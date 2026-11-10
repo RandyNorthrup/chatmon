@@ -8,14 +8,13 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PyQt6.QtCore import QPointF, QRect  # noqa: E402
 from PyQt6.QtGui import QImage, QPainter  # noqa: E402
-from PyQt6.QtWidgets import QApplication, QMenu  # noqa: E402
+from PyQt6.QtWidgets import QMenu  # noqa: E402
 
 from penguin_companion.stagemenu import StageMenu  # noqa: E402
 
 
 @pytest.fixture
-def menu():
-    QApplication.instance() or QApplication([])
+def menu(qapp):
     m = QMenu()
     ran = []
     m.addAction("Ask", lambda: ran.append("ask"))

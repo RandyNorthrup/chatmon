@@ -9,8 +9,8 @@ import pytest
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PyQt6.QtCore import QEventLoop, QPoint, QPointF, QRect, Qt, QTimer  # noqa: E402
-from PyQt6.QtGui import QAction, QImage, QPainter, QRegion  # noqa: E402
-from PyQt6.QtWidgets import QApplication, QMenu  # noqa: E402
+from PyQt6.QtGui import QAction, QImage, QKeySequence, QPainter, QRegion  # noqa: E402
+from PyQt6.QtWidgets import QMenu  # noqa: E402
 
 from penguin_companion import paths, xkb  # noqa: E402
 from penguin_companion.behavior import Behavior  # noqa: E402
@@ -64,8 +64,7 @@ class Overlay:
 
 
 @pytest.fixture
-def stage():
-    QApplication.instance() or QApplication([])
+def stage(qapp):
     sprites = Sprites(paths.anim_dir(), 120)
     s = Stage(sprites, Behavior(sprites.anims(), now=0, x=400), surface_factory=Overlay)
     box = AskBox()
@@ -155,18 +154,17 @@ def test_a_message_goes_above_the_open_box(stage):
     assert s._bubble_box.bottom() <= box.geometry().top() - s.origin().y()
 
 
-def test_menu_labels():
-    QApplication.instance() or QApplication([])
+def test_menu_labels(qapp):
     assert label_parts(QAction("Cu&t\tCtrl+X")) == ("Cut", "Ctrl+X")
     assert label_parts(QAction("Salt && pepper")) == ("Salt & pepper", "")
     menu = QMenu()
     action = menu.addAction("Quit")
     action.setShortcut("Ctrl+Q")
-    assert label_parts(action) == ("Quit", "Ctrl+Q")
+    native = QKeySequence("Ctrl+Q").toString(QKeySequence.SequenceFormat.NativeText)  # ⌘Q on macOS
+    assert label_parts(action) == ("Quit", native)
 
 
-def test_sprites_are_drawn_at_the_screens_resolution():
-    QApplication.instance() or QApplication([])
+def test_sprites_are_drawn_at_the_screens_resolution(qapp):
     one, two = Sprites(paths.anim_dir(), 120, 1.0), Sprites(paths.anim_dir(), 120, 2.0)
     a, b = one.frame("idle", 0, False), two.frame("idle", 0, False)
     assert abs(a.width() - b.width()) <= 1 and abs(a.height() - b.height()) <= 1  # the same size on screen

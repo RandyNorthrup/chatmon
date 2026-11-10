@@ -16,16 +16,10 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PyQt6.QtCore import QPointF, QRect, Qt  # noqa: E402
 from PyQt6.QtGui import QColor, QRegion  # noqa: E402
-from PyQt6.QtWidgets import QApplication  # noqa: E402
 
 from penguin_companion import layer, wayland  # noqa: E402
 
 linux_only = pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Wayland is Linux only")
-
-
-@pytest.fixture(scope="module")
-def qapp():
-    return QApplication.instance() or QApplication([])
 
 
 def test_encode_and_decode_round_trip():
@@ -48,6 +42,7 @@ def test_file_descriptors_travel_beside_the_bytes():
     assert fds == [42] and len(data) == 8 + 8  # the fd takes no room in the message
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Wayland sockets are Unix paths")
 def test_socket_path(tmp_path):
     assert wayland.socket_path({}) is None
     assert wayland.socket_path({"WAYLAND_DISPLAY": "wayland-1", "XDG_RUNTIME_DIR": "/run/user/5"}) == "/run/user/5/wayland-1"
