@@ -30,6 +30,11 @@ def backups(path):
     return sorted(path.parent.glob(path.name + ".chatmon-backup-*"))
 
 
+def PROGRAM():
+    """What our hooks run: /usr/bin/chatmon here (`which` is faked), or plain chatmon on Windows."""
+    return agents.hook_program()[0]
+
+
 # -- settings files in Claude Code's shape (Gemini, Qwen, Devin)
 
 
@@ -297,7 +302,7 @@ def test_json_hooks_move_to_the_new_name():
     assert gemini.migrate()
     groups = json.loads(path.read_text())["hooks"]["AfterAgent"]
     assert groups[0] == {"hooks": [mine]} and len(groups) == 2
-    assert groups[1]["hooks"][0]["command"].startswith("/usr/bin/chatmon notify done") and groups[1]["hooks"][0]["name"] == "chatmon-done"
+    assert groups[1]["hooks"][0]["command"].startswith(f"{PROGRAM()} notify done") and groups[1]["hooks"][0]["name"] == "chatmon-done"
     assert gemini.connected() and not gemini.legacy() and backups(path)
     assert gemini.migrate() == ""  # done once
 
@@ -310,7 +315,7 @@ def test_codex_moves_to_the_new_name():
     assert codex.legacy()
     codex.migrate()
     data = tomllib.loads(path.read_text())
-    assert data["model"] == "o3" and data["notify"][0] == "/usr/bin/chatmon" and not codex.legacy()
+    assert data["model"] == "o3" and data["notify"][0] == PROGRAM() and not codex.legacy()
 
 
 def test_own_hook_files_move_to_the_new_name():
@@ -320,7 +325,7 @@ def test_own_hook_files_move_to_the_new_name():
         old.write_text(json.dumps({"hooks": {"Stop": [{"command": f"{OLD} notify done"}]}}))
         assert agent.connected() and agent.legacy()
         agent.migrate()
-        assert not old.exists() and agent.config_path().name == "chatmon.json" and "/usr/bin/chatmon notify" in agent.config_path().read_text()
+        assert not old.exists() and agent.config_path().name == "chatmon.json" and f"{PROGRAM()} notify" in agent.config_path().read_text()
         agent.disconnect()
         assert not agent.connected()
 
@@ -333,7 +338,7 @@ def test_cursor_and_cline_move_to_the_new_name():
     assert cursor.legacy()
     cursor.migrate()
     stop = json.loads(path.read_text())["hooks"]["stop"]
-    assert stop[0] == {"command": "mine"} and stop[1]["command"].startswith("/usr/bin/chatmon") and len(stop) == 2
+    assert stop[0] == {"command": "mine"} and stop[1]["command"].startswith(PROGRAM()) and len(stop) == 2
 
     cline = agents.Cline()
     cline.config_path().mkdir(parents=True)
@@ -435,6 +440,8 @@ def test_our_command_is_known_in_every_form_we_write_it():
         "/usr/bin/chatmon notify done --source gemini --stdin",
         'chatmon notify working --source claude --stdin || true',  # the Claude Code plugin
         '"C:\\\\Users\\\\r\\\\chatmon.exe" notify done',  # JSON on Windows
+        "C:\\Users\\r\\.local\\bin\\chatmon.EXE notify done --source gemini --stdin",  # as Windows finds it, in PATHEXT's case
+        "& 'chatmon' 'notify' 'done' '--source' 'cline'",  # Cline on Windows, by name
         "# chatmon\n& 'C:\\Users\\r\\chatmon.exe' 'notify' 'done' '--source' 'cline'\nexit 0\n",  # Cline, PowerShell
         'notify = ["/usr/bin/chatmon", "notify", "done"]',  # Codex's TOML list
         "/usr/bin/python3 -m chatmon notify done",

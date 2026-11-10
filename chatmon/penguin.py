@@ -76,6 +76,8 @@ class StageWindow(QWidget):
         self.setGeometry(geometry)
         if not self.isVisible():
             self.show()
+        # A screen of another scale (a 4K monitor beside a laptop's, or the scale setting changed): sprites for it.
+        self.stage.scale_changed(screen.devicePixelRatio())
 
     def damage(self, region: QRegion) -> None:
         self.update(region)
@@ -401,6 +403,7 @@ class Stage(QObject):
         self._primary = ""  # the selected text last made the primary selection
         self.surface = surface_factory(self)
         self._use_screen(QGuiApplication.screenAt(QPoint(int(behavior.x), 0)) or QGuiApplication.primaryScreen())
+        QGuiApplication.instance().screenRemoved.connect(self._screen_removed)
         self._timer = QTimer(self)
         self._timer.setTimerType(Qt.TimerType.PreciseTimer)
         self._timer.timeout.connect(self._tick)
@@ -546,14 +549,22 @@ class Stage(QObject):
 
     # -- screens: the stage covers the one the penguin is on
 
-    def _use_screen(self, screen: QScreen) -> None:
-        if screen is self._screen:
+    def _use_screen(self, screen: QScreen, again: bool = False) -> None:
+        """Cover this screen. `again`: the same one, whose size or scale changed."""
+        if screen is self._screen and not again:
             return
         self._screen = screen
         self._geo = screen.geometry()
         self._key = None  # draw it all again there
         self.surface.set_screen(screen, self._geo)
         self._floor()
+
+    def _screen_removed(self, screen: QScreen) -> None:
+        """A monitor unplugged, a laptop undocked: if the chatmon was on it, over to one that's still there
+        (its walking range brings it on screen), before Qt deletes the screen from under the stage."""
+        if screen is self._screen:
+            self._screen = None
+            self._use_screen(QGuiApplication.primaryScreen())
 
     def _floor(self) -> int:
         """The floor's height on the stage, and keep the walking range current."""
@@ -568,7 +579,7 @@ class Stage(QObject):
         if not self._dragging:
             here = QGuiApplication.screenAt(QPoint(int(self.behavior.x), self._geo.center().y()))
             if here is not None:
-                self._use_screen(here)
+                self._use_screen(here, again=here.geometry() != self._geo)  # its resolution or scale may have changed
         floor = self._floor()
         f = self.behavior.tick(now)
         self.bubble.tick(now)

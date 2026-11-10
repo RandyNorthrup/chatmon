@@ -36,7 +36,8 @@ def _runs(name: str) -> re.Pattern:
     module = name.replace("-", "_")
     # A space, or the next item of a list or a quoted command line: "chatmon", "notify" / 'chatmon.exe' 'notify'.
     between = r"""["']?(?:\s*,\s*|\s+)["']?"""
-    return re.compile(rf"""(?:^|[\s/\\"'=])(?:{re.escape(name)}|{re.escape(module)})(?:\.exe|\.py)?{between}notify(?:\s|$|["',\]])""")
+    # .exe in any case: Windows finds chatmon.EXE, in PATHEXT's capitals.
+    return re.compile(rf"""(?:^|[\s/\\"'=])(?:{re.escape(name)}|{re.escape(module)})(?i:\.exe|\.py)?{between}notify(?:\s|$|["',\]])""")
 
 
 _OURS = _runs(MARK)
@@ -56,8 +57,17 @@ class AgentError(Exception):
     pass
 
 
+def hook_program() -> list[str]:
+    """How a hook runs Chatmon. On Windows, by name when it's on your PATH: agents run hooks there through
+    PowerShell, cmd or Git Bash, and a full path doesn't get through all three (bash drops its backslashes,
+    PowerShell won't run a quoted one), where the name does, as in the Claude Code plugin."""
+    if sys.platform == "win32" and shutil.which(paths.APP):
+        return [paths.APP]
+    return paths.command_line()
+
+
 def notify_argv(event: str, source: str, stdin: bool = True) -> list[str]:
-    return paths.command_line() + ["notify", event, "--source", source] + (["--stdin"] if stdin else [])
+    return hook_program() + ["notify", event, "--source", source] + (["--stdin"] if stdin else [])
 
 
 def shell_line(argv: list[str]) -> str:
@@ -72,7 +82,7 @@ def backup(path: Path) -> Path | None:
     return copy
 
 
-def write_atomic(path: Path, text: str) -> None:
+def write_atomic(path: Path, text: str, encoding: str = "utf-8") -> None:
     """Replace `path` with `text` all at once. The new copy is made with the old one's permissions from the
     start (a new file: readable by you alone), never briefly open to others: these files can hold tokens."""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -81,7 +91,7 @@ def write_atomic(path: Path, text: str) -> None:
     tmp.unlink(missing_ok=True)
     fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, mode)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+        with os.fdopen(fd, "w", encoding=encoding) as fh:
             fh.write(text)
         os.chmod(tmp, mode)  # O_CREAT's mode passes through the umask
         os.replace(tmp, path)
@@ -118,7 +128,7 @@ class Agent:
 
     def detected(self) -> bool:
         path = self.config_path()
-        return bool(self.command and shutil.which(self.command)) or bool(path and path.parent.exists())
+        return bool(self.command and paths.which(self.command)) or bool(path and path.parent.exists())
 
     def connected(self) -> bool:
         raise NotImplementedError
@@ -219,12 +229,19 @@ class JsonHooks(Agent):
         return f"Merge into {self.config_path()}:\n{json.dumps(snippet, indent=2)}"
 
 
+# No console window for a command-line tool run from the app: there's none of ours for it to share.
+_NO_WINDOW = subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
+
+
 def _run_json(argv: list[str], what: str) -> object:
     """Run another tool's command line and read its --json output."""
-    if not shutil.which(argv[0]):
+    program = shutil.which(argv[0])  # on Windows, also finds an npm install's claude.cmd, which running "claude" wouldn't
+    if not program:
         raise AgentError(f"{what} isn't installed.")
     try:
-        proc = subprocess.run(argv, capture_output=True, text=True, timeout=120)
+        proc = subprocess.run(
+            [program, *argv[1:]], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120, creationflags=_NO_WINDOW
+        )
     except (OSError, subprocess.SubprocessError) as exc:
         raise AgentError(f"{' '.join(argv[:3])} failed: {exc}") from None
     if proc.returncode != 0:
@@ -585,7 +602,7 @@ class Grok(OwnFile):
         return _home_env("GROK_HOME", Path.home() / ".grok") / "hooks" / f"{MARK}.json"
 
     def detected(self) -> bool:
-        return bool(shutil.which("grok")) or self.config_path().parent.parent.exists()
+        return bool(paths.which("grok")) or self.config_path().parent.parent.exists()
 
     def content(self) -> dict:
         def group(ours: str, matcher: str | None = None) -> list:
@@ -610,7 +627,7 @@ class Copilot(OwnFile):
         return _home_env("COPILOT_HOME", Path.home() / ".copilot") / "hooks" / f"{MARK}.json"
 
     def detected(self) -> bool:
-        return bool(shutil.which("copilot")) or self.config_path().parent.parent.exists()
+        return bool(paths.which("copilot")) or self.config_path().parent.parent.exists()
 
     def content(self) -> dict:
         def hook(ours: str, matcher: str | None = None) -> list:
@@ -703,7 +720,7 @@ class Cline(Agent):
         return Path.home() / "Documents" / "Cline" / "Hooks"
 
     def detected(self) -> bool:
-        return bool(shutil.which("cline")) or self.config_path().parent.exists()
+        return bool(paths.which("cline")) or self.config_path().parent.exists()
 
     def _file(self, event: str) -> Path:
         return self.config_path() / (f"{event}.ps1" if sys.platform == "win32" else event)
@@ -717,7 +734,7 @@ class Cline(Agent):
 
     def _text(self, event: str) -> str | None:
         path = self._file(event)
-        return path.read_text(errors="replace") if path.exists() else None
+        return path.read_text(encoding="utf-8-sig", errors="replace") if path.exists() else None
 
     def connected(self) -> bool:
         return any(is_ours(self._text(e) or "") for e in self.events)
@@ -732,7 +749,9 @@ class Cline(Agent):
         for event, ours in self.events.items():
             path = self._file(event)
             backup(path)
-            write_atomic(path, self._script(ours))
+            # With a BOM: Windows PowerShell 5.1 reads a script without one in the ANSI code page, which
+            # would garble a path like C:\Users\José.
+            write_atomic(path, self._script(ours), encoding="utf-8-sig" if path.suffix == ".ps1" else "utf-8")
             if sys.platform != "win32":
                 path.chmod(0o700)
         return f"Connected Cline: hook scripts in {self.config_path()} (Cline's \"Enable Hooks\" setting has to be on)"
@@ -762,7 +781,7 @@ def find(name: str) -> Agent | None:
 
 
 def generic() -> str:
-    cmd = shell_line(paths.command_line())
+    cmd = shell_line(hook_program())
     return (
         "Any other agent or script: have its hooks run\n"
         f"  {cmd} notify working   --source NAME    # started on something\n"

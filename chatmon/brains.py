@@ -20,6 +20,8 @@ import os
 import re
 import shutil
 import socket
+import subprocess
+import sys
 import tempfile
 import time
 from dataclasses import dataclass, field, replace
@@ -267,13 +269,44 @@ class BrainError(Exception):
 
 
 _reachable: dict[str, tuple[float, bool]] = {}
+_unsure: set[str] = set()  # URLs asked about without waiting, to be looked at by `look_again`
+FRESH_FOR = 10  # seconds a look holds good
 
 
-def reachable(url: str, timeout: float = 0.15) -> bool:
-    """Is something listening at this URL's host and port? (Remembered for 10 s.)"""
+def reachable(url: str, timeout: float = 0.15, wait: bool = True) -> bool:
+    """Is something listening at this URL's host and port? (Remembered for 10 s.)
+
+    Looking can take the whole `timeout` (on Windows, a port nobody listens on takes 2 s to say no), so
+    with `wait` off it answers at once with what it last saw, or no, and leaves the URL to `look_again`."""
     seen = _reachable.get(url)
-    if seen and time.monotonic() - seen[0] < 10:
+    if seen and time.monotonic() - seen[0] < FRESH_FOR:
         return seen[1]
+    if not wait:
+        _unsure.add(url)
+        return seen[1] if seen else False
+    return _look(url, timeout)
+
+
+def look_again(timeout: float = 0.15) -> bool:
+    """Look at each URL `reachable` answered without waiting for; True if any answer changed. Slow: run it
+    off the screen's thread."""
+    changed = False
+    while True:
+        try:
+            url = _unsure.pop()
+        except KeyError:
+            return changed
+        before = _reachable.get(url)
+        now = _look(url, timeout)
+        changed |= before is None or before[1] != now
+
+
+def unsure() -> bool:
+    """Has `reachable` answered anything without waiting since `look_again` last ran?"""
+    return bool(_unsure)
+
+
+def _look(url: str, timeout: float) -> bool:
     parts = urlsplit(url)
     ok = False
     try:
@@ -373,13 +406,14 @@ class Brain:
                 out = candidate
         return out
 
-    def available(self) -> bool:
+    def available(self, wait: bool = True) -> bool:
+        """Can it answer? `wait` off: never hold up the screen to find out (see `reachable`)."""
         if self.type == "command":
-            return bool(self.command) and shutil.which(self.command[0]) is not None
+            return bool(self.command) and paths.which(self.command[0]) is not None
         if any(not os.environ.get(var) for var in self.requires):
             return False
         if self.local:
-            return reachable(expand(self.url))
+            return reachable(expand(self.url), wait=wait)
         return bool(self.key()) or not self.api_key_env
 
     def automatic(self) -> bool:
@@ -471,13 +505,13 @@ def load_brains(ai_config: dict) -> dict[str, Brain]:
     return out
 
 
-def choose(brains: dict[str, Brain], configured: str, picked: str | None) -> Brain | None:
+def choose(brains: dict[str, Brain], configured: str, picked: str | None, wait: bool = True) -> Brain | None:
     """The brain to ask: the one picked from the menu, else the configured one,
     else the first available that "auto" may use."""
     for name in (picked, configured):
-        if name and name != "auto" and name in brains and brains[name].available():
+        if name and name != "auto" and name in brains and brains[name].available(wait):
             return brains[name]
-    return next((b for b in brains.values() if b.automatic() and b.available()), None)
+    return next((b for b in brains.values() if b.automatic() and b.available(wait)), None)
 
 
 _VAR = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}")
@@ -705,6 +739,19 @@ def clean_output(text: str) -> str:
     return _ANSI.sub("", text).strip()
 
 
+def _kill_tree(proc: QProcess) -> None:
+    """Stop a command-line brain, and whatever it started. On Windows an npm-installed tool is a .cmd file:
+    killing that stops cmd.exe alone, and the real program (node) would go on answering nobody."""
+    pid = proc.processId()
+    if sys.platform == "win32" and pid:
+        taskkill = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32" / "taskkill.exe"
+        try:
+            subprocess.run([str(taskkill), "/T", "/F", "/PID", str(pid)], capture_output=True, timeout=5, creationflags=subprocess.CREATE_NO_WINDOW)
+        except (OSError, subprocess.SubprocessError):
+            pass
+    proc.kill()
+
+
 class Asker(QObject):
     """Asks one brain one question at a time, without blocking the penguin."""
 
@@ -755,7 +802,7 @@ class Asker(QObject):
             proc, self._proc = self._proc, None
             proc.finished.disconnect()
             proc.errorOccurred.disconnect()
-            proc.kill()
+            _kill_tree(proc)
             proc.waitForFinished(1000)
             proc.deleteLater()
         if self._reply is not None:
@@ -768,6 +815,14 @@ class Asker(QObject):
     # -- command-line brains
 
     def _run(self, brain: Brain, prompt: str) -> None:
+        program = shutil.which(brain.command[0]) or brain.command[0]
+        if sys.platform == "win32" and Path(program).suffix.lower() in (".cmd", ".bat") and any("{prompt}" in a for a in command_args(brain)):
+            # cmd.exe would read the question (and earlier answers) as part of a command line: a quote and an
+            # ampersand in it would run whatever followed, %VAR% would be filled in, and 8 KB is the most it takes.
+            self._timer.stop()
+            error = f"{brain.label}: {Path(program).name} is run by cmd.exe, which can't be handed a question safely; use {{prompt_file}} or stdin."
+            QTimer.singleShot(0, lambda: self.failed.emit(error))
+            return
         args, use_stdin = [], True
         for arg in command_args(brain):
             if "{output_file}" in arg:
@@ -791,7 +846,7 @@ class Asker(QObject):
         proc.finished.connect(self._process_finished)
         proc.errorOccurred.connect(self._process_error)
         self._proc = proc
-        proc.start(shutil.which(brain.command[0]) or brain.command[0], args)
+        proc.start(program, args)
         if use_stdin:
             proc.write(prompt.encode("utf-8"))
         proc.closeWriteChannel()

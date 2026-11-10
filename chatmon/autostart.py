@@ -6,6 +6,7 @@ from __future__ import annotations
 import os
 import plistlib
 import shlex
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -64,6 +65,26 @@ def migrate() -> bool:
         if not old.exists():
             return False
         old.unlink()
+    set_enabled(True)
+    return True
+
+
+def refresh() -> bool:
+    """On Windows, autostart turned on before there was chatmonw runs chatmon.exe, which opens a console
+    window at every login and keeps it open: run Chatmon without one instead. Returns whether it did."""
+    if sys.platform != "win32":
+        return False
+    import winreg
+
+    try:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, _RUN_KEY) as key:
+            value, _ = winreg.QueryValueEx(key, _NAME)
+    except OSError:
+        return False
+    value = str(value).strip()
+    program = value[1:].partition('"')[0] if value.startswith('"') else value.partition(" ")[0]
+    if Path(program).name.lower() != f"{paths.APP}.exe" or not shutil.which(f"{paths.APP}w"):
+        return False  # already windowless, something you set up yourself, or no chatmonw to run instead
     set_enabled(True)
     return True
 

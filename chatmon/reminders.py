@@ -13,6 +13,9 @@ _WORDS = {
     "fifteen": 15, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
     "half an": 0.5, "half a": 0.5,
 }
+# Ten years: the furthest ahead a reminder, timer or focus may be. Much further, the date can't be shown
+# (Windows' clock stops at the year 3000) or even worked out.
+LONGEST = 10 * 366 * 24 * 3600
 _NUMBER = r"\d+(?:\.\d+)?"
 _WORD = r"half an?|an?|one|two|three|four|five|ten|fifteen|twenty|thirty|forty|fifty"
 _UNIT = r"seconds?|secs?|minutes?|mins?|hours?|hrs?|hr|days?|[smhd]"
@@ -49,7 +52,7 @@ def parse_when(text: str, now: datetime) -> tuple[datetime, str] | None:
     m = _IN_RE.search(text)
     if m:
         secs = seconds_in(m.group("d"))
-        if secs > 0:
+        if 0 < secs <= LONGEST:
             return now + timedelta(seconds=secs), _cut(text, m)
     for m in _CLOCK_RE.finditer(text):
         if not (m.group("at") or m.group("min") or m.group("ap") or m.group("word")):
@@ -108,7 +111,7 @@ def parse_command(text: str, now: datetime) -> Command | None:
         if lead:
             d = lead.group("d")
             secs = float(d) * 60 if d.isdigit() else seconds_in(d)
-            if secs > 0:
+            if 0 < secs <= LONGEST:
                 rest = m.group("rest")[lead.end() :]
                 return Command("timer", now + timedelta(seconds=secs), _what(re.sub(r"^\s*for\s+", "", rest)) or "Timer")
         return None
@@ -121,7 +124,7 @@ def parse_command(text: str, now: datetime) -> Command | None:
         if lead:
             d = lead.group("d")
             minutes = float(d) if d.isdigit() else seconds_in(d) / 60
-            if minutes > 0:
+            if 0 < minutes * 60 <= LONGEST:
                 return Command("focus", minutes=minutes)
     return None
 
@@ -135,7 +138,10 @@ def describe(due: float, now: float) -> str:
     delta = due - now
     if 0 <= delta < 3600:
         return f"in {max(1, round(delta / 60))} min"
-    d, n = datetime.fromtimestamp(due), datetime.fromtimestamp(now)
+    try:
+        d, n = datetime.fromtimestamp(due), datetime.fromtimestamp(now)
+    except (OSError, OverflowError, ValueError):  # one saved before there was a limit, past what the clock can show
+        return "a long way off"
     if d.date() == n.date():
         return f"at {clock(d)}"
     if d.date() == n.date() + timedelta(days=1):

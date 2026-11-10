@@ -107,10 +107,12 @@ bin/chatmon          # Windows: py bin\chatmon
 ```
 
 Agent hooks call `chatmon` by name, so if you run it from a clone, put the launcher on your PATH:
-`ln -s "$PWD/bin/chatmon" ~/.local/bin/`. For battery levels on Windows and macOS, also install `psutil`.
+`ln -s "$PWD/bin/chatmon" ~/.local/bin/` (on Windows, `pipx install --editable .` in the clone). For
+battery levels on Windows and macOS, also install `psutil`.
 
 The first time, it asks what it should be called. Right-click it and tick **Start when I log in** to keep
-it around.
+it around. On Windows that starts `chatmonw`, which installs alongside `chatmon` and runs it without a
+console window; run that way, Chatmon writes any problems to `chatmon.log` in its state folder.
 
 <details>
 <summary><b>Coming from Penguin companion</b></summary>
@@ -260,7 +262,9 @@ details.
   that could pass for a flag is refused.
 - **Only you can talk to it.** Hooks reach it through a local socket (a named pipe on Windows) open to
   your user account alone, in a folder of its own when there's no session runtime folder, never in shared
-  `/tmp`; a hook sends only to a socket you own, and messages are size-limited.
+  `/tmp`; a hook sends only to a socket you own, and messages are size-limited. Pipe names on Windows are
+  shared by every user of the PC, so a hook first checks that the pipe's server runs as you, and Chatmon
+  claims its pipe name before it listens; if another user got there first, it won't listen and says so.
 - **Keys** are read from environment variables (or `${VAR}` in a header) and are never written to logs.
   API keys only travel over HTTPS; plain HTTP is allowed only to a server on this computer, and a redirect
   is never followed, so a key goes only where the settings say. Settings and state files, and the copies
@@ -278,8 +282,8 @@ naps, the companion and its bubble style, brains and their models, effort and th
 replies show, break and focus lengths, and heads-up thresholds. **Edit settings…** in the menu opens it;
 **Reload settings** applies it. It lives in `~/.config/chatmon/` on Linux,
 `~/Library/Application Support/chatmon/` on macOS and `%APPDATA%\chatmon\` on Windows. `state.json` (in
-`~/.local/state/chatmon/` on Linux, next to the settings elsewhere) keeps the name, reminders, the
-chatmon and brain choices you made in the menu, and its spot on the screen.
+`~/.local/state/chatmon/` on Linux, in a `state` folder next to the settings elsewhere) keeps the name,
+reminders, the chatmon and brain choices you made in the menu, and its spot on the screen.
 
 ## How it's put together
 
@@ -321,6 +325,7 @@ screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland des
 | `chatmon/app.py`          | Ties it together: menu, tray, reminders, heads-ups, hooks |
 | `chatmon/brains.py`       | The AI brains, their models, effort and thinking       |
 | `chatmon/agents.py`       | Connecting coding agents                               |
+| `chatmon/winpipe.py`      | Whose named pipe it is, on Windows                     |
 | `chatmon/integrations/`   | The Claude Code plugin                                 |
 | `art/`                    | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
 
