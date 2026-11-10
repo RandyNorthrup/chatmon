@@ -24,7 +24,7 @@ PENGUIN_SHA1 = {
     "charge.png": "dc47ff049b4904c3e1663481fbd27e4231f3349e",
     "hop.png": "a8e0891dfb85d547477ed11801ea42387840d724",
     "idle.png": "e14d4777a7397261a210b170fa980f3706481673",
-    "manifest.json": "71be7bf73c7b66b956707caf738dc319ad724112",
+    "manifest.json": "1497b64ec2a9a50866db34e1c2ccc8458c086436",
     "peek.png": "94257d9798d1d245a8d1b5b0f2901690da6cbcba",
     "sleep.png": "80c732f254cdf1d4b1cafe36834e08b3d6044a2c",
     "talk.png": "57a425aad68387dc8c515f9b1f0f52bb27d03d0e",
@@ -53,8 +53,17 @@ def rgba(img: QImage) -> bytes:
     return bytes(ptr)
 
 
+def stored_sha1(path: Path) -> str:
+    """The sha1 of a file as git stores it. A checkout on Windows turns the manifest's line endings into CRLF,
+    so the bytes on disk differ by platform; git keeps LF, and so does this."""
+    data = path.read_bytes()
+    if path.suffix != ".png":
+        data = data.replace(b"\r\n", b"\n")
+    return hashlib.sha1(data).hexdigest()
+
+
 def test_the_penguins_files_are_untouched():
-    found = {p.name: hashlib.sha1(p.read_bytes()).hexdigest() for p in PENGUIN.anim_dir().iterdir() if p.is_file()}
+    found = {p.name: stored_sha1(p) for p in PENGUIN.anim_dir().iterdir() if p.is_file()}
     assert found == PENGUIN_SHA1
 
 
