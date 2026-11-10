@@ -137,9 +137,29 @@ def which(name: str) -> str | None:
     return found
 
 
+def frozen() -> bool:
+    """Running from an installer's build (PyInstaller), with no Python of its own to run it with."""
+    return bool(getattr(sys, "frozen", False))
+
+
+def restore_dll_search() -> None:
+    """Installed on Windows, PyInstaller points this process's DLL search at its own folder, and every program
+    it starts inherits that: an AI tool, the browser, the editor for the settings would find Chatmon's DLLs
+    before their own. Once Qt's are loaded (or before running another tool), put it back as Windows has it."""
+    if sys.platform == "win32" and frozen():
+        import ctypes
+
+        ctypes.windll.kernel32.SetDllDirectoryW(None)
+
+
 def command_line(windowless: bool = False) -> list[str]:
     """How to run this companion from a hook, a shortcut or autostart. `windowless`: on Windows, with
     no console window (for autostart): `chatmonw`, or pythonw, never chatmon.exe, which opens one."""
+    if frozen():  # installed from a package: its own programs, whatever else is on PATH
+        exe = Path(sys.executable)
+        if sys.platform == "win32":
+            return [str(exe.with_name(f"{APP}w.exe" if windowless else f"{APP}.exe"))]
+        return [str(exe)]
     if windowless and sys.platform == "win32":
         installed = shutil.which(APP + "w")  # the GUI launcher that installing makes alongside chatmon.exe
     else:

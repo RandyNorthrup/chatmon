@@ -134,3 +134,27 @@ def test_never_sends_to_a_socket_someone_else_owns(tmp_path, monkeypatch):
 def test_garbage_on_the_socket_is_dropped_not_fatal():
     deep = ("[" * 65000).encode()
     assert events.parse_lines(deep + b"\n" + b'{"type": "say", "text": "hi"}\n') == [{"type": "say", "text": "hi"}]
+
+
+def test_installed_from_a_package_it_runs_its_own_programs(monkeypatch, tmp_path):
+    """PyInstaller's Chatmon has no Python to run it with: hooks and autostart get its own programs."""
+    exe = tmp_path / ("chatmon.exe" if sys.platform == "win32" else "Chatmon")
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(sys, "executable", str(exe))
+    monkeypatch.setattr(paths.shutil, "which", lambda name: "/somewhere/else/" + name)  # whatever else is on PATH
+    if sys.platform == "win32":
+        assert paths.command_line() == [str(tmp_path / "chatmon.exe")]
+        assert paths.command_line(windowless=True) == [str(tmp_path / "chatmonw.exe")]
+    else:
+        assert paths.command_line() == paths.command_line(windowless=True) == [str(exe)]
+
+
+def test_dll_search_is_only_touched_when_frozen(monkeypatch):
+    monkeypatch.delattr(sys, "frozen", raising=False)
+    paths.restore_dll_search()  # nothing to do, on any platform
+
+
+def test_quit_says_when_nothing_is_running(monkeypatch, capsys):
+    monkeypatch.setattr(events, "send", lambda m, timeout=0.5: False)
+    monkeypatch.setattr(paths, "migrate", lambda: [])  # never the real settings folders
+    assert cli.main(["quit"]) == 1 and "isn't running" in capsys.readouterr().err

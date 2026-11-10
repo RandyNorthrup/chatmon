@@ -88,6 +88,27 @@ by name (or **Plain**, in your desktop's own colours) and it stays put whichever
 
 ## Install
 
+Download the one for your computer from the [latest release](https://github.com/RandyNorthrup/chatmon/releases/latest):
+
+| Your computer                          | Download                                         | Then                                                     |
+| -------------------------------------- | ------------------------------------------------ | -------------------------------------------------------- |
+| **Windows** 10 or 11                   | `Chatmon-<version>-windows-x64-setup.exe`        | Run it. It installs for you alone (no administrator needed) and asks whether to add Chatmon to the Start menu and the desktop, and to start it when you log in. |
+| **macOS**, Apple silicon or Intel      | `Chatmon-<version>-macos-arm64.pkg` or `-intel.pkg` | Open it. Chatmon goes in Applications, and the `chatmon` command your agents' hooks run goes on your PATH. (The `.dmg` is the same app to drag in yourself, without that command.) |
+| **Ubuntu** 24.04+, **Debian** 13+      | `chatmon_<version>-1_all.deb`                    | `sudo apt install ./chatmon_<version>-1_all.deb`         |
+| **Fedora** 44+                         | `chatmon-<version>-1.noarch.rpm`                 | `sudo dnf install ./chatmon-<version>-1.noarch.rpm`      |
+
+Then start it the way you start anything else: the Start menu, Launchpad or Spotlight, or your desktop's
+app menu (or `chatmon` in a terminal). On macOS it lives in the menu bar, not the Dock. The Linux
+packages run on your system's Python and PyQt6, which apt and dnf install along with them.
+
+The installers aren't signed yet, so the first time you'll be asked to trust them: on Windows,
+SmartScreen's **More info**, then **Run anyway**; on macOS, **System Settings → Privacy & Security →
+Open Anyway**. To uninstall: **Settings → Apps** on Windows, `sudo apt remove chatmon` or
+`sudo dnf remove chatmon` on Linux, and on macOS drag Chatmon to the Trash (after a `.pkg`, also
+`sudo rm /usr/local/bin/chatmon`). Your settings stay, for next time.
+
+### With Python instead
+
 You need Python 3.11 or newer.
 
 ```sh
@@ -329,6 +350,7 @@ screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland des
 | `chatmon/winlock.py`      | Hearing the screen lock and unlock, on Windows          |
 | `chatmon/integrations/`   | The Claude Code plugin                                 |
 | `art/`                    | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
+| `packaging/`              | The installers and packages, and how they're built ([packaging/README.md](packaging/README.md)) |
 
 The pictures and animations on this page are drawn by Chatmon's own code:
 `python art/tools/readme_media.py` makes them again (it needs `ffmpeg`).

@@ -246,3 +246,13 @@ def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
     assert c._brain().thinking == "off" and c.state.get("brain_options")["anthropic-api"]["thinking"] == "off"
     c.submit("status")
     assert "claude-sonnet-5-5, effort medium, thinking off" in c.ask_box.answer.toPlainText()
+
+
+def test_quits_when_asked(companion, monkeypatch):
+    """`chatmon quit` (an installer about to update it): it answers first, then quits, saving as it goes."""
+    quits = []
+    monkeypatch.setattr(companion.app, "quit", lambda: quits.append(True))
+    companion.handle({"type": "quit"})
+    assert quits == []  # not under the sender: it hears back first
+    spin(0.1)
+    assert quits == [True]

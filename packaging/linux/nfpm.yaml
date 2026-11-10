@@ -1,0 +1,89 @@
+# Chatmon's deb and rpm (nfpm). packaging/build.py linux builds them, after staging the chatmon package in
+# build/linux/chatmon; run from the repository's root. They use the system's Python and PyQt6.
+name: chatmon
+arch: all
+platform: linux
+version: ${CHATMON_VERSION}
+release: "1"
+section: utils
+priority: optional
+maintainer: Randy Northrup <RandyNorthrup@users.noreply.github.com>
+vendor: Randy Northrup
+homepage: https://github.com/RandyNorthrup/chatmon
+license: MIT
+description: |
+  A desktop companion that answers with your AI and watches your coding agents.
+  A little creature lives along the bottom of your screen. Click it and ask
+  anything: it answers with the AI you already use. It thinks while your coding
+  agents work, flaps when one needs you, and hops when one is done; it also keeps
+  reminders and timers, and nudges you to take breaks.
+
+overrides:
+  deb:
+    depends:
+      - python3 (>= 3.11)
+      - python3-pyqt6 (>= 6.5)
+    recommends:
+      - qt6-wayland
+  rpm:
+    depends:
+      - python3 >= 3.11
+      - python3-pyqt6 >= 6.5
+    recommends:
+      - qt6-qtwayland
+
+contents:
+  - dst: /usr/lib/chatmon  # the package's own folder, so removing it takes the folder too
+    type: dir
+    file_info:
+      mode: 0755
+  - src: ./build/linux/chatmon/
+    dst: /usr/lib/chatmon/chatmon/
+    type: tree
+  - src: ./packaging/linux/chatmon
+    dst: /usr/bin/chatmon
+    file_info:
+      mode: 0755
+  - src: ./packaging/linux/io.github.RandyNorthrup.chatmon.desktop
+    dst: /usr/share/applications/io.github.RandyNorthrup.chatmon.desktop
+    file_info:
+      mode: 0644
+  - src: ./packaging/linux/io.github.RandyNorthrup.chatmon.metainfo.xml
+    dst: /usr/share/metainfo/io.github.RandyNorthrup.chatmon.metainfo.xml
+    file_info:
+      mode: 0644
+  - src: ./packaging/icons/chatmon-48.png
+    dst: /usr/share/icons/hicolor/48x48/apps/io.github.RandyNorthrup.chatmon.png
+    file_info:
+      mode: 0644
+  - src: ./packaging/icons/chatmon-64.png
+    dst: /usr/share/icons/hicolor/64x64/apps/io.github.RandyNorthrup.chatmon.png
+    file_info:
+      mode: 0644
+  - src: ./packaging/icons/chatmon-128.png
+    dst: /usr/share/icons/hicolor/128x128/apps/io.github.RandyNorthrup.chatmon.png
+    file_info:
+      mode: 0644
+  - src: ./packaging/icons/chatmon-256.png
+    dst: /usr/share/icons/hicolor/256x256/apps/io.github.RandyNorthrup.chatmon.png
+    file_info:
+      mode: 0644
+  - src: ./packaging/icons/chatmon-512.png
+    dst: /usr/share/icons/hicolor/512x512/apps/io.github.RandyNorthrup.chatmon.png
+    file_info:
+      mode: 0644
+  - src: ./LICENSE
+    dst: /usr/share/doc/chatmon/copyright
+    packager: deb
+    file_info:
+      mode: 0644
+  - src: ./LICENSE
+    dst: /usr/share/licenses/chatmon/LICENSE
+    packager: rpm
+    type: license
+    file_info:
+      mode: 0644
+
+scripts:
+  postinstall: ./packaging/linux/postinstall.sh
+  preremove: ./packaging/linux/preremove.sh

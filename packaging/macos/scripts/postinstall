@@ -1,0 +1,18 @@
+#!/bin/sh
+# After the .pkg has put Chatmon.app in /Applications: a `chatmon` command on PATH, which runs the app's
+# own program, for your coding agents' hooks and the command line. Left alone if it's something else
+# (a pip or pipx install of your own, say).
+set -e
+LINK=/usr/local/bin/chatmon
+APP=/Applications/Chatmon.app/Contents/MacOS/Chatmon
+if [ -e "$LINK" ] && ! grep -q "Chatmon.app" "$LINK" 2>/dev/null; then
+    exit 0
+fi
+mkdir -p /usr/local/bin
+cat > "$LINK" <<EOF
+#!/bin/sh
+# Chatmon's command line, put here by its installer: the app's own program.
+exec "$APP" "\$@"
+EOF
+chmod 755 "$LINK"
+exit 0

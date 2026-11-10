@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Chatmon
+GenericName=Desktop companion
+Comment=A little creature on your desktop that answers with your AI and keeps an eye on your coding agents
+Exec=chatmon
+Icon=io.github.RandyNorthrup.chatmon
+Terminal=false
+Categories=Utility;
+Keywords=penguin;pet;companion;assistant;AI;agent;reminder;timer;
+StartupNotify=false

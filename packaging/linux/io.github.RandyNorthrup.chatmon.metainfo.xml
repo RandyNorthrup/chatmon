@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- What software centres (GNOME Software, KDE Discover) show for the installed package. -->
+<component type="desktop-application">
+  <id>io.github.RandyNorthrup.chatmon</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Chatmon</name>
+  <summary>A desktop companion that answers with your AI and keeps an eye on your coding agents</summary>
+  <description>
+    <p>
+      A little creature lives along the bottom of your screen: an electric penguin, a fire red panda, a ghost
+      rabbit, a fairy axolotl or a leaf pangolin. Click it and ask anything; it answers with the AI you already
+      use, a command-line tool you're signed in to, a model server on your own computer, or an API.
+    </p>
+    <p>
+      It thinks while your coding agents work, flaps when one needs your approval, and hops when one is done.
+      It also keeps reminders and timers, nudges you to take breaks, and stays out of your way.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.RandyNorthrup.chatmon.desktop</launchable>
+  <url type="homepage">https://github.com/RandyNorthrup/chatmon</url>
+  <url type="bugtracker">https://github.com/RandyNorthrup/chatmon/issues</url>
+  <developer id="io.github.randynorthrup">
+    <name>Randy Northrup</name>
+  </developer>
+  <provides>
+    <binary>chatmon</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+</component>

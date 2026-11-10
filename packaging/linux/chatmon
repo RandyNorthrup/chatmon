@@ -1,0 +1,11 @@
+#!/usr/bin/python3 -I
+"""Chatmon, as the deb and rpm packages install it: the system's Python and PyQt6, Chatmon in /usr/lib/chatmon.
+(-I: neither PYTHONPATH nor your own pip installs get to change what it runs.)"""
+
+import sys
+
+sys.path.insert(0, "/usr/lib/chatmon")
+
+from chatmon.cli import main  # noqa: E402
+
+raise SystemExit(main())
