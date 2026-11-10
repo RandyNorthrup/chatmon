@@ -91,35 +91,7 @@ begin
   if IsAdminInstallMode then Result := MachineEnvironment else Result := UserEnvironment;
 end;
 
-{ Where Dir is in Paths (1-based, in ';' + Paths + ';'), or 0. }
-function FindInPath(Paths, Dir: String): Integer;
-begin
-  Result := Pos(';' + Uppercase(RemoveBackslashUnlessRoot(Dir)) + ';', ';' + Uppercase(Paths) + ';');
-end;
-
-procedure AddToPath(Dir: String);
-var
-  Paths: String;
-begin
-  if not RegQueryStringValue(EnvRoot, EnvKey, 'Path', Paths) then Paths := '';
-  if FindInPath(Paths, Dir) > 0 then exit;
-  if (Paths <> '') and (Copy(Paths, Length(Paths), 1) <> ';') then Paths := Paths + ';';
-  RegWriteExpandStringValue(EnvRoot, EnvKey, 'Path', Paths + Dir);
-end;
-
-procedure RemoveFromPath(Dir: String);
-var
-  Paths, Padded: String;
-  At: Integer;
-begin
-  if not RegQueryStringValue(EnvRoot, EnvKey, 'Path', Paths) then exit;
-  At := FindInPath(Paths, Dir);
-  if At = 0 then exit;
-  Padded := ';' + Paths + ';';
-  Delete(Padded, At, Length(RemoveBackslashUnlessRoot(Dir)) + 1);  { the ';' before it, and it }
-  Paths := Copy(Padded, 2, Length(Padded) - 2);
-  RegWriteExpandStringValue(EnvRoot, EnvKey, 'Path', Paths);
-end;
+#include "path.iss"
 
 { Ask a running Chatmon to quit (it saves first), so its files can be replaced or removed. }
 procedure QuitChatmon;
@@ -141,9 +113,9 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then
     if WizardIsTaskSelected('path') then
-      AddToPath(ExpandConstant('{app}'))
+      AddToPath(EnvRoot, EnvKey, ExpandConstant('{app}'))
     else
-      RemoveFromPath(ExpandConstant('{app}'));
+      RemoveFromPath(EnvRoot, EnvKey, ExpandConstant('{app}'));
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
@@ -153,7 +125,7 @@ begin
   if CurUninstallStep = usUninstall then
   begin
     QuitChatmon;
-    RemoveFromPath(ExpandConstant('{app}'));
+    RemoveFromPath(EnvRoot, EnvKey, ExpandConstant('{app}'));
     { Starting at login, whether set here or from Chatmon's own menu, if it starts this one. }
     if RegQueryStringValue(HKCU, RunKey, 'Chatmon', Command) then
       if Pos(Uppercase(ExpandConstant('{app}')), Uppercase(Command)) > 0 then
