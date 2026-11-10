@@ -541,8 +541,9 @@ class LayerSurface(QObject):
         self._pending = self._pending.united(region)
         self._schedule()
 
-    def set_input(self, rects: list[QRect]) -> None:
-        key = tuple((r.x(), r.y(), r.width(), r.height()) for r in rects)
+    def set_input(self, rects) -> None:
+        """Where it takes clicks: (x, y, w, h) tuples, or QRects."""
+        key = tuple(rects) if not rects or isinstance(rects[0], tuple) else tuple((r.x(), r.y(), r.width(), r.height()) for r in rects)
         if key != self._input:
             self._input = key
             self._input_dirty = True
@@ -1169,8 +1170,10 @@ class LayerSurface(QObject):
         region = c.new_id()
         c.request(self.globals["wl_compositor"][0], COMPOSITOR_CREATE_REGION, "n", region)
         k = self._k()
+        rows = []
         for x, y, w, h in rects:
             x0, y0 = math.floor(x * k), math.floor(y * k)
-            c.request(region, REGION_ADD, "iiii", x0, y0, math.ceil((x + w) * k) - x0, math.ceil((y + h) * k) - y0)
+            rows.append((x0, y0, math.ceil((x + w) * k) - x0, math.ceil((y + h) * k) - y0))
+        c.requests(region, REGION_ADD, "iiii", rows)  # a sprite's outline is some fifty of them, as it walks
         c.request(self._surface, SURFACE_SET_INPUT_REGION, "o", region)
         c.request(region, REGION_DESTROY)

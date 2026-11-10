@@ -15,6 +15,7 @@ the overlay's pointer and keyboard.
 
 from __future__ import annotations
 
+import math
 import time
 
 from PyQt6.QtCore import QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer, pyqtSignal
@@ -30,6 +31,7 @@ from PyQt6.QtGui import (
     QPainter,
     QPainterPath,
     QPen,
+    QPixmap,
     QRegion,
     QScreen,
     QTextCharFormat,
@@ -40,6 +42,7 @@ from PyQt6.QtWidgets import QApplication, QFrame, QGraphicsScene, QGraphicsView,
 from . import clickthrough, layer
 from .behavior import Behavior, Frame
 from .bubble import SpeechBubble
+from .bubbleart import device_ratio
 from .sprites import Sprites
 from .stagemenu import StageMenu
 
@@ -146,6 +149,12 @@ class Hosted(QObject):
         self.scene.clearFocus()  # until the keyboard arrives
         self.scene.changed.connect(self._changed)
         self.was_visible = shown  # the stage notices it opening and closing (see Stage._tick)
+        # Its animated bubble is drawn by the stage, each frame; what's in it (the text, the field) is
+        # drawn from the scene only when the scene changes, and kept. (Drawing all of it from the scene
+        # thirty times a second cost most of a core.)
+        if hasattr(widget, "stage_draws_art"):
+            widget.stage_draws_art = True
+        self._contents: tuple[tuple, QPixmap] | None = None
         # Its context menus are drawn by the stage too (a QMenu would be an XWayland window).
         for child in widget.findChildren(QWidget):
             if child.contextMenuPolicy() == Qt.ContextMenuPolicy.DefaultContextMenu and hasattr(child, "createStandardContextMenu"):
@@ -168,7 +177,12 @@ class Hosted(QObject):
     def contains(self, gpos: QPointF) -> bool:
         return self.visible() and any(r.contains(gpos.toPoint()) for r in self.input_rects())
 
+    def anim_key(self, now: float) -> int:
+        key = getattr(self.widget, "anim_key", None)
+        return key(now) if key is not None and self.visible() else -1
+
     def _changed(self, rects) -> None:
+        self._contents = None
         origin = self.stage.origin()
         region = QRegion()
         for r in rects:
@@ -182,7 +196,24 @@ class Hosted(QObject):
         target = QRectF(self.rect().translated(-self.stage.origin()))
         if not region.intersects(target.toAlignedRect()):
             return
-        self.scene.render(p, target, QRectF(self.rect()))
+        art = getattr(self.widget, "paint_art", None)
+        if art is None or not art(p, target.x(), target.y()):
+            self.scene.render(p, target, QRectF(self.rect()))  # the plain box: drawn whole, it doesn't move
+            return
+        ratio = device_ratio(p)
+        key = (ratio, self.rect().size().width(), self.rect().size().height())
+        if self._contents is None or self._contents[0] != key:
+            size = self.rect().size()
+            pix = QPixmap(max(1, round(size.width() * ratio)), max(1, round(size.height() * ratio)))
+            pix.setDevicePixelRatio(ratio)
+            pix.fill(Qt.GlobalColor.transparent)
+            q = QPainter(pix)
+            q.setRenderHint(QPainter.RenderHint.Antialiasing)
+            q.setRenderHint(QPainter.RenderHint.TextAntialiasing)
+            self.scene.render(q, QRectF(0, 0, size.width(), size.height()), QRectF(self.rect()))
+            q.end()
+            self._contents = (key, pix)
+        p.drawPixmap(target.topLeft(), self._contents[1])
 
     # -- input
 
@@ -354,6 +385,7 @@ class Stage(QObject):
         self._bubble_box = QRectF()
         self._head = QPoint()
         self._key = None
+        self._input_parts: tuple | None = None  # what the input region was last built from
         self._press: QPoint | None = None
         self._press_on: str | int | None = None
         self._grab = QPointF()
@@ -543,13 +575,12 @@ class Stage(QObject):
         self._frame = f
         origin = self._geo.topLeft()
 
-        penguin, outline = QRect(), []
+        penguin, sprite = QRect(), None
         if f.anim is not None:
             sprite = self.sprites.frame(f.anim, f.index, f.mirror)
             left = round(f.x) - origin.x() - sprite.anchor
             top = floor - sprite.height() - round(f.lift)
             penguin = QRect(left, top, sprite.width(), sprite.height())
-            outline = [r.translated(left, top) for r in sprite.outline]
             head = QPoint(round(f.x) - origin.x(), top + 4)
         else:
             head = QPoint(round(f.x) - origin.x(), floor)
@@ -563,27 +594,41 @@ class Stage(QObject):
             if self._clear_of is not None and self._clear_of.isVisible():
                 top = min(top, self._clear_of.geometry().top() - origin.y())
             y = max(top - size.height(), 4)
+            # On whole device pixels: off them, every pixmap of an animated bubble is resampled each frame,
+            # which is slow and blurs it by half a pixel.
+            k = self._device_scale()
+            x, y = round(x * k) / k, math.floor(y * k) / k  # down, never up: it stays clear of what is below it
             bubble_box = QRectF(x, y, size.width(), size.height())
-            if self.bubble.visible():
-                outline.append(bubble_box.toAlignedRect())
 
         z_phase = int(now * 1.2) % 3 if zs.isValid() else -1
         fade = round(self.bubble.opacity(now) * 20) if self.bubble.drawn() else -1
         menu_rects = self.menu.rects()
-        key = (f.anim, f.index, f.mirror, penguin.topLeft(), z_phase, bubble_box.topLeft(), self.bubble.hover, fade, self.menu.key(), self.bubble.anim_key(now))
+        # What looks different, each part on its own: only what changed is drawn again.
+        key = (
+            (f.anim, f.index, f.mirror, penguin.topLeft(), z_phase),
+            (bubble_box.topLeft(), self.bubble.hover, fade, self.bubble.anim_key(now)),
+            self.menu.key(),
+            self.hosted.anim_key(now) if self.hosted is not None else -1,
+        )
         if key != self._key:
-            dirty = QRegion(self._penguin.adjusted(-2, -2, 2, 2)).united(QRegion(penguin.adjusted(-2, -2, 2, 2)))
-            dirty = dirty.united(QRegion(self._z_rect(self._penguin))).united(QRegion(zs))
-            dirty = dirty.united(QRegion(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
-            dirty = dirty.united(QRegion(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
-            for r in self._menu_rects + menu_rects:
-                dirty = dirty.united(QRegion(r.adjusted(-2, -2, 2, 2)))
+            old = self._key or (None, None, None, None)
+            dirty = QRegion()
+            if key[0] != old[0]:
+                dirty = QRegion(self._penguin.adjusted(-2, -2, 2, 2)).united(QRegion(penguin.adjusted(-2, -2, 2, 2)))
+                dirty = dirty.united(QRegion(self._z_rect(self._penguin))).united(QRegion(zs))
+            if key[1] != old[1]:
+                dirty = dirty.united(QRegion(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
+                dirty = dirty.united(QRegion(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
+            if key[2] != old[2]:
+                for r in self._menu_rects + menu_rects:
+                    dirty = dirty.united(QRegion(r.adjusted(-2, -2, 2, 2)))
+            if key[3] != old[3] and self.hosted is not None and self.hosted.visible():  # its bubble moved on a frame
+                dirty = dirty.united(QRegion(self.hosted.rect().translated(-origin)))
             self._menu_rects = menu_rects
             self._key = key
             self._penguin, self._bubble_box = penguin, bubble_box
             self.surface.damage(dirty)
-        if zs.isValid():
-            outline.append(zs)
+        hosted_rects: tuple = ()
         if self.hosted is not None:
             # Read each frame rather than from Show and Hide events, so however
             # it opens or closes, the keyboard and input region follow.
@@ -592,7 +637,7 @@ class Stage(QObject):
                 self.hosted.was_visible = shown
                 self.hosted_shown(self.hosted, shown, shown and getattr(self.hosted.widget, "wants_keyboard", True))
             if shown:
-                outline += [r.translated(-origin) for r in self.hosted.input_rects()]
+                hosted_rects = tuple((r.x() - origin.x(), r.y() - origin.y(), r.width(), r.height()) for r in self.hosted.input_rects())
             # Selected text is the primary selection, as in any Linux app.
             selected = self.hosted.selected_text() if shown else ""
             if selected and selected != self._primary:
@@ -605,9 +650,24 @@ class Stage(QObject):
                 set_text_input = getattr(self.surface, "set_text_input", None)
                 if set_text_input is not None:
                     set_text_input(state)
-        if self.menu.is_open():  # like any popup menu: a click anywhere else closes it
-            outline = [QRect(0, 0, self._geo.width(), self._geo.height())]
-        self.surface.set_input(outline)
+        # Where it takes clicks: built again only when something in it changed, and as plain numbers.
+        bubble_rect = bubble_box.toAlignedRect() if self.bubble.visible() else None
+        parts = (
+            sprite.rects if sprite is not None else (),
+            (penguin.x(), penguin.y()),
+            (bubble_rect.x(), bubble_rect.y(), bubble_rect.width(), bubble_rect.height()) if bubble_rect is not None else None,
+            (zs.x(), zs.y(), zs.width(), zs.height()) if zs.isValid() else None,
+            hosted_rects,
+            (self._geo.width(), self._geo.height()) if self.menu.is_open() else None,
+        )
+        if parts != self._input_parts:
+            self._input_parts = parts
+            rects, (dx, dy), bubble_t, zs_t, hosted_t, menu = parts
+            if menu is not None:  # like any popup menu: a click anywhere else closes it
+                inputs = ((0, 0, *menu),)
+            else:
+                inputs = tuple((x + dx, y + dy, w, h) for x, y, w, h in rects) + tuple(r for r in (bubble_t, zs_t) if r) + hosted_t
+            self.surface.set_input(inputs)
         self.surface.follow_pointer(self._target_at)
         if head != self._head:
             self._head = head
@@ -617,6 +677,11 @@ class Stage(QObject):
         interval = 1000 // FPS if moving else 1000 // SLOW_FPS
         if self._timer.interval() != interval:
             self._timer.setInterval(interval)
+
+    def _device_scale(self) -> float:
+        scale = getattr(self.surface, "device_scale", None)
+        k = scale() if scale is not None else 0.0
+        return k if k > 0 else 1.0
 
     def _sleeping(self, f: Frame) -> bool:
         return f.anim == "sleep" and f.index >= 3
@@ -638,14 +703,14 @@ class Stage(QObject):
             p.drawPixmap(self._penguin.topLeft(), self.sprites.frame(f.anim, f.index, f.mirror).pixmap)
             if self._sleeping(f):
                 self._paint_zs(p, self._z_rect(self._penguin), int(now * 1.2) % 3)
-        if self.bubble.drawn() and not self._bubble_box.isNull():
+        if self.bubble.drawn() and not self._bubble_box.isNull() and region.intersects(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)):
             p.save()
             p.translate(self._bubble_box.topLeft())
             self.bubble.paint(p, self._head.x() - self._bubble_box.x(), now)
             p.restore()
         if self.hosted is not None:
             self.hosted.paint(p, region)
-        if self.menu.is_open():
+        if self.menu.is_open() and any(region.intersects(r.adjusted(-3, -3, 3, 3)) for r in self._menu_rects):
             self.menu.paint(p)
 
     def _paint_zs(self, p: QPainter, rect: QRect, phase: int) -> None:

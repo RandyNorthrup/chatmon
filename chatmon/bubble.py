@@ -101,13 +101,13 @@ class SpeechBubble:
         self._content = QRectF()
         self.style = styles.get(None)
         self.animate = True
-        self.art = bubbleart.art(self.style.name)
+        self.art = bubbleart.art(self.style.name, "message")
         self._words: tuple[tuple, QPixmap] | None = None  # the title, text and buttons, drawn once
 
     def set_style(self, style: styles.Style, animate: bool) -> None:
         """Draw in `style` from the next message on (and the one showing, if any)."""
         self.style, self.animate = style, animate
-        self.art = bubbleart.art(style.name)
+        self.art = bubbleart.art(style.name, "message")
         if self._visible and self._closing_at is None:
             self._layout()
 
@@ -233,7 +233,7 @@ class SpeechBubble:
         """The title, ✕, text and buttons on a see-through pixmap the bubble's size. An animated bubble is
         drawn thirty times a second and laying out its text each time cost as much as some styles' art,
         so they are drawn once per message, button hovered and colours."""
-        ratio = max(1.0, p.device().devicePixelRatioF()) if p.device() else 1.0
+        ratio = bubbleart.device_ratio(p)
         key = (ratio, self.hover, title_c.rgba(), body_c.rgba(), self.style.name)
         if self._words is None or self._words[0] != key:
             pix = QPixmap(max(1, round(self.size.width() * ratio)), max(1, round(self.size.height() * ratio)))
@@ -304,6 +304,7 @@ class AskBox(QWidget):
         self.art: bubbleart.BubbleArt | None = None
         self._margins = (16, 12, 16, 14 + TAIL)
         self._opened_at = time.monotonic()
+        self.stage_draws_art = False  # on the overlay: the stage draws the bubble, this only what's in it
         self._frames = QTimer(self)  # redraws an animated bubble while it's open
         self._frames.setInterval(1000 // ANIM_FPS)
         self._frames.timeout.connect(self.update)
@@ -339,7 +340,7 @@ class AskBox(QWidget):
 
     def set_style(self, style: styles.Style, animate: bool) -> None:
         self.style, self.animate = style, animate
-        self.art = bubbleart.art(style.name)
+        self.art = bubbleart.art(style.name, "ask")
         if self.art:
             left, top, right, bottom = self.art.margins()
             self._margins = (round(left), round(top), round(right), round(bottom))
@@ -354,8 +355,24 @@ class AskBox(QWidget):
     def _content_width(self) -> int:
         return self.WIDTH - self._margins[0] - self._margins[2]
 
-    def _run_frames(self) -> None:
+    def anim_key(self, now: float) -> int:
+        """Changes as often as its animated bubble needs drawing again; -1 when it doesn't."""
         if self.isVisible() and self.animate and self.art is not None:
+            return int((now - self._opened_at) * ANIM_FPS)
+        return -1
+
+    def paint_art(self, p: QPainter, x: float, y: float) -> bool:
+        """Draw the painted bubble with its top-left at (x, y); False for the plain one, which the box
+        draws itself."""
+        if not self.art:
+            return False
+        left, top, right, bottom = self._margins
+        content = QSizeF(self.width() - left - right, self.height() - top - bottom)
+        self.art.paint(p, x, y, content, self._tail_x, time.monotonic() - self._opened_at, self.animate)
+        return True
+
+    def _run_frames(self) -> None:
+        if self.isVisible() and self.animate and self.art is not None and not self.stage_draws_art:
             self._frames.start()
         else:
             self._frames.stop()
@@ -478,9 +495,8 @@ class AskBox(QWidget):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
         if self.art:
-            left, top, right, bottom = self._margins
-            content = QSizeF(self.width() - left - right, self.height() - top - bottom)
-            self.art.paint(p, 0, 0, content, self._tail_x, time.monotonic() - self._opened_at, self.animate)
+            if not self.stage_draws_art:
+                self.paint_art(p, 0, 0)
             return
         fill, _ = colours()
         path = bubble_path(QRectF(self.rect()).adjusted(1, 1, -1, -1 - TAIL), self._tail_x)

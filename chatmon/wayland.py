@@ -40,10 +40,23 @@ def _pad(n: int) -> int:
     return (n + 3) & ~3
 
 
+_FIXED: dict[str, struct.Struct | None] = {}  # a signature of fixed-size arguments only: its whole request, packed at once
+
+
+def _fixed(sig: str) -> struct.Struct | None:
+    if sig not in _FIXED:
+        _FIXED[sig] = struct.Struct("<II" + "".join("i" if c in "if" else "I" for c in sig)) if all(c in "iunof" for c in sig) else None
+    return _FIXED[sig]
+
+
 def encode(object_id: int, opcode: int, sig: str, args) -> tuple[bytes, list[int]]:
     """One request: the bytes, and the file descriptors that go with them."""
     if len(sig) != len(args):
         raise ValueError(f"signature {sig!r} wants {len(sig)} arguments, got {len(args)}")
+    fixed = _fixed(sig)
+    if fixed is not None:  # most requests: a few numbers and ids, every frame
+        values = [round(v * 256) if c == "f" else (v or 0) if c in "uno" else v for c, v in zip(sig, args, strict=True)]
+        return fixed.pack(object_id, (fixed.size << 16) | opcode, *values), []
     body = bytearray()
     fds: list[int] = []
     for code, value in zip(sig, args, strict=True):
@@ -173,6 +186,18 @@ class Connection:
         data, fds = encode(oid, opcode, sig, args)
         self._out += data
         self._out_fds += [os.dup(fd) for fd in fds]
+
+    def requests(self, oid: int, opcode: int, sig: str, rows) -> None:
+        """The same request with each row of arguments: packed in one go (fixed-size arguments only)."""
+        fixed = _fixed(sig)
+        if fixed is None or "f" in sig:
+            for args in rows:
+                self.request(oid, opcode, sig, *args)
+            return
+        if self.closed:
+            return
+        head = (oid, (fixed.size << 16) | opcode)
+        self._out += b"".join(fixed.pack(*head, *args) for args in rows)
 
     def flush(self) -> bool:
         """Send what's queued without blocking; True once it's all gone."""

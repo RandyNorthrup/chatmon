@@ -119,7 +119,7 @@ def test_typing_and_clicking_reach_the_box(stage):
     s.key(key("\r", Qt.Key.Key_Return), True, False)
     assert sent == ["hi there"]
     # the box takes clicks on itself only, not on its see-through margin
-    rects = [r.translated(s.origin()) for r in s.surface.input]
+    rects = [QRect(*r).translated(s.origin()) for r in s.surface.input]
     assert any(r.contains(box.geometry().center()) for r in rects)
     assert not any(r.contains(box.geometry().bottomLeft() + QPoint(2, -2)) for r in rects)
     # its close button

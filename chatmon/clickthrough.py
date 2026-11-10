@@ -13,10 +13,15 @@ from __future__ import annotations
 import ctypes
 import ctypes.util
 
-from PyQt6.QtCore import QRect, Qt
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor, QGuiApplication, QRegion
 from PyQt6.QtWidgets import QWidget
 
+
+
+def _key(rects) -> tuple:
+    """Rectangles as (x, y, w, h) tuples: the stage sends them so; QRects are taken too."""
+    return tuple(rects) if not rects or isinstance(rects[0], tuple) else tuple((r.x(), r.y(), r.width(), r.height()) for r in rects)
 
 class _XRectangle(ctypes.Structure):
     _fields_ = [("x", ctypes.c_short), ("y", ctypes.c_short), ("width", ctypes.c_ushort), ("height", ctypes.c_ushort)]
@@ -47,8 +52,8 @@ class XShapeInput:
         self._last: tuple | None = None
         self.update([])
 
-    def update(self, rects: list[QRect]) -> None:
-        key = tuple((r.x(), r.y(), r.width(), r.height()) for r in rects)
+    def update(self, rects) -> None:
+        key = _key(rects)
         if key == self._last:
             return
         self._last = key
@@ -72,7 +77,7 @@ class PointerToggle:
         self._widget = widget
         self._accepting: bool | None = None
 
-    def update(self, rects: list[QRect]) -> None:
+    def update(self, rects) -> None:
         pass
 
     def follow_pointer(self, hit) -> None:
@@ -96,14 +101,14 @@ class MaskInput:
         self._last: tuple | None = None
         self.update([])
 
-    def update(self, rects: list[QRect]) -> None:
-        key = tuple((r.x(), r.y(), r.width(), r.height()) for r in rects)
+    def update(self, rects) -> None:
+        key = _key(rects)
         if key == self._last:
             return
         self._last = key
         region = QRegion()
-        for r in rects:
-            region = region.united(QRegion(r))
+        for r in key:
+            region = region.united(QRegion(*r))
         # An empty mask means "no mask" to Qt; keep one invisible pixel instead.
         self._widget.setMask(region if not region.isEmpty() else QRegion(0, 0, 1, 1))
 

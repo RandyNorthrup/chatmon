@@ -30,6 +30,10 @@ class SpriteFrame:
     anchor: int  # x of the penguin's centre line within the frame (logical)
     outline: list[QRect]  # the opaque area as a few rectangles, for click-through (logical)
     scale: float = 1.0  # device pixels per logical pixel
+    rects: tuple[tuple[int, int, int, int], ...] = ()  # the outline as plain (x, y, w, h): cheap to move every frame
+
+    def __post_init__(self) -> None:
+        self.rects = tuple((r.x(), r.y(), r.width(), r.height()) for r in self.outline)
 
     def width(self) -> int:
         return round(self.image.width() / self.scale)

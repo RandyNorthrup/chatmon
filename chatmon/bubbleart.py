@@ -36,6 +36,14 @@ def _h(*keys: int) -> float:
     return x / 0x100000000
 
 
+def device_ratio(p: QPainter) -> float:
+    """Device pixels per display pixel where `p` draws: what pixmaps drawn with it should be made at.
+    Its transform says, not its device: the ask box is painted through a scene onto the 2x overlay, by a
+    painter scaled by 2, on a widget whose own ratio is 1."""
+    t = p.combinedTransform()
+    return max(1.0, math.hypot(t.m11(), t.m12()))
+
+
 def _spans(a: float, b: float, lit: list[tuple[float, float]] | None) -> list[tuple[float, float]]:
     """The parts of the border from `a` to `b` (distances along it) that `lit` covers; all of it if `lit` is None."""
     if lit is None:
@@ -181,6 +189,7 @@ class Scroll(Layer):
         self._band: QPixmap | None = None
         self._corners: dict[tuple, list] = {}
         self._layouts: dict[tuple, tuple] = {}  # per border and band (a Runner lays two bands of its own)
+        self._together: QPixmap | None = None  # several layers' bands added up (`paint_together`)
         self._corner_layers: dict[tuple[int, int], QPixmap] = {}
 
     def strip(self) -> bool:
@@ -257,6 +266,41 @@ class Scroll(Layer):
         q.end()
         return band
 
+    @staticmethod
+    def paint_together(layers: list[Scroll], p: QPainter, rim: Rim, t: float, art: BubbleArt) -> None:
+        """Several plain Scroll layers laid round the border as one band: each one's band, at its own
+        strength and its own place across the border, added into one, which is laid once. Laying is the
+        same for every row of a band, so this is what laying them one by one draws, at half the cost.
+        Layers whose bands don't line up on whole device pixels are laid one by one."""
+        ratio = art.ratio
+        bands = []
+        for layer in layers:
+            _, tile = layer.fitted(rim)
+            band = QPixmap(layer.band(rim, layer.copies(t, tile), ratio))  # each layer reuses its own pixmap
+            bands.append((layer, band, -band.height() / ratio / 2 - layer.offset))  # its top, from the border line
+        lo = min(top for _, _, top in bands)
+        rows = [(top - lo) * ratio for _, _, top in bands]
+        if len(layers) < 2 or len({band.width() for _, band, _ in bands}) > 1 or any(abs(r - round(r)) > 0.01 for r in rows):
+            for layer in layers:
+                layer.paint(p, rim, t, art)
+            return
+        height = max(round(r) + band.height() for r, (_, band, _) in zip(rows, bands, strict=True))
+        first = layers[0]
+        if first._together is None or (first._together.width(), first._together.height()) != (bands[0][1].width(), height):
+            first._together = QPixmap(bands[0][1].width(), height)
+        together = first._together
+        together.fill(Qt.GlobalColor.transparent)
+        q = QPainter(together)
+        q.setCompositionMode(QPainter.CompositionMode.CompositionMode_Plus)
+        for (layer, band, _), row in zip(bands, rows, strict=True):
+            q.setOpacity(layer.alpha(t))
+            q.drawPixmap(0, round(row), band)
+        q.end()
+        p.save()
+        p.setCompositionMode(QPainter.CompositionMode.CompositionMode_Plus)
+        first.lay(p, rim, together, ratio, offset=-lo - height / ratio / 2)
+        p.restore()
+
     def paint(self, p: QPainter, rim: Rim, t: float, art: BubbleArt) -> None:
         _, tile = self.fitted(rim)
         band = self.band(rim, self.copies(t, tile), art.ratio)
@@ -300,25 +344,27 @@ class Scroll(Layer):
             self._corners[key] = out
         return self._corners[key]
 
-    def layout(self, rim: Rim, band: QPixmap, ratio: float) -> tuple:
+    def layout(self, rim: Rim, band: QPixmap, ratio: float, offset: float | None = None) -> tuple:
         """How `lay` puts this band round this border, worked out once per size: (band height in display px,
         its top, the straight edges, and the four corners). A corner is its slices as fragments of the band
         with the stretch of border each covers, where the small layer it is drawn on goes, and its wedges on
-        a pixmap that size, to cut the layer to."""
-        key = (rim.key, band.width(), band.height(), ratio, self.offset)  # type: ignore[attr-defined]
+        a pixmap that size, to cut the layer to. `offset`: where the band's middle is from the border line,
+        outward (this layer's own, unless the band is several layers')."""
+        offset = self.offset if offset is None else offset
+        key = (rim.key, band.width(), band.height(), ratio, offset)  # type: ignore[attr-defined]
         if key not in self._layouts:
             if len(self._layouts) > 6:
                 self._layouts.clear()
                 self._corner_layers.clear()
             h = band.height() / ratio
-            top, bottom = -h / 2 - self.offset, h / 2 - self.offset
+            top, bottom = -h / 2 - offset, h / 2 - offset
             m = self.MARGIN
             edges = [(px, py, ang, start, length) for (kind, length, px, py, ang), start in zip(rim.parts, rim.starts, strict=True) if kind == "line"]
             arcs = [(start, start + length) for (kind, length, *_), start in zip(rim.parts, rim.starts, strict=True) if kind == "arc"]
             groups: list[tuple[list, QPainterPath]] = [([], QPainterPath()) for _ in arcs]
             for wedge, x, y, turn, half, at in self.corners(rim, top, bottom):
                 rad = math.radians(turn)
-                middle = QPointF(x + math.sin(rad) * self.offset, y - math.cos(rad) * self.offset)  # (0, -offset), turned
+                middle = QPointF(x + math.sin(rad) * offset, y - math.cos(rad) * offset)  # (0, -offset), turned
                 source = QRectF((m + at - half) * ratio, 0, 2 * half * ratio, band.height())
                 slices, outline = groups[next(i for i, (a, b) in enumerate(arcs) if a <= at <= b)]
                 slices.append((QPainter.PixmapFragment.create(middle, source, 1 / ratio, 1 / ratio, turn, 1.0), at - half, at + half))
@@ -336,18 +382,19 @@ class Scroll(Layer):
                 q.translate(-origin.x(), -origin.y())
                 q.fillPath(outline, QColor(0, 0, 0))
                 q.end()
-                corners.append((slices, origin, size, mask))
+                reach = (min(a for _, a, _ in slices), max(b for _, _, b in slices)) if slices else (0.0, 0.0)
+                corners.append(([f for f, _, _ in slices], reach, origin, size, mask))
             self._layouts[key] = (h, top, edges, corners)
         return self._layouts[key]
 
-    def lay(self, p: QPainter, rim: Rim, band: QPixmap, ratio: float, lit: list[tuple[float, float]] | None = None) -> None:
+    def lay(self, p: QPainter, rim: Rim, band: QPixmap, ratio: float, lit: list[tuple[float, float]] | None = None, offset: float | None = None) -> None:
         """The unrolled band laid round the border: straight along the edges, and through each corner in
         thin slices, each turned to the border's direction there. The slices are drawn in one go on a layer
         of their own, where each one replaces what it overlaps rather than adding to it, and the layer is cut
         to the corners' wedges: so they neither overlap nor leave gaps. (One rotated draw at a time, clipped
         to its wedge, cost Qt more to set up than to draw, a hundred times a frame.) With `lit`, only those
         stretches of the border are laid."""
-        h, top, edges, corners = self.layout(rim, band, ratio)
+        h, top, edges, corners = self.layout(rim, band, ratio, offset)
         m = self.MARGIN
         for px, py, ang, start, length in edges:
             for a, b in _spans(start, start + length, lit):
@@ -356,9 +403,8 @@ class Scroll(Layer):
                 p.rotate(ang)
                 p.drawPixmap(QRectF(a - start, top, b - a, h), band, QRectF((m + a) * ratio, 0, (b - a) * ratio, band.height()))
                 p.restore()
-        for slices, origin, size, mask in corners:
-            fragments = [f for f, a, b in slices if _spans(a, b, lit)]
-            if not fragments:
+        for fragments, (a, b), origin, size, mask in corners:
+            if not fragments or not _spans(a, b, lit):  # a corner is drawn whole: what isn't lit is clear
                 continue
             layer = self._corner_layers.get(size)
             if layer is None:
@@ -408,6 +454,7 @@ class Runner(Scroll):
         self.colour = QColor(entry.get("colour", "#ffffff"))
         self.plus = bool(entry.get("plus", True))
         self._halo: tuple[tuple, QPixmap] | None = None  # (size, the halo as built): copied, never rebuilt
+        self._fades: dict[tuple, QPixmap] = {}  # a pulse's fade, per band height and length (`fade`)
         self._halo_band: QPixmap | None = None
 
     def pulses(self, rim: Rim, t: float) -> list[tuple[float, float, float]]:
@@ -427,22 +474,41 @@ class Runner(Scroll):
                 out.append((back, front, min(back, front)))
         return out
 
-    def envelope(self, band: QPixmap, pulses: list[tuple[float, float, float]], tail: float, ratio: float) -> None:
-        """Fade `band` to how bright the pulses are along it: its alpha times each pulse's tail, where the
-        pulse is. (Nothing else of the band is drawn, so the rest is left as it is.) The pulses never
-        overlap: each is at most the border's length over their number."""
-        share = tail / (tail + self.lead)
-        q = QPainter(band)
-        q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
-        q.scale(ratio, 1)
-        for back, front, start in pulses:
-            grad = QLinearGradient(back, 0, front, 0)
+    def fade(self, tail: float, height: int, ratio: float) -> QPixmap:
+        """One pulse's brightness along the band as alpha, a band `height` device px high: from its far end
+        up to its head and out at its front, with a clear pixel past each end. Drawn once per size."""
+        key = (round(tail, 3), height, ratio)
+        if key not in self._fades:
+            if len(self._fades) > 6:
+                self._fades.clear()
+            length = tail + self.lead + 2
+            fade = QPixmap(max(1, math.ceil(length * ratio)), height)
+            fade.fill(Qt.GlobalColor.transparent)
+            way = 1 if self.laps > 0 else -1
+            back, front = (1.0, 1.0 + tail + self.lead) if way > 0 else (1.0 + tail + self.lead, 1.0)
+            share = tail / (tail + self.lead)
+            grad = QLinearGradient(back * ratio, 0, front * ratio, 0)
             for at, level in self.TAIL:
                 grad.setColorAt(at * share, QColor(0, 0, 0, round(255 * level)))
             grad.setColorAt(1.0, QColor(0, 0, 0, 0))
-            # A px past each end, where the gradient is clear: what the bands copied in whole device
-            # pixels just past the pulse goes too. (Pulses are 2 px apart at least.)
-            q.fillRect(QRectF(start - 1, 0, tail + self.lead + 2, band.height()), grad)
+            q = QPainter(fade)
+            q.fillRect(QRectF(0, 0, fade.width(), height), grad)
+            q.end()
+            self._fades[key] = fade
+        return self._fades[key]
+
+    def envelope(self, band: QPixmap, pulses: list[tuple[float, float, float]], tail: float, ratio: float) -> None:
+        """Fade `band` to how bright the pulses are along it: its alpha times each pulse's fade, where the
+        pulse is. (Nothing else of the band is drawn, so the rest is left as it is.) The pulses never
+        overlap: each is at most the border's length over their number. The fade reaches a pixel past
+        each end, clear there, so what the bands copied in whole device pixels just past a pulse goes
+        too; it is stamped on whole device pixels, a shift of half of one at most, while a pulse moves
+        about seven a frame."""
+        fade = self.fade(tail, band.height(), ratio)
+        q = QPainter(band)
+        q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
+        for _, _, start in pulses:
+            q.drawPixmap(round((start - 1) * ratio), 0, fade)
         q.end()
 
     def halo_band(self, rim: Rim, ratio: float, lit: list[tuple[float, float]]) -> QPixmap:
@@ -1069,7 +1135,7 @@ class BubbleArt:
         (display px from the frame's left edge, clamped to where the notch can go)."""
         lo, hi = self.tail_range(text.width())
         tip_x = round(min(max(tip_x, lo), hi))
-        self.ratio = ratio = max(1.0, p.device().devicePixelRatioF()) if p.device() else 1.0
+        self.ratio = ratio = device_ratio(p)
         tw, th = round(text.width()), round(text.height())
         width, height = self._size(tw, th)
         still = self._get(self.still, "still", tw, th, tip_x, ratio)
@@ -1095,8 +1161,16 @@ class BubbleArt:
             self._overlay.fill(Qt.GlobalColor.transparent)
             q = QPainter(self._overlay)
             q.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
-            for layer in strips:
-                layer.paint(q, rim, t, self)
+            i = 0
+            while i < len(strips):
+                run = [strips[i]]
+                while type(run[0]) is Scroll and i + len(run) < len(strips) and type(strips[i + len(run)]) is Scroll:
+                    run.append(strips[i + len(run)])
+                if len(run) > 1:
+                    Scroll.paint_together(run, q, rim, t, self)
+                else:
+                    run[0].paint(q, rim, t, self)
+                i += len(run)
             q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
             q.drawPixmap(QPointF(0, 0), self.notch_mask(rim, width, height))
             q.end()
@@ -1129,15 +1203,18 @@ def _manifest() -> dict:
         return {}
 
 
-_loaded: dict[str, BubbleArt | None] = {}
+_loaded: dict[tuple[str, str], BubbleArt | None] = {}
 
 
-def art(name: str) -> BubbleArt | None:
-    """The style's painted bubble, or None if it has none (or its files are missing)."""
-    if name not in _loaded:
+def art(name: str, user: str = "") -> BubbleArt | None:
+    """The style's painted bubble, or None if it has none (or its files are missing). Each `user` (the
+    message bubble, the ask box) gets one of its own: it keeps what it drew last for the size it is, and
+    two bubbles of different sizes sharing one would draw everything afresh every frame."""
+    key = (name, user)
+    if key not in _loaded:
         entry = _manifest().get(name)
         try:
-            _loaded[name] = BubbleArt(name, entry) if entry and "rim" in entry else None
+            _loaded[key] = BubbleArt(name, entry) if entry and "rim" in entry else None
         except (FileNotFoundError, KeyError, TypeError, ValueError):
-            _loaded[name] = None
-    return _loaded[name]
+            _loaded[key] = None
+    return _loaded[key]
