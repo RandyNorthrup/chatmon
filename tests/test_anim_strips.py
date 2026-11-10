@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from PyQt6.QtGui import QImage
 
-ANIM = Path(__file__).resolve().parent.parent / "penguin_companion" / "anim"
+ANIM = Path(__file__).resolve().parent.parent / "chatmon" / "anim"
 MANIFEST = json.loads((ANIM / "manifest.json").read_text(encoding="utf-8"))
 # Front views keep the white penguin mark on the belly in every frame: it should stay put.
 FRONT = ["idle", "talk", "wave", "think", "hop", "sleep", "alert"]

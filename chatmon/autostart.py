@@ -13,17 +13,20 @@ from pathlib import Path
 from . import paths
 
 _RUN_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
-_NAME = "PenguinCompanion"
-_LABEL = "io.github.penguin-companion"
+_NAME = "Chatmon"
+_LABEL = "io.github.chatmon"
+# What it was called before the rename to Chatmon.
+_LEGACY_NAME = "PenguinCompanion"
+_LEGACY_LABEL = "io.github.penguin-companion"
 
 
-def _desktop_file() -> Path:
+def _desktop_file(app: str = paths.APP) -> Path:
     base = os.environ.get("XDG_CONFIG_HOME") or str(Path.home() / ".config")
-    return Path(base) / "autostart" / f"{paths.APP}.desktop"
+    return Path(base) / "autostart" / f"{app}.desktop"
 
 
-def _launch_agent() -> Path:
-    return Path.home() / "Library" / "LaunchAgents" / f"{_LABEL}.plist"
+def _launch_agent(label: str = _LABEL) -> Path:
+    return Path.home() / "Library" / "LaunchAgents" / f"{label}.plist"
 
 
 def where() -> str:
@@ -43,6 +46,26 @@ def enabled() -> bool:
         except OSError:
             return False
     return (_launch_agent() if sys.platform == "darwin" else _desktop_file()).exists()
+
+
+def migrate() -> bool:
+    """If it started at login under the old name, start Chatmon instead. Returns whether it did that."""
+    if sys.platform == "win32":
+        import winreg
+
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, _RUN_KEY, 0, winreg.KEY_QUERY_VALUE | winreg.KEY_SET_VALUE) as key:
+                winreg.QueryValueEx(key, _LEGACY_NAME)
+                winreg.DeleteValue(key, _LEGACY_NAME)
+        except OSError:
+            return False
+    else:
+        old = _launch_agent(_LEGACY_LABEL) if sys.platform == "darwin" else _desktop_file(paths.LEGACY_APP)
+        if not old.exists():
+            return False
+        old.unlink()
+    set_enabled(True)
+    return True
 
 
 def set_enabled(on: bool) -> None:
@@ -70,8 +93,8 @@ def set_enabled(on: bool) -> None:
     path.write_text(
         "[Desktop Entry]\n"
         "Type=Application\n"
-        "Name=Penguin companion\n"
-        "Comment=An electric penguin that lives on your desktop and helps out\n"
+        "Name=Chatmon\n"
+        "Comment=A little companion that lives on your desktop and helps out\n"
         f"Exec={shlex.join(command)}\n"
         "X-GNOME-Autostart-enabled=true\n",
         encoding="utf-8",

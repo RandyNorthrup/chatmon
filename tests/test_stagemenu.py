@@ -10,7 +10,7 @@ from PyQt6.QtCore import QPointF, QRect  # noqa: E402
 from PyQt6.QtGui import QImage, QPainter  # noqa: E402
 from PyQt6.QtWidgets import QMenu  # noqa: E402
 
-from penguin_companion.stagemenu import StageMenu  # noqa: E402
+from chatmon.stagemenu import StageMenu  # noqa: E402
 
 
 @pytest.fixture

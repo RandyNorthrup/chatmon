@@ -1,7 +1,7 @@
 import pytest
 
-from penguin_companion import brains
-from penguin_companion.brains import Brain, BrainError
+from chatmon import brains
+from chatmon.brains import Brain, BrainError
 
 
 def test_presets_and_overrides(monkeypatch):

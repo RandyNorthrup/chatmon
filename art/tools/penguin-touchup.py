@@ -1,7 +1,7 @@
 """Apply the pixel fixes to the animation strips, in place.
 
 Usage: python penguin-touchup.py [anim-dir] [--force]
-  anim-dir  the strips and manifest.json (default: ../../penguin_companion/anim)
+  anim-dir  the strips and manifest.json (default: ../../chatmon/anim)
   --force   run again on strips the manifest marks as touched up
 
 Run it after penguin-slice.py, or on strips that predate these fixes. Each
@@ -60,7 +60,7 @@ def touch_up(name, strip, entry):
 def main(argv):
     force = "--force" in argv
     args = [a for a in argv if not a.startswith("--")]
-    anim = args[0] if args else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "penguin_companion", "anim")
+    anim = args[0] if args else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "chatmon", "anim")
     path = os.path.join(anim, "manifest.json")
     with open(path, encoding="utf-8") as fh:
         manifest = json.load(fh)

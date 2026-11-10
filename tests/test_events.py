@@ -1,6 +1,6 @@
 import json
 
-from penguin_companion import cli, events
+from chatmon import cli, events
 
 
 def test_aliases():

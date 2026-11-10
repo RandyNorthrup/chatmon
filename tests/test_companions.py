@@ -9,15 +9,15 @@ from pathlib import Path
 import pytest
 from PyQt6.QtGui import QImage
 
-from penguin_companion import companions, paths, styles
-from penguin_companion.settings import DEFAULTS, load_config
-from penguin_companion.sprites import SIDE_VIEWS, Sprites
+from chatmon import companions, paths, styles
+from chatmon.settings import DEFAULTS, load_config
+from chatmon.sprites import SIDE_VIEWS, Sprites
 
 ROOT = Path(__file__).resolve().parent.parent
 PENGUIN = companions.COMPANIONS["penguin"]
 CREATURES = [c for c in companions.COMPANIONS.values() if c.id != "penguin"]
 PENGUIN_MANIFEST = json.loads((PENGUIN.anim_dir() / "manifest.json").read_text(encoding="utf-8"))
-# The penguin's art as approved (sha1 of every file in penguin_companion/anim): adding companions must not touch it.
+# The penguin's art as approved (sha1 of every file in chatmon/anim): adding companions must not touch it.
 PENGUIN_SHA1 = {
     "alert.png": "f73ec04b54d74f978bc5d0de32ad1f5c61e09779",
     "beam.png": "5ce9870f66a9f7cbadd850a05d716355a34a66d4",
@@ -163,5 +163,5 @@ def test_settings_default_to_the_penguin_and_a_matching_bubble(tmp_path):
 
 
 def test_every_companions_strips_are_packaged():
-    data = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["setuptools"]["package-data"]["penguin_companion"]
+    data = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["setuptools"]["package-data"]["chatmon"]
     assert {"anim/*.png", "anim/manifest.json", "anim/*/*.png", "anim/*/manifest.json"} <= set(data)

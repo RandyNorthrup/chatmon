@@ -15,7 +15,7 @@ import spritefix
 
 HERE = Path(__file__).resolve().parent
 SPEC_PATH = HERE / "creatures.json"
-ANIM_ROOT = HERE.parent.parent / "penguin_companion" / "anim"
+ANIM_ROOT = HERE.parent.parent / "chatmon" / "anim"
 SOLID = 200  # alpha above which a pixel is part of the drawing itself, not of a glow or an edge
 SHOWN = 32  # alpha above which a pixel shows at all (the limit the QC counts from)
 SPECK = 12  # strip px: a loose piece smaller than this is a speck

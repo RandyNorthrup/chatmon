@@ -7,7 +7,7 @@ desktops). Made with the Codex CLI's built-in image generation (the owner's Chat
 ## How it works
 
 - **The bubble never moves.** Each style is one painted bubble with its notch as part of the same piece
-  (`../../penguin_companion/bubbles/<style>-still.png`). `../../penguin_companion/bubbleart.py` draws it round
+  (`../../chatmon/bubbles/<style>-still.png`). `../../chatmon/bubbleart.py` draws it round
   any text as a 9-slice: the corners keep their shape, the edges stretch, and the bottom edge is split once more
   so the notch slides to point at the penguin. It is put together once per size and kept.
 - **The effect is separate pieces, moved by code.** Generated art supplies only stills: strips that tile end to
@@ -16,7 +16,7 @@ desktops). Made with the Codex CLI's built-in image generation (the owner's Chat
 - **Nothing covers the text.** Effects are drawn on and just outside the border line; the text area is never
   drawn over (measured: `inside` is 0 in the table below).
 - **Animation off** (`bubble_effects = false`, or "Animate bubbles" in the menu) draws the still alone.
-- `../../penguin_companion/styles.py` holds each style's text, button and entry colours, matched to its mock-up.
+- `../../chatmon/styles.py` holds each style's text, button and entry colours, matched to its mock-up.
 
 ### The moving parts
 
@@ -143,7 +143,7 @@ leaf        2.0   726x370      0.08     0.12    0.14     0.26  0%
 
 | Tool | What it does |
 | --- | --- |
-| `../tools/bubble-cut.py RAW_DIR` | Builds everything in `penguin_companion/bubbles/` from the picked originals: the still (median of the sheet's cells, cut on even pixels, straight edges evened), the rim's measured line, the tileable strips (ends folded over each other along a wandering edge, then proved by the wrap-column check), the baked flame loop and caterpillar gait, the sprite rows, and `manifest.json`. Stops on an original without real transparency, a strip whose join shows, or a baked loop that does not close. |
+| `../tools/bubble-cut.py RAW_DIR` | Builds everything in `chatmon/bubbles/` from the picked originals: the still (median of the sheet's cells, cut on even pixels, straight edges evened), the rim's measured line, the tileable strips (ends folded over each other along a wandering edge, then proved by the wrap-column check), the baked flame loop and caterpillar gait, the sprite rows, and `manifest.json`. Stops on an original without real transparency, a strip whose join shows, or a baked loop that does not close. |
 | `../tools/bubble-preview.py OUT_DIR` | Renders every style at real size and real speed with real text and buttons over a dark and a light desktop (`.webp`, `.gif`), a contact sheet and the stills. |
 | `../tools/loop-qc.py OUT_DIR` | The measured loop check above; also writes a strip of 12 moments and a seam sheet (last three and first three frames) per style. |
 

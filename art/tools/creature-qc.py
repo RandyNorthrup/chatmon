@@ -2,7 +2,7 @@
 
 Usage: python creature-qc.py [<creature> ...] [--anim-dir <dir>] [--size 120]
   creature    which to check (default: every creature in creatures.json)
-  --anim-dir  where the strips are (default: ../../penguin_companion/anim)
+  --anim-dir  where the strips are (default: ../../chatmon/anim)
   --size      the on-screen height the limits are judged at (the app's default, 120)
 Prints one row per strip and exits 1 if any check fails. Needs Pillow and numpy.
 

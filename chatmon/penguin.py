@@ -64,7 +64,7 @@ class StageWindow(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setAttribute(Qt.WidgetAttribute.WA_MacAlwaysShowToolWindow)  # macOS hides tool windows otherwise
         self.setMouseTracking(True)
-        self.setWindowTitle("Penguin companion")
+        self.setWindowTitle("Chatmon")
         self.winId()  # the native window, so clicks can pass through before it first shows
         self.input = clickthrough.for_window(self)
         self._closing = False

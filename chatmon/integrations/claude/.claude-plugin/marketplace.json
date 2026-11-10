@@ -1,0 +1,14 @@
+{
+  "name": "chatmon",
+  "owner": {
+    "name": "Randy Northrup"
+  },
+  "description": "Chatmon's plugins: little desktop companions that react to your coding agents.",
+  "plugins": [
+    {
+      "name": "chatmon",
+      "source": "./chatmon",
+      "description": "Lets your chatmon react while Claude Code works: it thinks while Claude works, waves when Claude needs you, and hops when it's done."
+    }
+  ]
+}

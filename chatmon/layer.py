@@ -37,14 +37,14 @@ from PyQt6.QtGui import QGuiApplication, QImage, QPainter, QRegion, QScreen
 from . import wayland, xkb
 from .wayland import DISPLAY_ID, Connection, decode
 
-STAGE_ENV = "PENGUIN_COMPANION_STAGE"  # "window" keeps the X window on Wayland too
-DEBUG = bool(os.environ.get("PENGUIN_COMPANION_DEBUG"))  # log the overlay's focus changes to stderr
+STAGE_ENV = "CHATMON_STAGE"  # "window" keeps the X window on Wayland too
+DEBUG = bool(os.environ.get("CHATMON_DEBUG"))  # log the overlay's focus changes to stderr
 
 
 def _debug(message: str) -> None:
     if DEBUG:
-        print(f"penguin-companion [overlay] {message}", file=sys.stderr, flush=True)
-NAMESPACE = "penguin-companion"
+        print(f"chatmon [overlay] {message}", file=sys.stderr, flush=True)
+NAMESPACE = "chatmon"  # the layer's name, for compositor rules
 
 # Opcodes (requests unless they say event), from the protocol XML files.
 REGISTRY_BIND = 0
@@ -153,7 +153,7 @@ class Buffer:
         self.width, self.height = width, height
         stride = width * 4
         size = stride * height
-        fd = os.memfd_create("penguin-companion", os.MFD_CLOEXEC)
+        fd = os.memfd_create("chatmon", os.MFD_CLOEXEC)
         try:
             os.ftruncate(fd, size)
             self.map = mmap.mmap(fd, size)
@@ -665,7 +665,7 @@ class LayerSurface(QObject):
             if notifier is not None:
                 notifier.setEnabled(False)
         # Without the compositor there's no screen to be on; say why rather than linger unseen.
-        print(f"penguin-companion: lost the Wayland connection ({self.conn.error or 'closed'}); quitting.", file=sys.stderr)
+        print(f"chatmon: lost the Wayland connection ({self.conn.error or 'closed'}); quitting.", file=sys.stderr)
         QGuiApplication.quit()
 
     # -- globals
@@ -861,7 +861,7 @@ class LayerSurface(QObject):
         if self._xkb_lib is None:
             self._xkb_lib = xkb.library()
         if self._xkb_lib is None:
-            print("penguin-companion: libxkbcommon not found; can't type in the ask box.", file=sys.stderr)
+            print("chatmon: libxkbcommon not found; can't type in the ask box.", file=sys.stderr)
             return
         if self._keyboard is not None:
             self._keyboard.close()
@@ -869,7 +869,7 @@ class LayerSurface(QObject):
             self._keyboard = xkb.Keyboard(self._xkb_lib, text)
         except ValueError as exc:
             self._keyboard = None
-            print(f"penguin-companion: {exc}", file=sys.stderr)
+            print(f"chatmon: {exc}", file=sys.stderr)
 
     def _repeat(self) -> None:
         if self._repeat_key is None or not self._kb_focus:

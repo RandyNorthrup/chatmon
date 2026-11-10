@@ -33,13 +33,13 @@ DEFAULTS: dict[str, Any] = {
 }
 
 TEMPLATE = """\
-# Penguin companion settings. Save this file, then pick "Reload settings" from
-# the penguin's menu (right-click it), or restart it.
+# Chatmon settings. Save this file, then pick "Reload settings" from your
+# chatmon's menu (right-click it), or restart it.
 
 # What your companion is called. Empty: it asks the first time it runs.
 name = ""
 
-# Height of the penguin on screen, in pixels.
+# Height of your chatmon on screen, in pixels.
 size = 120
 
 # Wander along the bottom of the screen.
@@ -48,7 +48,7 @@ walk = true
 # Fall asleep after this many minutes without any attention (0: never).
 sleep_after_minutes = 10
 
-# Which companion it is: "penguin" (the electric penguin), "fire-red-panda",
+# Which chatmon it is: "penguin" (the electric penguin), "fire-red-panda",
 # "ghost-rabbit", "fairy-axolotl" or "leaf-pangolin". The menu's "Companion"
 # overrides this.
 companion = "penguin"

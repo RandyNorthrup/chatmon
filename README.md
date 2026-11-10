@@ -1,7 +1,15 @@
-# Penguin companion
+# Chatmon
 
-An electric penguin that lives along the bottom of your screen. It wanders
-about, naps when you ignore it, peeks out from behind the taskbar, and helps:
+[![GitHub stars](https://img.shields.io/github/stars/RandyNorthrup/chatmon?style=flat&logo=github)](https://github.com/RandyNorthrup/chatmon/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/RandyNorthrup/chatmon/total?style=flat&logo=github)](https://github.com/RandyNorthrup/chatmon/releases)
+[![Latest release](https://img.shields.io/github/v/release/RandyNorthrup/chatmon?style=flat)](https://github.com/RandyNorthrup/chatmon/releases/latest)
+[![CI](https://github.com/RandyNorthrup/chatmon/actions/workflows/ci.yml/badge.svg)](https://github.com/RandyNorthrup/chatmon/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/RandyNorthrup/chatmon?style=flat)](LICENSE)
+
+A chatmon is a little creature that lives along the bottom of your screen: an
+electric penguin, a fire red panda, a ghost rabbit, a fairy axolotl or a leaf
+pangolin. It wanders about, naps when you ignore it, peeks out from behind the
+taskbar, and helps:
 
 - **Ask it anything.** Click it and type. It answers with the AI you already
   use: an AI command-line tool you're signed in to (Claude Code, Codex, Gemini
@@ -21,10 +29,8 @@ about, naps when you ignore it, peeks out from behind the taskbar, and helps:
 - **Breaks.** A nudge after an hour at the screen; locking the screen for five
   minutes counts as a break.
 - **Heads-ups.** A low battery, a disk filling up, system updates waiting.
-- **Pick your companion.** The penguin has four siblings: a fire red panda, a
-  ghost rabbit, a fairy axolotl and a leaf pangolin. Right-click it, open
-  **Companion** and choose; it changes on the spot, and its chat bubbles
-  change to match.
+- **Pick your chatmon.** Right-click it, open **Companion** and choose; it
+  changes on the spot, and its chat bubbles change to match.
 
 It runs on Linux, Windows and macOS.
 
@@ -33,26 +39,46 @@ It runs on Linux, Windows and macOS.
 You need Python 3.11 or newer.
 
 ```sh
-pipx install git+https://github.com/RandyNorthrup/penguin-companion
-penguin-companion
+pipx install git+https://github.com/RandyNorthrup/chatmon
+chatmon
 ```
 
-Without pipx: `python3 -m pip install --user git+https://github.com/RandyNorthrup/penguin-companion`.
+Without pipx: `python3 -m pip install --user git+https://github.com/RandyNorthrup/chatmon`.
+Each [release](https://github.com/RandyNorthrup/chatmon/releases) also has the
+wheel, for `pipx install chatmon-<version>-py3-none-any.whl`.
 Or run it from a clone, with PyQt6 installed (`python3 -m pip install PyQt6`, or
 `sudo apt install python3-pyqt6` on Debian and Ubuntu):
 
 ```sh
-git clone https://github.com/RandyNorthrup/penguin-companion
-cd penguin-companion
-./penguin-companion          # Windows: py penguin-companion
+git clone https://github.com/RandyNorthrup/chatmon
+cd chatmon
+bin/chatmon          # Windows: py bin\chatmon
 ```
 
-Agent hooks call `penguin-companion` by name, so if you run it from a clone,
-put the launcher on your PATH: `ln -s "$PWD/penguin-companion" ~/.local/bin/`.
+Agent hooks call `chatmon` by name, so if you run it from a clone, put the
+launcher on your PATH: `ln -s "$PWD/bin/chatmon" ~/.local/bin/`.
 For battery levels on Windows and macOS, also install `psutil`.
 
 The first time, it asks what it should be called. Right-click it and tick
 **Start when I log in** to keep it around.
+
+### Coming from Penguin companion
+
+Chatmon was called Penguin companion until 0.3.0. Quit the old one (right-click,
+**Quit**), then swap the package:
+
+```sh
+pipx uninstall penguin-companion
+pipx install git+https://github.com/RandyNorthrup/chatmon
+chatmon
+```
+
+The first time it runs, Chatmon moves your settings, name and reminders over
+from the `penguin-companion` folders, switches **Start when I log in** to the new
+name, and swaps the hooks of any agents you connected for `chatmon` ones (Claude
+Code gets the `chatmon` plugin in place of `penguin-companion`). Until then the
+old hooks keep working: `penguin-companion` is still installed as another name
+for `chatmon`, for this release.
 
 ## Using it
 
@@ -66,16 +92,26 @@ The first time, it asks what it should be called. Right-click it and tick
 Besides questions, the ask box understands *help*, *status* (battery, disks,
 reminders), *hide*, *new chat*, and the reminder, timer and focus phrases above.
 
-## Companions and bubbles
+## The chatmons and their bubbles
 
-**Companion** in the menu swaps the creature at once: the electric penguin
-(the default), the fire red panda, the ghost rabbit (it floats), the fairy
-axolotl or the leaf pangolin. Each has the same twelve animations and does
-everything the penguin does. **Bubble style** starts on **Match companion**
-(electric for the penguin, fire, ghost, fairy and leaf for the others); pick a
-style by name there and it stays whichever companion you choose. Both are
-remembered, and both can be set in the settings file (`companion`,
-`bubble_style`). A name the settings don't know is the penguin.
+**Companion** in the menu swaps the creature at once. Each has the same twelve
+animations, does everything the others do, and talks in chat bubbles of its
+own:
+
+| Chatmon          | Setting          | Its bubbles                                        |
+| ---------------- | ---------------- | -------------------------------------------------- |
+| Electric penguin (the default) | `penguin` | **Electric**: navy glass, lightning running round a cyan edge |
+| Fire red panda   | `fire-red-panda` | **Fire**: an ember edge with low flames along the top |
+| Ghost rabbit (it floats) | `ghost-rabbit` | **Ghost**: frosted, with violet mist drifting round it |
+| Fairy axolotl    | `fairy-axolotl`  | **Fairy**: blush opal, with glints and sparkles    |
+| Leaf pangolin    | `leaf-pangolin`  | **Leaf**: ivy, with a caterpillar crawling along it |
+
+**Bubble style** starts on **Match companion**, which follows whichever chatmon
+you pick. Choose a style by name there (or **Plain**, in your desktop's own
+colours) and it stays put whichever chatmon you pick; **Animate bubbles** holds
+the edges still. All of it is remembered, and can be set in the settings file
+(`companion`, `bubble_style`, `bubble_effects`). A name the settings don't know
+is the penguin.
 
 ## Brains: what answers your questions
 
@@ -115,16 +151,16 @@ has examples. The model names above were current in October 2026.
 The Claude Code and Grok brains have been tried; the others follow their
 tools' documented options.
 
-## AI agents: let them tell the penguin what they're doing
+## AI agents: let them tell your chatmon what they're doing
 
-Right-click the penguin, open **AI agents**, and tick the ones you use; or from
+Right-click your chatmon, open **AI agents**, and tick the ones you use; or from
 a terminal:
 
 ```sh
-penguin-companion hooks                 # what's here and what's connected
-penguin-companion hooks connect claude  # or: codex, gemini, muse, grok, copilot, cursor, cline, qwen, devin, all
-penguin-companion hooks disconnect claude
-penguin-companion hooks show cursor     # how to do it by hand
+chatmon hooks                 # what's here and what's connected
+chatmon hooks connect claude  # or: codex, gemini, muse, grok, copilot, cursor, cline, qwen, devin, all
+chatmon hooks disconnect claude
+chatmon hooks show cursor     # how to do it by hand
 ```
 
 | Agent              | How it's connected                                                    |
@@ -133,21 +169,21 @@ penguin-companion hooks show cursor     # how to do it by hand
 | Codex              | Its `notify` program, in `~/.codex/config.toml`                       |
 | Gemini CLI         | Hooks in `~/.gemini/settings.json`                                    |
 | Muse Code          | A Muse plugin, installed and approved with `muse plugins`             |
-| Grok               | Its own file, `~/.grok/hooks/penguin-companion.json`                  |
-| GitHub Copilot CLI | Its own file, `~/.copilot/hooks/penguin-companion.json`               |
+| Grok               | Its own file, `~/.grok/hooks/chatmon.json`                            |
+| GitHub Copilot CLI | Its own file, `~/.copilot/hooks/chatmon.json`                         |
 | Cursor             | Hooks in `~/.cursor/hooks.json`                                       |
 | Cline              | Hook scripts in `~/Documents/Cline/Hooks` (turn on Cline's "Enable Hooks") |
 | Qwen Code          | Hooks in `~/.qwen/settings.json`                                      |
 | Devin CLI          | Hooks in `~/.config/devin/config.json`                                |
 
 In Claude Code you can also add the plugin yourself:
-`/plugin install penguin-companion --marketplace RandyNorthrup/penguin-companion`.
+`/plugin install chatmon --marketplace RandyNorthrup/chatmon`.
 
 For anything else (Aider, Kiro, OpenCode, Amp, a CI script), have it run
-`penguin-companion notify working|needs-you|done|success|error --source NAME`;
-`penguin-companion hooks show any` has the details.
+`chatmon notify working|needs-you|done|success|error --source NAME`;
+`chatmon hooks show any` has the details.
 
-| Event       | The penguin                                                        |
+| Event       | Your chatmon                                                       |
 | ----------- | ------------------------------------------------------------------ |
 | `working`   | Thinks; after a minute, charges up                                 |
 | `needs-you` | Flaps and says what the agent is waiting for, until you click OK   |
@@ -155,29 +191,29 @@ For anything else (Aider, Kiro, OpenCode, Amp, a CI script), have it run
 | `success`   | Fires a little beam                                                |
 | `error`     | Says something went wrong                                          |
 
-`penguin-companion say TEXT` and `penguin-companion remind in 10m to stretch`
+`chatmon say TEXT` and `chatmon remind in 10m to stretch`
 work from any script too.
 
 ## Privacy and security
 
 - **Nothing is collected.** No telemetry, no accounts, no network calls of its
   own. The only thing that leaves your computer is a question you type, sent
-  to the brain you chose. Conversations live in memory and are gone when the
-  penguin quits or after 15 minutes idle.
+  to the brain you chose. Conversations live in memory and are gone when
+  Chatmon quits or after 15 minutes idle.
 - **Agents' replies stay off the screen** unless you set
   `agents.show_replies = true`; they can hold code or secrets you'd rather not
-  have on show during a screen share. The penguin shows what an agent is
+  have on show during a screen share. Your chatmon shows what an agent is
   waiting for, and never your prompts.
 - **Connecting an agent is always your choice.** Each connection backs up the
-  file it changes first (`<file>.penguin-backup-<time>`), touches only entries
-  that run `penguin-companion`, refuses to edit a file it can't parse, never
+  file it changes first (`<file>.chatmon-backup-<time>`), touches only entries
+  that run `chatmon` (or `penguin-companion`, its old name), refuses to edit a file it can't parse, never
   replaces something of yours (Codex allows only one `notify` program, Cline
   one script per event), and comes out again with `hooks disconnect`.
 - **Hooks can't get in an agent's way.** `notify` prints nothing, always
   succeeds, finishes within about a second even if the agent never closes its
-  input, and returns at once if the penguin isn't running. The AI tools the penguin runs for your own
-  questions carry `PENGUIN_COMPANION_INTERNAL=1`, so their hooks don't make it
-  react to itself.
+  input, and returns at once if Chatmon isn't running. The AI tools Chatmon runs
+  for your own questions carry `CHATMON_INTERNAL=1`, so their hooks don't make
+  it react to itself.
 - **Only you can talk to it.** Hooks reach it through a local socket (a named
   pipe on Windows) open to your user account alone; messages are size-limited.
 - **Keys** are read from environment variables (or `${VAR}` in a header) and
@@ -188,7 +224,7 @@ work from any script too.
   links.
 
 Found a security problem? Please open a private
-[security advisory](https://github.com/RandyNorthrup/penguin-companion/security/advisories/new).
+[security advisory](https://github.com/RandyNorthrup/chatmon/security/advisories/new).
 
 ## Settings
 
@@ -196,55 +232,57 @@ Found a security problem? Please open a private
 size, walking, how soon it naps, the companion and its bubble style, brains,
 whether agents' replies show, break and
 focus lengths, and heads-up thresholds. **Edit settings…** in the menu opens it;
-**Reload settings** applies it. It lives in `~/.config/penguin-companion/` on
-Linux, `~/Library/Application Support/penguin-companion/` on macOS and
-`%APPDATA%\penguin-companion\` on Windows. Next to it, `state.json` keeps the
-name, reminders and the penguin's spot on the screen.
+**Reload settings** applies it. It lives in `~/.config/chatmon/` on Linux,
+`~/Library/Application Support/chatmon/` on macOS and `%APPDATA%\chatmon\` on
+Windows. `state.json` (in `~/.local/state/chatmon/` on Linux, next to the
+settings elsewhere) keeps the name, reminders, the chatmon you picked and its
+spot on the screen.
 
 ## How it's put together
 
-The penguin and its message bubbles are drawn on one see-through surface over
+Your chatmon and its message bubbles are drawn on one see-through surface over
 the screen, so moving them never moves a window: no lag, no trails. Clicks go
-through it everywhere except the penguin and what it's showing you.
+through it everywhere except the chatmon and what it's showing you.
 
 - **Wayland** (Hyprland, KDE Plasma, Sway, niri and the other desktops with the
   layer-shell protocol): the surface is a layer-shell overlay, above panels, with
-  an input region for the clicks. Everything the penguin shows is drawn on it:
+  an input region for the clicks (its layer is named `chatmon`, for compositor
+rules). Everything the chatmon shows is drawn on it:
   its bubbles, its menus and the ask box, so none of it is an XWayland window
   that the desktop would put underneath, decorate with its borders, or keep the
   keyboard from. The overlay takes the keyboard only while the ask box is open,
   and reads it with libxkbcommon, so your layout, dead keys and compose work;
   input methods (fcitx5, IBus) work through the compositor's text-input
   protocol, and copy, cut, paste and middle-click paste through its clipboard
-  and primary selection. Qt can't make a layer-shell surface, so the penguin
+  and primary selection. Qt can't make a layer-shell surface, so Chatmon
   talks to the compositor itself, with a small Wayland client of its own (no
   extra libraries).
 - **X11**, and **GNOME on Wayland** (no layer-shell there; it runs through
   XWayland, whose X input shapes GNOME reads): a window over the screen with an
   X input shape. The ask box is a window of its own.
 - **Windows and macOS**: a window over the screen that takes the mouse only
-  while it's over the penguin.
+  while it's over the chatmon.
 
-`PENGUIN_COMPANION_STAGE=window` keeps the X11 way on a Wayland desktop, and
-`PENGUIN_COMPANION_DEBUG=1` logs the overlay's keyboard focus to the terminal,
+`CHATMON_STAGE=window` keeps the X11 way on a Wayland desktop, and
+`CHATMON_DEBUG=1` logs the overlay's keyboard focus to the terminal,
 should either ever be needed.
 
 | File                              | What                                                   |
 | --------------------------------- | ------------------------------------------------------ |
-| `penguin_companion/behavior.py`   | What it does from moment to moment (no Qt; tested)     |
-| `penguin_companion/penguin.py`    | The stage: drawing, the mouse, and the ask box when it's on the overlay |
-| `penguin_companion/layer.py`      | The stage's Wayland overlay (layer shell)              |
-| `penguin_companion/wayland.py`    | The Wayland wire protocol, just enough for the overlay |
-| `penguin_companion/xkb.py`        | The keyboard on the overlay, through libxkbcommon      |
-| `penguin_companion/stagemenu.py`  | Menus drawn on the stage                               |
-| `penguin_companion/clickthrough.py` | Clicks through the stage window (X11, Windows, macOS) |
-| `penguin_companion/companions.py` | The companions you can pick, and where each one's strips are |
-| `penguin_companion/sprites.py`    | One companion's animation strips, cut into frames for the screen |
-| `penguin_companion/bubble.py`     | Message bubbles and the ask box                        |
-| `penguin_companion/app.py`        | Ties it together: menu, tray, reminders, heads-ups, hooks |
-| `penguin_companion/brains.py`     | The AI brains                                          |
-| `penguin_companion/agents.py`     | Connecting coding agents                               |
-| `penguin_companion/integrations/` | The Claude Code plugin                                 |
+| `chatmon/behavior.py`   | What it does from moment to moment (no Qt; tested)     |
+| `chatmon/penguin.py`    | The stage: drawing, the mouse, and the ask box when it's on the overlay |
+| `chatmon/layer.py`      | The stage's Wayland overlay (layer shell)              |
+| `chatmon/wayland.py`    | The Wayland wire protocol, just enough for the overlay |
+| `chatmon/xkb.py`        | The keyboard on the overlay, through libxkbcommon      |
+| `chatmon/stagemenu.py`  | Menus drawn on the stage                               |
+| `chatmon/clickthrough.py` | Clicks through the stage window (X11, Windows, macOS) |
+| `chatmon/companions.py` | The companions you can pick, and where each one's strips are |
+| `chatmon/sprites.py`    | One companion's animation strips, cut into frames for the screen |
+| `chatmon/bubble.py`     | Message bubbles and the ask box                        |
+| `chatmon/app.py`        | Ties it together: menu, tray, reminders, heads-ups, hooks |
+| `chatmon/brains.py`     | The AI brains                                          |
+| `chatmon/agents.py`     | Connecting coding agents                               |
+| `chatmon/integrations/` | The Claude Code plugin                                 |
 | `art/`                            | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
 
 The overlay is tested on Hyprland 0.57; KDE Plasma 6.4 (Wayland) was tested

@@ -147,7 +147,7 @@ class Companion(QObject):
         self._every(int(self.config["heads_up"]["updates_every_hours"] * 3600_000), self._check_updates)
         QTimer.singleShot(120_000, self._check_updates)
         QTimer.singleShot(1500, self._greet)
-        QTimer.singleShot(3000, self._refresh_agents)
+        QTimer.singleShot(3000, partial(self._refresh_agents, True))
 
     # -- small helpers
 
@@ -302,7 +302,7 @@ class Companion(QObject):
         self._question = text
         self.ask_box.set_answer(f"**You:** {text}\n\n*{brain.label} is thinking…*")
         self.behavior.set_thinking(True, now)
-        self.asker.ask(brain, brains.system_prompt(self.name), self.history[-6:], text, float(self.config["ai"]["timeout_seconds"]))
+        self.asker.ask(brain, brains.system_prompt(self.name, self._companion().label.lower()), self.history[-6:], text, float(self.config["ai"]["timeout_seconds"]))
 
     def _answered(self, answer: str) -> None:
         now = self._now()
@@ -702,8 +702,24 @@ class Companion(QObject):
 
     # -- connecting AI agents
 
-    def _refresh_agents(self) -> None:
-        self.background.run(lambda: {a.name: a.status() for a in agents.AGENTS}, self._agents_known)
+    def _refresh_agents(self, migrate: bool = False) -> None:
+        """How each agent stands, off the main thread. The first time, hooks connected under the old name
+        (penguin-companion) are swapped for chatmon's first."""
+        self.background.run(partial(self._agent_statuses, migrate), self._agents_known)
+
+    @staticmethod
+    def _agent_statuses(migrate: bool) -> dict[str, str]:
+        status = {}
+        for agent in agents.AGENTS:
+            if migrate:
+                try:
+                    done = agent.migrate()
+                except (agents.AgentError, OSError) as exc:
+                    done = f"{agent.label}: couldn't move its hooks to the new name: {exc}"
+                if done:
+                    print(f"{paths.APP}: {done}", file=sys.stderr)
+            status[agent.name] = agent.status()
+        return status
 
     def _agents_known(self, status) -> None:
         if isinstance(status, dict) and status != self._agent_status:
@@ -886,22 +902,23 @@ class Companion(QObject):
 
 def run() -> int:
     # On Wayland a window can't place itself or stay above other windows, so
-    # the penguin runs through XWayland, where it can.
+    # the window runs through XWayland, where it can.
     if sys.platform.startswith("linux") and os.environ.get("XDG_SESSION_TYPE") == "wayland" and os.environ.get("DISPLAY") and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "xcb"
     if events.send({"type": "show"}):
-        print("The penguin is already running; it says hi.")
+        print("Chatmon is already running; it says hi.")
         return 0
     app = QApplication(sys.argv[:1])
-    app.setApplicationName("penguin-companion")
-    app.setApplicationDisplayName("Penguin companion")
+    app.setApplicationName(paths.APP)
+    app.setApplicationDisplayName("Chatmon")
+    autostart.migrate()
     app.setQuitOnLastWindowClosed(False)
     server = QLocalServer()
     server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)  # only you can talk to it
     name = paths.server_name()
     QLocalServer.removeServer(name)
     if not server.listen(name):
-        print(f"Couldn't open {name}: {server.errorString()}. Hooks won't reach the penguin.", file=sys.stderr)
+        print(f"Couldn't open {name}: {server.errorString()}. Hooks won't reach it.", file=sys.stderr)
     companion = Companion(app, server)
     # Python runs a signal handler between any two steps of whatever it's doing,
     # say halfway through drawing a frame; quit from the event loop instead.

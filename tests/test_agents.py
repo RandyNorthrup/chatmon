@@ -4,7 +4,7 @@ import tomllib
 
 import pytest
 
-from penguin_companion import agents
+from chatmon import agents
 
 
 @pytest.fixture(autouse=True)
@@ -27,7 +27,7 @@ def homes(tmp_path, monkeypatch):
 
 
 def backups(path):
-    return sorted(path.parent.glob(path.name + ".penguin-backup-*"))
+    return sorted(path.parent.glob(path.name + ".chatmon-backup-*"))
 
 
 # -- settings files in Claude Code's shape (Gemini, Qwen, Devin)
@@ -45,7 +45,7 @@ def test_gemini_keeps_your_hooks_and_settings():
     assert data["hooks"]["BeforeTool"] == [{"matcher": "x", "hooks": [mine]}]
     assert data["hooks"]["AfterAgent"][0] == {"hooks": [mine]} and len(data["hooks"]["AfterAgent"]) == 2
     ours = data["hooks"]["AfterAgent"][1]["hooks"][0]
-    assert "notify done --source gemini --stdin" in ours["command"] and ours["timeout"] == 5000 and ours["name"] == "penguin-done"
+    assert "notify done --source gemini --stdin" in ours["command"] and ours["timeout"] == 5000 and ours["name"] == "chatmon-done"
     assert len(backups(path)) == 1
 
 
@@ -188,13 +188,15 @@ class FakeClaude:
         if argv[1:4] == ["plugin", "marketplace", "list"]:
             return [{"name": m} for m in self.markets]
         if argv[1:4] == ["plugin", "marketplace", "add"]:
-            self.markets.append("penguin-companion")
+            self.markets.append("chatmon")
+        if argv[1:4] == ["plugin", "marketplace", "remove"]:
+            self.markets.remove(argv[4])
         if argv[1:3] == ["plugin", "install"]:
-            self.plugins = [{"id": argv[3], "enabled": True}]
+            self.plugins.append({"id": argv[3], "enabled": True})
         if argv[1:3] == ["plugin", "enable"]:
-            self.plugins = [{"id": argv[3], "enabled": True}]
+            self.plugins = [{**p, "enabled": True} if p["id"] == argv[3] else p for p in self.plugins]
         if argv[1:3] == ["plugin", "uninstall"]:
-            self.plugins = []
+            self.plugins = [p for p in self.plugins if p["id"] != argv[3]]
         return {}
 
 
@@ -204,24 +206,24 @@ def test_claude_installs_its_plugin(monkeypatch):
     claude = agents.ClaudeCode()
     assert claude.status() == "found"
     claude.connect()
-    assert claude.connected() and ["plugin", "marketplace", "add"] in fake.calls and ["plugin", "install", "penguin-companion@penguin-companion"] in fake.calls
+    assert claude.connected() and ["plugin", "marketplace", "add"] in fake.calls and ["plugin", "install", "chatmon@chatmon"] in fake.calls
     claude.disconnect()
     assert not claude.connected()
 
 
 def test_claude_switches_a_switched_off_plugin_back_on(monkeypatch):
-    fake = FakeClaude(installed=[{"id": "penguin-companion@penguin-companion", "enabled": False}], markets=["penguin-companion"])
+    fake = FakeClaude(installed=[{"id": "chatmon@chatmon", "enabled": False}], markets=["chatmon"])
     monkeypatch.setattr(agents, "_run_json", fake)
     claude = agents.ClaudeCode()
     assert claude.status() == "installed but off"
     claude.connect()
-    assert claude.connected() and ["plugin", "enable", "penguin-companion@penguin-companion"] in fake.calls
+    assert claude.connected() and ["plugin", "enable", "chatmon@chatmon"] in fake.calls
     assert not any(c[:2] == ["plugin", "install"] for c in fake.calls)
 
 
-def test_claude_needs_the_penguin_on_path(monkeypatch):
+def test_claude_needs_chatmon_on_path(monkeypatch):
     monkeypatch.setattr(agents, "_run_json", FakeClaude())
-    monkeypatch.setattr(agents.shutil, "which", lambda name: None if name == "penguin-companion" else f"/usr/bin/{name}")
+    monkeypatch.setattr(agents.shutil, "which", lambda name: None if name == "chatmon" else f"/usr/bin/{name}")
     with pytest.raises(agents.AgentError, match="PATH"):
         agents.ClaudeCode().connect()
 
@@ -231,17 +233,17 @@ def test_claude_plugin_files_match_the_installer():
     market = json.loads((root / ".claude-plugin" / "marketplace.json").read_text())
     plugin_dir = root / market["plugins"][0]["source"]
     hooks = json.loads((plugin_dir / "hooks" / "hooks.json").read_text())["hooks"]
-    assert market["name"] == "penguin-companion" and market["plugins"][0]["name"] == "penguin-companion"
+    assert market["name"] == "chatmon" and market["plugins"][0]["name"] == "chatmon"
     assert set(hooks) == {"UserPromptSubmit", "Notification", "Stop"}
     for groups in hooks.values():
         command = groups[0]["hooks"][0]["command"]
-        assert command.startswith("penguin-companion notify ") and command.endswith("|| true")
+        assert command.startswith("chatmon notify ") and command.endswith("|| true")
 
 
 def test_muse_plugin_manifest():
     manifest = agents.Muse().manifest()
     hooks = manifest["capabilities"]["hooks"]
-    assert manifest["name"] == "penguin-companion" and manifest["compat"]["manifestDir"] == ".muse-plugin"
+    assert manifest["name"] == "chatmon" and manifest["compat"]["manifestDir"] == ".muse-plugin"
     assert {h["event"] for h in hooks} == {"UserPromptSubmit", "PermissionRequest", "Notification", "Stop", "Interrupt"}
     assert all(h["async"] and "notify" in h["command"] and "muse" in h["command"] for h in hooks)
     assert len({h["id"] for h in hooks}) == len(hooks)
@@ -253,3 +255,110 @@ def test_every_agent_explains_itself():
     for agent in agents.AGENTS:
         assert agent.label and ("notify" in agent.manual() or "plugin" in agent.manual())
     assert "needs-you" in agents.generic()
+
+
+# -- hooks connected before the rename (penguin-companion) move to chatmon
+
+OLD = "/usr/bin/penguin-companion"
+
+
+def test_nothing_to_move_runs_nothing():
+    for agent in agents.AGENTS:
+        if agent.name not in ("claude", "muse"):  # those two ask their own tool, which the fixture forbids
+            assert not agent.legacy() and agent.migrate() == ""
+
+
+def test_json_hooks_move_to_the_new_name():
+    gemini = agents.Gemini()
+    path = gemini.config_path()
+    path.parent.mkdir(parents=True)
+    mine = {"type": "command", "command": "my-linter"}
+    old = {"name": "penguin-done", "type": "command", "command": f"{OLD} notify done --source gemini --stdin", "timeout": 5000}
+    path.write_text(json.dumps({"hooks": {"AfterAgent": [{"hooks": [mine]}, {"hooks": [old]}]}}))
+    assert gemini.connected() and gemini.legacy()
+    assert gemini.migrate()
+    groups = json.loads(path.read_text())["hooks"]["AfterAgent"]
+    assert groups[0] == {"hooks": [mine]} and len(groups) == 2
+    assert groups[1]["hooks"][0]["command"].startswith("/usr/bin/chatmon notify done") and groups[1]["hooks"][0]["name"] == "chatmon-done"
+    assert gemini.connected() and not gemini.legacy() and backups(path)
+    assert gemini.migrate() == ""  # done once
+
+
+def test_codex_moves_to_the_new_name():
+    codex = agents.Codex()
+    path = codex.config_path()
+    path.parent.mkdir(parents=True)
+    path.write_text(f'model = "o3"\nnotify = ["{OLD}", "notify", "done", "--source", "codex"]\n')
+    assert codex.legacy()
+    codex.migrate()
+    data = tomllib.loads(path.read_text())
+    assert data["model"] == "o3" and data["notify"][0] == "/usr/bin/chatmon" and not codex.legacy()
+
+
+def test_own_hook_files_move_to_the_new_name():
+    for agent in (agents.Grok(), agents.Copilot()):
+        old = agent.legacy_path()
+        old.parent.mkdir(parents=True)
+        old.write_text(json.dumps({"hooks": {"Stop": [{"command": f"{OLD} notify done"}]}}))
+        assert agent.connected() and agent.legacy()
+        agent.migrate()
+        assert not old.exists() and agent.config_path().name == "chatmon.json" and "/usr/bin/chatmon notify" in agent.config_path().read_text()
+        agent.disconnect()
+        assert not agent.connected()
+
+
+def test_cursor_and_cline_move_to_the_new_name():
+    cursor = agents.Cursor()
+    path = cursor.config_path()
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({"version": 1, "hooks": {"stop": [{"command": "mine"}, {"command": f"{OLD} notify done --source cursor"}]}}))
+    assert cursor.legacy()
+    cursor.migrate()
+    stop = json.loads(path.read_text())["hooks"]["stop"]
+    assert stop[0] == {"command": "mine"} and stop[1]["command"].startswith("/usr/bin/chatmon") and len(stop) == 2
+
+    cline = agents.Cline()
+    cline.config_path().mkdir(parents=True)
+    cline._file("TaskComplete").write_text(f"#!/bin/sh\n# penguin-companion\n{OLD} notify done --source cline || true\n")
+    assert cline.connected() and cline.legacy()
+    cline.migrate()
+    assert "# chatmon" in cline._file("TaskComplete").read_text() and not cline.legacy()
+
+
+def test_claude_swaps_the_old_plugin_for_the_new(monkeypatch):
+    fake = FakeClaude(installed=[{"id": "penguin-companion@penguin-companion", "enabled": True}], markets=["penguin-companion"])
+    monkeypatch.setattr(agents, "_run_json", fake)
+    claude = agents.ClaudeCode()
+    assert claude.connected() and claude.legacy()
+    claude.migrate()
+    assert [p["id"] for p in fake.plugins] == ["chatmon@chatmon"] and fake.markets == ["chatmon"]
+    assert claude.connected() and not claude.legacy()
+
+
+def test_claude_leaves_a_switched_off_old_plugin_off(monkeypatch):
+    fake = FakeClaude(installed=[{"id": "penguin-companion@penguin-companion", "enabled": False}], markets=["penguin-companion"])
+    monkeypatch.setattr(agents, "_run_json", fake)
+    claude = agents.ClaudeCode()
+    claude.migrate()
+    assert fake.plugins == [] and fake.markets == [] and not claude.connected()
+
+
+def test_muse_swaps_the_old_plugin_for_the_new(monkeypatch):
+    installed = {"penguin-companion"}
+    calls = []
+
+    def fake(argv, what):
+        calls.append(argv[2:4])
+        if argv[2] == "list":
+            return {"plugins": [{"plugin": {"id": i}} for i in sorted(installed)]}
+        if argv[2] == "remove":
+            installed.discard(argv[3])
+        if argv[2] == "install":
+            installed.add("chatmon")
+        return {}
+
+    monkeypatch.setattr(agents, "_run_json", fake)
+    muse = agents.Muse()
+    assert muse.connected() and muse.legacy()
+    muse.migrate()
+    assert installed == {"chatmon"} and ["remove", "penguin-companion"] in calls and ["approve", "chatmon"] in calls

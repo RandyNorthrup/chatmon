@@ -12,12 +12,12 @@ from PyQt6.QtCore import QEventLoop, QPoint, QPointF, QRect, Qt, QTimer  # noqa:
 from PyQt6.QtGui import QAction, QImage, QKeySequence, QPainter, QRegion  # noqa: E402
 from PyQt6.QtWidgets import QMenu  # noqa: E402
 
-from penguin_companion import paths, xkb  # noqa: E402
-from penguin_companion.behavior import Behavior  # noqa: E402
-from penguin_companion.bubble import AskBox  # noqa: E402
-from penguin_companion.penguin import Stage  # noqa: E402
-from penguin_companion.sprites import Sprites  # noqa: E402
-from penguin_companion.stagemenu import label_parts  # noqa: E402
+from chatmon import paths, xkb  # noqa: E402
+from chatmon.behavior import Behavior  # noqa: E402
+from chatmon.bubble import AskBox  # noqa: E402
+from chatmon.penguin import Stage  # noqa: E402
+from chatmon.sprites import Sprites  # noqa: E402
+from chatmon.stagemenu import label_parts  # noqa: E402
 
 
 def spin(seconds: float) -> None:

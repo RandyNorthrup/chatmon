@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from penguin_companion.reminders import BreakTracker, ReminderBook, describe, parse_command, parse_when, seconds_in
+from chatmon.reminders import BreakTracker, ReminderBook, describe, parse_command, parse_when, seconds_in
 
 NOW = datetime(2026, 10, 31, 14, 0, 0)
 

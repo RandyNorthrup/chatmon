@@ -6,7 +6,7 @@ Usage: python creature-cut.py <sheets-dir> [--only <creature>[/<anim>] ...] [--o
   --only      cut just these creatures, or one animation of one ("ghost-rabbit/idle"); the rest of
               that creature's manifest is kept
   --out       where the strips go: <anim-dir>/<creature>/<anim>.png and manifest.json
-              (default: ../../penguin_companion/anim)
+              (default: ../../chatmon/anim)
   --cache     keep the keyed sheets here, so a second run only repeats the slicing (keying a sheet
               takes a few seconds)
   --debug     also write <dir>/<creature>-<anim>.png: the aligned frames at sheet size on dark and

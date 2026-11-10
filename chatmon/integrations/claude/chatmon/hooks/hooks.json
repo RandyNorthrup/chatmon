@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "penguin-companion notify working --source claude --stdin || true",
+            "command": "chatmon notify working --source claude --stdin || true",
             "timeout": 5
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "penguin-companion notify needs-you --source claude --stdin || true",
+            "command": "chatmon notify needs-you --source claude --stdin || true",
             "timeout": 5
           }
         ]
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "penguin-companion notify done --source claude --stdin || true",
+            "command": "chatmon notify done --source claude --stdin || true",
             "timeout": 5
           }
         ]

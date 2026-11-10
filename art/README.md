@@ -12,7 +12,7 @@ D91.30), where it walks along the status bar, reacts to the agent, and peeks
 up from behind the status bar while hidden. This repository holds the
 character's art: the reference sheet, the prompts and tools that made the
 animations, and how they were made. The animation strips themselves live in
-[`../penguin_companion/anim/`](../penguin_companion/anim), where the app loads
+[`../chatmon/anim/`](../chatmon/anim), where the app loads
 them; paths below are relative to this folder.
 
 The chat bubbles' art has its own notes in [`bubbles/README.md`](bubbles/README.md). The four other
@@ -24,8 +24,8 @@ cut and check them, are described under "The four other companions" below.
 | Path                         | What it is                                                                                                        |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `source/reference-sheet.jpg` | The owner's character sheet (front, side, jump, charge, beam and angry poses), as supplied on 2026-10-05.         |
-| `../penguin_companion/anim/<name>.png` | One horizontal strip per animation, 240 px tall, frames left to right, transparent background. |
-| `../penguin_companion/anim/manifest.json` | Per animation: `frames`, the frame width `w` and height `h` in pixels, the playback rate `fps`, `loop`, the display `scale`, and `touchup` once `penguin-touchup.py` has fixed the strip. |
+| `../chatmon/anim/<name>.png` | One horizontal strip per animation, 240 px tall, frames left to right, transparent background. |
+| `../chatmon/anim/manifest.json` | Per animation: `frames`, the frame width `w` and height `h` in pixels, the playback rate `fps`, `loop`, the display `scale`, and `touchup` once `penguin-touchup.py` has fixed the strip. |
 | `tools/penguin-slice.py`     | Keys the chroma-green sheets, slices each grid into frames, lines every frame's body up with frame 1's, and writes the strips and the manifest (`--only <name>` re-makes one). |
 | `tools/penguin-touchup.py`   | The pixel fixes, run over the strips after slicing (see "Fixes" below).                                          |
 | `tools/spritefix.py`         | What the two scripts share: despill, per-frame alignment, the edge fade, the foot recolour and the bolt halo.     |
@@ -52,7 +52,7 @@ strip.
 | `turn`   |      6 |   6 |  no   | Turning between right, front and left; frame 6, a little hop facing left, now and then when it stops while facing left |
 | `beam`   |      6 |   8 |  no   | Celebrating (a merge, a green check)                           |
 
-The app plays some strips in its own order (`../penguin_companion/behavior.py`):
+The app plays some strips in its own order (`../chatmon/behavior.py`):
 `idle` holds frame 1 for a random 3 to 5 s, then blinks through frames 3, 4
 and 5 at 10 fps (frames 2 and 6 aren't used); `think` loops frames 1 to 5
 and keeps frame 6 for the moment the answer arrives; `sleep` dozes off through
@@ -75,7 +75,7 @@ the rest 1. `tools/penguin-slice.py` writes the same values.
    shadows, text or grid lines.
 3. `tools/penguin-slice.py` removed the green, cut the grid, aligned each row
    by its lowest opaque pixel, cropped every frame to the union box of its
-   animation, and wrote the strips at 240 px into `../penguin_companion/anim/`.
+   animation, and wrote the strips at 240 px into `../chatmon/anim/`.
    Since 2026-11-09 it also lines up every frame, not just every row (see
    "Fixes").
 4. `tools/penguin-touchup.py` applied the pixel fixes (2026-11-09).
@@ -137,8 +137,8 @@ Pillow installed); the strips here are the build input.
 The fire red panda, the ghost rabbit, the leaf pangolin and the fairy axolotl
 (concepts in [`concepts/`](concepts/README.md)) have the penguin's twelve
 animations, cut to the same pattern: one 240 px strip per animation and a
-`manifest.json`, in `../penguin_companion/anim/<creature>/`. The penguin's own
-strips stay in `../penguin_companion/anim/`, untouched. The app's names are
+`manifest.json`, in `../chatmon/anim/<creature>/`. The penguin's own
+strips stay in `../chatmon/anim/`, untouched. The app's names are
 kept: each creature's signature move is its `beam` strip.
 
 | Path | What it is |
@@ -166,7 +166,7 @@ The sheets are in this repository, in `source/<creature>/` beside their
 prompts (about 80 MB in all; the penguin's are not, see above).
 `sheets.sha1` in each folder lists them. Re-cut every creature with
 `python tools/creature-cut.py source` (from `art/`); run on these sheets it
-gives the strips in `../penguin_companion/anim/<creature>/` byte for byte.
+gives the strips in `../chatmon/anim/<creature>/` byte for byte.
 
 What is not a plain 3 x 2 sheet:
 

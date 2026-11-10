@@ -1,6 +1,6 @@
 """Build the chat bubbles' art from the picked originals: a still bubble per style and the pieces its
 border effect is made of. Nothing here is an animation frame drawn by a generator: motion is made in the
-app (penguin_companion/bubbleart.py) by moving these pieces on a fixed period.
+app (chatmon/bubbleart.py) by moving these pieces on a fixed period.
 
 usage: python art/tools/bubble-cut.py RAW_DIR [--only electric,fire]
 
@@ -19,7 +19,7 @@ and the effect sources:
   leaf-caterpillar.png                 4 x 2 sheet; only the last cell (the flat pose) is used, and its crawl
                                        is baked here by passing a wave along that one sprite
 
-Writes into penguin_companion/bubbles/: <style>-still.png, the strips and sprite rows, fairy-still-b.png (the
+Writes into chatmon/bubbles/: <style>-still.png, the strips and sprite rows, fairy-still-b.png (the
 same rim in shifted colours, transparent wherever nothing changes), fire-flames.png (the baked loop, frames
 stacked top to bottom), leaf-crawler.png (the baked crawl, frames side by side), manifest.json,
 and prints the measurements that prove each strip tiles (the wrap column's step against the other columns')
@@ -39,7 +39,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "penguin_companion" / "bubbles"
+OUT = ROOT / "chatmon" / "bubbles"
 TEXT = 210.0  # display width of the text area in the art's own proportions; sets the still's scale
 K = 0.5  # display px per art px: the art is kept at twice display size
 STYLES = ["electric", "fire", "ghost", "fairy", "leaf"]

@@ -1,7 +1,7 @@
 from datetime import date
 from pathlib import Path
 
-from penguin_companion.heads_up import Watcher, count_apt, count_flatpak, read_disks
+from chatmon.heads_up import Watcher, count_apt, count_flatpak, read_disks
 
 TODAY = date(2026, 10, 31)
 

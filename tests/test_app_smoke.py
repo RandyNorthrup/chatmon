@@ -30,8 +30,8 @@ def companion(tmp_path, monkeypatch):
     # socket paths are limited to ~100 characters, so keep this one short
     run = tempfile.mkdtemp(prefix="pc-", dir=None if sys.platform == "win32" else "/tmp")
     monkeypatch.setenv("XDG_RUNTIME_DIR", run)
-    from penguin_companion import agents, app as appmod, paths
-    from penguin_companion.settings import State
+    from chatmon import agents, app as appmod, paths
+    from chatmon.settings import State
 
     monkeypatch.setattr(agents, "_run_json", lambda argv, what: [])  # never run a real agent's command line
 
@@ -70,7 +70,7 @@ def test_a_hook_reaches_it(companion):
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     code = (
         "import sys; sys.path.insert(0, sys.argv[1]);"
-        "from penguin_companion import events;"
+        "from chatmon import events;"
         "sys.exit(0 if events.send({'type': 'say', 'text': 'hello from a hook'}, timeout=5) else 1)"
     )
     proc = subprocess.Popen([sys.executable, "-c", code, root])
@@ -140,7 +140,7 @@ def test_a_window_manager_cant_close_the_stage_or_strand_the_ask_box(companion):
 
 
 def test_picking_a_companion_swaps_its_sprites_at_once(companion):
-    from penguin_companion import companions
+    from chatmon import companions
 
     c = companion
     assert c._companion().id == "penguin" and c.sprites is c.stage.sprites
@@ -168,7 +168,7 @@ def test_picking_a_companion_swaps_its_sprites_at_once(companion):
     spin(0.4)
     assert c.stage._frame.anim in c.sprites.anims()
 
-    from penguin_companion.settings import State
+    from chatmon.settings import State
 
     assert State.load().get("companion") == "ghost-rabbit"  # remembered for next time
     c.state.set("companion", "no-such-creature")

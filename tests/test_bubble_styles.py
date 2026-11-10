@@ -9,8 +9,8 @@ import pytest
 from PyQt6.QtCore import QPoint, QSizeF
 from PyQt6.QtGui import QColor, QImage, QPainter
 
-from penguin_companion import bubbleart, paths, styles
-from penguin_companion.bubble import AskBox, SpeechBubble
+from chatmon import bubbleart, paths, styles
+from chatmon.bubble import AskBox, SpeechBubble
 
 PAINTED = ["electric", "fire", "ghost", "fairy", "leaf"]
 SIZES = [(300, 92), (220, 60), (377, 141)]  # text areas, display px

@@ -1,6 +1,6 @@
 import random
 
-from penguin_companion.behavior import Behavior
+from chatmon.behavior import Behavior
 
 ANIMS = {
     "walk": (8, 10, True), "idle": (6, 5, True), "peek": (6, 4, False), "talk": (6, 8, True),

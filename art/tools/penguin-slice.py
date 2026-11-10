@@ -4,7 +4,7 @@ Usage: python penguin-slice.py <sheets-dir> [out-dir] [--only name ...]
   sheets-dir  the raw sheets, one <name>.png per animation (kept outside the
               repository; see ../README.md)
   out-dir     where the strips and manifest.json go
-              (default: ../../penguin_companion/anim)
+              (default: ../../chatmon/anim)
   --only      slice just these animations and update their manifest entries,
               keeping the rest (for re-making one sheet)
 Then run penguin-touchup.py over the out-dir for the pixel fixes.
@@ -123,7 +123,7 @@ def main(argv):
     if not args:
         sys.exit(__doc__)
     sheets = args[0]
-    out = args[1] if len(args) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "penguin_companion", "anim")
+    out = args[1] if len(args) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "chatmon", "anim")
     os.makedirs(out, exist_ok=True)
     manifest_path = os.path.join(out, "manifest.json")
     manifest = {}

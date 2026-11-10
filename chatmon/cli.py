@@ -1,4 +1,4 @@
-"""Command line: start the companion, or talk to the one that's running."""
+"""Command line: start Chatmon, or talk to the one that's running."""
 
 from __future__ import annotations
 
@@ -7,17 +7,17 @@ import os
 import sys
 import threading
 
-from . import __version__, events
+from . import __version__, events, paths
 
 USAGE = """\
-usage: penguin-companion [command]
+usage: chatmon [command]
 
-  (no command)               start the companion
+  (no command)               start Chatmon
   hooks                      list the AI agents found here and whether they're connected
-  hooks connect AGENT|all    let an agent tell the penguin what it's doing
+  hooks connect AGENT|all    let an agent tell your chatmon what it's doing
   hooks disconnect AGENT|all take that back out of the agent's settings
   hooks show AGENT|any       how to connect one by hand
-  notify [EVENT] [JSON]      tell the penguin what an agent is doing (hooks run this)
+  notify [EVENT] [JSON]      tell your chatmon what an agent is doing (hooks run this)
       --source NAME          who it's from: claude, codex, muse, gemini...
       --stdin                read the hook's JSON payload from stdin
       --message TEXT         what to show
@@ -35,6 +35,7 @@ STDIN_WAIT = 0.5  # seconds to wait for it
 
 def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
+    paths.migrate()  # settings and state from before the rename, the first time it runs
     if not args:
         from .app import run
 
@@ -67,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
 def _send(message: dict) -> int:
     if events.send(message):
         return 0
-    print("The penguin isn't running. Start it with: penguin-companion", file=sys.stderr)
+    print("Chatmon isn't running. Start it with: chatmon", file=sys.stderr)
     return 1
 
 
@@ -146,7 +147,7 @@ def hooks(args: list[str]) -> int:
     if action == "list":
         for agent in agents.AGENTS:
             print(f"  {agent.name:<10} {agent.label:<20} {agent.status()}")
-        print("\nConnect one with: penguin-companion hooks connect NAME   (or: all)")
+        print("\nConnect one with: chatmon hooks connect NAME   (or: all)")
         return 0
     if action == "show":
         agent = agents.find(target or "")

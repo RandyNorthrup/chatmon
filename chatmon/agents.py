@@ -1,10 +1,14 @@
-"""Connecting the penguin to AI coding agents, so it reacts while they work.
+"""Connecting Chatmon to AI coding agents, so your chatmon reacts while they work.
 
 Each agent has its own way of running a command when something happens.
-Connecting writes the penguin's `notify` command into that agent's own
-settings; disconnecting takes it out again. Every change is something you ask
-for, is made after a backup of the file it changes, and only ever touches
-entries that run penguin-companion.
+Connecting writes Chatmon's `notify` command into that agent's own settings;
+disconnecting takes it out again. Every change is something you ask for, is
+made after a backup of the file it changes, and only ever touches entries that
+run chatmon (or penguin-companion, its old name).
+
+Hooks connected under the old name still work (penguin-companion stays as an
+alias for now); `migrate()` swaps them for chatmon's, and the app does that for
+each agent when it starts.
 """
 
 from __future__ import annotations
@@ -22,7 +26,17 @@ from pathlib import Path
 
 from . import paths
 
-MARK = "penguin-companion"  # every command we add contains this; it's how we find ours again
+MARK = "chatmon"  # every command we add contains this; it's how we find ours again
+LEGACY_MARK = "penguin-companion"  # what the commands contained before the rename
+
+
+def is_ours(text: str) -> bool:
+    return MARK in text or LEGACY_MARK in text
+
+
+def is_legacy(text: str) -> bool:
+    """A command added under the old name, still to be swapped for chatmon's."""
+    return LEGACY_MARK in text and MARK not in text
 
 
 class AgentError(Exception):
@@ -40,14 +54,14 @@ def shell_line(argv: list[str]) -> str:
 def backup(path: Path) -> Path | None:
     if not path.exists():
         return None
-    copy = path.with_name(f"{path.name}.penguin-backup-{time.strftime('%Y%m%d-%H%M%S')}")
+    copy = path.with_name(f"{path.name}.chatmon-backup-{time.strftime('%Y%m%d-%H%M%S')}")
     shutil.copy2(path, copy)
     return copy
 
 
 def write_atomic(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(path.name + ".penguin-tmp")
+    tmp = path.with_name(path.name + ".chatmon-tmp")
     tmp.write_text(text, encoding="utf-8")
     if path.exists():
         shutil.copymode(path, tmp)
@@ -101,6 +115,14 @@ class Agent:
     def manual(self) -> str:
         raise NotImplementedError
 
+    def legacy(self) -> bool:
+        """Connected under the old name, penguin-companion."""
+        return False
+
+    def migrate(self) -> str:
+        """Swap hooks connected under the old name for chatmon's; nothing if there are none."""
+        return self.connect() if self.legacy() else ""
+
 
 class JsonHooks(Agent):
     """Agents whose settings file has Claude Code's shape:
@@ -121,14 +143,20 @@ class JsonHooks(Agent):
 
     @staticmethod
     def _is_ours(group) -> bool:
-        return isinstance(group, dict) and any(MARK in str(h.get("command", "")) for h in group.get("hooks", []) if isinstance(h, dict))
+        return isinstance(group, dict) and any(is_ours(str(h.get("command", ""))) for h in group.get("hooks", []) if isinstance(h, dict))
 
-    def connected(self) -> bool:
+    def _groups(self) -> list:
         try:
             hooks = self._load().get("hooks") or {}
         except AgentError:
-            return False
-        return isinstance(hooks, dict) and any(self._is_ours(g) for event in self.events for g in hooks.get(event) or [])
+            return []
+        return [g for event in self.events for g in hooks.get(event) or []] if isinstance(hooks, dict) else []
+
+    def connected(self) -> bool:
+        return any(self._is_ours(g) for g in self._groups())
+
+    def legacy(self) -> bool:
+        return any(self._is_ours(g) and is_legacy(json.dumps(g)) for g in self._groups())
 
     def connect(self) -> str:
         data = self._load()
@@ -192,18 +220,20 @@ def _needs_on_path() -> None:
     if not shutil.which(paths.APP):
         raise AgentError(
             f"{paths.APP} has to be on your PATH for agent plugins to find it. Install it with "
-            f"`pipx install penguin-companion`, or link the launcher: ln -s <repo>/{paths.APP} ~/.local/bin/"
+            f"`pipx install git+https://github.com/RandyNorthrup/chatmon`, or link the launcher: ln -s <repo>/bin/{paths.APP} ~/.local/bin/"
         )
 
 
 class ClaudeCode(Agent):
-    """Claude Code gets the penguin's hooks from a plugin, which Claude Code
+    """Claude Code gets Chatmon's hooks from a plugin, which Claude Code
     manages itself; editing its settings file under a running Claude Code
     can be undone the next time it saves."""
 
     name, label, command = "claude", "Claude Code", "claude"
-    MARKETPLACE = "penguin-companion"
-    PLUGIN = "penguin-companion@penguin-companion"
+    MARKETPLACE = "chatmon"
+    PLUGIN = "chatmon@chatmon"
+    LEGACY_MARKETPLACE = "penguin-companion"
+    LEGACY_PLUGIN = "penguin-companion@penguin-companion"
 
     def config_path(self) -> Path:
         return _home_env("CLAUDE_CONFIG_DIR", Path.home() / ".claude") / "settings.json"
@@ -216,8 +246,12 @@ class ClaudeCode(Agent):
         found = _run_json(["claude", "plugin", "list", "--json"], self.label)
         return found if isinstance(found, list) else []
 
-    def _mine(self) -> dict | None:
-        return next((p for p in self._plugins() if isinstance(p, dict) and p.get("id") == self.PLUGIN), None)
+    def _mine(self, plugin: str | None = None) -> dict | None:
+        """Our plugin as Claude Code lists it: chatmon's, else the one from before the rename."""
+        found = {p.get("id"): p for p in self._plugins() if isinstance(p, dict)}
+        if plugin is not None:
+            return found.get(plugin)
+        return found.get(self.PLUGIN) or found.get(self.LEGACY_PLUGIN)
 
     def connected(self) -> bool:
         try:
@@ -225,6 +259,29 @@ class ClaudeCode(Agent):
         except AgentError:
             return False
         return bool(mine and mine.get("enabled", True))
+
+    def legacy(self) -> bool:
+        try:
+            return self._mine(self.LEGACY_PLUGIN) is not None
+        except AgentError:
+            return False
+
+    def migrate(self) -> str:
+        if not self.legacy():
+            return ""
+        was_on = bool((self._mine(self.LEGACY_PLUGIN) or {}).get("enabled", True))
+        self._remove(self.LEGACY_PLUGIN, self.LEGACY_MARKETPLACE)
+        if not was_on:  # it was switched off: leave it off, under the new name too
+            return f"Removed Claude Code's {self.LEGACY_PLUGIN} plugin (it was off)"
+        return self.connect()
+
+    def _remove(self, plugin: str, marketplace: str) -> None:
+        if self._mine(plugin) is not None:
+            _run_json(["claude", "plugin", "uninstall", plugin, "--scope", "user", "--json"], self.label)
+        try:
+            _run_json(["claude", "plugin", "marketplace", "remove", marketplace, "--json"], self.label)
+        except AgentError:
+            pass
 
     def status(self) -> str:
         try:
@@ -241,7 +298,7 @@ class ClaudeCode(Agent):
         names = {m.get("name") for m in markets} if isinstance(markets, list) else set()
         if self.MARKETPLACE not in names:
             _run_json(["claude", "plugin", "marketplace", "add", str(self.marketplace_dir()), "--json"], self.label)
-        mine = self._mine()
+        mine = self._mine(self.PLUGIN)
         if mine is None:
             _run_json(["claude", "plugin", "install", self.PLUGIN, "--scope", "user", "--json"], self.label)
         elif not mine.get("enabled", True):
@@ -249,22 +306,19 @@ class ClaudeCode(Agent):
         return (
             f"Connected Claude Code: the {self.PLUGIN} plugin is installed and on. It takes effect in new "
             "Claude Code sessions; a session that's open now can switch it off again when it saves its "
-            "settings, so connect again after closing those if `penguin-companion hooks` says it's off."
+            "settings, so connect again after closing those if `chatmon hooks` says it's off."
         )
 
     def disconnect(self) -> str:
-        if self._mine() is not None:
-            _run_json(["claude", "plugin", "uninstall", self.PLUGIN, "--scope", "user", "--json"], self.label)
-        try:
-            _run_json(["claude", "plugin", "marketplace", "remove", self.MARKETPLACE, "--json"], self.label)
-        except AgentError:
-            pass
+        self._remove(self.PLUGIN, self.MARKETPLACE)
+        if self.legacy():
+            self._remove(self.LEGACY_PLUGIN, self.LEGACY_MARKETPLACE)
         return f"Disconnected Claude Code: uninstalled the {self.PLUGIN} plugin"
 
     def manual(self) -> str:
         return (
             "In Claude Code, run:\n"
-            "  /plugin install penguin-companion --marketplace RandyNorthrup/penguin-companion\n"
+            "  /plugin install chatmon --marketplace RandyNorthrup/chatmon\n"
             f"or from a terminal:\n"
             f"  claude plugin marketplace add {self.marketplace_dir()}\n"
             f"  claude plugin install {self.PLUGIN}\n"
@@ -299,18 +353,25 @@ class Codex(Agent):
             current = self._parse(self._text()).get("notify")
         except AgentError:
             return False
-        return isinstance(current, list) and any(MARK in str(a) for a in current)
+        return isinstance(current, list) and any(is_ours(str(a)) for a in current)
+
+    def legacy(self) -> bool:
+        try:
+            current = self._parse(self._text()).get("notify")
+        except AgentError:
+            return False
+        return isinstance(current, list) and is_legacy(" ".join(map(str, current)))
 
     def connect(self) -> str:
         text = self._text()
         current = self._parse(text).get("notify")
-        if current and not any(MARK in str(a) for a in current):
+        if current and not any(is_ours(str(a)) for a in current):
             raise AgentError(
                 f"Codex already runs {current!r} when a turn ends, and it takes only one program. "
-                f"Not replacing it; see `penguin-companion hooks show codex` to do it by hand."
+                f"Not replacing it; see `chatmon hooks show codex` to do it by hand."
             )
         line = "notify = [" + ", ".join(json.dumps(a) for a in self._argv()) + "]"
-        text = self._LINE.sub(lambda m: "" if MARK in m.group(0) else m.group(0), text)
+        text = self._LINE.sub(lambda m: "" if is_ours(m.group(0)) else m.group(0), text)
         header = re.search(r"^\s*\[", text, re.M)  # a top-level key has to come before the first table
         at = header.start() if header else len(text)
         before, after = text[:at].rstrip("\n"), text[at:]
@@ -323,10 +384,10 @@ class Codex(Agent):
 
     def disconnect(self) -> str:
         text = self._text()
-        ours = [m for m in self._LINE.finditer(text) if MARK in m.group(0)]
+        ours = [m for m in self._LINE.finditer(text) if is_ours(m.group(0))]
         if not ours:
             return "Codex wasn't connected."
-        new = self._LINE.sub(lambda m: "" if MARK in m.group(0) else m.group(0), text)
+        new = self._LINE.sub(lambda m: "" if is_ours(m.group(0)) else m.group(0), text)
         new = re.sub(r"\A\n+", "", new)
         self._parse(new)
         saved = backup(self.config_path())
@@ -342,7 +403,8 @@ class Muse(Agent):
     """Muse Code takes hooks from plugins: we install a small one."""
 
     name, label, command = "muse", "Muse Code", "muse"
-    PLUGIN = "penguin-companion"
+    PLUGIN = "chatmon"
+    LEGACY_PLUGIN = "penguin-companion"
     events = {"UserPromptSubmit": "working", "PermissionRequest": "needs-you", "Notification": "needs-you", "Stop": "done", "Interrupt": "idle"}
 
     def bundle_dir(self) -> Path:
@@ -356,9 +418,9 @@ class Muse(Agent):
         return {
             "schemaVersion": 1,
             "name": self.PLUGIN,
-            "displayName": "Penguin companion",
+            "displayName": "Chatmon",
             "version": "1.0.0",
-            "description": "Lets the penguin companion react while Muse works.",
+            "description": "Lets your chatmon react while Muse works.",
             "compat": {"source": "native", "manifestDir": ".muse-plugin"},
             "capabilities": {"skills": [], "commands": [], "hooks": hooks, "mcpServers": [], "reminders": []},
         }
@@ -367,26 +429,37 @@ class Muse(Agent):
         found = _run_json(["muse", "plugins", *args, "--json"], self.label)
         return found if isinstance(found, dict) else {}
 
-    def connected(self) -> bool:
+    def _installed(self) -> set[str]:
         try:
             plugins = self._muse("list").get("plugins", [])
         except AgentError:
-            return False
-        return any(isinstance(p, dict) and (p.get("plugin") or {}).get("id") == self.PLUGIN for p in plugins)
+            return set()
+        return {(p.get("plugin") or {}).get("id") for p in plugins if isinstance(p, dict)}
+
+    def connected(self) -> bool:
+        return bool({self.PLUGIN, self.LEGACY_PLUGIN} & self._installed())
+
+    def legacy(self) -> bool:
+        return self.LEGACY_PLUGIN in self._installed()
 
     def connect(self) -> str:
         folder = self.bundle_dir()
         write_atomic(folder / ".muse-plugin" / "plugin.json", json.dumps(self.manifest(), indent=2) + "\n")
-        if self.connected():
+        installed = self._installed()
+        if self.LEGACY_PLUGIN in installed:
+            self._muse("remove", self.LEGACY_PLUGIN)
+        if self.PLUGIN in installed:
             self._muse("remove", self.PLUGIN)
         self._muse("install", str(folder), "--scope", "user")
         self._muse("approve", self.PLUGIN)
         return f"Connected Muse Code: installed and approved its {self.PLUGIN} plugin (from {folder})"
 
     def disconnect(self) -> str:
-        if not self.connected():
+        installed = self._installed() & {self.PLUGIN, self.LEGACY_PLUGIN}
+        if not installed:
             return "Muse Code wasn't connected."
-        self._muse("remove", self.PLUGIN)
+        for plugin in sorted(installed):
+            self._muse("remove", plugin)
         return f"Disconnected Muse Code: removed its {self.PLUGIN} plugin"
 
     def manual(self) -> str:
@@ -405,7 +478,7 @@ class Gemini(JsonHooks):
         return _home_env("GEMINI_CLI_HOME", Path.home()) / ".gemini" / "settings.json"
 
     def hook(self, ours: str) -> dict:
-        return {"name": f"penguin-{ours}", **super().hook(ours), "timeout": 5000}  # Gemini's timeouts are in ms
+        return {"name": f"chatmon-{ours}", **super().hook(ours), "timeout": 5000}  # Gemini's timeouts are in ms
 
 
 class Qwen(JsonHooks):
@@ -428,24 +501,37 @@ class Devin(JsonHooks):
 
 
 class OwnFile(Agent):
-    """Agents that read every hooks file in a folder: the penguin gets a file of its own."""
+    """Agents that read every hooks file in a folder: Chatmon gets a file of its own (chatmon.json; before
+    the rename, penguin-companion.json)."""
 
     def content(self) -> dict:
         raise NotImplementedError
 
+    def legacy_path(self) -> Path:
+        return self.config_path().with_name(f"{LEGACY_MARK}.json")
+
+    def _ours(self, path: Path) -> bool:
+        return path.exists() and is_ours(path.read_text(encoding="utf-8", errors="replace"))
+
     def connected(self) -> bool:
-        path = self.config_path()
-        return path.exists() and MARK in path.read_text(encoding="utf-8", errors="replace")
+        return self._ours(self.config_path()) or self._ours(self.legacy_path())
+
+    def legacy(self) -> bool:
+        return self._ours(self.legacy_path())
 
     def connect(self) -> str:
         write_atomic(self.config_path(), json.dumps(self.content(), indent=2) + "\n")
+        if self.legacy():
+            self.legacy_path().unlink()
         return f"Connected {self.label}: {self.config_path()}"
 
     def disconnect(self) -> str:
-        if not self.connected():
+        found = [path for path in (self.config_path(), self.legacy_path()) if self._ours(path)]
+        if not found:
             return f"{self.label} wasn't connected."
-        self.config_path().unlink()
-        return f"Disconnected {self.label}: removed {self.config_path()}"
+        for path in found:
+            path.unlink()
+        return f"Disconnected {self.label}: removed {', '.join(map(str, found))}"
 
     def manual(self) -> str:
         return f"Save as {self.config_path()}:\n{json.dumps(self.content(), indent=2)}"
@@ -515,17 +601,23 @@ class Cursor(Agent):
 
     @staticmethod
     def _is_ours(entry) -> bool:
-        return isinstance(entry, dict) and MARK in str(entry.get("command", ""))
+        return isinstance(entry, dict) and is_ours(str(entry.get("command", "")))
 
     def _entry(self, ours: str) -> dict:
         return {"command": shell_line(notify_argv(ours, self.name)), "timeout": 5}
 
-    def connected(self) -> bool:
+    def _entries(self) -> list:
         try:
             hooks = self._load().get("hooks") or {}
         except AgentError:
-            return False
-        return isinstance(hooks, dict) and any(self._is_ours(e) for event in self.events for e in hooks.get(event) or [])
+            return []
+        return [e for event in self.events for e in hooks.get(event) or []] if isinstance(hooks, dict) else []
+
+    def connected(self) -> bool:
+        return any(self._is_ours(e) for e in self._entries())
+
+    def legacy(self) -> bool:
+        return any(self._is_ours(e) and is_legacy(str(e.get("command", ""))) for e in self._entries())
 
     def connect(self) -> str:
         data = self._load()
@@ -582,13 +674,20 @@ class Cline(Agent):
             return f"# {MARK}\n& {quoted}\nexit 0\n"
         return f"#!/bin/sh\n# {MARK}\n{shell_line(notify_argv(ours, self.name))} || true\n"
 
+    def _text(self, event: str) -> str | None:
+        path = self._file(event)
+        return path.read_text(errors="replace") if path.exists() else None
+
     def connected(self) -> bool:
-        return any(self._file(e).exists() and MARK in self._file(e).read_text(errors="replace") for e in self.events)
+        return any(is_ours(self._text(e) or "") for e in self.events)
+
+    def legacy(self) -> bool:
+        return any(is_legacy(self._text(e) or "") for e in self.events)
 
     def connect(self) -> str:
-        taken = [e for e in self.events if self._file(e).exists() and MARK not in self._file(e).read_text(errors="replace")]
+        taken = [e for e in self.events if self._text(e) is not None and not is_ours(self._text(e))]
         if taken:
-            raise AgentError(f"You already have Cline hooks for {', '.join(taken)}; not replacing them. See `penguin-companion hooks show cline`.")
+            raise AgentError(f"You already have Cline hooks for {', '.join(taken)}; not replacing them. See `chatmon hooks show cline`.")
         for event, ours in self.events.items():
             path = self._file(event)
             write_atomic(path, self._script(ours))
@@ -600,7 +699,7 @@ class Cline(Agent):
         removed = 0
         for event in self.events:
             path = self._file(event)
-            if path.exists() and MARK in path.read_text(errors="replace"):
+            if is_ours(self._text(event) or ""):
                 path.unlink()
                 removed += 1
         return f"Disconnected Cline: removed {removed} hook scripts" if removed else "Cline wasn't connected."

@@ -1,6 +1,6 @@
 import tomllib
 
-from penguin_companion.settings import DEFAULTS, TEMPLATE, State, load_config, merge
+from chatmon.settings import DEFAULTS, TEMPLATE, State, load_config, merge
 
 
 def test_template_is_valid_and_matches_defaults():

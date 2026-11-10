@@ -1,6 +1,6 @@
 """Chat bubble styles: which painted bubble, and the text and button colours that go on it.
 
-The bubbles themselves are painted art (penguin_companion/bubbles, drawn by bubbleart.py); the plain
+The bubbles themselves are painted art (chatmon/bubbles, drawn by bubbleart.py); the plain
 style has none and uses the desktop's own colours.
 """
 

@@ -184,7 +184,7 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
     fps = float(sys.argv[sys.argv.index("--fps") + 1]) if "--fps" in sys.argv else 30.0
     app = preview.start_app()  # noqa: F841 (kept alive while drawing)
-    from penguin_companion import bubbleart, styles
+    from chatmon import bubbleart, styles
 
     only = sys.argv[sys.argv.index("--only") + 1].split(",") if "--only" in sys.argv else [s for s in styles.STYLES if s != "plain"]
     text = QSizeF(*preview.TEXT)

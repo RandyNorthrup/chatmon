@@ -8,7 +8,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PyQt6.QtCore import Qt  # noqa: E402
 
-from penguin_companion import xkb  # noqa: E402
+from chatmon import xkb  # noqa: E402
 
 LIB = xkb.library()
 pytestmark = pytest.mark.skipif(LIB is None, reason="libxkbcommon isn't installed")

@@ -18,7 +18,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PyQt6.QtCore import QPointF, QRect, Qt  # noqa: E402
 from PyQt6.QtGui import QColor, QRegion  # noqa: E402
 
-from penguin_companion import layer, wayland  # noqa: E402
+from chatmon import layer, wayland  # noqa: E402
 
 linux_only = pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Wayland is Linux only")
 
@@ -309,7 +309,7 @@ def test_layer_surface_draws_and_takes_clicks_only_on_the_penguin(qapp):
     (pointer,) = [wayland.decode("n", p)[0] for p in named(reqs, bound["wl_seat"][0], layer.SEAT_GET_POINTER)]
     (get,) = named(reqs, bound["zwlr_layer_shell_v1"][0], layer.LAYER_SHELL_GET_LAYER_SURFACE)
     layer_id, surface_id, output, which, namespace = wayland.decode("noous", get)
-    assert (output, which, namespace) == (bound["wl_output"][0], layer.LAYER_OVERLAY, "penguin-companion")
+    assert (output, which, namespace) == (bound["wl_output"][0], layer.LAYER_OVERLAY, "chatmon")
     assert named(reqs, layer_id, layer.LAYER_SURFACE_SET_ANCHOR) == [struct.pack("<I", 15)]
     assert named(reqs, layer_id, layer.LAYER_SURFACE_SET_KEYBOARD_INTERACTIVITY) == [struct.pack("<I", 0)]  # never the keyboard
     assert named(reqs, layer_id, layer.LAYER_SURFACE_SET_EXCLUSIVE_ZONE) == [struct.pack("<i", -1)]
@@ -425,7 +425,7 @@ def test_file_descriptors_come_with_their_events():
 
 
 def _xkb():
-    from penguin_companion import xkb
+    from chatmon import xkb
 
     lib = xkb.library()
     if lib is None:
@@ -552,7 +552,7 @@ def test_the_wheel_scrolls(qapp):
 
 @linux_only
 def test_input_methods_get_the_field_and_send_text(qapp):
-    from penguin_companion.layer import TextState
+    from chatmon.layer import TextState
 
     conn, server, stage, surf, ids = _configured(qapp)
     ti = ids["text_input"]

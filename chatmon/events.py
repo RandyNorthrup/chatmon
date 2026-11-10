@@ -12,7 +12,7 @@ from . import paths
 
 # Set in the environment of the AI tools the companion itself runs, so their
 # hooks don't make the penguin react to its own questions.
-INTERNAL_ENV = "PENGUIN_COMPANION_INTERNAL"
+INTERNAL_ENV = "CHATMON_INTERNAL"
 
 EVENTS = {
     "working": ("working", "start", "started", "busy", "thinking", "prompt"),

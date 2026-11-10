@@ -8,7 +8,7 @@ Per companion it writes
                      frame rates; walk and beam also mirrored, as the app shows them facing left
   <id>-light.webp    the same on a light desktop (#e9ebf0)
   <id>-contact.png   every frame of every strip at 2x (drawn for a 2x screen), on dark and on light
-The frames come from penguin_companion.sprites.Sprites and are placed as the stage places them: the
+The frames come from chatmon.sprites.Sprites and are placed as the stage places them: the
 anchor on one spot of the floor, the frame's bottom edge on the floor line. Run it with
 QT_QPA_PLATFORM=offscreen; nothing opens on the desktop. Needs PyQt6, Pillow and numpy.
 """
@@ -26,8 +26,8 @@ from PyQt6.QtCore import QPoint  # noqa: E402
 from PyQt6.QtGui import QColor, QGuiApplication, QImage, QPainter  # noqa: E402
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-from penguin_companion import companions  # noqa: E402
-from penguin_companion.sprites import SIDE_VIEWS, Sprites  # noqa: E402
+from chatmon import companions  # noqa: E402
+from chatmon.sprites import SIDE_VIEWS, Sprites  # noqa: E402
 
 DARK, LIGHT = "#1e2128", "#e9ebf0"
 MIN_PLAY = 1.6  # seconds: short loops go round until they have played this long

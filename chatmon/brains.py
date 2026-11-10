@@ -1,4 +1,4 @@
-"""Brains: whichever AI answers the questions you ask the penguin.
+"""Brains: whichever AI answers the questions you ask your chatmon.
 
 A brain is one of:
 - a command-line AI tool you're already signed in to (Claude Code, Codex,
@@ -94,7 +94,7 @@ PRESETS: dict[str, dict] = {
         "url": "https://openrouter.ai/api/v1",
         "model": "openrouter/auto",
         "api_key_env": "OPENROUTER_API_KEY",
-        "headers": {"X-OpenRouter-Title": "Penguin companion"},
+        "headers": {"X-OpenRouter-Title": "Chatmon"},
     },
     "bedrock-api": {
         "type": "openai",
@@ -239,9 +239,10 @@ def check_url(url: str) -> None:
         raise BrainError(f"{url} isn't HTTPS; only a server on this computer may use plain HTTP")
 
 
-def system_prompt(name: str) -> str:
+def system_prompt(name: str, kind: str) -> str:
+    """`kind`: which chatmon it is, as in "fire red panda"."""
     return (
-        f"You are {name}, a small electric-penguin desktop companion. Answer the person's "
+        f"You are {name}, a small {kind} desktop companion. Answer the person's "
         "question helpfully and briefly: a few sentences unless they ask for more. Plain text or "
         "light Markdown. You can't see their screen or files and you can't run anything."
     )

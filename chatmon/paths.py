@@ -10,7 +10,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-APP = "penguin-companion"
+APP = "chatmon"
+LEGACY_APP = "penguin-companion"  # its name before 0.3.0
 
 
 def _base(xdg_var: str, xdg_default: Path) -> Path:
@@ -20,6 +21,28 @@ def _base(xdg_var: str, xdg_default: Path) -> Path:
         return Path.home() / "Library" / "Application Support"
     value = os.environ.get(xdg_var)
     return Path(value) if value else xdg_default
+
+
+def _roots(app: str) -> list[Path]:
+    """The folders an app of this name keeps its settings and state in (one folder on Windows and macOS)."""
+    roots = [_base("XDG_CONFIG_HOME", Path.home() / ".config") / app, _base("XDG_STATE_HOME", Path.home() / ".local" / "state") / app]
+    return list(dict.fromkeys(roots))
+
+
+def migrate() -> list[tuple[Path, Path]]:
+    """Move the settings and state of the old name, penguin-companion, to Chatmon's folders: once, on the
+    first run after the rename, and only where Chatmon has none of its own yet. Returns what it moved."""
+    moved = []
+    for new in _roots(APP):
+        old = new.with_name(LEGACY_APP)
+        if old.is_dir() and not new.exists():
+            try:
+                os.replace(old, new)  # the same parent folder, so the same disk: a rename
+            except OSError as exc:
+                print(f"{APP}: couldn't move {old} to {new}: {exc}", file=sys.stderr)
+                continue
+            moved.append((old, new))
+    return moved
 
 
 def config_dir() -> Path:
@@ -79,7 +102,7 @@ def command_line(windowless: bool = False) -> list[str]:
     if windowless and sys.platform == "win32":
         pythonw = Path(python).with_name("pythonw.exe")
         python = str(pythonw) if pythonw.exists() else python
-    launcher = Path(__file__).resolve().parent.parent / APP
+    launcher = Path(__file__).resolve().parent.parent / "bin" / APP
     if launcher.exists():
         return [python, str(launcher)]
-    return [python, "-m", "penguin_companion"]
+    return [python, "-m", "chatmon"]
