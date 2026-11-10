@@ -750,7 +750,7 @@ class Companion(QObject):
         self.save()
 
     def _set_walk(self, on: bool) -> None:
-        self.behavior.walk_enabled = on
+        self.behavior.set_walk(on, self._now())
         self._menu_changed()
 
     def _set_autostart(self, on: bool) -> None:
@@ -768,7 +768,7 @@ class Companion(QObject):
         size = int(self.config["size"])
         self.sprites = Sprites(paths.anim_dir(), size, self._sprite_scale)
         self.stage.set_sprites(self.sprites)
-        self.behavior.walk_enabled = bool(self.config["walk"])
+        self.behavior.set_walk(bool(self.config["walk"]), self._now())
         self.behavior.sleep_after = float(self.config["sleep_after_minutes"]) * 60
         self.behavior.speed = size * 0.4
         self._menu_changed()

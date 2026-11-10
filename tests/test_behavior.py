@@ -128,3 +128,34 @@ def test_beam_faces_its_side():
     frames, _ = run(b, 3, 5)
     beams = [f for f in frames if f.anim == "beam"]
     assert beams and len({f.mirror for f in beams}) == 1
+
+
+def _until(b, t, test, limit=300, step=1 / 30):
+    """Tick until a frame passes `test`; return (frame, time)."""
+    while t < limit:
+        f = b.tick(t)
+        if test(f, b):
+            return f, t
+        t += step
+    raise AssertionError("never happened")
+
+
+def test_turning_walking_off_stops_a_walk_under_way():
+    b = make(seed=3, sleep_after=0)
+    _, t = _until(b, 0, lambda f, b: f.anim == "walk")
+    b.set_walk(False, t)
+    frames, t = run(b, t, t + 60)
+    assert all(f.anim != "walk" for f in frames)
+    settled = [f.x for f in frames[len(frames) // 2 :]]
+    assert len(set(settled)) == 1  # standing where it stopped
+    b.set_walk(True, t)
+    frames, _ = run(b, t, t + 300)
+    assert any(f.anim == "walk" for f in frames)  # and walks again once allowed
+
+
+def test_turning_walking_off_cancels_a_walk_still_queued_behind_its_turn():
+    b = make(seed=3, sleep_after=0)
+    _, t = _until(b, 0, lambda f, b: f.anim == "turn" and b._target is not None)
+    b.set_walk(False, t)
+    frames, _ = run(b, t, t + 60)
+    assert all(f.anim != "walk" for f in frames)
