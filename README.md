@@ -187,17 +187,38 @@ name, reminders and the penguin's spot on the screen.
 
 ## How it's put together
 
-The penguin and its message bubbles are drawn inside one see-through window over
+The penguin and its message bubbles are drawn on one see-through surface over
 the screen, so moving them never moves a window: no lag, no trails. Clicks go
-through that window everywhere except the penguin and its bubble (an X input
-shape on X11, mouse tracking on Windows and macOS). On Wayland desktops it runs
-through XWayland, since Wayland doesn't let a window place itself or stay above
-the others. The ask box is a small window of its own, as it needs the keyboard.
+through it everywhere except the penguin and what it's showing you.
+
+- **Wayland** (Hyprland, KDE Plasma, Sway, niri and the other desktops with the
+  layer-shell protocol): the surface is a layer-shell overlay, above panels, with
+  an input region for the clicks. Everything the penguin shows is drawn on it:
+  its bubbles, its menus and the ask box, so none of it is an XWayland window
+  that the desktop would put underneath, decorate with its borders, or keep the
+  keyboard from. The overlay takes the keyboard only while the ask box is open,
+  and reads it with libxkbcommon, so your layout, dead keys and compose work.
+  Qt can't make a layer-shell surface, so the penguin talks to the compositor
+  itself, with a small Wayland client of its own (no extra libraries).
+- **X11**, and **GNOME on Wayland** (no layer-shell there; it runs through
+  XWayland, whose X input shapes GNOME reads): a window over the screen with an
+  X input shape. The ask box is a window of its own.
+- **Windows and macOS**: a window over the screen that takes the mouse only
+  while it's over the penguin.
+
+`PENGUIN_COMPANION_STAGE=window` keeps the X11 way on a Wayland desktop, and
+`PENGUIN_COMPANION_DEBUG=1` logs the overlay's keyboard focus to the terminal,
+should either ever be needed.
 
 | File                              | What                                                   |
 | --------------------------------- | ------------------------------------------------------ |
 | `penguin_companion/behavior.py`   | What it does from moment to moment (no Qt; tested)     |
-| `penguin_companion/penguin.py`    | The stage window: drawing and the mouse                |
+| `penguin_companion/penguin.py`    | The stage: drawing, the mouse, and the ask box when it's on the overlay |
+| `penguin_companion/layer.py`      | The stage's Wayland overlay (layer shell)              |
+| `penguin_companion/wayland.py`    | The Wayland wire protocol, just enough for the overlay |
+| `penguin_companion/xkb.py`        | The keyboard on the overlay, through libxkbcommon      |
+| `penguin_companion/stagemenu.py`  | Menus drawn on the stage                               |
+| `penguin_companion/clickthrough.py` | Clicks through the stage window (X11, Windows, macOS) |
 | `penguin_companion/bubble.py`     | Message bubbles and the ask box                        |
 | `penguin_companion/app.py`        | Ties it together: menu, tray, reminders, heads-ups, hooks |
 | `penguin_companion/brains.py`     | The AI brains                                          |
@@ -205,8 +226,10 @@ the others. The ask box is a small window of its own, as it needs the keyboard.
 | `penguin_companion/integrations/` | The Claude Code plugin                                 |
 | `art/`                            | The character, its image prompts and the slicing tools ([art/README.md](art/README.md)) |
 
-Tested on KDE Plasma 6.4 (Wayland); CI runs the tests, including a headless run
-of the whole app, on Linux, Windows and macOS with Python 3.11 and 3.15.
+The overlay is tested on Hyprland 0.57; KDE Plasma 6.4 (Wayland) was tested
+with the window, before the overlay. CI runs the tests, including a headless run
+of the whole app and the overlay against a pretend compositor, on Linux, Windows
+and macOS with Python 3.11 and 3.15.
 
 ```sh
 python3 -m pip install pytest ruff

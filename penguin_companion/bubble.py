@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable
 
-from PyQt6.QtCore import QPoint, QPointF, QRectF, QSizeF, Qt, QUrl, pyqtSignal
+from PyQt6.QtCore import QPoint, QPointF, QRect, QRectF, QSizeF, Qt, QUrl, pyqtSignal
 from PyQt6.QtGui import (
     QAbstractTextDocumentLayout,
     QColor,
@@ -200,8 +200,9 @@ class SpeechBubble:
 
 
 class AskBox(QWidget):
-    """The bubble you type questions into. A real window, since it needs the
-    keyboard; the penguin holds still while it's open."""
+    """The bubble you type questions into, with real Qt widgets since it needs
+    the keyboard. A window of its own, or drawn on the Wayland overlay by the
+    stage (penguin.Hosted); the penguin holds still while it's open."""
 
     closed = pyqtSignal()
     submitted = pyqtSignal(str)
@@ -217,6 +218,7 @@ class AskBox(QWidget):
         self.setFixedWidth(self.WIDTH)
         self._anchor = QPoint(0, 0)
         self._tail_x = self.WIDTH / 2
+        self.wants_keyboard = True
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(16, 12, 16, 14 + TAIL)
@@ -247,7 +249,8 @@ class AskBox(QWidget):
         layout.addWidget(self.hint)
         self._style()
 
-    def open(self, anchor: QPoint, title: str, hint: str, placeholder: str, text: str = "", prefill: str = "") -> None:
+    def open(self, anchor: QPoint, title: str, hint: str, placeholder: str, text: str = "", prefill: str = "", activate: bool = True) -> None:
+        """Show it above `anchor`; `activate` gives it the keyboard (you asked for it)."""
         self.title.setText(title)
         self.hint.setText(QFontMetricsF(self.hint.font()).elidedText(hint, Qt.TextElideMode.ElideRight, self.WIDTH - 34))
         self.entry.setPlaceholderText(placeholder)
@@ -255,9 +258,11 @@ class AskBox(QWidget):
         self.reset_button.hide()
         self._anchor = QPoint(anchor)
         self.set_answer(text)
+        self.wants_keyboard = activate
         self.show()
         self.raise_()
-        self.activateWindow()
+        if activate:
+            self.activateWindow()
         self.entry.setFocus()
         self.entry.end(False)
 
@@ -276,6 +281,13 @@ class AskBox(QWidget):
 
     def set_resettable(self, on: bool) -> None:
         self.reset_button.setVisible(on)
+
+    def input_rects(self) -> list[QRect]:
+        """The bubble and its tail, without the see-through margin around them."""
+        h = self.height()
+        body = QRect(0, 0, self.width(), h - TAIL)
+        tail = QRect(round(self._tail_x) - 10, h - TAIL - 1, 20, TAIL + 1)
+        return [body, tail]
 
     def place(self, anchor: QPoint) -> None:
         self._anchor = QPoint(anchor)
@@ -340,3 +352,9 @@ class AskBox(QWidget):
             self.dismiss()
         else:
             super().keyPressEvent(event)
+
+    def closeEvent(self, event) -> None:
+        # The window manager closed it (Super+C and the like): same as Esc, so
+        # the penguin stops waiting on a question nobody can see.
+        event.ignore()
+        self.dismiss()

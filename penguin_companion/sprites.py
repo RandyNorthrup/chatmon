@@ -1,4 +1,9 @@
-"""The animation strips, cut into frames and scaled for the screen once."""
+"""The animation strips, cut into frames and scaled for the screen once.
+
+Frames are scaled to the screen's real pixels (`scale`: device pixels per
+logical pixel, 2 on a 2x screen), so the penguin is as sharp as the art
+allows; sizes, hit tests and outlines stay in logical pixels.
+"""
 
 from __future__ import annotations
 
@@ -17,15 +22,24 @@ BAND = 4  # rows per rectangle in a frame's outline
 
 @dataclass
 class SpriteFrame:
-    pixmap: QPixmap
-    image: QImage  # for exact hit tests
-    anchor: int  # x of the penguin's centre line within the frame
-    outline: list[QRect]  # the opaque area as a few rectangles, for click-through
+    pixmap: QPixmap  # device pixels, with its device pixel ratio set
+    image: QImage  # the same, for exact hit tests
+    anchor: int  # x of the penguin's centre line within the frame (logical)
+    outline: list[QRect]  # the opaque area as a few rectangles, for click-through (logical)
+    scale: float = 1.0  # device pixels per logical pixel
+
+    def width(self) -> int:
+        return round(self.image.width() / self.scale)
+
+    def height(self) -> int:
+        return round(self.image.height() / self.scale)
 
     def hit(self, x: int, y: int) -> bool:
-        if not (0 <= x < self.image.width() and 0 <= y < self.image.height()):
+        """Whether the penguin is at (x, y), logical pixels within the frame."""
+        dx, dy = int(x * self.scale), int(y * self.scale)
+        if not (0 <= dx < self.image.width() and 0 <= dy < self.image.height()):
             return False
-        return self.image.pixelColor(x, y).alpha() > OPAQUE
+        return self.image.pixelColor(dx, dy).alpha() > OPAQUE
 
 
 @dataclass
@@ -70,12 +84,20 @@ def _outline(img: QImage) -> list[QRect]:
     return rects
 
 
-def _frame(img: QImage, anchor: int) -> SpriteFrame:
-    return SpriteFrame(QPixmap.fromImage(img), img, anchor, _outline(img))
+def _frame(img: QImage, anchor: int, scale: float) -> SpriteFrame:
+    pixmap = QPixmap.fromImage(img)
+    pixmap.setDevicePixelRatio(scale)
+    outline = []
+    for r in _outline(img):  # device pixels to logical, rounding outward
+        left, top = int(r.left() / scale), int(r.top() / scale)
+        right, bottom = -int(-(r.right() + 1) // scale), -int(-(r.bottom() + 1) // scale)
+        outline.append(QRect(left, top, right - left, bottom - top))
+    return SpriteFrame(pixmap, img, anchor, outline, scale)
 
 
 class Sprites:
-    def __init__(self, anim_dir: Path, size: int):
+    def __init__(self, anim_dir: Path, size: int, scale: float = 1.0):
+        self.scale = scale = max(0.5, float(scale))
         manifest = json.loads((anim_dir / "manifest.json").read_text(encoding="utf-8"))
         self.info: dict[str, AnimInfo] = {}
         self._frames: dict[tuple[str, bool], list[SpriteFrame]] = {}
@@ -84,20 +106,20 @@ class Sprites:
             self.info[name] = AnimInfo(int(m["frames"]), float(m["fps"]), bool(m["loop"]))
             strip = QImage(str(anim_dir / f"{name}.png")).convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
             w, h = int(m["w"]), int(m["h"])
-            scale = float(m.get("scale", 1.0)) * size / h
-            dw, dh = max(1, round(w * scale)), max(1, round(h * scale))
-            anchor = round(_foot_centre(strip.copy(0, 0, w, h)) * scale)
+            factor = float(m.get("scale", 1.0)) * size / h  # art pixels to logical
+            dw, dh = max(1, round(w * factor * scale)), max(1, round(h * factor * scale))
+            anchor = round(_foot_centre(strip.copy(0, 0, w, h)) * factor)
             normal, mirrored = [], []
             for i in range(self.info[name].frames):
                 img = strip.copy(i * w, 0, w, h).scaled(
                     dw, dh, Qt.AspectRatioMode.IgnoreAspectRatio, Qt.TransformationMode.SmoothTransformation
                 )
-                normal.append(_frame(img, anchor))
+                normal.append(_frame(img, anchor, scale))
                 if name in SIDE_VIEWS:
-                    mirrored.append(_frame(img.transformed(flip), dw - anchor))
+                    mirrored.append(_frame(img.transformed(flip), round(dw / scale) - anchor, scale))
             self._frames[(name, False)] = normal
             self._frames[(name, True)] = mirrored or normal
-        self.height = max(f.pixmap.height() for fs in self._frames.values() for f in fs)
+        self.height = max(f.height() for fs in self._frames.values() for f in fs)
 
     def frame(self, anim: str, index: int, mirror: bool) -> SpriteFrame:
         return self._frames[(anim, mirror)][index]

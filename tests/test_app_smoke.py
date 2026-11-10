@@ -108,3 +108,32 @@ def test_hide_menu_and_reload(companion):
     assert labels[0] == "Ask Sparky…" and "Quit" in labels
     c.reload()
     assert c.stage.message_visible()
+
+
+def test_the_tray_menu_is_filled_before_anyone_opens_it(companion):
+    """D-Bus trays (Waybar and other StatusNotifierItem hosts) read the menu
+    before they ask for it to open, so it can't wait for aboutToShow."""
+    c = companion
+    labels = [a.text() for a in c.menu.actions() if a.text()]
+    assert "Hide (peek now and then)" in labels and "Quit" in labels
+    c.set_hidden(True)
+    spin(0.1)
+    assert "Come out" in [a.text() for a in c.menu.actions()]
+    c.handle({"type": "remind", "text": "in 30m to stretch"})
+    spin(0.1)
+    assert any(a.text().startswith("Reminders (1)") for a in c.menu.actions())
+
+
+def test_a_window_manager_cant_close_the_stage_or_strand_the_ask_box(companion):
+    from PyQt6.QtWidgets import QWidget
+
+    c = companion
+    window = c.stage.surface
+    if isinstance(window, QWidget):
+        QWidget.close(window)  # what Super+C does
+        assert window.isVisible()
+    closed = []
+    c.ask_box.closed.connect(lambda: closed.append(True))
+    c.open_ask()
+    QWidget.close(c.ask_box)
+    assert not c.ask_box.isVisible() and closed
