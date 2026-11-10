@@ -428,3 +428,19 @@ def test_claude_keeps_the_old_plugin_until_chatmon_can_run(monkeypatch):
     with pytest.raises(agents.AgentError, match="PATH"):
         agents.ClaudeCode().migrate()
     assert [p["id"] for p in fake.plugins] == ["penguin-companion@penguin-companion"]  # still there, still working
+
+
+def test_our_command_is_known_in_every_form_we_write_it():
+    ours = [
+        "/usr/bin/chatmon notify done --source gemini --stdin",
+        'chatmon notify working --source claude --stdin || true',  # the Claude Code plugin
+        '"C:\\\\Users\\\\r\\\\chatmon.exe" notify done',  # JSON on Windows
+        "# chatmon\n& 'C:\\Users\\r\\chatmon.exe' 'notify' 'done' '--source' 'cline'\nexit 0\n",  # Cline, PowerShell
+        'notify = ["/usr/bin/chatmon", "notify", "done"]',  # Codex's TOML list
+        "/usr/bin/python3 -m chatmon notify done",
+        "/usr/bin/penguin-companion notify done",
+    ]
+    for text in ours:
+        assert agents.is_ours(text), text
+    for text in ("~/bin/chatmonitor notify", "& 'C:\\x\\chatmonitor.exe' 'notify'", 'notify-send "chatmon"', "my-chatmon notify"):
+        assert not agents.is_ours(text), text

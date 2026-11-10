@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -112,7 +113,10 @@ def test_without_a_runtime_folder_the_socket_is_in_a_private_one(tmp_path, monke
 def test_never_sends_to_a_socket_someone_else_owns(tmp_path, monkeypatch):
     import socket as sockets
 
-    path = tmp_path / "s.sock"
+    import tempfile
+
+    short = Path(tempfile.mkdtemp(prefix="cm-", dir="/tmp"))  # a socket path must be short (104 bytes on macOS)
+    path = short / "s.sock"
     server = sockets.socket(sockets.AF_UNIX, sockets.SOCK_STREAM)
     server.bind(str(path))
     server.listen(1)

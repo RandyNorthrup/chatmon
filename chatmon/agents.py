@@ -34,7 +34,8 @@ def _runs(name: str) -> re.Pattern:
     """`name notify`, the command we add: the program on its own (any folder, quotes, .exe, or run as
     `python -m name`), then notify. Never a word that merely contains it, like chatmonitor."""
     module = name.replace("-", "_")
-    between = r"""(?:["']?\s*,\s*["']?|["']?\s+)"""  # a space, or the next item of a list: "chatmon", "notify"
+    # A space, or the next item of a list or a quoted command line: "chatmon", "notify" / 'chatmon.exe' 'notify'.
+    between = r"""["']?(?:\s*,\s*|\s+)["']?"""
     return re.compile(rf"""(?:^|[\s/\\"'=])(?:{re.escape(name)}|{re.escape(module)})(?:\.exe|\.py)?{between}notify(?:\s|$|["',\]])""")
 
 
