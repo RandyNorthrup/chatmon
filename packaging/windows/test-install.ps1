@@ -35,7 +35,7 @@ Check "the installed Chatmon runs" ($LASTEXITCODE -eq 0)
 
 # The uninstaller hands over to a copy of itself and returns at once: wait for the folder to go.
 Start-Process "$app\unins000.exe" -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART" -Wait
-for ($i = 0; $i -lt 60 -and ((Test-Path $app) -or (Uninstall-Entry))); $i++) { Start-Sleep 1 }
+for ($i = 0; $i -lt 60 -and ((Test-Path $app) -or (Uninstall-Entry)); $i++) { Start-Sleep 1 }
 Check "its folder is gone" (-not (Test-Path $app))
 Check "the Start menu entry and desktop icon are gone" (-not (Test-Path $startMenu) -and -not (Test-Path $desktop))
 Check "PATH is as it was" ([string][Environment]::GetEnvironmentVariable("Path", "User") -eq [string]$pathBefore)
