@@ -17,11 +17,13 @@ from PyQt6.QtWidgets import QWidget
 from . import clickthrough
 from .behavior import Behavior, Frame
 from .bubble import SpeechBubble
+from .styles import POP
 from .sprites import Sprites
 
 EDGE = 50  # keep the penguin's centre this far from the screen's sides
 FPS = 60  # while it walks, falls or a bubble fades
 SLOW_FPS = 30  # otherwise
+RIM_FPS = 30  # a bubble's rim effect
 
 
 class Stage(QWidget):
@@ -144,12 +146,14 @@ class Stage(QWidget):
 
         z_phase = int(now * 1.2) % 3 if zs.isValid() else -1
         fade = round(self.bubble.opacity(now) * 20) if self.bubble.drawn() else -1
-        key = (f.anim, f.index, f.mirror, penguin.topLeft(), z_phase, bubble_box.topLeft(), self.bubble.hover, fade)
+        rim = int(now * RIM_FPS) if self.bubble.animating(now) else -1  # the rim's effect, frame by frame
+        key = (f.anim, f.index, f.mirror, penguin.topLeft(), z_phase, bubble_box.topLeft(), self.bubble.hover, fade, rim)
         if key != self._key:
+            reach = self.bubble.margins()
             dirty = QRegion(self._penguin.adjusted(-2, -2, 2, 2)).united(QRegion(penguin.adjusted(-2, -2, 2, 2)))
             dirty = dirty.united(QRegion(self._z_rect(self._penguin))).united(QRegion(zs))
-            dirty = dirty.united(QRegion(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
-            dirty = dirty.united(QRegion(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
+            dirty = dirty.united(QRegion(self._bubble_box.marginsAdded(reach).toAlignedRect().adjusted(-3, -3, 3, 3)))
+            dirty = dirty.united(QRegion(bubble_box.marginsAdded(reach).toAlignedRect().adjusted(-3, -3, 3, 3)))
             self._key = key
             self._penguin, self._bubble_box = penguin, bubble_box
             self.update(dirty)
@@ -161,7 +165,8 @@ class Stage(QWidget):
             self._head = head
             self.head_moved.emit()
         # Full speed while anything moves; the sprites' own frame rates are 10 fps or less.
-        moving = f.anim == "walk" or self.behavior.held or self.behavior.falling or 0 <= fade < 20
+        popping = self.bubble.animating(now) and self.bubble.age(now) < POP
+        moving = f.anim == "walk" or self.behavior.held or self.behavior.falling or 0 <= fade < 20 or popping
         interval = 1000 // FPS if moving else 1000 // SLOW_FPS
         if self._timer.interval() != interval:
             self._timer.setInterval(interval)

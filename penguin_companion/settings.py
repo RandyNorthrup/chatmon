@@ -16,6 +16,8 @@ DEFAULTS: dict[str, Any] = {
     "size": 120,
     "walk": True,
     "sleep_after_minutes": 10,
+    "bubble_style": "electric",
+    "bubble_effects": True,
     "ai": {"brain": "auto", "timeout_seconds": 180, "brains": {}},
     "agents": {"show_replies": False},
     "breaks": {"every_minutes": 60, "snooze_minutes": 10},
@@ -44,6 +46,16 @@ walk = true
 
 # Fall asleep after this many minutes without any attention (0: never).
 sleep_after_minutes = 10
+
+# How its chat bubbles look: "electric" (lightning crackling round the rim),
+# "fire" (flames), "leaf" (a vine that grows round it), "fairy" (sparkles),
+# "ghost" (wisps), or "plain" (your desktop's own colours). The menu's
+# "Bubble style" overrides this.
+bubble_style = "electric"
+
+# Animate the bubbles: they pop up and their rim effect runs. false keeps the
+# style but holds it still.
+bubble_effects = true
 
 [ai]
 # Which brain answers your questions. "auto" uses the first AI command-line

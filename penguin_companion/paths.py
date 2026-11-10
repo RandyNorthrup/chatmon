@@ -66,6 +66,10 @@ def anim_dir() -> Path:
     return Path(__file__).resolve().parent / "anim"
 
 
+def bubbles_dir() -> Path:
+    return Path(__file__).resolve().parent / "bubbles"
+
+
 def command_line(windowless: bool = False) -> list[str]:
     """How to run this companion from a hook, a shortcut or autostart."""
     installed = shutil.which(APP)

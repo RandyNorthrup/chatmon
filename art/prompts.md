@@ -52,3 +52,13 @@ Same character and exactly the same sprite-sheet rules as before (green #00B140 
 ## `beam`
 
 Same character and exactly the same sprite-sheet rules as before (green #00B140 background). Now: CELEBRATE WITH A BEAM, 6 frames in 2 rows of 3, side view facing right like the reference's beam pose: frame 1 winding up, sparks gathering at the right flipper; frame 2 flipper extended, a small bright flash; frames 3 and 4 a short electric beam (yellow and cyan) shooting to the right, kept INSIDE the cell and not touching the next frame; frame 5 the beam fading to sparks; frame 6 a proud pose with a few fading sparks.
+
+## `beam` (redrawn 2026-11-09)
+
+The first beam sheet ran its beam into the cell edge in frames 3 and 4. On 2026-11-09 the sheet was redrawn with the Codex
+CLI's built-in image generation (the owner's ChatGPT sign-in) from the original strip itself, laid back onto the green
+sheet layout as the target, with the reference sheet as the second image. Three tries ran on this prompt; the owner
+picked the third after a frame-by-frame check against the original (body outline 84 to 93 percent the same, faces and
+poses matching, the beam ending inside every cell).
+
+The FIRST attached image is the exact target: the current beam sprite sheet of this penguin, 6 frames in 2 rows of 3 on chroma-key green. Redraw it as closely as you can: the identical penguin (same proportions, outlines, colours, armour plates, nodes and belly mark), the same pose and the same facial expression in each frame, the same size and placement in each cell, and the same look of the beam and sparks. The ONLY change: in frames 3 and 4 the electric beam is a little shorter so it ends INSIDE its cell in a bright flared tip with a few sparks, leaving clear green space (at least 15 percent of the cell width) between the tip and the cell's right edge. The SECOND attached image is the character reference sheet. Rules for every frame: feet on the same baseline, frames evenly spaced, never overlapping or touching, flat pure chroma-key green (#00B140) everywhere, no ground shadow, no text, no numbers, no grid lines, no borders. Landscape 3:2 image. For reference, the original prompt for this sheet was: Same character and exactly the same sprite-sheet rules as before (green #00B140 background). Now: CELEBRATE WITH A BEAM, 6 frames in 2 rows of 3, side view facing right like the reference's beam pose: frame 1 winding up, sparks gathering at the right flipper; frame 2 flipper extended, a small bright flash; frames 3 and 4 a short electric beam (yellow and cyan) shooting to the right, kept INSIDE the cell and not touching the next frame; frame 5 the beam fading to sparks; frame 6 a proud pose with a few fading sparks.

@@ -1,22 +1,25 @@
 """Slice the generated green-screen sprite sheets into keyed animation strips.
 
-Usage: python penguin-slice.py <sheets-dir> [out-dir]
-  sheets-dir  the raw 1536 x 1024 sheets, one <name>.png per animation (kept
-              outside the repository; see ../README.md)
+Usage: python penguin-slice.py <sheets-dir> [out-dir] [--only name ...]
+  sheets-dir  the raw sheets, one <name>.png per animation (kept outside the
+              repository; see ../README.md)
   out-dir     where the strips and manifest.json go
               (default: ../../penguin_companion/anim)
-Needs Pillow.
+  --only      slice just these animations and update their manifest entries,
+              keeping the rest (for re-making one sheet)
+Then run penguin-touchup.py over the out-dir for the pixel fixes.
+Needs Pillow and numpy.
 """
+
 import json
 import os
 import sys
+
+import numpy as np
 from PIL import Image, ImageFilter
 
-if len(sys.argv) < 2:
-    sys.exit(__doc__)
-SHEETS = sys.argv[1]
-OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "penguin_companion", "anim")
-os.makedirs(OUT, exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import spritefix  # noqa: E402
 
 # name: (cols, rows, fps, loop, scale)
 # scale is the display scale that keeps the penguin one size on screen, matched
@@ -36,6 +39,7 @@ SPEC = {
     "beam": (3, 2, 8, False, 1.0),
 }
 FRAME_H = 240  # output frame height in px (2x for ~120 px on screen)
+MARGIN = 160  # canvas margin so shifted content never clips
 
 
 def key_image(img):
@@ -59,11 +63,13 @@ def key_image(img):
     return out
 
 
-manifest = {}
-for name, (cols, rows, fps, loop, display_scale) in SPEC.items():
-    src = os.path.join(SHEETS, f"{name}.png")
-    sheet = Image.open(src).convert("RGB")
-    keyed = key_image(sheet)
+def bbox_of(img):
+    return img.getchannel("A").point(lambda v: 255 if v > 48 else 0).getbbox()
+
+
+def slice_sheet(path, name):
+    cols, rows, fps, loop, display_scale = SPEC[name]
+    keyed = key_image(Image.open(path).convert("RGB"))
     W, H = keyed.size
     cw, ch = W / cols, H / rows
     raw = []
@@ -71,51 +77,69 @@ for name, (cols, rows, fps, loop, display_scale) in SPEC.items():
         for c in range(cols):
             box = (round(c * cw), round(r * ch), round((c + 1) * cw), round((r + 1) * ch))
             raw.append((r, keyed.crop(box)))
-    # Align rows: the generator places each row at its own height, so shift every row
-    # so its lowest point (feet, or the peek cut line) and its mean centre match row 0.
-    def bbox_of(img):
-        return img.getchannel("A").point(lambda v: 255 if v > 48 else 0).getbbox()
+    # Rows: the generator places each row at its own height, so shift every row so its lowest
+    # point (feet, or the peek cut line) matches row 0. Within a row the feet share a baseline.
     rows_bb = {}
     for r, cell in raw:
         bb = bbox_of(cell)
         if bb:
             rows_bb.setdefault(r, []).append(bb)
     ref_bottom = max(b[3] for b in rows_bb[0])
-    ref_cx = sum((b[0] + b[2]) / 2 for b in rows_bb[0]) / len(rows_bb[0])
-    shift = {}
-    for r, bbs in rows_bb.items():
-        bottom = max(b[3] for b in bbs)
-        cx = sum((b[0] + b[2]) / 2 for b in bbs) / len(bbs)
-        shift[r] = (round(ref_cx - cx), round(ref_bottom - bottom))
-    M = 60  # canvas margin so shifted content never clips
+    dy = {r: round(ref_bottom - max(b[3] for b in bbs)) for r, bbs in rows_bb.items()}
     cells = []
     for r, cell in raw:
-        dx, dy = shift.get(r, (0, 0))
-        canvas = Image.new("RGBA", (cell.width + 2 * M, cell.height + 2 * M), (0, 0, 0, 0))
-        canvas.paste(cell, (M + dx, M + dy), cell)
-        cells.append(canvas)
+        canvas = Image.new("RGBA", (cell.width + 2 * MARGIN, cell.height + 2 * MARGIN), (0, 0, 0, 0))
+        canvas.paste(cell, (MARGIN, MARGIN + dy.get(r, 0)), cell)
+        cells.append(np.asarray(canvas).copy())
+    # Columns: the generator doesn't centre the character in every cell either, so line each frame's
+    # body up with frame 1's (spritefix.ALIGN says how), or the penguin slides about as it plays.
+    cells = [spritefix.despill(c) for c in cells]
+    cells, _ = spritefix.realign(cells, spritefix.ALIGN[name], pad=0)
     # One shared crop for the whole animation keeps motion (bob, hop) relative to the cell.
     union = None
     for cell in cells:
-        bb = cell.getchannel("A").point(lambda v: 255 if v > 48 else 0).getbbox()
-        if bb is None:
-            continue
-        union = bb if union is None else (min(union[0], bb[0]), min(union[1], bb[1]), max(union[2], bb[2]), max(union[3], bb[3]))
+        bb = bbox_of(Image.fromarray(cell))
+        if bb is not None:
+            union = bb if union is None else (min(union[0], bb[0]), min(union[1], bb[1]), max(union[2], bb[2]), max(union[3], bb[3]))
     pad = 6
-    cw0, ch0 = cells[0].size
+    cw0, ch0 = cells[0].shape[1], cells[0].shape[0]
     union = (max(0, union[0] - pad), max(0, union[1] - pad), min(cw0, union[2] + pad), min(ch0, union[3] + pad))
-    frames = [cell.crop(union) for cell in cells]
+    frames = [Image.fromarray(c).crop(union) for c in cells]
     fw0, fh0 = frames[0].size
     scale = FRAME_H / fh0
     fw = max(1, round(fw0 * scale))
     strip = Image.new("RGBA", (fw * len(frames), FRAME_H), (0, 0, 0, 0))
     for i, f in enumerate(frames):
         strip.paste(f.resize((fw, FRAME_H), Image.LANCZOS), (i * fw, 0))
-    path = os.path.join(OUT, f"{name}.png")
-    strip.save(path, optimize=True)
-    manifest[name] = {"frames": len(frames), "w": fw, "h": FRAME_H, "fps": fps, "loop": loop, "scale": display_scale}
-    print(name, len(frames), fw, FRAME_H, os.path.getsize(path))
+    entry = {"frames": len(frames), "w": fw, "h": FRAME_H, "fps": fps, "loop": loop, "scale": display_scale}
+    return strip, entry
 
-with open(os.path.join(OUT, "manifest.json"), "w", encoding="utf-8") as fh:
-    json.dump(manifest, fh, indent=1)
-print("sheet size", W, H)
+
+def main(argv):
+    args = [a for a in argv if not a.startswith("--")]
+    only = argv[argv.index("--only") + 1 :] if "--only" in argv else None
+    if only:
+        args = args[: len(args) - len(only)]
+    if not args:
+        sys.exit(__doc__)
+    sheets = args[0]
+    out = args[1] if len(args) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "penguin_companion", "anim")
+    os.makedirs(out, exist_ok=True)
+    manifest_path = os.path.join(out, "manifest.json")
+    manifest = {}
+    if only and os.path.exists(manifest_path):
+        with open(manifest_path, encoding="utf-8") as fh:
+            manifest = json.load(fh)
+    for name in only or SPEC:
+        strip, entry = slice_sheet(os.path.join(sheets, f"{name}.png"), name)
+        path = os.path.join(out, f"{name}.png")
+        strip.save(path, optimize=True)
+        manifest[name] = entry
+        print(name, entry["frames"], entry["w"], FRAME_H, os.path.getsize(path))
+    ordered = {k: manifest[k] for k in SPEC if k in manifest}
+    with open(manifest_path, "w", encoding="utf-8") as fh:
+        json.dump(ordered, fh, indent=1)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

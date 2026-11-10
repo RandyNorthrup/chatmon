@@ -17,7 +17,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QGuiApplication, QIcon
 from PyQt6.QtNetwork import QLocalServer
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
-from . import agents, autostart, brains, events, heads_up, paths, reminders
+from . import agents, autostart, brains, events, heads_up, paths, reminders, styles
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -98,6 +98,7 @@ class Companion(QObject):
         )
         self.stage = Stage(self.sprites, self.behavior)
         self.ask_box = AskBox()
+        self._apply_bubble_style()
         self.asker = brains.Asker(self)
 
         self.stage.clicked.connect(self.on_click)
@@ -589,6 +590,7 @@ class Companion(QObject):
                 sub.addAction(f"✕  {reminders.describe(r.due, time.time())}: {r.text}", partial(self._cancel, r.id))
         m.addSeparator()
         self._brain_menu(m.addMenu("Brain"))
+        self._style_menu(m.addMenu("Bubble style"))
         self._agents_menu(m.addMenu("AI agents"))
         self._refresh_agents()
         walk = m.addAction("Walk around")
@@ -673,6 +675,45 @@ class Companion(QObject):
         self.open_ask()
         self.ask_box.set_answer("Any agent or script can tell me what it's doing:\n\n```\n" + agents.generic() + "\n```")
 
+    def _style_menu(self, sub: QMenu) -> None:
+        group = QActionGroup(sub)
+        current = self._bubble_style().name
+        for style in styles.STYLES.values():
+            action = sub.addAction(style.label)
+            action.setCheckable(True)
+            action.setChecked(style.name == current)
+            action.triggered.connect(partial(self._pick_style, style.name))
+            group.addAction(action)
+        sub.addSeparator()
+        moving = sub.addAction("Animate bubbles")
+        moving.setCheckable(True)
+        moving.setChecked(self._bubble_effects())
+        moving.toggled.connect(self._set_bubble_effects)
+
+    def _bubble_style(self) -> styles.Style:
+        return styles.get(self.state.get("bubble_style") or self.config["bubble_style"])
+
+    def _bubble_effects(self) -> bool:
+        picked = self.state.get("bubble_effects")
+        return bool(self.config["bubble_effects"] if picked is None else picked)
+
+    def _apply_bubble_style(self) -> None:
+        style, animate = self._bubble_style(), self._bubble_effects()
+        self.stage.bubble.set_style(style, animate)
+        self.ask_box.set_style(style, animate)
+
+    def _pick_style(self, name: str) -> None:
+        self.state.set("bubble_style", name)
+        self.state.save()
+        self._apply_bubble_style()
+        if not self.ask_box.isVisible():
+            self.say(self.name, f"New look: {styles.get(name).label.split(':')[0].lower()}.", timeout_s=4)
+
+    def _set_bubble_effects(self, on: bool) -> None:
+        self.state.set("bubble_effects", on)
+        self.state.save()
+        self._apply_bubble_style()
+
     def _pick_brain(self, name: str | None) -> None:
         self.state.set("brain", name)
         self.state.save()
@@ -698,6 +739,7 @@ class Companion(QObject):
         self.behavior.walk_enabled = bool(self.config["walk"])
         self.behavior.sleep_after = float(self.config["sleep_after_minutes"]) * 60
         self.behavior.speed = size * 0.4
+        self._apply_bubble_style()
         self.say("Settings reloaded", timeout_s=3)
 
     def quit(self) -> None:

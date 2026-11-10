@@ -128,3 +128,57 @@ def test_beam_faces_its_side():
     frames, _ = run(b, 3, 5)
     beams = [f for f in frames if f.anim == "beam"]
     assert beams and len({f.mirror for f in beams}) == 1
+
+
+def test_thinking_loops_without_the_got_it_frame_then_shows_it_once_for_the_answer():
+    b = make(walk=False)
+    run(b, 0, 3)
+    b.set_thinking(True, 3)
+    frames, t = run(b, 3, 15)
+    thinking = [f.index for f in frames if f.anim == "think"]
+    assert set(thinking) == {0, 1, 2, 3, 4}  # 5 is "got it!", not part of the wait
+    b.set_thinking(False, t)
+    b.set_talking(True, t)
+    frames, _ = run(b, t, t + 2)
+    got_it = [i for i, f in enumerate(frames) if (f.anim, f.index) == ("think", 5)]
+    assert got_it and got_it[0] == 0, "the answer arrives with the got-it frame"
+    assert frames[got_it[-1] + 1].anim == "talk" and len(got_it) <= 16  # about half a second, then talking
+
+
+def test_working_think_never_shows_got_it():
+    b = make(walk=False)
+    b.set_working(True, 1)
+    frames, _ = run(b, 1, 50)
+    assert all(f.index != 5 for f in frames if f.anim == "think")
+
+
+def test_idle_holds_still_and_blinks_now_and_then():
+    b = make(walk=False, sleep_after=0)
+    run(b, 0, 3)
+    b.set_attending(True, 3)
+    frames, _ = run(b, 3, 40)
+    idle = [f.index for f in frames if f.anim == "idle"]
+    assert set(idle) == {0, 2, 3, 4}  # still, or blinking; never the old breathing loop
+    blinking = sum(1 for i in idle if i != 0) / len(idle)
+    assert blinking < 0.12, f"eyes shut or closing {blinking:.0%} of the time"
+    # Blinks are 3 s or more apart: the longest stretch of open eyes is at least 3 s of frames.
+    runs, current = [], 0
+    for i in idle:
+        current = current + 1 if i == 0 else 0
+        runs.append(current)
+    assert max(runs) >= 3 * 30 - 2
+    blinks = sum(1 for a, c in zip(idle, idle[1:], strict=False) if a == 0 and c == 2)
+    assert 6 <= blinks <= 13  # 37 s at one blink every 3-5 s
+
+
+def test_a_walk_to_the_left_sometimes_ends_with_a_little_hop():
+    hops = 0
+    for seed in range(1, 9):
+        b = make(seed=seed, sleep_after=0)
+        frames, _ = run(b, 0, 400)
+        for i, f in enumerate(frames):
+            if (f.anim, f.index) == ("turn", 5):
+                before = next(p for p in reversed(frames[:i]) if p.anim != "turn")
+                assert before.anim == "walk" and before.mirror, "the hop only follows a walk to the left"
+                hops += 1
+    assert hops, "the turn strip's hop frame is never used"

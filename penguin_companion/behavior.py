@@ -28,6 +28,15 @@ TURN = {
     ("left", "right"): [4, 3, 2, 1, 0],
 }
 TURN_FPS = 10
+TURN_HOP = 5  # side left with a little hop: now and then, when it stops while facing left
+
+# `idle`: 0 relaxed, 1 a breath, 2 eyes half shut, 3 shut, 4 half open, 5 relaxed.
+# It holds still and blinks every few seconds, not every loop of the strip.
+IDLE_BLINK = [2, 3, 4]
+IDLE_FPS = 10
+# `think`: frames 0-4 are thinking; 5 is "got it!", shown once when the answer arrives.
+THINK_LOOP = [0, 1, 2, 3, 4]
+THINK_GOT_IT = 5
 
 
 @dataclass
@@ -276,10 +285,15 @@ class Behavior:
             self.asleep = True
             clips += self._to_front()
             clips += [Clip("sleep", [0, 1, 2], self._fps("sleep")), Clip("sleep", [3, 4, 5], self._fps("sleep"), loop=True)]
-        elif mood in ("alert", "talk", "think", "charge"):
-            clips += self._to_front() + [Clip(mood, self._all(mood), self._fps(mood), loop=True)]
+        elif mood == "think":
+            clips += self._to_front() + [Clip("think", self._think_loop(), self._fps("think"), loop=True)]
+        elif mood in ("alert", "talk", "charge"):
+            clips += self._to_front()
+            if mood == "talk" and previous == "think" and self._has("think", THINK_GOT_IT):
+                clips.append(Clip("think", [THINK_GOT_IT], 2))  # "got it!" for half a second
+            clips.append(Clip(mood, self._all(mood), self._fps(mood), loop=True))
         elif mood == "attend":
-            clips += self._to_front() + [Clip("idle", self._all("idle"), self._fps("idle"), loop=True)]
+            clips += self._to_front() + [self._idle()]
         else:
             clips += self._ambient()
         target = self._target
@@ -296,11 +310,30 @@ class Behavior:
             clips.append(Clip("walk", list(range(frames)), fps, loop=True, mirror=side == "left", stance=side))
             self._target = target
             return clips
-        clips = self._to_front()
+        clips = []
+        if self.stance == "left" and roll >= 0.85 and self._has("turn", TURN_HOP):
+            clips.append(Clip("turn", [TURN_HOP], 5, stance="left"))
+        clips += self._to_front()
         if roll < 0.58:
             clips.append(Clip("wave", self._all("wave"), self._fps("wave")))
-        clips.append(Clip("idle", self._all("idle"), self._fps("idle"), loop=True, duration=self.rng.uniform(4, 10)))
+        clips.append(self._idle(duration=self.rng.uniform(4, 10)))
         return clips
+
+    def _has(self, anim: str, frame: int) -> bool:
+        return anim in self.anims and self.anims[anim][0] > frame
+
+    def _think_loop(self) -> list[int]:
+        """Thinking, without the "got it!" frame (that waits for the answer)."""
+        if self._has("think", THINK_GOT_IT):
+            return list(THINK_LOOP)
+        return self._all("think")
+
+    def _idle(self, duration: float | None = None) -> Clip:
+        """Stand still for 3-5 s, blink, and go round again."""
+        if not self._has("idle", max(IDLE_BLINK)):
+            return Clip("idle", self._all("idle"), self._fps("idle"), loop=True, duration=duration)
+        hold = round(self.rng.uniform(3, 5) * IDLE_FPS)
+        return Clip("idle", [0] * hold + IDLE_BLINK, IDLE_FPS, loop=True, duration=duration)
 
     def _pick_target(self) -> float:
         lo = max(self.left, self.x - self.WALK_MAX)
