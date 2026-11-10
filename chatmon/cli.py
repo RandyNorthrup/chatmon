@@ -25,6 +25,7 @@ usage: chatmon [command]
       left out, it's worked out from the payload
   say TEXT                   make it say something
   remind WHEN [to] TEXT      set a reminder: remind in 20m to stretch
+  quit                       close the chatmon that's running
   autostart on|off           start it when you log in
   --version
 """
@@ -53,6 +54,8 @@ def main(argv: list[str] | None = None) -> int:
         return _send({"type": "say", "text": " ".join(rest)})
     if command == "remind":
         return _send({"type": "remind", "text": " ".join(rest)})
+    if command == "quit":
+        return _send({"type": "quit"})
     if command == "hooks":
         return hooks(rest)
     if command == "autostart" and rest and rest[0] in ("on", "off"):

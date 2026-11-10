@@ -593,6 +593,8 @@ class Companion(QObject):
         elif kind == "show":
             self.set_hidden(False)
             self.behavior.poke(now)
+        elif kind == "quit":  # `chatmon quit`: an installer updating it, say
+            QTimer.singleShot(0, self.quit)  # once the sender has heard back
 
     def _agent_event(self, event: str, source: str, text: str) -> None:
         now = self._now()
@@ -1081,6 +1083,7 @@ def run() -> int:
         print("Chatmon is already running; it says hi.")
         return 0
     app = QApplication(sys.argv[:1])
+    paths.restore_dll_search()  # Qt is loaded: what Chatmon starts from here on gets Windows' own DLL search
     app.setApplicationName(paths.APP)
     app.setApplicationDisplayName("Chatmon")
     autostart.migrate()

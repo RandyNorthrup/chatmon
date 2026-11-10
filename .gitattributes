@@ -1,0 +1,5 @@
+# Scripts that run on Linux and macOS keep Unix line endings, whatever the checkout does with the rest:
+# "#!/bin/sh\r" is no interpreter.
+*.sh text eol=lf
+packaging/linux/chatmon text eol=lf
+packaging/macos/scripts/* text eol=lf
