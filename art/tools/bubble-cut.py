@@ -269,7 +269,15 @@ def swap_colours(style: str, entry: dict, turn: float) -> str:
     rgb = img[..., :3].astype(float)
     fill = np.median(rgb[y0 + 10 : y1 - 10, x0 + 10 : x1 - 10].reshape(-1, 3), axis=0)
     weight = np.clip((np.abs(rgb - fill).sum(axis=2) - 30) / 50, 0, 1)
-    weight[y0:y1, x0:x1] = 0  # the fill itself is identical in both, to the pixel
+    # The fill itself is identical in both, to the pixel: the text area, with its corners rounded as the
+    # rim's are. (Square corners cut the turned rim off where it curves in, and the swap showed a box.)
+    rim = entry["rim"]
+    inner = rim["inset"][0] + rim["half"]  # the rim's inside edge, from the frame's left
+    r = max(0.0, rim["radius"] - rim["half"] - (x0 - inner))
+    yy, xx = np.mgrid[0 : img.shape[0], 0 : img.shape[1]]
+    cx, cy = np.clip(xx, x0 + r, x1 - 1 - r), np.clip(yy, y0 + r, y1 - 1 - r)
+    inside = (xx >= x0) & (xx < x1) & (yy >= y0) & (yy < y1) & ((xx - cx) ** 2 + (yy - cy) ** 2 <= r * r)
+    weight[inside] = 0
     hsv = np.array([colorsys.rgb_to_hsv(*(px / 255)) for px in rgb.reshape(-1, 3)])
     hsv[:, 0] = (hsv[:, 0] + turn) % 1.0
     turned = np.array([colorsys.hsv_to_rgb(*px) for px in hsv]).reshape(rgb.shape) * 255
