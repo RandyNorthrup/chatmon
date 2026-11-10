@@ -220,7 +220,7 @@ class Companion(QObject):
         elif not (self.config["name"] or self.state.get("name")):
             self._asking_name = True
             self.open_ask(focus=False)  # nobody clicked: don't take the keyboard from them
-        else:
+        elif not self.stage.message_visible():  # an agent or a script got in first: theirs matters more
             self.say(f"Hi, I'm {self.name}!", "Click me to ask anything.", timeout_s=5)
 
     # -- clicks and the ask box

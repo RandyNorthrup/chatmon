@@ -209,3 +209,11 @@ def test_first_run_after_the_rename_asks_about_plugin_agents(companion):
     c.stage.dismiss_message()
     c._agents_known({"claude": "found"})
     assert not c.stage.message_visible()  # once
+
+
+def test_the_greeting_never_covers_a_message_that_came_first(companion):
+    """A hook's message can arrive before the greeting is due (1.5 s after start): it stays."""
+    c = companion
+    c.handle({"type": "say", "text": "Deploy finished."})
+    spin(1.8)  # past when the greeting would show
+    assert "Deploy finished." in c.stage.bubble.doc.toPlainText() and "Hi, I'm" not in c.stage.bubble.title
