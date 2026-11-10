@@ -24,12 +24,14 @@ from __future__ import annotations
 
 import ctypes
 import math
+import threading
+from dataclasses import dataclass, field
 import mmap
 import os
 import sys
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer
+from PyQt6.QtCore import QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QGuiApplication, QImage, QPainter, QRegion, QScreen
 
 from . import wayland, xkb
@@ -76,6 +78,27 @@ VIEWPORT_DESTROY, VIEWPORT_SET_DESTINATION = 0, 2
 FRACTIONAL_GET = 1
 FRACTIONAL_DESTROY = 0
 EV_FRACTIONAL_PREFERRED_SCALE = 0
+TEXT_INPUT_MANAGER_GET = 1
+TI_DESTROY, TI_ENABLE, TI_DISABLE, TI_SET_SURROUNDING_TEXT = 0, 1, 2, 3
+TI_SET_CONTENT_TYPE, TI_SET_CURSOR_RECTANGLE, TI_COMMIT = 5, 6, 7
+EV_TI_ENTER, EV_TI_LEAVE, EV_TI_PREEDIT, EV_TI_COMMIT_STRING, EV_TI_DELETE_SURROUNDING, EV_TI_DONE = 0, 1, 2, 3, 4, 5
+SURROUNDING_MAX = 4000  # bytes: a Wayland message can't carry more
+DATA_DEVICE_MANAGER_CREATE_SOURCE, DATA_DEVICE_MANAGER_GET_DEVICE = 0, 1
+DATA_DEVICE_SET_SELECTION = 1
+EV_DATA_DEVICE_DATA_OFFER, EV_DATA_DEVICE_SELECTION = 0, 5
+DATA_OFFER_RECEIVE, DATA_OFFER_DESTROY = 1, 2
+EV_DATA_OFFER_OFFER = 0
+DATA_SOURCE_OFFER, DATA_SOURCE_DESTROY = 0, 1
+EV_DATA_SOURCE_SEND, EV_DATA_SOURCE_CANCELLED = 1, 2
+PRIMARY_MANAGER_CREATE_SOURCE, PRIMARY_MANAGER_GET_DEVICE = 0, 1
+PRIMARY_DEVICE_SET_SELECTION = 0
+EV_PRIMARY_DEVICE_DATA_OFFER, EV_PRIMARY_DEVICE_SELECTION = 0, 1
+PRIMARY_OFFER_RECEIVE, PRIMARY_OFFER_DESTROY = 0, 1
+EV_PRIMARY_OFFER_OFFER = 0
+PRIMARY_SOURCE_OFFER, PRIMARY_SOURCE_DESTROY = 0, 1
+EV_PRIMARY_SOURCE_SEND, EV_PRIMARY_SOURCE_CANCELLED = 0, 1
+TEXT_TYPES = ("text/plain;charset=utf-8", "UTF8_STRING", "text/plain", "TEXT", "STRING")  # best first
+PASTE_MAX = 4 * 1024 * 1024  # bytes of clipboard text to take at most
 
 LAYER_OVERLAY = 3
 ANCHOR_ALL = 1 | 2 | 4 | 8  # top, bottom, left, right: the whole output
@@ -100,6 +123,9 @@ WANTED = {
     "wp_cursor_shape_manager_v1": 1,
     "wp_viewporter": 1,
     "wp_fractional_scale_manager_v1": 1,
+    "zwp_text_input_manager_v3": 1,  # input methods (fcitx5, IBus...) through the compositor
+    "wl_data_device_manager": 3,  # the clipboard
+    "zwp_primary_selection_device_manager_v1": 1,  # selected text, pasted with the middle button
 }
 NEEDED = {"wl_compositor": 4, "wl_shm": 1, "zwlr_layer_shell_v1": 1}
 
@@ -151,6 +177,258 @@ class Buffer:
         self.map.close()
 
 
+def _write_all(fd: int, data: bytes) -> None:
+    try:
+        view = memoryview(data)
+        while view:
+            view = view[os.write(fd, view) :]
+    except OSError:
+        pass  # the other side stopped reading
+    finally:
+        os.close(fd)
+
+
+class PipeReader(QObject):
+    """Reads a pipe to its end without blocking, then says what it got."""
+
+    finished = pyqtSignal(bytes)
+
+    def __init__(self, fd: int, limit: int, parent: QObject):
+        super().__init__(parent)
+        self.fd, self.limit, self.data = fd, limit, bytearray()
+        os.set_blocking(fd, False)
+        self.notifier = QSocketNotifier(fd, QSocketNotifier.Type.Read, self)
+        self.notifier.activated.connect(self._read)
+        self.timer = QTimer(self, singleShot=True)
+        self.timer.timeout.connect(self._end)
+        self.timer.start(5000)  # an app that never finishes writing
+
+    def _read(self) -> None:
+        try:
+            chunk = os.read(self.fd, 65536)
+        except BlockingIOError:
+            return
+        except OSError:
+            chunk = b""
+        self.data += chunk
+        if not chunk or len(self.data) >= self.limit:
+            self._end()
+
+    def _end(self) -> None:
+        if self.fd < 0:
+            return
+        self.notifier.setEnabled(False)
+        self.timer.stop()
+        os.close(self.fd)
+        self.fd = -1
+        self.finished.emit(bytes(self.data[: self.limit]))
+
+
+@dataclass(frozen=True)
+class Channel:
+    """A selection protocol's names and opcodes (the clipboard's and the
+    primary selection's are alike but numbered differently)."""
+
+    manager: str
+    create_source: int
+    get_device: int
+    set_selection: int
+    ev_data_offer: int
+    ev_selection: int
+    offer_receive: int
+    offer_destroy: int
+    ev_offer: int
+    source_offer: int
+    source_destroy: int
+    ev_send: int
+    ev_cancelled: int
+
+
+CLIPBOARD = Channel(
+    "wl_data_device_manager", DATA_DEVICE_MANAGER_CREATE_SOURCE, DATA_DEVICE_MANAGER_GET_DEVICE, DATA_DEVICE_SET_SELECTION,
+    EV_DATA_DEVICE_DATA_OFFER, EV_DATA_DEVICE_SELECTION, DATA_OFFER_RECEIVE, DATA_OFFER_DESTROY, EV_DATA_OFFER_OFFER,
+    DATA_SOURCE_OFFER, DATA_SOURCE_DESTROY, EV_DATA_SOURCE_SEND, EV_DATA_SOURCE_CANCELLED,
+)
+PRIMARY = Channel(
+    "zwp_primary_selection_device_manager_v1", PRIMARY_MANAGER_CREATE_SOURCE, PRIMARY_MANAGER_GET_DEVICE,
+    PRIMARY_DEVICE_SET_SELECTION, EV_PRIMARY_DEVICE_DATA_OFFER, EV_PRIMARY_DEVICE_SELECTION, PRIMARY_OFFER_RECEIVE,
+    PRIMARY_OFFER_DESTROY, EV_PRIMARY_OFFER_OFFER, PRIMARY_SOURCE_OFFER, PRIMARY_SOURCE_DESTROY, EV_PRIMARY_SOURCE_SEND,
+    EV_PRIMARY_SOURCE_CANCELLED,
+)
+
+
+class Selection:
+    """The clipboard or the primary selection, as this connection has it:
+    what other apps offer (read only when you paste), and what we offer."""
+
+    def __init__(self, surface: LayerSurface, channel: Channel):
+        self.surface, self.ch, self.conn = surface, channel, surface.conn
+        self.devices: dict[int, int] = {}  # seat id: device id
+        self.offers: dict[int, set[str]] = {}  # offers the compositor made: their types
+        self.current: int | None = None  # the offer that's the selection now
+        self.source: tuple[int, bytes] | None = None  # what we offer
+        self.readers: list[PipeReader] = []
+
+    def add_devices(self) -> None:
+        manager = self.surface.globals.get(self.ch.manager)
+        if manager is None:
+            return
+        for seat in self.surface._seat_versions:
+            if seat not in self.devices:
+                device = self.conn.new_id(self._device_event)
+                self.conn.request(manager[0], self.ch.get_device, "no", device, seat)
+                self.devices[seat] = device
+
+    def has_text(self) -> bool:
+        return self.current is not None and bool(self.offers.get(self.current, set()) & set(TEXT_TYPES))
+
+    def paste(self, then) -> None:
+        if not self.has_text():
+            return
+        types = self.offers[self.current]
+        mime = next(t for t in TEXT_TYPES if t in types)
+        read_fd, write_fd = os.pipe2(os.O_CLOEXEC)
+        self.conn.request(self.current, self.ch.offer_receive, "sh", mime, write_fd)
+        os.close(write_fd)  # request() sent a copy; the other app has the writing end
+        self.surface._flush()
+        reader = PipeReader(read_fd, PASTE_MAX, self.surface)
+        self.readers.append(reader)
+
+        def done(data: bytes) -> None:
+            self.readers.remove(reader)
+            then(data.decode("utf-8", errors="replace"))
+
+        reader.finished.connect(done)
+
+    def copy(self, text: str) -> None:
+        device = next(iter(self.devices.values()), None)
+        manager = self.surface.globals.get(self.ch.manager)
+        if device is None or manager is None or not text:
+            return
+        self._drop_source()
+        source = self.conn.new_id(self._source_event)
+        self.conn.request(manager[0], self.ch.create_source, "n", source)
+        for mime in TEXT_TYPES:
+            self.conn.request(source, self.ch.source_offer, "s", mime)
+        self.source = (source, text.encode("utf-8"))
+        self.conn.request(device, self.ch.set_selection, "ou", source, self.surface._input_serial)
+
+    def _device_event(self, opcode: int, args: bytes) -> None:
+        if opcode == self.ch.ev_data_offer:  # an object the compositor made; its types follow
+            (offer,) = decode("n", args)
+            self.offers[offer] = set()
+            self.conn.listen(offer, lambda op, a, o=offer: self._offer_event(o, op, a))
+        elif opcode == self.ch.ev_selection:
+            (offer,) = decode("o", args)
+            if self.current is not None and self.current != offer:
+                self._drop_offer(self.current)
+            self.current = offer or None
+
+    def _offer_event(self, offer: int, opcode: int, args: bytes) -> None:
+        if opcode == self.ch.ev_offer:
+            (mime,) = decode("s", args)
+            self.offers.setdefault(offer, set()).add(mime)
+
+    def _drop_offer(self, offer: int) -> None:
+        self.offers.pop(offer, None)
+        self.conn.request(offer, self.ch.offer_destroy)
+        self.conn.forget(offer)
+
+    def _source_event(self, opcode: int, args: bytes) -> None:
+        if opcode == self.ch.ev_send:
+            decode("sh", args)
+            fd = self.conn.take_fd()
+            if self.source is None:
+                os.close(fd)
+                return
+            threading.Thread(target=_write_all, args=(fd, self.source[1]), daemon=True).start()  # a slow reader can't stall us
+        elif opcode == self.ch.ev_cancelled:  # someone else's is the selection now
+            self._drop_source()
+
+    def _drop_source(self) -> None:
+        if self.source is not None:
+            self.conn.request(self.source[0], self.ch.source_destroy)
+            self.conn.forget(self.source[0])
+            self.source = None
+
+
+@dataclass
+class TextState:
+    """A text field with the focus: its text, cursor and selection anchor (Qt's
+    UTF-16 positions) and the cursor's rectangle on the stage."""
+
+    text: str
+    cursor: int
+    anchor: int
+    rect: QRect
+
+
+@dataclass
+class PendingIM:
+    preedit: str = ""
+    cursor: tuple[int, int] = (0, 0)  # bytes into the preedit; (-1, -1) hides it
+    commit: str = ""
+    before: int = 0  # bytes to delete before the cursor
+    after: int = 0
+
+
+@dataclass
+class TextInput:
+    id: int
+    entered: bool = False  # the seat's text-input focus is on our surface
+    enabled: bool = False
+    commits: int = 0
+    sent: tuple | None = None  # the state last sent: (text, cursor, anchor, rect), in bytes
+    pending: PendingIM = field(default_factory=PendingIM)
+
+
+def _utf8_len(s: str) -> int:
+    return len(s.encode("utf-8", errors="surrogatepass"))
+
+
+def _utf16_len(s: str) -> int:
+    return len(s.encode("utf-16-le", errors="surrogatepass")) // 2
+
+
+def _from_utf16(s: str, units: int) -> str:
+    """The first `units` UTF-16 units of s (Qt's positions), as a str."""
+    return s.encode("utf-16-le", errors="surrogatepass")[: units * 2].decode("utf-16-le", errors="ignore")
+
+
+def utf16_offset(s: str, byte_offset: int) -> int:
+    """A UTF-8 byte offset into s (the protocol's) as UTF-16 units (Qt's)."""
+    return _utf16_len(s.encode("utf-8", errors="surrogatepass")[: max(0, byte_offset)].decode("utf-8", errors="ignore"))
+
+
+def crop_surrounding(text: str, cursor: int, anchor: int) -> tuple[str, int, int]:
+    """The text around the cursor, at most SURROUNDING_MAX bytes, with the
+    cursor and anchor (UTF-16 positions in) as byte offsets into it (out)."""
+    lo, hi = sorted((cursor, anchor))
+    head = _from_utf16(text, lo)  # before the selection
+    selection = _from_utf16(text, hi)[len(head) :]
+    tail = text[len(head) + len(selection) :]
+    if _utf8_len(selection) > SURROUNDING_MAX:  # too long to send: just the cursor's side of it
+        selection = ""
+    room = SURROUNDING_MAX - _utf8_len(selection)
+    while _utf8_len(head) + _utf8_len(tail) > room:  # trim the far ends, keeping what's near the cursor
+        if len(head) >= len(tail):
+            head = head[1:]
+        else:
+            tail = tail[:-1]
+    start, end = _utf8_len(head), _utf8_len(head) + _utf8_len(selection)
+    return head + selection + tail, *((start, end) if cursor <= anchor else (end, start))
+
+
+def delete_lengths(sent: tuple | None, before: int, after: int) -> tuple[int, int]:
+    """Bytes to delete around the cursor, as UTF-16 units, using the text we sent."""
+    if not sent or not (before or after):
+        return 0, 0
+    data, cursor = sent[0].encode("utf-8", errors="surrogatepass"), sent[1]
+    gone_before = data[max(0, cursor - before) : cursor].decode("utf-8", errors="ignore")
+    gone_after = data[cursor : cursor + after].decode("utf-8", errors="ignore")
+    return _utf16_len(gone_before), _utf16_len(gone_after)
+
+
 class LayerSurface(QObject):
     """The stage's surface on Wayland (penguin.Stage drives it)."""
 
@@ -167,6 +445,13 @@ class LayerSurface(QObject):
         self.outputs: dict[int, Output] = {}  # registry name: output
         self.pointers: dict[int, tuple[int, int | None]] = {}  # seat id: (pointer id, cursor shape device id)
         self.keyboards: dict[int, int] = {}  # seat id: keyboard id
+        self.text_inputs: dict[int, TextInput] = {}  # seat id: its text input
+        self._input_serial = 0  # the latest input event's serial: setting a selection needs one
+        self.selections = {
+            "clipboard": Selection(self, CLIPBOARD),
+            "primary": Selection(self, PRIMARY),
+        }
+        self._text_state: TextState | None = None  # the focused text field, as the stage last said
         self._seat_versions: dict[int, int] = {}
         self._registry = conn.new_id(self._registry_event)
         conn.request(DISPLAY_ID, 1, "n", self._registry)  # wl_display.get_registry
@@ -224,6 +509,9 @@ class LayerSurface(QObject):
         return all(name in self.globals and self.globals[name][1] >= version for name, version in NEEDED.items())
 
     def _start(self) -> None:
+        self._add_text_inputs()
+        for selection in self.selections.values():
+            selection.add_devices()
         self._notifier = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Type.Read, self)
         self._notifier.activated.connect(self._readable)
         self._write_notifier = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Type.Write, self)
@@ -273,6 +561,32 @@ class LayerSurface(QObject):
             self._cursor = shape
             if self._pointer_on:
                 self._set_cursor(self._enter_serial)
+
+    # The clipboard and the primary selection (middle-click paste): Qt's own
+    # can't be used for what's on the overlay. Through XWayland they're X
+    # selections, which the compositor only syncs while an X window has the
+    # keyboard; natively, the compositor gives them only to the connection with
+    # the keyboard, ours here, not Qt's.
+
+    def clipboard_has_text(self, which: str = "clipboard") -> bool:
+        return self.selections[which].has_text()
+
+    def paste(self, then, which: str = "clipboard") -> None:
+        """Read the clipboard's (or primary selection's) text; hand it to `then`."""
+        self.selections[which].paste(then)
+
+    def copy(self, text: str, which: str = "clipboard") -> None:
+        """Put text on the clipboard (or primary selection), for any app to paste."""
+        self.selections[which].copy(text)
+        self._flush()
+
+    def set_text_input(self, state: TextState | None) -> None:
+        """The text field that has the focus on the stage (None: none does),
+        for input methods: what's around the cursor and where the cursor is."""
+        self._text_state = state
+        for ti in self.text_inputs.values():
+            self._send_text_state(ti)
+        self._flush()
 
     def focus_keyboard(self, on: bool, grab: bool = True) -> None:
         """Let the overlay have the keyboard while the ask box is open, or not.
@@ -371,6 +685,10 @@ class LayerSurface(QObject):
             elif interface == "wl_seat":
                 self._seat_versions[oid] = use
                 self.conn.listen(oid, lambda op, a, s=oid: self._seat_event(s, op, a))
+                if self._notifier is not None:  # a seat that came later
+                    self._add_text_inputs()
+                    for selection in self.selections.values():
+                        selection.add_devices()
             elif interface not in self.globals:
                 self.globals[interface] = (oid, use)
         elif opcode == EV_REGISTRY_GLOBAL_REMOVE:
@@ -449,7 +767,7 @@ class LayerSurface(QObject):
             if not self._pointer_on:
                 return
             self._last = (x, y)
-            self._enter_serial = serial
+            self._enter_serial = self._input_serial = serial
             self.stage.move(*self._local(x, y))
             self._set_cursor(serial)
             self._maybe_on_demand()
@@ -463,8 +781,9 @@ class LayerSurface(QObject):
             self.stage.move(*self._local(x, y))
             self._maybe_on_demand()
         elif opcode == EV_POINTER_BUTTON and (self._pointer_on or self._held):
-            _serial, _time, button, state = decode("uuuu", args)
-            qt_button = {BTN_LEFT: Qt.MouseButton.LeftButton, BTN_RIGHT: Qt.MouseButton.RightButton}.get(button)
+            serial, _time, button, state = decode("uuuu", args)
+            self._input_serial = serial
+            qt_button = {BTN_LEFT: Qt.MouseButton.LeftButton, BTN_RIGHT: Qt.MouseButton.RightButton, BTN_MIDDLE: Qt.MouseButton.MiddleButton}.get(button)
             if qt_button is None:
                 return
             local, gpos = self._local(*self._last)
@@ -502,8 +821,10 @@ class LayerSurface(QObject):
             finally:
                 os.close(fd)
         elif opcode == EV_KEYBOARD_ENTER:
-            _serial, surface = decode("uo", args[:8])
+            serial, surface = decode("uo", args[:8])
             _debug(f"keyboard enter (ours: {surface == self._surface})")
+            if surface == self._surface:
+                self._input_serial = serial
             if surface == self._surface:
                 self._kb_focus = True
                 self.stage.keyboard_focus(True)
@@ -521,7 +842,8 @@ class LayerSurface(QObject):
         elif opcode == EV_KEYBOARD_REPEAT_INFO:
             self._repeat_rate, self._repeat_delay = decode("ii", args)
         elif opcode == EV_KEYBOARD_KEY and self._kb_focus and self._keyboard is not None:
-            _serial, _time, code, state = decode("uuuu", args)
+            serial, _time, code, state = decode("uuuu", args)
+            self._input_serial = serial
             if state == 1:
                 key = self._keyboard.press(code)
                 self._stop_repeat()
@@ -570,6 +892,88 @@ class LayerSurface(QObject):
         self.conn.request(self._surface, SURFACE_COMMIT)
         self._flush()
 
+
+    # -- input methods (text-input-unstable-v3)
+
+    def _add_text_inputs(self) -> None:
+        manager = self.globals.get("zwp_text_input_manager_v3")
+        if manager is None:
+            return
+        for seat in self._seat_versions:
+            if seat not in self.text_inputs:
+                ti = TextInput(self.conn.new_id())
+                self.conn.listen(ti.id, lambda op, a, t=ti: self._text_input_event(t, op, a))
+                self.conn.request(manager[0], TEXT_INPUT_MANAGER_GET, "no", ti.id, seat)
+                self.text_inputs[seat] = ti
+
+    def _send_text_state(self, ti: TextInput) -> None:
+        """Enable, update or disable a text input to match the focused field."""
+        if not ti.entered:
+            return
+        state = self._text_state
+        c = self.conn
+        if state is None:
+            if ti.enabled:
+                ti.enabled, ti.sent = False, None
+                c.request(ti.id, TI_DISABLE)
+                self._ti_commit(ti)
+            return
+        sent = self._wire_state(state)
+        if ti.enabled and sent == ti.sent:
+            return
+        _debug(f"text input {'update' if ti.enabled else 'enable'}: {sent}")
+        if not ti.enabled:
+            ti.enabled = True
+            c.request(ti.id, TI_ENABLE)
+            c.request(ti.id, TI_SET_CONTENT_TYPE, "uu", 0, 0)  # normal text
+        text, cursor, anchor, rect = sent
+        c.request(ti.id, TI_SET_SURROUNDING_TEXT, "sii", text, cursor, anchor)
+        c.request(ti.id, TI_SET_CURSOR_RECTANGLE, "iiii", *rect)
+        ti.sent = sent
+        self._ti_commit(ti)
+
+    def _ti_commit(self, ti: TextInput) -> None:
+        self.conn.request(ti.id, TI_COMMIT)
+        ti.commits += 1
+
+    def _wire_state(self, state: TextState) -> tuple[str, int, int, tuple[int, int, int, int]]:
+        """The field as the protocol has it: UTF-8 byte offsets, at most
+        SURROUNDING_MAX bytes around the cursor, the cursor in surface pixels."""
+        text, cursor, anchor = crop_surrounding(state.text, state.cursor, state.anchor)
+        k = self._k()
+        r = state.rect
+        rect = (math.floor(r.x() * k), math.floor(r.y() * k), max(1, math.ceil(r.width() * k)), max(1, math.ceil(r.height() * k)))
+        return text, cursor, anchor, rect
+
+    def _text_input_event(self, ti: TextInput, opcode: int, args: bytes) -> None:
+        _debug(f"text input event {opcode} {args[:40]!r}")
+        if opcode == EV_TI_ENTER:
+            (surface,) = decode("o", args)
+            ti.entered = surface == self._surface
+            ti.enabled, ti.sent = False, None
+            self._send_text_state(ti)
+            self._flush()
+        elif opcode == EV_TI_LEAVE:
+            ti.entered = ti.enabled = False
+            ti.sent, ti.pending = None, PendingIM()
+            self.stage.input_method("", None, "", 0, 0)  # drop any half-typed text
+        elif opcode == EV_TI_PREEDIT:
+            text, begin, end = decode("sii", args)
+            ti.pending.preedit, ti.pending.cursor = text or "", (begin, end)
+        elif opcode == EV_TI_COMMIT_STRING:
+            (text,) = decode("s", args)
+            ti.pending.commit = text or ""
+        elif opcode == EV_TI_DELETE_SURROUNDING:
+            ti.pending.before, ti.pending.after = decode("uu", args)
+        elif opcode == EV_TI_DONE:
+            pending, ti.pending = ti.pending, PendingIM()
+            if not ti.entered:
+                return
+            before, after = delete_lengths(ti.sent, pending.before, pending.after)
+            preedit, cursor = pending.preedit, None
+            if pending.cursor != (-1, -1):  # -1, -1: hide the cursor
+                cursor = (utf16_offset(preedit, pending.cursor[0]), utf16_offset(preedit, pending.cursor[1]))
+            self.stage.input_method(preedit, cursor, pending.commit, before, after)
 
     # -- the surface
 

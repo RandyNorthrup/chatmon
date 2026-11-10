@@ -59,6 +59,19 @@ class Overlay:
     def focus_keyboard(self, on, grab=True):
         self.focus.append((on, grab))
 
+    clipboard = "from another app"
+    primary = "selected elsewhere"
+    copied: list = []
+
+    def clipboard_has_text(self, which="clipboard"):
+        return bool(getattr(self, which))
+
+    def paste(self, then, which="clipboard"):
+        then(getattr(self, which))
+
+    def copy(self, text, which="clipboard"):
+        self.copied.append((which, text) if which != "clipboard" else text)
+
     def close(self):
         pass
 
@@ -180,3 +193,65 @@ def test_hosting_the_box_doesnt_open_it(stage):
     s, box = stage
     spin(0.1)
     assert not box.isVisible() and s.surface.focus == []  # no keyboard taken, nothing drawn
+
+
+def test_input_method_text_goes_into_the_box(stage):
+    s, box = stage
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    s.keyboard_focus(True)
+    for ch in "ab":
+        s.key(key(ch), True, False)
+    state = s.hosted.text_state()
+    assert (state.text, state.cursor, state.anchor) == ("ab", 2, 2)
+    assert box.geometry().translated(-s.origin()).contains(state.rect.center())  # the caret, on the stage
+    s.input_method("にほ", (6, 6), "", 0, 0)  # composing: not in the text yet
+    assert box.entry.text() == "ab"
+    s.input_method("", None, "日本", 1, 0)  # commit, replacing the "b"
+    assert box.entry.text() == "a日本"
+    s.keyboard_focus(False)
+    assert s.hosted.text_state() is None  # no keyboard here: no input method either
+
+
+def test_the_box_uses_the_overlays_clipboard(stage):
+    s, box = stage
+    s.surface.copied = []
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    s.keyboard_focus(True)
+    ctrl = Qt.KeyboardModifier.ControlModifier
+    s.key(key("\x16", Qt.Key.Key_V, ctrl), True, False)
+    assert box.entry.text() == "from another app"
+    s.key(key("\x01", Qt.Key.Key_A, ctrl), True, False)
+    s.key(key("\x03", Qt.Key.Key_C, ctrl), True, False)
+    assert s.surface.copied == ["from another app"]
+    s.surface.clipboard = "two\nlines"
+    s.key(key("\x16", Qt.Key.Key_V, ctrl), True, False)  # replaces the selection, on one line
+    assert box.entry.text() == "two lines"
+    s.key(key("\x01", Qt.Key.Key_A, ctrl), True, False)
+    s.key(key("\x18", Qt.Key.Key_X, ctrl), True, False)
+    assert box.entry.text() == "" and s.surface.copied[-1] == "two lines"
+    # the right-click menu's clipboard items do the same
+    gpos = centre_of(box, box.entry)
+    s.press(gpos - QPointF(s.origin()), gpos, Qt.MouseButton.RightButton)
+    paste = next(i.action for i in s.menu.panels[0].items if i.action.objectName() == "edit-paste")
+    assert paste.isEnabled()
+    s.close_menu()
+    paste.trigger()
+    assert box.entry.text() == "two lines"
+
+
+def test_selecting_is_the_primary_selection_and_middle_click_pastes_it(stage):
+    s, box = stage
+    s.surface.copied = []
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    s.keyboard_focus(True)
+    for ch in "hello":
+        s.key(key(ch), True, False)
+    s.key(key("\x01", Qt.Key.Key_A, Qt.KeyboardModifier.ControlModifier), True, False)
+    spin(0.1)
+    assert ("primary", "hello") in s.surface.copied
+    gpos = centre_of(box, box.entry)
+    s.press(gpos - QPointF(s.origin()), gpos, Qt.MouseButton.MiddleButton)
+    assert "selected elsewhere" in box.entry.text()

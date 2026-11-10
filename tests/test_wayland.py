@@ -7,6 +7,7 @@ import os
 import socket
 import struct
 import sys
+import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -53,6 +54,8 @@ def test_socket_path(tmp_path):
 
 PROTOCOLS = [
     Path("/usr/share/wayland/wayland.xml"),
+    Path("/usr/share/wayland-protocols/unstable/text-input/text-input-unstable-v3.xml"),
+    Path("/usr/share/wayland-protocols/unstable/primary-selection/primary-selection-unstable-v1.xml"),
     Path("/usr/share/wayland-protocols/stable/viewporter/viewporter.xml"),
     Path("/usr/share/wayland-protocols/staging/cursor-shape/cursor-shape-v1.xml"),
     Path("/usr/share/wayland-protocols/staging/fractional-scale/fractional-scale-v1.xml"),
@@ -97,6 +100,43 @@ CHECKS = {  # constant: (interface, "request" or "event", name)
     "EV_KEYBOARD_KEY": ("wl_keyboard", "event", "key"),
     "EV_KEYBOARD_MODIFIERS": ("wl_keyboard", "event", "modifiers"),
     "EV_KEYBOARD_REPEAT_INFO": ("wl_keyboard", "event", "repeat_info"),
+    "TEXT_INPUT_MANAGER_GET": ("zwp_text_input_manager_v3", "request", "get_text_input"),
+    "DATA_DEVICE_MANAGER_CREATE_SOURCE": ("wl_data_device_manager", "request", "create_data_source"),
+    "DATA_DEVICE_MANAGER_GET_DEVICE": ("wl_data_device_manager", "request", "get_data_device"),
+    "DATA_DEVICE_SET_SELECTION": ("wl_data_device", "request", "set_selection"),
+    "EV_DATA_DEVICE_DATA_OFFER": ("wl_data_device", "event", "data_offer"),
+    "EV_DATA_DEVICE_SELECTION": ("wl_data_device", "event", "selection"),
+    "DATA_OFFER_RECEIVE": ("wl_data_offer", "request", "receive"),
+    "DATA_OFFER_DESTROY": ("wl_data_offer", "request", "destroy"),
+    "EV_DATA_OFFER_OFFER": ("wl_data_offer", "event", "offer"),
+    "DATA_SOURCE_OFFER": ("wl_data_source", "request", "offer"),
+    "DATA_SOURCE_DESTROY": ("wl_data_source", "request", "destroy"),
+    "EV_DATA_SOURCE_SEND": ("wl_data_source", "event", "send"),
+    "EV_DATA_SOURCE_CANCELLED": ("wl_data_source", "event", "cancelled"),
+    "PRIMARY_MANAGER_CREATE_SOURCE": ("zwp_primary_selection_device_manager_v1", "request", "create_source"),
+    "PRIMARY_MANAGER_GET_DEVICE": ("zwp_primary_selection_device_manager_v1", "request", "get_device"),
+    "PRIMARY_DEVICE_SET_SELECTION": ("zwp_primary_selection_device_v1", "request", "set_selection"),
+    "EV_PRIMARY_DEVICE_DATA_OFFER": ("zwp_primary_selection_device_v1", "event", "data_offer"),
+    "EV_PRIMARY_DEVICE_SELECTION": ("zwp_primary_selection_device_v1", "event", "selection"),
+    "PRIMARY_OFFER_RECEIVE": ("zwp_primary_selection_offer_v1", "request", "receive"),
+    "PRIMARY_OFFER_DESTROY": ("zwp_primary_selection_offer_v1", "request", "destroy"),
+    "EV_PRIMARY_OFFER_OFFER": ("zwp_primary_selection_offer_v1", "event", "offer"),
+    "PRIMARY_SOURCE_OFFER": ("zwp_primary_selection_source_v1", "request", "offer"),
+    "PRIMARY_SOURCE_DESTROY": ("zwp_primary_selection_source_v1", "request", "destroy"),
+    "EV_PRIMARY_SOURCE_SEND": ("zwp_primary_selection_source_v1", "event", "send"),
+    "EV_PRIMARY_SOURCE_CANCELLED": ("zwp_primary_selection_source_v1", "event", "cancelled"),
+    "TI_ENABLE": ("zwp_text_input_v3", "request", "enable"),
+    "TI_DISABLE": ("zwp_text_input_v3", "request", "disable"),
+    "TI_SET_SURROUNDING_TEXT": ("zwp_text_input_v3", "request", "set_surrounding_text"),
+    "TI_SET_CONTENT_TYPE": ("zwp_text_input_v3", "request", "set_content_type"),
+    "TI_SET_CURSOR_RECTANGLE": ("zwp_text_input_v3", "request", "set_cursor_rectangle"),
+    "TI_COMMIT": ("zwp_text_input_v3", "request", "commit"),
+    "EV_TI_ENTER": ("zwp_text_input_v3", "event", "enter"),
+    "EV_TI_LEAVE": ("zwp_text_input_v3", "event", "leave"),
+    "EV_TI_PREEDIT": ("zwp_text_input_v3", "event", "preedit_string"),
+    "EV_TI_COMMIT_STRING": ("zwp_text_input_v3", "event", "commit_string"),
+    "EV_TI_DELETE_SURROUNDING": ("zwp_text_input_v3", "event", "delete_surrounding_text"),
+    "EV_TI_DONE": ("zwp_text_input_v3", "event", "done"),
     "OUTPUT_RELEASE": ("wl_output", "request", "release"),
     "EV_OUTPUT_GEOMETRY": ("wl_output", "event", "geometry"),
     "EV_OUTPUT_DONE": ("wl_output", "event", "done"),
@@ -218,6 +258,9 @@ class FakeStage:
 
     def key(self, key, pressed, repeat):
         self.calls.append(("key", key.text, pressed))
+
+    def input_method(self, preedit, cursor, commit, before, after):
+        self.calls.append(("im", preedit, cursor, commit, before, after))
 
     def keyboard_focus(self, on):
         self.calls.append(("keyboard", on))
@@ -400,7 +443,11 @@ def _configured(qapp, layer_version=4):
     conn.flush()
     (registry,) = [wayland.decode("n", p)[0] for o, op, p in server.requests() if o == wayland.DISPLAY_ID and op == 1]
     for name, (interface, version) in enumerate(
-        [("wl_compositor", 6), ("wl_shm", 1), ("wl_seat", 7), ("wl_output", 4), ("zwlr_layer_shell_v1", layer_version)], start=1
+        [
+            ("wl_compositor", 6), ("wl_shm", 1), ("wl_seat", 7), ("wl_output", 4), ("zwlr_layer_shell_v1", layer_version),
+            ("zwp_text_input_manager_v3", 1), ("wl_data_device_manager", 3), ("zwp_primary_selection_device_manager_v1", 1),
+        ],
+        start=1,
     ):
         server.send(registry, layer.EV_REGISTRY_GLOBAL, "usu", name, interface, version)
     conn.read()
@@ -416,6 +463,11 @@ def _configured(qapp, layer_version=4):
     conn.flush()
     reqs = server.requests()
     ids = {
+        "text_input": wayland.decode("no", named(reqs, bound["zwp_text_input_manager_v3"], layer.TEXT_INPUT_MANAGER_GET)[0])[0],
+        "data_device": wayland.decode("no", named(reqs, bound["wl_data_device_manager"], layer.DATA_DEVICE_MANAGER_GET_DEVICE)[0])[0],
+        "data_device_manager": bound["wl_data_device_manager"],
+        "primary_device": wayland.decode("no", named(reqs, bound["zwp_primary_selection_device_manager_v1"], layer.PRIMARY_MANAGER_GET_DEVICE)[0])[0],
+        "primary_manager": bound["zwp_primary_selection_device_manager_v1"],
         "pointer": wayland.decode("n", named(reqs, bound["wl_seat"], layer.SEAT_GET_POINTER)[0])[0],
         "keyboard": wayland.decode("n", named(reqs, bound["wl_seat"], layer.SEAT_GET_KEYBOARD)[0])[0],
     }
@@ -494,5 +546,139 @@ def test_the_wheel_scrolls(qapp):
     server.send(ids["pointer"], layer.EV_POINTER_AXIS, "uuf", 0, layer.AXIS_VERTICAL, 15.0)  # one notch down
     conn.read()
     assert ("wheel", 0, -120) in stage.calls
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_input_methods_get_the_field_and_send_text(qapp):
+    from penguin_companion.layer import TextState
+
+    conn, server, stage, surf, ids = _configured(qapp)
+    ti = ids["text_input"]
+    surf.set_text_input(TextState("héllo", 5, 5, QRect(10, 20, 2, 16)))  # before the text-input focus: nothing yet
+    assert named(server.requests(), ti, layer.TI_ENABLE) == []
+    server.send(ti, layer.EV_TI_ENTER, "o", ids["surface"])
+    conn.read()
+    reqs = server.requests()
+    assert len(named(reqs, ti, layer.TI_ENABLE)) == 1
+    assert wayland.decode("sii", named(reqs, ti, layer.TI_SET_SURROUNDING_TEXT)[0]) == ["héllo", 6, 6]  # bytes: é is two
+    assert wayland.decode("iiii", named(reqs, ti, layer.TI_SET_CURSOR_RECTANGLE)[0]) == [10, 20, 2, 16]
+    assert len(named(reqs, ti, layer.TI_COMMIT)) == 1
+
+    # composing: shown, with its cursor, in Qt's units
+    server.send(ti, layer.EV_TI_PREEDIT, "sii", "日本", 6, 6)
+    server.send(ti, layer.EV_TI_DONE, "u", 1)
+    conn.read()
+    assert stage.calls[-1] == ("im", "日本", (2, 2), "", 0, 0)
+    # committing, replacing the "lo" before the cursor
+    server.send(ti, layer.EV_TI_DELETE_SURROUNDING, "uu", 2, 0)
+    server.send(ti, layer.EV_TI_COMMIT_STRING, "s", "p!")
+    server.send(ti, layer.EV_TI_DONE, "u", 1)
+    conn.read()
+    assert stage.calls[-1] == ("im", "", (0, 0), "p!", 2, 0)
+
+    surf.set_text_input(TextState("hélp!", 5, 5, QRect(10, 20, 2, 16)))  # the field changed: say so
+    reqs = server.requests()
+    assert wayland.decode("sii", named(reqs, ti, layer.TI_SET_SURROUNDING_TEXT)[0]) == ["hélp!", 6, 6]
+    assert named(reqs, ti, layer.TI_ENABLE) == []
+    surf.set_text_input(None)  # the box closed
+    reqs = server.requests()
+    assert len(named(reqs, ti, layer.TI_DISABLE)) == 1 and len(named(reqs, ti, layer.TI_COMMIT)) == 1
+
+    server.send(ti, layer.EV_TI_LEAVE, "o", ids["surface"])
+    conn.read()
+    assert stage.calls[-1] == ("im", "", None, "", 0, 0)  # anything half-typed goes
+    surf.close()
+    server.sock.close()
+
+
+def test_byte_offsets_become_qt_positions():
+    assert layer.utf16_offset("日本", 3) == 1
+    assert layer.utf16_offset("😀a", 4) == 2  # one emoji, two UTF-16 units
+    assert layer.crop_surrounding("ab😀cd", 4, 2) == ("ab😀cd", 6, 2)
+    text, cursor, anchor = layer.crop_surrounding("x" * 5000 + "|" + "y" * 5000, 5001, 5001)
+    assert len(text.encode()) <= layer.SURROUNDING_MAX and cursor == anchor and text[cursor - 1] == "|"
+    assert layer.delete_lengths(("héllo", 6, 6, None), 3, 0) == (3, 0)  # "llo"
+    assert layer.delete_lengths(("héllo", 6, 6, None), 5, 0) == (4, 0)  # "éllo": é is two bytes, one position
+
+
+@linux_only
+def test_the_clipboard_is_the_overlays_own(qapp):
+    """Paste reads the clipboard the compositor offers this connection; copy offers ours."""
+    conn, server, stage, surf, ids = _configured(qapp)
+    device = ids["data_device"]
+    assert not surf.clipboard_has_text()
+    offer = 0xFF000001  # objects the compositor makes have ids from here
+    server.send(device, layer.EV_DATA_DEVICE_DATA_OFFER, "n", offer)
+    server.send(offer, layer.EV_DATA_OFFER_OFFER, "s", "image/png")
+    server.send(offer, layer.EV_DATA_OFFER_OFFER, "s", "text/plain;charset=utf-8")
+    server.send(device, layer.EV_DATA_DEVICE_SELECTION, "o", offer)
+    conn.read()
+    assert surf.clipboard_has_text()
+
+    got = []
+    surf.paste(got.append)
+    (receive,) = named(server.requests(), offer, layer.DATA_OFFER_RECEIVE)
+    assert wayland.decode("sh", receive) == ["text/plain;charset=utf-8"]
+    write_end = server.fds[-1]  # the pasting app writes into it, then closes it
+    os.write(write_end, "héllo".encode())
+    os.close(write_end)
+    deadline = time.monotonic() + 3
+    while not got and time.monotonic() < deadline:
+        qapp.processEvents()
+    assert got == ["héllo"]
+
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")  # copying needs an input serial
+    conn.read()
+    surf.copy("copied ✓")
+    reqs = server.requests()
+    (create,) = named(reqs, ids["data_device_manager"], layer.DATA_DEVICE_MANAGER_CREATE_SOURCE)
+    (source,) = wayland.decode("n", create)
+    assert "text/plain;charset=utf-8" in [wayland.decode("s", p)[0] for p in named(reqs, source, layer.DATA_SOURCE_OFFER)]
+    assert wayland.decode("ou", named(reqs, device, layer.DATA_DEVICE_SET_SELECTION)[0]) == [source, 77]
+    read_end, write_end = os.pipe()
+    server.send(source, layer.EV_DATA_SOURCE_SEND, "sh", "text/plain;charset=utf-8", write_end)  # another app pastes
+    os.close(write_end)
+    conn.read()
+    data = b""
+    while chunk := os.read(read_end, 4096):
+        data += chunk
+    os.close(read_end)
+    assert data.decode() == "copied ✓"
+    server.send(source, layer.EV_DATA_SOURCE_CANCELLED)  # someone else copied
+    conn.read()
+    conn.flush()  # as LayerSurface._readable does after every batch of events
+    assert named(server.requests(), source, layer.DATA_SOURCE_DESTROY)
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_the_primary_selection_too(qapp):
+    """The middle-click selection: the same as the clipboard, its own protocol."""
+    conn, server, stage, surf, ids = _configured(qapp)
+    device = ids["primary_device"]
+    offer = 0xFF000002
+    server.send(device, layer.EV_PRIMARY_DEVICE_DATA_OFFER, "n", offer)
+    server.send(offer, layer.EV_PRIMARY_OFFER_OFFER, "s", "UTF8_STRING")
+    server.send(device, layer.EV_PRIMARY_DEVICE_SELECTION, "o", offer)
+    conn.read()
+    assert surf.clipboard_has_text("primary") and not surf.clipboard_has_text("clipboard")
+    got = []
+    surf.paste(got.append, "primary")
+    (receive,) = named(server.requests(), offer, layer.PRIMARY_OFFER_RECEIVE)
+    assert wayland.decode("sh", receive) == ["UTF8_STRING"]
+    os.write(server.fds[-1], b"selected elsewhere")
+    os.close(server.fds[-1])
+    deadline = time.monotonic() + 3
+    while not got and time.monotonic() < deadline:
+        qapp.processEvents()
+    assert got == ["selected elsewhere"]
+    surf.copy("selected here", "primary")
+    reqs = server.requests()
+    (source,) = wayland.decode("n", named(reqs, ids["primary_manager"], layer.PRIMARY_MANAGER_CREATE_SOURCE)[0])
+    assert wayland.decode("ou", named(reqs, device, layer.PRIMARY_DEVICE_SET_SELECTION)[0])[0] == source
+    assert not named(reqs, ids["data_device"], layer.DATA_DEVICE_SET_SELECTION)  # the clipboard's untouched
     surf.close()
     server.sock.close()

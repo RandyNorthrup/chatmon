@@ -23,16 +23,19 @@ from PyQt6.QtGui import (
     QContextMenuEvent,
     QFont,
     QGuiApplication,
+    QInputMethodEvent,
     QKeyEvent,
+    QKeySequence,
     QMouseEvent,
     QPainter,
     QPainterPath,
     QPen,
     QRegion,
     QScreen,
+    QTextCharFormat,
     QWheelEvent,
 )
-from PyQt6.QtWidgets import QApplication, QFrame, QGraphicsScene, QGraphicsView, QMenu, QWidget
+from PyQt6.QtWidgets import QApplication, QFrame, QGraphicsScene, QGraphicsView, QLineEdit, QMenu, QWidget
 
 from . import clickthrough, layer
 from .behavior import Behavior, Frame
@@ -219,6 +222,37 @@ class Hosted(QObject):
     def key(self, event: QKeyEvent) -> None:
         QApplication.sendEvent(self.scene, event)
 
+    # -- input methods: what Qt's own platform plugins do for a window
+
+    def text_state(self) -> layer.TextState | None:
+        """The focused text field, if it takes input-method text, for the input method."""
+        if not self.visible() or self.scene.focusItem() is None or not self.scene.hasFocus():
+            return None
+        if not self.scene.inputMethodQuery(Qt.InputMethodQuery.ImEnabled):
+            return None
+        text = self.scene.inputMethodQuery(Qt.InputMethodQuery.ImSurroundingText) or ""
+        cursor = self.scene.inputMethodQuery(Qt.InputMethodQuery.ImCursorPosition) or 0
+        anchor = self.scene.inputMethodQuery(Qt.InputMethodQuery.ImAnchorPosition)
+        rect = self.scene.inputMethodQuery(Qt.InputMethodQuery.ImCursorRectangle)  # scene = screen coordinates
+        rect = QRectF(rect).toAlignedRect() if isinstance(rect, (QRect, QRectF)) else QRect()  # QRect or QRectF, by widget
+        return layer.TextState(str(text), int(cursor), int(cursor if anchor is None else anchor), rect.translated(-self.stage.origin()))
+
+    def input_method(self, preedit: str, cursor: tuple[int, int] | None, commit: str, before: int, after: int) -> None:
+        """Text from the input method: the composing text (shown underlined,
+        with its cursor), and committed text replacing what it says to delete."""
+        attributes = []
+        if preedit:
+            underline = QTextCharFormat()
+            underline.setFontUnderline(True)
+            length = len(preedit.encode("utf-16-le", errors="surrogatepass")) // 2
+            attributes.append(QInputMethodEvent.Attribute(QInputMethodEvent.AttributeType.TextFormat, 0, length, underline))
+        shown = cursor is not None
+        attributes.append(QInputMethodEvent.Attribute(QInputMethodEvent.AttributeType.Cursor, cursor[1] if shown else 0, 1 if shown else 0))
+        event = QInputMethodEvent(preedit, attributes)
+        if commit or before or after:
+            event.setCommitString(commit, -before, before + after)
+        QApplication.sendEvent(self.scene, event)
+
     def keyboard_focus(self, on: bool) -> None:
         if on:
             self.scene.setFocus()
@@ -230,7 +264,64 @@ class Hosted(QObject):
             menu = child.createStandardContextMenu(pos)
         except TypeError:
             menu = child.createStandardContextMenu()
+        # Its clipboard items use Qt's clipboard, which isn't the one the overlay has.
+        for action in menu.actions():
+            name = action.objectName()
+            if name == "link-copy":
+                link = child.anchorAt(pos)
+                self._rewire(action, lambda link=link: self.stage.clipboard_copy(link))
+            elif name in ("edit-copy", "edit-cut", "edit-paste"):
+                self._rewire(action, {"edit-copy": self.copy, "edit-cut": self.cut, "edit-paste": self.paste}[name])
+                if name == "edit-paste":  # Qt judged it by its own clipboard
+                    action.setEnabled(self.stage.clipboard_has_text() and self.editable())
         self.stage.open_menu(menu, child.mapTo(self.widget, pos) + self.rect().topLeft(), owned=True)
+
+    @staticmethod
+    def _rewire(action, slot) -> None:
+        try:
+            action.triggered.disconnect()
+        except TypeError:
+            pass
+        action.triggered.connect(lambda _checked=False: slot())
+
+    # -- the clipboard, through the stage's surface
+
+    def editable(self) -> bool:
+        return bool(self.scene.inputMethodQuery(Qt.InputMethodQuery.ImEnabled)) and not self.scene.inputMethodQuery(
+            Qt.InputMethodQuery.ImReadOnly
+        )
+
+    def selected_text(self) -> str:
+        return str(self.scene.inputMethodQuery(Qt.InputMethodQuery.ImCurrentSelection) or "")
+
+    def copy(self) -> None:
+        self.stage.clipboard_copy(self.selected_text())
+
+    def cut(self) -> None:
+        if self.selected_text() and self.editable():
+            self.copy()
+            QApplication.sendEvent(self.scene, QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Delete, Qt.KeyboardModifier.NoModifier))
+
+    def paste(self) -> None:
+        if self.editable():
+            self.stage.clipboard_paste(self.insert)
+
+    def middle_click(self, gpos: QPointF) -> None:
+        """Linux's other paste: the primary selection, where you click."""
+        self.mouse(QEvent.Type.MouseButtonPress, gpos, Qt.MouseButton.LeftButton, Qt.MouseButton.LeftButton)  # put the cursor there
+        self.mouse(QEvent.Type.MouseButtonRelease, gpos, Qt.MouseButton.LeftButton, Qt.MouseButton.NoButton)
+        if self.editable():
+            self.stage.clipboard_paste(self.insert, "primary")
+
+    def insert(self, text: str) -> None:
+        """Typed-in text: replaces the selection, at the cursor."""
+        if not self.visible() or not text:
+            return
+        if isinstance(self.widget.focusWidget(), QLineEdit):
+            text = " ".join(text.splitlines())  # one line
+        event = QInputMethodEvent("", [])
+        event.setCommitString(text)
+        QApplication.sendEvent(self.scene, event)
 
 
 def make_surface(stage: Stage):
@@ -274,6 +365,8 @@ class Stage(QObject):
         self.hosted: Hosted | None = None
         self._clear_of: QWidget | None = None  # the ask box: bubbles go above it, not under it
         self._hosted_press = False  # a button went down on the hosted widget: it gets the rest
+        self._text_state: layer.TextState | None = None  # what the input method was last told
+        self._primary = ""  # the selected text last made the primary selection
         self.surface = surface_factory(self)
         self._use_screen(QGuiApplication.screenAt(QPoint(int(behavior.x), 0)) or QGuiApplication.primaryScreen())
         self._timer = QTimer(self)
@@ -371,11 +464,41 @@ class Stage(QObject):
         if self.hosted is None or not self.hosted.visible():
             return
         kind = QEvent.Type.KeyPress if pressed else QEvent.Type.KeyRelease
-        self.hosted.key(QKeyEvent(kind, int(key.key), key.modifiers, key.text, repeat))
+        event = QKeyEvent(kind, int(key.key), key.modifiers, key.text, repeat)
+        if pressed and hasattr(self.surface, "paste"):  # the overlay's clipboard, not Qt's
+            for shortcut, do in (
+                (QKeySequence.StandardKey.Paste, self.hosted.paste),
+                (QKeySequence.StandardKey.Copy, self.hosted.copy),
+                (QKeySequence.StandardKey.Cut, self.hosted.cut),
+            ):
+                if event.matches(shortcut):
+                    do()
+                    return
+        self.hosted.key(event)
+
+    # The clipboard ("clipboard") and the primary selection ("primary"), when
+    # the surface keeps them (the overlay); Qt's own are used everywhere else.
+
+    def clipboard_has_text(self, which: str = "clipboard") -> bool:
+        has = getattr(self.surface, "clipboard_has_text", None)
+        return bool(has and has(which))
+
+    def clipboard_copy(self, text: str, which: str = "clipboard") -> None:
+        if text and hasattr(self.surface, "copy"):
+            self.surface.copy(text, which)
+
+    def clipboard_paste(self, then, which: str = "clipboard") -> None:
+        if hasattr(self.surface, "paste"):
+            self.surface.paste(then, which)
 
     def keyboard_focus(self, on: bool) -> None:
         if self.hosted is not None:
             self.hosted.keyboard_focus(on)
+
+    def input_method(self, preedit: str, cursor: tuple[int, int] | None, commit: str, before: int, after: int) -> None:
+        """Text from an input method (the surface's text-input protocol)."""
+        if self.hosted is not None and self.hosted.visible():
+            self.hosted.input_method(preedit, cursor, commit, before, after)
 
     def wheel(self, pos: QPointF, gpos: QPointF, dx: int, dy: int) -> None:
         if self.hosted is not None and self.hosted.contains(gpos) and not self.menu.is_open():
@@ -470,6 +593,18 @@ class Stage(QObject):
                 self.hosted_shown(self.hosted, shown, shown and getattr(self.hosted.widget, "wants_keyboard", True))
             if shown:
                 outline += [r.translated(-origin) for r in self.hosted.input_rects()]
+            # Selected text is the primary selection, as in any Linux app.
+            selected = self.hosted.selected_text() if shown else ""
+            if selected and selected != self._primary:
+                self.clipboard_copy(selected, "primary")
+            self._primary = selected
+            # The focused field's text and cursor, for an input method, when they change.
+            state = self.hosted.text_state()
+            if state != self._text_state:
+                self._text_state = state
+                set_text_input = getattr(self.surface, "set_text_input", None)
+                if set_text_input is not None:
+                    set_text_input(state)
         if self.menu.is_open():  # like any popup menu: a click anywhere else closes it
             outline = [QRect(0, 0, self._geo.width(), self._geo.height())]
         self.surface.set_input(outline)
@@ -551,6 +686,10 @@ class Stage(QObject):
                 self._menu_gone()
             if action is not None:
                 action.trigger()
+            return True
+        if self.hosted is not None and self.hosted.contains(gpos) and button == Qt.MouseButton.MiddleButton:
+            if hasattr(self.surface, "paste"):
+                self.hosted.middle_click(gpos)
             return True
         if self.hosted is not None and self.hosted.contains(gpos):
             self._hosted_press = True

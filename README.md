@@ -197,9 +197,12 @@ through it everywhere except the penguin and what it's showing you.
   its bubbles, its menus and the ask box, so none of it is an XWayland window
   that the desktop would put underneath, decorate with its borders, or keep the
   keyboard from. The overlay takes the keyboard only while the ask box is open,
-  and reads it with libxkbcommon, so your layout, dead keys and compose work.
-  Qt can't make a layer-shell surface, so the penguin talks to the compositor
-  itself, with a small Wayland client of its own (no extra libraries).
+  and reads it with libxkbcommon, so your layout, dead keys and compose work;
+  input methods (fcitx5, IBus) work through the compositor's text-input
+  protocol, and copy, cut, paste and middle-click paste through its clipboard
+  and primary selection. Qt can't make a layer-shell surface, so the penguin
+  talks to the compositor itself, with a small Wayland client of its own (no
+  extra libraries).
 - **X11**, and **GNOME on Wayland** (no layer-shell there; it runs through
   XWayland, whose X input shapes GNOME reads): a window over the screen with an
   X input shape. The ask box is a window of its own.
