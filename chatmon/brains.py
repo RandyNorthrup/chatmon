@@ -32,59 +32,179 @@ from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkReques
 from . import paths
 from .events import INTERNAL_ENV
 
-# Model ids current as of October 2026; any of them can be changed in the settings.
+# Model ids current as of 10 November 2026 (checked on each provider's own pages); the menu offers the
+# `models` listed, and any can be set in the settings.
 PRESETS: dict[str, dict] = {
     # Command-line tools, with your own sign-in.
-    "claude": {"type": "command", "label": "Claude Code", "command": ["claude", "-p", "--tools", "", "--no-session-persistence"]},
+    "claude": {
+        "type": "command",
+        "label": "Claude Code",
+        "command": ["claude", "-p", "--tools", "", "--no-session-persistence"],
+        "models": ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5-2"],
+        "model_args": ["--model", "{model}"],
+        "efforts": ["low", "medium", "high", "xhigh", "max"],
+        "effort_args": ["--effort", "{effort}"],
+    },
     "codex": {
         "type": "command",
         "label": "Codex",
         "command": ["codex", "exec", "--skip-git-repo-check", "--sandbox", "read-only", "--output-last-message", "{output_file}", "-"],
+        "model_args": ["-m", "{model}"],
+        "efforts": ["low", "medium", "high", "xhigh"],
+        "effort_args": ["-c", 'model_reasoning_effort="{effort}"'],
     },
     # Gemini reads the question from stdin and appends -p; tools needing approval are refused headless.
-    "gemini": {"type": "command", "label": "Gemini CLI", "command": ["gemini", "-o", "text", "-p", "Answer the question above."]},
-    "muse": {"type": "command", "label": "Muse Code", "command": ["muse", "exec", "--preset", "empty", "--prompt-file", "{prompt_file}"]},
+    "gemini": {
+        "type": "command",
+        "label": "Gemini CLI",
+        "command": ["gemini", "-o", "text", "-p", "Answer the question above."],
+        "models": ["gemini-3.8-flash", "gemini-4-carbon", "gemini-4-argon"],
+        "model_args": ["-m", "{model}"],
+    },
+    "muse": {
+        "type": "command",
+        "label": "Muse Code",
+        "command": ["muse", "exec", "--preset", "empty", "--prompt-file", "{prompt_file}"],
+        "models": ["muse-spark-1.3", "muse-ember-1.0", "muse-wonder-1.0"],
+        "model_args": ["--model", "{model}"],
+        "efforts": ["minimal", "low", "medium", "high", "xhigh", "max"],
+        "effort_args": ["--reasoning-effort", "{effort}"],
+    },
     "grok": {
         "type": "command",
         "label": "Grok",
         "command": ["grok", "--prompt-file", "{prompt_file}", "--tools", "read_file,grep,list_dir", "--disable-web-search",
                     "--permission-mode", "dontAsk", "--output-format", "plain"],
+        "model_args": ["-m", "{model}"],
     },
-    "copilot": {"type": "command", "label": "GitHub Copilot CLI", "command": ["copilot", "-s", "--no-ask-user", "--available-tools=view,grep,glob"]},
+    "copilot": {
+        "type": "command",
+        "label": "GitHub Copilot CLI",
+        "command": ["copilot", "-s", "--no-ask-user", "--available-tools=view,grep,glob"],
+        "model_args": ["--model", "{model}"],
+        "efforts": ["low", "medium", "high", "xhigh", "max"],
+        "effort_args": ["--effort", "{effort}"],
+    },
     # Model servers on this computer: used when they're running, with whatever model they have loaded.
     "ollama": {"type": "openai", "label": "Ollama", "url": "http://localhost:11434/v1", "model": "auto", "local": True},
     "lmstudio": {"type": "openai", "label": "LM Studio", "url": "http://localhost:1234/v1", "model": "auto", "local": True},
     "llamacpp": {"type": "openai", "label": "llama.cpp", "url": "http://127.0.0.1:9931/v1", "model": "auto", "local": True},
     "vllm": {"type": "openai", "label": "vLLM", "url": "http://localhost:8000/v1", "model": "auto", "local": True},
     # APIs: pick one to use it.
-    "anthropic-api": {"type": "anthropic", "label": "Anthropic API", "model": "claude-opus-5-5", "api_key_env": "ANTHROPIC_API_KEY"},
-    "openai-api": {"type": "responses", "label": "OpenAI API", "url": "https://api.openai.com/v1", "model": "gpt-6.1-sol", "api_key_env": "OPENAI_API_KEY"},
+    "anthropic-api": {
+        "type": "anthropic",
+        "label": "Anthropic API",
+        "model": "claude-opus-5-5",
+        "models": ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5-2"],
+        "effort": "low",  # a few sentences: low is plenty, and quick
+        "api_key_env": "ANTHROPIC_API_KEY",
+    },
+    "openai-api": {
+        "type": "responses",
+        "label": "OpenAI API",
+        "url": "https://api.openai.com/v1",
+        "model": "gpt-6.1-sol",
+        "models": ["gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-astra", "gpt-6-luna"],
+        "efforts": ["low", "medium", "high"],
+        "thinking_fields": {"off": {"reasoning.effort": "none"}},
+        "thinking_models": {"off": ["gpt-6.1-terra", "gpt-6-luna"]},  # Sol and Astra always reason
+        "api_key_env": "OPENAI_API_KEY",
+    },
     "gemini-api": {
         "type": "openai",
         "label": "Gemini API",
         "url": "https://generativelanguage.googleapis.com/v1beta/openai",
         "model": "gemini-3.8-flash",
+        "models": ["gemini-3.8-flash", "gemini-4-carbon", "gemini-4-argon", "gemini-3.5-flash-lite"],
+        "efforts": ["low", "medium", "high"],  # Gemini 3 and later can't turn thinking off
         "api_key_env": "GEMINI_API_KEY",
     },
-    "xai-api": {"type": "responses", "label": "xAI API", "url": "https://api.x.ai/v1", "model": "grok-4.7", "api_key_env": "XAI_API_KEY"},
-    "meta-api": {"type": "openai", "label": "Meta Model API (Muse Spark)", "url": "https://api.meta.ai/v1", "model": "muse-spark-1.3", "api_key_env": "MODEL_API_KEY"},
-    "mistral-api": {"type": "openai", "label": "Mistral API", "url": "https://api.mistral.ai/v1", "model": "mistral-small-latest", "api_key_env": "MISTRAL_API_KEY"},
-    "deepseek-api": {"type": "openai", "label": "DeepSeek API", "url": "https://api.deepseek.com", "model": "deepseek-v4-pro", "api_key_env": "DEEPSEEK_API_KEY"},
-    "groq-api": {"type": "openai", "label": "Groq", "url": "https://api.groq.com/openai/v1", "model": "openai/gpt-oss-120b", "api_key_env": "GROQ_API_KEY"},
-    "together-api": {"type": "openai", "label": "Together AI", "url": "https://api.together.ai/v1", "model": "moonshotai/Kimi-K3", "api_key_env": "TOGETHER_API_KEY"},
+    "xai-api": {
+        "type": "responses",
+        "label": "xAI API",
+        "url": "https://api.x.ai/v1",
+        "model": "grok-4.7",
+        "models": ["grok-4.7", "grok-4.6", "grok-4.20-0309-non-reasoning"],  # the last one doesn't reason at all
+        "efforts": ["low", "medium", "high", "xhigh"],
+        "model_efforts": {"grok-4.20-0309-non-reasoning": []},
+        "api_key_env": "XAI_API_KEY",
+    },
+    "meta-api": {
+        "type": "openai",
+        "label": "Meta Model API (Muse)",
+        "url": "https://api.meta.ai/v1",
+        "model": "muse-spark-1.3",
+        "models": ["muse-spark-1.3", "muse-ember-1.0", "muse-wonder-1.0"],  # Ember: Nov 2026, the cheapest; Wonder: preview
+        "efforts": ["minimal", "low", "medium", "high", "xhigh", "max"],  # none of them can stop reasoning
+        "effort": "low",  # Meta's own advice for direct answers; they default to high (Spark) and max (Ember, Wonder)
+        "api_key_env": "MODEL_API_KEY",
+    },
+    "mistral-api": {
+        "type": "openai",
+        "label": "Mistral API",
+        "url": "https://api.mistral.ai/v1",
+        "model": "mistral-small-latest",
+        "models": ["mistral-small-latest", "mistral-large-4-0"],
+        "model_efforts": {"mistral-small-latest": ["high"], "mistral-large-4-0": ["low", "medium", "high"]},
+        "thinking_fields": {"off": {"reasoning_effort": "none"}},  # Small thinks only a little then
+        "thinking_models": {"off": ["mistral-small-latest"]},
+        "api_key_env": "MISTRAL_API_KEY",
+    },
+    "deepseek-api": {
+        "type": "openai",
+        "label": "DeepSeek API",
+        "url": "https://api.deepseek.com",
+        "model": "deepseek-v4-pro",
+        "models": ["deepseek-v4-pro", "deepseek-flash"],
+        "efforts": ["low", "high", "max"],
+        "thinking_fields": {"on": {"thinking.type": "enabled"}, "off": {"thinking.type": "disabled"}},
+        "api_key_env": "DEEPSEEK_API_KEY",
+    },
+    "groq-api": {
+        "type": "openai",
+        "label": "Groq",
+        "url": "https://api.groq.com/openai/v1",
+        "model": "openai/gpt-oss-120b",
+        "models": ["openai/gpt-oss-120b", "openai/gpt-oss-20b"],
+        "efforts": ["low", "medium", "high"],
+        "api_key_env": "GROQ_API_KEY",
+    },
+    "together-api": {
+        "type": "openai",
+        "label": "Together AI",
+        "url": "https://api.together.ai/v1",
+        "model": "moonshotai/Kimi-K3.1-Pro",
+        "models": ["moonshotai/Kimi-K3.1-Pro", "zai-org/GLM-5.3", "deepseek-ai/DeepSeek-V4.1-Flash", "openai/gpt-oss-120b"],
+        "model_efforts": {"openai/gpt-oss-120b": ["low", "medium", "high"]},
+        "api_key_env": "TOGETHER_API_KEY",
+    },
     "fireworks-api": {
         "type": "openai",
         "label": "Fireworks",
         "url": "https://api.fireworks.ai/inference/v1",
         "model": "accounts/fireworks/models/glm-5p3",
+        "models": ["accounts/fireworks/models/glm-5p3", "accounts/fireworks/models/kimi-k3p1-pro"],
+        "efforts": ["low", "medium", "high"],
         "api_key_env": "FIREWORKS_API_KEY",
     },
-    "cerebras-api": {"type": "openai", "label": "Cerebras", "url": "https://api.cerebras.ai/v1", "model": "gpt-oss-120b", "api_key_env": "CEREBRAS_API_KEY"},
-    "perplexity-api": {
+    "cerebras-api": {
+        "type": "openai",
+        "label": "Cerebras",
+        "url": "https://api.cerebras.ai/v1",
+        "model": "gpt-oss-120b",
+        "models": ["gpt-oss-120b", "qwen-3.8-27b"],
+        "efforts": ["low", "medium", "high"],
+        "thinking_fields": {"off": {"reasoning_effort": "none"}},
+        "thinking_models": {"off": ["qwen-3.8-27b"]},
+        "api_key_env": "CEREBRAS_API_KEY",
+    },
+    "perplexity-api": {  # the Agent API (Sonar's Chat Completions support ended 2026-09-27)
         "type": "responses",
         "label": "Perplexity (web search)",
         "url": "https://api.perplexity.ai/v1",
+        "path": "/agent",
         "model": "perplexity/sonar",
+        "models": ["perplexity/sonar", "openai/gpt-6.1-sol", "google/gemini-3.8-flash", "anthropic/claude-sonnet-5-5"],
         "api_key_env": "PERPLEXITY_API_KEY",
         "extra": {"tools": [{"type": "web_search"}]},
     },
@@ -93,6 +213,10 @@ PRESETS: dict[str, dict] = {
         "label": "OpenRouter",
         "url": "https://openrouter.ai/api/v1",
         "model": "openrouter/auto",
+        "models": ["openrouter/auto", "openai/gpt-6.1-sol", "google/gemini-3.8-flash", "anthropic/claude-sonnet-5-5"],
+        "efforts": ["low", "medium", "high"],
+        "model_efforts": {"openrouter/auto": []},  # the router picks its own
+        "effort_field": "reasoning.effort",
         "api_key_env": "OPENROUTER_API_KEY",
         "headers": {"X-OpenRouter-Title": "Chatmon"},
     },
@@ -101,6 +225,7 @@ PRESETS: dict[str, dict] = {
         "label": "Amazon Bedrock",
         "url": "https://bedrock-runtime.${AWS_REGION}.amazonaws.com/openai/v1",
         "model": "global.openai.gpt-6.1-sol",
+        "models": ["global.openai.gpt-6.1-sol", "global.openai.gpt-6.1-terra", "global.openai.gpt-6-astra", "global.openai.gpt-6-luna"],
         "api_key_env": "AWS_BEARER_TOKEN_BEDROCK",
         "requires": ["AWS_REGION"],
     },
@@ -110,10 +235,31 @@ TYPES = ("command", "anthropic", "openai", "responses")
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2026-10-21"
 # Models that take server-side refusal fallbacks ("fallbacks": "default").
-_FALLBACK_MODELS = {"claude-opus-5-5", "claude-opus-5", "claude-fable-5-1", "claude-sonnet-5-5"}
+_FALLBACK_MODELS = {"claude-fable-5-2", "claude-fable-5-1", "claude-opus-5-5", "claude-opus-5", "claude-sonnet-5-5"}
 _FALLBACK_BETA = "server-side-fallback-2026-07-01"
 
 _ANSI = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]|\x1b\][^\x07]*\x07")
+
+
+def describe(brain: Brain) -> str:
+    """Its model, effort and thinking, as far as they're set: "claude-opus-5-5, effort low"."""
+    parts = [brain.model] if brain.model and brain.model != "auto" else []
+    if brain.effort:
+        parts.append(f"effort {brain.effort}")
+    if brain.thinking != "auto":
+        parts.append(f"thinking {brain.thinking}")
+    return ", ".join(parts)
+
+
+def command_args(brain: Brain) -> list[str]:
+    """A command-line brain's arguments after the program: its own, then its model, effort and thinking."""
+    args = list(brain.command[1:])
+    if brain.model and brain.model_args:
+        args += [a.replace("{model}", brain.model) for a in brain.model_args]
+    if brain.effort and brain.effort_args:
+        args += [a.replace("{effort}", brain.effort) for a in brain.effort_args]
+    args += brain.thinking_args.get(brain.thinking, [])
+    return args
 
 
 class BrainError(Exception):
@@ -149,7 +295,20 @@ class Brain:
     model: str = ""
     api_key_env: str = ""
     api_key: str = ""
-    effort: str = "low"
+    effort: str = ""  # how hard it thinks, one of `efforts`; "": the model's own default
+    thinking: str = "auto"  # "auto" (the model's own default), "on" or "off"
+    models: list[str] = field(default_factory=list)  # models to offer in the menu, the usual one first
+    efforts: list[str] = field(default_factory=list)  # effort levels it takes, least first; none: it has no such setting
+    model_efforts: dict[str, list[str]] = field(default_factory=dict)  # a model's own levels, where they differ
+    thinking_models: dict[str, list[str]] = field(default_factory=dict)  # "on"/"off": the only models that can
+    effort_field: str = ""  # where an API takes the effort (dots for nesting); "": the usual place for its type
+    path: str = ""  # an API's path after `url`; "": the usual one for its type
+    # Command-line tools: arguments added for a model, an effort and thinking ("{model}", "{effort}" filled in).
+    model_args: list[str] = field(default_factory=list)
+    effort_args: list[str] = field(default_factory=list)
+    thinking_args: dict[str, list[str]] = field(default_factory=dict)  # "on"/"off": arguments
+    # APIs: what goes into the request body to turn thinking on or off ("on"/"off": fields, dots for nesting).
+    thinking_fields: dict[str, dict] = field(default_factory=dict)
     headers: dict[str, str] = field(default_factory=dict)  # extra headers; "${VAR}" is read from the environment
     extra: dict = field(default_factory=dict)  # extra fields for the request body
     local: bool = False  # a server on this computer: available while it's running
@@ -158,6 +317,61 @@ class Brain:
 
     def key(self) -> str:
         return self.api_key or (os.environ.get(self.api_key_env, "") if self.api_key_env else "")
+
+    # -- model, effort and thinking, as the menu offers them
+
+    def effort_levels(self, model: str | None = None) -> list[str]:
+        model = self.model if model is None else model
+        return self.model_efforts.get(model, self.efforts)
+
+    def thinking_modes(self) -> list[str]:
+        """The thinking choices this brain has at all: "auto", and "on"/"off" where it can be told."""
+        if self.type == "anthropic":
+            return ["auto", "on", "off"]
+        known = self.thinking_args if self.type == "command" else self.thinking_fields
+        return ["auto"] + [m for m in ("on", "off") if m in known]
+
+    def refuses(self, model: str | None = None, effort: str | None = None, thinking: str | None = None) -> str | None:
+        """Why this combination of model, effort and thinking can't be sent (None: it can). Each one left
+        out is this brain's own."""
+        model = self.model if model is None else model
+        effort = self.effort if effort is None else effort
+        thinking = self.thinking if thinking is None else thinking
+        if model and not _MODEL_NAME.fullmatch(model):
+            return "not a model name"  # it reaches command lines: never something a tool could read as a flag
+        levels = self.effort_levels(model)
+        if effort and not levels:
+            return "it has no effort setting"
+        if effort and effort not in levels:
+            return f"this model doesn't take {effort}"
+        if thinking not in self.thinking_modes():
+            return "it has no thinking setting"
+        only = self.thinking_models.get(thinking)
+        if only is not None and model not in only:
+            return f"this model can't turn thinking {thinking}"
+        if self.type == "anthropic":
+            return _anthropic_why_not(model, effort, thinking)
+        return None
+
+    def with_options(self, options: dict | None) -> Brain:
+        """This brain with the model, effort and thinking picked from the menu; a pick that doesn't go
+        together with the rest (thinking off at an effort the model won't do it at) is left out."""
+        out, options = self, options or {}
+        if options.get("model") is not None:  # a model switch always happens; what doesn't suit the new model goes
+            candidate = replace(out, model=str(options["model"]))
+            if candidate.refuses() is not None:
+                effort = out.effort if candidate.refuses(effort=out.effort, thinking="auto") is None else ""
+                candidate = replace(candidate, effort=effort, thinking="auto")
+            if candidate.refuses() is None:
+                out = candidate
+        for key in ("effort", "thinking"):
+            value = options.get(key)
+            if value is None:
+                continue
+            candidate = replace(out, **{key: str(value)})
+            if candidate.refuses() is None:
+                out = candidate
+        return out
 
     def available(self) -> bool:
         if self.type == "command":
@@ -180,6 +394,45 @@ class Brain:
         return f"{', '.join(missing)} not set" if missing else "not set up"
 
 
+ANTHROPIC_EFFORTS = ["low", "medium", "high", "xhigh", "max"]  # every current Claude model takes these
+_MODEL_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:/@-]{0,199}")
+
+# Thinking on the Claude API, by model: which always think, and how the others are told not to.
+_ALWAYS_THINKS = {"claude-fable-5-2", "claude-fable-5-1", "claude-fable-5", "claude-mythos-5-2", "claude-mythos-5-1", "claude-opus-5-5"}
+_OFF_BETWEEN_TOOLS = {"claude-sonnet-5-5"}  # "between_tools", at effort high or below
+_OFF_UP_TO_HIGH = {"claude-opus-5", "claude-haiku-5-5"}  # "disabled", at effort high or below
+_OFF_ANY = {"claude-sonnet-5", "claude-opus-4-8", "claude-opus-4-7"}  # "disabled"
+_ABOVE_HIGH = {"xhigh", "max"}
+
+
+def _anthropic_why_not(model: str, effort: str, thinking: str) -> str | None:
+    if thinking != "off":
+        return None
+    if model in _ALWAYS_THINKS:
+        return "this model always thinks; lower its effort instead"
+    if model in _OFF_BETWEEN_TOOLS | _OFF_UP_TO_HIGH and effort in _ABOVE_HIGH:
+        return "thinking can be off only at effort high or below"
+    if model not in _OFF_BETWEEN_TOOLS | _OFF_UP_TO_HIGH | _OFF_ANY:
+        return "not known to be possible on this model"
+    return None
+
+
+def _anthropic_thinking(model: str, thinking: str) -> dict | None:
+    if thinking == "on":
+        return {"type": "adaptive"}
+    if thinking == "off":
+        return {"type": "between_tools"} if model in _OFF_BETWEEN_TOOLS else {"type": "disabled"}
+    return None  # the model's own default
+
+
+def _set(body: dict, dotted: str, value) -> None:
+    """body["a"]["b"] = value for "a.b", making the dicts on the way."""
+    *path, last = dotted.split(".")
+    for key in path:
+        body = body.setdefault(key, {})
+    body[last] = value
+
+
 def load_brains(ai_config: dict) -> dict[str, Brain]:
     """The built-in brains with your overrides, then your own, in auto order."""
     user = ai_config.get("brains") or {}
@@ -197,7 +450,18 @@ def load_brains(ai_config: dict) -> dict[str, Brain]:
             model=spec.get("model", ""),
             api_key_env=spec.get("api_key_env", ""),
             api_key=spec.get("api_key", ""),
-            effort=spec.get("effort", "low"),
+            effort=str(spec.get("effort", "low" if spec["type"] == "anthropic" else "")),  # a chat answer needs little
+            thinking=str(spec.get("thinking", "auto")),
+            models=[str(m) for m in spec.get("models", [])],
+            efforts=[str(e) for e in spec.get("efforts", ANTHROPIC_EFFORTS if spec["type"] == "anthropic" else [])],
+            model_args=[str(a) for a in spec.get("model_args", [])],
+            effort_args=[str(a) for a in spec.get("effort_args", [])],
+            thinking_args={str(k): [str(a) for a in v] for k, v in (spec.get("thinking_args") or {}).items()},
+            thinking_fields={str(k): dict(v) for k, v in (spec.get("thinking_fields") or {}).items()},
+            model_efforts={str(k): [str(e) for e in v] for k, v in (spec.get("model_efforts") or {}).items()},
+            thinking_models={str(k): [str(m) for m in v] for k, v in (spec.get("thinking_models") or {}).items()},
+            effort_field=str(spec.get("effort_field", "")),
+            path=str(spec.get("path", "")),
             headers={str(k): str(v) for k, v in (spec.get("headers") or {}).items()},
             extra=dict(spec.get("extra") or {}),
             local=bool(spec.get("local", False)),
@@ -274,8 +538,12 @@ def anthropic_request(brain: Brain, system: str, history, question: str) -> tupl
         "max_tokens": 16000,
         "system": system,
         "messages": _messages(history, question),
-        "output_config": {"effort": brain.effort},
     }
+    if brain.effort:
+        body["output_config"] = {"effort": brain.effort}
+    thinking = _anthropic_thinking(brain.model, brain.thinking)
+    if thinking is not None:
+        body["thinking"] = thinking
     if brain.model in _FALLBACK_MODELS:
         headers["anthropic-beta"] = _FALLBACK_BETA
         body["fallbacks"] = "default"
@@ -287,7 +555,9 @@ def openai_request(brain: Brain, system: str, history, question: str) -> tuple[d
     if brain.key():
         headers["authorization"] = f"Bearer {brain.key()}"
     body = {"model": brain.model, "messages": [{"role": "system", "content": system}] + _messages(history, question)}
-    return _custom(brain, headers, body)
+    if brain.effort and brain.effort_levels():
+        _set(body, brain.effort_field or "reasoning_effort", brain.effort)
+    return _custom(brain, headers, _thinking_fields(brain, body))
 
 
 def responses_request(brain: Brain, system: str, history, question: str) -> tuple[dict, dict]:
@@ -295,7 +565,15 @@ def responses_request(brain: Brain, system: str, history, question: str) -> tupl
     if brain.key():
         headers["authorization"] = f"Bearer {brain.key()}"
     body = {"model": brain.model, "instructions": system, "input": _messages(history, question)}
-    return _custom(brain, headers, body)
+    if brain.effort and brain.effort_levels():
+        _set(body, brain.effort_field or "reasoning.effort", brain.effort)
+    return _custom(brain, headers, _thinking_fields(brain, body))
+
+
+def _thinking_fields(brain: Brain, body: dict) -> dict:
+    for dotted, value in brain.thinking_fields.get(brain.thinking, {}).items():
+        _set(body, dotted, value)
+    return body
 
 
 def _custom(brain: Brain, headers: dict, body: dict) -> tuple[dict, dict]:
@@ -375,8 +653,8 @@ def endpoint(brain: Brain):
     if brain.type == "anthropic":
         return expand(brain.url) or ANTHROPIC_URL, anthropic_request, parse_anthropic
     if brain.type == "responses":
-        return base + "/responses", responses_request, parse_responses
-    return base + "/chat/completions", openai_request, parse_openai
+        return base + (brain.path or "/responses"), responses_request, parse_responses
+    return base + (brain.path or "/chat/completions"), openai_request, parse_openai
 
 
 def clean_output(text: str) -> str:
@@ -447,7 +725,7 @@ class Asker(QObject):
 
     def _run(self, brain: Brain, prompt: str) -> None:
         args, use_stdin = [], True
-        for arg in brain.command[1:]:
+        for arg in command_args(brain):
             if "{output_file}" in arg:
                 self._output_file = self._temp("answer-")
                 arg = arg.replace("{output_file}", str(self._output_file))

@@ -170,7 +170,12 @@ class Companion(QObject):
         return heads_up.Watcher(float(h["battery_low"]), float(h["battery_critical"]), float(h["disk_full_percent"]))
 
     def _brain(self) -> brains.Brain | None:
-        return brains.choose(self.brains, self.config["ai"]["brain"], self.state.get("brain"))
+        """The brain to ask, with the model, effort and thinking picked for it from the menu."""
+        brain = brains.choose(self.brains, self.config["ai"]["brain"], self.state.get("brain"))
+        return brain.with_options(self._brain_options(brain.name)) if brain else None
+
+    def _brain_options(self, name: str) -> dict:
+        return dict((self.state.get("brain_options") or {}).get(name) or {})
 
     def _now(self) -> float:
         return time.monotonic()
@@ -367,7 +372,7 @@ class Companion(QObject):
         if not upcoming:
             lines.append("- No reminders set")
         brain = self._brain()
-        lines.append(f"- Brain: {brain.label if brain else 'none'}")
+        lines.append(f"- Brain: {brain.label if brain else 'none'}" + (f" ({brains.describe(brain)})" if brain and brains.describe(brain) else ""))
         return "\n".join(lines)
 
     # -- hiding
@@ -704,6 +709,56 @@ class Companion(QObject):
                 action.setChecked(picked == brain.name)
                 action.triggered.connect(partial(self._pick_brain, brain.name))
                 group.addAction(action)
+        if current is not None:
+            self._brain_options_menu(sub, current)
+
+    THINKING = {"auto": "Automatic (the model's own choice)", "on": "On", "off": "Off"}
+
+    def _brain_options_menu(self, sub: QMenu, brain: brains.Brain) -> None:
+        """How the brain in use answers: its model, how hard it thinks, whether it thinks at all."""
+        modes = brain.thinking_modes()
+        if not (brain.models or brain.effort_levels() or len(modes) > 1):
+            return
+        sub.addSection(f"{brain.label}: how it answers")
+        base = self.brains[brain.name]  # as set up, before any picks: its defaults
+        if brain.models:
+            own = "The tool’s own choice" if brain.type == "command" else "Its own default"
+            menu = sub.addMenu(f"Model: {brain.model or own.lower()}")
+            group = QActionGroup(menu)
+            if not base.model:
+                self._option(menu, group, own, not brain.model, None, brain.name, "model", "")
+            for model in dict.fromkeys([*brain.models, *([brain.model] if brain.model else [])]):
+                label = model + ("  (default)" if model == base.model else "")
+                # Any model can be picked: an effort or thinking it doesn't take is dropped with the switch.
+                self._option(menu, group, label, brain.model == model, brain.refuses(model=model, effort="", thinking="auto"), brain.name, "model", model)
+        levels = brain.effort_levels()
+        if levels:
+            menu = sub.addMenu(f"Effort: {brain.effort or 'the model’s default'}")
+            group = QActionGroup(menu)
+            self._option(menu, group, "The model’s default", not brain.effort, None, brain.name, "effort", "")
+            for level in levels:
+                label = level + ("  (default)" if level == base.effort else "")
+                self._option(menu, group, label, brain.effort == level, brain.refuses(effort=level), brain.name, "effort", level)
+        if len(modes) > 1:
+            menu = sub.addMenu(f"Thinking: {self.THINKING[brain.thinking].split(' (')[0]}")
+            group = QActionGroup(menu)
+            for mode in modes:
+                self._option(menu, group, self.THINKING[mode], brain.thinking == mode, brain.refuses(thinking=mode), brain.name, "thinking", mode)
+
+    def _option(self, menu: QMenu, group: QActionGroup, label: str, checked: bool, refused: str | None, brain: str, key: str, value: str) -> None:
+        action = menu.addAction(label if refused is None else f"{label}  ({refused})")
+        action.setCheckable(True)
+        action.setChecked(checked)
+        action.setEnabled(refused is None)
+        action.triggered.connect(partial(self._set_brain_option, brain, key, value))
+        group.addAction(action)
+
+    def _set_brain_option(self, brain: str, key: str, value: str) -> None:
+        options = dict(self.state.get("brain_options") or {})
+        options[brain] = {**options.get(brain, {}), key: value}
+        self.state.set("brain_options", options)
+        self.state.save()
+        self._menu_changed()
 
     # -- connecting AI agents
 

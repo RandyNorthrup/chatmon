@@ -12,7 +12,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PyQt6.QtCore import QEventLoop, QTimer  # noqa: E402
 from PyQt6.QtNetwork import QLocalServer  # noqa: E402
-from PyQt6.QtWidgets import QApplication  # noqa: E402
+from PyQt6.QtWidgets import QApplication, QMenu  # noqa: E402
 
 
 def spin(seconds: float) -> None:
@@ -217,3 +217,32 @@ def test_the_greeting_never_covers_a_message_that_came_first(companion):
     c.handle({"type": "say", "text": "Deploy finished."})
     spin(1.8)  # past when the greeting would show
     assert "Deploy finished." in c.stage.bubble.doc.toPlainText() and "Hi, I'm" not in c.stage.bubble.title
+
+
+def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
+    c = companion
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    c._pick_brain("anthropic-api")
+    menu = QMenu()
+    c._brain_menu(menu)
+    subs = {a.text().split(":")[0]: a.menu() for a in menu.actions() if a.menu()}
+    assert {"Model", "Effort", "Thinking"} <= set(subs)
+
+    def click(sub, starts):
+        (action,) = [a for a in subs[sub].actions() if a.text().startswith(starts)]
+        assert action.isEnabled(), action.text()
+        action.trigger()
+
+    click("Model", "claude-sonnet-5-5")
+    click("Effort", "medium")
+    off = [a for a in subs["Thinking"].actions() if a.text().startswith("Off")][0]
+    assert off.isEnabled() is False and "always thinks" in off.text()  # still Opus 5.5 when the menu was made
+    brain = c._brain()
+    assert (brain.name, brain.model, brain.effort) == ("anthropic-api", "claude-sonnet-5-5", "medium")
+    menu = QMenu()
+    c._brain_menu(menu)
+    subs = {a.text().split(":")[0]: a.menu() for a in menu.actions() if a.menu()}
+    click("Thinking", "Off")  # Sonnet 5.5 can, at medium
+    assert c._brain().thinking == "off" and c.state.get("brain_options")["anthropic-api"]["thinking"] == "off"
+    c.submit("status")
+    assert "claude-sonnet-5-5, effort medium, thinking off" in c.ask_box.answer.toPlainText()

@@ -104,10 +104,29 @@ timeout_seconds = 180
 # model = "your-deployment"
 # api_key_env = "AZURE_OPENAI_API_KEY"
 #
-# Change a built-in one's model the same way:
+# Model, effort and thinking are easiest to change from the menu (Brain, then
+# Model, Effort and Thinking for the brain in use); what you pick there is
+# remembered for each brain. To set them here instead, or for your own brains:
 #
 # [ai.brains.openai-api]
-# model = "gpt-6-luna"
+# model = "gpt-6.1-terra"
+# effort = "medium"        # how hard it thinks; "" leaves it to the model
+# thinking = "off"         # "auto" (the model's own default), "on" or "off"
+#
+# Your own brain can offer the same choices in the menu:
+#
+# [ai.brains.my-provider]
+# models = ["fast-model", "smart-model"]
+# efforts = ["low", "medium", "high"]           # sent as reasoning_effort
+# thinking_fields = { off = { "reasoning_effort" = "none" } }
+#
+# and a command brain takes them as arguments ("{model}", "{effort}"):
+#
+# [ai.brains.my-tool]
+# model_args = ["--model", "{model}"]
+# effort_args = ["--effort", "{effort}"]
+# efforts = ["low", "high"]
+# thinking_args = { off = ["--no-thinking"] }
 
 [agents]
 # Show the last words of an agent's reply when it finishes. Off by default:
