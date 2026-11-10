@@ -8,7 +8,14 @@ $app = Join-Path $env:LOCALAPPDATA "Programs\Chatmon"
 $startMenu = Join-Path ([Environment]::GetFolderPath("Programs")) "Chatmon.lnk"
 $desktop = Join-Path ([Environment]::GetFolderPath("Desktop")) "Chatmon.lnk"
 $runKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
-$pathBefore = [Environment]::GetEnvironmentVariable("Path", "User")
+
+# Your PATH as the registry holds it: its type and its text, %VARIABLES% unexpanded.
+function RawPath {
+    $key = Get-Item HKCU:\Environment
+    if ($key.GetValueNames() -notcontains "Path") { return "<none>" }
+    "$($key.GetValueKind('Path')): $($key.GetValue('Path', $null, 'DoNotExpandEnvironmentNames'))"
+}
+$pathBefore = RawPath
 
 function Check($what, $ok) {
     if (-not $ok) { throw "FAILED: $what" }
@@ -38,6 +45,8 @@ Start-Process "$app\unins000.exe" -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXE
 for ($i = 0; $i -lt 60 -and ((Test-Path $app) -or (Uninstall-Entry)); $i++) { Start-Sleep 1 }
 Check "its folder is gone" (-not (Test-Path $app))
 Check "the Start menu entry and desktop icon are gone" (-not (Test-Path $startMenu) -and -not (Test-Path $desktop))
-Check "PATH is as it was" ([string][Environment]::GetEnvironmentVariable("Path", "User") -eq [string]$pathBefore)
+$pathAfter = RawPath
+if ($pathAfter -ne $pathBefore) { Write-Host "PATH before: $pathBefore`nPATH after:  $pathAfter" }
+Check "PATH is as it was, type and all" ($pathAfter -eq $pathBefore)
 Check "it no longer starts at login" ($null -eq (Get-ItemProperty $runKey -Name Chatmon -ErrorAction SilentlyContinue))
 Check "it's gone from Apps & features" ($null -eq (Uninstall-Entry))
