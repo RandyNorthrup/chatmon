@@ -119,6 +119,14 @@ class Behavior:
     def set_attending(self, on: bool, now: float) -> None:
         self._flag("attending", on, now)
 
+    def set_walk(self, on: bool, now: float) -> None:
+        """Walk around or not. Turning it off stops a walk under way, or one
+        about to start after its turn, rather than letting it finish."""
+        self.walk_enabled = on
+        walking = self._target is not None or any(c.anim == "walk" for c in [self._clip, *self._queue])
+        if not on and walking and not self.held:
+            self._plan(self.wanted_mood(now), now)
+
     def set_hidden(self, on: bool, now: float) -> None:
         self.hidden = on
         if not on:

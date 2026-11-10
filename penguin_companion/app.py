@@ -12,12 +12,12 @@ import time
 from datetime import date, datetime
 from functools import partial
 
-from PyQt6.QtCore import QObject, QPoint, QProcess, QTimer, QUrl, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QActionGroup, QDesktopServices, QGuiApplication, QIcon
 from PyQt6.QtNetwork import QLocalServer
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
-from . import agents, autostart, brains, events, heads_up, paths, reminders, styles
+from . import agents, autostart, brains, events, heads_up, paths, reminders
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -86,7 +86,8 @@ class Companion(QObject):
         self._last_ask = 0.0
         self._update_counts: dict[str, int] = {}
 
-        self.sprites = Sprites(paths.anim_dir(), int(self.config["size"]))
+        self._sprite_scale = QGuiApplication.primaryScreen().devicePixelRatio()
+        self.sprites = Sprites(paths.anim_dir(), int(self.config["size"]), self._sprite_scale)
         screen = QGuiApplication.primaryScreen().availableGeometry()
         self.behavior = Behavior(
             self.sprites.anims(),
@@ -98,13 +99,18 @@ class Companion(QObject):
         )
         self.stage = Stage(self.sprites, self.behavior)
         self.ask_box = AskBox()
-        self._apply_bubble_style()
+        if self.stage.hosts_windows():  # the Wayland overlay: drawn there, not a window of its own
+            self.stage.host(self.ask_box)
+        else:
+            self.stage.keep_clear_of(self.ask_box)
         self.asker = brains.Asker(self)
 
         self.stage.clicked.connect(self.on_click)
         self.stage.menu_requested.connect(self.show_menu)
         self.stage.head_moved.connect(self._follow)
         self.stage.message_closed.connect(self._message_closed)
+        self.stage.menu_closed.connect(self._menu_closed)
+        self.stage.scale_changed_to.connect(self._set_sprite_scale)
         self.ask_box.closed.connect(self._ask_closed)
         self.ask_box.submitted.connect(self.submit)
         self.ask_box.reset_requested.connect(self._new_chat)
@@ -112,8 +118,20 @@ class Companion(QObject):
         self.asker.failed.connect(self._failed)
         self.server.newConnection.connect(self._accept)
 
+        # The menu is always filled in: a tray that shows it over D-Bus (Waybar,
+        # and other StatusNotifierItem trays) reads it before asking for it to open.
         self.menu = QMenu()
         self.menu.aboutToShow.connect(self._fill_menu)
+        self.menu.aboutToHide.connect(self._menu_closed)  # the QMenu popup; the stage's menu says so itself
+        self._menu_open = False
+        self._menu_stale = False
+        self._menu_timer = QTimer(self)
+        self._menu_timer.setSingleShot(True)
+        self._menu_timer.timeout.connect(self._fill_menu)
+        self._menu_clock: tuple = ()
+        self._agent_status: dict[str, str] = {}
+        self.background = Background()
+        self._fill_menu()
         self.tray = QSystemTrayIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
         self.tray.setContextMenu(self.menu)
         self.tray.activated.connect(self._tray_clicked)
@@ -127,8 +145,6 @@ class Companion(QObject):
         self._every(int(self.config["heads_up"]["updates_every_hours"] * 3600_000), self._check_updates)
         QTimer.singleShot(120_000, self._check_updates)
         QTimer.singleShot(1500, self._greet)
-        self.background = Background()
-        self._agent_status: dict[str, str] = {}
         QTimer.singleShot(3000, self._refresh_agents)
 
     # -- small helpers
@@ -160,6 +176,7 @@ class Companion(QObject):
         self.state.set("x", round(self.behavior.x))
         self.state.set("reminders", self.reminders.to_list())
         self.state.save()
+        self._menu_changed()  # reminders and focus show in it
 
     # -- talking
 
@@ -176,6 +193,7 @@ class Companion(QObject):
             return
         self._alert_key = key
         self.behavior.set_hidden(False, self._now())
+        self._menu_changed()
         self.behavior.set_alert(True, self._now())
         self.stage.show_message(title, text, buttons or [("OK", None)], None)
 
@@ -194,7 +212,7 @@ class Companion(QObject):
             self.say("I couldn't read my settings", f"`{self.config_error}`\n\nUsing the defaults for now.", timeout_s=30)
         elif not (self.config["name"] or self.state.get("name")):
             self._asking_name = True
-            self.open_ask()
+            self.open_ask(focus=False)  # nobody clicked: don't take the keyboard from them
         else:
             self.say(f"Hi, I'm {self.name}!", "Click me to ask anything.", timeout_s=5)
 
@@ -213,7 +231,9 @@ class Companion(QObject):
         else:
             self.open_ask()
 
-    def open_ask(self, prefill: str = "") -> None:
+    def open_ask(self, prefill: str = "", *, focus: bool = True) -> None:
+        """Open the ask box. It takes the keyboard (`focus`) when you asked for
+        it, with a click or the menu; otherwise you click it to type."""
         now = self._now()
         if self.behavior.hidden:
             self.set_hidden(False)
@@ -226,13 +246,20 @@ class Companion(QObject):
         anchor = self.stage.head_point()
         if self._asking_name:
             self.ask_box.open(
-                anchor, "Hi! I'm your new desktop companion.", "Enter to save · Esc to decide later", "A name for me", text="What should I be called?"
+                anchor,
+                "Hi! I'm your new desktop companion.",
+                "Enter to save · Esc to decide later",
+                "A name for me",
+                text="What should I be called?",
+                activate=focus,
             )
-            return
-        brain = self._brain()
-        via = f"answers from {brain.label}" if brain else "no AI set up yet; reminders and timers still work"
-        self.ask_box.open(anchor, f"Ask {self.name}", f"Enter to ask · Esc to close · {via}", "Ask anything, or: remind me in 20m to stretch", prefill=prefill)
-        self.ask_box.set_resettable(bool(self.history))
+        else:
+            brain = self._brain()
+            via = f"answers from {brain.label}" if brain else "no AI set up yet; reminders and timers still work"
+            self.ask_box.open(
+                anchor, f"Ask {self.name}", f"Enter to ask · Esc to close · {via}", "Ask anything, or: remind me in 20m to stretch", prefill=prefill, activate=focus
+            )
+            self.ask_box.set_resettable(bool(self.history))
 
     def _ask_closed(self) -> None:
         now = self._now()
@@ -240,7 +267,7 @@ class Companion(QObject):
         self.asker.cancel()
         self.behavior.set_thinking(False, now)
         self.behavior.set_talking(False, now)
-        self.behavior.set_attending(False, now)
+        self.behavior.set_attending(self._menu_open, now)
 
     def _new_chat(self) -> None:
         self.history.clear()
@@ -254,6 +281,7 @@ class Companion(QObject):
             self._asking_name = False
             self.state.set("name", text.strip()[:40])
             self.state.save()
+            self._menu_changed()
             self.ask_box.dismiss()
             self.behavior.react("hop", now)
             self.say(f"{self.name}! I love it.", HELP, timeout_s=25)
@@ -342,6 +370,7 @@ class Companion(QObject):
         if on:
             self.stage.dismiss_message()
             self.ask_box.dismiss()
+        self._menu_changed()
 
     # -- reminders, timers, focus, breaks
 
@@ -403,6 +432,8 @@ class Companion(QObject):
             self.breaks.away(self._last_wall)
             self.breaks.back(now)
         self._last_wall = now
+        if self._menu_clock != self._time_labels():
+            self._menu_changed()
         mono = self._now()
         for source, (state, since) in list(self.agents.items()):
             if state == "working" and mono - since > WORK_EXPIRES:
@@ -564,14 +595,48 @@ class Companion(QObject):
     # -- menus
 
     def show_menu(self, pos: QPoint) -> None:
-        self.menu.popup(pos)
+        """The penguin's own menu (right-click): it stands still and looks at you while it's open."""
+        self._menu_open = True
+        self.behavior.set_attending(True, self._now())
+        if self.stage.draws_menus():
+            self._fill_menu()
+            self.stage.open_menu(self.menu, pos)
+        else:
+            self.menu.popup(pos)
+
+    def _menu_closed(self) -> None:
+        if self._menu_open and not self.stage.menu.is_open():
+            self._menu_open = False
+            self.behavior.set_attending(self.ask_box.isVisible(), self._now())
+        if self._menu_stale:
+            self._menu_stale = False
+            self._menu_timer.start(0)
 
     def _tray_clicked(self, reason) -> None:
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
             self.set_hidden(not self.behavior.hidden)
 
+    def _menu_changed(self) -> None:
+        """Something the menu shows changed: fill it in again, once things settle,
+        and never under an open menu (its items would vanish under the pointer)."""
+        if self.menu.isVisible() or self.stage.menu.is_open():
+            self._menu_stale = True
+        else:
+            self._menu_timer.start(0)
+
+    def _time_labels(self) -> tuple:
+        """The parts of the menu that change with the clock."""
+        now = time.time()
+        focus = self.reminders.focus()
+        left = max(1, round((focus.due - now) / 60)) if focus else None
+        return (left, tuple(reminders.describe(r.due, now) for r in self.reminders.upcoming() if r.kind != "focus"))
+
     def _fill_menu(self) -> None:
+        self._menu_timer.stop()
+        self._menu_clock = self._time_labels()
         m = self.menu
+        for sub in m.findChildren(QMenu, options=Qt.FindChildOption.FindDirectChildrenOnly):
+            sub.deleteLater()  # clear() keeps submenus
         m.clear()
         m.addAction(f"Ask {self.name}…", self.open_ask)
         m.addAction("Remind me…", partial(self.open_ask, "remind me in "))
@@ -590,7 +655,6 @@ class Companion(QObject):
                 sub.addAction(f"✕  {reminders.describe(r.due, time.time())}: {r.text}", partial(self._cancel, r.id))
         m.addSeparator()
         self._brain_menu(m.addMenu("Brain"))
-        self._style_menu(m.addMenu("Bubble style"))
         self._agents_menu(m.addMenu("AI agents"))
         self._refresh_agents()
         walk = m.addAction("Walk around")
@@ -601,7 +665,7 @@ class Companion(QObject):
         login = m.addAction("Start when I log in")
         login.setCheckable(True)
         login.setChecked(autostart.enabled())
-        login.toggled.connect(autostart.set_enabled)
+        login.toggled.connect(self._set_autostart)
         m.addSeparator()
         m.addAction("Edit settings…", lambda: QDesktopServices.openUrl(QUrl.fromLocalFile(str(paths.config_file()))))
         m.addAction("Reload settings", self.reload)
@@ -638,8 +702,9 @@ class Companion(QObject):
         self.background.run(lambda: {a.name: a.status() for a in agents.AGENTS}, self._agents_known)
 
     def _agents_known(self, status) -> None:
-        if isinstance(status, dict):
+        if isinstance(status, dict) and status != self._agent_status:
             self._agent_status = status
+            self._menu_changed()
 
     def _agents_menu(self, sub: QMenu) -> None:
         sub.addSection("Let them tell me what they're doing")
@@ -675,55 +740,22 @@ class Companion(QObject):
         self.open_ask()
         self.ask_box.set_answer("Any agent or script can tell me what it's doing:\n\n```\n" + agents.generic() + "\n```")
 
-    def _style_menu(self, sub: QMenu) -> None:
-        group = QActionGroup(sub)
-        current = self._bubble_style().name
-        for style in styles.STYLES.values():
-            action = sub.addAction(style.label)
-            action.setCheckable(True)
-            action.setChecked(style.name == current)
-            action.triggered.connect(partial(self._pick_style, style.name))
-            group.addAction(action)
-        sub.addSeparator()
-        moving = sub.addAction("Animate bubbles")
-        moving.setCheckable(True)
-        moving.setChecked(self._bubble_effects())
-        moving.toggled.connect(self._set_bubble_effects)
-
-    def _bubble_style(self) -> styles.Style:
-        return styles.get(self.state.get("bubble_style") or self.config["bubble_style"])
-
-    def _bubble_effects(self) -> bool:
-        picked = self.state.get("bubble_effects")
-        return bool(self.config["bubble_effects"] if picked is None else picked)
-
-    def _apply_bubble_style(self) -> None:
-        style, animate = self._bubble_style(), self._bubble_effects()
-        self.stage.bubble.set_style(style, animate)
-        self.ask_box.set_style(style, animate)
-
-    def _pick_style(self, name: str) -> None:
-        self.state.set("bubble_style", name)
-        self.state.save()
-        self._apply_bubble_style()
-        if not self.ask_box.isVisible():
-            self.say(self.name, f"New look: {styles.get(name).label.split(':')[0].lower()}.", timeout_s=4)
-
-    def _set_bubble_effects(self, on: bool) -> None:
-        self.state.set("bubble_effects", on)
-        self.state.save()
-        self._apply_bubble_style()
-
     def _pick_brain(self, name: str | None) -> None:
         self.state.set("brain", name)
         self.state.save()
+        self._menu_changed()
 
     def _cancel(self, rid: str) -> None:
         self.reminders.cancel(rid)
         self.save()
 
     def _set_walk(self, on: bool) -> None:
-        self.behavior.walk_enabled = on
+        self.behavior.set_walk(on, self._now())
+        self._menu_changed()
+
+    def _set_autostart(self, on: bool) -> None:
+        autostart.set_enabled(on)
+        self._menu_changed()
 
     def reload(self) -> None:
         self.config, self.config_error = load_config()
@@ -734,13 +766,20 @@ class Companion(QObject):
         self.watcher = self._make_watcher()
         self.breaks.every = float(self.config["breaks"]["every_minutes"]) * 60
         size = int(self.config["size"])
-        self.sprites = Sprites(paths.anim_dir(), size)
+        self.sprites = Sprites(paths.anim_dir(), size, self._sprite_scale)
         self.stage.set_sprites(self.sprites)
-        self.behavior.walk_enabled = bool(self.config["walk"])
+        self.behavior.set_walk(bool(self.config["walk"]), self._now())
         self.behavior.sleep_after = float(self.config["sleep_after_minutes"]) * 60
         self.behavior.speed = size * 0.4
-        self._apply_bubble_style()
+        self._menu_changed()
         self.say("Settings reloaded", timeout_s=3)
+
+    def _set_sprite_scale(self, scale: float) -> None:
+        """The stage's screen has this many device pixels to a pixel: draw the penguin with them."""
+        if abs(scale - self._sprite_scale) > 0.01:
+            self._sprite_scale = scale
+            self.sprites = Sprites(paths.anim_dir(), int(self.config["size"]), scale)
+            self.stage.set_sprites(self.sprites)
 
     def quit(self) -> None:
         self.save()
@@ -768,8 +807,10 @@ def run() -> int:
     if not server.listen(name):
         print(f"Couldn't open {name}: {server.errorString()}. Hooks won't reach the penguin.", file=sys.stderr)
     companion = Companion(app, server)
+    # Python runs a signal handler between any two steps of whatever it's doing,
+    # say halfway through drawing a frame; quit from the event loop instead.
     for sig in (signal.SIGINT, signal.SIGTERM):
-        signal.signal(sig, lambda *_: companion.quit())
+        signal.signal(sig, lambda *_: QTimer.singleShot(0, companion.quit))
     try:
         return app.exec()
     finally:
