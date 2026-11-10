@@ -1,3 +1,3 @@
 """Chatmon: little desktop companions that help out — an electric penguin and its four friends."""
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"

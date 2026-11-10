@@ -326,6 +326,7 @@ screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland des
 | `chatmon/brains.py`       | The AI brains, their models, effort and thinking       |
 | `chatmon/agents.py`       | Connecting coding agents                               |
 | `chatmon/winpipe.py`      | Whose named pipe it is, on Windows                     |
+| `chatmon/winlock.py`      | Hearing the screen lock and unlock, on Windows          |
 | `chatmon/integrations/`   | The Claude Code plugin                                 |
 | `art/`                    | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
 
