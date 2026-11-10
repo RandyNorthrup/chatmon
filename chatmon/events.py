@@ -4,6 +4,7 @@ the running companion: one JSON object per line over a local socket."""
 from __future__ import annotations
 
 import json
+import os
 import socket
 import sys
 from typing import Any
@@ -81,10 +82,13 @@ def send(message: dict[str, Any], timeout: float = 0.5) -> bool:
     data = (json.dumps(message) + "\n").encode("utf-8")
     if sys.platform == "win32":
         return _send_pipe(data, timeout)
+    name = paths.server_name()
     try:
+        if os.stat(name).st_uid != os.getuid():
+            return False  # someone else's socket: never tell them what our agents are doing
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
             sock.settimeout(timeout)
-            sock.connect(paths.server_name())
+            sock.connect(name)
             sock.sendall(data)
             try:
                 sock.recv(len(ACK))
@@ -125,7 +129,7 @@ def parse_lines(data: bytes) -> list[dict[str, Any]]:
     for line in data.decode("utf-8", errors="replace").splitlines():
         try:
             value = json.loads(line)
-        except ValueError:
+        except (ValueError, RecursionError):  # not JSON, or nested too deep to read
             continue
         if isinstance(value, dict):
             out.append(value)

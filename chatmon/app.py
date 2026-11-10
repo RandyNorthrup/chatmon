@@ -9,6 +9,7 @@ import signal
 import sys
 import threading
 import time
+import traceback
 from datetime import date, datetime
 from functools import partial
 
@@ -977,11 +978,17 @@ class Companion(QObject):
         self.app.quit()
 
 
+def _log_exception(kind, value, tb) -> None:
+    traceback.print_exception(kind, value, tb, file=sys.stderr)
+
+
 def run() -> int:
     # On Wayland a window can't place itself or stay above other windows, so
     # the window runs through XWayland, where it can.
     if sys.platform.startswith("linux") and os.environ.get("XDG_SESSION_TYPE") == "wayland" and os.environ.get("DISPLAY") and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "xcb"
+    # PyQt aborts the whole app on an exception that escapes a slot; log it and carry on instead.
+    sys.excepthook = _log_exception
     if events.send({"type": "show"}):
         print("Chatmon is already running; it says hi.")
         return 0

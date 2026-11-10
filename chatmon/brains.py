@@ -488,13 +488,29 @@ def expand(value: str) -> str:
     return _VAR.sub(lambda m: os.environ.get(m.group(1), ""), value)
 
 
+_URL_PART = re.compile(r"[A-Za-z0-9._-]*")
+
+
+def expand_url(value: str) -> str:
+    """A URL's "${VAR}"s from the environment (Bedrock's ${AWS_REGION}); each must be a plain word, as it
+    decides which host gets the key."""
+
+    def part(m: re.Match) -> str:
+        found = os.environ.get(m.group(1), "")
+        if not _URL_PART.fullmatch(found):
+            raise BrainError(f"${{{m.group(1)}}} isn't a plain name, so it can't go in the URL")
+        return found
+
+    return _VAR.sub(part, value)
+
+
 def check_url(url: str) -> None:
     """Keys and questions go over HTTPS; plain HTTP only to this computer."""
     parts = urlsplit(url)
     if parts.scheme == "https":
         return
     host = (parts.hostname or "").lower()
-    local = host == "localhost" or host.endswith(".localhost")
+    local = host == "localhost"  # not *.localhost: only some resolvers keep those on this computer
     try:
         local = local or ipaddress.ip_address(host).is_loopback
     except ValueError:
@@ -635,6 +651,34 @@ def parse_responses(data: dict) -> str:
     return text
 
 
+def _redirected(reply: QNetworkReply) -> str | None:
+    status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
+    if isinstance(status, int) and 300 <= status < 400:
+        return "it answered with a redirect, which isn't followed (the key goes only where the settings say)"
+    return None
+
+
+def _json_object(raw: bytes) -> dict:
+    """A reply's JSON, which must be an object; ValueError otherwise (too deep to read is one too)."""
+    try:
+        data = json.loads(raw) if raw else {}
+    except RecursionError:
+        raise ValueError("nested too deep") from None
+    if not isinstance(data, dict):
+        raise ValueError("not a JSON object")
+    return data
+
+
+def _parsed(parse, data: dict) -> str:
+    """The answer from a reply, or BrainError: a reply of any other shape than expected is never a crash."""
+    try:
+        return parse(data)
+    except BrainError:
+        raise
+    except (AttributeError, KeyError, TypeError, IndexError, ValueError):
+        raise BrainError("the answer wasn't in the expected shape") from None
+
+
 def _with_model(brain: Brain, model: str) -> Brain:
     return replace(brain, model=model)
 
@@ -649,9 +693,9 @@ def first_model(data: dict) -> str:
 
 def endpoint(brain: Brain):
     """(URL, request builder, reply parser) for an HTTP brain."""
-    base = expand(brain.url).rstrip("/")
+    base = expand_url(brain.url).rstrip("/")
     if brain.type == "anthropic":
-        return expand(brain.url) or ANTHROPIC_URL, anthropic_request, parse_anthropic
+        return expand_url(brain.url) or ANTHROPIC_URL, anthropic_request, parse_anthropic
     if brain.type == "responses":
         return base + (brain.path or "/responses"), responses_request, parse_responses
     return base + (brain.path or "/chat/completions"), openai_request, parse_openai
@@ -691,8 +735,8 @@ class Asker(QObject):
         if brain.type == "command":
             self._run(brain, text_prompt(system, history, question))
             return
-        url, request, self._parse = endpoint(brain)
         try:
+            url, request, self._parse = endpoint(brain)
             check_url(url)
         except BrainError as exc:
             self._timer.stop()
@@ -701,7 +745,7 @@ class Asker(QObject):
             return
         if brain.model in ("", "auto"):  # a local server: ask it which model it has
             self._then = lambda model: self._post(url, *request(_with_model(brain, model), system, history, question))
-            self._get(expand(brain.url).rstrip("/") + "/models", brain)
+            self._get(expand_url(brain.url).rstrip("/") + "/models", brain)
             return
         self._post(url, *request(brain, system, history, question))
 
@@ -791,8 +835,15 @@ class Asker(QObject):
 
     # -- HTTP brains
 
-    def _post(self, url: str, headers: dict, body: dict) -> None:
+    @staticmethod
+    def _request(url: str) -> QNetworkRequest:
         req = QNetworkRequest(QUrl(url))
+        # Never follow a redirect: it would take the key and the question somewhere check_url never saw.
+        req.setAttribute(QNetworkRequest.Attribute.RedirectPolicyAttribute, QNetworkRequest.RedirectPolicy.ManualRedirectPolicy)
+        return req
+
+    def _post(self, url: str, headers: dict, body: dict) -> None:
+        req = self._request(url)
         for name, value in headers.items():
             req.setRawHeader(name.encode(), value.encode())
         reply = self._nam.post(req, QByteArray(json.dumps(body).encode("utf-8")))
@@ -800,7 +851,7 @@ class Asker(QObject):
         self._reply = reply
 
     def _get(self, url: str, brain: Brain) -> None:
-        req = QNetworkRequest(QUrl(url))
+        req = self._request(url)
         if brain.key():
             req.setRawHeader(b"authorization", f"Bearer {brain.key()}".encode())
         reply = self._nam.get(req)
@@ -812,9 +863,12 @@ class Asker(QObject):
         if reply is None:
             return
         raw = bytes(reply.readAll())
+        redirected = _redirected(reply)
         reply.deleteLater()
         try:
-            model = first_model(json.loads(raw) if raw else {})
+            if redirected:
+                raise BrainError(redirected)
+            model = first_model(_json_object(raw))
         except (ValueError, BrainError) as exc:
             self._timer.stop()
             self.failed.emit(f"{self._brain.label}: {exc if isinstance(exc, BrainError) else 'no model list'}.")
@@ -828,15 +882,18 @@ class Asker(QObject):
             return
         raw = bytes(reply.readAll())
         network_error = reply.errorString() if reply.error() != QNetworkReply.NetworkError.NoError else None
+        redirected = _redirected(reply)
         reply.deleteLater()
         try:
-            data = json.loads(raw) if raw else {}
+            data = _json_object(raw)
         except ValueError:
             data = {}
         try:
+            if redirected:
+                raise BrainError(redirected)
             if not data and network_error:
                 raise BrainError(network_error)
-            self.answered.emit(self._parse(data))
+            self.answered.emit(_parsed(self._parse, data))
         except BrainError as exc:
             self.failed.emit(f"{self._brain.label}: {exc}.")
 

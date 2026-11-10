@@ -7,7 +7,6 @@ import getpass
 import os
 import shutil
 import sys
-import tempfile
 from pathlib import Path
 
 APP = "chatmon"
@@ -92,8 +91,15 @@ def socket_path() -> Path:
     run = os.environ.get("XDG_RUNTIME_DIR")
     if run:
         return Path(run) / f"{APP}.sock"
-    uid = getattr(os, "getuid", lambda: getpass.getuser())()
-    return Path(tempfile.gettempdir()) / f"{APP}-{uid}.sock"
+    # No runtime folder (an ssh session, a container): a folder of our own, not the shared /tmp, where
+    # another user could take the name first and hear every agent's events.
+    folder = state_dir() / "run"
+    try:
+        folder.mkdir(parents=True, exist_ok=True, mode=0o700)
+        os.chmod(folder, 0o700)
+    except OSError:
+        pass
+    return folder / f"{APP}.sock"
 
 
 def server_name() -> str:

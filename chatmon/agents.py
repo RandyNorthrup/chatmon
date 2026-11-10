@@ -30,13 +30,25 @@ MARK = "chatmon"  # every command we add contains this; it's how we find ours ag
 LEGACY_MARK = "penguin-companion"  # what the commands contained before the rename
 
 
+def _runs(name: str) -> re.Pattern:
+    """`name notify`, the command we add: the program on its own (any folder, quotes, .exe, or run as
+    `python -m name`), then notify. Never a word that merely contains it, like chatmonitor."""
+    module = name.replace("-", "_")
+    between = r"""(?:["']?\s*,\s*["']?|["']?\s+)"""  # a space, or the next item of a list: "chatmon", "notify"
+    return re.compile(rf"""(?:^|[\s/\\"'=])(?:{re.escape(name)}|{re.escape(module)})(?:\.exe|\.py)?{between}notify(?:\s|$|["',\]])""")
+
+
+_OURS = _runs(MARK)
+_LEGACY = _runs(LEGACY_MARK)
+
+
 def is_ours(text: str) -> bool:
-    return MARK in text or LEGACY_MARK in text
+    return bool(_OURS.search(text) or _LEGACY.search(text))
 
 
 def is_legacy(text: str) -> bool:
     """A command added under the old name, still to be swapped for chatmon's."""
-    return LEGACY_MARK in text and MARK not in text
+    return bool(_LEGACY.search(text)) and not _OURS.search(text)
 
 
 class AgentError(Exception):
@@ -60,12 +72,21 @@ def backup(path: Path) -> Path | None:
 
 
 def write_atomic(path: Path, text: str) -> None:
+    """Replace `path` with `text` all at once. The new copy is made with the old one's permissions from the
+    start (a new file: readable by you alone), never briefly open to others: these files can hold tokens."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(path.name + ".chatmon-tmp")
-    tmp.write_text(text, encoding="utf-8")
-    if path.exists():
-        shutil.copymode(path, tmp)
-    os.replace(tmp, path)
+    mode = path.stat().st_mode & 0o777 if path.exists() else 0o600
+    tmp.unlink(missing_ok=True)
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, mode)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(text)
+        os.chmod(tmp, mode)  # O_CREAT's mode passes through the umask
+        os.replace(tmp, path)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
 
 
 def load_json(path: Path) -> dict:
@@ -286,6 +307,8 @@ class ClaudeCode(Agent):
         if not self.legacy():
             return ""
         was_on = bool((self._mine(self.LEGACY_PLUGIN) or {}).get("enabled", True))
+        if was_on:
+            _needs_on_path()  # before anything is removed: the new plugin runs `chatmon` by name
         self._remove(self.LEGACY_PLUGIN, self.LEGACY_MARKETPLACE)
         if not was_on:  # it was switched off: leave it off, under the new name too
             return f"Removed Claude Code's {self.LEGACY_PLUGIN} plugin (it was off)"
@@ -370,7 +393,7 @@ class Codex(Agent):
             current = self._parse(self._text()).get("notify")
         except AgentError:
             return False
-        return isinstance(current, list) and any(is_ours(str(a)) for a in current)
+        return isinstance(current, list) and is_ours(" ".join(map(str, current)))
 
     def legacy(self) -> bool:
         try:
@@ -382,7 +405,7 @@ class Codex(Agent):
     def connect(self) -> str:
         text = self._text()
         current = self._parse(text).get("notify")
-        if current and not any(is_ours(str(a)) for a in current):
+        if current and not is_ours(" ".join(map(str, current))):
             raise AgentError(
                 f"Codex already runs {current!r} when a turn ends, and it takes only one program. "
                 f"Not replacing it; see `chatmon hooks show codex` to do it by hand."
@@ -707,9 +730,10 @@ class Cline(Agent):
             raise AgentError(f"You already have Cline hooks for {', '.join(taken)}; not replacing them. See `chatmon hooks show cline`.")
         for event, ours in self.events.items():
             path = self._file(event)
+            backup(path)
             write_atomic(path, self._script(ours))
             if sys.platform != "win32":
-                path.chmod(0o755)
+                path.chmod(0o700)
         return f"Connected Cline: hook scripts in {self.config_path()} (Cline's \"Enable Hooks\" setting has to be on)"
 
     def disconnect(self) -> str:
@@ -717,6 +741,7 @@ class Cline(Agent):
         for event in self.events:
             path = self._file(event)
             if is_ours(self._text(event) or ""):
+                backup(path)
                 path.unlink()
                 removed += 1
         return f"Disconnected Cline: removed {removed} hook scripts" if removed else "Cline wasn't connected."

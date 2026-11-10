@@ -372,3 +372,27 @@ def test_the_electric_border_is_cyan_and_its_lightning_yellow(qapp):
         r, g, b = mean_colour(name, 120)
         assert r > b + 40 and g > b + 20, (name, r, g, b)
 
+
+
+def test_an_answer_can_never_make_qt_read_a_file(qapp, tmp_path):
+    """An image in markdown would have Qt read the file it names: /dev/zero, a pipe, anything."""
+    secret = tmp_path / "secret.png"
+    secret.write_bytes(b"not for showing")
+    text = f"Look: ![x]({secret}) and ![y][r] done\n\n[r]: file://{secret}"
+
+    def images(doc) -> int:
+        n, block = 0, doc.begin()
+        while block.isValid():
+            it = block.begin()
+            while not it.atEnd():
+                n += it.fragment().charFormat().isImageFormat()
+                it += 1
+            block = block.next()
+        return n
+
+    message = SpeechBubble()
+    message.show("Hi", text, [], None, 0.0)
+    assert images(message.doc) == 0 and message.doc.toPlainText().count("[image]") == 2
+    box = AskBox()
+    box.set_answer(text)
+    assert images(box.answer.document()) == 0 and "[image]" in box.answer.toPlainText()

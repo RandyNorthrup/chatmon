@@ -23,6 +23,7 @@ from PyQt6.QtGui import (
     QPalette,
     QPen,
     QPixmap,
+    QTextCursor,
     QTextDocument,
 )
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QTextBrowser, QToolButton, QVBoxLayout, QWidget
@@ -42,6 +43,28 @@ def open_link(url: QUrl) -> None:
     """Links in answers open in the browser; nothing else (no files, no apps)."""
     if url.scheme() in ("http", "https", "mailto"):
         QDesktopServices.openUrl(url)
+
+
+def without_images(doc: QTextDocument) -> None:
+    """Take every image out of a document just made from markdown, before anything lays it out. To show
+    one, Qt reads the file it names: any path at all, so an answer (or a web page an answer quotes) with
+    ![](/dev/zero) could fill the memory, and one naming a pipe would freeze the app. An image becomes
+    "[image]"."""
+    spans = []
+    block = doc.begin()
+    while block.isValid():
+        it = block.begin()
+        while not it.atEnd():
+            fragment = it.fragment()
+            if fragment.isValid() and fragment.charFormat().isImageFormat():
+                spans.append((fragment.position(), fragment.length()))
+            it += 1
+        block = block.next()
+    cursor = QTextCursor(doc)
+    for position, length in reversed(spans):
+        cursor.setPosition(position)
+        cursor.setPosition(position + length, QTextCursor.MoveMode.KeepAnchor)
+        cursor.insertText("[image]")
 
 
 def colours() -> tuple[QColor, QColor]:
@@ -144,6 +167,7 @@ class SpeechBubble:
         title_font, body_font = _font(10.5, bold=True), _font(10.5)
         self.doc.setDefaultFont(body_font)
         self.doc.setMarkdown(self._text)
+        without_images(self.doc)
         has_text = bool(self._text)
         metrics = QFontMetricsF(body_font)
         self.buttons = [_Button(label, action, QRectF(0, 0, metrics.horizontalAdvance(label) + 28, metrics.height() + 10)) for label, action in self._button_specs]
@@ -425,6 +449,7 @@ class AskBox(QWidget):
     def set_answer(self, markdown: str) -> None:
         if markdown:
             self.answer.setMarkdown(markdown)
+            without_images(self.answer.document())
             doc = self.answer.document()
             doc.setTextWidth(self._content_width() - 10)
             self.answer.setFixedHeight(min(int(doc.size().height()) + 4, self.MAX_ANSWER))

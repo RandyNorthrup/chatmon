@@ -256,3 +256,78 @@ def test_switching_model_drops_only_what_the_new_one_cant_do():
     assert (mistral.model, mistral.effort) == ("mistral-large-4-0", "low")
     small = mistral.with_options({"model": "mistral-small-latest", "effort": "low"})
     assert small.effort == "" and small.effort_levels() == ["high"]  # low isn't one of Small's
+
+
+def test_a_reply_of_the_wrong_shape_is_an_error_not_a_crash():
+    for data in ({"content": ["text", 3]}, {"output": [None, "x"]}, {"choices": "nope"}):
+        for parse in (brains.parse_anthropic, brains.parse_responses, brains.parse_openai):
+            with pytest.raises(BrainError):
+                brains._parsed(parse, data)
+    with pytest.raises(ValueError):
+        brains._json_object(b"[1, 2]")
+    with pytest.raises(ValueError):
+        brains._json_object(b"[" * 70000)
+
+
+def test_a_redirect_never_takes_the_key_anywhere(qapp):
+    """Plain HTTP is allowed to this computer only; a redirect from there must not carry the key on."""
+    import http.server
+    import threading
+
+    from PyQt6.QtCore import QEventLoop, QTimer
+
+    seen = []
+
+    class Elsewhere(http.server.BaseHTTPRequestHandler):
+        def do_POST(self):
+            seen.append(self.headers.get("authorization"))
+            self.send_response(200)
+            self.end_headers()
+
+        def log_message(self, *args):
+            pass
+
+    elsewhere = http.server.HTTPServer(("127.0.0.1", 0), Elsewhere)
+
+    class Redirect(http.server.BaseHTTPRequestHandler):
+        def do_POST(self):
+            self.send_response(307)
+            self.send_header("Location", f"http://127.0.0.1:{elsewhere.server_port}/steal")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+
+        def log_message(self, *args):
+            pass
+
+    local = http.server.HTTPServer(("127.0.0.1", 0), Redirect)
+    for server in (local, elsewhere):
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+    try:
+        brain = Brain("local", "openai", url=f"http://127.0.0.1:{local.server_port}/v1", model="m", api_key="secret-key")
+        asker = brains.Asker()
+        result = []
+        loop = QEventLoop()
+        asker.answered.connect(lambda text: (result.append(("answer", text)), loop.quit()))
+        asker.failed.connect(lambda text: (result.append(("failed", text)), loop.quit()))
+        QTimer.singleShot(5000, loop.quit)
+        asker.ask(brain, "S", [], "q", 5.0)
+        loop.exec()
+        assert result and result[0][0] == "failed" and "redirect" in result[0][1], result
+        assert seen == []  # the key never left
+    finally:
+        local.shutdown()
+        elsewhere.shutdown()
+
+
+def test_only_this_computer_gets_plain_http_and_url_variables_stay_plain(monkeypatch):
+    for url in ("http://localhost:11434/v1", "http://127.0.0.1:1234/v1", "http://[::1]:8000/v1", "https://api.example.com/v1"):
+        brains.check_url(url)
+    for url in ("http://evil.localhost/v1", "http://example.com/v1", "ftp://localhost/v1"):
+        with pytest.raises(BrainError):
+            brains.check_url(url)
+    bedrock = brains.load_brains({})["bedrock-api"]
+    monkeypatch.setenv("AWS_REGION", "us-east-1")
+    assert brains.endpoint(bedrock)[0] == "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions"
+    monkeypatch.setenv("AWS_REGION", "attacker.example/x#")
+    with pytest.raises(BrainError, match="plain name"):
+        brains.endpoint(bedrock)

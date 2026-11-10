@@ -1,6 +1,10 @@
 import json
+import os
+import sys
 
-from chatmon import cli, events
+import pytest
+
+from chatmon import cli, events, paths
 
 
 def test_aliases():
@@ -92,3 +96,37 @@ def test_borrowed_claude_hooks_are_relabelled(monkeypatch):
     assert cli._real_source("claude") == "grok" and cli._real_source("codex") == "codex"
     monkeypatch.delenv("GROK_HOOK_EVENT")
     assert cli._real_source("claude") == "claude"
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="a named pipe there")
+def test_without_a_runtime_folder_the_socket_is_in_a_private_one(tmp_path, monkeypatch):
+    monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
+    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "state"))
+    monkeypatch.setattr(paths.Path, "home", lambda: tmp_path)
+    sock = paths.socket_path()
+    assert tmp_path in sock.parents and "/tmp/" not in str(sock).replace(str(tmp_path), "")
+    assert (sock.parent.stat().st_mode & 0o777) == 0o700
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="a named pipe there")
+def test_never_sends_to_a_socket_someone_else_owns(tmp_path, monkeypatch):
+    import socket as sockets
+
+    path = tmp_path / "s.sock"
+    server = sockets.socket(sockets.AF_UNIX, sockets.SOCK_STREAM)
+    server.bind(str(path))
+    server.listen(1)
+    monkeypatch.setattr(paths, "server_name", lambda: str(path))
+    try:
+        monkeypatch.setattr(events.os, "getuid", lambda: os.stat(path).st_uid + 1)  # as if it were another user's
+        assert events.send({"type": "say", "text": "secret"}, timeout=0.2) is False
+        server.settimeout(0.2)
+        with pytest.raises(OSError):
+            server.accept()  # nothing ever connected
+    finally:
+        server.close()
+
+
+def test_garbage_on_the_socket_is_dropped_not_fatal():
+    deep = ("[" * 65000).encode()
+    assert events.parse_lines(deep + b"\n" + b'{"type": "say", "text": "hi"}\n') == [{"type": "say", "text": "hi"}]

@@ -380,3 +380,51 @@ def test_muse_swaps_the_old_plugin_for_the_new(monkeypatch):
     assert muse.connected() and muse.legacy()
     muse.migrate()
     assert installed == {"chatmon"} and ["remove", "penguin-companion"] in calls and ["approve", "chatmon"] in calls
+
+
+def test_a_hook_that_only_looks_like_ours_is_left_alone():
+    gemini = agents.Gemini()
+    path = gemini.config_path()
+    path.parent.mkdir(parents=True)
+    lookalike = {"hooks": [{"type": "command", "command": "~/bin/chatmonitor notify --all"}]}
+    path.write_text(json.dumps({"hooks": {"AfterAgent": [lookalike]}}))
+    assert not gemini.connected()
+    gemini.connect()
+    gemini.disconnect()
+    assert json.loads(path.read_text())["hooks"]["AfterAgent"] == [lookalike]
+
+    codex = agents.Codex()
+    codex.config_path().parent.mkdir(parents=True)
+    codex.config_path().write_text('notify = ["chatmonitor", "notify"]\n')
+    with pytest.raises(agents.AgentError, match="only one program"):
+        codex.connect()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX permissions")
+def test_settings_are_never_briefly_readable_by_others(tmp_path):
+    fresh = tmp_path / "new.json"
+    agents.write_atomic(fresh, "{}")
+    assert fresh.stat().st_mode & 0o777 == 0o600
+    private = tmp_path / "settings.json"
+    private.write_text("{}")
+    private.chmod(0o600)
+    agents.write_atomic(private, '{"a": 1}')
+    assert private.stat().st_mode & 0o777 == 0o600 and not list(tmp_path.glob("*.chatmon-tmp"))
+
+
+def test_cline_scripts_are_backed_up_before_they_change():
+    cline = agents.Cline()
+    cline.config_path().mkdir(parents=True)
+    old = cline._file("TaskComplete")
+    old.write_text(f"#!/bin/sh\n# penguin-companion\n{OLD} notify done --source cline || true\n")
+    cline.migrate()
+    assert backups(old) and "penguin-companion" in backups(old)[0].read_text()
+
+
+def test_claude_keeps_the_old_plugin_until_chatmon_can_run(monkeypatch):
+    fake = FakeClaude(installed=[{"id": "penguin-companion@penguin-companion", "enabled": True}], markets=["penguin-companion"])
+    monkeypatch.setattr(agents, "_run_json", fake)
+    monkeypatch.setattr(agents.shutil, "which", lambda name: None if name == "chatmon" else f"/usr/bin/{name}")
+    with pytest.raises(agents.AgentError, match="PATH"):
+        agents.ClaudeCode().migrate()
+    assert [p["id"] for p in fake.plugins] == ["penguin-companion@penguin-companion"]  # still there, still working

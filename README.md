@@ -259,11 +259,14 @@ details.
   shell; a model, effort or thinking choice is used only if it's one the brain takes, and a model name
   that could pass for a flag is refused.
 - **Only you can talk to it.** Hooks reach it through a local socket (a named pipe on Windows) open to
-  your user account alone; messages are size-limited.
+  your user account alone, in a folder of its own when there's no session runtime folder, never in shared
+  `/tmp`; a hook sends only to a socket you own, and messages are size-limited.
 - **Keys** are read from environment variables (or `${VAR}` in a header) and are never written to logs.
-  API keys only travel over HTTPS; plain HTTP is allowed only to a server on this computer. Settings and
-  state files are readable by you alone.
-- **Links** in answers open in your browser only if they're web or mail links.
+  API keys only travel over HTTPS; plain HTTP is allowed only to a server on this computer, and a redirect
+  is never followed, so a key goes only where the settings say. Settings and state files, and the copies
+  made while connecting an agent, are readable by you alone.
+- **Answers are only shown.** Links open in your browser only if they're web or mail links, and an image
+  in an answer is never loaded (it would have the app read the file it names).
 
 Found a security problem? Please open a private
 [security advisory](https://github.com/RandyNorthrup/chatmon/security/advisories/new).

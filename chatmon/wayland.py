@@ -24,6 +24,7 @@ from typing import Callable
 DISPLAY_ID = 1
 HEADER = struct.Struct("<II")
 MAX_FDS = 28  # per recvmsg, as libwayland
+_CLOEXEC = getattr(socket, "MSG_CMSG_CLOEXEC", 0)  # file descriptors we're sent never leak into the AI tools we run
 
 # A request or event signature is a string of argument codes:
 #   i int, u uint, f fixed (a float on our side), s string, o object id (0 or
@@ -231,7 +232,7 @@ class Connection:
         """Read and dispatch whatever has arrived; False once the connection is gone."""
         while not self.closed:
             try:
-                data, ancdata, _flags, _addr = self.sock.recvmsg(65536, socket.CMSG_SPACE(MAX_FDS * 4))
+                data, ancdata, _flags, _addr = self.sock.recvmsg(65536, socket.CMSG_SPACE(MAX_FDS * 4), _CLOEXEC)
             except (BlockingIOError, InterruptedError):
                 break
             except OSError as exc:
