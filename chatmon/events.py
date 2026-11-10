@@ -74,18 +74,29 @@ MAX_MESSAGE = 64 * 1024  # bytes; anything longer is dropped
 _LIMITS = {"type": 20, "event": 20, "source": 40, "message": 2000, "text": 2000}
 
 
+# What `deliver` found at the companion's address.
+SENT = "sent"
+ABSENT = "absent"  # nothing listening there: Chatmon isn't running
+FOREIGN = "foreign"  # something run by another user holds the address; it was told nothing
+
+
 def send(message: dict[str, Any], timeout: float = 0.5) -> bool:
     """Deliver a message to the running companion. False if it isn't running.
 
     Waits (up to `timeout`) for the companion to say it got the message
     before hanging up; on Windows, hanging up first can lose it."""
+    return deliver(message, timeout) == SENT
+
+
+def deliver(message: dict[str, Any], timeout: float = 0.5) -> str:
+    """Like `send`, but says what it found: SENT, ABSENT or FOREIGN."""
     data = (json.dumps(message) + "\n").encode("utf-8")
     if sys.platform == "win32":
         return _send_pipe(data, timeout)
     name = paths.server_name()
     try:
         if os.stat(name).st_uid != os.getuid():
-            return False  # someone else's socket: never tell them what our agents are doing
+            return FOREIGN  # someone else's socket: never tell them what our agents are doing
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
             sock.settimeout(timeout)
             sock.connect(name)
@@ -94,24 +105,32 @@ def send(message: dict[str, Any], timeout: float = 0.5) -> bool:
                 sock.recv(len(ACK))
             except OSError:
                 pass  # sent; the companion was just slow to answer
-        return True
+        return SENT
     except OSError:
-        return False
+        return ABSENT
 
 
-def _send_pipe(data: bytes, timeout: float) -> bool:
+def _send_pipe(data: bytes, timeout: float) -> str:
     from PyQt6.QtNetwork import QLocalSocket
+
+    from . import winpipe
 
     ms = int(timeout * 1000)
     sock = QLocalSocket()
     sock.connectToServer(paths.server_name())
     if not sock.waitForConnected(ms):
-        return False
+        # Your own Chatmon always lets you in, so a pipe that turns you away is someone else's.
+        return FOREIGN if sock.error() == QLocalSocket.LocalSocketError.SocketAccessError else ABSENT
+    # Pipe names are first come, first served, for every user on the PC: check whose this one is
+    # before saying anything, on the very handle we'd say it through.
+    if not winpipe.server_is_me(int(sock.socketDescriptor())):
+        sock.abort()
+        return FOREIGN
     sock.write(data)
     sock.waitForBytesWritten(ms)
     sock.waitForReadyRead(ms)
     sock.disconnectFromServer()
-    return True
+    return SENT
 
 
 def clean(message: dict[str, Any]) -> dict[str, Any]:

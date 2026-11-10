@@ -114,3 +114,15 @@ def test_short_time_away_is_not_a_break():
 
 def test_breaks_off():
     assert not BreakTracker(0, now=0).due(10**9)
+
+
+def test_nothing_further_ahead_than_ten_years():
+    """Windows can't show a date past the year 3000; much further, it can't even be worked out."""
+    assert parse_when("in 400000 days to retire", NOW) is None
+    assert parse_when("in 99999999999 days to retire", NOW) is None
+    assert parse_command("timer 99999999999 days", NOW) is None
+    assert parse_when("in 3650 days to check the time capsule", NOW) is not None
+
+
+def test_a_reminder_saved_before_the_limit_still_shows():
+    assert describe(1e18, NOW.timestamp()) == "a long way off"

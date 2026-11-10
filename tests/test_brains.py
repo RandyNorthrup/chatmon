@@ -16,7 +16,7 @@ def test_presets_and_overrides(monkeypatch):
 
 @pytest.fixture(autouse=True)
 def nothing_running_here(monkeypatch):
-    monkeypatch.setattr(brains, "reachable", lambda url, timeout=0.15: False)
+    monkeypatch.setattr(brains, "reachable", lambda url, timeout=0.15, wait=True: False)
 
 
 def test_choose_prefers_picked_then_configured_then_first(monkeypatch):
@@ -106,7 +106,7 @@ def test_auto_never_picks_a_paid_api(monkeypatch):
 
 def test_a_running_local_server_is_picked_with_its_own_model(monkeypatch):
     monkeypatch.setattr(brains.shutil, "which", lambda name: None)
-    monkeypatch.setattr(brains, "reachable", lambda url, timeout=0.15: "11434" in url)
+    monkeypatch.setattr(brains, "reachable", lambda url, timeout=0.15, wait=True: "11434" in url)
     found = brains.load_brains({})
     chosen = brains.choose(found, "auto", None)
     assert chosen.name == "ollama" and chosen.model == "auto"
@@ -331,3 +331,17 @@ def test_only_this_computer_gets_plain_http_and_url_variables_stay_plain(monkeyp
     monkeypatch.setenv("AWS_REGION", "attacker.example/x#")
     with pytest.raises(BrainError, match="plain name"):
         brains.endpoint(bedrock)
+
+
+def test_programs_are_looked_for_now_and_then_not_on_every_menu(monkeypatch):
+    """On Windows each look for a program takes a few ms, and the menu asks after a dozen of them."""
+    from chatmon import paths
+
+    looks = []
+    monkeypatch.setattr(brains.shutil, "which", lambda name: looks.append(name) or f"/bin/{name}")
+    grok = brains.Brain(name="grok", type="command", command=["grok"])
+    assert grok.available() and grok.available() and looks == ["grok"]
+    monkeypatch.setenv("PATH", "/somewhere/else")  # a new PATH: look again
+    assert grok.available() and looks == ["grok", "grok"]
+    monkeypatch.setattr(paths, "FOUND_FOR", 0)  # and once it's old
+    assert grok.available() and looks == ["grok", "grok", "grok"]

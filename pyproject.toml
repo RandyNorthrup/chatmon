@@ -45,6 +45,9 @@ Issues = "https://github.com/RandyNorthrup/chatmon/issues"
 chatmon = "chatmon.cli:main"
 penguin-companion = "chatmon.cli:main"  # the old name, kept for one release
 
+[project.gui-scripts]
+chatmonw = "chatmon.cli:main"  # on Windows, Chatmon without a console window: what autostart runs
+
 [tool.setuptools]
 packages = ["chatmon"]
 include-package-data = false

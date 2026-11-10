@@ -12,6 +12,7 @@ import time
 import traceback
 from datetime import date, datetime
 from functools import partial
+from pathlib import Path
 
 from PyQt6.QtCore import QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QActionGroup, QDesktopServices, QGuiApplication, QIcon
@@ -66,10 +67,11 @@ def pretty(source: str) -> str:
 
 
 class Companion(QObject):
-    def __init__(self, app: QApplication, server: QLocalServer):
+    def __init__(self, app: QApplication, server: QLocalServer, server_problem: str | None = None):
         super().__init__()
         self.app = app
         self.server = server
+        self.server_problem = server_problem  # why hooks can't reach it, if they can't
         self.state = State.load()
         self.config, self.config_error = load_config()
         self.brains = brains.load_brains(self.config["ai"])
@@ -88,13 +90,15 @@ class Companion(QObject):
         self._last_ask = 0.0
         self._update_counts: dict[str, int] = {}
 
-        self._sprite_scale = QGuiApplication.primaryScreen().devicePixelRatio()
-        self.sprites = self._load_sprites()
         screen = QGuiApplication.primaryScreen().availableGeometry()
+        x = float(self.state.get("x", screen.x() + screen.width() * 0.8))
+        # Drawn for the scale of the screen it starts on; the stage says so when it moves to one of another.
+        self._sprite_scale = (QGuiApplication.screenAt(QPoint(int(x), 0)) or QGuiApplication.primaryScreen()).devicePixelRatio()
+        self.sprites = self._load_sprites()
         self.behavior = Behavior(
             self.sprites.anims(),
             now=time.monotonic(),
-            x=float(self.state.get("x", screen.x() + screen.width() * 0.8)),
+            x=x,
             walk=bool(self.config["walk"]),
             sleep_after=float(self.config["sleep_after_minutes"]) * 60,
             speed=int(self.config["size"]) * 0.4,
@@ -135,6 +139,7 @@ class Companion(QObject):
         self._agent_status: dict[str, str] = {}
         self._renamed = paths.first_run_since_rename()  # Penguin companion became Chatmon
         self.background = Background()
+        self._looking = False  # finding out, off the screen's thread, whether model servers here are running
         self._fill_menu()
         self.tray = QSystemTrayIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
         self.tray.setContextMenu(self.menu)
@@ -170,10 +175,25 @@ class Companion(QObject):
         h = self.config["heads_up"]
         return heads_up.Watcher(float(h["battery_low"]), float(h["battery_critical"]), float(h["disk_full_percent"]))
 
-    def _brain(self) -> brains.Brain | None:
-        """The brain to ask, with the model, effort and thinking picked for it from the menu."""
-        brain = brains.choose(self.brains, self.config["ai"]["brain"], self.state.get("brain"))
+    def _brain(self, wait: bool = True) -> brains.Brain | None:
+        """The brain to ask, with the model, effort and thinking picked for it from the menu. `wait` off:
+        as far as can be told without holding up the screen (for the menu)."""
+        brain = brains.choose(self.brains, self.config["ai"]["brain"], self.state.get("brain"), wait)
         return brain.with_options(self._brain_options(brain.name)) if brain else None
+
+    def _look_again(self) -> None:
+        """Find out, off the screen's thread, what the menu couldn't wait to (whether model servers on this
+        computer are running), and fill the menu in again if anything changed."""
+        if self._looking or not brains.unsure():
+            return
+        self._looking = True
+
+        def looked(changed) -> None:
+            self._looking = False
+            if changed is True:
+                self._menu_changed()
+
+        self.background.run(brains.look_again, looked)
 
     def _brain_options(self, name: str) -> dict:
         return dict((self.state.get("brain_options") or {}).get(name) or {})
@@ -223,6 +243,8 @@ class Companion(QObject):
     def _greet(self) -> None:
         if self.config_error:
             self.say("I couldn't read my settings", f"`{self.config_error}`\n\nUsing the defaults for now.", timeout_s=30)
+        elif self.server_problem:
+            self.say("Your agents can't reach me", f"{self.server_problem}\n\nEverything else works.", timeout_s=30)
         elif not (self.config["name"] or self.state.get("name")):
             self._asking_name = True
             self.open_ask(focus=False)  # nobody clicked: don't take the keyboard from them
@@ -465,7 +487,12 @@ class Companion(QObject):
             )
 
     def _watch_screen_lock(self) -> None:
-        try:  # D-Bus: Linux and the BSDs; elsewhere suspend gaps stand in for it
+        if sys.platform == "win32":
+            from . import winlock
+
+            self._lock_watcher = winlock.LockWatcher(self._screen_locked)
+            return
+        try:  # D-Bus: Linux and the BSDs; elsewhere (macOS) suspend gaps stand in for it
             from PyQt6.QtDBus import QDBusConnection
         except ImportError:
             return
@@ -685,10 +712,11 @@ class Companion(QObject):
         m.addAction("Edit settings…", lambda: QDesktopServices.openUrl(QUrl.fromLocalFile(str(paths.config_file()))))
         m.addAction("Reload settings", self.reload)
         m.addAction("Quit", self.quit)
+        self._look_again()
 
     def _brain_menu(self, sub: QMenu) -> None:
         group = QActionGroup(sub)
-        current = self._brain()
+        current = self._brain(wait=False)
         picked = self.state.get("brain")
         auto = sub.addAction(f"Automatic ({current.label if current else 'none found'})")
         auto.setCheckable(True)
@@ -703,7 +731,7 @@ class Companion(QObject):
         for title, belongs in groups:
             sub.addSection(title)
             for brain in (b for b in self.brains.values() if belongs(b)):
-                ok = brain.available()
+                ok = brain.available(wait=False)
                 action = sub.addAction(brain.label if ok else f"{brain.label} ({brain.why_not()})")
                 action.setCheckable(True)
                 action.setEnabled(ok)
@@ -982,28 +1010,92 @@ def _log_exception(kind, value, tb) -> None:
     traceback.print_exception(kind, value, tb, file=sys.stderr)
 
 
+LOG_LIMIT = 1_000_000  # bytes; past this the log starts over, the last one kept as chatmon.log.old
+
+
+def log_file() -> Path:
+    return paths.state_dir() / f"{paths.APP}.log"
+
+
+def _log_without_a_console() -> None:
+    """Started with no console (autostart, chatmonw, pythonw on Windows), Python has no stdout or
+    stderr, and what Chatmon has to say about a problem would go nowhere: keep it in a log instead."""
+    if sys.stderr is not None:
+        return
+    log = log_file()
+    try:
+        log.parent.mkdir(parents=True, exist_ok=True)
+        if log.exists() and log.stat().st_size > LOG_LIMIT:
+            os.replace(log, log.with_name(log.name + ".old"))
+        stream = open(log, "a", encoding="utf-8", errors="replace", buffering=1)
+    except OSError:
+        return
+    sys.stdout = sys.stderr = stream
+    print(f"--- Chatmon started {datetime.now():%Y-%m-%d %H:%M:%S}")
+
+
+def open_server(reached: str = events.ABSENT) -> tuple[QLocalServer | None, str | None]:
+    """The server that hooks and a second launch reach Chatmon through, and what's wrong with it, if
+    anything. `reached` is what `events.deliver` found at its address. No server: another copy of
+    Chatmon got there first, a moment ago."""
+    server = QLocalServer()
+    server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)  # only you can talk to it
+    name = paths.server_name()
+    guard = None
+    if sys.platform == "win32":
+        from . import winpipe
+
+        # Any user can make a pipe of any name, and Qt would quietly add its own to theirs: claim the
+        # name before Qt listens on it, and don't listen at all if someone else has it.
+        held = f"Another user on this computer is holding `{winpipe.full_name(name)}`, the address your agents' hooks reach me at, so I won't listen there and they'll tell it nothing."
+        if reached == events.FOREIGN:
+            return server, held
+        try:
+            guard = winpipe.claim(name)
+        except OSError as exc:  # can't tell; listen as Qt would on its own
+            print(f"Couldn't claim {name} first: {exc}", file=sys.stderr)
+        else:
+            if guard is None:
+                return (None, None) if events.send({"type": "show"}) else (server, held)
+    else:
+        QLocalServer.removeServer(name)  # a socket left behind in our own private folder
+    try:
+        if not server.listen(name):
+            return server, f"I couldn't open `{name}` ({server.errorString()}), the address your agents' hooks reach me at."
+    finally:
+        if guard is not None:
+            winpipe.release(guard)
+    return server, None
+
+
 def run() -> int:
     # On Wayland a window can't place itself or stay above other windows, so
     # the window runs through XWayland, where it can.
     if sys.platform.startswith("linux") and os.environ.get("XDG_SESSION_TYPE") == "wayland" and os.environ.get("DISPLAY") and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "xcb"
+    _log_without_a_console()
     # PyQt aborts the whole app on an exception that escapes a slot; log it and carry on instead.
     sys.excepthook = _log_exception
-    if events.send({"type": "show"}):
+    reached = events.deliver({"type": "show"})
+    if reached == events.SENT:
         print("Chatmon is already running; it says hi.")
         return 0
     app = QApplication(sys.argv[:1])
     app.setApplicationName(paths.APP)
     app.setApplicationDisplayName("Chatmon")
     autostart.migrate()
+    autostart.refresh()
     app.setQuitOnLastWindowClosed(False)
-    server = QLocalServer()
-    server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)  # only you can talk to it
-    name = paths.server_name()
-    QLocalServer.removeServer(name)
-    if not server.listen(name):
-        print(f"Couldn't open {name}: {server.errorString()}. Hooks won't reach it.", file=sys.stderr)
-    companion = Companion(app, server)
+    server, problem = open_server(reached)
+    if server is None:
+        print("Chatmon is already running; it says hi.")
+        return 0
+    if problem:
+        print(f"{problem} Hooks won't reach Chatmon.", file=sys.stderr)
+    companion = Companion(app, server, server_problem=problem)
+    # Windows ending the session (logging off, shutting down) says so with aboutToQuit and then ends the app
+    # there and then: nothing after app.exec() gets to run.
+    app.aboutToQuit.connect(companion.save)
     # Python runs a signal handler between any two steps of whatever it's doing,
     # say halfway through drawing a frame; quit from the event loop instead.
     for sig in (signal.SIGINT, signal.SIGTERM):

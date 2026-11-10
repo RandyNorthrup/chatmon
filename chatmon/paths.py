@@ -7,6 +7,7 @@ import getpass
 import os
 import shutil
 import sys
+import time
 from pathlib import Path
 
 APP = "chatmon"
@@ -118,9 +119,31 @@ def bubbles_dir() -> Path:
     return Path(__file__).resolve().parent / "bubbles"
 
 
+FOUND_FOR = 30  # seconds `which` remembers where a program is
+_found: dict[tuple, tuple[float, str | None]] = {}
+
+
+def which(name: str) -> str | None:
+    """shutil.which, remembered for half a minute, for the menu: on Windows each look tries every PATHEXT
+    ending in every PATH folder (a few ms each), and the menu asks after a dozen programs every time it
+    opens. Asked again as soon as PATH, or the lookup itself (tests replace it), changes."""
+    key = (name, os.environ.get("PATH", ""), shutil.which)
+    seen = _found.get(key)
+    now = time.monotonic()
+    if seen and now - seen[0] < FOUND_FOR:
+        return seen[1]
+    found = shutil.which(name)
+    _found[key] = (now, found)
+    return found
+
+
 def command_line(windowless: bool = False) -> list[str]:
-    """How to run this companion from a hook, a shortcut or autostart."""
-    installed = shutil.which(APP)
+    """How to run this companion from a hook, a shortcut or autostart. `windowless`: on Windows, with
+    no console window (for autostart): `chatmonw`, or pythonw, never chatmon.exe, which opens one."""
+    if windowless and sys.platform == "win32":
+        installed = shutil.which(APP + "w")  # the GUI launcher that installing makes alongside chatmon.exe
+    else:
+        installed = shutil.which(APP)
     if installed:
         return [installed]
     python = sys.executable
