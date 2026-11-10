@@ -34,6 +34,7 @@ PAD = 14
 TAIL = 12
 RADIUS = 14
 FADE = 0.14  # seconds
+SPILL = 3  # px an effect may reach past a bubble's frame (a flame's tip): the stage draws that much round it
 ANIM_FPS = 30  # how often an animated bubble is redrawn (its frames crossfade in between)
 
 
@@ -103,6 +104,7 @@ class SpeechBubble:
         self.animate = True
         self.art = bubbleart.art(self.style.name, "message")
         self._words: tuple[tuple, QPixmap] | None = None  # the title, text and buttons, drawn once
+        self._frame: tuple[tuple, QPixmap] | None = None  # the whole bubble, drawn once per frame of its animation
 
     def set_style(self, style: styles.Style, animate: bool) -> None:
         """Draw in `style` from the next message on (and the one showing, if any)."""
@@ -138,6 +140,7 @@ class SpeechBubble:
     def _layout(self) -> None:
         """Lay the title, text and buttons out (from 0, 0), then put them inside the bubble."""
         self._words = None
+        self._frame = None
         title_font, body_font = _font(10.5, bold=True), _font(10.5)
         self.doc.setDefaultFont(body_font)
         self.doc.setMarkdown(self._text)
@@ -211,23 +214,45 @@ class SpeechBubble:
         return None
 
     def paint(self, p: QPainter, tail_x: float, now: float) -> None:
-        style = self.style
+        frame = self._frame_pixmap(bubbleart.device_ratio(p), tail_x, now)
         p.save()
         p.setOpacity(self.opacity(now))
-        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        p.drawPixmap(QPointF(-SPILL, -SPILL), frame)
+        p.restore()
+
+    def _frame_pixmap(self, ratio: float, tail_x: float, now: float) -> QPixmap:
+        """The whole bubble as it looks now, drawn once per frame of its animation (once, if it doesn't
+        move) however often it is put on the screen: it follows a walking penguin at 60 frames a second,
+        and drawing its art each time cost twice what the animation needs. A fade is applied to the
+        finished picture, rather than to each layer as it's drawn."""
         if self.art:
-            self.art.paint(p, 0, 0, self._content.size(), tail_x, now - self._shown_at, self.animate)
-            title_c, body_c = style.text_colours()
+            title_c, body_c = self.style.text_colours()
+            colours_key: tuple = ()
         else:
             fill, text = colours()
-            box = QRectF(1, 1, self.size.width() - 2, self.size.height() - TAIL - 2)
-            path = bubble_path(box, tail_x)
-            p.fillPath(path, fill)
-            p.setPen(QPen(ACCENT, 2))
-            p.drawPath(path)
             title_c = body_c = text
-        p.drawPixmap(QPointF(0, 0), self._words_pixmap(p, title_c, body_c))
-        p.restore()
+            colours_key = (fill.rgba(), text.rgba())
+        size = (max(1, round((self.size.width() + 2 * SPILL) * ratio)), max(1, round((self.size.height() + 2 * SPILL) * ratio)))
+        key = (ratio, size, round(tail_x * ratio), self.hover, self.anim_key(now), self.style.name, colours_key, title_c.rgba(), body_c.rgba())
+        if self._frame is None or self._frame[0] != key:
+            pix = self._frame[1] if self._frame is not None and (self._frame[1].width(), self._frame[1].height()) == size else QPixmap(*size)
+            pix.setDevicePixelRatio(ratio)
+            pix.fill(Qt.GlobalColor.transparent)
+            q = QPainter(pix)
+            q.setRenderHint(QPainter.RenderHint.Antialiasing)
+            q.translate(SPILL, SPILL)
+            if self.art:
+                self.art.paint(q, 0, 0, self._content.size(), tail_x, now - self._shown_at, self.animate)
+            else:
+                box = QRectF(1, 1, self.size.width() - 2, self.size.height() - TAIL - 2)
+                path = bubble_path(box, tail_x)
+                q.fillPath(path, fill)
+                q.setPen(QPen(ACCENT, 2))
+                q.drawPath(path)
+            q.drawPixmap(QPointF(0, 0), self._words_pixmap(q, title_c, body_c))
+            q.end()
+            self._frame = (key, pix)
+        return self._frame[1]
 
     def _words_pixmap(self, p: QPainter, title_c: QColor, body_c: QColor) -> QPixmap:
         """The title, ✕, text and buttons on a see-through pixmap the bubble's size. An animated bubble is

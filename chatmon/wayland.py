@@ -40,7 +40,8 @@ def _pad(n: int) -> int:
     return (n + 3) & ~3
 
 
-_FIXED: dict[str, struct.Struct | None] = {}  # a signature of fixed-size arguments only: its whole request, packed at once
+_FIXED: dict[str, struct.Struct | None] = {}
+_MANY: dict[tuple[str, int], struct.Struct] = {}  # a batch of one request (`Connection.requests`), by its length  # a signature of fixed-size arguments only: its whole request, packed at once
 
 
 def _fixed(sig: str) -> struct.Struct | None:
@@ -197,7 +198,13 @@ class Connection:
         if self.closed:
             return
         head = (oid, (fixed.size << 16) | opcode)
-        self._out += b"".join(fixed.pack(*head, *args) for args in rows)
+        rows = list(rows)
+        many = _MANY.get((sig, len(rows)))
+        if many is None:
+            many = _MANY[(sig, len(rows))] = struct.Struct("<" + fixed.format[1:] * len(rows))
+            if len(_MANY) > 64:
+                _MANY.clear()
+        self._out += many.pack(*[v for args in rows for v in (*head, *args)])
 
     def flush(self) -> bool:
         """Send what's queued without blocking; True once it's all gone."""

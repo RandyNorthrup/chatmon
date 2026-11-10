@@ -1170,10 +1170,14 @@ class LayerSurface(QObject):
         region = c.new_id()
         c.request(self.globals["wl_compositor"][0], COMPOSITOR_CREATE_REGION, "n", region)
         k = self._k()
-        rows = []
-        for x, y, w, h in rects:
-            x0, y0 = math.floor(x * k), math.floor(y * k)
-            rows.append((x0, y0, math.ceil((x + w) * k) - x0, math.ceil((y + h) * k) - y0))
+        if k == int(k):  # whole pixels stay whole: no rounding to do (an integer scale, as on a 2x screen)
+            k = int(k)
+            rows = [(x * k, y * k, w * k, h * k) for x, y, w, h in rects]
+        else:
+            rows = []
+            for x, y, w, h in rects:
+                x0, y0 = math.floor(x * k), math.floor(y * k)
+                rows.append((x0, y0, math.ceil((x + w) * k) - x0, math.ceil((y + h) * k) - y0))
         c.requests(region, REGION_ADD, "iiii", rows)  # a sprite's outline is some fifty of them, as it walks
         c.request(self._surface, SURFACE_SET_INPUT_REGION, "o", region)
         c.request(region, REGION_DESTROY)
