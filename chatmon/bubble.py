@@ -22,6 +22,7 @@ from PyQt6.QtGui import (
     QPainterPath,
     QPalette,
     QPen,
+    QPixmap,
     QTextDocument,
 )
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QTextBrowser, QToolButton, QVBoxLayout, QWidget
@@ -101,6 +102,7 @@ class SpeechBubble:
         self.style = styles.get(None)
         self.animate = True
         self.art = bubbleart.art(self.style.name)
+        self._words: tuple[tuple, QPixmap] | None = None  # the title, text and buttons, drawn once
 
     def set_style(self, style: styles.Style, animate: bool) -> None:
         """Draw in `style` from the next message on (and the one showing, if any)."""
@@ -135,6 +137,7 @@ class SpeechBubble:
 
     def _layout(self) -> None:
         """Lay the title, text and buttons out (from 0, 0), then put them inside the bubble."""
+        self._words = None
         title_font, body_font = _font(10.5, bold=True), _font(10.5)
         self.doc.setDefaultFont(body_font)
         self.doc.setMarkdown(self._text)
@@ -223,6 +226,28 @@ class SpeechBubble:
             p.setPen(QPen(ACCENT, 2))
             p.drawPath(path)
             title_c = body_c = text
+        p.drawPixmap(QPointF(0, 0), self._words_pixmap(p, title_c, body_c))
+        p.restore()
+
+    def _words_pixmap(self, p: QPainter, title_c: QColor, body_c: QColor) -> QPixmap:
+        """The title, ✕, text and buttons on a see-through pixmap the bubble's size. An animated bubble is
+        drawn thirty times a second and laying out its text each time cost as much as some styles' art,
+        so they are drawn once per message, button hovered and colours."""
+        ratio = max(1.0, p.device().devicePixelRatioF()) if p.device() else 1.0
+        key = (ratio, self.hover, title_c.rgba(), body_c.rgba(), self.style.name)
+        if self._words is None or self._words[0] != key:
+            pix = QPixmap(max(1, round(self.size.width() * ratio)), max(1, round(self.size.height() * ratio)))
+            pix.setDevicePixelRatio(ratio)
+            pix.fill(Qt.GlobalColor.transparent)
+            q = QPainter(pix)
+            q.setRenderHint(QPainter.RenderHint.Antialiasing)
+            self._draw_words(q, title_c, body_c)
+            q.end()
+            self._words = (key, pix)
+        return self._words[1]
+
+    def _draw_words(self, p: QPainter, title_c: QColor, body_c: QColor) -> None:
+        style = self.style
         c = self._content
         p.setPen(title_c)
         p.setFont(self._title_font)
@@ -252,7 +277,6 @@ class SpeechBubble:
             p.drawRoundedRect(r, r.height() / 2, r.height() / 2)
             p.setPen(label)
             p.drawText(b.rect, Qt.AlignmentFlag.AlignCenter, b.label)
-        p.restore()
 
 
 class AskBox(QWidget):

@@ -6,8 +6,8 @@ import re
 from pathlib import Path
 
 import pytest
-from PyQt6.QtCore import QPoint, QSizeF
-from PyQt6.QtGui import QColor, QImage, QPainter
+from PyQt6.QtCore import QPoint, QRectF, QSizeF, Qt
+from PyQt6.QtGui import QColor, QImage, QPainter, QPixmap
 
 from chatmon import bubbleart, paths, styles
 from chatmon.bubble import AskBox, SpeechBubble
@@ -310,9 +310,17 @@ def test_a_pulse_is_a_bright_head_with_a_fading_tail(qapp):
     runner = next(layer for layer in art.layers if isinstance(layer, bubbleart.Runner))
     lo, _ = art.tail_range(300)
     rim = art.rim(300, 92, round(lo))
-    size = (round(rim.length + 2 * runner.MARGIN), 8)
     t = runner.period * 0.31
-    image = runner.envelope(rim, t, size, 1.0).toImage()
+    tail = max(8.0, min(runner.tail, rim.length / runner.count - runner.lead - 2))
+    pulses = runner.pulses(rim, t)
+    band = QPixmap(round(rim.length + 2 * runner.MARGIN), 8)  # as `paint` has it: solid where lit, clear elsewhere
+    band.fill(Qt.GlobalColor.transparent)
+    q = QPainter(band)
+    for _, _, start in pulses:
+        q.fillRect(QRectF(start, 0, tail + runner.lead, 8), QColor("white"))
+    q.end()
+    runner.envelope(band, pulses, tail, 1.0)
+    image = band.toImage()
     way = 1 if runner.laps > 0 else -1
     head = bubbleart._heads(rim, t, runner.period, runner.count, runner.laps)[0]
 
