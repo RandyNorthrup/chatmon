@@ -570,7 +570,7 @@ class Stage(QObject):
         z_phase = int(now * 1.2) % 3 if zs.isValid() else -1
         fade = round(self.bubble.opacity(now) * 20) if self.bubble.drawn() else -1
         menu_rects = self.menu.rects()
-        key = (f.anim, f.index, f.mirror, penguin.topLeft(), z_phase, bubble_box.topLeft(), self.bubble.hover, fade, self.menu.key())
+        key = (f.anim, f.index, f.mirror, penguin.topLeft(), z_phase, bubble_box.topLeft(), self.bubble.hover, fade, self.menu.key(), self.bubble.anim_key(now))
         if key != self._key:
             dirty = QRegion(self._penguin.adjusted(-2, -2, 2, 2)).united(QRegion(penguin.adjusted(-2, -2, 2, 2)))
             dirty = dirty.united(QRegion(self._z_rect(self._penguin))).united(QRegion(zs))

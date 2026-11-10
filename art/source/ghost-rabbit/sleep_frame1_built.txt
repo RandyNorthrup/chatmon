@@ -1,0 +1,2 @@
+Built, not generated: python rigtool/blink_inbetween.py --sheet picked/idle.png --grid 3x2 --open 1 --closed 4 --amounts 0.7 --out picked/sleep_frame1_built.png
+One 512 px frame = sleep frame 1 (eyes heavy, 0.7 closed). Source frames: cells 1 (open) and 4 (closed) of picked/idle.png, which register with picked/sleep.png within 2 px.

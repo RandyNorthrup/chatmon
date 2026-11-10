@@ -15,6 +15,10 @@ animations, and how they were made. The animation strips themselves live in
 [`../penguin_companion/anim/`](../penguin_companion/anim), where the app loads
 them; paths below are relative to this folder.
 
+The chat bubbles' art has its own notes in [`bubbles/README.md`](bubbles/README.md). The four other
+companions' concept sheets are in [`concepts/`](concepts/README.md); their strips, and the tools that
+cut and check them, are described under "The four other companions" below.
+
 ## Files
 
 | Path                         | What it is                                                                                                        |
@@ -127,6 +131,192 @@ The raw 1536 × 1024 sheets (19 MB) are not in this repository; they were
 archived at `~/archive/companion-sheets/` on the Kubuntu desktop. Re-running
 the slicer needs them (`python tools/penguin-slice.py <sheets-dir>`, with
 Pillow installed); the strips here are the build input.
+
+## The four other companions (2026-11-09 and 10)
+
+The fire red panda, the ghost rabbit, the leaf pangolin and the fairy axolotl
+(concepts in [`concepts/`](concepts/README.md)) have the penguin's twelve
+animations, cut to the same pattern: one 240 px strip per animation and a
+`manifest.json`, in `../penguin_companion/anim/<creature>/`. The penguin's own
+strips stay in `../penguin_companion/anim/`, untouched. The app's names are
+kept: each creature's signature move is its `beam` strip.
+
+| Path | What it is |
+| ---- | ---------- |
+| `tools/creatures.json` | The table the tools are driven by: per creature its key colour, its size on screen, the colours that mark its body, belly and effects; per animation the sheet cells that make the frames, what stays put from frame to frame, and its display scale. |
+| `tools/creature-cut.py` | Sheets to strips: `penguin-slice.py` made general (any key colour, soft glows, frames taken from several sheets, built frames). |
+| `tools/creature-qc.py` | Measures the strips and exits 1 if any is out of limits (below). |
+| `tools/creature-preview.py` | Renders previews through the app's own sprite code, for the owner to watch. |
+| `tools/creaturespec.py` | What the cutter and the QC share: reading the table, and finding the body, the floor, the anchor and the specks in a frame. |
+| `tools/spritefix.py` | The keying, despill, resampling and component code (shared with the penguin's tools, whose part of it is unchanged). |
+| `tools/blink-inbetween.py` | Builds a half-closed eye from a creature's own open and closed frames (the ghost rabbit's three built frames). |
+| `source/<creature>/*.png` | The approved raw sheets the cutter reads. |
+| `source/<creature>/*.txt` | The exact prompt of every sheet in use, and how each built sheet was made. |
+| `source/<creature>/sheets.sha1` | The SHA-1 of every raw sheet in use. |
+
+### The raw sheets
+
+Each creature has 12 to 14 raw sheets, 1536 x 1024 like the penguin's: `walk`
+is 4 x 2 cells of 384 x 512, the others 3 x 2 cells of 512 x 512, on a flat
+key colour. They were generated on 2026-11-09 with the Codex CLI's image
+generation (the owner's ChatGPT sign-in) from the concept sheets; the ones cut
+here are the approved ones, and their prompts are in `source/<creature>/`.
+
+The sheets are in this repository, in `source/<creature>/` beside their
+prompts (about 80 MB in all; the penguin's are not, see above).
+`sheets.sha1` in each folder lists them. Re-cut every creature with
+`python tools/creature-cut.py source` (from `art/`); run on these sheets it
+gives the strips in `../penguin_companion/anim/<creature>/` byte for byte.
+
+What is not a plain 3 x 2 sheet:
+
+- **fire-red-panda `beam`** is two files, `signature-a.png` and
+  `signature-b.png`, of 2 x 2 cells of 768 x 512 (the panda at full size plus
+  its fire puff does not fit a 512 px cell): frames 1 to 4 are the four cells
+  of `-a`, frames 5 and 6 the top row of `-b`.
+- **ghost-rabbit `idle`** takes frames 1, 2, 4 and 6 from `idle.png` and frames
+  3 and 5 (the half-closed blink) from `idle_blink_built.png`. Cells 3 and 5
+  of `idle.png` are never used: their lids slant and read sly.
+- **ghost-rabbit `sleep`** takes frame 1 from `sleep_frame1_built.png` and
+  frames 2 to 6 from `sleep.png` (its own cell 1 reads smug).
+- **leaf-pangolin `idle`** is the sheet that did not pass its own QC for one
+  reason: frame 2 is frame 1 again, with no breath. The cutter builds frame 2
+  from frame 1 (below). Its key is magenta, because the creature is green.
+- **fairy-axolotl `walk`** is walk candidate t11, the one the owner picked.
+
+### Built frames, and why
+
+Four frames are built from the creature's own drawing instead of generated,
+because six tries each could not make the generator draw them right:
+
+- **ghost-rabbit `idle` 3 and 5, `sleep` 1** (half-closed and heavy eyes).
+  Generated half-blinks came out sly, deadpan or rolled. `blink-inbetween.py`
+  composites them from the idle sheet's open frame (cell 1) and closed frame
+  (cell 4): below the lid line the open eye, above it the closed frame's lid,
+  the lid line the closed frame's own arc. Nothing outside the eyes changes.
+  The commands are in `source/ghost-rabbit/*_built.txt`; run on `idle.png`
+  they give the same pixels as the two built sheets (checked 2026-11-10).
+- **leaf-pangolin `idle` 2** (the breath). `creature-cut.py` stretches frame 1
+  upwards by 1 percent with the feet staying put (`{"of": 1, "taller": 1.01}`
+  in the table): the top of the head rises about 2 px in the strip and 1 px on
+  screen, as the panda's and the axolotl's drawn breaths do. The penguin's
+  own breath lifts its chest 2 px and its head 1 px in the strip; 1.5 percent,
+  the figure first proposed, would lift the sprout about 3.5 px, more than any
+  companion breathes. The app never shows this frame as it plays `idle` today
+  (it holds frame 1 and blinks through 3, 4, 5).
+
+### How a sheet becomes a strip
+
+`python tools/creature-cut.py <sheets-dir>` (add `--only ghost-rabbit` or
+`--only ghost-rabbit/idle` for a part, `--cache <dir>` to keep the keyed
+sheets between runs, `--debug <dir>` for pictures of the aligned frames with
+the floor line and anchor drawn in). Needs Pillow and numpy. Then
+`python tools/creature-qc.py`.
+
+1. **Key.** The key colour is measured from each sheet's border (the green
+   differs by a few levels from sheet to sheet; the pangolin's is magenta).
+   `spritefix.chroma_key` then sorts every pixel into background, paint or a
+   blend of the two. Paint keeps its colour and is opaque. A blend beside
+   paint, on the line between the key and that paint, is an anti-aliased edge:
+   it gets the paint's colour and the alpha the line gives. Any other blend is
+   light over the key (a glow, mist, a sparkle, the fairy's ribbon): it gets
+   the least alpha it can have and its colour unmixed from the key, so a glow
+   stays soft and carries no green. A glow is never cut off at a threshold:
+   its faintest tenth fades out, and so does what is only the sheet's
+   background wavering (faint light in the key's own colour, or with none of
+   the red a green key lacks). Cyan wings and gold stars are paint and are not
+   touched; only the key's own hue is taken out of edge pixels (hue 80 to 170
+   on green, never above 170), once after keying and once after scaling.
+2. **Cut** the grid and take the frames the table lists.
+3. **Line up.** Every frame is moved so the animation's anchor stays put,
+   left to right and, for frames that stand, top to bottom. The anchor is what
+   the creature keeps still in that animation: the best overlap of its body
+   for standing poses, a belly or chest mark or the moon charm for hops and
+   bounces, the feet for a turn, the middle of the body for a walk, the cut
+   line for `peek`. Frames in the air go with their row of the sheet, so a hop
+   keeps its height. The ghost rabbit has no feet: its floor line is the tip
+   of its tail, and its float cycle and hop are kept as drawn.
+4. **Box and scale.** All frames of an animation share one box, whose bottom
+   edge is a fixed distance under the floor line (1.5 px on screen, as under
+   the penguin's feet; 9.5 px under the ghost rabbit, which floats), scaled
+   to 240 px with colour weighted by alpha. Loose pieces under 12 px that are
+   faint, or far from the creature in an animation without loose effects, are
+   dropped.
+5. **Manifest.** As the penguin's, plus `anchor`: the x in the strip that the
+   app pins to the floor spot (the first frame's feet; the body's middle for
+   the ghost rabbit). The penguin's manifest has none and the app measures
+   its feet as before.
+
+**Size.** Each creature is drawn so its idle frame stands as tall as the
+penguin's (115.5 px at the default size; the ghost rabbit reaches the same
+height floating): `screen_px` in the table is screen pixels per sheet pixel.
+**Scale.** The sheets were not all drawn at one size (side views are smaller,
+`peek` is larger). Each animation's `scale` was set so its head matches the
+idle strip's on screen: `creature-qc.py` slides idle's head over the frame at
+a range of sizes and takes the best match, and the sheet agents' own
+measurements (eye distance, ear and orb spacing, body area) agree with it to
+a few percent. The manifest's `scale` is that times the box height.
+
+### What the QC measures
+
+`creature-qc.py` prints one row per strip and exits 1 on any failure. Limits
+are in screen pixels at the default size (120), not strip pixels.
+
+| Check | What is measured | Limit |
+| ----- | ---------------- | ----- |
+| size | strip is frames x w by h as the manifest says; all twelve are there, with the penguin's frame counts and rates | exact |
+| fringe | edge pixels (alpha above 32, within 2 px of one that isn't) within 100 RGB levels of the key, or of the key's hue and tinted more than 10 levels its way | 0 |
+| x | spread of the animation's anchor, left to right, over the frames | 1 px |
+| y | spread of the floor line over the frames that stand on it | 1 px |
+| head | head size on screen against idle's (best-match size, as above) | 3 percent |
+| border | pixels with alpha above 32 on a frame's outermost rows and columns | 0 |
+| specks | loose pieces under 12 px, over 6 px from the creature, that are faint or in an animation without loose effects | 0 |
+
+Results on 2026-11-10 (all 48 strips pass; worst value per creature, and the
+animation it is in):
+
+| Creature | fringe | x, px | y, px | head, % | border | specks | loose pieces meant |
+| -------- | -----: | ----- | ----- | ------- | -----: | -----: | -----------------: |
+| fire-red-panda | 0 | 0.47 (think) | 0.26 (walk) | -1.1 (sleep) | 0 | 0 | 112 |
+| ghost-rabbit | 0 | 0.49 (wave) | 0.60 (think) | -0.8 (peek) | 0 | 0 | 48 |
+| leaf-pangolin | 0 | 0.53 (turn) | 0.26 (talk) | -0.9 (peek) | 0 | 0 | 108 |
+| fairy-axolotl | 0 | 0.51 (peek) | 0.35 (walk) | -0.8 (wave) | 0 | 0 | 135 |
+
+The head sizes are near zero because the scales were set with this same
+measurement; what stands behind them is the comparison with the sheet agents'
+independent figures. Most agree within 2 percent. The ones that differ more:
+the panda's `think` (0.974 here; 1.04 was suggested from the ear spacing,
+which a tilted head throws off), the rabbit's `peek` (0.881; 0.83 from the ear
+orbs, while the distance between the eyes also says about 0.89), the
+axolotl's `walk`, `beam` and `peek` (1.222, 1.173 and 1.035; 1.198, 1.14 and
+1.0 from body area), and the pangolin's `walk`, which came with no figure
+(1.226: it is drawn in 384 px cells).
+
+What it cannot tell: whether the motion reads well or a frame is on-model (the
+owner watches the previews for that), and whether a loose piece it counts as
+meant is a sparkle or a blemish (the `loose` column is for the eye). `x` uses
+the anchor the cutter lined the frames up by (or the `check` the table names,
+where the frames were kept as drawn), so it shows the strip kept that
+alignment through scaling, not that the anchor was the right choice. `y` is
+not judged where the table keeps frames as drawn (the ghost rabbit's float
+cycle and hop).
+
+Known and accepted:
+
+- In `alert` three creatures stand a little higher than in their other
+  animations, because the glow reaches under the feet and nothing may be
+  clipped: the fire red panda 1.1 px, the fairy axolotl 0.9 px, and
+  the leaf pangolin 3 px (it stands on its lime band).
+- The fire red panda's `sleep` lines its lying frames up with the standing
+  ones by the muzzle, so it lies down where it stood.
+- `peek` strips are 240 px tall for about 40 px on screen, like the penguin's,
+  so they are the largest files.
+- Pale effects (the axolotl's sparkles, the rabbit's mist and orbs) are faint
+  on a light taskbar. The penguin's `charge` got a dark halo for that in its
+  touch-up; nothing of the kind was added here, because these strips are cut
+  from the approved sheets and not retouched.
+- The ghost rabbit's moon charm sways about 1 px on screen in `alert` while
+  its body stays put: the frames are lined up by the body.
 
 ## Still to do
 

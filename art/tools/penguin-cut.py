@@ -3,6 +3,7 @@
 Usage: python penguin-cut.py <out-dir>
 Reads ../source/reference-sheet.jpg. Needs Pillow.
 """
+
 import os
 import sys
 from PIL import Image, ImageFilter

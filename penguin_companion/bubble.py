@@ -1,11 +1,16 @@
-"""Speech bubbles: messages drawn by the stage, and the ask box you type in."""
+"""Speech bubbles: messages drawn by the stage, and the ask box you type in.
+
+Both are drawn in the chosen bubble style (styles.py): a painted, animated bubble (bubbleart.py) with
+its notch pointing at the penguin, or the plain one in the desktop's own colours.
+"""
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 from typing import Callable
 
-from PyQt6.QtCore import QPoint, QPointF, QRect, QRectF, QSizeF, Qt, QUrl, pyqtSignal
+from PyQt6.QtCore import QPoint, QPointF, QRect, QRectF, QSizeF, Qt, QTimer, QUrl, pyqtSignal
 from PyQt6.QtGui import (
     QAbstractTextDocumentLayout,
     QColor,
@@ -21,11 +26,14 @@ from PyQt6.QtGui import (
 )
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QTextBrowser, QToolButton, QVBoxLayout, QWidget
 
-ACCENT = QColor("#26b8d9")  # the penguin's glowing cyan nodes
+from . import bubbleart, styles
+
+ACCENT = QColor(styles.PLAIN_ACCENT)  # the penguin's glowing cyan nodes
 PAD = 14
 TAIL = 12
 RADIUS = 14
 FADE = 0.14  # seconds
+ANIM_FPS = 30  # how often an animated bubble is redrawn (its frames crossfade in between)
 
 
 def open_link(url: QUrl) -> None:
@@ -35,7 +43,7 @@ def open_link(url: QUrl) -> None:
 
 
 def colours() -> tuple[QColor, QColor]:
-    """Bubble fill and text, from the desktop's light or dark theme."""
+    """The plain bubble's fill and text, from the desktop's light or dark theme."""
     pal = QApplication.palette()
     fill = QColor(pal.color(QPalette.ColorRole.Base))
     fill.setAlpha(248)
@@ -43,7 +51,7 @@ def colours() -> tuple[QColor, QColor]:
 
 
 def bubble_path(box: QRectF, tail_x: float) -> QPainterPath:
-    """A rounded box with a tail under it pointing down at `tail_x`."""
+    """A rounded box with a tail under it pointing down at `tail_x` (the plain bubble)."""
     path = QPainterPath()
     path.addRoundedRect(box, RADIUS, RADIUS)
     tail = QPainterPath()
@@ -88,6 +96,18 @@ class SpeechBubble:
         self._visible = False
         self._close_rect = QRectF()
         self._body_top = 0.0
+        self._body = QRectF()
+        self._content = QRectF()
+        self.style = styles.get(None)
+        self.animate = True
+        self.art = bubbleart.art(self.style.name)
+
+    def set_style(self, style: styles.Style, animate: bool) -> None:
+        """Draw in `style` from the next message on (and the one showing, if any)."""
+        self.style, self.animate = style, animate
+        self.art = bubbleart.art(style.name)
+        if self._visible and self._closing_at is None:
+            self._layout()
 
     def visible(self) -> bool:
         """Showing and not on its way out."""
@@ -97,40 +117,64 @@ class SpeechBubble:
         """Still on screen, perhaps fading out."""
         return self._visible
 
+    def anim_key(self, now: float) -> int:
+        """Changes as often as an animated bubble needs redrawing; -1 when it doesn't."""
+        if self._visible and self.animate and self.art is not None:
+            return int((now - self._shown_at) * ANIM_FPS)
+        return -1
+
     def show(self, title: str, text: str, buttons, timeout_s: float | None, now: float) -> None:
         self.title = title
         self.hover = None
+        self._text = text or ""
+        self._button_specs = list(buttons or [])
+        self._shown_at, self._closing_at = now, None
+        self._expires = now + timeout_s if timeout_s else None
+        self._visible = True
+        self._layout()
+
+    def _layout(self) -> None:
+        """Lay the title, text and buttons out (from 0, 0), then put them inside the bubble."""
         title_font, body_font = _font(10.5, bold=True), _font(10.5)
         self.doc.setDefaultFont(body_font)
-        self.doc.setMarkdown(text or "")
-        has_text = bool(text)
+        self.doc.setMarkdown(self._text)
+        has_text = bool(self._text)
         metrics = QFontMetricsF(body_font)
-        self.buttons = [_Button(label, action, QRectF(0, 0, metrics.horizontalAdvance(label) + 26, metrics.height() + 10)) for label, action in buttons or []]
-        title_w = QFontMetricsF(title_font).horizontalAdvance(title) + 28
+        self.buttons = [_Button(label, action, QRectF(0, 0, metrics.horizontalAdvance(label) + 28, metrics.height() + 10)) for label, action in self._button_specs]
+        title_w = QFontMetricsF(title_font).horizontalAdvance(self.title) + 28
         buttons_w = sum(b.rect.width() for b in self.buttons) + 8 * max(0, len(self.buttons) - 1)
-        inner_max = self.MAX_WIDTH - 2 * PAD
+        inner_max = self.MAX_WIDTH - 2 * PAD  # the text's widest, whatever bubble it's in
         self.doc.setTextWidth(inner_max)
-        inner = min(inner_max, max(140, title_w, buttons_w, self.doc.idealWidth() + 1 if has_text else 0))
+        inner = min(inner_max, max(160, title_w, buttons_w, self.doc.idealWidth() + 1 if has_text else 0))
         self.doc.setTextWidth(inner)
         title_h = QFontMetricsF(title_font).height()
-        height = PAD + title_h
-        self._body_top = height + 6
+        height = title_h
+        body_top = height + 6
         if has_text:
             height += 6 + self.doc.size().height()
         if self.buttons:
-            height += 10
-            x = PAD + inner
+            height += 12
+            x = inner
             for b in reversed(self.buttons):
                 x -= b.rect.width()
                 b.rect.moveTo(x, height)
                 x -= 8
             height += self.buttons[0].rect.height()
-        height += PAD
-        self.size = QSizeF(inner + 2 * PAD, height + TAIL)
-        self._close_rect = QRectF(PAD + inner - 16, PAD - 2, 20, title_h + 4)
-        self._shown_at, self._closing_at = now, None
-        self._expires = now + timeout_s if timeout_s else None
-        self._visible = True
+        if self.art:
+            frame = self.art.frame_for(QSizeF(inner, height))
+            origin = frame.text.topLeft()
+            self.size = frame.size
+            pad = self.art.pad + 4
+            self._body = frame.text.adjusted(-pad, -pad, pad, pad)
+        else:
+            origin = QPointF(PAD, PAD)
+            self.size = QSizeF(inner + 2 * PAD, height + 2 * PAD + TAIL)
+            self._body = QRectF(0, 0, self.size.width(), self.size.height() - TAIL)
+        self._content = QRectF(origin, QSizeF(inner, height))
+        for b in self.buttons:
+            b.rect.translate(origin)
+        self._body_top = origin.y() + body_top
+        self._close_rect = QRectF(origin.x() + inner - 18, origin.y() - 3, 22, title_h + 6)
         self._title_font, self._has_text = title_font, has_text
 
     def dismiss(self, now: float) -> None:
@@ -159,42 +203,54 @@ class SpeechBubble:
         for i, b in enumerate(self.buttons):
             if b.rect.contains(pos):
                 return i
-        if QRectF(0, 0, self.size.width(), self.size.height() - TAIL).contains(pos):
+        if self._body.contains(pos):
             return "body"
         return None
 
     def paint(self, p: QPainter, tail_x: float, now: float) -> None:
-        fill, text = colours()
+        style = self.style
         p.save()
         p.setOpacity(self.opacity(now))
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
-        box = QRectF(1, 1, self.size.width() - 2, self.size.height() - TAIL - 2)
-        path = bubble_path(box, tail_x)
-        p.fillPath(path, fill)
-        p.setPen(QPen(ACCENT, 2))
-        p.drawPath(path)
-        p.setPen(text)
+        if self.art:
+            self.art.paint(p, 0, 0, self._content.size(), tail_x, now - self._shown_at, self.animate)
+            title_c, body_c = style.text_colours()
+        else:
+            fill, text = colours()
+            box = QRectF(1, 1, self.size.width() - 2, self.size.height() - TAIL - 2)
+            path = bubble_path(box, tail_x)
+            p.fillPath(path, fill)
+            p.setPen(QPen(ACCENT, 2))
+            p.drawPath(path)
+            title_c = body_c = text
+        c = self._content
+        p.setPen(title_c)
         p.setFont(self._title_font)
-        p.drawText(QRectF(PAD, PAD, self.size.width() - 2 * PAD - 20, 40), Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop, self.title)
+        p.drawText(QRectF(c.x(), c.y(), c.width() - 20, 40), Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop, self.title)
         p.setFont(_font(9.5))
         p.drawText(self._close_rect, Qt.AlignmentFlag.AlignCenter, "✕")
         if self._has_text:
             p.save()
-            p.translate(PAD, self._body_top)
+            p.translate(c.x(), self._body_top)
             ctx = QAbstractTextDocumentLayout.PaintContext()
-            ctx.palette.setColor(QPalette.ColorRole.Text, text)
+            ctx.palette.setColor(QPalette.ColorRole.Text, body_c)
+            ctx.palette.setColor(QPalette.ColorRole.Link, QColor(style.accent))
             self.doc.documentLayout().draw(p, ctx)
             p.restore()
         p.setFont(_font(10))
         for i, b in enumerate(self.buttons):
-            if i == self.hover:
-                p.setBrush(ACCENT)
-                p.setPen(QPen(ACCENT, 1.2))
+            look = style.primary if i == 0 else style.other
+            outline = QColor(look.outline)
+            if i == self.hover:  # lit up: filled with its outline colour
+                fill, label = outline, QColor(look.fill) if look.fill and self.art else QColor("white")
             else:
-                p.setBrush(Qt.BrushStyle.NoBrush)
-                p.setPen(QPen(ACCENT, 1.2))
-            p.drawRoundedRect(b.rect.adjusted(0.5, 0.5, -0.5, -0.5), 8, 8)
-            p.setPen(QColor("white") if i == self.hover else text)
+                fill = QColor(look.fill) if look.fill else None
+                label = QColor(look.text) if look.text else body_c
+            p.setBrush(fill if fill is not None else Qt.BrushStyle.NoBrush)
+            p.setPen(QPen(outline, 1.5))
+            r = b.rect.adjusted(0.75, 0.75, -0.75, -0.75)
+            p.drawRoundedRect(r, r.height() / 2, r.height() / 2)
+            p.setPen(label)
             p.drawText(b.rect, Qt.AlignmentFlag.AlignCenter, b.label)
         p.restore()
 
@@ -219,9 +275,17 @@ class AskBox(QWidget):
         self._anchor = QPoint(0, 0)
         self._tail_x = self.WIDTH / 2
         self.wants_keyboard = True
+        self.style = styles.get(None)
+        self.animate = True
+        self.art: bubbleart.BubbleArt | None = None
+        self._margins = (16, 12, 16, 14 + TAIL)
+        self._opened_at = time.monotonic()
+        self._frames = QTimer(self)  # redraws an animated bubble while it's open
+        self._frames.setInterval(1000 // ANIM_FPS)
+        self._frames.timeout.connect(self.update)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(16, 12, 16, 14 + TAIL)
+        layout.setContentsMargins(*self._margins)
         layout.setSpacing(8)
         top = QHBoxLayout()
         self.title = QLabel()
@@ -247,30 +311,56 @@ class AskBox(QWidget):
         self.hint = QLabel()
         self.hint.setObjectName("hint")
         layout.addWidget(self.hint)
+        self.set_style(self.style, self.animate)
+
+    def set_style(self, style: styles.Style, animate: bool) -> None:
+        self.style, self.animate = style, animate
+        self.art = bubbleart.art(style.name)
+        if self.art:
+            left, top, right, bottom = self.art.margins()
+            self._margins = (round(left), round(top), round(right), round(bottom))
+        else:
+            self._margins = (16, 12, 16, 14 + TAIL)
+        self.layout().setContentsMargins(*self._margins)
         self._style()
+        if self.isVisible():
+            self.set_answer(self.answer.toMarkdown() if self.answer.isVisible() else "")
+            self._run_frames()
+
+    def _content_width(self) -> int:
+        return self.WIDTH - self._margins[0] - self._margins[2]
+
+    def _run_frames(self) -> None:
+        if self.isVisible() and self.animate and self.art is not None:
+            self._frames.start()
+        else:
+            self._frames.stop()
 
     def open(self, anchor: QPoint, title: str, hint: str, placeholder: str, text: str = "", prefill: str = "", activate: bool = True) -> None:
         """Show it above `anchor`; `activate` gives it the keyboard (you asked for it)."""
         self.title.setText(title)
-        self.hint.setText(QFontMetricsF(self.hint.font()).elidedText(hint, Qt.TextElideMode.ElideRight, self.WIDTH - 34))
+        self.hint.setText(QFontMetricsF(self.hint.font()).elidedText(hint, Qt.TextElideMode.ElideRight, self._content_width() - 2))
         self.entry.setPlaceholderText(placeholder)
         self.entry.setText(prefill)
         self.reset_button.hide()
         self._anchor = QPoint(anchor)
         self.set_answer(text)
         self.wants_keyboard = activate
+        if not self.isVisible():
+            self._opened_at = time.monotonic()
         self.show()
         self.raise_()
         if activate:
             self.activateWindow()
         self.entry.setFocus()
         self.entry.end(False)
+        self._run_frames()
 
     def set_answer(self, markdown: str) -> None:
         if markdown:
             self.answer.setMarkdown(markdown)
             doc = self.answer.document()
-            doc.setTextWidth(self.WIDTH - 32 - 10)
+            doc.setTextWidth(self._content_width() - 10)
             self.answer.setFixedHeight(min(int(doc.size().height()) + 4, self.MAX_ANSWER))
             self.answer.show()
         else:
@@ -285,6 +375,12 @@ class AskBox(QWidget):
     def input_rects(self) -> list[QRect]:
         """The bubble and its tail, without the see-through margin around them."""
         h = self.height()
+        if self.art:
+            k, (x0, y0, x1, y1) = self.art.k, self.art.text
+            body = QRect(round(x0 * k), round(y0 * k), round(self.width() - (self.art.w - x1) * k - x0 * k), round(h - (self.art.h - y1) * k - y0 * k))
+            tip_y = round(body.bottom() + (self.art.tip[1] - y1) * k)
+            tail = QRect(round(self._tail_x) - 12, body.bottom() - 2, 24, max(4, tip_y - body.bottom() + 2))
+            return [body, tail]
         body = QRect(0, 0, self.width(), h - TAIL)
         tail = QRect(round(self._tail_x) - 10, h - TAIL - 1, 20, TAIL + 1)
         return [body, tail]
@@ -306,7 +402,11 @@ class AskBox(QWidget):
         geo = screen.availableGeometry()
         x = min(max(self._anchor.x() - self.WIDTH // 2, geo.left() + 4), geo.right() - self.WIDTH - 4)
         y = max(self._anchor.y() - height, geo.top() + 4)
-        self._tail_x = min(max(self._anchor.x() - x, RADIUS + TAIL), self.WIDTH - RADIUS - TAIL)
+        if self.art:
+            lo, hi = self.art.tail_range(self._content_width())
+        else:
+            lo, hi = RADIUS + TAIL, self.WIDTH - RADIUS - TAIL
+        self._tail_x = min(max(self._anchor.x() - x, lo), hi)
         self.setGeometry(x, y, self.WIDTH, height)
         self.update()
 
@@ -317,20 +417,28 @@ class AskBox(QWidget):
             self.submitted.emit(text)
 
     def _style(self) -> None:
-        fill, text = colours()
+        if self.art:
+            title, text = self.style.text_colours()
+        else:
+            _, text = colours()
+            title = text
         dim = QColor(text)
-        dim.setAlpha(150)
-        base = QApplication.palette().color(QPalette.ColorRole.Base)
+        dim.setAlpha(165)
+        base = self.style.entry_colour() if self.art else QApplication.palette().color(QPalette.ColorRole.Base)
+        accent = self.style.accent if self.art else ACCENT.name()
+        self.answer.document().setDefaultStyleSheet(f"a {{ color: {accent}; }}")
         self.setStyleSheet(
             f"""
             QLabel, QTextBrowser {{ color: {text.name()}; background: transparent; font-size: 10.5pt; }}
-            QLabel#title {{ font-weight: 600; }}
+            QLabel#title {{ font-weight: 600; color: {title.name()}; }}
             QLabel#hint {{ color: {dim.name(QColor.NameFormat.HexArgb)}; font-size: 9pt; }}
-            QLineEdit {{ border: 1px solid {ACCENT.name()}; border-radius: 8px; padding: 6px 8px;
-                         background: {base.name()}; color: {text.name()}; font-size: 10.5pt; }}
-            QToolButton {{ color: {text.name()}; border: none; padding: 2px 6px; }}
+            QLineEdit {{ border: 1px solid {accent}; border-radius: 8px; padding: 6px 8px;
+                         background: {base.name()}; color: {text.name()}; font-size: 10.5pt;
+                         selection-background-color: {accent}; }}
+            QToolButton {{ color: {title.name()}; border: none; padding: 2px 6px; }}
+            QToolButton:hover {{ color: {accent}; }}
             QScrollBar:vertical {{ width: 6px; background: transparent; margin: 0; }}
-            QScrollBar::handle:vertical {{ background: {ACCENT.name()}; border-radius: 3px; min-height: 24px; }}
+            QScrollBar::handle:vertical {{ background: {accent}; border-radius: 3px; min-height: 24px; }}
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height: 0; }}
             QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{ background: transparent; }}
             """
@@ -338,10 +446,19 @@ class AskBox(QWidget):
         for child in self.findChildren(QWidget):
             child.ensurePolished()
 
+    def hideEvent(self, event) -> None:
+        self._frames.stop()
+        super().hideEvent(event)
+
     def paintEvent(self, _event) -> None:
-        fill, _ = colours()
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        if self.art:
+            left, top, right, bottom = self._margins
+            content = QSizeF(self.width() - left - right, self.height() - top - bottom)
+            self.art.paint(p, 0, 0, content, self._tail_x, time.monotonic() - self._opened_at, self.animate)
+            return
+        fill, _ = colours()
         path = bubble_path(QRectF(self.rect()).adjusted(1, 1, -1, -1 - TAIL), self._tail_x)
         p.fillPath(path, fill)
         p.setPen(QPen(ACCENT, 2))

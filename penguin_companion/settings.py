@@ -16,7 +16,8 @@ DEFAULTS: dict[str, Any] = {
     "size": 120,
     "walk": True,
     "sleep_after_minutes": 10,
-    "bubble_style": "electric",
+    "companion": "penguin",
+    "bubble_style": "match",
     "bubble_effects": True,
     "ai": {"brain": "auto", "timeout_seconds": 180, "brains": {}},
     "agents": {"show_replies": False},
@@ -35,7 +36,7 @@ TEMPLATE = """\
 # Penguin companion settings. Save this file, then pick "Reload settings" from
 # the penguin's menu (right-click it), or restart it.
 
-# What the penguin is called. Empty: it asks the first time it runs.
+# What your companion is called. Empty: it asks the first time it runs.
 name = ""
 
 # Height of the penguin on screen, in pixels.
@@ -47,14 +48,19 @@ walk = true
 # Fall asleep after this many minutes without any attention (0: never).
 sleep_after_minutes = 10
 
-# How its chat bubbles look: "electric" (lightning crackling round the rim),
-# "fire" (flames), "leaf" (a vine that grows round it), "fairy" (sparkles),
-# "ghost" (wisps), or "plain" (your desktop's own colours). The menu's
-# "Bubble style" overrides this.
-bubble_style = "electric"
+# Which companion it is: "penguin" (the electric penguin), "fire-red-panda",
+# "ghost-rabbit", "fairy-axolotl" or "leaf-pangolin". The menu's "Companion"
+# overrides this.
+companion = "penguin"
 
-# Animate the bubbles: they pop up and their rim effect runs. false keeps the
-# style but holds it still.
+# How its chat bubbles look: "match" (the companion's own style), or always
+# "electric" (navy glass, crackling cyan edge), "fire" (ember edge, low flames
+# along the top), "ghost" (frosted, violet mist), "fairy" (blush opal, glints),
+# "leaf" (ivy, and a caterpillar crawling along it) or "plain" (your desktop's
+# own colours). The menu's "Bubble style" overrides this.
+bubble_style = "match"
+
+# Animate the bubbles' edges. false keeps the style but holds it still.
 bubble_effects = true
 
 [ai]

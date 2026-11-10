@@ -3,6 +3,9 @@
 Frames are scaled to the screen's real pixels (`scale`: device pixels per
 logical pixel, 2 on a 2x screen), so the penguin is as sharp as the art
 allows; sizes, hit tests and outlines stay in logical pixels.
+
+Every companion (companions.py) has its own folder of strips and manifest;
+`Sprites` loads the one folder it is given.
 """
 
 from __future__ import annotations
@@ -108,7 +111,10 @@ class Sprites:
             w, h = int(m["w"]), int(m["h"])
             factor = float(m.get("scale", 1.0)) * size / h  # art pixels to logical
             dw, dh = max(1, round(w * factor * scale)), max(1, round(h * factor * scale))
-            anchor = round(_foot_centre(strip.copy(0, 0, w, h)) * factor)
+            # Where the floor pins the frame: the manifest says (the newer companions: a ghost has
+            # no feet, and flames and mist would pull a measured one), or it is the first frame's feet.
+            foot = float(m["anchor"]) if "anchor" in m else _foot_centre(strip.copy(0, 0, w, h))
+            anchor = round(foot * factor)
             normal, mirrored = [], []
             for i in range(self.info[name].frames):
                 img = strip.copy(i * w, 0, w, h).scaled(

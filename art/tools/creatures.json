@@ -1,0 +1,140 @@
+{
+ "frame_height": 240,
+ "screen_size": 120,
+ "floor_gap": 1.5,
+ "playback": {
+  "walk": [10, true],
+  "idle": [5, true],
+  "peek": [4, false],
+  "talk": [8, true],
+  "wave": [7, true],
+  "think": [4, true],
+  "hop": [9, true],
+  "sleep": [3, true],
+  "charge": [9, true],
+  "alert": [8, true],
+  "turn": [6, false],
+  "beam": [8, false]
+ },
+ "creatures": {
+  "fire-red-panda": {
+   "name": "Fire red panda",
+   "key": "green",
+   "screen_px": 0.295,
+   "colours": {
+    "effect": ["r>170 and g>100 and b<150 and r-b>90"],
+    "mark": ["r>225 and g>190 and b>140 and r-b<110"]
+   },
+   "heads": {
+    "front": {"x": [0.05, 0.62], "y": [0.15, 0.55]},
+    "side": {"x": [0.6, 1.0], "y": [0.12, 0.6]},
+    "turn_front": 3,
+    "turn_side": 1
+   },
+   "defaults": {"x": "overlap"},
+   "anims": {
+    "walk": {"sheet": ["walk.png", 4, 2], "scale": 1.301, "x": {"by": "centre", "band": [0.3, 0.78]}, "head": {"view": "side"}},
+    "idle": {"sheet": ["idle.png", 3, 2]},
+    "peek": {"sheet": ["peek.png", 3, 2], "scale": 0.773, "x": "cut", "gap": 0.3, "anchor": "cut", "head": {"frame": 5, "part": {"x": [0.05, 0.95], "y": [0.2, 0.92]}}},
+    "talk": {"sheet": ["talk.png", 3, 2], "scale": 0.992},
+    "wave": {"sheet": ["wave.png", 3, 2], "scale": 1.02},
+    "think": {"sheet": ["think.png", 3, 2], "scale": 0.974, "x": {"by": "overlap", "band": [0.45, 1.0]}, "loose": true, "head": {"frame": 6}},
+    "hop": {"sheet": ["hop.png", 3, 2], "scale": 1.08, "x": {"by": "mark", "top": 2}, "y": {"floor": [1, 5, 6]}, "head": {"frame": 6}},
+    "sleep": {"sheet": ["sleep.png", 3, 2], "scale": 0.992, "x": {"by": "overlap", "groups": [[1, 2], [3, 4, 5, 6]], "links": [[3, 2, {"by": "mark", "top": 1}]]}},
+    "charge": {"sheet": ["charge.png", 3, 2], "scale": 1.009, "loose": true},
+    "alert": {"sheet": ["alert.png", 3, 2], "scale": 1.003, "x": {"by": "mark", "top": 2}},
+    "turn": {"sheet": ["turn.png", 3, 2], "scale": 1.073, "x": "feet", "y": {"floor": [1, 2, 3, 4, 5]}},
+    "beam": {"sheets": {"a": ["signature-a.png", 2, 2], "b": ["signature-b.png", 2, 2]}, "frames": ["a1", "a2", "a3", "a4", "b1", "b2"], "scale": 1.074, "x": "none", "check": "feet", "loose": true, "head": {"view": "side", "frame": 6}}
+   }
+  },
+  "ghost-rabbit": {
+   "name": "Ghost rabbit",
+   "key": "green",
+   "screen_px": 0.29,
+   "hover": 8,
+   "colours": {
+    "body": ["r>205 and g>185 and b>215 and b-g<48"],
+    "mark": ["r>215 and g>165 and b<175 and r-b>60"]
+   },
+   "heads": {
+    "front": {"x": [0.3, 0.7], "y": [0.05, 0.5]},
+    "side": {"x": [0.5, 1.0], "y": [0.05, 0.5]},
+    "turn_front": 3,
+    "turn_side": 1
+   },
+   "defaults": {"x": "overlap"},
+   "anims": {
+    "walk": {"sheet": ["walk.png", 4, 2], "scale": 1.14, "x": "centre", "y": {"pin": "sheet"}, "head": {"view": "side"}},
+    "idle": {"sheets": {"": ["idle.png", 3, 2], "b": ["idle_blink_built.png", 2, 1]}, "frames": [1, 2, "b1", 4, "b2", 6]},
+    "peek": {"sheet": ["peek.png", 3, 2], "scale": 0.881, "x": "cut", "gap": 0.3, "anchor": "cut", "head": {"frame": 5, "part": {"x": [0.2, 0.8], "y": [0.1, 0.92]}}},
+    "talk": {"sheet": ["talk.png", 3, 2]},
+    "wave": {"sheet": ["wave.png", 3, 2]},
+    "think": {"sheet": ["think.png", 3, 2], "x": {"by": "overlap", "band": [0.45, 1.0]}, "loose": true, "head": {"frame": 6}},
+    "hop": {"sheet": ["hop.png", 3, 2], "scale": 1.013, "x": "mark", "y": {"floor": [6], "pin": "sheet"}, "head": {"frame": 6}},
+    "sleep": {"sheets": {"": ["sleep.png", 3, 2], "b": ["sleep_frame1_built.png", 1, 1]}, "frames": ["b1", 2, 3, 4, 5, 6], "x": {"by": "overlap", "band": [0.45, 1.0]}},
+    "charge": {"sheet": ["charge.png", 3, 2], "scale": 1.007, "loose": true},
+    "alert": {"sheet": ["alert.png", 3, 2], "scale": 1.008, "x": "centre"},
+    "turn": {"sheet": ["turn.png", 3, 2], "x": "centre", "y": {"floor": [1, 2, 3, 4, 5]}},
+    "beam": {"sheet": ["signature.png", 3, 2], "scale": 1.149, "x": "none", "check": {"by": "overlap", "band": [0.5, 1.0]}, "loose": true, "head": {"view": "side", "frame": 6}}
+   }
+  },
+  "leaf-pangolin": {
+   "name": "Leaf pangolin",
+   "key": "magenta",
+   "screen_px": 0.2955,
+   "colours": {
+    "mark": ["r>215 and g>190 and b>120 and b<215 and r-b>25 and r-g<45"]
+   },
+   "heads": {
+    "front": {"x": [0.15, 0.85], "y": [0.15, 0.5]},
+    "side": {"x": [0.55, 1.0], "y": [0.1, 0.5]},
+    "turn_front": 3,
+    "turn_side": 1
+   },
+   "defaults": {"x": "overlap", "soft": false},
+   "anims": {
+    "walk": {"sheet": ["walk.png", 4, 2], "scale": 1.226, "x": {"by": "centre", "band": [0.3, 0.78]}, "head": {"view": "side"}},
+    "idle": {"sheet": ["idle.png", 3, 2], "frames": [1, {"of": 1, "taller": 1.01}, 3, 4, 5, 6]},
+    "peek": {"sheet": ["peek.png", 3, 2], "scale": 1.011, "x": "cut", "gap": 0.3, "anchor": "cut", "head": {"frame": 5, "part": {"x": [0.05, 0.95], "y": [0.3, 0.92]}}},
+    "talk": {"sheet": ["talk.png", 3, 2], "scale": 1.007},
+    "wave": {"sheet": ["wave.png", 3, 2]},
+    "think": {"sheet": ["think.png", 3, 2], "loose": true, "head": {"frame": 6}},
+    "hop": {"sheet": ["hop.png", 3, 2], "scale": 1.008, "x": {"by": "mark", "top": 1}, "y": {"floor": [1, 5, 6]}, "head": {"frame": 6}},
+    "sleep": {"sheet": ["sleep.png", 3, 2], "scale": 0.99},
+    "charge": {"sheet": ["charge.png", 3, 2], "scale": 1.007, "x": {"by": "mark", "top": 1}, "loose": true},
+    "alert": {"sheet": ["alert.png", 3, 2], "scale": 0.989, "x": {"by": "mark", "top": 1}, "y": {"floor": [1, 3, 4, 6]}},
+    "turn": {"sheet": ["turn.png", 3, 2], "scale": 1.028, "x": "feet", "y": {"floor": [1, 2, 3, 4, 5]}},
+    "beam": {"sheet": ["signature.png", 3, 2], "scale": 0.976, "x": "none", "loose": true, "head": {"view": "side", "frame": 6}}
+   }
+  },
+  "fairy-axolotl": {
+   "name": "Fairy axolotl",
+   "key": "green",
+   "screen_px": 0.295,
+   "colours": {
+    "mark": ["r>235 and g>215 and b>180 and b<232 and r-b>20"]
+   },
+   "heads": {
+    "front": {"x": [0.15, 0.75], "y": [0.05, 0.42]},
+    "side": {"x": [0.5, 1.0], "y": [0.08, 0.55]},
+    "turn_front": 3,
+    "turn_side": 1
+   },
+   "defaults": {"x": "overlap"},
+   "anims": {
+    "walk": {"sheet": ["walk.png", 4, 2], "scale": 1.222, "x": {"by": "centre", "band": [0.3, 0.78]}, "head": {"view": "side"}},
+    "idle": {"sheet": ["idle.png", 3, 2]},
+    "peek": {"sheet": ["peek.png", 3, 2], "scale": 1.035, "x": "cut", "gap": 0.3, "anchor": "cut", "head": {"frame": 5, "part": {"x": [0.05, 0.95], "y": [0.1, 0.92]}}},
+    "talk": {"sheet": ["talk.png", 3, 2], "x": {"by": "overlap", "band": [0.5, 1.0]}},
+    "wave": {"sheet": ["wave.png", 3, 2], "scale": 0.992},
+    "think": {"sheet": ["think.png", 3, 2], "loose": true, "head": {"frame": 6}},
+    "hop": {"sheet": ["hop.png", 3, 2], "scale": 0.984, "x": {"by": "mark", "top": 1}, "y": {"floor": [1, 5, 6]}, "head": {"frame": 6}},
+    "sleep": {"sheet": ["sleep.png", 3, 2], "scale": 0.992, "x": {"by": "overlap", "band": [0.5, 1.0]}},
+    "charge": {"sheet": ["charge.png", 3, 2], "scale": 0.987, "loose": true},
+    "alert": {"sheet": ["alert.png", 3, 2], "scale": 0.992, "x": {"by": "mark", "top": 1}, "y": {"floor": [1, 3, 5]}},
+    "turn": {"sheet": ["turn.png", 3, 2], "scale": 1.18, "x": "feet", "y": {"floor": [1, 2, 3, 4, 5]}},
+    "beam": {"sheet": ["signature.png", 3, 2], "scale": 1.173, "x": "none", "check": "feet", "loose": true, "head": {"view": "side", "frame": 6}}
+   }
+  }
+ }
+}

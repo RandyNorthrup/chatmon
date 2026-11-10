@@ -137,3 +137,63 @@ def test_a_window_manager_cant_close_the_stage_or_strand_the_ask_box(companion):
     c.open_ask()
     QWidget.close(c.ask_box)
     assert not c.ask_box.isVisible() and closed
+
+
+def test_picking_a_companion_swaps_its_sprites_at_once(companion):
+    from penguin_companion import companions
+
+    c = companion
+    assert c._companion().id == "penguin" and c.sprites is c.stage.sprites
+    penguin_frame = c.sprites.frame("idle", 0, False).image
+    c._fill_menu()
+    menu = next(a.menu() for a in c.menu.actions() if a.text() == "Companion")
+    labels = [a.text() for a in menu.actions()]
+    assert labels == [x.label for x in companions.COMPANIONS.values()]
+    assert [a.text() for a in menu.actions() if a.isChecked()] == ["Electric penguin"]
+
+    next(a for a in menu.actions() if a.text() == "Ghost rabbit").trigger()
+    assert c._companion().id == "ghost-rabbit" and c.state.get("companion") == "ghost-rabbit"
+    assert c.stage.sprites is c.sprites and c.sprites.frame("idle", 0, False).image != penguin_frame
+    assert c.behavior.anims == c.sprites.anims()
+    c.state.set("name", "")
+    assert c.name == "Rabbit"  # until it is named, it answers to what it is
+    c.state.set("name", "Sparky")
+    for anim in ("hop", "beam", "wave"):  # it carries on with the new strips: reactions, hiding and peeking
+        c.behavior.react(anim, c._now())
+        spin(0.25)
+        assert c.stage._frame.anim in c.sprites.anims()
+    c.set_hidden(True)
+    spin(0.4)
+    c.set_hidden(False)
+    spin(0.4)
+    assert c.stage._frame.anim in c.sprites.anims()
+
+    from penguin_companion.settings import State
+
+    assert State.load().get("companion") == "ghost-rabbit"  # remembered for next time
+    c.state.set("companion", "no-such-creature")
+    c.reload()
+    assert c._companion().id == "penguin" and c.sprites.frame("idle", 0, False).image == penguin_frame
+
+
+def test_bubbles_match_the_companion_unless_a_style_was_chosen(companion):
+    c = companion
+    assert c._bubble_style_name() == "match" and c._bubble_style().name == "electric"
+    c._pick_companion("fire-red-panda")
+    assert c._bubble_style().name == "fire" and c.stage.bubble.style.name == "fire" and c.ask_box.style.name == "fire"
+    c._fill_menu()
+    menu = next(a.menu() for a in c.menu.actions() if a.text() == "Bubble style")
+    assert [a.text() for a in menu.actions() if a.isChecked() and a.text() != "Animate bubbles"] == ["Match companion (fire)"]
+
+    next(a for a in menu.actions() if a.text() == "Leaf").trigger()  # a style chosen by name wins
+    assert c._bubble_style().name == "leaf" and c.stage.bubble.style.name == "leaf"
+    c._pick_companion("fairy-axolotl")
+    assert c._bubble_style().name == "leaf"
+
+    c._pick_style("match")
+    assert c._bubble_style().name == "fairy" and c.ask_box.style.name == "fairy"
+    c.state.set("bubble_style", None)  # settings that already name a style keep it
+    c.config["bubble_style"] = "ghost"
+    assert c._bubble_style().name == "ghost"
+    c.config["bubble_style"] = "no-such-style"
+    assert c._bubble_style().name == "fairy"

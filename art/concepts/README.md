@@ -1,18 +1,21 @@
 # Companion concepts
 
 Mock-up reference sheets for four more companions, made to sit beside the electric penguin: the same bold outlines, cel shading, chunky
-proportions and glowing nodes, each an original creature with its own element. They are concept art, not animation strips yet: each
-would go through the same pipeline as the penguin (twelve sprite sheets from `../prompts.md`, then `../tools/penguin-slice.py`).
+proportions and glowing nodes, each an original creature with its own element. They are the concept art: the four companions' animation strips were drawn
+from these sheets and cut on 2026-11-09 and 10 (twelve sprite sheets each, then `../tools/creature-cut.py`; see
+"The four other companions" in [`../README.md`](../README.md)).
 
 Made on 2026-11-09 with the Codex CLI's built-in image generation (the owner's ChatGPT sign-in), one image per run, with
-`../source/reference-sheet.jpg` attached as the style reference. Each file here is the byte-identical original.
+`../source/reference-sheet.jpg` attached as the style reference. The same day each was redrawn slightly less childish (the
+same creature, a little more grown-up proportions, no blush, calmer faces), with its first sheet attached as the design;
+the owner picked one of two tries for each. Each file here is the byte-identical original.
 
 Every sheet shows six poses on a flat chroma-key background: side view, front view, powering up, an eager crouch with a glow outline, a
 joyful jump, and the signature move.
 
 | File | Element | The design | QC |
 | --- | --- | --- | --- |
-| `ghost-rabbit.png` | Ghost | A floating lavender rabbit whose long ears and lower body trail into violet mist; a crescent-moon charm on a ribbon; glowing violet orb nodes on its ears and paws. Signature move: a spiral of mist from its paws. | In pose 6 the moon charm hangs low on the belly instead of at the neck; fix when this becomes a sprite sheet. |
+| `ghost-rabbit.png` | Ghost | A floating lavender rabbit whose long ears and lower body trail into violet mist; a crescent-moon charm on a ribbon; glowing violet orb nodes on its ears and paws. Signature move: a spiral of mist from its paws. | In pose 6 the moon charm still hangs low on the belly instead of at the neck; fix when this becomes a sprite sheet. The less-childish pass changed it least (slightly smaller eyes). |
 | `fairy-axolotl.png` | Fairy | A pink axolotl with petal-shaped gill fronds carrying glowing star nodes, small iridescent wings and a gold star on its tail tip. Signature move: a ribbon of sparkles from its tail. | Clean: four limbs, two wings and the tail star in every pose. |
 | `fire-red-panda.png` | Fire | A red panda cub with flame ear tufts, a ringed tail that burns at the tip and glowing ember nodes on its ears, paws and tail rings. Signature move: a puff of fire. | Clean: four legs in every pose. A red panda with a flaming tail sits close to a well-known browser mascot; the design is its own creature, but keep the marketing away from that comparison. |
 | `leaf-pangolin.png` | Leaf | A pangolin whose scales are overlapping fresh green leaves, with a two-leaf sprout on its head and glowing seed nodes along its back and tail. Signature move: rolling into a ball in a whirl of leaves. Drawn on magenta so the green keys cleanly. | Clean: two arms, two legs and the sprout in every pose. A two-leaf sprout on the head is a common creature motif; swap it for a fern curl if it should stand further apart. |
@@ -36,3 +39,9 @@ Use the attached image as a STYLE reference only: match its art style exactly (b
 ### `leaf-pangolin`
 
 Use the attached image as a STYLE reference only: match its art style exactly (bold dark outlines, flat cel shading with soft highlights, chunky cute chibi proportions, big glossy eyes, the same level of detail and the same glowing-node accents), but do NOT draw a penguin. Create a CHARACTER REFERENCE SHEET for a NEW original creature, a cute elemental companion in the style of a monster-collecting game: a LEAF pangolin. A small round body covered in overlapping fresh green leaf-shaped scales with fine vein lines, a soft cream face and belly, a little two-leaf sprout growing from the top of its head, small round ears, a long leafy tail it can curl around itself, tiny claws, big friendly eyes, and glowing lime-yellow seed nodes along its back and tail. Show the creature six times in two rows of three, evenly spaced and never touching or overlapping: 1 side view facing right, standing on its hind legs; 2 front view, standing on its hind legs, friendly smile; 3 front view powering up with its element (a swirl of green leaves and small glowing pollen motes); 4 an eager, determined crouch with a soft lime-green glow outline; 5 a joyful jump; 6 side view facing right using its signature move (curled into a rolling ball trailing a whirl of green leaves), kept inside its own cell. Flat pure chroma-key magenta (#FF00FF) background everywhere; no ground shadows, no text, no numbers, no labels, no borders, no grid lines. An original design that does not resemble any existing franchise character. Cute and friendly, never scary. Landscape 16:9 image.
+
+## The less-childish pass
+
+Each was redrawn from its first sheet with the prompt above plus the text below; files kept: fire `-b`, ghost `-a`, fairy `-b`, leaf `-b`.
+
+Use the second attached image (this creature's own concept sheet) as the exact design: keep the same creature, the same features, markings, colours and element details, and the same six poses and layout. Make it SLIGHTLY LESS CHILDISH: a little more grown-up proportions (a slightly smaller head and eyes relative to the body, slightly longer limbs), NO blush marks, calmer and more confident expressions instead of baby-like ones; still friendly and a little cute, suited to an assistant for Pokemon fans. Keep the same art style: bold dark outlines, cel shading and glowing nodes.

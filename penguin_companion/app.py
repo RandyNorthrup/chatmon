@@ -17,7 +17,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QGuiApplication, QIcon
 from PyQt6.QtNetwork import QLocalServer
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
-from . import agents, autostart, brains, events, heads_up, paths, reminders
+from . import agents, autostart, brains, companions, events, heads_up, paths, reminders, styles
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -26,6 +26,7 @@ from .sprites import Sprites
 
 PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
+MATCH = "match"  # the bubble style that follows the companion
 
 HELP = """\
 **Click me** to ask anything, **drag me** anywhere, **right-click** for the menu.
@@ -87,7 +88,7 @@ class Companion(QObject):
         self._update_counts: dict[str, int] = {}
 
         self._sprite_scale = QGuiApplication.primaryScreen().devicePixelRatio()
-        self.sprites = Sprites(paths.anim_dir(), int(self.config["size"]), self._sprite_scale)
+        self.sprites = self._load_sprites()
         screen = QGuiApplication.primaryScreen().availableGeometry()
         self.behavior = Behavior(
             self.sprites.anims(),
@@ -99,6 +100,7 @@ class Companion(QObject):
         )
         self.stage = Stage(self.sprites, self.behavior)
         self.ask_box = AskBox()
+        self._apply_bubble_style()
         if self.stage.hosts_windows():  # the Wayland overlay: drawn there, not a window of its own
             self.stage.host(self.ask_box)
         else:
@@ -151,7 +153,7 @@ class Companion(QObject):
 
     @property
     def name(self) -> str:
-        return self.config["name"] or self.state.get("name") or "Penguin"
+        return self.config["name"] or self.state.get("name") or self._companion().nickname
 
     def _every(self, ms: int, fn) -> None:
         timer = QTimer(self)
@@ -655,6 +657,8 @@ class Companion(QObject):
                 sub.addAction(f"✕  {reminders.describe(r.due, time.time())}: {r.text}", partial(self._cancel, r.id))
         m.addSeparator()
         self._brain_menu(m.addMenu("Brain"))
+        self._companion_menu(m.addMenu("Companion"))
+        self._style_menu(m.addMenu("Bubble style"))
         self._agents_menu(m.addMenu("AI agents"))
         self._refresh_agents()
         walk = m.addAction("Walk around")
@@ -740,6 +744,99 @@ class Companion(QObject):
         self.open_ask()
         self.ask_box.set_answer("Any agent or script can tell me what it's doing:\n\n```\n" + agents.generic() + "\n```")
 
+    # -- which companion, and how its bubbles look
+
+    def _companion(self) -> companions.Companion:
+        """The one picked from the menu, else the one in the settings, else the penguin."""
+        return companions.get(self.state.get("companion") or self.config["companion"])
+
+    def _load_sprites(self) -> Sprites:
+        """The chosen companion's strips, and only those."""
+        return Sprites(self._companion().anim_dir(), int(self.config["size"]), self._sprite_scale)
+
+    def _show_sprites(self) -> None:
+        """Draw with the companion, size and screen scale as they are now."""
+        self.sprites = self._load_sprites()
+        self.behavior.anims = self.sprites.anims()
+        self.stage.set_sprites(self.sprites)
+
+    def _show_icon(self) -> None:
+        icon = QIcon(self.sprites.frame("idle", 0, False).pixmap)
+        self.tray.setIcon(icon)
+        self.app.setWindowIcon(icon)
+
+    def _companion_menu(self, sub: QMenu) -> None:
+        group = QActionGroup(sub)
+        current = self._companion().id
+        for companion in companions.COMPANIONS.values():
+            action = sub.addAction(companion.label)
+            action.setCheckable(True)
+            action.setChecked(companion.id == current)
+            action.setEnabled(companions.get(companion.id) is companion)  # its strips are installed
+            action.triggered.connect(partial(self._pick_companion, companion.id))
+            group.addAction(action)
+
+    def _pick_companion(self, name: str) -> None:
+        if name == self._companion().id:
+            return
+        self.state.set("companion", name)
+        self.state.save()
+        self._show_sprites()
+        self._show_icon()
+        self._apply_bubble_style()  # "Match companion" follows it
+        self._menu_changed()
+        self.behavior.react("wave", self._now())
+
+    def _style_menu(self, sub: QMenu) -> None:
+        group = QActionGroup(sub)
+        current = self._bubble_style_name()
+        matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()
+        for name, label in [(MATCH, f"Match companion ({matching})")] + [(s.name, s.label) for s in styles.STYLES.values()]:
+            action = sub.addAction(label)
+            action.setCheckable(True)
+            action.setChecked(name == current)
+            action.triggered.connect(partial(self._pick_style, name))
+            group.addAction(action)
+            if name == MATCH:
+                sub.addSeparator()
+        sub.addSeparator()
+        moving = sub.addAction("Animate bubbles")
+        moving.setCheckable(True)
+        moving.setChecked(self._bubble_effects())
+        moving.toggled.connect(self._set_bubble_effects)
+
+    def _bubble_style_name(self) -> str:
+        """The style picked from the menu, else the one in the settings: a style's name, or MATCH."""
+        name = str(self.state.get("bubble_style") or self.config["bubble_style"] or MATCH).strip().lower()
+        return name if name in styles.STYLES else MATCH
+
+    def _bubble_style(self) -> styles.Style:
+        """A style chosen by name wins; otherwise the bubbles match the companion."""
+        name = self._bubble_style_name()
+        return styles.get(self._companion().bubble_style if name == MATCH else name)
+
+    def _bubble_effects(self) -> bool:
+        picked = self.state.get("bubble_effects")
+        return bool(self.config["bubble_effects"] if picked is None else picked)
+
+    def _apply_bubble_style(self) -> None:
+        style, animate = self._bubble_style(), self._bubble_effects()
+        self.stage.bubble.set_style(style, animate)
+        self.ask_box.set_style(style, animate)
+
+    def _pick_style(self, name: str) -> None:
+        self.state.set("bubble_style", name)
+        self.state.save()
+        self._apply_bubble_style()
+        self._menu_changed()
+        if not self.ask_box.isVisible():
+            self.say(self.name, f"New look: {self._bubble_style().label.split(' (')[0].lower()}.", timeout_s=4)
+
+    def _set_bubble_effects(self, on: bool) -> None:
+        self.state.set("bubble_effects", on)
+        self.state.save()
+        self._apply_bubble_style()
+
     def _pick_brain(self, name: str | None) -> None:
         self.state.set("brain", name)
         self.state.save()
@@ -765,12 +862,12 @@ class Companion(QObject):
         self.brains = brains.load_brains(self.config["ai"])
         self.watcher = self._make_watcher()
         self.breaks.every = float(self.config["breaks"]["every_minutes"]) * 60
-        size = int(self.config["size"])
-        self.sprites = Sprites(paths.anim_dir(), size, self._sprite_scale)
-        self.stage.set_sprites(self.sprites)
+        self._show_sprites()
+        self._show_icon()
         self.behavior.set_walk(bool(self.config["walk"]), self._now())
         self.behavior.sleep_after = float(self.config["sleep_after_minutes"]) * 60
-        self.behavior.speed = size * 0.4
+        self.behavior.speed = int(self.config["size"]) * 0.4
+        self._apply_bubble_style()
         self._menu_changed()
         self.say("Settings reloaded", timeout_s=3)
 
@@ -778,8 +875,7 @@ class Companion(QObject):
         """The stage's screen has this many device pixels to a pixel: draw the penguin with them."""
         if abs(scale - self._sprite_scale) > 0.01:
             self._sprite_scale = scale
-            self.sprites = Sprites(paths.anim_dir(), int(self.config["size"]), scale)
-            self.stage.set_sprites(self.sprites)
+            self._show_sprites()
 
     def quit(self) -> None:
         self.save()

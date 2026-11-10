@@ -1,0 +1,2 @@
+Built, not generated: python rigtool/blink_inbetween.py --sheet picked/idle.png --grid 3x2 --open 1 --closed 4 --amounts 0.55,0.45 --out picked/idle_blink_built.png
+One row of two 512 px frames: cell 1 = idle frame 3 (0.55 closed, closing), cell 2 = idle frame 5 (0.45 closed, opening). Source frames: cells 1 (open) and 4 (closed) of picked/idle.png.

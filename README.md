@@ -21,6 +21,10 @@ about, naps when you ignore it, peeks out from behind the taskbar, and helps:
 - **Breaks.** A nudge after an hour at the screen; locking the screen for five
   minutes counts as a break.
 - **Heads-ups.** A low battery, a disk filling up, system updates waiting.
+- **Pick your companion.** The penguin has four siblings: a fire red panda, a
+  ghost rabbit, a fairy axolotl and a leaf pangolin. Right-click it, open
+  **Companion** and choose; it changes on the spot, and its chat bubbles
+  change to match.
 
 It runs on Linux, Windows and macOS.
 
@@ -56,11 +60,22 @@ The first time, it asks what it should be called. Right-click it and tick
 | -------------------------------- | -------------------------------------------------------- |
 | Click it                         | Opens the ask box (or wakes up, or answers an alert)     |
 | Drag it                          | Comes along; let go and it drops back to the taskbar    |
-| Right-click it, or the tray icon | The menu: ask, remind, focus timer, reminders, brain, AI agents, walk, hide, settings |
+| Right-click it, or the tray icon | The menu: ask, remind, focus timer, reminders, brain, companion, bubble style, AI agents, walk, hide, settings |
 | Click the tray icon              | Hides it, or brings it back                              |
 
 Besides questions, the ask box understands *help*, *status* (battery, disks,
 reminders), *hide*, *new chat*, and the reminder, timer and focus phrases above.
+
+## Companions and bubbles
+
+**Companion** in the menu swaps the creature at once: the electric penguin
+(the default), the fire red panda, the ghost rabbit (it floats), the fairy
+axolotl or the leaf pangolin. Each has the same twelve animations and does
+everything the penguin does. **Bubble style** starts on **Match companion**
+(electric for the penguin, fire, ghost, fairy and leaf for the others); pick a
+style by name there and it stays whichever companion you choose. Both are
+remembered, and both can be set in the settings file (`companion`,
+`bubble_style`). A name the settings don't know is the penguin.
 
 ## Brains: what answers your questions
 
@@ -178,7 +193,8 @@ Found a security problem? Please open a private
 ## Settings
 
 `config.toml`, created on first run with every setting explained: the name,
-size, walking, how soon it naps, brains, whether agents' replies show, break and
+size, walking, how soon it naps, the companion and its bubble style, brains,
+whether agents' replies show, break and
 focus lengths, and heads-up thresholds. **Edit settings…** in the menu opens it;
 **Reload settings** applies it. It lives in `~/.config/penguin-companion/` on
 Linux, `~/Library/Application Support/penguin-companion/` on macOS and
@@ -222,12 +238,14 @@ should either ever be needed.
 | `penguin_companion/xkb.py`        | The keyboard on the overlay, through libxkbcommon      |
 | `penguin_companion/stagemenu.py`  | Menus drawn on the stage                               |
 | `penguin_companion/clickthrough.py` | Clicks through the stage window (X11, Windows, macOS) |
+| `penguin_companion/companions.py` | The companions you can pick, and where each one's strips are |
+| `penguin_companion/sprites.py`    | One companion's animation strips, cut into frames for the screen |
 | `penguin_companion/bubble.py`     | Message bubbles and the ask box                        |
 | `penguin_companion/app.py`        | Ties it together: menu, tray, reminders, heads-ups, hooks |
 | `penguin_companion/brains.py`     | The AI brains                                          |
 | `penguin_companion/agents.py`     | Connecting coding agents                               |
 | `penguin_companion/integrations/` | The Claude Code plugin                                 |
-| `art/`                            | The character, its image prompts and the slicing tools ([art/README.md](art/README.md)) |
+| `art/`                            | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
 
 The overlay is tested on Hyprland 0.57; KDE Plasma 6.4 (Wayland) was tested
 with the window, before the overlay. CI runs the tests, including a headless run

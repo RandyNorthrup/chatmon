@@ -55,6 +55,8 @@ version = { attr = "penguin_companion.__version__" }
 penguin_companion = [
     "anim/*.png",
     "anim/manifest.json",
+    "anim/*/*.png",
+    "anim/*/manifest.json",
     "bubbles/*.png",
     "bubbles/manifest.json",
     "integrations/claude/.claude-plugin/marketplace.json",

@@ -1,158 +1,300 @@
 {
  "electric": {
   "scale": 0.5,
-  "slice": [
-   60,
-   51,
-   60,
-   51
+  "w": 498,
+  "h": 243,
+  "text": [
+   46,
+   42,
+   464,
+   185
   ],
-  "rim": [
-   18,
-   18,
-   18,
-   18
-  ],
-  "panel": [
-   592,
+  "corner": 36,
+  "notch": [
+   164,
    260
   ],
   "tail": [
-   83,
-   59,
-   20
+   212,
+   224
   ],
-  "fx": {
-   "frames": 8,
-   "w": 120,
-   "h": 39,
-   "loop": false
-  }
+  "rim": {
+   "inset": [
+    35.5,
+    31.0,
+    23.0,
+    49.5
+   ],
+   "radius": 35.8,
+   "half": 11.5
+  },
+  "fx": [
+   {
+    "type": "glow",
+    "period": 4.0,
+    "amount": 0.14,
+    "beats": [
+     1,
+     3
+    ]
+   },
+   {
+    "type": "runner",
+    "file": "electric-current.png",
+    "period": 8.0,
+    "count": 2,
+    "laps": 1,
+    "speed": 10.0,
+    "offset": 0.0,
+    "opacity": 1.0,
+    "tail": 190.0,
+    "lead": 12.0,
+    "glow": 0.9,
+    "halo": 22.0,
+    "head": 6.0,
+    "colour": "#ffd93b",
+    "plus": false
+   },
+   {
+    "type": "wake",
+    "file": "electric-arcs.png",
+    "count": 2,
+    "w": 116,
+    "h": 38,
+    "period": 8.0,
+    "laps": 1,
+    "spacing": 80.0,
+    "life": 0.6,
+    "seed": 7,
+    "offset": 2.0,
+    "plus": false
+   }
+  ]
  },
  "fairy": {
   "scale": 0.5,
-  "slice": [
-   60,
-   49,
-   60,
-   49
+  "w": 475,
+  "h": 221,
+  "text": [
+   28,
+   30,
+   447,
+   175
   ],
-  "rim": [
-   7,
-   8,
-   7,
-   6
-  ],
-  "panel": [
-   432,
-   176
+  "corner": 36,
+  "notch": [
+   89,
+   171
   ],
   "tail": [
-   58,
-   43,
-   8
+   129,
+   205
   ],
-  "fx": {
-   "frames": 8,
-   "w": 52,
-   "h": 51,
-   "loop": true
-  }
+  "rim": {
+   "inset": [
+    23.2,
+    29.5,
+    24.7,
+    41.0
+   ],
+   "radius": 39.3,
+   "half": 2.0
+  },
+  "fx": [
+   {
+    "type": "swap",
+    "file": "fairy-still-b.png",
+    "period": 6.0,
+    "amount": 0.9
+   },
+   {
+    "type": "sheen",
+    "period": 6.0,
+    "count": 2,
+    "life": 2.6,
+    "speed": 34.0,
+    "reach": 40.0,
+    "amount": 0.8,
+    "seed": 4
+   },
+   {
+    "type": "sparkles",
+    "file": "fairy-sparkles.png",
+    "count": 6,
+    "w": 42,
+    "h": 44,
+    "period": 6.0,
+    "slots": 4,
+    "life": 1.3,
+    "seed": 5,
+    "plus": true
+   }
+  ]
  },
  "fire": {
   "scale": 0.5,
-  "slice": [
-   60,
-   53,
-   60,
-   53
+  "w": 471,
+  "h": 228,
+  "text": [
+   26,
+   46,
+   445,
+   174
   ],
-  "rim": [
-   16,
-   17,
-   17,
-   16
-  ],
-  "panel": [
-   422,
-   173
+  "corner": 32,
+  "notch": [
+   86,
+   174
   ],
   "tail": [
-   63,
-   42,
-   18
+   130,
+   208
   ],
-  "fx": {
-   "frames": 8,
-   "w": 48,
-   "h": 80,
-   "loop": true
-  }
+  "rim": {
+   "inset": [
+    17.5,
+    31.5,
+    18.0,
+    47.0
+   ],
+   "radius": 35.8,
+   "half": 9.5
+  },
+  "fx": [
+   {
+    "type": "flames",
+    "file": "fire-flames.png",
+    "frames": 36,
+    "w": 375,
+    "h": 42,
+    "period": 3.0,
+    "base": 38,
+    "seam": 1.03,
+    "wrap": 0.49
+   },
+   {
+    "type": "glow",
+    "period": 3.0,
+    "amount": 0.22,
+    "beats": [
+     1,
+     2
+    ]
+   },
+   {
+    "type": "embers",
+    "file": "fire-embers.png",
+    "count": 6,
+    "w": 14,
+    "h": 13,
+    "period": 3.0,
+    "slots": 5,
+    "life": 1.5,
+    "seed": 3,
+    "plus": true
+   }
+  ]
  },
  "ghost": {
   "scale": 0.5,
-  "slice": [
-   60,
-   56,
-   60,
-   56
+  "w": 488,
+  "h": 261,
+  "text": [
+   36,
+   36,
+   454,
+   201
   ],
-  "rim": [
-   13,
-   12,
-   12,
-   11
-  ],
-  "panel": [
-   540,
-   223
+  "corner": 42,
+  "notch": [
+   142,
+   242
   ],
   "tail": [
-   80,
-   56,
-   13
+   192,
+   240
   ],
-  "fx": {
-   "frames": 8,
-   "w": 59,
-   "h": 88,
-   "loop": true
-  }
+  "rim": {
+   "inset": [
+    22.5,
+    27.0,
+    24.0,
+    51.5
+   ],
+   "radius": 39.3,
+   "half": 10.0
+  },
+  "fx": [
+   {
+    "type": "glow",
+    "period": 6.0,
+    "amount": 0.16,
+    "beats": [
+     1
+    ]
+   },
+   {
+    "type": "scroll",
+    "file": "ghost-mist-a.png",
+    "period": 6.0,
+    "speed": 11.0,
+    "offset": 0.5,
+    "opacity": 0.5,
+    "breathe": 0.35
+   },
+   {
+    "type": "scroll",
+    "file": "ghost-mist-b.png",
+    "period": 6.0,
+    "speed": -7.0,
+    "offset": 0.0,
+    "opacity": 0.7,
+    "breathe": 0.3,
+    "phase": 0.5
+   }
+  ]
  },
  "leaf": {
   "scale": 0.5,
-  "slice": [
-   60,
-   57,
-   60,
-   57
+  "w": 466,
+  "h": 258,
+  "text": [
+   26,
+   56,
+   446,
+   208
   ],
-  "rim": [
-   15,
-   15,
-   12,
-   14
-  ],
-  "panel": [
-   368,
-   176
+  "corner": 38,
+  "notch": [
+   79,
+   183
   ],
   "tail": [
-   70,
-   53,
-   16
+   131,
+   250
   ],
-  "fx": {
-   "frames": 8,
-   "w": 60,
-   "h": 57,
-   "loop": true
+  "rim": {
+   "inset": [
+    15.0,
+    33.0,
+    14.0,
+    44.5
+   ],
+   "radius": 22.8,
+   "half": 24.0
   },
-  "fx2": {
-   "frames": 8,
-   "w": 92,
-   "h": 39,
-   "loop": true
-  }
+  "fx": [
+   {
+    "type": "crawler",
+    "file": "leaf-crawler.png",
+    "frames": 42,
+    "w": 68,
+    "h": 36,
+    "feet": 0.972,
+    "speed": 10.0,
+    "stride": 1.4,
+    "rest": 2.8
+   }
+  ]
  }
 }
