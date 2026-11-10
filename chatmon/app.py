@@ -132,7 +132,7 @@ class Companion(QObject):
         self._menu_timer.timeout.connect(self._fill_menu)
         self._menu_clock: tuple = ()
         self._agent_status: dict[str, str] = {}
-        self._renamed = bool(paths.migrated)  # the first run since Penguin companion became Chatmon
+        self._renamed = paths.first_run_since_rename()  # Penguin companion became Chatmon
         self.background = Background()
         self._fill_menu()
         self.tray = QSystemTrayIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))

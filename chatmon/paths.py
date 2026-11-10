@@ -12,7 +12,7 @@ from pathlib import Path
 
 APP = "chatmon"
 LEGACY_APP = "penguin-companion"  # its name before 0.3.0
-migrated: list[tuple[Path, Path]] = []  # what `migrate()` moved in this run: the first run after the rename
+RENAMED = ".renamed"  # left in the state folder by `migrate()`, until the app has started once since
 
 
 def _base(xdg_var: str, xdg_default: Path) -> Path:
@@ -43,8 +43,25 @@ def migrate() -> list[tuple[Path, Path]]:
                 print(f"{APP}: couldn't move {old} to {new}: {exc}", file=sys.stderr)
                 continue
             moved.append((old, new))
-    migrated.extend(moved)
+    if moved:  # whichever command ran first (a hook's notify, likely), the app hears of it when it starts
+        try:
+            state_dir().mkdir(parents=True, exist_ok=True)
+            (state_dir() / RENAMED).touch()
+        except OSError:
+            pass
     return moved
+
+
+def first_run_since_rename() -> bool:
+    """True once: the first time the app starts after `migrate()` moved the old name's folders."""
+    mark = state_dir() / RENAMED
+    try:
+        mark.unlink()
+    except FileNotFoundError:
+        return False
+    except OSError:
+        pass
+    return True
 
 
 def config_dir() -> Path:

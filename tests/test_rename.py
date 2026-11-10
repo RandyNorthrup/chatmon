@@ -37,6 +37,7 @@ def test_settings_and_state_move_to_the_new_name(home):
     assert paths.config_file().read_text() == 'name = "Starry"\n'
     assert paths.state_file().read_text() == '{"x": 630}'
     assert paths.migrate() == []  # once
+    assert paths.first_run_since_rename() and not paths.first_run_since_rename()  # the app hears of it once
 
 
 def test_existing_chatmon_settings_are_never_overwritten(home):
@@ -50,7 +51,7 @@ def test_existing_chatmon_settings_are_never_overwritten(home):
 
 
 def test_nothing_old_moves_nothing(home):
-    assert paths.migrate() == []
+    assert paths.migrate() == [] and not paths.first_run_since_rename()
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Windows keeps it in the registry")
