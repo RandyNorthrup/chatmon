@@ -149,6 +149,10 @@ class Companion(QObject):
         QTimer.singleShot(120_000, self._check_updates)
         QTimer.singleShot(1500, self._greet)
         QTimer.singleShot(3000, partial(self._refresh_agents, True))
+        self._preload = QTimer(self)  # cuts the animations not shown yet, one at a time, between frames
+        self._preload.setInterval(40)
+        self._preload.timeout.connect(self._preload_next)
+        QTimer.singleShot(2000, self._preload.start)  # once the screen's scale is known
 
     # -- small helpers
 
@@ -787,6 +791,12 @@ class Companion(QObject):
         self.sprites = self._load_sprites()
         self.behavior.anims = self.sprites.anims()
         self.stage.set_sprites(self.sprites)
+        if hasattr(self, "_preload"):
+            self._preload.start()
+
+    def _preload_next(self) -> None:
+        if not self.sprites.load_next():
+            self._preload.stop()
 
     def _show_icon(self) -> None:
         icon = QIcon(self.sprites.frame("idle", 0, False).pixmap)
