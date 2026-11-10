@@ -211,6 +211,24 @@ def test_claude_installs_its_plugin(monkeypatch):
     assert not claude.connected()
 
 
+def test_claude_reads_the_marketplace_from_a_copy_an_upgrade_cant_take_away(monkeypatch):
+    added = []
+    fake = FakeClaude()
+
+    def run(argv, what):
+        if argv[1:4] == ["plugin", "marketplace", "add"]:
+            added.append(argv[4])
+        return fake(argv, what)
+
+    monkeypatch.setattr(agents, "_run_json", run)
+    claude = agents.ClaudeCode()
+    claude.connect()
+    (folder,) = added
+    assert agents.Path(folder) == claude.marketplace_dir() and agents.paths.state_dir() in agents.Path(folder).parents
+    assert json.loads((agents.Path(folder) / ".claude-plugin" / "marketplace.json").read_text())["name"] == "chatmon"
+    assert (agents.Path(folder) / "chatmon" / "hooks" / "hooks.json").exists()
+
+
 def test_claude_switches_a_switched_off_plugin_back_on(monkeypatch):
     fake = FakeClaude(installed=[{"id": "chatmon@chatmon", "enabled": False}], markets=["chatmon"])
     monkeypatch.setattr(agents, "_run_json", fake)
@@ -229,7 +247,7 @@ def test_claude_needs_chatmon_on_path(monkeypatch):
 
 
 def test_claude_plugin_files_match_the_installer():
-    root = agents.ClaudeCode.marketplace_dir()
+    root = agents.ClaudeCode.packaged_marketplace()
     market = json.loads((root / ".claude-plugin" / "marketplace.json").read_text())
     plugin_dir = root / market["plugins"][0]["source"]
     hooks = json.loads((plugin_dir / "hooks" / "hooks.json").read_text())["hooks"]

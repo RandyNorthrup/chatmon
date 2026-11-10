@@ -197,3 +197,15 @@ def test_bubbles_match_the_companion_unless_a_style_was_chosen(companion):
     assert c._bubble_style().name == "ghost"
     c.config["bubble_style"] = "no-such-style"
     assert c._bubble_style().name == "fairy"
+
+
+def test_first_run_after_the_rename_asks_about_plugin_agents(companion):
+    """Claude Code may have dropped the old plugin before Chatmon could move it: say so, once."""
+    c = companion
+    c._renamed = True
+    c._agents_known({"claude": "found", "muse": "not found", "codex": "found"})
+    text = c.stage.bubble.doc.toPlainText()
+    assert "Claude Code" in text and "Muse" not in text and "Codex" not in text and "AI agents" in text
+    c.stage.dismiss_message()
+    c._agents_known({"claude": "found"})
+    assert not c.stage.message_visible()  # once

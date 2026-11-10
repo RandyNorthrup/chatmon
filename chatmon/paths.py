@@ -12,6 +12,7 @@ from pathlib import Path
 
 APP = "chatmon"
 LEGACY_APP = "penguin-companion"  # its name before 0.3.0
+migrated: list[tuple[Path, Path]] = []  # what `migrate()` moved in this run: the first run after the rename
 
 
 def _base(xdg_var: str, xdg_default: Path) -> Path:
@@ -42,6 +43,7 @@ def migrate() -> list[tuple[Path, Path]]:
                 print(f"{APP}: couldn't move {old} to {new}: {exc}", file=sys.stderr)
                 continue
             moved.append((old, new))
+    migrated.extend(moved)
     return moved
 
 

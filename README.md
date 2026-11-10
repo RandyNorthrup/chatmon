@@ -80,6 +80,12 @@ Code gets the `chatmon` plugin in place of `penguin-companion`). Until then the
 old hooks keep working: `penguin-companion` is still installed as another name
 for `chatmon`, for this release.
 
+Claude Code and Muse Code can drop the old plugin as soon as the old package is
+uninstalled, before Chatmon gets to move it. If either shows unticked under
+**AI agents** afterwards, tick it again (your chatmon reminds you on that first
+run). From 0.3.0 on, Chatmon keeps its Claude Code marketplace in its own state
+folder, so upgrades can't take it away again.
+
 ## Using it
 
 | You                              | It                                                       |

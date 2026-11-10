@@ -239,8 +239,24 @@ class ClaudeCode(Agent):
         return _home_env("CLAUDE_CONFIG_DIR", Path.home() / ".claude") / "settings.json"
 
     @staticmethod
-    def marketplace_dir() -> Path:
+    def packaged_marketplace() -> Path:
+        """The marketplace and plugin as they ship, inside the installed package."""
         return Path(__file__).resolve().parent / "integrations" / "claude"
+
+    @staticmethod
+    def marketplace_dir() -> Path:
+        """Where Claude Code reads the marketplace from: a copy in Chatmon's state folder. Claude Code
+        drops a marketplace whose folder has gone, and its plugin with it, so it must not be the
+        package's own folder, which an upgrade, a reinstall or a rename takes away."""
+        return paths.state_dir() / "integrations" / "claude-marketplace"
+
+    def _publish(self) -> Path:
+        """Copy the marketplace as this version ships it to where Claude Code reads it."""
+        folder = self.marketplace_dir()
+        if folder.exists():
+            shutil.rmtree(folder)
+        shutil.copytree(self.packaged_marketplace(), folder)
+        return folder
 
     def _plugins(self) -> list:
         found = _run_json(["claude", "plugin", "list", "--json"], self.label)
@@ -294,10 +310,11 @@ class ClaudeCode(Agent):
 
     def connect(self) -> str:
         _needs_on_path()
+        folder = self._publish()
         markets = _run_json(["claude", "plugin", "marketplace", "list", "--json"], self.label)
         names = {m.get("name") for m in markets} if isinstance(markets, list) else set()
         if self.MARKETPLACE not in names:
-            _run_json(["claude", "plugin", "marketplace", "add", str(self.marketplace_dir()), "--json"], self.label)
+            _run_json(["claude", "plugin", "marketplace", "add", str(folder), "--json"], self.label)
         mine = self._mine(self.PLUGIN)
         if mine is None:
             _run_json(["claude", "plugin", "install", self.PLUGIN, "--scope", "user", "--json"], self.label)
@@ -320,7 +337,7 @@ class ClaudeCode(Agent):
             "In Claude Code, run:\n"
             "  /plugin install chatmon --marketplace RandyNorthrup/chatmon\n"
             f"or from a terminal:\n"
-            f"  claude plugin marketplace add {self.marketplace_dir()}\n"
+            f"  claude plugin marketplace add {self.packaged_marketplace()}\n"
             f"  claude plugin install {self.PLUGIN}\n"
             f"The plugin runs `{paths.APP} notify ...`, so {paths.APP} has to be on your PATH."
         )

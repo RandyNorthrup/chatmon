@@ -132,6 +132,7 @@ class Companion(QObject):
         self._menu_timer.timeout.connect(self._fill_menu)
         self._menu_clock: tuple = ()
         self._agent_status: dict[str, str] = {}
+        self._renamed = bool(paths.migrated)  # the first run since Penguin companion became Chatmon
         self.background = Background()
         self._fill_menu()
         self.tray = QSystemTrayIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
@@ -722,6 +723,17 @@ class Companion(QObject):
         return status
 
     def _agents_known(self, status) -> None:
+        if self._renamed and isinstance(status, dict):
+            self._renamed = False
+            # An agent that installs a plugin from a folder of ours may have dropped it when the old
+            # folder went, before it could be moved over; nothing records that it was connected.
+            unsure = [a.label for a in agents.AGENTS if a.name in ("claude", "muse") and status.get(a.name) == "found"]
+            if unsure:
+                self.say(
+                    self.name,
+                    f"I'm Chatmon now. If {' or '.join(unsure)} was connected before, tick it again under **AI agents** in my menu.",
+                    timeout_s=30,
+                )
         if isinstance(status, dict) and status != self._agent_status:
             self._agent_status = status
             self._menu_changed()
