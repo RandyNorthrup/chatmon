@@ -113,6 +113,13 @@ def count_windows(output: str, code: int) -> int | None:
     return int(m.group(1)) if code == 0 and m else None
 
 
+def count_softwareupdate(output: str, code: int) -> int | None:
+    """macOS `softwareupdate --list --no-scan`: a "* Label: ..." line for each update it already knows of."""
+    if code != 0:
+        return None
+    return sum(1 for line in output.splitlines() if line.lstrip().startswith("* "))
+
+
 def windows_restart_needed(output: str) -> bool:
     return output.strip().endswith("|True")
 
@@ -141,7 +148,8 @@ def update_checks() -> list[UpdateCheck]:
         shell = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
         return [UpdateCheck("windows", [str(shell), "-NoProfile", "-NonInteractive", "-Command", _WINDOWS_UPDATES], count_windows)]
     if sys.platform == "darwin":
-        return []  # macOS tells you itself, in System Settings
+        # What macOS found at its own last look (--no-scan: no network, no administrator).
+        return [UpdateCheck("softwareupdate", ["/usr/sbin/softwareupdate", "--list", "--no-scan"], count_softwareupdate)]
     checks = [
         UpdateCheck("apt", ["apt", "list", "--upgradable"], count_apt),
         UpdateCheck("dnf", ["dnf", "check-update", "--cacheonly", "--quiet"], count_dnf),

@@ -72,6 +72,27 @@ _CreateNamedPipe = _declare(
 )
 
 
+def my_identity() -> str | None:
+    """"<your SID>-<session>": who you are and which session this is. Pipe names are shared by every session on
+    the PC (only events and the like are kept apart per session), so the pipe's name has both: you at the
+    console and over Remote Desktop get a Chatmon each, and two people named alike in two domains never meet.
+    https://learn.microsoft.com/en-us/windows/win32/termserv/kernel-object-namespaces"""
+    sid = _user_sid(_GetCurrentProcess())
+    if sid is None:
+        return None
+    text = wintypes.LPWSTR()
+    if not _ConvertSidToStringSid(sid, ctypes.byref(text)):
+        return None
+    try:
+        me = text.value
+    finally:
+        _LocalFree(ctypes.cast(text, ctypes.c_void_p))
+    session = wintypes.DWORD()
+    if not _kernel32.ProcessIdToSessionId(_kernel32.GetCurrentProcessId(), ctypes.byref(session)):
+        return None
+    return f"{me}-{session.value}"
+
+
 def full_name(name: str) -> str:
     """A QLocalServer name as Windows knows the pipe."""
     return name if name.startswith("\\\\") else "\\\\.\\pipe\\" + name

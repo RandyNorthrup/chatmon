@@ -86,8 +86,9 @@ Type: filesandordirs; Name: "{app}\{#Name}"
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{autoprograms}\Chatmon"; Filename: "{app}\chatmonw.exe"; Comment: "Your desktop companion"; Tasks: startmenu
-Name: "{autodesktop}\Chatmon"; Filename: "{app}\chatmonw.exe"; Comment: "Your desktop companion"; Tasks: desktop
+; AppUserModelID: the same identity Chatmon gives itself (app.py), so Windows knows the shortcut and the app as one.
+Name: "{autoprograms}\Chatmon"; Filename: "{app}\chatmonw.exe"; Comment: "Your desktop companion"; AppUserModelID: "RandyNorthrup.Chatmon"; Tasks: startmenu
+Name: "{autodesktop}\Chatmon"; Filename: "{app}\chatmonw.exe"; Comment: "Your desktop companion"; AppUserModelID: "RandyNorthrup.Chatmon"; Tasks: desktop
 
 [Registry]
 ; The same value Chatmon's own "Start when I log in" sets, so its menu shows it ticked.

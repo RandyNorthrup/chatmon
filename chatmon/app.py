@@ -31,6 +31,7 @@ PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Gro
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
 AGENTS_FRESH = 30  # seconds a look at how the agents stand holds good for filling in the menu
 MATCH = "match"  # the bubble style that follows the companion
+APP_USER_MODEL_ID = "RandyNorthrup.Chatmon"  # Windows: the app's identity (packaging/windows/chatmon.iss gives its shortcuts it too)
 
 HELP = """\
 **Click me** to ask anything, **drag me** anywhere, **right-click** for the menu.
@@ -203,6 +204,7 @@ class Companion(QObject):
         self._fill_menu()
         self.tray = QSystemTrayIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
         self.tray.setContextMenu(self.menu)
+        self.tray.setToolTip("Chatmon")
         self.tray.activated.connect(self._tray_clicked)
         self.tray.show()
         self.app.setWindowIcon(self.tray.icon())
@@ -1830,6 +1832,27 @@ def _log_without_a_console() -> None:
     print(f"--- Chatmon started {datetime.now():%Y-%m-%d %H:%M:%S}")
 
 
+_instance_lock: int | None = None  # the lock this Chatmon holds while it runs (Linux, macOS)
+
+
+def _hold_instance_lock(path: str) -> bool:
+    """Take the lock that says this is the Chatmon here, for as long as it runs; False if another has it."""
+    global _instance_lock
+    import fcntl
+
+    try:
+        fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_CLOEXEC, 0o600)
+    except OSError:
+        return True  # can't make one (a read-only folder): go on as before
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        os.close(fd)
+        return False
+    _instance_lock = fd
+    return True
+
+
 def open_server(reached: str = events.ABSENT) -> tuple[QLocalServer | None, str | None]:
     """The server that hooks and a second launch reach Chatmon through, and what's wrong with it, if
     anything. `reached` is what `events.deliver` found at its address. No server: another copy of
@@ -1854,6 +1877,14 @@ def open_server(reached: str = events.ABSENT) -> tuple[QLocalServer | None, str 
             if guard is None:
                 return (None, None) if events.send({"type": "show"}) else (server, held)
     else:
+        # Two started at once could both find nothing listening, and the second would take the first's socket
+        # away: whoever holds this lock (for as long as it runs) is the one Chatmon here.
+        if not _hold_instance_lock(name + ".lock"):
+            for _ in range(15):  # the other is starting, or running: it shows itself
+                if events.send({"type": "show"}):
+                    break
+                time.sleep(0.2)
+            return None, None
         QLocalServer.removeServer(name)  # a socket left behind in our own private folder
     try:
         if not server.listen(name):
@@ -1880,9 +1911,19 @@ def run() -> int:
     if reached == events.SENT:
         print("Chatmon is already running; it says hi.")
         return 0
+    if sys.platform == "win32":
+        # Its identity on Windows (taskbar, notifications), the same one its shortcuts carry: set before any
+        # window. https://learn.microsoft.com/en-us/windows/win32/shell/appids
+        try:
+            import ctypes
+
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_USER_MODEL_ID)
+        except (AttributeError, OSError):
+            pass
     app = QApplication(sys.argv[:1])
     app.setApplicationName(paths.APP)
     app.setApplicationDisplayName("Chatmon")
+    app.setDesktopFileName(autostart.APP_ID)  # its identity to Linux desktops and portals
     autostart.migrate()
     autostart.refresh()
     app.setQuitOnLastWindowClosed(False)

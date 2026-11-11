@@ -108,7 +108,10 @@ def server_name() -> str:
     """The local server's name: a socket path on Linux and macOS, a named
     pipe on Windows."""
     if sys.platform == "win32":
-        return f"{APP}-{getpass.getuser()}"
+        from . import winpipe
+
+        identity = winpipe.my_identity()  # your SID and this session's number (see there why)
+        return f"{APP}-{identity}" if identity else f"{APP}-{getpass.getuser()}"
     return str(socket_path())
 
 

@@ -487,6 +487,13 @@ class Updater(QObject):
         proc.deleteLater()
         self.busy = False
         if code != 0:
+            if self.kind in (DEB, RPM) and code == 126:  # pkexec: the password prompt was dismissed
+                return self.failed.emit("The update wasn't installed: the password prompt was closed.")
+            if self.kind in (DEB, RPM) and code == 127:  # pkexec: no prompt to ask with, or not allowed
+                return self.failed.emit(
+                    "The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
+                    f"In a terminal: `sudo {HELPER} '{self.ready}' {self._expected}`"
+                )
             detail = err.splitlines()[-1] if err else f"exit code {code}"
             return self.failed.emit(f"The update wasn't installed ({detail}).")
         relaunch = relaunch_command(self.kind)

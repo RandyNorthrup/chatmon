@@ -449,3 +449,14 @@ def test_without_a_console_it_keeps_a_log(tmp_path):
     subprocess.run([pythonw, "-c", code, root], env=env, timeout=60, check=True)
     log = tmp_path / "chatmon" / "state" / "chatmon.log"
     assert "a warning" in log.read_text(encoding="utf-8")
+
+
+def test_the_pipe_is_named_for_you_and_this_session(qapp):
+    """Pipe names are one namespace for every session: yours carries your SID and the session's number."""
+    import re
+
+    from chatmon import paths, winpipe
+
+    identity = winpipe.my_identity()
+    assert re.fullmatch(r"S-1-5-[\\d-]+-\\d+", identity)
+    assert paths.server_name() == f"chatmon-{identity}"

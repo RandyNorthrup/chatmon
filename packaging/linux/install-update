@@ -30,5 +30,12 @@ if [ $kind = deb ]; then
     apt-get install -y "$dir/update.deb"
 else
     [ "$(rpm -qp --queryformat '%{NAME}' "$dir/update.rpm" 2>/dev/null)" = chatmon ] || { echo "install-update: not Chatmon" >&2; exit 3; }
-    dnf install -y "$dir/update.rpm"
+    if command -v dnf >/dev/null; then
+        dnf install -y "$dir/update.rpm"
+    elif command -v zypper >/dev/null; then  # openSUSE; the package is checked by its checksum, not a GPG key
+        zypper --non-interactive install --allow-unsigned-rpm "$dir/update.rpm"
+    else
+        echo "install-update: no dnf or zypper to install it with" >&2
+        exit 4
+    fi
 fi

@@ -103,3 +103,33 @@ def test_each_platform_has_its_own_checks(monkeypatch):
     monkeypatch.setattr(heads_up.shutil, "which", lambda name: f"/usr/bin/{name}" if name in ("dnf", "flatpak") else None)
     assert [c.name for c in heads_up.update_checks()] == ["dnf", "flatpak"]
     assert "--cacheonly" in heads_up.update_checks()[0].argv
+
+
+def test_macos_software_update_count():
+    from chatmon import heads_up
+
+    listed = (
+        "Software Update Tool\n\nSoftware Update found the following new or updated software:\n"
+        "* Label: macOS Tahoe 26.1-25B78\n\tTitle: macOS Tahoe 26.1, Version: 26.1, Size: 4.2GiB, Recommended: YES, Action: restart,\n"
+        "* Label: Safari26.1\n\tTitle: Safari, Version: 26.1, Size: 160MiB, Recommended: YES,\n"
+    )
+    assert heads_up.count_softwareupdate(listed, 0) == 2
+    assert heads_up.count_softwareupdate("No new software available.\n", 0) == 0
+    assert heads_up.count_softwareupdate("", 1) is None
+
+
+def test_macos_lists_updates_without_looking_online():
+    """The real command, on a Mac: --no-scan exists, and it answers without network or administrator."""
+    import subprocess
+    import sys
+
+    import pytest
+
+    from chatmon import heads_up
+
+    if sys.platform != "darwin":
+        pytest.skip("macOS only")
+    (check,) = heads_up.update_checks()
+    out = subprocess.run(check.argv, capture_output=True, text=True, timeout=120)
+    assert out.returncode == 0, out.stderr
+    assert isinstance(check.count(out.stdout, out.returncode), int)

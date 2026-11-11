@@ -251,3 +251,28 @@ def test_without_an_answer_from_the_shell_the_usual_folders(tmp_path, monkeypatc
     import os
 
     assert os.environ["PATH"].startswith("/opt/homebrew/bin" + os.pathsep + "/usr/local/bin")
+
+
+def test_only_one_chatmon_holds_the_lock(tmp_path, monkeypatch):
+    """Two started at once: the second finds the lock held, says "show" to the first, and doesn't take its socket."""
+    import subprocess
+    import sys
+
+    if sys.platform == "win32":
+        pytest.skip("Windows: the pipe's first instance does this")
+    from chatmon import app as appmod
+
+    lock = str(tmp_path / "chatmon.sock.lock")
+    holder = subprocess.Popen(
+        [sys.executable, "-c", "import fcntl, os, sys, time; fd = os.open(sys.argv[1], os.O_RDWR | os.O_CREAT); fcntl.flock(fd, fcntl.LOCK_EX); print('held', flush=True); time.sleep(30)", lock],
+        stdout=subprocess.PIPE, text=True,
+    )
+    try:
+        assert holder.stdout.readline().strip() == "held"
+        assert appmod._hold_instance_lock(lock) is False
+    finally:
+        holder.kill()
+        holder.wait()
+    monkeypatch.setattr(appmod, "_instance_lock", None)
+    assert appmod._hold_instance_lock(lock) is True and appmod._instance_lock is not None
+    os.close(appmod._instance_lock)

@@ -52,6 +52,8 @@ if (-not $Unsigned) {
     Check "every program and library installed is signed$(if ($bad) { ': not ' + ($bad.Name -join ', ') })" (-not $bad)
 }
 Check "a Start menu entry that starts chatmonw.exe" ((Test-Path $startMenu) -and ((Shortcut $startMenu) -eq "$app\chatmonw.exe"))
+$shortcut = (New-Object -ComObject Shell.Application).Namespace((Split-Path $startMenu)).ParseName((Split-Path $startMenu -Leaf))
+Check "the Start menu entry is Chatmon's own (its AppUserModelID)" ($shortcut.ExtendedProperty("System.AppUserModel.ID") -eq "RandyNorthrup.Chatmon")
 Check "a desktop icon that starts chatmonw.exe" ((Test-Path $desktop) -and ((Shortcut $desktop) -eq "$app\chatmonw.exe"))
 Check "its folder on your PATH" ((UserPath) -contains $app)
 Check "starting at login" ((Get-ItemProperty $runKey -Name Chatmon -ErrorAction SilentlyContinue).Chatmon -eq "`"$app\chatmonw.exe`"")

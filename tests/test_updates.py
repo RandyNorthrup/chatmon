@@ -399,3 +399,21 @@ def test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit(qapp, gith
     QTimer.singleShot(200, loop.quit)
     loop.exec()
     assert started and events == ["handed over"] and not updater.busy
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="pkexec: Linux")
+@pytest.mark.parametrize("code, says", [(126, "password prompt was closed"), (127, "no password prompt running")])
+def test_what_pkexec_said_is_told_plainly(qapp, github, monkeypatch, code, says):
+    from PyQt6.QtCore import QEventLoop, QTimer
+
+    github(b"the real installer")
+    updater, _ = run_updater(qapp)
+    monkeypatch.setattr(updates, "installer_command", lambda kind, path, expected="": ("/bin/sh", ["-c", f"exit {code}"], {}))
+    failed = []
+    updater.failed.connect(failed.append)
+    updater.install()
+    loop = QEventLoop()
+    QTimer.singleShot(2000, loop.quit)
+    updater.failed.connect(lambda _m: loop.quit())
+    loop.exec()
+    assert failed and says in failed[0]
