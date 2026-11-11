@@ -325,7 +325,7 @@ jobs:
             echo "::group::$image"
             docker run --rm -v "$PWD:/src:ro" "$image" sh -ec "
               # Ubuntu's archive hosts' DNS has failed for hours at a time: kernel.org's mirror (apt checks the signatures).
-              apt-get update -qq || { sed -i -E 's#http://(archive|security)\.ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources 2>/dev/null; apt-get update -qq; }
+              apt-get update -qq --error-on=any || { sed -i -E 's#http://(archive|security)\.ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources 2>/dev/null; apt-get update -qq; }
               DEBIAN_FRONTEND=noninteractive apt-get install -y -qq /src/dist/chatmon_*_all.deb >/dev/null
               python3 /src/packaging/build.py smoke chatmon chatmon --version $version
               sum=\$(sha256sum /src/dist/chatmon_*_all.deb | cut -d' ' -f1)
