@@ -46,7 +46,7 @@ jobs:
 
   windows:
     runs-on: windows-latest
-    timeout-minutes: 40
+    timeout-minutes: 90  # Nuitka compiles Chatmon twice: chatmon.exe and chatmonw.exe
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
@@ -72,11 +72,23 @@ jobs:
       - id: version
         shell: pwsh
         run: '"version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT'
-      - name: Install it, run it, uninstall it
+      - name: The last release's installer, for this one to upgrade
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select(any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-windows-x64-setup.exe" --dir "$RUNNER_TEMP/last"
+      - name: Install the last release, then this one over it, run it, uninstall it
         shell: pwsh
         env:
           VERSION: ${{ steps.version.outputs.version }}
-        run: ./packaging/windows/test-install.ps1 (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName $env:VERSION -Unsigned
+        run: |
+          $last = Get-Item "$env:RUNNER_TEMP\last\*-windows-x64-setup.exe"
+          $p = Start-Process $last.FullName -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/TASKS=startmenu" -Wait -PassThru
+          if ($p.ExitCode) { throw "$($last.Name) failed: $($p.ExitCode)" }
+          Write-Host "Installed $($last.Name)"
+          ./packaging/windows/test-install.ps1 (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName $env:VERSION -Unsigned
       - name: Keep the unsigned installer with the run
         if: github.event_name != 'release' && !startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -89,24 +101,24 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: windows-app
-          path: build/pyinstaller/Chatmon
+          path: build/nuitka/Chatmon
           include-hidden-files: true
           retention-days: 1
           if-no-files-found: error
 
-  # Builds the installer again around the Chatmon the windows job froze, and has Inno Setup sign it and
-  # its uninstaller as it makes them, with Randy Northrup's Artifact Signing certificate (Azure). This job
+  # Signs Chatmon's programs, chatmon.exe and chatmonw.exe, and every library beside them not already
+  # signed by its maker, then has Inno Setup build the installer around them again and sign it and its
+  # uninstaller as it makes them: all with Randy Northrup's Artifact Signing certificate (Azure). This job
   # alone can sign, and runs nothing from PyPI and none of Chatmon: only pinned actions, Inno Setup and
   # Microsoft's signing module (each checked to be signed by its maker, and the module fetches Microsoft's
   # signtool at the versions it names), compiling packaging/windows/chatmon.iss. Azure trusts GitHub's
-  # sign-in only from the `release` environment, which only v* tags can use. Why chatmon.exe and
-  # chatmonw.exe stay unsigned: packaging/README.md. Running this by hand from a v* tag signs and checks
-  # without publishing, to try it.
+  # sign-in only from the `release` environment, which only v* tags can use. Running this by hand from a
+  # v* tag signs and checks without publishing, to try it. What signing covers: packaging/README.md.
   sign-windows:
     if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
     needs: [python, windows]  # python: a release's tag is the version
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     environment: release
     permissions:
       contents: read
@@ -134,33 +146,56 @@ jobs:
             $sig = Get-AuthenticodeSignature $script.FullName
             if ($sig.Status -ne "Valid" -or $sig.SignerCertificate.Subject -notlike "CN=Microsoft Corporation,*") { throw "$($script.Name): $($sig.Status) $($sig.SignerCertificate.Subject)" }
           }
+      - name: How this job signs
+        shell: pwsh
+        run: |
+          # signtool, through Microsoft's module, signed in as the Azure CLI is: SHA-256, and timestamped,
+          # or the signature would end with the certificate. One file (Inno Setup passes each, quoted, as $f),
+          # or -Catalog, a list of them relative to it.
+          Set-Content (Join-Path $env:RUNNER_TEMP "sign.ps1") -Encoding utf8 -Value @'
+          param([string]$File, [string]$Catalog)
+          $ErrorActionPreference = "Stop"
+          Import-Module ArtifactSigning -RequiredVersion 0.1.8
+          $options = @{ Timeout = 1800 }
+          foreach ($c in "Environment", "WorkloadIdentity", "ManagedIdentity", "SharedTokenCache", "VisualStudio",
+            "VisualStudioCode", "AzurePowerShell", "AzureDeveloperCli", "InteractiveBrowser") { $options["Exclude${c}Credential"] = $true }
+          if ($Catalog) { $options["FilesCatalog"] = $Catalog } else { $options["Files"] = $File }
+          Invoke-ArtifactSigning @options `
+            -Endpoint https://wus.codesigning.azure.net/ -CodeSigningAccountName scnetsolutions -CertificateProfileName SAKUtility `
+            -FileDigest SHA256 -TimestampRfc3161 http://timestamp.acs.microsoft.com -TimestampDigest SHA256 `
+            -Description Chatmon -DescriptionUrl https://github.com/RandyNorthrup/chatmon
+          '@
       - name: Sign in to Azure, to sign
         uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
+      - name: Sign Chatmon's programs, and each library its maker didn't
+        shell: pwsh
+        run: |
+          $app = Join-Path $env:RUNNER_TEMP "Chatmon"
+          $binaries = Get-ChildItem $app -Recurse -File -Include *.exe, *.dll, *.pyd
+          $unsigned = $binaries | Where-Object { (Get-AuthenticodeSignature $_.FullName).Status -eq "NotSigned" }
+          if ("chatmon.exe", "chatmonw.exe" | Where-Object { "$app\$_" -notin $unsigned.FullName }) { throw "chatmon.exe and chatmonw.exe should come unsigned" }
+          $catalog = Join-Path $env:RUNNER_TEMP "unsigned.txt"
+          Set-Content $catalog -Encoding utf8 -Value ($unsigned | ForEach-Object { [IO.Path]::GetRelativePath($env:RUNNER_TEMP, $_.FullName) })
+          Write-Host "$($unsigned.Count) of $($binaries.Count) to sign"
+          & pwsh -NoProfile -NonInteractive -File (Join-Path $env:RUNNER_TEMP "sign.ps1") -Catalog $catalog
+          if ($LASTEXITCODE) { throw "Signing failed: $LASTEXITCODE" }
+          foreach ($binary in $binaries) {
+            $sig = Get-AuthenticodeSignature $binary.FullName
+            if ($sig.Status -ne "Valid") { throw "$($binary.FullName): $($sig.Status) $($sig.StatusMessage)" }
+            if ($binary.FullName -in $unsigned.FullName -and ($sig.SignerCertificate.Subject -notmatch "^CN=Randy Northrup(,|$)" -or -not $sig.TimeStamperCertificate)) {
+              throw "$($binary.FullName): signed by $($sig.SignerCertificate.Subject), timestamp $($sig.TimeStamperCertificate.Subject)"
+            }
+          }
       - name: Build the installer, signing it and its uninstaller
         shell: pwsh
         env:
           VERSION: ${{ needs.windows.outputs.version }}
         run: |
-          # What Inno Setup runs for each file it signs ($f, quoted): signtool, through Microsoft's module,
-          # signed in as the Azure CLI is. SHA-256, timestamped, or the signature would outlast nothing.
           $sign = Join-Path $env:RUNNER_TEMP "sign.ps1"
-          Set-Content $sign -Encoding utf8 -Value @'
-          param([Parameter(Mandatory)] [string]$File)
-          $ErrorActionPreference = "Stop"
-          Import-Module ArtifactSigning -RequiredVersion 0.1.8
-          $credentials = "Environment", "WorkloadIdentity", "ManagedIdentity", "SharedTokenCache", "VisualStudio",
-            "VisualStudioCode", "AzurePowerShell", "AzureDeveloperCli", "InteractiveBrowser"
-          $exclude = @{}
-          foreach ($c in $credentials) { $exclude["Exclude${c}Credential"] = $true }
-          Invoke-ArtifactSigning @exclude -Files $File `
-            -Endpoint https://wus.codesigning.azure.net/ -CodeSigningAccountName scnetsolutions -CertificateProfileName SAKUtility `
-            -FileDigest SHA256 -TimestampRfc3161 http://timestamp.acs.microsoft.com -TimestampDigest SHA256 `
-            -Description Chatmon -DescriptionUrl https://github.com/RandyNorthrup/chatmon
-          '@
           if ($sign.Contains(" ")) { throw "Inno Setup can't be handed $sign" }
           if ($env:VERSION -notmatch '^\d+\.\d+\.\d+$') { throw "Not a version: $env:VERSION" }
           $iscc = Join-Path $env:LOCALAPPDATA "Programs\Inno Setup 6\ISCC.exe"
@@ -183,7 +218,8 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
-  # The signed installer, put through what the unsigned one was, and its uninstaller checked signed too.
+  # The signed installer, put through what the unsigned one was, and every program and library it installs
+  # checked signed.
   test-signed-windows:
     needs: [windows, sign-windows]
     runs-on: windows-latest
@@ -226,7 +262,15 @@ jobs:
           python-version: "3.14"
       - run: python -m pip install -r packaging/requirements.txt
       - run: python packaging/build.py macos
-      - name: Install the .pkg, run it
+      - name: The last release's .pkg, for this one to upgrade
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          arch=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo intel)
+          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq "[.[] | select(any(.assets[]; .name | endswith(\"-macos-$arch.pkg\")))][0].tag_name")
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-macos-$arch.pkg" --dir "$RUNNER_TEMP/last"
+          sudo installer -pkg "$RUNNER_TEMP"/last/*.pkg -target /
+      - name: Install this .pkg over it, run it
         run: |
           sudo installer -pkg dist/Chatmon-*.pkg -target /
           test -x /usr/local/bin/chatmon

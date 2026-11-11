@@ -1116,7 +1116,6 @@ def run() -> int:
         print("Chatmon is already running; it says hi.")
         return 0
     app = QApplication(sys.argv[:1])
-    paths.restore_dll_search()  # Qt is loaded: what Chatmon starts from here on gets Windows' own DLL search
     app.setApplicationName(paths.APP)
     app.setApplicationDisplayName("Chatmon")
     autostart.migrate()

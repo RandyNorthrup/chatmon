@@ -1,7 +1,7 @@
 ; Chatmon's Windows installer (Inno Setup 6). packaging/build.py windows builds it:
-;   ISCC /DAppVersion=x.y.z /DSourceDir=<PyInstaller's Chatmon folder> /DOutputDir=<folder> chatmon.iss
-; A release's is built signed (.github/workflows/packages.yml): /DSignWith=<name> /S<name>=<command $f>
-; has Inno Setup sign the uninstaller and the installer as it makes them.
+;   ISCC /DAppVersion=x.y.z /DSourceDir=<Nuitka's Chatmon folder> /DOutputDir=<folder> chatmon.iss
+; A release's is built signed (.github/workflows/packages.yml), around Chatmon's programs signed already:
+; /DSignWith=<name> /S<name>=<command $f> has Inno Setup sign the uninstaller and the installer as it makes them.
 ;
 ; Installs for you alone (no administrator needed) or, if you choose, for everyone. Its choices:
 ; a Start menu entry, a desktop icon (off unless you tick it), chatmon on PATH for your coding agents'
@@ -11,7 +11,7 @@
   #error Pass the version: /DAppVersion=x.y.z
 #endif
 #ifndef SourceDir
-  #define SourceDir "..\..\build\pyinstaller\Chatmon"
+  #define SourceDir "..\..\build\nuitka\Chatmon"
 #endif
 #ifndef OutputDir
   #define OutputDir "..\..\dist"
@@ -63,8 +63,24 @@ Name: "path"; Description: "Let my coding agents' hooks run chatmon (adds it to 
 Name: "autostart"; Description: "Start Chatmon when I &log in"; GroupDescription: "Starting:"; Flags: unchecked
 
 [InstallDelete]
-; An update's files replace the last version's whole: nothing of it is left behind to be loaded.
+; An update's files replace the last version's whole: nothing of it is left behind to be loaded. Each
+; folder this version installs goes first, as do the last version's libraries, and PyInstaller's
+; _internal, from versions before Chatmon was compiled with Nuitka.
 Type: filesandordirs; Name: "{app}\_internal"
+Type: files; Name: "{app}\*.dll"
+Type: files; Name: "{app}\*.pyd"
+#define Found
+#define Search = FindFirst(AddBackslash(SourceDir) + "*", faDirectory)
+#sub InstalledFolder
+  #define Name = FindGetFileName(Search)
+  #if Name != "." && Name != ".." && DirExists(AddBackslash(SourceDir) + Name)
+Type: filesandordirs; Name: "{app}\{#Name}"
+  #endif
+#endsub
+#for {Found = Search; Found; Found = FindNext(Search)} InstalledFolder
+#if Search
+  #expr FindClose(Search)
+#endif
 
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs

@@ -238,7 +238,6 @@ def _run_json(argv: list[str], what: str) -> object:
     program = shutil.which(argv[0])  # on Windows, also finds an npm install's claude.cmd, which running "claude" wouldn't
     if not program:
         raise AgentError(f"{what} isn't installed.")
-    paths.restore_dll_search()
     try:
         proc = subprocess.run(
             [program, *argv[1:]], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120, creationflags=_NO_WINDOW

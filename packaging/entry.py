@@ -1,4 +1,4 @@
-"""What the installers' Chatmon runs (PyInstaller's entry point): the same as the chatmon command."""
+"""What the installers' Chatmon runs (what Nuitka compiles, packaging/build.py): the same as the chatmon command."""
 
 from chatmon.cli import main
 

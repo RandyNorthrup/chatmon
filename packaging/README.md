@@ -4,7 +4,7 @@ What each release offers besides the wheel, how it's made, and how to make it yo
 
 | Platform | File                                   | Made with                          | What it installs                                        |
 | -------- | -------------------------------------- | ---------------------------------- | ------------------------------------------------------- |
-| Windows  | `Chatmon-<v>-windows-x64-setup.exe`    | PyInstaller, then Inno Setup 6     | `chatmon.exe` (hooks, the command line) and `chatmonw.exe` (no console window) in `%LOCALAPPDATA%\Programs\Chatmon`, or Program Files for everyone; optional Start menu entry, desktop icon, PATH entry and start at login |
+| Windows  | `Chatmon-<v>-windows-x64-setup.exe`    | Nuitka, then Inno Setup 6          | `chatmon.exe` (hooks, the command line) and `chatmonw.exe` (no console window) in `%LOCALAPPDATA%\Programs\Chatmon`, or Program Files for everyone; optional Start menu entry, desktop icon, PATH entry and start at login |
 | macOS    | `Chatmon-<v>-macos-<arch>.pkg`, `.dmg` | PyInstaller, pkgbuild, hdiutil     | `/Applications/Chatmon.app` (no Dock icon: it's in the menu bar); the `.pkg` also writes `/usr/local/bin/chatmon`, which runs it |
 | Linux    | `chatmon_<v>-1_all.deb`, `chatmon-<v>-1.noarch.rpm` | nfpm                  | Chatmon in `/usr/lib/chatmon`, `/usr/bin/chatmon`, an app menu entry and icons; the system's Python and PyQt6 run it |
 
@@ -21,29 +21,34 @@ touches `packaging/`, or running the workflow by hand, builds and checks them wi
 
 ## Signing (Windows)
 
-A release's Windows installer, and the uninstaller it puts beside Chatmon, are signed by Randy Northrup
-through Azure Artifact Signing, and timestamped, so they stay valid after the certificate expires.
-Windows then names Randy Northrup as their publisher. SmartScreen goes by reputation as well as by
-signature, and builds it for each new file as people download it, so a new version may still be asked
-about for a while; the prompt then names its publisher.
+A release's Windows installer, the uninstaller it puts beside Chatmon, Chatmon's own programs
+(`chatmon.exe`, `chatmonw.exe`) and every library beside them that its maker didn't sign are signed by
+Randy Northrup through Azure Artifact Signing, and timestamped, so they stay valid after the certificate
+expires. Windows then names Randy Northrup as their publisher, and Smart App Control can tell them
+apart from unknown programs. SmartScreen goes by reputation as well as by signature, and builds it for
+each new file as people download it, so a new version may still be asked about for a while; the prompt
+then names its publisher.
 
 The workflow's `sign-windows` job does it. It's the only job that can sign: Azure trusts GitHub's
 sign-in only from this repository's `release` environment, which only `v*` tags can use, and its identity
-may only sign with that one certificate profile. It runs nothing from PyPI and none of Chatmon: it takes
-the Chatmon the `windows` job froze, and Inno Setup builds the installer around it again, signing each of
-the two as it makes it. Another job then installs that installer, runs it, uninstalls it, and checks both
-signatures, before it's published.
+may only sign with that one certificate profile. It runs nothing from PyPI and none of Chatmon: it signs
+the Chatmon the `windows` job compiled, and Inno Setup builds the installer around it again, signing the
+installer and uninstaller as it makes them. Another job then installs that installer, runs it,
+uninstalls it, and checks every signature, before it's published.
 
-**`chatmon.exe` and `chatmonw.exe` aren't signed, on purpose.** PyInstaller's bootloader finds the
-Python it runs by searching its own file from the end. Windows leaves a file's certificate table out of
-what its signature covers ([CVE-2013-3900](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900);
-the stricter check is off unless you turn it on), so anyone could put their own code in a signed copy's
-table, where the bootloader would find it first and run it, while Windows still called the file signed
-by Randy Northrup. Inno Setup's installer reads its files from where a part its signature covers says
-they are, so it can't be led astray like that. SmartScreen asks only about downloaded files, so for most
-people the installer's signature is the one that counts. Smart App Control, on the Windows 11 computers
-that have it on, checks every program, and may block an unsigned one it doesn't know; signing them
-safely needs a bootloader that stops searching where the certificate table starts.
+**Why Nuitka.** A signature covers a whole program except its certificate table, which Windows leaves out
+of what it checks ([CVE-2013-3900](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900);
+the stricter check is off unless you turn it on). So a signed program must never run anything it finds
+there, or anywhere its signature doesn't reach. PyInstaller's programs search their own file from the end
+for the Python they run, which would find code planted in that table first, and read more Python from a
+zip file beside them. Nuitka compiles Chatmon, and the standard library it uses, into the program itself:
+what it runs is in signed programs and signed libraries, and `build.py` checks that neither program
+carries anything after its last section. Inno Setup's installer reads its files from where a part its
+signature covers says they are, so it can't be led astray either.
+
+macOS is built with PyInstaller still: Nuitka doesn't support PyQt6 there, and it doesn't need to. A
+macOS signature covers the whole program file and seals every other file in the app, so nothing can be
+slipped in beside what it covers.
 
 ## Making them yourself
 
@@ -51,14 +56,15 @@ On the platform you're building for, from the repository's root:
 
 ```sh
 python -m pip install -r packaging/requirements.txt   # Windows and macOS
-python packaging/build.py windows   # also needs Inno Setup 6 (winget install JRSoftware.InnoSetup)
+python packaging/build.py windows   # Visual Studio's C++ build tools, and Inno Setup 6 (winget install JRSoftware.InnoSetup)
 python packaging/build.py macos     # Xcode's command line tools
 python packaging/build.py linux     # nfpm: packaging/linux/get-nfpm.sh downloads and checks it
 ```
 
-They land in `dist/`. `python packaging/build.py smoke CLI APP` checks an installed one, in a scratch home
+They land in `dist/`. On Windows, Nuitka compiles all of Chatmon to C, twice (once for each program), so a
+build takes a while. `python packaging/build.py smoke CLI APP` checks an installed one, in a scratch home
 of its own (for example `smoke chatmon chatmon` after installing a .deb), and
-`pwsh packaging/windows/test-install.ps1 <setup.exe> <version>` puts the Windows installer through what CI
+`pwsh packaging/windows/test-install.ps1 <setup.exe> <version> -Unsigned` puts the Windows installer through what CI
 does: install with every option, check each, run it, uninstall, check it's all gone. Don't run that on a
 computer whose Chatmon you want to keep set up as it is.
 
