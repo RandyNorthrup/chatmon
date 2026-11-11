@@ -306,18 +306,18 @@ def test_asks_for_no_session_bus_on_macos(monkeypatch):
     dbus has Qt find its libdbus and wait on it at every start."""
     import types
 
-    from chatmon import app as appmod
+    pytest.importorskip("PyQt6.QtDBus")  # not in PyQt's Windows build
+    from chatmon import app as appmod, linuxsession
 
-    asked = []
-    fake = types.ModuleType("PyQt6.QtDBus")
-    fake.QDBusConnection = types.SimpleNamespace(sessionBus=lambda: asked.append(True) or types.SimpleNamespace(isConnected=lambda: False))
-    monkeypatch.setitem(sys.modules, "PyQt6.QtDBus", fake)
+    watched = []
+    monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept: watched.append(True))
+    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None)
     monkeypatch.setattr(sys, "platform", "darwin")
-    appmod.Companion._watch_screen_lock(types.SimpleNamespace())
-    assert asked == []
+    appmod.Companion._watch_screen_lock(me)
+    assert watched == []
     monkeypatch.setattr(sys, "platform", "linux")
-    appmod.Companion._watch_screen_lock(types.SimpleNamespace())
-    assert asked == [True]  # where there is one, it still listens
+    appmod.Companion._watch_screen_lock(me)
+    assert watched == [True]  # where there is one, it still listens
 
 
 def test_quits_when_asked(companion, monkeypatch):
