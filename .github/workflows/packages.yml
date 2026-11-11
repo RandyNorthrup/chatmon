@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   python:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -36,6 +36,7 @@ jobs:
         run: |
           version=$(python packaging/build.py version)
           [ "$TAG" = "v$version" ] || { echo "Release $TAG, but chatmon/__init__.py says $version"; exit 1; }
+          python packaging/build.py notes "$version" > /dev/null  # what's new in it, which Chatmon shows after updating
       - run: python -m pip install build==1.6.1
       - run: python -m build
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -79,7 +80,7 @@ jobs:
         run: |
           tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select(any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')
           gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-windows-x64-setup.exe" --dir "$RUNNER_TEMP/last"
-      - name: Install the last release, then this one over it, run it, uninstall it
+      - name: Install the last release, update it to this one, run it, uninstall it
         shell: pwsh
         env:
           VERSION: ${{ steps.version.outputs.version }}
@@ -88,7 +89,22 @@ jobs:
           $p = Start-Process $last.FullName -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/TASKS=startmenu" -Wait -PassThru
           if ($p.ExitCode) { throw "$($last.Name) failed: $($p.ExitCode)" }
           Write-Host "Installed $($last.Name)"
-          ./packaging/windows/test-install.ps1 (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName $env:VERSION -Unsigned
+          # Then this one, as Chatmon's updater runs it: silently, as the last install was, and Chatmon starts again.
+          $env:QT_QPA_PLATFORM = "offscreen"
+          $setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName
+          # Not Start-Process -Wait: that waits for what the installer starts too, and it starts Chatmon again.
+          $p = Start-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/relaunch=1" -PassThru
+          $p.WaitForExit()
+          if ($p.ExitCode) { throw "Updating failed: $($p.ExitCode)" }
+          $app = Join-Path $env:LOCALAPPDATA "Programs\Chatmon"
+          for ($i = 0; $i -lt 30 -and -not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe"); $i++) { Start-Sleep 1 }
+          if (-not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe")) { throw "Chatmon didn't start again after updating" }
+          if ((& "$app\chatmon.exe" --version) -ne $env:VERSION) { throw "Not updated to $env:VERSION" }
+          & "$app\chatmon.exe" quit
+          for ($i = 0; $i -lt 30 -and (Get-Process chatmonw -ErrorAction SilentlyContinue); $i++) { Start-Sleep 1 }
+          Write-Host "Updated to $env:VERSION and started again"
+          Remove-Item Env:QT_QPA_PLATFORM
+          ./packaging/windows/test-install.ps1 $setup $env:VERSION -Unsigned
       - name: Keep the unsigned installer with the run
         if: github.event_name != 'release' && !startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -240,6 +256,12 @@ jobs:
         env:
           VERSION: ${{ needs.windows.outputs.version }}
         run: ./packaging/windows/test-install.ps1 (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName $env:VERSION
+      - name: Chatmon's own updater would install it
+        shell: pwsh
+        run: |
+          python -m pip install PyQt6==6.11.0 PyQt6-Qt6==6.11.2
+          $setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName
+          python -c "import sys; from pathlib import Path; from chatmon import updates; f = Path(sys.argv[1]); print(updates.windows_signer(f)); why = updates.verify(f, updates.sha256(f), updates.WINDOWS); sys.exit(why)" $setup
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: package-windows
@@ -290,7 +312,7 @@ jobs:
           if-no-files-found: error
 
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -304,9 +326,13 @@ jobs:
           for image in ubuntu:24.04 debian:trixie; do
             echo "::group::$image"
             docker run --rm -v "$PWD:/src:ro" "$image" sh -ec "
-              apt-get update -qq
+              # Ubuntu's archive hosts' DNS has failed for hours at a time: kernel.org's mirror (apt checks the signatures).
+              apt-get update -qq --error-on=any || { sed -i -E 's#http://(archive|security)\.ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources 2>/dev/null; apt-get update -qq; }
               DEBIAN_FRONTEND=noninteractive apt-get install -y -qq /src/dist/chatmon_*_all.deb >/dev/null
               python3 /src/packaging/build.py smoke chatmon chatmon --version $version
+              sum=\$(sha256sum /src/dist/chatmon_*_all.deb | cut -d' ' -f1)
+              /usr/lib/chatmon/install-update /src/dist/chatmon_*_all.deb \$sum >/dev/null
+              if /usr/lib/chatmon/install-update /src/dist/chatmon_*_all.deb $(printf '0%.0s' $(seq 64)) 2>/dev/null; then echo 'installed despite a wrong checksum'; exit 1; fi
               apt-get remove -y -qq chatmon >/dev/null
               test ! -e /usr/lib/chatmon"
             echo "::endgroup::"
@@ -315,6 +341,9 @@ jobs:
           docker run --rm -v "$PWD:/src:ro" fedora:44 sh -ec "
             dnf install -y -q /src/dist/chatmon-*.noarch.rpm >/dev/null
             python3 /src/packaging/build.py smoke chatmon chatmon --version $version
+            sum=\$(sha256sum /src/dist/chatmon-*.noarch.rpm | cut -d' ' -f1)
+            /usr/lib/chatmon/install-update /src/dist/chatmon-*.noarch.rpm \$sum >/dev/null
+            if /usr/lib/chatmon/install-update /src/dist/chatmon-*.noarch.rpm $(printf '0%.0s' $(seq 64)) 2>/dev/null; then echo 'installed despite a wrong checksum'; exit 1; fi
             dnf remove -y -q chatmon >/dev/null
             test ! -e /usr/lib/chatmon"
           echo "::endgroup::"
@@ -326,10 +355,57 @@ jobs:
             dist/*.rpm
           if-no-files-found: error
 
-  publish:
+  # The list of every file's checksum, signed with Chatmon's release key (a secret of the `release`
+  # environment, v* tags only): Chatmon installs an update only if this signature and its checksum hold.
+  checksums:
     if: github.event_name == 'release'
     needs: [python, test-signed-windows, macos, linux]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: chatmon/updates.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: package-*
+          path: ${{ runner.temp }}/dist
+          merge-multiple: true
+      - name: List and sign every file's checksum
+        env:
+          KEY: ${{ secrets.RELEASE_SIGNING_KEY }}
+          DIST: ${{ runner.temp }}/dist
+        run: |
+          cd "$DIST"
+          sha256sum -- * > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          umask 077
+          key="$RUNNER_TEMP/release.pem"
+          trap 'rm -f "$key"' EXIT
+          printf '%s\n' "$KEY" > "$key"
+          openssl pkeyutl -sign -inkey "$key" -rawin -in SHA256SUMS.txt -out SHA256SUMS.txt.sig
+          # The key that signed is the one Chatmon trusts, and the signature checks out with it.
+          public=$(openssl pkey -in "$key" -pubout -outform DER | tail -c 32 | od -An -tx1 | tr -d ' \n')
+          grep -q "\"$public\"" "$GITHUB_WORKSPACE/chatmon/updates.py" || { echo "RELEASE_SIGNING_KEY isn't a key in RELEASE_KEYS"; exit 1; }
+          openssl pkey -in "$key" -pubout -out "$RUNNER_TEMP/release.pub"
+          openssl pkeyutl -verify -pubin -inkey "$RUNNER_TEMP/release.pub" -rawin -in SHA256SUMS.txt -sigfile SHA256SUMS.txt.sig
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: package-checksums
+          path: |
+            ${{ runner.temp }}/dist/SHA256SUMS.txt
+            ${{ runner.temp }}/dist/SHA256SUMS.txt.sig
+          if-no-files-found: error
+
+  publish:
+    if: github.event_name == 'release'
+    needs: [python, test-signed-windows, macos, linux, checksums]
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: write
@@ -345,4 +421,5 @@ jobs:
           TAG: ${{ github.event.release.tag_name }}
         run: |
           ls -l dist
+          test -s dist/SHA256SUMS.txt && test -s dist/SHA256SUMS.txt.sig
           gh release upload "$TAG" dist/* --clobber --repo "$GITHUB_REPOSITORY"

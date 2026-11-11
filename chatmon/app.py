@@ -20,7 +20,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiAppli
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
-from . import agents, autostart, brains, companions, events, heads_up, paths, reminders, styles
+from . import __version__, agents, autostart, brains, changelog, companions, events, heads_up, paths, reminders, report, styles, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -40,6 +40,7 @@ I also understand, without any AI:
 - *timer 10 min for the pasta* · *focus 50*
 - *status* — battery, disk, reminders
 - *hide* — I'll duck behind the taskbar and peek out now and then
+- *what's new* · *check for updates* · *report a problem*
 """
 
 
@@ -144,6 +145,16 @@ class Companion(QObject):
         self._agents_seen = float("-inf")  # when the last look came back
         self._renamed = paths.first_run_since_rename()  # Penguin companion became Chatmon
         self.background = Background()
+        self.updater = updates.Updater(self.background, self)
+        self.updater.available.connect(self._update_available)
+        self.updater.newer_only.connect(self._update_out)
+        self.updater.up_to_date.connect(self._up_to_date)
+        self.updater.failed.connect(self._update_failed)
+        self.updater.installing.connect(self.quit)
+        self.updater.handed_over.connect(lambda: self.say("Updating…", "The installer has it from here. I'll be back in a moment.", timeout_s=60))
+        self._checking_by_hand = False  # a check you asked for says what it found, even "nothing new"
+        self._install_kind: str | None = None
+        self._problem_told = False
         self._looking = False  # finding out, off the screen's thread, whether model servers here are running
         self._fill_menu()
         self.tray = QSystemTrayIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
@@ -159,6 +170,10 @@ class Companion(QObject):
         self._every(int(self.config["heads_up"]["updates_every_hours"] * 3600_000), self._check_updates)
         QTimer.singleShot(120_000, self._check_updates)
         QTimer.singleShot(1500, self._greet)
+        QTimer.singleShot(45_000, self._maybe_check_updates)
+        self._every(3600_000, self._maybe_check_updates)
+        global _problem
+        _problem = self._problem
         QTimer.singleShot(3000, partial(self._refresh_agents, True))
         self._preload = QTimer(self)  # cuts the animations not shown yet, one at a time, between frames
         self._preload.setInterval(40)
@@ -253,6 +268,8 @@ class Companion(QObject):
         elif not (self.config["name"] or self.state.get("name")):
             self._asking_name = True
             self.open_ask(focus=False)  # nobody clicked: don't take the keyboard from them
+        elif self._whats_new_after_update():
+            pass
         elif not self.stage.message_visible():  # an agent or a script got in first: theirs matters more
             self.say(f"Hi, I'm {self.name}!", "Click me to ask anything.", timeout_s=5)
 
@@ -383,6 +400,19 @@ class Companion(QObject):
             self.set_hidden(True)
         elif word in ("new chat", "/new", "reset"):
             self._new_chat()
+        elif word in ("what's new", "whats new", "what is new", "changes", "changelog", "release notes"):
+            self.show_whats_new()
+        elif word in ("check for updates", "update", "updates", "update yourself", "install update"):
+            self.ask_box.dismiss()
+            self._update_now() if self.updater.ready else self.check_for_updates()
+        elif word in ("report a problem", "report a bug", "report bug", "bug", "report"):
+            self.ask_box.set_answer("Opening a problem report in your browser…")
+            self.report_problem()
+        elif word in ("suggest an idea", "feature request", "suggest a feature", "idea"):
+            self.ask_box.set_answer("Opening an idea form in your browser…")
+            self.report_problem(report.IDEA)
+        elif word in ("version", "what version", "which version"):
+            self.ask_box.set_answer(f"I'm Chatmon {__version__}.")
         else:
             return False
         return True
@@ -554,6 +584,143 @@ class Companion(QObject):
             if notice and not self.stage.message_visible():
                 self.behavior.react("wave", self._now())
                 self.say(notice.title, notice.text, [("OK", None)], timeout_s=60)
+
+    # -- updating Chatmon, what's new, and reporting problems
+
+    def _checks_updates(self) -> bool:
+        picked = self.state.get("check_updates")
+        return bool(self.config["updates"]["check"] if picked is None else picked)
+
+    def _maybe_check_updates(self) -> None:
+        """Once a day or so, while Chatmon runs: never more often, whatever restarts it."""
+        if self._checks_updates() and time.time() - float(self.state.get("update_checked") or 0) > updates.CHECK_EVERY:
+            self.state.set("update_checked", time.time())
+            self.state.save()
+            self.updater.check(self._install_kind)
+
+    def check_for_updates(self) -> None:
+        """You asked: look now, and say what was found, even if it's nothing."""
+        self._checking_by_hand = True
+        self.say("Looking for updates…", timeout_s=10)
+        self.state.set("update_checked", time.time())
+        self.state.save()
+        self.updater.check(self._install_kind, by_hand=True)
+
+    def _update_available(self, release: updates.Release) -> None:
+        self._checking_by_hand = False
+        self._install_kind = self.updater.kind
+        self._menu_changed()
+        self.behavior.react("wave", self._now())
+        self.say(
+            f"Chatmon {release.version} is ready",
+            "Downloaded and checked. Updating takes a moment, then I'll be right back.",
+            [("Update now", self._update_now), ("What's new", partial(self._show_release_notes, release)), ("Later", None)],
+            timeout_s=90,
+        )
+
+    def _update_out(self, release: updates.Release, how: str) -> None:
+        self._checking_by_hand = False
+        self._install_kind = self.updater.kind
+        first = ("Release page", partial(QDesktopServices.openUrl, QUrl(release.page)))
+        if "metered" in how:
+            first = ("Download it", self.check_for_updates)
+        self.say(f"Chatmon {release.version} is out", how, [first, ("What's new", partial(self._show_release_notes, release)), ("OK", None)], timeout_s=60)
+
+    def _up_to_date(self) -> None:
+        self._install_kind = self.updater.kind
+        if self._checking_by_hand:
+            self._checking_by_hand = False
+            self.say("You're up to date", f"This is the newest Chatmon, {__version__}.", timeout_s=6)
+
+    def _update_failed(self, why: str) -> None:
+        print(f"{paths.APP}: {why}", file=sys.stderr)
+        if self._checking_by_hand or self.updater.ready is not None or why.startswith("The update"):
+            self._checking_by_hand = False
+            self.say("No update this time", why, [("OK", None)], timeout_s=30)
+
+    def _update_now(self) -> None:
+        self.save()
+        self.say("Updating…", "The installer may ask for your password. I'll be back in a moment.", timeout_s=None)
+        self.updater.install()
+
+    def _show_release_notes(self, release: updates.Release) -> None:
+        self.ask_box.show_notes(self.stage.head_point(), f"What's new in Chatmon {release.version}", release.notes or "No notes for this release.")
+
+    def _whats_new_after_update(self) -> bool:
+        """The first start after an update: what changed since the version you last ran. True if shown."""
+        seen = self.state.get("seen_version")
+        self.state.set("seen_version", __version__)
+        self.state.save()
+        if seen is None:
+            # Never noted: a new install (nothing to tell), or an update from before 0.6.0, which didn't note it.
+            if not (set(self.state.data) - {"seen_version", "x"}) or "name" not in self.state.data:
+                return False
+            seen = "0"
+            releases = [r for r in changelog.since(seen, __version__) if changelog.version_key(r.version) == changelog.version_key(__version__)]
+        else:
+            releases = changelog.since(seen, __version__)
+        if not releases or not updates.newer(__version__, seen):
+            return False
+        self.behavior.react("beam", self._now())
+        self.show_whats_new(releases, updated=True)
+        return True
+
+    def show_whats_new(self, releases: list[changelog.Release] | None = None, updated: bool = False) -> None:
+        releases = releases or [r for r in [changelog.find(__version__)] if r]
+        title = f"Updated to Chatmon {__version__}" if updated else f"What's new in Chatmon {__version__}"
+        body = changelog.notes(releases) if releases else "No notes for this version."
+        body += f"\n\nFound a problem? [Report it]({self._report_url()}) · [All changes](https://github.com/{updates.REPO}/releases)"
+        self.ask_box.show_notes(self.stage.head_point(), title, body)
+
+    def _report_url(self, template: str = report.BUG) -> str:
+        brain = self._brain(wait=False)
+        # A built-in brain by its name; one of your own only as that (its name could be a server of yours).
+        label = (brain.label if brain.name in brains.PRESETS else "A brain of my own") if brain else ""
+        return report.url(template, install=self._install_kind or "", brain=label)
+
+    def report_problem(self, template: str = report.BUG) -> None:
+        QDesktopServices.openUrl(QUrl(self._report_url(template)))
+
+    def open_log(self) -> None:
+        log = log_file()
+        if log.exists():
+            QDesktopServices.openUrl(QUrl.fromLocalFile(str(log)))
+        else:
+            self.say("No log yet", "I write one when I run without a terminal, and nothing has gone wrong in it so far.", timeout_s=8)
+
+    def _problem(self) -> None:
+        """Something in Chatmon failed (it's in the log): offer to report it, once a run."""
+        if self._problem_told:
+            return
+        self._problem_told = True
+        buttons = [("Report it", self.report_problem)]
+        if log_file().exists():
+            buttons.append(("Open the log", self.open_log))
+        self.say("Something went wrong in me", "I kept going, but you can tell my maker what happened.", buttons + [("OK", None)], timeout_s=45)
+
+    def _help_menu(self, sub: QMenu) -> None:
+        sub.addAction(f"What's new in {__version__}", self.show_whats_new)
+        if self.updater.ready is not None and self.updater.release is not None:
+            sub.addAction(f"Install Chatmon {self.updater.release.version}", self._update_now)
+        else:
+            sub.addAction("Check for updates now", self.check_for_updates)
+        auto = sub.addAction("Check for updates every day")
+        auto.setCheckable(True)
+        auto.setChecked(self._checks_updates())
+        auto.toggled.connect(self._set_check_updates)
+        sub.addSeparator()
+        sub.addAction("Report a problem…", self.report_problem)
+        sub.addAction("Suggest an idea…", partial(self.report_problem, report.IDEA))
+        sub.addAction("Open the log", self.open_log)
+        version = sub.addAction(f"Chatmon {__version__}")
+        version.setEnabled(False)
+
+    def _set_check_updates(self, on: bool) -> None:
+        self.state.set("check_updates", on)
+        self.state.save()
+        self._menu_changed()
+        if on:
+            self._maybe_check_updates()
 
     # -- messages from hooks and scripts
 
@@ -730,6 +897,9 @@ class Companion(QObject):
         login.setChecked(autostart.enabled())
         login.toggled.connect(self._set_autostart)
         m.addSeparator()
+        if self.updater.ready is not None and self.updater.release is not None:
+            m.addAction(f"Update to Chatmon {self.updater.release.version}", self._update_now)
+        self._help_menu(m.addMenu("Help & updates"))
         m.addAction("Edit settings…", lambda: QDesktopServices.openUrl(QUrl.fromLocalFile(str(paths.config_file()))))
         m.addAction("Reload settings", self.reload)
         m.addAction("Quit", self.quit)
@@ -1035,14 +1205,23 @@ class Companion(QObject):
             self._show_sprites()
 
     def quit(self) -> None:
+        global _problem
+        if _problem == self._problem:
+            _problem = None
+        self.updater.cancel()
         self.save()
         self.tray.hide()
         self.stage.close_stage()
         self.app.quit()
 
 
+_problem = None  # the running Companion's offer to report what went wrong
+
+
 def _log_exception(kind, value, tb) -> None:
     traceback.print_exception(kind, value, tb, file=sys.stderr)
+    if _problem is not None and not issubclass(kind, KeyboardInterrupt):
+        QTimer.singleShot(0, _problem)
 
 
 def _find_fonts(app: QApplication) -> None:

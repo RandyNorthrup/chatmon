@@ -432,6 +432,7 @@ class AskBox(QWidget):
         self.hint.setText(QFontMetricsF(self.hint.font()).elidedText(hint, Qt.TextElideMode.ElideRight, self._content_width() - 2))
         self.entry.setPlaceholderText(placeholder)
         self.entry.setText(prefill)
+        self.entry.show()
         self.reset_button.hide()
         self._anchor = QPoint(anchor)
         self.set_answer(text)
@@ -445,6 +446,14 @@ class AskBox(QWidget):
         self.entry.setFocus()
         self.entry.end(False)
         self._run_frames()
+
+    def show_notes(self, anchor: QPoint, title: str, markdown: str, hint: str = "Esc to close") -> None:
+        """Something to read, not to answer (what's new in an update): the same bubble, scrolling, with
+        no field to type in."""
+        self.open(anchor, title, hint, "", text=markdown)
+        self.entry.hide()
+        self.answer.setFocus()  # it scrolls with the keys, and passes Esc on to close
+        self._fit()
 
     def set_answer(self, markdown: str) -> None:
         if markdown:

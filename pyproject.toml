@@ -63,6 +63,7 @@ chatmon = [
     "anim/*/manifest.json",
     "bubbles/*.png",
     "bubbles/manifest.json",
+    "changelog.md",
     "integrations/claude/.claude-plugin/marketplace.json",
     "integrations/claude/chatmon/.claude-plugin/plugin.json",
     "integrations/claude/chatmon/hooks/hooks.json",

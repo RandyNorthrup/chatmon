@@ -1,0 +1,21 @@
+name: Suggest an idea
+description: Something Chatmon could do, or do better.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What you'd like Chatmon to do, and what it would help you with.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Chatmon version
+      placeholder: "0.6.0"
+  - type: input
+    id: system
+    attributes:
+      label: Your system
+      placeholder: Windows 11, macOS 15, Fedora 44 with KDE…

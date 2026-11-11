@@ -264,9 +264,22 @@ details.
 
 ## Privacy and security
 
-- **Nothing is collected.** No telemetry, no accounts, no network calls of its own. The only thing that
-  leaves your computer is a question you type, sent to the brain you chose. Conversations live in memory
-  and are gone when Chatmon quits or after 15 minutes idle.
+- **Nothing is collected.** No telemetry, no accounts. What leaves your computer is a question you type,
+  sent to the brain you chose, and once a day, Chatmon asking GitHub for its latest release (it says only
+  that it's Chatmon and which version; GitHub sees your IP address, as any website does). **Help & updates
+  → Check for updates every day** turns that off. Conversations live in memory and are gone when Chatmon
+  quits or after 15 minutes idle.
+- **An update installs only if it's the real one, and only when you say so.** The release's list of
+  checksums (`SHA256SUMS.txt`) must be signed with Chatmon's release key, whose public half is built into
+  Chatmon, and the download must match its checksum there; on Windows the installer must also be signed by
+  Randy Northrup's own certificate from Microsoft's identity-verified code signing. Swapping files on the
+  release page can't get past that. Then Chatmon asks; nothing installs until you click **Update now**, and
+  it's checked again first. On macOS and Linux the system asks for your password, and the root side installs
+  only a copy it made and checked itself. On a metered connection it doesn't download until you ask. A
+  Chatmon run from source, or a pip install of your own, only says an update is out.
+- **A problem report is yours to send.** **Report a problem** opens GitHub's form in your browser with
+  Chatmon's version, how it was installed, your system, Qt's version and the brain's name filled in, and
+  nothing else: never your name, files, chats, keys or log. Nothing is sent until you submit it.
 - **Agents' replies stay off the screen** unless you set `agents.show_replies = true`; they can hold code
   or secrets you'd rather not have on show during a screen share. Your chatmon shows what an agent is
   waiting for, and never your prompts.
@@ -348,6 +361,10 @@ screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland des
 | `chatmon/agents.py`       | Connecting coding agents                               |
 | `chatmon/winpipe.py`      | Whose named pipe it is, on Windows                     |
 | `chatmon/winlock.py`      | Hearing the screen lock and unlock, on Windows          |
+| `chatmon/updates.py`      | Finding, checking and installing updates               |
+| `chatmon/ed25519.py`      | Checking the release key's signature (no extra libraries) |
+| `chatmon/changelog.py`    | What's new in each version (`changelog.md`)            |
+| `chatmon/report.py`       | Reporting a problem: GitHub's form, filled in          |
 | `chatmon/integrations/`   | The Claude Code plugin                                 |
 | `art/`                    | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
 | `packaging/`              | The installers and packages, and how they're built ([packaging/README.md](packaging/README.md)) |

@@ -1,0 +1,66 @@
+name: Report a problem
+description: Something in Chatmon doesn't work, or works wrong.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for telling us. Chatmon's **Report a problem** menu item fills in the version and system for you.
+        Please leave out anything private: API keys, chats, file names you'd rather not share.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you saw, and what you expected instead.
+      placeholder: I clicked my chatmon and asked… It showed… I expected…
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to make it happen again
+      description: The steps, if you know them. "It happens every time I…" helps a lot.
+      placeholder: |
+        1. …
+        2. …
+  - type: input
+    id: version
+    attributes:
+      label: Chatmon version
+      description: In the menu under **Help & updates**, or `chatmon --version`.
+      placeholder: "0.6.0"
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Your system
+      description: Windows, macOS or Linux, with its version (and on Linux, the desktop).
+      placeholder: Windows 11, macOS 15, Fedora 44 with KDE…
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How you installed Chatmon
+      options:
+        - Windows installer
+        - macOS .pkg or .dmg
+        - .deb (Ubuntu, Debian)
+        - .rpm (Fedora)
+        - pipx
+        - pip, or from the source
+        - Not sure
+  - type: input
+    id: brain
+    attributes:
+      label: Brain in use, if it's about chatting
+      description: Under **Brain** in the menu. Just its name; never a key.
+      placeholder: Claude Code, Ollama, OpenAI API…
+  - type: textarea
+    id: log
+    attributes:
+      label: Log (optional)
+      description: |
+        **Help & updates → Open the log** shows it. Paste the lines from around when it happened. Read them first: they can show the names of files and folders.
+      render: text

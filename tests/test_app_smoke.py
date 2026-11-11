@@ -35,7 +35,10 @@ def companion(tmp_path, monkeypatch):
 
     monkeypatch.setattr(agents, "_run_json", lambda argv, what: [])  # never run a real agent's command line
 
-    State(paths.state_file(), {"name": "Sparky", "x": 600}).save()
+    from chatmon import __version__
+
+    # Seen this version already (no what's new), and never looking for updates (no network in tests).
+    State(paths.state_file(), {"name": "Sparky", "x": 600, "seen_version": __version__, "check_updates": False}).save()
     qapp = QApplication.instance() or QApplication([])
     qapp.setQuitOnLastWindowClosed(False)
     server = QLocalServer()
@@ -325,3 +328,65 @@ def test_quits_when_asked(companion, monkeypatch):
     assert quits == []  # not under the sender: it hears back first
     spin(0.1)
     assert quits == [True]
+
+
+def test_after_an_update_it_shows_whats_new_once(companion):
+    from chatmon import __version__
+
+    c = companion
+    c.state.set("seen_version", "0.5.1")
+    assert c._whats_new_after_update()
+    assert c.ask_box.isVisible() and c.ask_box.title.text() == f"Updated to Chatmon {__version__}"
+    text = c.ask_box.answer.toPlainText()
+    assert "Updates in one click" in text and "Report it" in text
+    assert not c.ask_box.entry.isVisible()  # something to read, not to answer
+    assert c.state.get("seen_version") == __version__
+    c.ask_box.dismiss()
+    assert not c._whats_new_after_update()  # once
+
+
+def test_whats_new_on_a_new_install_and_an_update_from_before_it_noted_versions(companion):
+    c = companion
+    c.state.data.clear()  # a new install: nothing to tell, it asks for a name instead
+    assert not c._whats_new_after_update()
+    c.state.data.clear()
+    c.state.data.update({"name": "Sparky", "x": 600})  # 0.5.x kept no "seen_version"
+    assert c._whats_new_after_update() and c.ask_box.isVisible()
+
+
+def test_the_help_menu_and_its_words_in_the_ask_box(companion, monkeypatch):
+    from chatmon import app as appmod
+
+    c = companion
+    opened = []
+    monkeypatch.setattr(appmod.QDesktopServices, "openUrl", lambda url: opened.append(url.toString()))
+    c._fill_menu()
+    help_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Help & updates")
+    labels = [a.text() for a in help_menu.actions() if a.text()]
+    assert labels[:3] == [f"What's new in {appmod.__version__}", "Check for updates now", "Check for updates every day"]
+    assert "Report a problem…" in labels and "Open the log" in labels
+    c.open_ask()
+    c.submit("report a problem")
+    assert opened and opened[-1].startswith("https://github.com/RandyNorthrup/chatmon/issues/new?template=bug_report.yml")
+    c.submit("version")
+    assert appmod.__version__ in c.ask_box.answer.toPlainText()
+    c.submit("what's new")
+    assert c.ask_box.title.text().startswith("What's new in Chatmon")
+
+
+def test_a_problem_inside_chatmon_offers_to_report_it_once(companion):
+    from chatmon import app as appmod
+
+    c = companion
+    spin(1.8)
+    try:
+        raise ValueError("boom")
+    except ValueError:
+        appmod._log_exception(*sys.exc_info())
+    spin(0.1)
+    assert c.stage.bubble.title == "Something went wrong in me"
+    assert [b.label for b in c.stage.bubble.buttons][0] == "Report it"
+    c.stage.dismiss_message()
+    appmod._log_exception(ValueError, ValueError("again"), None)
+    spin(0.1)
+    assert not c.stage.message_visible()  # once a run
