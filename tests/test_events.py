@@ -158,3 +158,61 @@ def test_quit_says_when_nothing_is_running(monkeypatch, capsys):
     monkeypatch.setattr(events, "send", lambda m, timeout=0.5: False)
     monkeypatch.setattr(paths, "migrate", lambda: [])  # never the real settings folders
     assert cli.main(["quit"]) == 1 and "isn't running" in capsys.readouterr().err
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="a named pipe there")
+def test_a_full_queue_of_connections_is_waited_out_not_taken_for_absence(monkeypatch):
+    """Several agents' hooks at once while the companion is busy drawing fill its queue of connections it
+    hasn't taken yet: a sender then gets EAGAIN, which means wait a moment, not that nobody is there."""
+    import socket as sockets
+    import tempfile
+    import threading
+    import time
+
+    folder = Path(tempfile.mkdtemp(prefix="cm-", dir="/tmp"))
+    path = str(folder / "s.sock")
+    server = sockets.socket(sockets.AF_UNIX, sockets.SOCK_STREAM)
+    server.bind(path)
+    server.listen(0)
+    monkeypatch.setattr(paths, "server_name", lambda: path)
+    fillers = []
+    try:
+        for _ in range(64):  # fill the queue, as a burst of hooks would
+            filler = sockets.socket(sockets.AF_UNIX, sockets.SOCK_STREAM)
+            filler.setblocking(False)
+            try:
+                filler.connect(path)
+            except OSError:  # full: EAGAIN on Linux, refused on macOS
+                filler.close()
+                break
+            fillers.append(filler)
+        got = []
+
+        def catch_up():  # the companion, done drawing, takes its connections and answers
+            time.sleep(0.3)
+            server.settimeout(2)
+            for _ in range(len(fillers) + 1):
+                conn, _ = server.accept()
+                conn.settimeout(1)
+                try:
+                    data = conn.recv(1000)
+                    if data:
+                        got.append(data)
+                        conn.sendall(events.ACK)
+                except OSError:
+                    pass
+                conn.close()
+
+        helper = threading.Thread(target=catch_up)
+        helper.start()
+        assert events.deliver({"type": "say", "text": "made it"}) == events.SENT
+        helper.join()
+        assert any(b"made it" in data for data in got)
+    finally:
+        for filler in fillers:
+            filler.close()
+        server.close()
+
+    started = time.monotonic()
+    monkeypatch.setattr(paths, "server_name", lambda: str(folder / "nobody.sock"))
+    assert events.deliver({"type": "say", "text": "hi"}) == events.ABSENT and time.monotonic() - started < 0.5
