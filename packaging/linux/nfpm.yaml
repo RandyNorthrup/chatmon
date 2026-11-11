@@ -44,6 +44,10 @@ contents:
     dst: /usr/bin/chatmon
     file_info:
       mode: 0755
+  - src: ./packaging/linux/install-update  # what pkexec runs to install an update (Chatmon's updater)
+    dst: /usr/lib/chatmon/install-update
+    file_info:
+      mode: 0755
   - src: ./packaging/linux/io.github.RandyNorthrup.chatmon.desktop
     dst: /usr/share/applications/io.github.RandyNorthrup.chatmon.desktop
     file_info:

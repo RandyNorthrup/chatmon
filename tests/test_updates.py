@@ -2,6 +2,8 @@
 checks a download must pass, and what's new after an update. No network: GitHub's replies are made here."""
 
 import hashlib
+import os
+import sys
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
@@ -116,14 +118,17 @@ def test_on_windows_the_installer_must_be_signed_by_randy_northrup(tmp_path, mon
         ("HashMismatch", ours, microsoft, False),
         ("NotSigned", "", "", False),
     ):
-        monkeypatch.setattr(updates, "windows_signer", lambda path, s=status, n=signer, i=issuer: (s, n, i))
+        monkeypatch.setattr(updates, "windows_signer", lambda path, s=status, n=signer, i=issuer: (s, n, i, ["1.3.6.1.5.5.7.3.3", updates.IDENTITY]))
         assert (updates.verify(f, good, "windows") is None) is ok, (status, signer, issuer)
+    # A namesake, with a verified identity of their own: everything matches but the identity Microsoft gave his.
+    monkeypatch.setattr(updates, "windows_signer", lambda path: ("Valid", ours, microsoft, ["1.3.6.1.5.5.7.3.3", "1.3.6.1.4.1.311.97.1.2.3.4"]))
+    assert "Randy Northrup" in updates.verify(f, good, "windows")
 
 
 def test_the_installer_is_never_handed_the_path_as_part_of_a_script(tmp_path):
     pkg = tmp_path / 'it"s $(rm -rf ~) & a.pkg'
-    program, args, env = updates.installer_command("macos", pkg)
-    assert program == "/usr/bin/osascript" and str(pkg) not in " ".join(args) and env == {"CHATMON_UPDATE": str(pkg)}
+    program, args, env = updates.installer_command("macos", pkg, "ab" * 32)
+    assert program == "/usr/bin/osascript" and str(pkg) not in " ".join(args) and env == {"CHATMON_UPDATE": str(pkg), "CHATMON_SHA256": "ab" * 32}
     program, args, env = updates.installer_command("windows", tmp_path / "setup.exe")
     assert program == str(tmp_path / "setup.exe") and "/VERYSILENT" in args and "/relaunch=1" in args
 
@@ -173,6 +178,13 @@ def test_a_problem_report_carries_nothing_personal(monkeypatch, tmp_path):
 
 # -- the whole way, against a pretend GitHub on this computer
 
+# A release key of the tests' own (its private half was thrown away once it had signed TEST_SUMS).
+TEST_KEY = "0159134b42f176309b0c0dab125eea5b8805fbc64979fe4cbc8fd365d2e8260c"
+TEST_SUMS = b"103d0547c1df562a8088c25a3ed02b03fa24b0f29a489e5e91030a2f960cc622  chatmon_9.0.0-1_all.deb\n"
+TEST_SIGNATURE = bytes.fromhex(
+    "acc05a1e43e895d49c56feedd5c3b71ba391d3991221f8dff13498ea3f88ad29fe61370c4c8bdb2a316e4148a069773b0532c854f8b65a5b8709782850c19504"
+)
+
 
 class Inline:
     """Background, without the thread: the work runs at once."""
@@ -211,13 +223,19 @@ def github(tmp_path, monkeypatch):
     monkeypatch.setattr(updates, "LATEST", base + "/latest")
     monkeypatch.setattr(updates, "DOWNLOADS", base + "/download/")
     monkeypatch.setattr(updates, "SECURE", "http://127.0.0.1:")  # in tests only: the real one is https
-    monkeypatch.setattr(updates.paths, "state_dir", lambda: tmp_path / "state")
-    monkeypatch.setattr(updates, "installer_command", lambda kind, path: ("installer", [str(path)], {}))
+    for var in ("XDG_CACHE_HOME", "LOCALAPPDATA"):
+        monkeypatch.setenv(var, str(tmp_path / "cache"))
+    monkeypatch.setenv("HOME", str(tmp_path))  # macOS: ~/Library/Caches
+    monkeypatch.setattr(updates, "installer_command", lambda kind, path, expected="": ("installer", [str(path)], {}))
+    monkeypatch.setattr(updates, "RELEASE_KEYS", (TEST_KEY,))
+    monkeypatch.setattr(updates.signed_sums, "__defaults__", ((TEST_KEY,),))
 
-    def publish(installer: bytes, sums_for: bytes | None = None):
+    def publish(installer: bytes, sums_for: bytes | None = None, sign: bool = True):
         name = "chatmon_9.0.0-1_all.deb"
         files["/download/v9.0.0/" + name] = installer
-        files["/download/v9.0.0/SHA256SUMS.txt"] = f"{hashlib.sha256(sums_for or installer).hexdigest()}  {name}\n".encode()
+        sums = f"{hashlib.sha256(sums_for or installer).hexdigest()}  {name}\n".encode()
+        files["/download/v9.0.0/SHA256SUMS.txt"] = sums
+        files["/download/v9.0.0/SHA256SUMS.txt.sig"] = TEST_SIGNATURE if sign and sums == TEST_SUMS else bytes(64)
         files["/latest"] = json.dumps({
             "tag_name": "v9.0.0", "draft": False, "prerelease": False, "body": "## New\n- Nine",
             "html_url": "", "assets": [{"name": n.rsplit("/", 1)[1], "browser_download_url": base + n} for n in files if n.startswith("/download/")],
@@ -308,3 +326,55 @@ def test_an_installer_that_wont_start_says_so_and_frees_the_updater(qapp, github
     QTimer.singleShot(1000, loop.quit)
     loop.exec()
     assert failed and "couldn't start" in failed[0] and not updater.busy and updater.ready.exists()
+
+
+def test_checksums_not_signed_with_the_release_key_are_never_trusted(qapp, github):
+    github(b"the real installer", sign=False)  # the right checksums, but anyone could have written them
+    updater, seen = run_updater(qapp)
+    assert [name for name, _ in seen] == ["failed"] and "release key" in seen[0][1][0]
+    assert updater.ready is None and not any(updates.folder().iterdir())
+
+
+def test_signed_checksums_are_read_only_with_a_good_signature():
+    assert updates.signed_sums(TEST_SUMS, TEST_SIGNATURE, (TEST_KEY,)) == {"chatmon_9.0.0-1_all.deb": TEST_SUMS[:64].decode()}
+    assert updates.signed_sums(TEST_SUMS + b"x", TEST_SIGNATURE, (TEST_KEY,)) is None
+    assert updates.signed_sums(TEST_SUMS, TEST_SIGNATURE, updates.RELEASE_KEYS) is None  # the real key didn't sign it
+    assert updates.signed_sums(TEST_SUMS, b"\0" * 64, (TEST_KEY,)) is None
+
+
+def test_ed25519_against_rfc_8032_and_openssl():
+    from chatmon import ed25519
+
+    h = bytes.fromhex
+    rfc1 = ("d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", "",
+            "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b")
+    rfc2 = ("3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72",
+            "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00")
+    real = (updates.RELEASE_KEYS[0], b"check".hex(),  # signed with the release key itself, as it was made
+            "0f4abc496bbd257905b1e86d8525d0f222572e3345ca0d5173217a63873dfef0e6ffb9aad944721e4c7088acb972719c092e499269f7d4d9672f96a9ced81e0e")
+    for key, message, signature in (rfc1, rfc2, real):
+        assert ed25519.verify(h(key), h(message), h(signature))
+        assert not ed25519.verify(h(key), h(message) + b"!", h(signature))
+        bad = bytearray(h(signature))
+        bad[5] ^= 1
+        assert not ed25519.verify(h(key), h(message), bytes(bad))
+    key, message, signature = rfc2
+    big_s = h(signature)[:32] + (int.from_bytes(h(signature)[32:], "little") + ed25519._Q).to_bytes(32, "little")
+    assert not ed25519.verify(h(key), h(message), big_s)  # s past the group's order: malleable, refused
+    assert not ed25519.verify(h(key)[:31], h(message), h(signature)) and not ed25519.verify(h(key), h(message), h(signature)[:63])
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="macOS only")
+def test_the_macos_install_script_checks_its_own_copy(tmp_path):
+    """The script as the updater runs it, but without asking for a password and with echo for installer:
+    its quoting holds, and it installs only a copy matching the checksum."""
+    import subprocess
+
+    pkg = tmp_path / "it's a \"pkg\" $(touch pwned).pkg"
+    pkg.write_bytes(b"the package")
+    script = updates._MACOS_SCRIPT.replace(" with administrator privileges", "").replace("/usr/sbin/installer -pkg", "/bin/echo installing")
+    for checksum, ok in ((hashlib.sha256(b"the package").hexdigest(), True), ("0" * 64, False)):
+        env = {**os.environ, "CHATMON_UPDATE": str(pkg), "CHATMON_SHA256": checksum}
+        out = subprocess.run(["/usr/bin/osascript", "-e", script], env=env, capture_output=True, text=True, cwd=tmp_path)
+        assert (out.returncode == 0 and "installing" in out.stdout) is ok, out
+    assert not (tmp_path / "pwned").exists()

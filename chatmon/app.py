@@ -603,7 +603,7 @@ class Companion(QObject):
         self.say("Looking for updates…", timeout_s=10)
         self.state.set("update_checked", time.time())
         self.state.save()
-        self.updater.check(self._install_kind)
+        self.updater.check(self._install_kind, by_hand=True)
 
     def _update_available(self, release: updates.Release) -> None:
         self._checking_by_hand = False
@@ -620,12 +620,10 @@ class Companion(QObject):
     def _update_out(self, release: updates.Release, how: str) -> None:
         self._checking_by_hand = False
         self._install_kind = self.updater.kind
-        self.say(
-            f"Chatmon {release.version} is out",
-            how,
-            [("Release page", partial(QDesktopServices.openUrl, QUrl(release.page))), ("What's new", partial(self._show_release_notes, release)), ("OK", None)],
-            timeout_s=60,
-        )
+        first = ("Release page", partial(QDesktopServices.openUrl, QUrl(release.page)))
+        if "metered" in how:
+            first = ("Download it", self.check_for_updates)
+        self.say(f"Chatmon {release.version} is out", how, [first, ("What's new", partial(self._show_release_notes, release)), ("OK", None)], timeout_s=60)
 
     def _up_to_date(self) -> None:
         self._install_kind = self.updater.kind
@@ -675,7 +673,9 @@ class Companion(QObject):
 
     def _report_url(self, template: str = report.BUG) -> str:
         brain = self._brain(wait=False)
-        return report.url(template, install=self._install_kind or "", brain=brain.label if brain else "")
+        # A built-in brain by its name; one of your own only as that (its name could be a server of yours).
+        label = (brain.label if brain.name in brains.PRESETS else "A brain of my own") if brain else ""
+        return report.url(template, install=self._install_kind or "", brain=label)
 
     def report_problem(self, template: str = report.BUG) -> None:
         QDesktopServices.openUrl(QUrl(self._report_url(template)))

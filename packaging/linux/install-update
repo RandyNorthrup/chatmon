@@ -1,0 +1,34 @@
+#!/bin/sh
+# Chatmon's updater, run as root by pkexec: install-update FILE SHA256
+#
+# Installs the update FILE (a .deb or .rpm Chatmon downloaded) if it's a chatmon package whose SHA-256 is
+# SHA256, the checksum Chatmon found in the release's signed list. It works on a copy in a folder only root
+# can write, made before it's checked, so nothing can swap the file between the check and the install.
+set -eu
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+[ "$(id -u)" = 0 ] || { echo "install-update: run as root, by pkexec" >&2; exit 1; }
+[ $# -eq 2 ] || { echo "usage: install-update FILE SHA256" >&2; exit 2; }
+file=$1 want=$2
+case $want in *[!0-9a-f]*) echo "install-update: not a SHA-256" >&2; exit 2 ;; esac
+[ ${#want} -eq 64 ] || { echo "install-update: not a SHA-256" >&2; exit 2; }
+case $file in
+    *.deb) kind=deb ;;
+    *.rpm) kind=rpm ;;
+    *) echo "install-update: not a .deb or .rpm" >&2; exit 2 ;;
+esac
+[ -f "$file" ] || { echo "install-update: no such file" >&2; exit 2; }
+
+dir=$(mktemp -d /tmp/chatmon-update.XXXXXXXX)  # root's own, mode 700
+trap 'rm -rf "$dir"' EXIT
+cp -- "$file" "$dir/update.$kind"
+got=$(sha256sum "$dir/update.$kind" | cut -d' ' -f1)
+[ "$got" = "$want" ] || { echo "The update doesn't match its checksum, so it wasn't installed." >&2; exit 3; }
+
+if [ $kind = deb ]; then
+    [ "$(dpkg-deb --field "$dir/update.deb" Package)" = chatmon ] || { echo "install-update: not Chatmon" >&2; exit 3; }
+    apt-get install -y "$dir/update.deb"
+else
+    [ "$(rpm -qp --queryformat '%{NAME}' "$dir/update.rpm" 2>/dev/null)" = chatmon ] || { echo "install-update: not Chatmon" >&2; exit 3; }
+    dnf install -y "$dir/update.rpm"
+fi

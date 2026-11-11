@@ -36,6 +36,13 @@ the Chatmon the `windows` job compiled, and Inno Setup builds the installer arou
 installer and uninstaller as it makes them. Another job then installs that installer, runs it,
 uninstalls it, and checks every signature, before it's published.
 
+**Updates.** Every release has `SHA256SUMS.txt`, signed (`SHA256SUMS.txt.sig`, Ed25519) by the
+workflow's `checksums` job with Chatmon's release key, a secret of the `release` environment. Chatmon's
+updater installs nothing whose checksum isn't in a list that key signed; `chatmon/updates.py` holds its
+public half (`RELEASE_KEYS`), and the job refuses to sign with any other. To change keys, add the new
+public key there, release with the old key, then swap the secret. On Linux, `pkexec` runs the packages'
+own `/usr/lib/chatmon/install-update`, which installs only a root-owned copy matching the checksum.
+
 **Why Nuitka.** A signature covers a whole program except its certificate table, which Windows leaves out
 of what it checks ([CVE-2013-3900](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900);
 the stricter check is off unless you turn it on). So a signed program must never run anything it finds
