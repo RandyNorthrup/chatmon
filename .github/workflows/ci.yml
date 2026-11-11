@@ -50,3 +50,11 @@ jobs:
         env:
           QT_QPA_PLATFORM: cocoa
         run: python -m pytest -q tests/test_macnative.py
+
+  gnome:
+    # GNOME's own answers, from a real Mutter running headless: time away from the keyboard is read there.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh

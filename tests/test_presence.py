@@ -46,3 +46,20 @@ def test_the_overlay_tells_when_youre_away(qapp, monkeypatch):
     desk = presence.Desk("wayland")
     desk.overlay_idle_since = presence.time.monotonic() - 60  # the compositor said so a minute ago
     assert desk.idle_seconds() == pytest.approx(presence.AWAY_AFTER + 60, abs=1)
+
+
+def test_gnome_says_how_long_youve_been_away(qapp, monkeypatch):
+    """Against a real Mutter (tests/gnome-session.sh): its IdleMonitor, where Chatmon reads it."""
+    import os
+
+    from chatmon import presence
+
+    bus = presence._session_bus()
+    path, iface = "/org/gnome/Mutter/IdleMonitor/Core", "org.gnome.Mutter.IdleMonitor"
+    if not bus or presence._dbus_call(bus, iface, path, iface, "GetIdletime") is None:
+        if os.environ.get("CHATMON_GNOME_SESSION"):
+            pytest.fail("Mutter's IdleMonitor didn't answer")
+        pytest.skip("no GNOME session here")
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "GNOME")
+    seconds = presence.Desk("wayland").idle_seconds()
+    assert isinstance(seconds, float) and 0 <= seconds < 3600
