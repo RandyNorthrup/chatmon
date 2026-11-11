@@ -523,6 +523,10 @@ class AskBox(QWidget):
         self.show()
         self.raise_()
         if activate:
+            if QGuiApplication.platformName() == "cocoa":  # the keyboard comes to an app that's active
+                from . import macnative
+
+                macnative.activate()
             self.activateWindow()
         self.entry.setFocus()
         self.entry.end(False)
@@ -728,6 +732,13 @@ class AskBox(QWidget):
     def hideEvent(self, event) -> None:
         self._frames.stop()
         super().hideEvent(event)
+
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        if QGuiApplication.platformName() == "cocoa" and not self.stage_draws_art:
+            from . import macnative
+
+            macnative.float_everywhere(self)
 
     def paintEvent(self, _event) -> None:
         p = QPainter(self)

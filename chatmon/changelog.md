@@ -7,15 +7,25 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 ### New
 - **Chats you can come back to.** Your chats are kept on this computer, readable by you alone. **History** in the chat, or **Chats** in the menu, picks one up where you left off, and the whole conversation scrolls like a chat app's. Rename a chat, pin it to the top, save it as Markdown, or delete it.
 - **Attach files, pictures and text.** The **+** in the chat, Ctrl+V, or dropping files on it. Text goes to every brain; pictures and PDFs to the ones that can read them, and a brain that can't says so first.
+- **Much more without any AI.** Sums, unit conversions, the time and date, days until a day, coins and dice, passwords, notes, a stopwatch, and reminders by number. Ask me *help* to see it all. These are answered right away, never sent anywhere, and never become part of a chat.
+- **Keeps out of your way.** Bubbles wait while a full-screen app, a presentation or Do Not Disturb is on, and the chatmon steps out of a full-screen app's way. Something that needs you still reaches you, as a system notification.
+- **Breaks know when you're away.** Time away from the keyboard counts, locked or not, and so does the computer sleeping, on Windows, macOS and Linux.
+- **Follows your accessibility settings.** Reduced motion stills the bubbles and the walking; high contrast uses plain bubbles in your desktop's colours, unless you've chosen otherwise.
 - **Updates in one click.** Chatmon checks for a new version once a day, downloads it, and checks that it's the real one before it asks to install it. Turn it off under **Help & updates** in the menu.
 - **What's new.** After an update, Chatmon shows what changed. **Help & updates → What's new** shows it again.
 - **Report a problem** from the menu opens a GitHub issue with your Chatmon version and system filled in. When something goes wrong, Chatmon offers to report it.
 - **Signed for Windows.** The installer, its uninstaller and Chatmon's own programs are signed by Randy Northrup, so Windows can tell where they came from.
 
 ### Changes
+- **macOS:** the chatmon is on every Space, takes the keyboard only when you open the chat, and finds your AI tools and keys when started from Finder or at login. It also counts the system updates waiting.
+- **Linux:** starting at login and the password prompt for updates follow the desktop's standards, and updates waiting are counted on Fedora, Arch and openSUSE too. Locking the screen counts as a break on GNOME, Hyprland and Sway, not only KDE.
+- **Windows:** Chatmon has its own identity in Windows, Remote Desktop gets a Chatmon of its own, and a restart to finish Windows updates gets a heads-up.
 - On Windows, Chatmon is compiled with Nuitka: the installer is about a sixth smaller.
 
 ### Fixes
+- *Remind me how decorators work* is a question for the AI, not a reminder without a time.
+- **macOS:** clicking the menu-bar icon no longer hides or brings out the chatmon.
+- Two Chatmons started at the same moment can no longer take each other's place.
 - **Windows:** the chatmon no longer vanishes when the pointer crosses it, it takes clicks again afterwards, and it no longer freezes for a few seconds at its first bubble.
 - A bubble's first button (**OK**, a reminder's **Snooze**) takes clicks on Windows and macOS.
 

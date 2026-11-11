@@ -77,7 +77,9 @@ def install_kind() -> str:
     if paths.frozen():
         if sys.platform == "win32" and (Path(sys.executable).parent / "unins000.exe").exists():
             return WINDOWS
-        if sys.platform == "darwin":
+        # Only the one in Applications, where the .pkg installs it (a copy run from elsewhere would get a
+        # second Chatmon in Applications, and not be updated itself).
+        if sys.platform == "darwin" and Path(sys.executable).resolve().is_relative_to("/Applications/Chatmon.app"):
             return MACOS
         return MANUAL
     package = Path(__file__).resolve().parent
@@ -485,6 +487,13 @@ class Updater(QObject):
         proc.deleteLater()
         self.busy = False
         if code != 0:
+            if self.kind in (DEB, RPM) and code == 126:  # pkexec: the password prompt was dismissed
+                return self.failed.emit("The update wasn't installed: the password prompt was closed.")
+            if self.kind in (DEB, RPM) and code == 127:  # pkexec: no prompt to ask with, or not allowed
+                return self.failed.emit(
+                    "The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
+                    f"In a terminal: `sudo {HELPER} '{self.ready}' {self._expected}`"
+                )
             detail = err.splitlines()[-1] if err else f"exit code {code}"
             return self.failed.emit(f"The update wasn't installed ({detail}).")
         relaunch = relaunch_command(self.kind)

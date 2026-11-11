@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import os
 import plistlib
-import shlex
+import re
 import shutil
 import subprocess
 import sys
@@ -21,9 +21,31 @@ _LEGACY_NAME = "PenguinCompanion"
 _LEGACY_LABEL = "io.github.penguin-companion"
 
 
-def _desktop_file(app: str = paths.APP) -> Path:
+APP_ID = "io.github.RandyNorthrup.chatmon"  # the desktop entry's name, as the packages install it
+
+
+def _desktop_file(app: str = APP_ID) -> Path:
     base = os.environ.get("XDG_CONFIG_HOME") or str(Path.home() / ".config")
     return Path(base) / "autostart" / f"{app}.desktop"
+
+
+def exec_line(command: list[str]) -> str:
+    """A desktop entry's Exec=, quoted as the spec says: an argument with a space or a reserved character in
+    double quotes, `"`, `` ` ``, `$` and `\\` escaped there, every % doubled, and then every backslash doubled
+    (the rule for all string values).
+    https://specifications.freedesktop.org/desktop-entry/latest/exec-variables.html"""
+    out = []
+    for arg in command:
+        arg = arg.replace("%", "%%")
+        if arg and not re.search(r"""[\s"'\\><~|&;$*?#()`]""", arg):
+            out.append(arg)
+        else:
+            out.append('"' + re.sub(r'(["`$\\])', r"\\\1", arg) + '"')
+    # Then the general rule for string values, applied before the quoting rule when it's read: each backslash
+    # written twice (a literal one, in quotes, is four).
+    line = " ".join(out).replace("\\", "\\\\")
+    # And the string rule's escapes for what may never be in a line of the file as it is.
+    return line.replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
 
 
 def _launch_agent(label: str = _LABEL) -> Path:
@@ -46,7 +68,9 @@ def enabled() -> bool:
             return True
         except OSError:
             return False
-    return (_launch_agent() if sys.platform == "darwin" else _desktop_file()).exists()
+    if sys.platform == "darwin":
+        return _launch_agent().exists()
+    return _desktop_file().exists() or _desktop_file(paths.APP).exists()
 
 
 def migrate() -> bool:
@@ -61,10 +85,12 @@ def migrate() -> bool:
         except OSError:
             return False
     else:
-        old = _launch_agent(_LEGACY_LABEL) if sys.platform == "darwin" else _desktop_file(paths.LEGACY_APP)
-        if not old.exists():
+        olds = [_launch_agent(_LEGACY_LABEL)] if sys.platform == "darwin" else [_desktop_file(paths.LEGACY_APP), _desktop_file(paths.APP)]
+        found = [old for old in olds if old.exists()]
+        if not found:
             return False
-        old.unlink()
+        for old in found:
+            old.unlink()
     set_enabled(True)
     return True
 
@@ -106,6 +132,8 @@ def set_enabled(on: bool) -> None:
     path = _launch_agent() if sys.platform == "darwin" else _desktop_file()
     if not on:
         path.unlink(missing_ok=True)
+        if sys.platform != "darwin":
+            _desktop_file(paths.APP).unlink(missing_ok=True)  # its name before 0.6.0
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     if sys.platform == "darwin":
@@ -116,7 +144,8 @@ def set_enabled(on: bool) -> None:
         "Type=Application\n"
         "Name=Chatmon\n"
         "Comment=A little companion that lives on your desktop and helps out\n"
-        f"Exec={shlex.join(command)}\n"
+        f"Exec={exec_line(command)}\n"
+        f"Icon={APP_ID}\n"
         "X-GNOME-Autostart-enabled=true\n",
         encoding="utf-8",
     )

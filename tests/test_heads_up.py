@@ -54,3 +54,82 @@ def test_read_disks_skips_duplicates_and_missing(tmp_path):
     (tmp_path / "sub").mkdir()
     readings = read_disks([tmp_path, tmp_path / "sub", Path("/definitely/not/here")])
     assert len(readings) == 1 and 0 <= readings[0][1] <= 100
+
+
+def test_dnf_pacman_zypper_and_windows_update_counts():
+    from chatmon import heads_up
+
+    dnf = (
+        "\n"
+        "firefox.x86_64                     145.0-1.fc44              updates\n"
+        "kernel-core.x86_64                 6.17.4-300.fc44           updates\n"
+        "Obsoleting Packages\n"
+        "foo.noarch                         2.0-1.fc44                updates\n"
+        "    foo-old.noarch                 1.0-1.fc44                @updates\n"
+    )
+    assert heads_up.count_dnf(dnf, 100) == 3 and heads_up.count_dnf("", 0) == 0
+    assert heads_up.count_dnf("Error: Cache-only enabled but no cache", 1) is None  # couldn't tell: nothing said
+    assert heads_up.count_pacman("linux 6.17.3-1 -> 6.17.4-1\nfirefox 144-1 -> 145-1\n", 0) == 2
+    assert heads_up.count_pacman("", 1) == 0
+    zypper = (
+        '<?xml version="1.0"?><stream><update-status version="0.6"><update-list>'
+        '<update name="vim" edition="9.1-2" arch="x86_64" kind="package"/>'
+        '<update name="openSUSE-2026-1" kind="patch"/>'
+        '<update name="curl" edition="8.17-1" arch="x86_64" kind="package">x</update>'
+        "</update-list></update-status></stream>"
+    )
+    assert heads_up.count_zypper(zypper, 0) == 2 and heads_up.count_zypper("", 4) is None
+    assert heads_up.count_windows("3|False", 0) == 3 and not heads_up.windows_restart_needed("3|False")
+    assert heads_up.count_windows("0|True", 0) == 0 and heads_up.windows_restart_needed("0|True")
+    assert heads_up.count_windows("Exception calling Search", 1) is None
+
+
+def test_a_restart_to_finish_updating_is_its_own_heads_up():
+    from datetime import date
+
+    w = Watcher(20, 10, 90)
+    notice = w.updates(0, date(2026, 11, 11), restart=True)
+    assert notice.title == "Restart to finish updating"
+    assert w.updates(5, date(2026, 11, 11)) is None  # once a day
+
+
+def test_each_platform_has_its_own_checks(monkeypatch):
+    from chatmon import heads_up
+
+    monkeypatch.setattr(heads_up.sys, "platform", "win32")
+    (check,) = heads_up.update_checks()
+    assert check.name == "windows" and check.argv[0].lower().endswith("powershell.exe") and "Online = $false" in check.argv[-1]
+    monkeypatch.setattr(heads_up.sys, "platform", "linux")
+    monkeypatch.setattr(heads_up.shutil, "which", lambda name: f"/usr/bin/{name}" if name in ("dnf", "flatpak") else None)
+    assert [c.name for c in heads_up.update_checks()] == ["dnf", "flatpak"]
+    assert "--cacheonly" in heads_up.update_checks()[0].argv
+
+
+def test_macos_software_update_count():
+    from chatmon import heads_up
+
+    listed = (
+        "Software Update Tool\n\nSoftware Update found the following new or updated software:\n"
+        "* Label: macOS Tahoe 26.1-25B78\n\tTitle: macOS Tahoe 26.1, Version: 26.1, Size: 4.2GiB, Recommended: YES, Action: restart,\n"
+        "* Label: Safari26.1\n\tTitle: Safari, Version: 26.1, Size: 160MiB, Recommended: YES,\n"
+    )
+    assert heads_up.count_softwareupdate(listed, 0) == 2
+    assert heads_up.count_softwareupdate("No new software available.\n", 0) == 0
+    assert heads_up.count_softwareupdate("", 1) is None
+
+
+def test_macos_lists_updates_without_looking_online():
+    """The real command, on a Mac: --no-scan exists, and it answers without network or administrator."""
+    import subprocess
+    import sys
+
+    import pytest
+
+    from chatmon import heads_up
+
+    if sys.platform != "darwin":
+        pytest.skip("macOS only")
+    (check,) = heads_up.update_checks()
+    out = subprocess.run(check.argv, capture_output=True, text=True, timeout=120)
+    assert out.returncode == 0, out.stderr
+    assert isinstance(check.count(out.stdout, out.returncode), int)

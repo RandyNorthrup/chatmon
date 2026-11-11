@@ -215,3 +215,127 @@ def test_a_full_queue_of_connections_is_waited_out_not_taken_for_absence(monkeyp
     started = time.monotonic()
     monkeypatch.setattr(paths, "server_name", lambda: str(folder / "nobody.sock"))
     assert events.deliver({"type": "say", "text": "hi"}) == events.ABSENT and time.monotonic() - started < 0.5
+
+
+def test_a_mac_app_started_from_finder_gets_your_login_shells_environment(tmp_path, monkeypatch):
+    """launchd gives it /usr/bin:/bin and no keys; your shell would have /opt/homebrew/bin and OPENAI_API_KEY."""
+    import sys
+
+    if sys.platform == "win32":
+        pytest.skip("a pretend shell script: not on Windows")
+    from chatmon import paths
+
+    shell = tmp_path / "zsh"
+    shell.write_text(
+        "#!/bin/sh\nprintf '%s\\0' --chatmon-environment--\n"
+        "printf 'PATH=/opt/homebrew/bin:/usr/bin:/bin\\0OPENAI_API_KEY=from-zshrc\\0HOME=/elsewhere\\0PWD=/somewhere\\0'\n"
+    )
+    shell.chmod(0o755)
+    monkeypatch.setattr(paths.sys, "platform", "darwin")
+    monkeypatch.setenv("SHELL", str(shell))
+    monkeypatch.setenv("PATH", "/usr/bin:/bin")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    adopted = paths.login_environment()
+    import os
+
+    assert os.environ["PATH"].split(os.pathsep)[0] == "/opt/homebrew/bin" and "/usr/bin" in os.environ["PATH"]
+    assert os.environ["OPENAI_API_KEY"] == "from-zshrc" and os.environ["HOME"] == str(tmp_path)  # nothing set is changed
+    assert "PWD" not in adopted and "OPENAI_API_KEY" in adopted
+
+
+def test_without_an_answer_from_the_shell_the_usual_folders(tmp_path, monkeypatch):
+    from chatmon import paths
+
+    monkeypatch.setattr(paths.sys, "platform", "darwin")
+    monkeypatch.setenv("SHELL", str(tmp_path / "no-such-shell"))
+    monkeypatch.setenv("PATH", "/usr/bin:/bin")
+    paths.login_environment()
+    import os
+
+    assert os.environ["PATH"].startswith("/opt/homebrew/bin" + os.pathsep + "/usr/local/bin")
+
+
+def test_only_one_chatmon_holds_the_lock(tmp_path, monkeypatch):
+    """Two started at once: the second finds the lock held, says "show" to the first, and doesn't take its socket."""
+    import subprocess
+    import sys
+
+    if sys.platform == "win32":
+        pytest.skip("Windows: the pipe's first instance does this")
+    from chatmon import app as appmod
+
+    lock = str(tmp_path / "chatmon.sock.lock")
+    holder = subprocess.Popen(
+        [sys.executable, "-c", "import fcntl, os, sys, time; fd = os.open(sys.argv[1], os.O_RDWR | os.O_CREAT); fcntl.flock(fd, fcntl.LOCK_EX); print('held', flush=True); time.sleep(30)", lock],
+        stdout=subprocess.PIPE, text=True,
+    )
+    try:
+        assert holder.stdout.readline().strip() == "held"
+        assert appmod._hold_instance_lock(lock) is False
+    finally:
+        holder.kill()
+        holder.wait()
+    monkeypatch.setattr(appmod, "_instance_lock", None)
+    assert appmod._hold_instance_lock(lock) is True and appmod._instance_lock is not None
+    os.close(appmod._instance_lock)
+
+
+def test_the_login_shell_says_only_what_follows_its_marker_and_nothing_that_changes_chatmon(tmp_path, monkeypatch):
+    import sys
+
+    if sys.platform == "win32":
+        pytest.skip("a pretend shell script: not on Windows")
+    from chatmon import paths
+
+    shell = tmp_path / "zsh"
+    shell.write_text(
+        "#!/bin/sh\n"
+        "echo 'Welcome to my shell! NOTICE=from-motd'\n"  # what a startup file prints
+        "printf '%s\\0' --chatmon-environment--\n"
+        "printf 'PATH=/opt/homebrew/bin:/usr/bin\\0DYLD_INSERT_LIBRARIES=/tmp/evil.dylib\\0QT_QPA_PLATFORM=offscreen\\0"
+        "XDG_RUNTIME_DIR=/tmp/shared\\0MY_API_KEY=k\\0'\n"
+    )
+    shell.chmod(0o755)
+    monkeypatch.setattr(paths.sys, "platform", "darwin")
+    monkeypatch.setenv("SHELL", str(shell))
+    monkeypatch.setenv("PATH", "/usr/bin")
+    for name in ("DYLD_INSERT_LIBRARIES", "QT_QPA_PLATFORM", "XDG_RUNTIME_DIR", "MY_API_KEY", "NOTICE"):
+        monkeypatch.delenv(name, raising=False)
+    adopted = paths.login_environment()
+    assert "MY_API_KEY" in adopted and os.environ["MY_API_KEY"] == "k"
+    for name in ("DYLD_INSERT_LIBRARIES", "QT_QPA_PLATFORM", "XDG_RUNTIME_DIR", "NOTICE"):
+        assert name not in os.environ, name
+
+
+def test_a_shell_that_never_answers_is_stopped_whole(tmp_path, monkeypatch):
+    import sys
+    import time
+
+    if sys.platform == "win32":
+        pytest.skip("a pretend shell script: not on Windows")
+    from chatmon import paths
+
+    shell = tmp_path / "zsh"
+    shell.write_text("#!/bin/sh\nsleep 60 &\nsleep 60\n")
+    shell.chmod(0o755)
+    monkeypatch.setattr(paths.sys, "platform", "darwin")
+    monkeypatch.setenv("SHELL", str(shell))
+    started = time.monotonic()
+    paths.login_environment(timeout=0.5)
+    assert time.monotonic() - started < 5
+
+
+def test_the_lock_is_never_followed_through_a_link_nor_taken_for_held_on_an_odd_error(tmp_path, monkeypatch):
+    import sys
+
+    if sys.platform == "win32":
+        pytest.skip("Windows: the pipe's first instance does this")
+    from chatmon import app as appmod
+
+    target = tmp_path / "someone-elses"
+    target.write_text("")
+    link = tmp_path / "chatmon.sock.lock"
+    link.symlink_to(target)
+    monkeypatch.setattr(appmod, "_instance_lock", None)
+    assert appmod._hold_instance_lock(str(link)) is True and appmod._instance_lock is None  # not through the link

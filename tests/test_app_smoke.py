@@ -306,18 +306,18 @@ def test_asks_for_no_session_bus_on_macos(monkeypatch):
     dbus has Qt find its libdbus and wait on it at every start."""
     import types
 
-    from chatmon import app as appmod
+    pytest.importorskip("PyQt6.QtDBus")  # not in PyQt's Windows build
+    from chatmon import app as appmod, linuxsession
 
-    asked = []
-    fake = types.ModuleType("PyQt6.QtDBus")
-    fake.QDBusConnection = types.SimpleNamespace(sessionBus=lambda: asked.append(True) or types.SimpleNamespace(isConnected=lambda: False))
-    monkeypatch.setitem(sys.modules, "PyQt6.QtDBus", fake)
+    watched = []
+    monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept: watched.append(True))
+    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None)
     monkeypatch.setattr(sys, "platform", "darwin")
-    appmod.Companion._watch_screen_lock(types.SimpleNamespace())
-    assert asked == []
+    appmod.Companion._watch_screen_lock(me)
+    assert watched == []
     monkeypatch.setattr(sys, "platform", "linux")
-    appmod.Companion._watch_screen_lock(types.SimpleNamespace())
-    assert asked == [True]  # where there is one, it still listens
+    appmod.Companion._watch_screen_lock(me)
+    assert watched == [True]  # where there is one, it still listens
 
 
 def test_quits_when_asked(companion, monkeypatch):
@@ -614,3 +614,154 @@ def test_pasted_file_lists_are_capped_and_never_reach_network_paths(companion, t
     assert until(lambda: len(c.attached) == attachments.MAX_COUNT)
     spin(0.2)
     assert len(looked) == attachments.MAX_COUNT and not any(n.startswith(("//", "\\\\")) for n in looked)
+
+
+def test_offline_answers_are_marked_and_kept_out_of_the_chat(companion, monkeypatch):
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    c.submit("What's a good name for a cat?")
+    brain.answer("Mochi.")
+    c.submit("5 km in miles")
+    shown = c.ask_box.answer.toPlainText()
+    assert "3.107 miles" in shown and "without any AI" in shown and "Mochi." in shown  # under the chat
+    assert len(brain.asked) == 1 and len(c.chat.messages) == 2  # no brain asked, nothing added
+    c.submit("password")
+    assert len(c.chat.messages) == 2 and "password" not in c.chat_book.load(c.chat.id).markdown().lower()
+
+
+def test_a_question_that_only_sounds_like_a_command_goes_to_the_ai(companion, monkeypatch):
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    for question in ("remind me how python decorators work", "what is the capital of France?", "how do I set a timer in python"):
+        c.submit(question)
+        assert brain.asked[-1][1] == question
+    assert c.reminders.upcoming() == []
+
+
+def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
+    c = companion
+    c.open_ask()
+    c.submit("note: buy milk")
+    c.submit("note: call Sam")
+    assert [n["text"] for n in c.state.get("notes")] == ["buy milk", "call Sam"]
+    c.submit("notes")
+    shown = " ".join(c.ask_box.answer.toMarkdown().split())
+    assert "1. buy milk 2. call Sam" in shown  # a numbered list
+    c.submit("delete note 1")
+    assert [n["text"] for n in c.state.get("notes")] == ["call Sam"]
+    c._fill_menu()
+    labels = [a.text() for a in c.menu.actions()]
+    assert "Notes (1)" in labels
+    c.submit("stopwatch")
+    assert c._stopwatch is not None
+    c._fill_menu()
+    assert any(a.text().startswith("Stop the stopwatch") for a in c.menu.actions())
+    c.submit("stop stopwatch")
+    assert c._stopwatch is None and "Stopwatch stopped at" in c.ask_box.answer.toPlainText()
+    c.submit("remind me in 30m to stretch")
+    c.submit("timer 10 min for the pasta")
+    c.submit("reminders")
+    listed = " ".join(c.ask_box.answer.toMarkdown().split())
+    assert "1. Timer" in listed and "2. Reminder" in listed
+    c.submit("cancel reminder 1")
+    assert [r.text for r in c.reminders.upcoming()] == ["stretch"]
+
+
+class PretendDesk:
+    """The platform's readings, set by the test."""
+
+    def __init__(self):
+        self.idle, self.why_quiet, self.is_covered, self.motion, self.contrast, self.notice = 0.0, None, False, False, False, None
+        self.overlay_idle_since = None
+
+    def idle_seconds(self):
+        return self.idle
+
+    def quiet(self):
+        return self.why_quiet
+
+    def covered(self, _window):
+        return self.is_covered
+
+    def reduce_motion(self):
+        return self.motion
+
+    def high_contrast(self):
+        return self.contrast
+
+    def notice_seconds(self):
+        return self.notice
+
+    def close(self):
+        pass
+
+
+def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
+    c = companion
+    c.desk = desk = PretendDesk()
+    spin(1.8)
+    c.stage.dismiss_message()
+    spin(0.3)
+    desk.why_quiet = "a presentation"
+    c._check_quiet()
+    c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+    spin(0.2)
+    assert not c.stage.message_visible() and len(c._held) == 1
+    c.open_ask()  # you're using Chatmon: what you ask for isn't held back
+    c.submit("status")
+    assert "Brain:" in c.ask_box.answer.toPlainText()
+    c.ask_box.dismiss()
+    desk.why_quiet = None
+    c._check_quiet()
+    spin(1.0)
+    assert c.stage.message_visible() and c.stage.bubble.title == "Claude finished" and c._held == []
+
+
+def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(companion, monkeypatch):
+    from PyQt6.QtWidgets import QSystemTrayIcon
+
+    c = companion
+    c.desk = desk = PretendDesk()
+    shown = []
+    monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
+    monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: shown.append((title, text)))
+    desk.why_quiet, desk.is_covered = "a full-screen game", True
+    c._check_quiet()
+    c.alert("reminder:x", "Reminder", "**Stretch**")
+    assert c._alert_key is None and len(c._held) == 1
+    if sys.platform != "darwin":
+        assert shown == [("Reminder", "Chatmon has something for you.")]  # never its words: the system keeps them
+    desk.why_quiet, desk.is_covered = None, False
+    c._check_quiet()
+    spin(1.0)
+    assert c._alert_key == "reminder:x" and c.stage.bubble.title == "Reminder"
+
+
+def test_being_away_from_the_keyboard_counts_as_a_break(companion):
+    c = companion
+    c.desk = desk = PretendDesk()
+    c.breaks.active_since = time.time() - 3600
+    desk.idle = 600.0
+    c._check_away()
+    assert c.breaks.away_since is not None
+    desk.idle = 2.0
+    c._check_away()
+    assert c.breaks.away_since is None and time.time() - c.breaks.active_since < 5  # ten minutes away: a break taken
+
+
+def test_reduced_motion_and_high_contrast_unless_you_chose(companion):
+    c = companion
+    c.desk = desk = PretendDesk()
+    c.state.set("bubble_effects", None)
+    c.state.set("bubble_style", None)
+    desk.motion, desk.contrast = True, True
+    c._check_accessibility()
+    assert not c._bubble_effects() and c._bubble_style().name == "plain" and not c.behavior.walk_enabled
+    c._pick_style("fire")  # your pick wins
+    c._set_bubble_effects(True)
+    assert c._bubble_style().name == "fire" and c._bubble_effects()
+    desk.notice = 30.0
+    c.say("hello", timeout_s=5)
+    assert c.stage.bubble._expires - c.stage.bubble._shown_at == pytest.approx(30.0)

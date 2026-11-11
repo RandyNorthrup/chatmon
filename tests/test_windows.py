@@ -336,6 +336,33 @@ def test_hears_the_screen_lock_and_unlock(qapp):
         watcher.close()
 
 
+def test_hears_remote_disconnects_and_sleep(qapp):
+    """A Remote Desktop session that disconnects doesn't lock, and sleep isn't a lock: both are time away."""
+    import ctypes
+    from ctypes import wintypes
+
+    from PyQt6 import sip
+
+    from chatmon import winlock
+
+    away, slept = [], []
+    watcher = winlock.LockWatcher(away.append, slept.append)
+    try:
+        def tell(message, wparam):
+            msg = wintypes.MSG(watcher.hwnd, message, wparam, 0)
+            return watcher.nativeEventFilter(b"windows_generic_MSG", sip.voidptr(ctypes.addressof(msg)))
+
+        tell(winlock.WM_WTSSESSION_CHANGE, winlock.WTS_REMOTE_DISCONNECT)
+        tell(winlock.WM_WTSSESSION_CHANGE, winlock.WTS_REMOTE_CONNECT)
+        tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMSUSPEND)
+        tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMSUSPEND)  # the same news twice: once
+        tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMRESUMEAUTOMATIC)
+        tell(winlock.WM_POWERBROADCAST, 0x8013)  # PBT_POWERSETTINGCHANGE: not ours
+        assert away == [True, False] and slept == [True, False]
+    finally:
+        watcher.close()
+
+
 # -- no console windows
 
 
@@ -422,3 +449,14 @@ def test_without_a_console_it_keeps_a_log(tmp_path):
     subprocess.run([pythonw, "-c", code, root], env=env, timeout=60, check=True)
     log = tmp_path / "chatmon" / "state" / "chatmon.log"
     assert "a warning" in log.read_text(encoding="utf-8")
+
+
+def test_the_pipe_is_named_for_you_and_this_session(qapp):
+    """Pipe names are one namespace for every session: yours carries your SID and the session's number."""
+    import re
+
+    from chatmon import paths, winpipe
+
+    identity = winpipe.my_identity()
+    assert re.fullmatch(r"S-1-5-[\d-]+-\d+", identity)
+    assert paths.server_name() == f"chatmon-{identity}"

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!-- What the system's password prompt says when Chatmon installs its update (pkexec runs install-update),
+     and that it's asked every time: nothing is remembered for a later run. -->
+<policyconfig>
+  <vendor>Chatmon</vendor>
+  <vendor_url>https://github.com/RandyNorthrup/chatmon</vendor_url>
+  <icon_name>io.github.RandyNorthrup.chatmon</icon_name>
+  <action id="io.github.RandyNorthrup.chatmon.install-update">
+    <description>Install a Chatmon update</description>
+    <message>Chatmon needs your password to install its update.</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/chatmon/install-update</annotate>
+  </action>
+</policyconfig>

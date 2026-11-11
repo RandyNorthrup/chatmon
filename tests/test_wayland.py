@@ -59,6 +59,7 @@ PROTOCOLS = [
     Path("/usr/share/wayland-protocols/stable/viewporter/viewporter.xml"),
     Path("/usr/share/wayland-protocols/staging/cursor-shape/cursor-shape-v1.xml"),
     Path("/usr/share/wayland-protocols/staging/fractional-scale/fractional-scale-v1.xml"),
+    Path("/usr/share/wayland-protocols/staging/ext-idle-notify/ext-idle-notify-v1.xml"),
     Path("/usr/share/wlr-protocols/unstable/wlr-layer-shell-unstable-v1.xml"),
 ]
 
@@ -101,6 +102,11 @@ CHECKS = {  # constant: (interface, "request" or "event", name)
     "EV_KEYBOARD_MODIFIERS": ("wl_keyboard", "event", "modifiers"),
     "EV_KEYBOARD_REPEAT_INFO": ("wl_keyboard", "event", "repeat_info"),
     "TEXT_INPUT_MANAGER_GET": ("zwp_text_input_manager_v3", "request", "get_text_input"),
+    "LAYER_SURFACE_SET_LAYER": ("zwlr_layer_surface_v1", "request", "set_layer"),
+    "IDLE_NOTIFIER_GET_IDLE": ("ext_idle_notifier_v1", "request", "get_idle_notification"),
+    "IDLE_NOTIFIER_GET_INPUT_IDLE": ("ext_idle_notifier_v1", "request", "get_input_idle_notification"),
+    "EV_IDLE_IDLED": ("ext_idle_notification_v1", "event", "idled"),
+    "EV_IDLE_RESUMED": ("ext_idle_notification_v1", "event", "resumed"),
     "DATA_DEVICE_MANAGER_CREATE_SOURCE": ("wl_data_device_manager", "request", "create_data_source"),
     "DATA_DEVICE_MANAGER_GET_DEVICE": ("wl_data_device_manager", "request", "get_data_device"),
     "DATA_DEVICE_SET_SELECTION": ("wl_data_device", "request", "set_selection"),
@@ -236,6 +242,10 @@ class FakeScreen:
 class FakeStage:
     def __init__(self):
         self.calls = []
+        self.away_calls = []
+
+    def away(self, on):
+        self.away_calls.append(on)
 
     def paint(self, p, region):
         p.fillRect(QRect(10, 10, 50, 50), QColor(255, 0, 0))
@@ -309,7 +319,7 @@ def test_layer_surface_draws_and_takes_clicks_only_on_the_penguin(qapp):
     (pointer,) = [wayland.decode("n", p)[0] for p in named(reqs, bound["wl_seat"][0], layer.SEAT_GET_POINTER)]
     (get,) = named(reqs, bound["zwlr_layer_shell_v1"][0], layer.LAYER_SHELL_GET_LAYER_SURFACE)
     layer_id, surface_id, output, which, namespace = wayland.decode("noous", get)
-    assert (output, which, namespace) == (bound["wl_output"][0], layer.LAYER_OVERLAY, "chatmon")
+    assert (output, which, namespace) == (bound["wl_output"][0], layer.LAYER_TOP, "chatmon")  # under full-screen windows
     assert named(reqs, layer_id, layer.LAYER_SURFACE_SET_ANCHOR) == [struct.pack("<I", 15)]
     assert named(reqs, layer_id, layer.LAYER_SURFACE_SET_KEYBOARD_INTERACTIVITY) == [struct.pack("<I", 0)]  # never the keyboard
     assert named(reqs, layer_id, layer.LAYER_SURFACE_SET_EXCLUSIVE_ZONE) == [struct.pack("<i", -1)]
@@ -446,6 +456,7 @@ def _configured(qapp, layer_version=4):
         [
             ("wl_compositor", 6), ("wl_shm", 1), ("wl_seat", 7), ("wl_output", 4), ("zwlr_layer_shell_v1", layer_version),
             ("zwp_text_input_manager_v3", 1), ("wl_data_device_manager", 3), ("zwp_primary_selection_device_manager_v1", 1),
+            ("ext_idle_notifier_v1", 2),
         ],
         start=1,
     ):
@@ -470,6 +481,9 @@ def _configured(qapp, layer_version=4):
         "primary_manager": bound["zwp_primary_selection_device_manager_v1"],
         "pointer": wayland.decode("n", named(reqs, bound["wl_seat"], layer.SEAT_GET_POINTER)[0])[0],
         "keyboard": wayland.decode("n", named(reqs, bound["wl_seat"], layer.SEAT_GET_KEYBOARD)[0])[0],
+        "idle_notifier": bound["ext_idle_notifier_v1"],
+        "seat": bound["wl_seat"],
+        "idle_request": wayland.decode("nuo", named(reqs, bound["ext_idle_notifier_v1"], layer.IDLE_NOTIFIER_GET_INPUT_IDLE)[0]),
     }
     (get,) = named(reqs, bound["zwlr_layer_shell_v1"], layer.LAYER_SHELL_GET_LAYER_SURFACE)
     ids["layer"], ids["surface"] = wayland.decode("noous", get)[:2]
@@ -713,5 +727,32 @@ def test_pasting_into_the_ask_box_prefers_files_then_pictures_then_text(qapp):
         while not got and time.monotonic() < deadline:
             qapp.processEvents()
         assert got == [("text/plain" if wanted == "UTF8_STRING" else wanted, data)]
+    surf.close()
+    server.sock.close()
+
+
+
+@linux_only
+def test_it_gives_way_to_full_screen_windows_and_comes_above_them_when_it_must(qapp):
+    """The top layer, which full-screen windows cover; the overlay while an alert or the ask box needs you."""
+    conn, server, stage, surf, ids = _configured(qapp)
+    surf.raise_above(True)
+    surf.raise_above(True)  # once is enough
+    surf.raise_above(False)
+    sets = [wayland.decode("u", p)[0] for p in named(server.requests(), ids["layer"], layer.LAYER_SURFACE_SET_LAYER)]
+    assert sets == [layer.LAYER_OVERLAY, layer.LAYER_TOP]
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_it_hears_when_youre_away_from_the_keyboard_and_back(qapp):
+    conn, server, stage, surf, ids = _configured(qapp)
+    assert ids["idle_request"] == [surf._idle, layer.IDLE_AFTER_MS, ids["seat"]]  # input idle: a playing video isn't you
+    server.send(surf._idle, layer.EV_IDLE_IDLED)
+    conn.read()
+    server.send(surf._idle, layer.EV_IDLE_RESUMED)
+    conn.read()
+    assert stage.away_calls == [True, False]
     surf.close()
     server.sock.close()
