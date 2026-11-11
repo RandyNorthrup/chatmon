@@ -18,9 +18,10 @@ import ctypes
 import ctypes.util
 import os
 import shutil
-import subprocess
 import sys
 import time
+
+from PyQt6.QtCore import QObject, QProcess
 
 AWAY_AFTER = 300  # seconds without input: away from the desk
 
@@ -156,15 +157,15 @@ def _mac_reduce_motion() -> bool | None:
 
 
 def _dbus_call(bus, service: str, path: str, interface: str, method: str, *args):
-    """One D-Bus call's first answer, or None (no such service, an error, or no answer within a moment)."""
+    """One D-Bus call's first answer, or None (no such service, an error, or no answer within half a second).
+    One message, not an interface object, which would ask the service to describe itself first, and wait."""
     try:
-        from PyQt6.QtDBus import QDBusInterface, QDBusMessage
+        from PyQt6.QtDBus import QDBus, QDBusMessage
 
-        iface = QDBusInterface(service, path, interface, bus)
-        if not iface.isValid():
-            return None
-        iface.setTimeout(500)
-        reply = iface.call(method, *args)
+        message = QDBusMessage.createMethodCall(service, path, interface, method)
+        if args:
+            message.setArguments(list(args))
+        reply = bus.call(message, QDBus.CallMode.Block, 500)
         if reply.type() != QDBusMessage.MessageType.ReplyMessage or not reply.arguments():
             return None
         value = reply.arguments()[0]
@@ -251,6 +252,40 @@ class _X11:
         return bool(active and active[0]) and self.atoms["_NET_WM_STATE_FULLSCREEN"] in self._longs(active[0], "_NET_WM_STATE")
 
 
+class _GSetting(QObject):
+    """A GNOME setting, kept up to date by `gsettings monitor` (which says each change as it happens), read at
+    once from here: never a wait on the screen's thread."""
+
+    def __init__(self, schema: str, key: str):
+        super().__init__()
+        self.value: str | None = None
+        self._key = key
+        if not shutil.which("gsettings"):
+            return
+        first = QProcess(self)
+        first.finished.connect(lambda *_: self._set(bytes(first.readAllStandardOutput()).decode(errors="replace")))
+        first.start("gsettings", ["get", schema, key])
+        self._monitor = QProcess(self)
+        self._monitor.readyReadStandardOutput.connect(self._changed)
+        self._monitor.start("gsettings", ["monitor", schema, key])
+
+    def _set(self, text: str) -> None:
+        text = text.strip()
+        if text:
+            self.value = text
+
+    def _changed(self) -> None:
+        for line in bytes(self._monitor.readAllStandardOutput()).decode(errors="replace").splitlines():
+            name, _, value = line.partition(":")
+            if name.strip() == self._key:
+                self._set(value)
+
+    def close(self) -> None:
+        if getattr(self, "_monitor", None) is not None:
+            self._monitor.kill()
+            self._monitor.waitForFinished(500)
+
+
 class Desk:
     """Readings of the person at the computer and their desktop's settings. One per app."""
 
@@ -259,6 +294,18 @@ class Desk:
         self.overlay_idle_since: float | None = None  # told by the Wayland overlay (ext-idle-notify-v1)
         self._x11: _X11 | None = None
         self._desktop = (os.environ.get("XDG_CURRENT_DESKTOP") or "").lower()
+        self._gnome: dict[str, _GSetting] = {}
+
+    def _gsetting(self, schema: str, key: str) -> str | None:
+        if "gnome" not in self._desktop or sys.platform in ("win32", "darwin"):
+            return None
+        if (schema, key) not in self._gnome:
+            self._gnome[(schema, key)] = _GSetting(schema, key)
+        return self._gnome[(schema, key)].value
+
+    def close(self) -> None:
+        for setting in self._gnome.values():
+            setting.close()
 
     def _x(self) -> _X11 | None:
         if self.platform != "xcb" or os.environ.get("WAYLAND_DISPLAY"):  # XWayland sees X windows alone
@@ -294,13 +341,8 @@ class Desk:
             if bus and _dbus_call(bus, "org.freedesktop.Notifications", "/org/freedesktop/Notifications",
                                   "org.freedesktop.DBus.Properties", "Get", "org.freedesktop.Notifications", "Inhibited") is True:
                 return "Do Not Disturb"
-        if "gnome" in self._desktop and shutil.which("gsettings"):
-            try:
-                out = subprocess.run(["gsettings", "get", "org.gnome.desktop.notifications", "show-banners"], capture_output=True, text=True, timeout=2)
-                if out.stdout.strip() == "false":
-                    return "Do Not Disturb"
-            except (OSError, subprocess.SubprocessError):
-                pass
+        if self._gsetting("org.gnome.desktop.notifications", "show-banners") == "false":
+            return "Do Not Disturb"
         x = self._x()
         if x and x.fullscreen_in_front():
             return "a full-screen app"
@@ -323,13 +365,7 @@ class Desk:
                             "ReadOne", "org.freedesktop.appearance", "reduced-motion") if bus else None
         if isinstance(portal, int):
             return portal == 1
-        if "gnome" in self._desktop and shutil.which("gsettings"):
-            try:
-                out = subprocess.run(["gsettings", "get", "org.gnome.desktop.interface", "enable-animations"], capture_output=True, text=True, timeout=2)
-                return out.stdout.strip() == "false"
-            except (OSError, subprocess.SubprocessError):
-                return False
-        return False
+        return self._gsetting("org.gnome.desktop.interface", "enable-animations") == "false"
 
     def high_contrast(self) -> bool:
         if sys.platform == "win32":

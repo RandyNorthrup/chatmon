@@ -306,7 +306,9 @@ class Companion(QObject):
             # (which follows your Do Not Disturb). macOS's needs a signed app: there it just waits.
             self._held = (self._held + [partial(self.alert, key, title, text, buttons)])[-5:]
             if sys.platform != "darwin" and QSystemTrayIcon.supportsMessages():
-                self.tray.showMessage(title, text.replace("**", "").replace("*", ""), QSystemTrayIcon.MessageIcon.Information, 10_000)
+                # Only that something's waiting: the system keeps notifications (Action Center, a phone linked
+                # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
+                self.tray.showMessage(title, "Chatmon has something for you.", QSystemTrayIcon.MessageIcon.Information, 10_000)
             return
         self._alert_key = key
         self.behavior.set_hidden(False, self._now())
@@ -890,7 +892,7 @@ class Companion(QObject):
             notes.append({"text": asked.arg[: self.MAX_NOTE], "at": time.time()})
             self._set_notes(notes)
             self.behavior.react("hop", self._now())
-            return f"Noted (note {len(notes)})."
+            return f"Noted (note {len(notes)}). *delete note {len(notes)}* takes it back."
         if asked.kind == "notes":
             return "\n".join(f"{i}. {n['text']}" for i, n in enumerate(notes, 1)) if notes else "No notes yet: *note: buy milk* makes one."
         if asked.kind == "delete note":
@@ -1781,6 +1783,7 @@ class Companion(QObject):
 
     def quit(self) -> None:
         self._save_chat()
+        self.desk.close()
         global _problem
         if _problem == self._problem:
             _problem = None
@@ -1840,15 +1843,20 @@ def _hold_instance_lock(path: str) -> bool:
     global _instance_lock
     import fcntl
 
+    import errno
+
     try:
-        fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_CLOEXEC, 0o600)
+        fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_CLOEXEC | os.O_NOFOLLOW, 0o600)
     except OSError:
-        return True  # can't make one (a read-only folder): go on as before
+        return True  # can't make one (a read-only folder, a link where it would be): go on as before
+    if os.fstat(fd).st_uid != os.getuid():  # someone else's file: it says nothing about us
+        os.close(fd)
+        return True
     try:
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
+    except OSError as exc:
         os.close(fd)
-        return False
+        return exc.errno not in (errno.EWOULDBLOCK, errno.EAGAIN)  # held by another Chatmon; any other error: go on
     _instance_lock = fd
     return True
 

@@ -43,7 +43,9 @@ def exec_line(command: list[str]) -> str:
             out.append('"' + re.sub(r'(["`$\\])', r"\\\1", arg) + '"')
     # Then the general rule for string values, applied before the quoting rule when it's read: each backslash
     # written twice (a literal one, in quotes, is four).
-    return " ".join(out).replace("\\", "\\\\")
+    line = " ".join(out).replace("\\", "\\\\")
+    # And the string rule's escapes for what may never be in a line of the file as it is.
+    return line.replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
 
 
 def _launch_agent(label: str = _LABEL) -> Path:

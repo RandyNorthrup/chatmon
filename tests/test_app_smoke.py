@@ -694,6 +694,9 @@ class PretendDesk:
     def notice_seconds(self):
         return self.notice
 
+    def close(self):
+        pass
+
 
 def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
     c = companion
@@ -729,7 +732,7 @@ def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(com
     c.alert("reminder:x", "Reminder", "**Stretch**")
     assert c._alert_key is None and len(c._held) == 1
     if sys.platform != "darwin":
-        assert shown == [("Reminder", "Stretch")]
+        assert shown == [("Reminder", "Chatmon has something for you.")]  # never its words: the system keeps them
     desk.why_quiet, desk.is_covered = None, False
     c._check_quiet()
     spin(1.0)

@@ -139,8 +139,8 @@ def test_passwords_are_strong_and_never_the_same():
     "asked, kind, arg",
     [
         ("note: buy milk", "note", "buy milk"),
-        ("Add a note call the dentist", "note", "call the dentist"),
-        ("jot down: idea for a game", "note", "idea for a game"),
+        ("Add a note: call the dentist", "note", "call the dentist"),
+        ("take a note: idea for a game", "note", "idea for a game"),
         ("notes", "notes", ""),
         ("delete note 2", "delete note", "2"),
         ("clear notes", "clear notes", ""),
@@ -162,3 +162,39 @@ def test_a_reminder_without_a_time_or_a_question_for_the_ai():
     assert offline.reminder_or_question("to stretch?")
     assert not offline.reminder_or_question("to stretch")
     assert not offline.reminder_or_question("call Sam")
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "Note: I use Python 3.12. Why does asyncio.run fail inside Jupyter?",
+        "note, my AWS key is AKIAEXAMPLE can you check its format",
+        "write down the steps to rotate my SSH keys",
+        "jot down a plan for my week",
+        "note: how do I rotate my keys",
+        "pick one: should I use postgres or mysql for this",
+    ],
+)
+def test_questions_are_never_kept_as_notes_or_picked_at_random(question):
+    assert offline.parse_kept(question) is None and offline.answer(question, NOW) is None
+
+
+@pytest.mark.parametrize("asked", ["round(1, -10**300)", "round(1, -10**8)", "round(2.5, 10**9)"])
+def test_round_cant_be_made_to_work_forever(asked):
+    started = time.perf_counter()
+    assert "can't be worked out" in offline.answer(asked, NOW)
+    assert time.perf_counter() - started < 0.2
+    assert offline.answer("round(3.14159, 2)", NOW).endswith("= **3.14**")
+
+
+def test_pasted_text_with_runs_of_spaces_is_never_slow():
+    for text in ("1 a in " + " " * 5000 + "!", "5 " + "km " * 3000 + "in miles", "1" + " " * 30000 + "kg"):
+        started = time.perf_counter()
+        assert offline.answer(text, NOW) is None
+        assert time.perf_counter() - started < 0.2
+    assert offline.answer("  5   km   in   miles ", NOW) == "5 km = **3.107 miles**"
+
+
+def test_no_complex_numbers_and_no_huge_random_ranges():
+    assert offline.answer("(-8)**0.5", NOW) == "Hmm: that has no real answer."
+    assert offline.answer("random number between 1 and " + "9" * 5000, NOW) is None

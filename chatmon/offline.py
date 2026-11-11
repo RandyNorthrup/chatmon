@@ -63,6 +63,8 @@ def _number(node: ast.AST, budget: list[int]) -> float | int:
             if len(args) != 1 or args[0] != int(args[0]) or not 0 <= args[0] <= 170:
                 raise ValueError
             return math.factorial(int(args[0]))
+        if len(args) == 2 and (node.func.id != "round" or not isinstance(args[1], int) or abs(args[1]) > _MAX_DIGITS):
+            raise ValueError  # round(1, -10**300) would work out 10**(10**300)
         return _FUNCTIONS[node.func.id](*args)
     raise _NotMath
 
@@ -96,6 +98,8 @@ def calculate(expression: str) -> float | int | None:
         raise ValueError("can't divide by zero") from None
     except (ValueError, TypeError):
         raise ValueError("that can't be worked out") from None
+    if isinstance(value, complex):  # (-8) ** 0.5
+        raise ValueError("that has no real answer")
     if isinstance(value, float) and (math.isinf(value) or math.isnan(value)):
         raise OverflowError
     if isinstance(value, int) and value.bit_length() > _MAX_DIGITS * 3.33:  # products of big numbers, too
@@ -168,10 +172,11 @@ _TEMPERATURES = {
     "f": "°F", "°f": "°F", "fahrenheit": "°F",
     "k": "K", "kelvin": "K", "kelvins": "K",
 }
+_UNIT_WORDS = r"[a-z°/'\"]+(?: [a-z°/'\"]+)?"  # one word, or two ("fl oz"): no runs of spaces to backtrack over
 _CONVERT = re.compile(
-    r"^(?:convert\s+|how\s+many\s+(?P<target_first>[a-z°/ '\"]+?)\s+(?:is|are|in)\s+)?"
-    r"(?P<amount>-?\d[\d,]*(?:\.\d+)?)\s*(?P<from>[a-z°/ '\"]+?)"
-    r"(?:\s+(?:in|to|into|as|in\s+to)\s+(?P<to>[a-z°/ '\"]+?))?\s*\??$",
+    rf"^(?:convert |how many (?P<target_first>{_UNIT_WORDS}) (?:is|are|in) )?"
+    rf"(?P<amount>-?\d[\d,]{{0,20}}(?:\.\d{{1,10}})?) ?(?P<from>{_UNIT_WORDS})"
+    rf"(?: (?:in|to|into|as) (?P<to>{_UNIT_WORDS}))? ?\??$",
     re.I,
 )
 
@@ -186,7 +191,10 @@ def _from_kelvin(value: float, unit: str) -> float:
 
 def convert(text: str) -> str | None:
     """"5 km in miles" → "5 km = **3.107 mi**"; None if it isn't a conversion between units it knows."""
-    m = _CONVERT.match(text.strip())
+    text = " ".join(text.split())
+    if len(text) > 80:  # a conversion is short; anything longer is for the AI, and never a slow match
+        return None
+    m = _CONVERT.match(text)
     if not m:
         return None
     target = (m.group("to") or m.group("target_first") or "").strip().lower()
@@ -297,8 +305,8 @@ def chance(text: str, rng=_RANDOM) -> str | None:
         total = sum(rolls) + bonus
         shown = " + ".join(map(str, rolls)) + (f" {m.group(3)} {m.group(4)}" if bonus else "")
         return f"🎲 **{total}**" + (f"  ({shown})" if count > 1 or bonus else "")
-    m = re.fullmatch(r"(?:pick |give me |choose )?(?:a )?random number(?: (?:between|from) (-?\d+) (?:and|to|-) (-?\d+))?", t) or re.fullmatch(
-        r"(?:pick|choose) a number (?:between |from )?(-?\d+) ?(?:and|to|-) ?(-?\d+)", t
+    m = re.fullmatch(r"(?:pick |give me |choose )?(?:a )?random number(?: (?:between|from) (-?\d{1,18}) (?:and|to|-) (-?\d{1,18}))?", t) or re.fullmatch(
+        r"(?:pick|choose) a number (?:between |from )?(-?\d{1,18}) ?(?:and|to|-) ?(-?\d{1,18})", t
     )
     if m:
         low, high = (int(m.group(1)), int(m.group(2))) if m.group(1) else (1, 100)
@@ -306,11 +314,14 @@ def chance(text: str, rng=_RANDOM) -> str | None:
         return f"**{rng.randint(low, high)}**  (from {low} to {high})"
     # "pick one: pizza, tacos or sushi": short options, asked plainly (a question about choosing is the AI's).
     m = re.fullmatch(r"(?:pick|choose) (?:one(?: of| from)?|between|from|one for me|for me)\s*:?\s+(.+)", text.strip(), re.I)
-    if m and "?" not in text:
+    if m and "?" not in text and not _QUESTION_START.match(m.group(1)):
         options = [o.strip(" .!") for o in re.split(r",|\bor\b|\band\b", m.group(1)) if o.strip(" .!")]
         if 2 <= len(options) <= 20 and all(len(o) <= 40 and len(o.split()) <= 5 for o in options):
             return f"**{rng.choice(options)}**"
     return None
+
+
+_QUESTION_START = re.compile(r"(?:should|which|what|how|why|is|are|do|does|can|could|would|will)\b", re.I)
 
 
 # -- passwords
@@ -357,10 +368,10 @@ def parse_kept(text: str) -> Asked | None:
     """Notes, the stopwatch and reminders, which the app keeps."""
     t = " ".join(text.strip().split())
     low = t.lower().rstrip("?.!")
-    m = re.fullmatch(r"(?:note|add (?:a )?note|take (?:a )?note|jot down|write down)\s*[:,-]\s*(.+)", t, re.I | re.S) or re.fullmatch(
-        r"(?:add (?:a )?note|take (?:a )?note|jot down|write down)\s+(.+)", t, re.I | re.S
-    )
-    if m:
+    # Only "note: ..." (or "add a note: ..."), and never something asked: "Note: I use Python 3.12. Why does
+    # asyncio fail?" is a question for the AI, and mustn't be kept in a file instead.
+    m = re.fullmatch(r"(?:note|add (?:a )?note|take (?:a )?note):\s*(.+)", t, re.I | re.S)
+    if m and "?" not in m.group(1) and not _QUESTION_START.match(m.group(1)) and not reminder_or_question(m.group(1)):
         return Asked("note", m.group(1).strip())
     if low in ("notes", "my notes", "show notes", "show my notes", "list notes", "list my notes", "what are my notes"):
         return Asked("notes")

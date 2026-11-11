@@ -14,8 +14,8 @@ from __future__ import annotations
 import os
 from typing import Callable
 
-from PyQt6.QtCore import QObject, pyqtSlot
-from PyQt6.QtDBus import QDBusConnection, QDBusInterface, QDBusMessage
+from PyQt6.QtCore import QMetaType, QObject, pyqtSlot
+from PyQt6.QtDBus import QDBus, QDBusArgument, QDBusConnection, QDBusMessage
 
 LOGIN1 = "org.freedesktop.login1"
 
@@ -50,14 +50,13 @@ class SessionWatcher(QObject):
     @staticmethod
     def _session_path(system: QDBusConnection) -> str | None:
         """Our session's object (signals never come from /session/auto): by our process, else XDG_SESSION_ID."""
-        manager = QDBusInterface(LOGIN1, "/org/freedesktop/login1", "org.freedesktop.login1.Manager", system)
-        if not manager.isValid():
-            return None
-        manager.setTimeout(1000)
         for method, arg in (("GetSessionByPID", os.getpid()), ("GetSession", os.environ.get("XDG_SESSION_ID"))):
             if arg is None:
                 continue
-            reply = manager.call(method, arg)
+            # One message with a timeout of its own: an interface object would ask logind to describe itself first.
+            message = QDBusMessage.createMethodCall(LOGIN1, "/org/freedesktop/login1", "org.freedesktop.login1.Manager", method)
+            message.setArguments([QDBusArgument(arg, QMetaType.Type.UInt.value) if method == "GetSessionByPID" else arg])
+            reply = system.call(message, QDBus.CallMode.Block, 1000)
             if reply.type() == QDBusMessage.MessageType.ReplyMessage and reply.arguments():
                 found = _value(reply.arguments()[0])
                 if hasattr(found, "path"):  # a QDBusObjectPath

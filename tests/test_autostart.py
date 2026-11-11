@@ -34,3 +34,8 @@ def test_the_entry_has_the_apps_own_name_and_icon_and_replaces_the_old_one(tmp_p
     assert not old.exists() and 'Exec="/opt/my apps/chatmon"' in text and "Icon=io.github.RandyNorthrup.chatmon" in text
     autostart.set_enabled(False)
     assert not entry.exists() and not autostart.enabled()
+
+
+def test_a_newline_in_a_path_cant_add_a_line_to_the_entry():
+    line = autostart.exec_line(["/home/me/odd\nX-Evil=1/chatmon"])
+    assert "\n" not in line and "\\n" in line

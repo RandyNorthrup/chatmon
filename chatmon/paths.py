@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import getpass
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -142,7 +143,10 @@ def which(name: str) -> str | None:
 
 
 # Variables a login shell sets that are its own, or this moment's, not the environment a program should get.
-_SHELL_ONLY = {"PWD", "OLDPWD", "SHLVL", "_", "PS1", "PS2", "PROMPT", "RPROMPT", "TERM", "TERM_PROGRAM", "TERM_SESSION_ID", "COLUMNS", "LINES"}
+_SHELL_ONLY = {"PWD", "OLDPWD", "SHLVL", "_", "PS1", "PS2", "PROMPT", "RPROMPT", "TERM", "TERM_PROGRAM", "TERM_SESSION_ID", "COLUMNS", "LINES", "TMPDIR"}
+# Nor what would change how Chatmon itself runs: its libraries, its Python, Qt, where its socket goes.
+_NOT_ADOPTED = ("DYLD_", "LD_", "PYTHON", "QT_", "XDG_", "QML", "__CF", "SSH_AUTH_SOCK")
+_SENTINEL = b"--chatmon-environment--"
 
 
 def login_environment(timeout: float = 4.0) -> list[str]:
@@ -155,14 +159,27 @@ def login_environment(timeout: float = 4.0) -> list[str]:
     shell = os.environ.get("SHELL") or "/bin/zsh"
     found: dict[str, str] = {}
     if os.path.isabs(shell) and os.access(shell, os.X_OK):
+        # Its own process group, all of it ended if it doesn't answer in time; whatever the shell's startup files
+        # print comes before the marker, and only what follows it is read.
+        proc = None
         try:
-            out = subprocess.run([shell, "-l", "-i", "-c", "/usr/bin/env -0"], capture_output=True, timeout=timeout, stdin=subprocess.DEVNULL)
-            for item in out.stdout.split(b"\0"):
-                name, eq, value = item.partition(b"=")
-                if eq and name and not name.startswith(b"\n"):
-                    found[name.decode("utf-8", "replace")] = value.decode("utf-8", "replace")
+            proc = subprocess.Popen(
+                [shell, "-l", "-i", "-c", f"printf '%s\\0' {_SENTINEL.decode()}; /usr/bin/env -0"],
+                stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, start_new_session=True,
+            )
+            out, _ = proc.communicate(timeout=timeout)
+            if _SENTINEL + b"\0" in out:
+                for item in out.split(_SENTINEL + b"\0", 1)[1].split(b"\0"):
+                    name, eq, value = item.partition(b"=")
+                    if eq and re.fullmatch(rb"[A-Za-z_][A-Za-z0-9_]*", name):
+                        found[name.decode()] = value.decode("utf-8", "replace")
         except (OSError, subprocess.SubprocessError):
-            pass
+            if proc is not None:
+                try:
+                    os.killpg(proc.pid, 9)
+                except OSError:
+                    pass
+                proc.wait()
     usual = ["/opt/homebrew/bin", "/usr/local/bin", str(Path.home() / ".local" / "bin"), str(Path.home() / ".npm-global" / "bin")]
     path = found.get("PATH") or os.pathsep.join([*usual, os.environ.get("PATH", "")])
     adopted = []
@@ -170,7 +187,7 @@ def login_environment(timeout: float = 4.0) -> list[str]:
         os.environ["PATH"] = os.pathsep.join(dict.fromkeys(p for p in path.split(os.pathsep) + os.environ.get("PATH", "").split(os.pathsep) if p))
         adopted.append("PATH")
     for name, value in found.items():
-        if name not in os.environ and name not in _SHELL_ONLY:
+        if name not in os.environ and name not in _SHELL_ONLY and not name.startswith(_NOT_ADOPTED):
             os.environ[name] = value
             adopted.append(name)
     return adopted
