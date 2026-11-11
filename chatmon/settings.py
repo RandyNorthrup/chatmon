@@ -138,8 +138,9 @@ show_replies = false
 [chats]
 # Keep your chats on this computer, so you can come back to one and carry on
 # (the menu's "Chats", or "History" in the ask box). They're readable by you
-# alone, and "Clear chat history" deletes them. Pictures and PDFs you attach
-# aren't kept, only their names. The menu's "Keep chat history" overrides this.
+# alone, and "Clear chat history" deletes them. What you attach (files, text,
+# pictures) isn't kept, only its name. The menu's "Keep chat history"
+# overrides this.
 keep = true
 
 [updates]

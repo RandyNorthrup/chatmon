@@ -84,7 +84,7 @@ class Companion(QObject):
         self.chat = chats.Chat()  # the one you're in: saved as it goes (if you keep them), resumable from History
         self.chat_book = chats.ChatBook()
         self.attached: list[attachments.Attachment] = []  # for the next question
-        self._asking: tuple[str, list[attachments.Attachment]] | None = None  # the question on its way, and what went with it
+        self._asking: tuple[str, str, list[attachments.Attachment]] | None = None  # (chat id, question, attached), on its way
         self._renaming: str | None = None  # the chat whose new name the box is asking for
         self.agents: dict[str, tuple[str, float]] = {}  # source: (state, since)
         self._last_event: tuple[str, str] | None = None
@@ -345,8 +345,16 @@ class Companion(QObject):
         picked = self.state.get("keep_chats")
         return bool(self.config["chats"]["keep"] if picked is None else picked)
 
+    def _drop_question(self) -> None:
+        """A question on its way belongs to the chat it was asked in: leaving that chat drops it."""
+        if self._asking is not None:
+            self.asker.cancel()
+            self._asking = None
+            self.behavior.set_thinking(False, self._now())
+
     def _start_chat(self) -> None:
-        self.chat = chats.Chat()
+        self._drop_question()
+        self.chat = chats.Chat(keep=self._keeps_chats())
         self.attached.clear()
 
     def _new_chat(self) -> None:
@@ -371,7 +379,7 @@ class Companion(QObject):
         return "\n\n".join(parts)
 
     def _save_chat(self) -> None:
-        if self._keeps_chats() and self.chat.messages:
+        if self._keeps_chats() and self.chat.keep and self.chat.messages:
             try:
                 self.chat_book.save(self.chat)
             except OSError as exc:
@@ -422,7 +430,7 @@ class Companion(QObject):
         """A chat's name or pin changed: kept, and the menus show it."""
         if chat.id == self.chat.id:
             self.chat = chat
-        if self._keeps_chats():
+        if self._keeps_chats() and chat.keep:
             self.chat_book.save(chat)
         self._menu_changed()
 
@@ -495,10 +503,14 @@ class Companion(QObject):
         self.open_ask()
 
     def _resume_chat(self, chat_id: str) -> None:
-        chat = self.chat_book.load(chat_id)
-        if chat is None:
-            self.say("That chat is gone", "It may have been cleared.", timeout_s=6)
-            return
+        if chat_id == self.chat.id:
+            chat = self.chat
+        else:
+            chat = self.chat_book.load(chat_id)
+            if chat is None:
+                self.say("That chat is gone", "It may have been cleared.", timeout_s=6)
+                return
+            self._drop_question()
         self.chat = chat
         self.attached.clear()
         self._last_ask = self._now()
@@ -537,10 +549,11 @@ class Companion(QObject):
         self.state.set("keep_chats", on)
         self.state.save()
         self._menu_changed()
-        if on:
-            self._save_chat()
+        if on:  # from the next chat: what was said while it was off stays unsaved, as promised
+            self.say("Keeping chats", "Chats from here on are kept, so you can come back to them.", timeout_s=8)
         else:
-            self.say("Not keeping chats", "New chats stay only until I quit. Earlier ones stay until you clear them.", timeout_s=10)
+            self.chat.keep = False
+            self.say("Not keeping chats", "From now on, chats stay only until I quit. Earlier ones stay until you clear them.", timeout_s=10)
 
     def _show_attach(self, pos: QPoint) -> None:
         menu = QMenu()
@@ -564,26 +577,41 @@ class Companion(QObject):
             files, _ = QFileDialog.getOpenFileNames(None, "Attach to your question", str(Path.home()))
         finally:
             self.ask_box.resume()
-        for name in files:
+        self._attach_files_named(files)
+
+    def _attach_files_named(self, names: list[str]) -> None:
+        room = attachments.MAX_COUNT - len(self.attached)
+        # Never a network path (\\server\share): even looking at one would sign in to that server as you.
+        local = [n for n in names if n and not n.startswith(("//", "\\\\"))]
+        if len(local) > room:
+            self.say("That's a lot of files", f"I took the first {max(0, room)}: {attachments.MAX_COUNT} attachments at most.", timeout_s=8)
+        for name in local[: max(0, room)]:
             self._attach(lambda name=name: attachments.from_path(Path(name)))
 
     def _attach_pasted(self, kind: str, payload) -> None:
         if kind == "files":
-            for name in payload:
-                self._attach(lambda name=name: attachments.from_path(Path(name)))
+            self._attach_files_named(list(payload))
         elif kind == "image":
             self._attach(lambda: attachments.from_image(payload))
         elif kind == "text":
             self._attach(lambda: attachments.from_text(payload))
 
     def _attach(self, make) -> None:
+        """Read it off the screen's thread (a big file or picture takes a moment), then add it."""
+        self.background.run(make, self._attached_one)
+
+    def _attached_one(self, result) -> None:
         try:
-            attachment = make()
-            attachments.check_total(self.attached, attachment)
+            if isinstance(result, Exception):
+                raise result
+            attachments.check_total(self.attached, result)
         except attachments.AttachError as exc:
             self.say("Couldn't attach that", str(exc)[:1].upper() + str(exc)[1:] + ".", timeout_s=8)
             return
-        self.attached.append(attachment)
+        except Exception as exc:  # reported, never fatal
+            self.say("Couldn't attach that", str(exc), timeout_s=8)
+            return
+        self.attached.append(result)
         self.ask_box.set_attachments([a.label() for a in self.attached])
 
     def _remove_attachment(self, index: int) -> None:
@@ -631,23 +659,27 @@ class Companion(QObject):
             return
         self.attached.clear()
         self.ask_box.set_attachments([])
-        self._asking = (text, attached)
+        self._asking = (self.chat.id, text, attached)
         you = f"**You:** {text}" + (f"\n\n*Attached: {attachments.mentioned(attached)}*" if attached else "")
         self.ask_box.set_answer(self._transcript(f"{you}\n\n*{brain.label} is thinking…*"), at_end=True)
         self.behavior.set_thinking(True, now)
         question = text or "Have a look at what I attached."
         system = brains.system_prompt(self.name, self._companion().label.lower())
-        self.asker.ask(brain, system, self.chat.history()[-8:], question, float(self.config["ai"]["timeout_seconds"]), attached)
+        self.asker.ask(brain, system, self.chat.history(brain.label)[-8:], question, float(self.config["ai"]["timeout_seconds"]), attached)
 
     def _answered(self, answer: str) -> None:
         now = self._now()
         self.behavior.set_thinking(False, now)
-        text, attached = self._asking or ("", [])
+        if self._asking is None or self._asking[0] != self.chat.id:  # asked in a chat since left: not this one's
+            self._asking = None
+            return
+        _, text, attached = self._asking
         self._asking = None
         sent = attachments.in_question(text or "Have a look at what I attached.", attached)
         brain = self._brain(wait=False)
-        self.chat.add(chats.Message("user", text, sent=sent if sent != text else "", attached=[a.name for a in attached]))
-        self.chat.add(chats.Message("assistant", answer, brain=brain.label if brain else ""))
+        label = brain.label if brain else ""
+        self.chat.add(chats.Message("user", text, sent=sent if sent != text else "", attached=[a.name for a in attached], brain=label))
+        self.chat.add(chats.Message("assistant", answer, brain=label))
         self._save_chat()
         self.ask_box.set_answer(self._transcript(), at_end=True)
         self.ask_box.set_resettable(True)
@@ -656,7 +688,10 @@ class Companion(QObject):
 
     def _failed(self, error: str) -> None:
         self.behavior.set_thinking(False, self._now())
-        text, attached = self._asking or ("", [])
+        if self._asking is None or self._asking[0] != self.chat.id:
+            self._asking = None
+            return
+        _, text, attached = self._asking
         self._asking = None
         # Back in the box, to try again (or with another brain).
         self.attached = attached + self.attached

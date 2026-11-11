@@ -272,14 +272,17 @@ details.
   → Check for updates every day** turns that off.
 - **Your chats stay on this computer.** They're kept in Chatmon's state folder, one file each, readable by
   you alone, so **Chats** (or **History** in the ask box) can bring one back to carry on. What's kept is
-  what you saw: your questions, the text you attached (it was part of the question), the answers, and the
-  names of pictures and PDFs, never the files. **Keep chat history** off keeps them only until Chatmon
-  quits; **Clear chat history** deletes them all.
+  what you saw: your questions, the answers, and the names of what you attached, never the files, pictures
+  or text themselves. **Keep chat history** off keeps chats only until Chatmon quits; **Clear chat history**
+  deletes them all.
 - **What you attach goes only to the brain you ask, and only what you picked.** Chatmon reads a file when
-  you attach it, never a folder, a device or a pipe, and nothing else on your computer. Text goes to every
-  brain, quoted in your question; pictures (made smaller first) and PDFs only to the brains that can read
-  them, and a brain that can't says so before anything is sent. The command-line AI tools still run with
-  their file tools off.
+  you attach it, never a folder, a device, a pipe or a network path, and nothing else on your computer.
+  Text is quoted in your question between markers no file can fake; pictures (made smaller first) and PDFs
+  go only to the brains that can read them. Attached text goes again with later questions only to the
+  brain you first gave it to, and only until Chatmon quits. A command-line AI tool that can read files
+  (Codex, Gemini CLI, Grok, Copilot) is given no attachments, since a file could tell it to read others;
+  Claude Code and Muse Code run with their tools off, so they get text. Each question to a command-line
+  tool runs in a new, empty folder of its own.
 - **An update installs only if it's the real one, and only when you say so.** The release's list of
   checksums (`SHA256SUMS.txt`) must be signed with Chatmon's release key, whose public half is built into
   Chatmon, and the download must match its checksum there; on Windows the installer must also be signed by
