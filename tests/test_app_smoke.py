@@ -248,6 +248,30 @@ def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
     assert "claude-sonnet-5-5, effort medium, thinking off" in c.ask_box.answer.toPlainText()
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="a Unix socket, as hooks use on Linux and macOS")
+def test_senders_that_stop_waiting_are_all_heard(companion, monkeypatch):
+    """A busy or slow computer can take longer to answer than a sender waits (half a second), so the answer
+    goes to a sender that has hung up. Every message is still heard, the ones after it too: on an Intel Mac
+    the last one, `chatmon quit`, once went unheard for good."""
+    import json
+    import socket
+
+    from chatmon import paths
+
+    heard = []
+    monkeypatch.setattr(companion, "handle", heard.append)
+    sent = [{"type": "say", "text": f"message {i}"} for i in range(4)]
+    for message in sent:
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sender:
+            sender.connect(paths.server_name())
+            sender.sendall(json.dumps(message).encode() + b"\n")
+        spin(0.02)  # gone before its answer: the answer finds no one there
+    deadline = time.monotonic() + 5
+    while len(heard) < len(sent) and time.monotonic() < deadline:
+        spin(0.05)
+    assert heard == sent
+
+
 def test_quits_when_asked(companion, monkeypatch):
     """`chatmon quit` (an installer about to update it): it answers first, then quits, saving as it goes."""
     quits = []

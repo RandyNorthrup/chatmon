@@ -14,9 +14,10 @@ from datetime import date, datetime
 from functools import partial
 from pathlib import Path
 
+from PyQt6 import sip
 from PyQt6.QtCore import QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QActionGroup, QDesktopServices, QGuiApplication, QIcon
-from PyQt6.QtNetwork import QLocalServer
+from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 from . import agents, autostart, brains, companions, events, heads_up, paths, reminders, styles
@@ -548,17 +549,25 @@ class Companion(QObject):
     # -- messages from hooks and scripts
 
     def _accept(self) -> None:
+        # Each connection is read and answered from the event loop, never from inside Qt's notice that its
+        # socket is ready. A sender waits only half a second for its answer, and a slow or busy computer can
+        # take longer: answering one that has hung up makes Qt tear its socket down right there, and then a
+        # connection accepted in the same pass could go unheard for good (`chatmon quit`, on an Intel Mac).
+        queued = Qt.ConnectionType.QueuedConnection
         while self.server.hasPendingConnections():
             sock = self.server.nextPendingConnection()
             buffer = bytearray()
-            sock.readyRead.connect(partial(self._received, sock, buffer, False))
-            sock.disconnected.connect(partial(self._received, sock, buffer, True))
-            self._received(sock, buffer, False)
+            sock.readyRead.connect(partial(self._received, sock, buffer, False), type=queued)
+            sock.disconnected.connect(partial(self._received, sock, buffer, True), type=queued)
+            QTimer.singleShot(0, partial(self._received, sock, buffer, False))  # anything already in
 
-    def _received(self, sock, buffer: bytearray, closed: bool) -> None:
+    def _received(self, sock: QLocalSocket, buffer: bytearray, closed: bool) -> None:
         """Handle each complete line as it arrives and answer it, so the
         sender can hang up knowing it got here."""
-        buffer.extend(bytes(sock.readAll()))
+        if sip.isdeleted(sock):  # done with before this call came round
+            return
+        if sock.bytesAvailable():  # (reading a socket Qt has closed only gets a warning)
+            buffer.extend(bytes(sock.readAll()))
         if len(buffer) > events.MAX_MESSAGE:
             buffer.clear()
             sock.abort()
@@ -568,7 +577,7 @@ class Companion(QObject):
             buffer[:] = rest
             for message in events.parse_lines(line):
                 self.handle(message)
-            if not closed:
+            if not closed and sock.state() == QLocalSocket.LocalSocketState.ConnectedState:
                 sock.write(events.ACK)
                 sock.flush()
         if closed:
