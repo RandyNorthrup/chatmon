@@ -476,21 +476,69 @@ def test_a_script_with_quotes_reaches_powershell_whole():
     assert out.returncode == 0 and out.stdout == "a|bc|d", out.stderr
 
 
-def test_the_updaters_signature_check_reads_a_real_signed_file(monkeypatch):
-    """What the updater asks Windows of an installer, asked of Microsoft's own signed PowerShell here, by a
-    Chatmon started from PowerShell 7 (its modules first on the path Chatmon passes on)."""
-    import os
+def signed_by_its_maker():
+    """A program signed in itself (as Chatmon's installer is), here and on CI alike: python.org's Python,
+    signed by the Python Software Foundation through Microsoft's identity-verified code signing, as Randy's is."""
+    from pathlib import Path
+
+    python = Path(getattr(sys, "_base_executable", sys.executable))
+    out = subprocess.run(
+        ["powershell", "-NoProfile", "-Command", "(Get-AuthenticodeSignature -LiteralPath $env:SIGNED).SignatureType"],
+        env={**os.environ, "SIGNED": str(python)}, capture_output=True, text=True, timeout=120,
+    )
+    if out.stdout.strip() != "Authenticode":
+        pytest.skip(f"{python} isn't signed in itself here")
+    return python
+
+
+def test_the_updaters_signature_check_reads_what_windows_reads(monkeypatch):
+    """WinVerifyTrust through ctypes, with no PowerShell: the same signer, issuer and key usages
+    Get-AuthenticodeSignature gives (asked here only to compare), and a signature that isn't Randy's refused."""
+    from chatmon import updates
+
+    signed = signed_by_its_maker()
+    script = ("$s = Get-AuthenticodeSignature -LiteralPath $env:SIGNED; $c = $s.SignerCertificate;"
+              "[Console]::Out.Write(\"$($s.Status)|$($c.Subject)|$($c.Issuer)|$(($c.EnhancedKeyUsageList.ObjectId) -join ';')\")")
+    out = subprocess.run(["powershell", "-NoProfile", "-Command", script], env={**os.environ, "SIGNED": str(signed)},
+                         capture_output=True, text=True, timeout=120)
+    status, signer, issuer, usages = out.stdout.split("|")
+
+    def no_powershell(*args, **kwargs):  # as where a company blocks it
+        raise PermissionError("blocked by policy")
+
+    monkeypatch.setattr(subprocess, "run", no_powershell)
+    monkeypatch.setattr(subprocess, "Popen", no_powershell)
+    assert updates.windows_signer(signed) == (status, signer, issuer, usages.split(";"))
+    assert status == "Valid" and "1.3.6.1.5.5.7.3.3" in usages  # code signing
+    assert "isn't Randy Northrup's" in updates.verify(signed, updates.sha256(signed), updates.WINDOWS)  # the PSF's, not his
+
+
+def test_a_changed_or_unsigned_download_is_never_valid(tmp_path):
+    import shutil
+
+    from chatmon import updates
+
+    changed = tmp_path / "setup.exe"
+    shutil.copy(signed_by_its_maker(), changed)
+    data = bytearray(changed.read_bytes())
+    data[len(data) // 2] ^= 0xFF  # one byte, after it was signed
+    changed.write_bytes(bytes(data))
+    status, signer, _, _ = updates.windows_signer(changed)
+    assert status == "HashMismatch" and "Python Software Foundation" in signer  # whose it claimed to be, for the message
+    plain = tmp_path / "plain.exe"
+    plain.write_bytes(b"MZ" + bytes(4096))
+    assert updates.windows_signer(plain)[0] != "Valid"
+    assert updates.windows_signer(tmp_path / "gone.exe")[0] != "Valid"
+
+
+def test_a_catalog_never_vouches_for_a_download():
+    """Windows' own programs are vouched for by catalogs of Windows'; a download must be signed in itself."""
     from pathlib import Path
 
     from chatmon import updates
 
-    pwsh7 = Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "PowerShell" / "7" / "Modules"
-    monkeypatch.setenv("PSModulePath", f"{pwsh7};{os.environ.get('PSModulePath', '')}")
-    signed = Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
-    status, signer, issuer, usages = updates.windows_signer(signed)
-    assert status == "Valid", signer  # on failure, PowerShell's reason
-    assert "Microsoft" in signer and "Microsoft" in issuer and "1.3.6.1.5.5.7.3.3" in usages  # code signing
-    assert "isn't Randy Northrup's" in updates.verify(signed, updates.sha256(signed), updates.WINDOWS)  # Microsoft's, not his
+    windows_own = Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
+    assert updates.windows_signer(windows_own)[0] != "Valid"
 
 
 def test_the_windows_update_check_runs_and_says_something_readable():

@@ -180,24 +180,15 @@ def sha256(path: Path) -> str:
 
 
 def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
-    """(status, signer, issuer, extended key usages) of a file's Authenticode signature, as Windows sees it.
-    Slow (PowerShell starts): off the screen's thread."""
-    script = (
-        "$ErrorActionPreference = 'Stop'; $s = Get-AuthenticodeSignature -LiteralPath $env:CHATMON_UPDATE; $c = $s.SignerCertificate;"
-        "[Console]::Out.Write(\"$($s.Status)|$($c.Subject)|$($c.Issuer)|$(($c.EnhancedKeyUsageList.ObjectId) -join ';')\")"
-    )
+    """(status, signer, issuer, extended key usages) of a file's own Authenticode signature, as Windows'
+    WinVerifyTrust sees it (wintrust.py): nothing has to start, PowerShell or anything else. Can take a while
+    (Windows may fetch what the certificate chain needs): off the screen's thread."""
     try:
-        out = subprocess.run(
-            paths.powershell(script),
-            env={**os.environ, "CHATMON_UPDATE": str(path)},  # the path as data, never as part of the script
-            capture_output=True, text=True, timeout=120, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-    except (OSError, subprocess.SubprocessError) as exc:
-        return "Unknown", str(exc), "", []
-    status, signer, issuer, usages = (out.stdout.strip().split("|") + ["", "", ""])[:4]
-    if not status:  # no answer: PowerShell's reason, said once, in place of a signer
-        return "Unknown", next((line.strip() for line in out.stderr.splitlines() if line.strip()), "")[:200], "", []
-    return status, signer, issuer, [u for u in usages.split(";") if u]
+        from . import wintrust
+
+        return wintrust.signer(path)
+    except (ImportError, OSError, AttributeError, ValueError) as exc:  # not Windows, or a library without what's asked
+        return "Unknown", str(exc)[:200], "", []
 
 
 def verify(path: Path, expected: str, kind: str) -> str | None:
