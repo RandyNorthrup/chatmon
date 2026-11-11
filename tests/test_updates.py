@@ -226,7 +226,8 @@ def github(tmp_path, monkeypatch):
     for var in ("XDG_CACHE_HOME", "LOCALAPPDATA"):
         monkeypatch.setenv(var, str(tmp_path / "cache"))
     monkeypatch.setenv("HOME", str(tmp_path))  # macOS: ~/Library/Caches
-    monkeypatch.setattr(updates, "installer_command", lambda kind, path, expected="": ("installer", [str(path)], {}))
+    # A program that exists nowhere (macOS has a real "installer"): what runs is never a real installer.
+    monkeypatch.setattr(updates, "installer_command", lambda kind, path, expected="": ("chatmon-test-no-such-installer", [str(path)], {}))
     monkeypatch.setattr(updates, "RELEASE_KEYS", (TEST_KEY,))
     monkeypatch.setattr(updates.signed_sums, "__defaults__", ((TEST_KEY,),))
 
@@ -318,7 +319,7 @@ def test_an_installer_that_wont_start_says_so_and_frees_the_updater(qapp, github
     from PyQt6.QtCore import QEventLoop, QTimer
 
     github(b"the real installer")
-    updater, _ = run_updater(qapp)  # its installer_command is "installer", which doesn't exist
+    updater, _ = run_updater(qapp)  # its installer_command names a program that doesn't exist
     failed = []
     updater.failed.connect(failed.append)
     updater.install()
