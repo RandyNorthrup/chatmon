@@ -183,7 +183,7 @@ def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
     """(status, signer, issuer, extended key usages) of a file's Authenticode signature, as Windows sees it.
     Slow (PowerShell starts): off the screen's thread."""
     script = (
-        "$s = Get-AuthenticodeSignature -LiteralPath $env:CHATMON_UPDATE; $c = $s.SignerCertificate;"
+        "$ErrorActionPreference = 'Stop'; $s = Get-AuthenticodeSignature -LiteralPath $env:CHATMON_UPDATE; $c = $s.SignerCertificate;"
         "[Console]::Out.Write(\"$($s.Status)|$($c.Subject)|$($c.Issuer)|$(($c.EnhancedKeyUsageList.ObjectId) -join ';')\")"
     )
     try:
@@ -195,7 +195,9 @@ def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
     except (OSError, subprocess.SubprocessError) as exc:
         return "Unknown", str(exc), "", []
     status, signer, issuer, usages = (out.stdout.strip().split("|") + ["", "", ""])[:4]
-    return status or "Unknown", signer, issuer, [u for u in usages.split(";") if u]
+    if not status:  # no answer: PowerShell's reason, said once, in place of a signer
+        return "Unknown", next((line.strip() for line in out.stderr.splitlines() if line.strip()), "")[:200], "", []
+    return status, signer, issuer, [u for u in usages.split(";") if u]
 
 
 def verify(path: Path, expected: str, kind: str) -> str | None:

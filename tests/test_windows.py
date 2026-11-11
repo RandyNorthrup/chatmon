@@ -476,16 +476,20 @@ def test_a_script_with_quotes_reaches_powershell_whole():
     assert out.returncode == 0 and out.stdout == "a|bc|d", out.stderr
 
 
-def test_the_updaters_signature_check_reads_a_real_signed_file():
-    """What the updater asks Windows of an installer, asked of Microsoft's own signed PowerShell here."""
+def test_the_updaters_signature_check_reads_a_real_signed_file(monkeypatch):
+    """What the updater asks Windows of an installer, asked of Microsoft's own signed PowerShell here, by a
+    Chatmon started from PowerShell 7 (its modules first on the path Chatmon passes on)."""
     import os
     from pathlib import Path
 
     from chatmon import updates
 
+    pwsh7 = Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "PowerShell" / "7" / "Modules"
+    monkeypatch.setenv("PSModulePath", f"{pwsh7};{os.environ.get('PSModulePath', '')}")
     signed = Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
     status, signer, issuer, usages = updates.windows_signer(signed)
-    assert status == "Valid" and "Microsoft" in signer and "Microsoft" in issuer and "1.3.6.1.5.5.7.3.3" in usages  # code signing
+    assert status == "Valid", signer  # on failure, PowerShell's reason
+    assert "Microsoft" in signer and "Microsoft" in issuer and "1.3.6.1.5.5.7.3.3" in usages  # code signing
     assert "isn't Randy Northrup's" in updates.verify(signed, updates.sha256(signed), updates.WINDOWS)  # Microsoft's, not his
 
 

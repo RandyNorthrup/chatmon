@@ -193,14 +193,20 @@ def login_environment(timeout: float = 4.0) -> list[str]:
     return adopted
 
 
+# Windows PowerShell's own modules first. Started from PowerShell 7 (a terminal, a script), Chatmon passes on
+# PowerShell 7's module path, and Windows PowerShell would load PowerShell 7's modules, which it can't:
+# Get-AuthenticodeSignature and every other module command fail. Set before the script, it's what they load.
+_OWN_MODULES = "$env:PSModulePath = \"$PSHOME\\Modules;\" + [Environment]::GetEnvironmentVariable('PSModulePath', 'Machine');"
+
+
 def powershell(script: str) -> list[str]:
-    """Windows PowerShell running `script`, as one argument nothing can garble: -EncodedCommand (UTF-16LE,
-    base64). Passed as -Command, a script's double quotes are stripped on the way in by Windows PowerShell's
-    own reading of its command line, and the script never runs as written."""
+    """Windows PowerShell running `script` with its own modules, as one argument nothing can garble:
+    -EncodedCommand (UTF-16LE, base64). Passed as -Command, a script's double quotes are stripped on the way in
+    by Windows PowerShell's own reading of its command line, and the script never runs as written."""
     import base64
 
     system = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32"
-    encoded = base64.b64encode(script.encode("utf-16-le")).decode("ascii")
+    encoded = base64.b64encode((_OWN_MODULES + "\n" + script).encode("utf-16-le")).decode("ascii")
     return [str(system / "WindowsPowerShell" / "v1.0" / "powershell.exe"), "-NoProfile", "-NonInteractive", "-EncodedCommand", encoded]
 
 
