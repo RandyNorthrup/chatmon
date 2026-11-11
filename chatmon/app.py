@@ -44,7 +44,7 @@ HELP_ALL = """\
 **Without any AI** (nothing leaves your computer, and none of it goes in a chat):
 
 - **Reminders and timers:** *remind me in 20m to stretch* · *remind me at 3pm to call Sam* · *timer 10 min for the pasta* · *reminders* · *cancel reminder 2* · *clear reminders*
-- **Focus and breaks:** *focus 50* · *stop focus*
+- **Focus and breaks:** *focus 50* · *stop focus* · *breaks off* · *breaks on* · *focus alerts off* · *focus alerts on*
 - **Notes:** *note: buy milk* · *notes* · *delete note 2* · *clear notes*
 - **Stopwatch:** *stopwatch* · *stop stopwatch*
 - **Sums:** *2 + 2 * 3* · *15% of 80* · *sqrt(2)* · *calc 2^10*
@@ -1043,6 +1043,18 @@ class Companion(QObject):
             self._new_chat()
         elif word in ("rename chat", "rename this chat", "name this chat") and self.chat.messages:
             self._ask_new_name(self.chat.id)
+        elif word in ("breaks off", "no breaks", "stop break reminders", "break reminders off", "breaks on", "break reminders on"):
+            on = word in ("breaks on", "break reminders on")
+            self._override(("breaks", "remind"), on)
+            self.state.save()
+            self.config["breaks"]["remind"] = on
+            self._offline(text, "Break reminders are on." if on else "No more break reminders. *Breaks on* brings them back.")
+        elif word in ("focus alerts off", "focus notifications off", "focus alerts on", "focus notifications on"):
+            on = word.endswith(" on")
+            self._override(("focus", "tell_when_done"), on)
+            self.state.save()
+            self.config["focus"]["tell_when_done"] = on
+            self._offline(text, "I'll say when a focus session ends." if on else "Focus sessions will end quietly. *Focus alerts on* brings it back.")
         elif word in ("settings", "preferences", "options", "open settings"):
             self.ask_box.dismiss()
             self.open_settings()
@@ -1197,7 +1209,7 @@ class Companion(QObject):
             return
         self.save()
         rest = [r for r in due if r.kind != "focus"]
-        if len(rest) < len(due):
+        if len(rest) < len(due) and self.config["focus"].get("tell_when_done", True):
             self.behavior.react("beam", self._now())
             minutes = float(self.config["focus"]["minutes"])
             self.say(
@@ -1241,7 +1253,10 @@ class Companion(QObject):
             if state == "working" and mono - since > WORK_EXPIRES:
                 del self.agents[source]
         self._update_working()
-        if self.breaks.due(now) and self.reminders.focus() is None and not self.stage.message_visible() and not self.ask_box.isVisible():
+        if (
+            self.config["breaks"].get("remind", True) and self.breaks.due(now) and self.reminders.focus() is None
+            and not self.stage.message_visible() and not self.ask_box.isVisible()
+        ):
             minutes = self.breaks.minutes_on(now)
             snooze = float(self.config["breaks"]["snooze_minutes"])
             self.breaks.snooze(now, snooze)
@@ -2021,7 +2036,8 @@ class Companion(QObject):
     SETTINGS_PATHS = {  # the window's name for a setting: where it lives in the settings
         "size": ("size",), "walk": ("walk",), "sleep_after_minutes": ("sleep_after_minutes",),
         "timeout_seconds": ("ai", "timeout_seconds"), "show_replies": ("agents", "show_replies"),
-        "breaks_every": ("breaks", "every_minutes"), "snooze": ("breaks", "snooze_minutes"), "focus": ("focus", "minutes"),
+        "break_reminders": ("breaks", "remind"), "breaks_every": ("breaks", "every_minutes"), "snooze": ("breaks", "snooze_minutes"),
+        "focus": ("focus", "minutes"), "focus_done": ("focus", "tell_when_done"),
         "battery_low": ("heads_up", "battery_low"), "battery_critical": ("heads_up", "battery_critical"),
         "disk_full": ("heads_up", "disk_full_percent"), "updates_heads_up": ("heads_up", "updates"),
         "updates_every_hours": ("heads_up", "updates_every_hours"),
@@ -2037,7 +2053,9 @@ class Companion(QObject):
             "timeout_seconds": int(c["ai"]["timeout_seconds"]), "show_replies": bool(c["agents"]["show_replies"]),
             "keep_chats": self._keeps_chats(), "context_tokens": self._context_cap(), "instructions": self._instructions(),
             "memory": self.memory.texts(),
-            "breaks_every": int(c["breaks"]["every_minutes"]), "snooze": int(c["breaks"]["snooze_minutes"]), "focus": int(c["focus"]["minutes"]),
+            "break_reminders": bool(c["breaks"]["remind"]) and int(c["breaks"]["every_minutes"]) > 0,  # 0: the file's old "off"
+            "breaks_every": int(c["breaks"]["every_minutes"]),
+            "snooze": int(c["breaks"]["snooze_minutes"]), "focus": int(c["focus"]["minutes"]), "focus_done": bool(c["focus"]["tell_when_done"]),
             "battery_low": int(c["heads_up"]["battery_low"]), "battery_critical": int(c["heads_up"]["battery_critical"]),
             "disk_full": int(c["heads_up"]["disk_full_percent"]), "updates_heads_up": bool(c["heads_up"]["updates"]),
             "updates_every_hours": int(c["heads_up"]["updates_every_hours"]),

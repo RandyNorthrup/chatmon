@@ -931,7 +931,7 @@ def test_settings_hands_back_only_what_changed(qapp):
         "bubble_style": "match", "bubble_effects": True, "check_updates": True, "brain": "", "timeout_seconds": 180,
         "show_replies": False, "keep_chats": True, "context_tokens": 48000, "instructions": "", "memory": ["a"],
         "breaks_every": 60, "snooze": 10, "focus": 25, "battery_low": 20, "battery_critical": 10, "disk_full": 90,
-        "updates_heads_up": True, "updates_every_hours": 6,
+        "updates_heads_up": True, "updates_every_hours": 6, "break_reminders": True, "focus_done": True,
     }
     choices = {"companions": [("penguin", "Penguin")], "bubble_styles": [("match", "Match")], "brains": [("", "Automatic")]}
     w = SettingsWindow(values, choices)
@@ -996,3 +996,30 @@ def test_portal_file_uris_become_local_paths_only():
     from chatmon import portal
 
     assert portal.paths_from(["file:///home/me/My%20Notes.txt", "sftp://host/x", "file:///tmp/a"]) == ["/home/me/My Notes.txt", "/tmp/a"]
+
+
+def test_break_reminders_and_focus_alerts_can_be_turned_off_and_on(companion, monkeypatch):
+    c = companion
+    c.open_ask()
+    c.submit("breaks off")
+    assert c.config["breaks"]["remind"] is False and c._load_config()[0]["breaks"]["remind"] is False  # kept
+    c.ask_box.dismiss()
+    c.stage.dismiss_message()
+    c.breaks.active_since = time.time() - 5 * 3600  # long overdue
+    c._check_time()
+    assert not c.stage.message_visible()  # no nudge
+    c.open_ask()
+    c.submit("breaks on")
+    assert c.config["breaks"]["remind"] is True
+    c.submit("focus alerts off")
+    c.ask_box.dismiss()
+    c.stage.dismiss_message()
+    c.reminders.add(time.time() - 1, "25-minute focus", "focus")
+    c._check_reminders()
+    assert not c.stage.message_visible() and c.reminders.focus() is None  # it ended, quietly
+    c.open_ask()
+    c.submit("focus alerts on")
+    c.ask_box.dismiss()
+    c.reminders.add(time.time() - 1, "25-minute focus", "focus")
+    c._check_reminders()
+    assert c.stage.bubble.title == "Focus session done!"

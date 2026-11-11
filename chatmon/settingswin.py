@@ -163,12 +163,21 @@ class SettingsWindow(QDialog):
 
     def _breaks(self, v: dict) -> QWidget:
         page, form = QWidget(), QFormLayout()
-        self.breaks_every = _spin(0, 480, v["breaks_every"], " min", 5, special="Off")
+        self.break_reminders = QCheckBox("Remind me to take breaks")
+        self.break_reminders.setChecked(v["break_reminders"])
+        self.breaks_every = _spin(5, 480, v["breaks_every"] or 60, " min", 5)
         self.snooze = _spin(1, 120, v["snooze"], " min")
+        for w in (self.breaks_every, self.snooze):  # kept as they are while reminders are off
+            w.setEnabled(v["break_reminders"])
+            self.break_reminders.toggled.connect(w.setEnabled)
         self.focus = _spin(1, 240, v["focus"], " min", 5)
-        form.addRow("Remind me to take a break every", self.breaks_every)
+        self.focus_done = QCheckBox("Tell me when a focus session ends")
+        self.focus_done.setChecked(v["focus_done"])
+        form.addRow("", self.break_reminders)
+        form.addRow("After this long at the screen", self.breaks_every)
         form.addRow("Snooze a break for", self.snooze)
         form.addRow("A focus session lasts", self.focus)
+        form.addRow("", self.focus_done)
         form.addRow("", _note("Time away from the keyboard counts as a break, and so does the computer sleeping or locked."))
         page.setLayout(form)
         return page
@@ -216,7 +225,9 @@ class SettingsWindow(QDialog):
             "context_tokens": self.context_tokens.value(),
             "instructions": self.instructions.toPlainText().strip(),
             "memory": [self.memory.item(i).text() for i in range(self.memory.count())],
+            "break_reminders": self.break_reminders.isChecked(),
             "breaks_every": self.breaks_every.value(),
+            "focus_done": self.focus_done.isChecked(),
             "snooze": self.snooze.value(),
             "focus": self.focus.value(),
             "battery_low": self.battery_low.value(),

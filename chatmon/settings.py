@@ -23,8 +23,8 @@ DEFAULTS: dict[str, Any] = {
     "agents": {"show_replies": False},
     "updates": {"check": True},
     "chats": {"keep": True, "context_tokens": 48000, "instructions": ""},
-    "breaks": {"every_minutes": 60, "snooze_minutes": 10},
-    "focus": {"minutes": 25},
+    "breaks": {"remind": True, "every_minutes": 60, "snooze_minutes": 10},
+    "focus": {"minutes": 25, "tell_when_done": True},
     "heads_up": {
         "battery_low": 20,
         "battery_critical": 10,
@@ -161,12 +161,15 @@ instructions = ""
 check = true
 
 [breaks]
-# Nudge you to take a break after this many minutes at the screen (0: off).
+# Nudge you to take a break after this many minutes at the screen.
+remind = true
 every_minutes = 60
 snooze_minutes = 10
 
 [focus]
 minutes = 25
+# Say when a focus session ends.
+tell_when_done = true
 
 [heads_up]
 battery_low = 20          # percent; 0 turns battery warnings off

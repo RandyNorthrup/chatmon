@@ -12,6 +12,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Ask about what you attached, later.** Text you attach is kept with its chat (readable by you alone), so you can come back to it after Chatmon restarts. It goes only to the brain you gave it to.
 
 ### Changes
+- **Break reminders and focus alerts can be turned off**, in Settings or by saying *breaks off* or *focus alerts off* (and *… on* to bring them back). Turned off, your break interval is kept for when you turn them on again.
 - **Walk around** in the menu is remembered after a restart, as Settings remembers it.
 - The chatmon stops walking while the pointer is over it, so it's easy to click, and carries on when the pointer leaves.
 - **Linux:** the app's entry has **Bring out Chatmon** and **Quit Chatmon** in the launcher and dock.
