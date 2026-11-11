@@ -336,6 +336,33 @@ def test_hears_the_screen_lock_and_unlock(qapp):
         watcher.close()
 
 
+def test_hears_remote_disconnects_and_sleep(qapp):
+    """A Remote Desktop session that disconnects doesn't lock, and sleep isn't a lock: both are time away."""
+    import ctypes
+    from ctypes import wintypes
+
+    from PyQt6 import sip
+
+    from chatmon import winlock
+
+    away, slept = [], []
+    watcher = winlock.LockWatcher(away.append, slept.append)
+    try:
+        def tell(message, wparam):
+            msg = wintypes.MSG(watcher.hwnd, message, wparam, 0)
+            return watcher.nativeEventFilter(b"windows_generic_MSG", sip.voidptr(ctypes.addressof(msg)))
+
+        tell(winlock.WM_WTSSESSION_CHANGE, winlock.WTS_REMOTE_DISCONNECT)
+        tell(winlock.WM_WTSSESSION_CHANGE, winlock.WTS_REMOTE_CONNECT)
+        tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMSUSPEND)
+        tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMSUSPEND)  # the same news twice: once
+        tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMRESUMEAUTOMATIC)
+        tell(winlock.WM_POWERBROADCAST, 0x8013)  # PBT_POWERSETTINGCHANGE: not ours
+        assert away == [True, False] and slept == [True, False]
+    finally:
+        watcher.close()
+
+
 # -- no console windows
 
 

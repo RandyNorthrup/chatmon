@@ -1058,23 +1058,22 @@ class Companion(QObject):
             )
 
     def _watch_screen_lock(self) -> None:
+        """Hear the screen lock and the computer sleep (time away counts as a break). macOS has no
+        documented lock notification: there, time without input (presence.Desk) tells the same."""
         if sys.platform == "win32":
             from . import winlock
 
-            self._lock_watcher = winlock.LockWatcher(self._screen_locked)
+            self._lock_watcher = winlock.LockWatcher(self._screen_locked, self._sleeping)
             return
         if sys.platform == "darwin":
-            # Suspend gaps stand in for it. PyQt ships QtDBus on macOS too, and on an Intel Mac with
-            # Homebrew's dbus Qt finds its libdbus and asks for a session bus macOS doesn't have: a wait
-            # on the screen's thread at every start, and a thread of its own, for nothing.
+            # PyQt ships QtDBus on macOS too, and on an Intel Mac with Homebrew's dbus Qt finds its libdbus and
+            # asks for a session bus macOS doesn't have: a wait on the screen's thread at every start, for nothing.
             return
         try:  # D-Bus: Linux and the BSDs
-            from PyQt6.QtDBus import QDBusConnection
+            from . import linuxsession
         except ImportError:
             return
-        bus = QDBusConnection.sessionBus()
-        if bus.isConnected():
-            bus.connect("org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", "ActiveChanged", self._screen_locked)
+        self._lock_watcher = linuxsession.SessionWatcher(self._screen_locked, self._sleeping)
 
     @pyqtSlot(bool)
     def _screen_locked(self, locked: bool) -> None:
@@ -1084,6 +1083,12 @@ class Companion(QObject):
         else:
             self.breaks.back(now)
             self.behavior.wake(self._now())
+
+    def _sleeping(self, going: bool) -> None:
+        """The computer is going to sleep (True), or has woken (False): as good as stepping away."""
+        self._screen_locked(going)
+        if not going:
+            self._last_wall = time.time()  # not a gap to be guessed at as well
 
     # -- heads-ups
 
