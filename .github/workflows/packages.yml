@@ -347,6 +347,35 @@ jobs:
             dnf remove -y -q chatmon >/dev/null
             test ! -e /usr/lib/chatmon"
           echo "::endgroup::"
+      - name: The last release's packages, for this one to update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select(any(.assets[]; .name | endswith("_all.deb")))][0].tag_name')
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*_all.deb" --pattern "*.noarch.rpm" --dir "$RUNNER_TEMP/last"
+          echo "Updating from $tag"
+      - name: Install the last release, update it to this one with its own updater, run it
+        run: |
+          version=$(python3 packaging/build.py version)
+          # As Chatmon's updater does: the install-update of the Chatmon already installed (pkexec runs it as
+          # root) installs the new package, checked by its checksum from the signed list.
+          echo "::group::ubuntu:24.04"
+          docker run --rm -v "$PWD:/src:ro" -v "$RUNNER_TEMP/last:/last:ro" ubuntu:24.04 sh -ec "
+            apt-get update -qq --error-on=any || { sed -i -E 's#http://(archive|security)\.ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources 2>/dev/null; apt-get update -qq; }
+            DEBIAN_FRONTEND=noninteractive apt-get install -y -qq /last/chatmon_*_all.deb >/dev/null
+            sum=\$(sha256sum /src/dist/chatmon_*_all.deb | cut -d' ' -f1)
+            /usr/lib/chatmon/install-update /src/dist/chatmon_*_all.deb \$sum >/dev/null
+            dpkg-query -W -f '\${Version}\n' chatmon
+            python3 /src/packaging/build.py smoke chatmon chatmon --version $version"
+          echo "::endgroup::"
+          echo "::group::fedora:44"
+          docker run --rm -v "$PWD:/src:ro" -v "$RUNNER_TEMP/last:/last:ro" fedora:44 sh -ec "
+            dnf install -y -q /last/chatmon-*.noarch.rpm >/dev/null
+            sum=\$(sha256sum /src/dist/chatmon-*.noarch.rpm | cut -d' ' -f1)
+            /usr/lib/chatmon/install-update /src/dist/chatmon-*.noarch.rpm \$sum >/dev/null
+            rpm -q chatmon
+            python3 /src/packaging/build.py smoke chatmon chatmon --version $version"
+          echo "::endgroup::"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: package-linux
