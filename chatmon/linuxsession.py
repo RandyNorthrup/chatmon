@@ -6,6 +6,8 @@ a break, on whichever desktop.
 - org.freedesktop.ScreenSaver ActiveChanged (KDE) and org.gnome.ScreenSaver ActiveChanged (GNOME), on the
   session bus.
 
+And power-profiles-daemon's power-saver mode (PowerProfile), so the stage draws less often then.
+
 Imported where there's D-Bus alone; each part is tried, and one that isn't there is left out.
 """
 
@@ -80,3 +82,35 @@ class SessionWatcher(QObject):
             changed = args[1] or {}
             if "LockedHint" in changed:
                 self._locked(bool(_value(changed["LockedHint"])))
+
+
+# power-profiles-daemon, by its name since 0.20, then its first. https://upower.pages.freedesktop.org/power-profiles-daemon/
+PROFILES = (("org.freedesktop.UPower.PowerProfiles", "/org/freedesktop/UPower/PowerProfiles"), ("net.hadess.PowerProfiles", "/net/hadess/PowerProfiles"))
+
+
+class PowerProfile(QObject):
+    """Calls `saving(bool)`: whether the system's power-saver profile is on, now and as it changes."""
+
+    def __init__(self, saving: Callable[[bool], None]):
+        super().__init__()
+        self._saving = saving
+        self.heard: str | None = None
+        system = QDBusConnection.systemBus()
+        if not system.isConnected():
+            return
+        for service, path in PROFILES:
+            message = QDBusMessage.createMethodCall(service, path, "org.freedesktop.DBus.Properties", "Get")
+            message.setArguments([service, "ActiveProfile"])
+            reply = system.call(message, QDBus.CallMode.Block, 500)
+            if reply.type() != QDBusMessage.MessageType.ReplyMessage or not reply.arguments():
+                continue
+            if system.connect(service, path, "org.freedesktop.DBus.Properties", "PropertiesChanged", self._changed):
+                self.heard = service
+            saving(_value(reply.arguments()[0]) == "power-saver")
+            return
+
+    @pyqtSlot(QDBusMessage)
+    def _changed(self, message: QDBusMessage) -> None:
+        args = message.arguments()
+        if len(args) >= 2 and "ActiveProfile" in (args[1] or {}):
+            self._saving(_value(args[1]["ActiveProfile"]) == "power-saver")

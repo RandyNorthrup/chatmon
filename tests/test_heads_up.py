@@ -1,6 +1,7 @@
 from datetime import date
 from pathlib import Path
 
+from chatmon import heads_up
 from chatmon.heads_up import Watcher, count_apt, count_flatpak, read_disks
 
 TODAY = date(2026, 10, 31)
@@ -136,3 +137,28 @@ def test_macos_lists_updates_without_looking_online():
     out = subprocess.run(check.argv, capture_output=True, text=True, timeout=120)
     assert out.returncode == 0, out.stderr
     assert isinstance(check.count(out.stdout, out.returncode), int)
+
+
+def _battery(base, name, percent, status, **held):
+    bat = base / name
+    bat.mkdir(parents=True)
+    (bat / "capacity").write_text(f"{percent}\n")
+    (bat / "status").write_text(f"{status}\n")
+    for key, value in held.items():
+        (bat / key).write_text(f"{value}\n")
+    return bat
+
+
+def test_two_batteries_count_as_one_weighted_by_what_each_holds(tmp_path):
+    _battery(tmp_path, "BAT0", 100, "Full", energy_now=20_000_000, energy_full=20_000_000)  # a small one, full
+    _battery(tmp_path, "BAT1", 25, "Discharging", energy_now=15_000_000, energy_full=60_000_000)  # a big one, low
+    percent, plugged = heads_up.sysfs_battery(tmp_path)
+    assert round(percent) == 44 and not plugged  # 35 of 80 Wh, not the first one's 100%
+
+
+def test_batteries_in_different_units_are_averaged_and_a_mouses_is_left_out(tmp_path):
+    _battery(tmp_path, "BAT0", 80, "Charging", energy_now=1, energy_full=2)
+    _battery(tmp_path, "BAT1", 40, "Charging", charge_now=1, charge_full=2)
+    (_battery(tmp_path, "BAT2", 5, "Discharging") / "scope").write_text("Device\n")
+    assert heads_up.sysfs_battery(tmp_path) == (60.0, True)
+    assert heads_up.sysfs_battery(tmp_path / "none") is None

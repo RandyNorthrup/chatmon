@@ -311,7 +311,8 @@ def test_asks_for_no_session_bus_on_macos(monkeypatch):
 
     watched = []
     monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept: watched.append(True))
-    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None)
+    monkeypatch.setattr(linuxsession, "PowerProfile", lambda saving: None)
+    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=None)
     monkeypatch.setattr(sys, "platform", "darwin")
     appmod.Companion._watch_screen_lock(me)
     assert watched == []
@@ -797,3 +798,15 @@ def test_with_no_tray_it_says_once_where_its_menu_is(companion, monkeypatch):
     c.stage.dismiss_message()
     c._no_tray_news()
     assert not c.stage.message_visible()  # once ever
+
+
+def test_in_power_saver_mode_the_stage_draws_less_often(companion):
+    from chatmon import penguin
+
+    c = companion
+    c._power_saving(True)
+    spin(0.2)
+    assert c.stage._timer.interval() in (1000 // penguin.SAVER_FPS, 1000 // penguin.SAVER_SLOW_FPS)
+    c._power_saving(False)
+    spin(0.2)
+    assert c.stage._timer.interval() in (1000 // penguin.FPS, 1000 // penguin.SLOW_FPS)

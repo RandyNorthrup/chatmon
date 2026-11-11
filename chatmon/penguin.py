@@ -49,6 +49,7 @@ from .stagemenu import StageMenu
 EDGE = 50  # keep the penguin's centre this far from the screen's sides
 FPS = 60  # while it walks, falls or a bubble fades
 SLOW_FPS = 30  # otherwise
+SAVER_FPS, SAVER_SLOW_FPS = 30, 20  # the system saving power: half as often, still twice a sprite's own frame rate
 
 
 class StageWindow(QWidget):
@@ -426,6 +427,7 @@ class Stage(QObject):
         self._timer = QTimer(self)
         self._timer.setTimerType(Qt.TimerType.PreciseTimer)
         self._timer.timeout.connect(self._tick)
+        self.power_saving = False  # the system's power-saver mode: fewer frames
         self._timer.start(1000 // FPS)
 
     # -- what the app uses
@@ -725,7 +727,10 @@ class Stage(QObject):
             self.head_moved.emit()
         # Full speed while anything moves; the sprites' own frame rates are 10 fps or less.
         moving = f.anim == "walk" or self.behavior.held or self.behavior.falling or 0 <= fade < 20
-        interval = 1000 // FPS if moving else 1000 // SLOW_FPS
+        if self.power_saving:
+            interval = 1000 // SAVER_FPS if moving else 1000 // SAVER_SLOW_FPS
+        else:
+            interval = 1000 // FPS if moving else 1000 // SLOW_FPS
         if self._timer.interval() != interval:
             self._timer.setInterval(interval)
 

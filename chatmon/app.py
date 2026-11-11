@@ -1094,6 +1094,10 @@ class Companion(QObject):
         except ImportError:
             return
         self._lock_watcher = linuxsession.SessionWatcher(self._screen_locked, self._sleeping)
+        self._power_watcher = linuxsession.PowerProfile(self._power_saving)
+
+    def _power_saving(self, on: bool) -> None:
+        self.stage.power_saving = on
 
     @pyqtSlot(bool)
     def _screen_locked(self, locked: bool) -> None:

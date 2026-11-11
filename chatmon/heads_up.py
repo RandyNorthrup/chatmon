@@ -24,8 +24,18 @@ class Notice:
     urgent: bool = False
 
 
+UPOWER = "org.freedesktop.UPower"
+DISPLAY_DEVICE = "/org/freedesktop/UPower/devices/DisplayDevice"  # every battery the computer runs on, as one
+POWER_SUPPLY = Path("/sys/class/power_supply")
+
+
 def read_battery() -> tuple[float, bool] | None:
-    """(percent, plugged in), or None without a battery."""
+    """(percent, plugged in), or None without a battery. On Linux, all the computer's batteries as one (a laptop
+    can have two), as the desktop's own battery icon shows them."""
+    if sys.platform not in ("win32", "darwin"):
+        reading = upower_battery() or sysfs_battery()
+        if reading is not None:
+            return reading
     try:
         import psutil
 
@@ -34,14 +44,63 @@ def read_battery() -> tuple[float, bool] | None:
             return float(battery.percent), bool(battery.power_plugged)
     except Exception:
         pass
-    for bat in sorted(Path("/sys/class/power_supply").glob("BAT*")):
+    return None
+
+
+def upower_battery() -> tuple[float, bool] | None:
+    """UPower's DisplayDevice: its batteries combined, weighted by what each holds.
+    https://upower.freedesktop.org/docs/UPower.html#UPower.GetDisplayDevice"""
+    try:
+        from PyQt6.QtDBus import QDBusConnection
+
+        from .presence import _dbus_call
+    except ImportError:
+        return None
+    bus = QDBusConnection.systemBus()
+    if not bus.isConnected():
+        return None
+
+    def get(path: str, interface: str, name: str):
+        return _dbus_call(bus, UPOWER, path, "org.freedesktop.DBus.Properties", "Get", interface, name)
+
+    if not get(DISPLAY_DEVICE, "org.freedesktop.UPower.Device", "IsPresent"):  # no battery, or no UPower
+        return None
+    percent = get(DISPLAY_DEVICE, "org.freedesktop.UPower.Device", "Percentage")
+    on_battery = get("/org/freedesktop/UPower", UPOWER, "OnBattery")
+    if not isinstance(percent, (int, float)) or on_battery is None:
+        return None
+    return float(percent), not bool(on_battery)
+
+
+def sysfs_battery(base: Path = POWER_SUPPLY) -> tuple[float, bool] | None:
+    """The kernel's batteries (not a mouse's or a headset's), combined as UPower does: by what each holds, when
+    they all say it in the same unit, else their percentages averaged."""
+    found = []  # (percent, (unit, now, full) or None)
+    plugged = True
+    for bat in sorted(base.glob("BAT*")):
         try:
+            if (bat / "scope").is_file() and (bat / "scope").read_text().strip() == "Device":
+                continue
             percent = float((bat / "capacity").read_text().strip())
-            status = (bat / "status").read_text().strip()
+            plugged = plugged and (bat / "status").read_text().strip() != "Discharging"
         except (OSError, ValueError):
             continue
-        return percent, status != "Discharging"
-    return None
+        held = None
+        for unit in ("energy", "charge"):  # µWh, or µAh
+            try:
+                held = (unit, float((bat / f"{unit}_now").read_text()), float((bat / f"{unit}_full").read_text()))
+                break
+            except (OSError, ValueError):
+                pass
+        found.append((percent, held))
+    if not found:
+        return None
+    units = {held[0] for _, held in found if held}
+    if len(units) == 1 and all(held for _, held in found) and sum(held[2] for _, held in found) > 0:
+        percent = 100.0 * sum(held[1] for _, held in found) / sum(held[2] for _, held in found)
+    else:
+        percent = sum(p for p, _ in found) / len(found)
+    return min(100.0, percent), plugged
 
 
 def disk_folders() -> list[Path]:

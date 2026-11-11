@@ -6,9 +6,11 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 
 ### Changes
 - **Linux:** the app's entry has **Bring out Chatmon** and **Quit Chatmon** in the launcher and dock.
+- **Linux:** in power-saver mode, the chatmon draws less often.
 
 ### Fixes
 - **Linux:** something that needs you, under a full-screen app, reaches you as a notification on every desktop, with or without a tray. With no tray (GNOME, out of the box), Chatmon says once where its menu is.
+- **Linux:** a laptop with two batteries gets its battery warnings for both together, as the desktop's battery icon shows them, not for the first alone.
 
 ## 0.6.0
 
