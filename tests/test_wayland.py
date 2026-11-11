@@ -115,6 +115,13 @@ CHECKS = {  # constant: (interface, "request" or "event", name)
     "DATA_DEVICE_MANAGER_GET_DEVICE": ("wl_data_device_manager", "request", "get_data_device"),
     "DATA_DEVICE_SET_SELECTION": ("wl_data_device", "request", "set_selection"),
     "EV_DATA_DEVICE_DATA_OFFER": ("wl_data_device", "event", "data_offer"),
+    "EV_DATA_DEVICE_ENTER": ("wl_data_device", "event", "enter"),
+    "EV_DATA_DEVICE_LEAVE": ("wl_data_device", "event", "leave"),
+    "EV_DATA_DEVICE_MOTION": ("wl_data_device", "event", "motion"),
+    "EV_DATA_DEVICE_DROP": ("wl_data_device", "event", "drop"),
+    "DATA_OFFER_ACCEPT": ("wl_data_offer", "request", "accept"),
+    "DATA_OFFER_FINISH": ("wl_data_offer", "request", "finish"),
+    "DATA_OFFER_SET_ACTIONS": ("wl_data_offer", "request", "set_actions"),
     "EV_DATA_DEVICE_SELECTION": ("wl_data_device", "event", "selection"),
     "DATA_OFFER_RECEIVE": ("wl_data_offer", "request", "receive"),
     "DATA_OFFER_DESTROY": ("wl_data_offer", "request", "destroy"),
@@ -248,12 +255,19 @@ class FakeStage:
         self.calls = []
         self.away_calls = []
         self.lock_calls = []
+        self.drops = []
 
     def away(self, on):
         self.away_calls.append(on)
 
     def locked(self, on):
         self.lock_calls.append(on)
+
+    def drop_at(self, gpos):
+        return gpos.x() < 500  # the ask box's side of the screen
+
+    def dropped(self, mime, data):
+        self.drops.append((mime, data))
 
     def paint(self, p, region):
         p.fillRect(QRect(10, 10, 50, 50), QColor(255, 0, 0))
@@ -776,5 +790,48 @@ def test_it_hears_hyprland_lock_and_unlock(qapp):
     server.send(surf._lock_notification, layer.EV_LOCK_UNLOCKED)
     conn.read()
     assert stage.lock_calls == [True, False]
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_files_dragged_onto_the_ask_box_are_taken_and_elsewhere_refused(qapp):
+    conn, server, stage, surf, ids = _configured(qapp)
+    device = ids["data_device"]
+    offer = 0xFF000002
+    server.send(device, layer.EV_DATA_DEVICE_DATA_OFFER, "n", offer)
+    for mime in ("text/plain;charset=utf-8", "text/uri-list"):
+        server.send(offer, layer.EV_DATA_OFFER_OFFER, "s", mime)
+    server.send(device, layer.EV_DATA_DEVICE_ENTER, "uoffo", 31, ids["surface"], 900.0, 300.0, offer)  # not over the box
+    conn.read()
+    server.send(device, layer.EV_DATA_DEVICE_MOTION, "uff", 1, 200.0, 300.0)  # over it
+    conn.read()
+    reqs = server.requests()
+    accepts = [wayland.decode("us", p) for p in named(reqs, offer, layer.DATA_OFFER_ACCEPT)]
+    assert accepts == [[31, None], [31, "text/uri-list"]]  # refused, then files: the best it takes
+    assert [wayland.decode("uu", p) for p in named(reqs, offer, layer.DATA_OFFER_SET_ACTIONS)] == [[layer.DND_ACTION_COPY] * 2]
+    server.send(device, layer.EV_DATA_DEVICE_DROP)
+    server.send(device, layer.EV_DATA_DEVICE_LEAVE)  # some compositors say so after a drop: the offer stays for reading
+    conn.read()
+    (receive,) = named(server.requests(), offer, layer.DATA_OFFER_RECEIVE)
+    assert wayland.decode("sh", receive) == ["text/uri-list"]
+    write_end = server.fds[-1]
+    os.write(write_end, b"file:///home/me/notes.txt\r\n")
+    os.close(write_end)
+    deadline = time.monotonic() + 3
+    while not stage.drops and time.monotonic() < deadline:
+        qapp.processEvents()
+    assert stage.drops == [("text/uri-list", b"file:///home/me/notes.txt\r\n")]
+    reqs = server.requests()
+    assert named(reqs, offer, layer.DATA_OFFER_FINISH) and named(reqs, offer, layer.DATA_OFFER_DESTROY)  # done with it
+    # A drag that leaves without a drop is let go of.
+    other = 0xFF000003
+    server.send(device, layer.EV_DATA_DEVICE_DATA_OFFER, "n", other)
+    server.send(device, layer.EV_DATA_DEVICE_ENTER, "uoffo", 32, ids["surface"], 100.0, 100.0, other)
+    server.send(device, layer.EV_DATA_DEVICE_LEAVE)
+    conn.read()
+    reqs = server.requests()
+    assert named(reqs, other, layer.DATA_OFFER_DESTROY) and not named(reqs, other, layer.DATA_OFFER_RECEIVE)
+    assert surf.selections["clipboard"].drag is None
     surf.close()
     server.sock.close()

@@ -287,3 +287,18 @@ def test_files_pictures_and_long_text_paste_into_the_box_as_attachments(stage, t
     assert pasted[1][0] == "image" and pasted[1][1].width() == 4
     assert pasted[2][0] == "text" and pasted[2][1].startswith("a long log line")
     assert len(pasted) == 3 and box.entry.text() == "short"  # short text is typed in, as before
+
+
+def test_a_drop_lands_in_the_open_ask_box_only(stage, tmp_path):
+    s, box = stage
+    pasted = []
+    box.pasted.connect(lambda kind, payload: pasted.append((kind, payload)))
+    inside = centre_of(box, box.entry) if box.isVisible() else None
+    assert inside is None or not s.drop_at(inside)
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    inside = centre_of(box, box.entry)
+    assert s.drop_at(inside) and not s.drop_at(QPointF(5, 5))
+    notes = tmp_path / "notes.txt"
+    s.dropped("text/uri-list", f"{QUrl.fromLocalFile(str(notes)).toString()}\r\n".encode())
+    assert pasted == [("files", [str(notes)])]

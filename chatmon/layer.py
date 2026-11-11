@@ -86,8 +86,10 @@ SURROUNDING_MAX = 4000  # bytes: a Wayland message can't carry more
 DATA_DEVICE_MANAGER_CREATE_SOURCE, DATA_DEVICE_MANAGER_GET_DEVICE = 0, 1
 DATA_DEVICE_SET_SELECTION = 1
 EV_DATA_DEVICE_DATA_OFFER, EV_DATA_DEVICE_SELECTION = 0, 5
-DATA_OFFER_RECEIVE, DATA_OFFER_DESTROY = 1, 2
+EV_DATA_DEVICE_ENTER, EV_DATA_DEVICE_LEAVE, EV_DATA_DEVICE_MOTION, EV_DATA_DEVICE_DROP = 1, 2, 3, 4  # drag and drop
+DATA_OFFER_ACCEPT, DATA_OFFER_RECEIVE, DATA_OFFER_DESTROY, DATA_OFFER_FINISH, DATA_OFFER_SET_ACTIONS = 0, 1, 2, 3, 4
 EV_DATA_OFFER_OFFER = 0
+DND_ACTION_COPY = 1
 DATA_SOURCE_OFFER, DATA_SOURCE_DESTROY = 0, 1
 EV_DATA_SOURCE_SEND, EV_DATA_SOURCE_CANCELLED = 1, 2
 PRIMARY_MANAGER_CREATE_SOURCE, PRIMARY_MANAGER_GET_DEVICE = 0, 1
@@ -282,6 +284,10 @@ class Selection:
         self.current: int | None = None  # the offer that's the selection now
         self.source: tuple[int, bytes] | None = None  # what we offer
         self.readers: list[PipeReader] = []
+        self.drag: int | None = None  # the offer being dragged over us (the clipboard's device only)
+        self.drag_serial = 0
+        self.drag_type: str | None = None  # the type we said we'd take, where it is now; None: not here
+        self.dropped = False
 
     def add_devices(self) -> None:
         manager = self.surface.globals.get(self.ch.manager)
@@ -358,6 +364,73 @@ class Selection:
             if self.current is not None and self.current != offer:
                 self._drop_offer(self.current)
             self.current = offer or None
+        elif self.ch is CLIPBOARD and opcode in (EV_DATA_DEVICE_ENTER, EV_DATA_DEVICE_MOTION, EV_DATA_DEVICE_LEAVE, EV_DATA_DEVICE_DROP):
+            self._drag_event(opcode, args)
+
+    # -- something dragged over the overlay: files, a picture or text, dropped into the ask box
+
+    def _drag_event(self, opcode: int, args: bytes) -> None:
+        if opcode == EV_DATA_DEVICE_ENTER:
+            serial, _surface, x, y, offer = decode("uoffo", args)
+            if self.drag is not None and self.drag != offer:
+                self._end_drag()
+            self.drag, self.drag_serial, self.drag_type, self.dropped = offer or None, serial, "", False
+            if self.drag is not None:
+                self._drag_to(x, y)
+        elif opcode == EV_DATA_DEVICE_MOTION:
+            _time, x, y = decode("uff", args)
+            if self.drag is not None:
+                self._drag_to(x, y)
+        elif opcode == EV_DATA_DEVICE_LEAVE:
+            if not self.dropped:  # gone without a drop; after one, the offer lives until it's read
+                self._end_drag()
+        elif opcode == EV_DATA_DEVICE_DROP:
+            self._drop()
+
+    def _drag_to(self, x: float, y: float) -> None:
+        """Say whether a drop here would be taken, and as what (only when that changes)."""
+        _local, gpos = self.surface._local(x, y)
+        types = self.offers.get(self.drag, set())
+        mime = None
+        if getattr(self.surface.stage, "drop_at", lambda _pos: False)(gpos):
+            mime = next((t for t in RICH_TYPES if t in types), None) or next((t for t in TEXT_TYPES if t in types), None)
+        if mime == self.drag_type:
+            return
+        self.drag_type = mime
+        self.conn.request(self.drag, DATA_OFFER_ACCEPT, "us", self.drag_serial, mime)  # None: not here
+        if mime is not None:
+            self.conn.request(self.drag, DATA_OFFER_SET_ACTIONS, "uu", DND_ACTION_COPY, DND_ACTION_COPY)
+        self.surface._flush()
+
+    def _drop(self) -> None:
+        offer, mime = self.drag, self.drag_type
+        if offer is None or not mime:
+            self._end_drag()
+            return
+        self.dropped = True
+        read_fd, write_fd = os.pipe2(os.O_CLOEXEC)
+        self.conn.request(offer, self.ch.offer_receive, "sh", mime, write_fd)
+        os.close(write_fd)
+        self.surface._flush()
+        reader = PipeReader(read_fd, PASTE_IMAGE_MAX if mime.startswith("image/") else PASTE_MAX, self.surface)
+        self.readers.append(reader)
+
+        def done(data: bytes) -> None:
+            self.readers.remove(reader)
+            if self.drag == offer:
+                self.conn.request(offer, DATA_OFFER_FINISH)  # taken: the other app may finish its side
+                self._end_drag()
+            dropped = getattr(self.surface.stage, "dropped", None)
+            if dropped is not None and data:
+                dropped("text/plain" if mime in TEXT_TYPES else mime, data)
+
+        reader.finished.connect(done)
+
+    def _end_drag(self) -> None:
+        if self.drag is not None and self.drag != self.current:
+            self._drop_offer(self.drag)
+            self.surface._flush()
+        self.drag, self.drag_type, self.dropped = None, None, False
 
     def _offer_event(self, offer: int, opcode: int, args: bytes) -> None:
         if opcode == self.ch.ev_offer:

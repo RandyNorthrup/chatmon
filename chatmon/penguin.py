@@ -448,6 +448,19 @@ class Stage(QObject):
         """The surface heard you've been away from the keyboard and mouse a while (or are back)."""
         self.away_changed.emit(on)
 
+    def drop_at(self, gpos: QPointF) -> bool:
+        """Something dragged over the overlay: would a drop here be taken? Into the ask box, while you can
+        type in it, as the ask box takes a drop elsewhere (bubble.py's dropEvent)."""
+        hosted = self.hosted
+        if hosted is None or not hosted.contains(gpos):
+            return False
+        entry = getattr(hosted.widget, "entry", None)
+        return hasattr(hosted.widget, "paste_overlay") and entry is not None and entry.isVisible()
+
+    def dropped(self, mime: str, data: bytes) -> None:
+        if self.hosted is not None and hasattr(self.hosted.widget, "paste_overlay"):
+            self.hosted.widget.paste_overlay(mime, data)
+
     def locked(self, on: bool) -> None:
         """The surface heard the session lock (or unlock)."""
         self.lock_changed.emit(on)
