@@ -682,3 +682,36 @@ def test_the_primary_selection_too(qapp):
     assert not named(reqs, ids["data_device"], layer.DATA_DEVICE_SET_SELECTION)  # the clipboard's untouched
     surf.close()
     server.sock.close()
+
+
+@linux_only
+def test_pasting_into_the_ask_box_prefers_files_then_pictures_then_text(qapp):
+    """What the compositor offers for a paste, read in the best type offered: copied files (a file manager
+    offers a uri-list), a picture (a screenshot), or text."""
+    conn, server, stage, surf, ids = _configured(qapp)
+    device = ids["data_device"]
+    for n, (offered, wanted, data) in enumerate(
+        (
+            (["text/plain;charset=utf-8", "text/uri-list", "x-special/gnome-copied-files"], "text/uri-list", b"file:///home/me/notes.txt\r\n"),
+            (["text/plain", "image/png", "image/jpeg"], "image/png", b"\x89PNG\r\n\x1a\nfake"),
+            (["UTF8_STRING", "TEXT"], "UTF8_STRING", "just text ✓".encode()),
+        )
+    ):
+        offer = 0xFF000010 + n
+        server.send(device, layer.EV_DATA_DEVICE_DATA_OFFER, "n", offer)
+        for mime in offered:
+            server.send(offer, layer.EV_DATA_OFFER_OFFER, "s", mime)
+        server.send(device, layer.EV_DATA_DEVICE_SELECTION, "o", offer)
+        conn.read()
+        got = []
+        surf.paste_rich(lambda mime, raw, got=got: got.append((mime, raw)))
+        (receive,) = named(server.requests(), offer, layer.DATA_OFFER_RECEIVE)
+        assert wayland.decode("sh", receive) == [wanted]
+        os.write(server.fds[-1], data)
+        os.close(server.fds[-1])
+        deadline = time.monotonic() + 3
+        while not got and time.monotonic() < deadline:
+            qapp.processEvents()
+        assert got == [("text/plain" if wanted == "UTF8_STRING" else wanted, data)]
+    surf.close()
+    server.sock.close()

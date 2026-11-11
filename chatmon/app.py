@@ -18,9 +18,9 @@ from PyQt6 import sip
 from PyQt6.QtCore import QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiApplication, QIcon
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
-from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
+from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, agents, autostart, brains, changelog, companions, events, heads_up, paths, reminders, report, styles, updates
+from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, events, heads_up, paths, reminders, report, styles, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -81,14 +81,17 @@ class Companion(QObject):
         self.reminders = reminders.ReminderBook.from_list(self.state.get("reminders", []))
         self.breaks = reminders.BreakTracker(self.config["breaks"]["every_minutes"], time.time())
         self.watcher = self._make_watcher()
-        self.history: list[tuple[str, str]] = []
+        self.chat = chats.Chat()  # the one you're in: saved as it goes (if you keep them), resumable from History
+        self.chat_book = chats.ChatBook()
+        self.attached: list[attachments.Attachment] = []  # for the next question
+        self._asking: tuple[str, str, list[attachments.Attachment]] | None = None  # (chat id, question, attached), on its way
+        self._renaming: str | None = None  # the chat whose new name the box is asking for
         self.agents: dict[str, tuple[str, float]] = {}  # source: (state, since)
         self._last_event: tuple[str, str] | None = None
         self._last_event_at = 0.0
         self._alert_key: str | None = None
         self._waiting: list = []  # messages held back while an alert is up
         self._asking_name = False
-        self._question = ""
         self._last_wall = time.time()
         self._last_ask = 0.0
         self._update_counts: dict[str, int] = {}
@@ -124,6 +127,10 @@ class Companion(QObject):
         self.ask_box.closed.connect(self._ask_closed)
         self.ask_box.submitted.connect(self.submit)
         self.ask_box.reset_requested.connect(self._new_chat)
+        self.ask_box.history_requested.connect(self._show_history)
+        self.ask_box.attach_requested.connect(self._show_attach)
+        self.ask_box.pasted.connect(self._attach_pasted)
+        self.ask_box.attachment_removed.connect(self._remove_attachment)
         self.asker.answered.connect(self._answered)
         self.asker.failed.connect(self._failed)
         self.server.newConnection.connect(self._accept)
@@ -297,8 +304,8 @@ class Companion(QObject):
         self.behavior.wake(now)
         self.behavior.set_attending(True, now)
         self.stage.dismiss_message()
-        if now - self._last_ask > 15 * 60:
-            self.history.clear()
+        if now - self._last_ask > 15 * 60 and self.chat.messages:
+            self._start_chat()  # a while since: a fresh one (the last is in History)
         self._last_ask = now
         anchor = self.stage.head_point()
         if self._asking_name:
@@ -310,26 +317,311 @@ class Companion(QObject):
                 text="What should I be called?",
                 activate=focus,
             )
+            self.ask_box.chatting(False)
         else:
             brain = self._brain()
             via = f"answers from {brain.label}" if brain else "no AI set up yet; reminders and timers still work"
             self.ask_box.open(
-                anchor, f"Ask {self.name}", f"Enter to ask · Esc to close · {via}", "Ask anything, or: remind me in 20m to stretch", prefill=prefill, activate=focus
+                anchor, f"Ask {self.name}", f"Enter to ask · Esc to close · {via}", "Ask anything, or: remind me in 20m to stretch",
+                text=self._transcript(), prefill=prefill, activate=focus,
             )
-            self.ask_box.set_resettable(bool(self.history))
+            self.ask_box.chatting(True)
+            self.ask_box.set_answer(self._transcript(), at_end=True)
+            self.ask_box.set_attachments([a.label() for a in self.attached])
+            self.ask_box.set_resettable(bool(self.chat.messages))
 
     def _ask_closed(self) -> None:
         now = self._now()
         self._asking_name = False
+        self._renaming = None
         self.asker.cancel()
         self.behavior.set_thinking(False, now)
         self.behavior.set_talking(False, now)
         self.behavior.set_attending(self._menu_open, now)
 
+    # -- chats: kept, resumed, and what's attached to them
+
+    def _keeps_chats(self) -> bool:
+        picked = self.state.get("keep_chats")
+        return bool(self.config["chats"]["keep"] if picked is None else picked)
+
+    def _drop_question(self) -> None:
+        """A question on its way belongs to the chat it was asked in: leaving that chat drops it."""
+        if self._asking is not None:
+            self.asker.cancel()
+            self._asking = None
+            self.behavior.set_thinking(False, self._now())
+
+    def _start_chat(self) -> None:
+        self._drop_question()
+        self.chat = chats.Chat(keep=self._keeps_chats())
+        self.attached.clear()
+
     def _new_chat(self) -> None:
-        self.history.clear()
+        self._start_chat()
+        self.ask_box.set_attachments([])
         self.ask_box.set_resettable(False)
         self.ask_box.set_answer("*New chat. Ask away.*")
+
+    def _transcript(self, pending: str = "") -> str:
+        """The chat as the box shows it: each question and its answer, newest at the bottom."""
+        parts = []
+        for m in self.chat.messages[-40:]:
+            if m.role == "user":
+                line = f"**You:** {m.text}" if m.text else "**You:**"
+                if m.attached:
+                    line += f"\n\n*Attached: {', '.join(m.attached)}*"
+                parts.append(line)
+            else:
+                parts.append(m.text)
+        if pending:
+            parts.append(pending)
+        return "\n\n".join(parts)
+
+    def _save_chat(self) -> None:
+        if self._keeps_chats() and self.chat.keep and self.chat.messages:
+            try:
+                self.chat_book.save(self.chat)
+            except OSError as exc:
+                print(f"{paths.APP}: couldn't save the chat: {exc}", file=sys.stderr)
+
+    RECENT_CHATS = 12  # in the menu itself; the rest under "Older chats"
+
+    def _chats_menu(self, sub: QMenu, in_box: bool = False) -> None:
+        """Your chats, each with what can be done with it, and keeping or clearing them all."""
+        sub.addAction("New chat", self._new_chat if in_box else self._open_new_chat)
+        if self.chat.messages:
+            sub.addAction("Rename this chat…", partial(self._ask_new_name, self.chat.id))
+        recent = self.chat_book.recent() if self._keeps_chats() else []
+        if recent:
+            sub.addSection("Your chats")
+            for chat in recent[: self.RECENT_CHATS]:
+                self._chat_item(sub, chat)
+            if len(recent) > self.RECENT_CHATS:
+                older = sub.addMenu(f"Older chats ({len(recent) - self.RECENT_CHATS})")
+                for chat in recent[self.RECENT_CHATS :]:
+                    self._chat_item(older, chat)
+        else:
+            empty = sub.addAction("No saved chats yet" if self._keeps_chats() else "Chats aren't being kept")
+            empty.setEnabled(False)
+        sub.addSeparator()
+        keep = sub.addAction("Keep chat history")
+        keep.setCheckable(True)
+        keep.setChecked(self._keeps_chats())
+        keep.toggled.connect(self._set_keep_chats)
+        sub.addAction("Clear chat history…", self._ask_to_clear_chats)
+
+    def _chat_item(self, menu: QMenu, chat: chats.Chat) -> None:
+        """One chat: carry on with it, rename, pin, save or delete it."""
+        mark = "★ " if chat.pinned else ""
+        here = "  (this one)" if chat.id == self.chat.id else ""
+        item = menu.addMenu(f"{mark}{chat.title or 'A chat'}   ·   {chats.when(chat.updated)}{here}")
+        item.addAction("Carry on", partial(self._resume_chat, chat.id))
+        item.addAction("Rename…", partial(self._ask_new_name, chat.id))
+        item.addAction("Unpin" if chat.pinned else "Pin to the top", partial(self._pin_chat, chat.id, not chat.pinned))
+        item.addAction("Save as Markdown…", partial(self._export_chat, chat.id))
+        item.addSeparator()
+        item.addAction("Delete…", partial(self._ask_to_delete_chat, chat.id))
+
+    def _chat_by_id(self, chat_id: str) -> chats.Chat | None:
+        return self.chat if chat_id == self.chat.id else self.chat_book.load(chat_id)
+
+    def _changed_chat(self, chat: chats.Chat) -> None:
+        """A chat's name or pin changed: kept, and the menus show it."""
+        if chat.id == self.chat.id:
+            self.chat = chat
+        if self._keeps_chats() and chat.keep:
+            self.chat_book.save(chat)
+        self._menu_changed()
+
+    def _ask_new_name(self, chat_id: str) -> None:
+        chat = self._chat_by_id(chat_id)
+        if chat is None:
+            return
+        self._renaming = chat_id
+        self.ask_box.open(self.stage.head_point(), "Rename this chat", "Enter to save · Esc to leave it as it is", "A name for the chat", prefill=chat.title)
+        self.ask_box.chatting(False)
+        self.ask_box.set_attachments([])
+        self.ask_box.entry.selectAll()
+
+    def _rename(self, chat_id: str, title: str) -> None:
+        chat = self._chat_by_id(chat_id)
+        title = " ".join(title.split())
+        if chat is None or not title:
+            return
+        chat.rename(title)
+        self._changed_chat(chat)
+
+    def _pin_chat(self, chat_id: str, on: bool) -> None:
+        chat = self._chat_by_id(chat_id)
+        if chat is not None:
+            chat.pinned = on
+            self._changed_chat(chat)
+
+    def _export_chat(self, chat_id: str) -> None:
+        chat = self._chat_by_id(chat_id)
+        if chat is None:
+            return
+        safe = "".join(c if c.isalnum() or c in " -_" else " " for c in chat.title or "chat").strip()[:60] or "chat"
+        shown = self.ask_box.isVisible()
+        if shown:
+            self.ask_box.pause()  # the save dialog needs the keyboard
+        try:
+            name, _ = QFileDialog.getSaveFileName(None, "Save the chat", str(Path.home() / f"{safe}.md"), "Markdown (*.md);;Text (*.txt)")
+        finally:
+            if shown:
+                self.ask_box.resume()
+        if not name:
+            return
+        try:
+            Path(name).write_text(chat.markdown(), encoding="utf-8")
+        except OSError as exc:
+            self.say("Couldn't save the chat", str(exc), timeout_s=10)
+            return
+        self.say("Chat saved", f"`{Path(name).name}`", timeout_s=5)
+
+    def _ask_to_delete_chat(self, chat_id: str) -> None:
+        chat = self._chat_by_id(chat_id)
+        if chat is not None:
+            self.say(f"Delete “{chat.title or 'this chat'}”?", "It can't be brought back.", [("Delete it", partial(self._delete_chat, chat_id)), ("Keep it", None)], timeout_s=30)
+
+    def _popup(self, menu: QMenu, pos: QPoint) -> None:
+        """A menu of the moment, where it can be seen: drawn by the stage on the Wayland overlay."""
+        if self.stage.draws_menus():
+            self.stage.open_menu(menu, pos, owned=True)
+        else:
+            menu.aboutToHide.connect(menu.deleteLater)
+            menu.popup(pos)
+
+    def _show_history(self, pos: QPoint) -> None:
+        menu = QMenu()
+        self._chats_menu(menu, in_box=True)
+        self._popup(menu, pos)
+
+    def _open_new_chat(self) -> None:
+        self._start_chat()
+        self.open_ask()
+
+    def _resume_chat(self, chat_id: str) -> None:
+        if chat_id == self.chat.id:
+            chat = self.chat
+        else:
+            chat = self.chat_book.load(chat_id)
+            if chat is None:
+                self.say("That chat is gone", "It may have been cleared.", timeout_s=6)
+                return
+            self._drop_question()
+        self.chat = chat
+        self.attached.clear()
+        self._last_ask = self._now()
+        if not self.ask_box.isVisible():
+            self.open_ask()
+        self.ask_box.set_attachments([])
+        self.ask_box.set_resettable(True)
+        self.ask_box.set_answer(self._transcript(), at_end=True)
+
+    def _delete_chat(self, chat_id: str | None = None) -> None:
+        chat_id = chat_id or self.chat.id
+        self.chat_book.delete(chat_id)
+        if chat_id == self.chat.id:
+            self._start_chat()
+            if self.ask_box.isVisible():
+                self._new_chat()
+        self._menu_changed()
+
+    def _ask_to_clear_chats(self) -> None:
+        self.say(
+            "Delete every saved chat?", "They can't be brought back.",
+            [("Delete them", self._clear_chats), ("Keep them", None)], timeout_s=30,
+        )
+
+    def _clear_chats(self) -> None:
+        gone = self.chat_book.clear()
+        self._start_chat()
+        if self.ask_box.isVisible():
+            self.ask_box.set_attachments([])
+            self.ask_box.set_resettable(False)
+            self.ask_box.set_answer("*Chat history cleared.*")
+        self._menu_changed()
+        self.say("Chat history cleared", f"{gone} chat{'s' if gone != 1 else ''} deleted.", timeout_s=5)
+
+    def _set_keep_chats(self, on: bool) -> None:
+        self.state.set("keep_chats", on)
+        self.state.save()
+        self._menu_changed()
+        if on:  # from the next chat: what was said while it was off stays unsaved, as promised
+            self.say("Keeping chats", "Chats from here on are kept, so you can come back to them.", timeout_s=8)
+        else:
+            self.chat.keep = False
+            self.say("Not keeping chats", "From now on, chats stay only until I quit. Earlier ones stay until you clear them.", timeout_s=10)
+
+    def _show_attach(self, pos: QPoint) -> None:
+        menu = QMenu()
+        menu.addAction("Attach files…", self._attach_files)
+        menu.addAction("Paste from the clipboard", self._paste_into_box)
+        if self.attached:
+            menu.addAction("Take them all off", self._clear_attachments)
+        self._popup(menu, pos)
+
+    def _paste_into_box(self) -> None:
+        hosted = self.stage.hosted
+        if hosted is not None and hosted.widget is self.ask_box:
+            hosted.paste()  # the overlay's own clipboard
+        else:
+            self.ask_box.paste_clipboard()
+
+    def _attach_files(self) -> None:
+        # The system's file dialog needs the keyboard, which the ask box holds on the overlay: out of its way meanwhile.
+        self.ask_box.pause()
+        try:
+            files, _ = QFileDialog.getOpenFileNames(None, "Attach to your question", str(Path.home()))
+        finally:
+            self.ask_box.resume()
+        self._attach_files_named(files)
+
+    def _attach_files_named(self, names: list[str]) -> None:
+        room = attachments.MAX_COUNT - len(self.attached)
+        # Never a network path (\\server\share): even looking at one would sign in to that server as you.
+        local = [n for n in names if n and not n.startswith(("//", "\\\\"))]
+        if len(local) > room:
+            self.say("That's a lot of files", f"I took the first {max(0, room)}: {attachments.MAX_COUNT} attachments at most.", timeout_s=8)
+        for name in local[: max(0, room)]:
+            self._attach(lambda name=name: attachments.from_path(Path(name)))
+
+    def _attach_pasted(self, kind: str, payload) -> None:
+        if kind == "files":
+            self._attach_files_named(list(payload))
+        elif kind == "image":
+            self._attach(lambda: attachments.from_image(payload))
+        elif kind == "text":
+            self._attach(lambda: attachments.from_text(payload))
+
+    def _attach(self, make) -> None:
+        """Read it off the screen's thread (a big file or picture takes a moment), then add it."""
+        self.background.run(make, self._attached_one)
+
+    def _attached_one(self, result) -> None:
+        try:
+            if isinstance(result, Exception):
+                raise result
+            attachments.check_total(self.attached, result)
+        except attachments.AttachError as exc:
+            self.say("Couldn't attach that", str(exc)[:1].upper() + str(exc)[1:] + ".", timeout_s=8)
+            return
+        except Exception as exc:  # reported, never fatal
+            self.say("Couldn't attach that", str(exc), timeout_s=8)
+            return
+        self.attached.append(result)
+        self.ask_box.set_attachments([a.label() for a in self.attached])
+
+    def _remove_attachment(self, index: int) -> None:
+        if 0 <= index < len(self.attached):
+            del self.attached[index]
+            self.ask_box.set_attachments([a.label() for a in self.attached])
+
+    def _clear_attachments(self) -> None:
+        self.attached.clear()
+        self.ask_box.set_attachments([])
 
     def submit(self, text: str) -> None:
         now = self._now()
@@ -343,7 +635,12 @@ class Companion(QObject):
             self.behavior.react("hop", now)
             self.say(f"{self.name}! I love it.", HELP, timeout_s=25)
             return
-        if self._local(text):
+        if self._renaming is not None:
+            chat_id, self._renaming = self._renaming, None
+            self._rename(chat_id, text)
+            self.open_ask()  # back to the chat, renamed
+            return
+        if not self.attached and self._local(text):  # with something attached, it's a question
             return
         brain = self._brain()
         if brain is None:
@@ -354,23 +651,54 @@ class Companion(QObject):
                 "menu.\n\n" + HELP
             )
             return
-        self._question = text
-        self.ask_box.set_answer(f"**You:** {text}\n\n*{brain.label} is thinking…*")
+        attached = list(self.attached)
+        refused = brains.cant_take(brain, attached)
+        if refused:  # kept, for a brain that can
+            self.ask_box.entry.setText(text)
+            self.ask_box.set_answer(self._transcript(f"*{refused}*"), at_end=True)
+            return
+        self.attached.clear()
+        self.ask_box.set_attachments([])
+        self._asking = (self.chat.id, text, attached)
+        you = f"**You:** {text}" + (f"\n\n*Attached: {attachments.mentioned(attached)}*" if attached else "")
+        self.ask_box.set_answer(self._transcript(f"{you}\n\n*{brain.label} is thinking…*"), at_end=True)
         self.behavior.set_thinking(True, now)
-        self.asker.ask(brain, brains.system_prompt(self.name, self._companion().label.lower()), self.history[-6:], text, float(self.config["ai"]["timeout_seconds"]))
+        question = text or "Have a look at what I attached."
+        system = brains.system_prompt(self.name, self._companion().label.lower())
+        self.asker.ask(brain, system, self.chat.history(brain.label)[-8:], question, float(self.config["ai"]["timeout_seconds"]), attached)
 
     def _answered(self, answer: str) -> None:
         now = self._now()
         self.behavior.set_thinking(False, now)
-        self.history.append((self._question, answer))
-        self.ask_box.set_answer(f"**You:** {self._question}\n\n{answer}")
+        if self._asking is None or self._asking[0] != self.chat.id:  # asked in a chat since left: not this one's
+            self._asking = None
+            return
+        _, text, attached = self._asking
+        self._asking = None
+        sent = attachments.in_question(text or "Have a look at what I attached.", attached)
+        brain = self._brain(wait=False)
+        label = brain.label if brain else ""
+        self.chat.add(chats.Message("user", text, sent=sent if sent != text else "", attached=[a.name for a in attached], brain=label))
+        self.chat.add(chats.Message("assistant", answer, brain=label))
+        self._save_chat()
+        self.ask_box.set_answer(self._transcript(), at_end=True)
         self.ask_box.set_resettable(True)
         self.behavior.set_talking(True, now)
         QTimer.singleShot(int(min(max(len(answer) / 18, 2), 10) * 1000), lambda: self.behavior.set_talking(False, self._now()))
 
     def _failed(self, error: str) -> None:
         self.behavior.set_thinking(False, self._now())
-        self.ask_box.set_answer(f"**You:** {self._question}\n\n*Hmm, that didn't work.* {error}")
+        if self._asking is None or self._asking[0] != self.chat.id:
+            self._asking = None
+            return
+        _, text, attached = self._asking
+        self._asking = None
+        # Back in the box, to try again (or with another brain).
+        self.attached = attached + self.attached
+        self.ask_box.set_attachments([a.label() for a in self.attached])
+        if text and not self.ask_box.entry.text():
+            self.ask_box.entry.setText(text)
+        self.ask_box.set_answer(self._transcript(f"**You:** {text}\n\n*Hmm, that didn't work.* {error}"), at_end=True)
 
     def _local(self, text: str) -> bool:
         """Reminders, timers and the like, handled without any AI."""
@@ -400,6 +728,10 @@ class Companion(QObject):
             self.set_hidden(True)
         elif word in ("new chat", "/new", "reset"):
             self._new_chat()
+        elif word in ("rename chat", "rename this chat", "name this chat") and self.chat.messages:
+            self._ask_new_name(self.chat.id)
+        elif word in ("history", "chats", "my chats", "chat history"):
+            self._show_history(self.ask_box.history_button.mapToGlobal(QPoint(0, self.ask_box.history_button.height())))
         elif word in ("what's new", "whats new", "what is new", "changes", "changelog", "release notes"):
             self.show_whats_new()
         elif word in ("check for updates", "update", "updates", "update yourself", "install update"):
@@ -866,6 +1198,7 @@ class Companion(QObject):
             sub.deleteLater()  # clear() keeps submenus
         m.clear()
         m.addAction(f"Ask {self.name}…", self.open_ask)
+        self._chats_menu(m.addMenu("Chats"))
         m.addAction("Remind me…", partial(self.open_ask, "remind me in "))
         focus = self.reminders.focus()
         if focus:
@@ -1205,6 +1538,7 @@ class Companion(QObject):
             self._show_sprites()
 
     def quit(self) -> None:
+        self._save_chat()
         global _problem
         if _problem == self._problem:
             _problem = None

@@ -8,7 +8,7 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QEventLoop, QPoint, QPointF, QRect, Qt, QTimer  # noqa: E402
+from PyQt6.QtCore import QEventLoop, QPoint, QPointF, QRect, Qt, QTimer, QUrl  # noqa: E402
 from PyQt6.QtGui import QAction, QImage, QKeySequence, QPainter, QRegion  # noqa: E402
 from PyQt6.QtWidgets import QMenu  # noqa: E402
 
@@ -255,3 +255,35 @@ def test_selecting_is_the_primary_selection_and_middle_click_pastes_it(stage):
     gpos = centre_of(box, box.entry)
     s.press(gpos - QPointF(s.origin()), gpos, Qt.MouseButton.MiddleButton)
     assert "selected elsewhere" in box.entry.text()
+
+
+def test_files_pictures_and_long_text_paste_into_the_box_as_attachments(stage, tmp_path):
+    from PyQt6.QtCore import QBuffer, QByteArray, QIODevice
+    from PyQt6.QtGui import QImage
+
+    s, box = stage
+    pasted = []
+    box.pasted.connect(lambda kind, payload: pasted.append((kind, payload)))
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    s.keyboard_focus(True)
+    image = QImage(4, 4, QImage.Format.Format_RGB32)
+    image.fill(0)
+    png = QByteArray()
+    buffer = QBuffer(png)
+    buffer.open(QIODevice.OpenModeFlag.WriteOnly)
+    image.save(buffer, "PNG")
+    notes = tmp_path / "my notes.txt"
+    ctrl = Qt.KeyboardModifier.ControlModifier
+    for offered in (
+        ("text/uri-list", f"{QUrl.fromLocalFile(str(notes)).toString()}\r\n".encode()),
+        ("image/png", bytes(png)),
+        ("text/plain", ("a long log line\n" * 20).encode()),
+        ("text/plain", b"short"),
+    ):
+        s.surface.paste_rich = lambda then, offered=offered: then(*offered)
+        s.key(key("\x16", Qt.Key.Key_V, ctrl), True, False)
+    assert pasted[0] == ("files", [str(notes)])
+    assert pasted[1][0] == "image" and pasted[1][1].width() == 4
+    assert pasted[2][0] == "text" and pasted[2][1].startswith("a long log line")
+    assert len(pasted) == 3 and box.entry.text() == "short"  # short text is typed in, as before

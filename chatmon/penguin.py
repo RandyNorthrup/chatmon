@@ -336,7 +336,12 @@ class Hosted(QObject):
             QApplication.sendEvent(self.scene, QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Delete, Qt.KeyboardModifier.NoModifier))
 
     def paste(self) -> None:
-        if self.editable():
+        if not self.editable():
+            return
+        rich = getattr(self.widget, "paste_overlay", None)  # the ask box: files and pictures attach
+        if rich is not None and hasattr(self.stage.surface, "paste_rich"):
+            self.stage.surface.paste_rich(rich)
+        else:
             self.stage.clipboard_paste(self.insert)
 
     def middle_click(self, gpos: QPointF) -> None:
