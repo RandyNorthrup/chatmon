@@ -179,10 +179,11 @@ Christmas*), coins and dice (*roll 2d6*), passwords, and *status* (battery, disk
 use). Ask it *help* for the full list. These are answered at once, marked as answered without AI, never
 sent anywhere, and never part of a chat; anything else goes to the brain you picked.
 
-It keeps out of your way: bubbles wait while a full-screen app, a presentation or Do Not Disturb is on, and
-the chatmon gives way to full-screen windows (something that needs you still comes through as a system
-notification). Time away from the keyboard counts toward a break, locked or not, as does sleep. Reduced
-motion and high contrast are followed unless you choose otherwise.
+It keeps out of your way: bubbles wait while a full-screen app, a presentation, Do Not Disturb (KDE, GNOME)
+or Focus (Windows 11) is on, and the chatmon gives way to full-screen windows (something that needs you still
+comes through as a system notification). Time away from the keyboard counts toward a break, locked or not,
+as does sleep. In power-saver mode it draws less often, and on Windows not at all while the screen is locked
+or off. Reduced motion and high contrast are followed unless you choose otherwise.
 
 ## Brains: what answers your questions
 
@@ -327,8 +328,8 @@ details.
   API keys only travel over HTTPS; plain HTTP is allowed only to a server on this computer, and a redirect
   is never followed, so a key goes only where the settings say. Settings and state files, and the copies
   made while connecting an agent, are readable by you alone.
-- **What it notices about you stays with it.** How long since you last typed, whether a full-screen app
-  or Do Not Disturb is on, and your accessibility settings are read from your own system, as you use it,
+- **What it notices about you stays with it.** How long since you last typed, whether a full-screen app,
+  Do Not Disturb or Focus is on, and your accessibility settings are read from your own system, as you use it,
   and never kept or sent anywhere. To tell a full-screen app is in front, it looks only at the front
   window's size and state (Windows, X11), never its title or contents; on macOS and the Wayland overlay the
   system keeps the chatmon out of a full-screen app's way itself.
