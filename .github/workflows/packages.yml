@@ -252,7 +252,7 @@ jobs:
       matrix:
         runner: [macos-latest, macos-15-intel]  # Apple silicon, Intel
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 75
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -273,18 +273,13 @@ jobs:
       - name: Install this .pkg over it, run it
         run: |
           sudo installer -pkg dist/Chatmon-*.pkg -target /
-          # Only this version's program: an older one's (Contents/MacOS/Chatmon) is gone, not left to run.
-          for f in /Applications/Chatmon.app/Contents/MacOS/*; do
-            [ "$(basename "$f")" != Chatmon ] || { echo "An older version's program is left: $f"; exit 1; }
-          done
-          grep -q "MacOS/chatmon-app" /usr/local/bin/chatmon
           test -x /usr/local/bin/chatmon
-          python packaging/build.py smoke /usr/local/bin/chatmon /Applications/Chatmon.app/Contents/MacOS/chatmon-app --version "$(python packaging/build.py version)"
+          python packaging/build.py smoke /usr/local/bin/chatmon /Applications/Chatmon.app/Contents/MacOS/Chatmon --version "$(python packaging/build.py version)"
       - name: The .dmg holds the app
         run: |
           mount=$(mktemp -d)
           hdiutil attach -nobrowse -readonly -mountpoint "$mount" dist/Chatmon-*.dmg
-          test -x "$mount/Chatmon.app/Contents/MacOS/chatmon-app" && test -L "$mount/Applications"
+          test -x "$mount/Chatmon.app/Contents/MacOS/Chatmon" && test -L "$mount/Applications"
           hdiutil detach "$mount"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

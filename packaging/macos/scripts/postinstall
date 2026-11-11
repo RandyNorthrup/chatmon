@@ -5,7 +5,7 @@
 # writing through a link someone left there would write wherever it points.
 set -e
 LINK=/usr/local/bin/chatmon
-APP=/Applications/Chatmon.app/Contents/MacOS/chatmon-app
+APP=/Applications/Chatmon.app/Contents/MacOS/Chatmon
 if [ -L "$LINK" ]; then
     exit 0
 fi

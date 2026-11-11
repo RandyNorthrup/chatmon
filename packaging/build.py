@@ -1,14 +1,14 @@
 """Build Chatmon's installers and packages, and check an installed one works.
 
   python packaging/build.py windows   dist/Chatmon-<v>-windows-x64-setup.exe     Nuitka, then Inno Setup 6
-  python packaging/build.py macos     dist/Chatmon-<v>-macos-<arch>.pkg, .dmg    Nuitka, pkgbuild, hdiutil
+  python packaging/build.py macos     dist/Chatmon-<v>-macos-<arch>.pkg, .dmg    PyInstaller, pkgbuild, hdiutil
   python packaging/build.py linux     dist/chatmon_<v>-1_all.deb, -1.noarch.rpm nfpm, for the system's Python and PyQt6
   python packaging/build.py version   the version they're built as (chatmon/__init__.py's)
   python packaging/build.py smoke CLI APP [--version V]
       Start an installed Chatmon (APP), talk to it with its command line (CLI), and quit it, in a scratch
       home of its own and without a screen (Qt's offscreen platform).
 
-Needs Nuitka and a C compiler (windows: Visual Studio's; macos: Xcode's), Inno Setup 6's ISCC (windows: on PATH, in its usual folders, or $ISCC)
+Needs Nuitka and Visual Studio's C compiler (windows), PyInstaller (macos), Inno Setup 6's ISCC (windows: on PATH, in its usual folders, or $ISCC)
 and nfpm (linux: on PATH or $NFPM). Only the standard library here, so smoke runs on any Python.
 """
 
@@ -29,7 +29,6 @@ PACKAGING = ROOT / "packaging"
 BUILD = ROOT / "build"
 DIST = ROOT / "dist"
 BUNDLE_ID = "io.github.randynorthrup.chatmon"
-MACOS_PROGRAM = "chatmon-app"  # Chatmon.app/Contents/MacOS/chatmon-app; packaging/macos/scripts/postinstall runs it
 
 
 def version() -> str:
@@ -42,8 +41,15 @@ def run(*argv, **kwargs) -> subprocess.CompletedProcess:
     return subprocess.run([str(a) for a in argv], check=True, **kwargs)
 
 
+def pyinstaller() -> Path:
+    """Freeze Chatmon with PyInstaller (macOS); returns where it put it."""
+    out = BUILD / "pyinstaller"
+    run(sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--distpath", out, "--workpath", BUILD / "pyinstaller-work", PACKAGING / "chatmon.spec")
+    return out
+
+
 def nuitka(out: Path, mode: str, *options: str) -> Path:
-    """Compile Chatmon with Nuitka into a standalone program of its own, a Python included; returns its folder.
+    """Compile Chatmon with Nuitka (Windows) into a standalone program of its own, a Python included; returns its folder.
 
     Every line of Python, Chatmon's and the standard library's, is compiled into the program itself, and
     the rest are its DLLs (or shared libraries) and Chatmon's pictures. So whatever runs is a program or
@@ -140,28 +146,7 @@ def _iscc() -> str:
 def macos() -> list[Path]:
     v = version()
     arch = {"x86_64": "intel", "arm64": "arm64"}.get(platform.machine(), platform.machine())
-    out = nuitka(
-        BUILD / "nuitka", "app-dist", "--macos-app-mode=ui-element",  # app-dist: standalone, as an app bundle; menu bar, no Dock icon
-        # Not "Chatmon": beside it, Nuitka links Chatmon's pictures in as "chatmon", the same name to macOS.
-        f"--output-filename={MACOS_PROGRAM}", "--macos-app-name=Chatmon", f"--macos-app-version={v}",
-        f"--macos-signed-app-name={BUNDLE_ID}", f"--macos-app-icon={PACKAGING / 'icons' / 'chatmon.icns'}",
-    )
-    bundles = list(out.glob("*.app"))
-    if len(bundles) != 1:
-        sys.exit(f"Nuitka made {[b.name for b in bundles]} in {out}")
-    app = out / "Chatmon.app"
-    if bundles[0] != app:
-        bundles[0].rename(app)
-    if not (app / "Contents" / "MacOS" / MACOS_PROGRAM).is_file():
-        sys.exit(f"{app} has no Contents/MacOS/{MACOS_PROGRAM}")
-    plist = app / "Contents" / "Info.plist"
-    for key, kind, value in (
-        ("CFBundleName", "string", "Chatmon"), ("CFBundleDisplayName", "string", "Chatmon"),
-        ("CFBundleIdentifier", "string", BUNDLE_ID), ("CFBundleShortVersionString", "string", v), ("CFBundleVersion", "string", v),
-        ("LSUIElement", "bool", "YES"), ("NSHighResolutionCapable", "bool", "YES"),
-        ("NSHumanReadableCopyright", "string", "Copyright (c) 2026 Randy Northrup. MIT License."),
-    ):
-        run("plutil", "-replace", key, f"-{kind}", value, plist)
+    app = pyinstaller() / "Chatmon.app"
     run("codesign", "--force", "--deep", "--sign", "-", app)  # ad hoc: Apple silicon runs nothing unsigned
     work = BUILD / "macos"
     shutil.rmtree(work, ignore_errors=True)
@@ -174,7 +159,7 @@ def macos() -> list[Path]:
     # Installed where it belongs, never "relocated" to wherever another copy of the app happens to be.
     run("pkgbuild", "--analyze", "--root", work / "root", work / "component.plist")
     run("plutil", "-replace", "0.BundleIsRelocatable", "-bool", "NO", work / "component.plist")
-    # And it replaces an older version's bundle whole: nothing of that one (a program since renamed) is left in it.
+    # And it replaces an older version's bundle whole: nothing of that one is left in it to run.
     run("plutil", "-replace", "0.BundleOverwriteAction", "-string", "upgrade", work / "component.plist")
     run("pkgbuild", "--root", work / "root", "--component-plist", work / "component.plist", "--identifier", BUNDLE_ID, "--version", v,
         "--install-location", "/", "--scripts", scripts, work / "Chatmon.pkg")

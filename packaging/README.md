@@ -5,7 +5,7 @@ What each release offers besides the wheel, how it's made, and how to make it yo
 | Platform | File                                   | Made with                          | What it installs                                        |
 | -------- | -------------------------------------- | ---------------------------------- | ------------------------------------------------------- |
 | Windows  | `Chatmon-<v>-windows-x64-setup.exe`    | Nuitka, then Inno Setup 6          | `chatmon.exe` (hooks, the command line) and `chatmonw.exe` (no console window) in `%LOCALAPPDATA%\Programs\Chatmon`, or Program Files for everyone; optional Start menu entry, desktop icon, PATH entry and start at login |
-| macOS    | `Chatmon-<v>-macos-<arch>.pkg`, `.dmg` | Nuitka, pkgbuild, hdiutil          | `/Applications/Chatmon.app` (no Dock icon: it's in the menu bar); the `.pkg` also writes `/usr/local/bin/chatmon`, which runs it |
+| macOS    | `Chatmon-<v>-macos-<arch>.pkg`, `.dmg` | PyInstaller, pkgbuild, hdiutil     | `/Applications/Chatmon.app` (no Dock icon: it's in the menu bar); the `.pkg` also writes `/usr/local/bin/chatmon`, which runs it |
 | Linux    | `chatmon_<v>-1_all.deb`, `chatmon-<v>-1.noarch.rpm` | nfpm                  | Chatmon in `/usr/lib/chatmon`, `/usr/bin/chatmon`, an app menu entry and icons; the system's Python and PyQt6 run it |
 
 The Windows and macOS builds carry their own Python and Qt; the Linux ones depend on
@@ -46,6 +46,10 @@ what it runs is in signed programs and signed libraries, and `build.py` checks t
 carries anything after its last section. Inno Setup's installer reads its files from where a part its
 signature covers says they are, so it can't be led astray either.
 
+macOS is built with PyInstaller still: Nuitka doesn't support PyQt6 there, and it doesn't need to. A
+macOS signature covers the whole program file and seals every other file in the app, so nothing can be
+slipped in beside what it covers.
+
 ## Making them yourself
 
 On the platform you're building for, from the repository's root:
@@ -57,8 +61,8 @@ python packaging/build.py macos     # Xcode's command line tools
 python packaging/build.py linux     # nfpm: packaging/linux/get-nfpm.sh downloads and checks it
 ```
 
-They land in `dist/`. Nuitka compiles all of Chatmon to C, so a build takes a while: Windows compiles it
-twice, once for each program. `python packaging/build.py smoke CLI APP` checks an installed one, in a scratch home
+They land in `dist/`. On Windows, Nuitka compiles all of Chatmon to C, twice (once for each program), so a
+build takes a while. `python packaging/build.py smoke CLI APP` checks an installed one, in a scratch home
 of its own (for example `smoke chatmon chatmon` after installing a .deb), and
 `pwsh packaging/windows/test-install.ps1 <setup.exe> <version> -Unsigned` puts the Windows installer through what CI
 does: install with every option, check each, run it, uninstall, check it's all gone. Don't run that on a

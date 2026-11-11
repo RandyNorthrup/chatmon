@@ -138,9 +138,10 @@ def which(name: str) -> str | None:
 
 
 def frozen() -> bool:
-    """Running from an installer's build (compiled by Nuitka, standalone), with no Python to run it with."""
-    compiled = globals().get("__compiled__")  # Nuitka gives each module it compiles one
-    return bool(getattr(compiled, "standalone", False))
+    """Running from an installer's build, with no Python of its own to run it with: compiled by Nuitka
+    (Windows), which gives each module it compiles a __compiled__, or frozen by PyInstaller (macOS)."""
+    compiled = globals().get("__compiled__")
+    return bool(getattr(compiled, "standalone", False) or getattr(sys, "frozen", False))
 
 
 def command_line(windowless: bool = False) -> list[str]:
