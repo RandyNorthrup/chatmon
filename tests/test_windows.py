@@ -458,5 +458,5 @@ def test_the_pipe_is_named_for_you_and_this_session(qapp):
     from chatmon import paths, winpipe
 
     identity = winpipe.my_identity()
-    assert re.fullmatch(r"S-1-5-[\\d-]+-\\d+", identity)
+    assert re.fullmatch(r"S-1-5-[\d-]+-\d+", identity)
     assert paths.server_name() == f"chatmon-{identity}"
