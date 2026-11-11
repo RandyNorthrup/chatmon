@@ -42,7 +42,7 @@ def run(*argv, **kwargs) -> subprocess.CompletedProcess:
     return subprocess.run([str(a) for a in argv], check=True, **kwargs)
 
 
-def nuitka(out: Path, *options: str) -> Path:
+def nuitka(out: Path, mode: str, *options: str) -> Path:
     """Compile Chatmon with Nuitka into a standalone program of its own, a Python included; returns its folder.
 
     Every line of Python, Chatmon's and the standard library's, is compiled into the program itself, and
@@ -50,7 +50,7 @@ def nuitka(out: Path, *options: str) -> Path:
     a library a signature can cover: nothing is read from an archive, or from after a program's end."""
     shutil.rmtree(out, ignore_errors=True)
     run(
-        sys.executable, "-m", "nuitka", "--mode=standalone", "--deployment",
+        sys.executable, "-m", "nuitka", f"--mode={mode}", "--deployment",
         "--enable-plugin=pyqt6", "--noinclude-qt-translations",
         "--include-package=chatmon", "--include-package-data=chatmon",  # its modules imported where used, its pictures
         "--nofollow-import-to=tkinter,unittest,pydoc_data,test",
@@ -91,15 +91,18 @@ def windows() -> Path:
     v = version()
     numbers = ".".join((re.findall(r"\d+", v)[:3] + ["0", "0", "0", "0"])[:4])
     common = (
+        # Which DLLs each needs, read from their import tables by pefile (Nuitka's own copy), not by a
+        # Dependency Walker Nuitka would download unchecked from its website.
+        "--experimental=force-dependencies-pefile",
         "--output-folder-name=Chatmon", f"--windows-icon-from-ico={PACKAGING / 'icons' / 'chatmon.ico'}",
         "--company-name=Randy Northrup", "--product-name=Chatmon", "--file-description=Chatmon",
         f"--file-version={numbers}", f"--product-version={numbers}", "--copyright=Copyright (c) 2026 Randy Northrup. MIT License.",
     )
     # Two programs on the same files: chatmon.exe, a console program (hooks, the command line), and chatmonw.exe,
     # with no console window (the Start menu, the desktop, autostart). Built apart, then one beside the other.
-    console = nuitka(BUILD / "nuitka-console", *common, "--windows-console-mode=force", "--output-filename=chatmon.exe") / "Chatmon.dist"
+    console = nuitka(BUILD / "nuitka-console", "standalone", *common, "--windows-console-mode=force", "--output-filename=chatmon.exe") / "Chatmon.dist"
     windowless = nuitka(
-        BUILD / "nuitka-windowless", *common, "--windows-console-mode=disable", "--output-filename=chatmonw.exe",
+        BUILD / "nuitka-windowless", "standalone", *common, "--windows-console-mode=disable", "--output-filename=chatmonw.exe",
         # No console, no stdout or stderr, as for pythonw: Chatmon then keeps what it has to say in its log.
         "--force-stdout-spec={NONE}", "--force-stderr-spec={NONE}",
     ) / "Chatmon.dist"
@@ -138,7 +141,7 @@ def macos() -> list[Path]:
     v = version()
     arch = {"x86_64": "intel", "arm64": "arm64"}.get(platform.machine(), platform.machine())
     out = nuitka(
-        BUILD / "nuitka", "--macos-create-app-bundle", "--macos-app-mode=ui-element",  # menu bar, no Dock icon
+        BUILD / "nuitka", "app-dist", "--macos-app-mode=ui-element",  # app-dist: standalone, as an app bundle; menu bar, no Dock icon
         # Not "Chatmon": beside it, Nuitka links Chatmon's pictures in as "chatmon", the same name to macOS.
         f"--output-filename={MACOS_PROGRAM}", "--macos-app-name=Chatmon", f"--macos-app-version={v}",
         f"--macos-signed-app-name={BUNDLE_ID}", f"--macos-app-icon={PACKAGING / 'icons' / 'chatmon.icns'}",
