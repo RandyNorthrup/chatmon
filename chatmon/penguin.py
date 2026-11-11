@@ -16,6 +16,7 @@ the overlay's pointer and keyboard.
 from __future__ import annotations
 
 import math
+import sys
 import time
 
 from PyQt6.QtCore import QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer, pyqtSignal
@@ -479,6 +480,13 @@ class Stage(QObject):
     def native_window(self) -> int:
         win = getattr(self.surface, "winId", None)
         return int(win()) if win is not None else 0
+
+    def dialog_owner(self) -> QWidget | None:
+        """The window the system's dialogs belong to, on Windows: the stage's own. A window with no owner
+        can open under the stage, which stays on top; one it owns opens above it, centred on its screen."""
+        if sys.platform == "win32" and isinstance(self.surface, QWidget):
+            return self.surface
+        return None
 
     def dismiss_message(self) -> None:
         self.bubble.dismiss(self._clock())

@@ -993,6 +993,24 @@ def test_without_a_chooser_the_portal_falls_back_to_qts_dialog(companion, monkey
     assert used == ["qt"]
 
 
+def test_on_windows_file_dialogs_belong_to_the_stage(companion, monkeypatch, tmp_path):
+    """A dialog with no owner can open under the stage, which stays on top; one the stage owns opens above it."""
+    from chatmon import app as appmod
+
+    c = companion
+    PretendBrain(c, monkeypatch)
+    owners = []
+    monkeypatch.setattr(appmod.QFileDialog, "getOpenFileNames", lambda parent, *a: (owners.append(parent), ([], ""))[1])
+    monkeypatch.setattr(appmod.QFileDialog, "getSaveFileName", lambda parent, *a: (owners.append(parent), ("", ""))[1])
+    c.open_ask()
+    c._attach_files()
+    c.submit("Hello")
+    c._answered("Hi.")
+    c._export_chat(c.chat.id)
+    expected = c.stage.surface if sys.platform == "win32" else None
+    assert len(owners) == 2 and all(owner is expected for owner in owners)
+
+
 def test_portal_file_uris_become_local_paths_only():
     pytest.importorskip("PyQt6.QtDBus")
     from chatmon import portal

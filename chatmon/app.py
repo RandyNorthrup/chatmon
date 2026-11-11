@@ -627,7 +627,7 @@ class Companion(QObject):
             if shown:
                 self.ask_box.pause()  # the save dialog needs the keyboard
             try:
-                name, _ = QFileDialog.getSaveFileName(None, "Save the chat", str(Path.home() / f"{safe}.md"), "Markdown (*.md);;Text (*.txt)")
+                name, _ = QFileDialog.getSaveFileName(self.stage.dialog_owner(), "Save the chat", str(Path.home() / f"{safe}.md"), "Markdown (*.md);;Text (*.txt)")
             finally:
                 if shown:
                     self.ask_box.resume()
@@ -750,7 +750,7 @@ class Companion(QObject):
         # The system's file dialog needs the keyboard, which the ask box holds on the overlay: out of its way meanwhile.
         self.ask_box.pause()
         try:
-            files, _ = QFileDialog.getOpenFileNames(None, "Attach to your question", str(Path.home()))
+            files, _ = QFileDialog.getOpenFileNames(self.stage.dialog_owner(), "Attach to your question", str(Path.home()))
         finally:
             self.ask_box.resume()
         self._attach_files_named(files)
