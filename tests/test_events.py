@@ -137,9 +137,9 @@ def test_garbage_on_the_socket_is_dropped_not_fatal():
 
 
 def test_installed_from_a_package_it_runs_its_own_programs(monkeypatch, tmp_path):
-    """PyInstaller's Chatmon has no Python to run it with: hooks and autostart get its own programs."""
+    """The installers' Chatmon has no Python to run it with: hooks and autostart get its own programs."""
     exe = tmp_path / ("chatmon.exe" if sys.platform == "win32" else "Chatmon")
-    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(paths, "frozen", lambda: True)
     monkeypatch.setattr(sys, "executable", str(exe))
     monkeypatch.setattr(paths.shutil, "which", lambda name: "/somewhere/else/" + name)  # whatever else is on PATH
     if sys.platform == "win32":
@@ -149,9 +149,8 @@ def test_installed_from_a_package_it_runs_its_own_programs(monkeypatch, tmp_path
         assert paths.command_line() == paths.command_line(windowless=True) == [str(exe)]
 
 
-def test_dll_search_is_only_touched_when_frozen(monkeypatch):
-    monkeypatch.delattr(sys, "frozen", raising=False)
-    paths.restore_dll_search()  # nothing to do, on any platform
+def test_run_from_source_it_is_not_frozen():
+    assert not paths.frozen()
 
 
 def test_quit_says_when_nothing_is_running(monkeypatch, capsys):

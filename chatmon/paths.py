@@ -138,18 +138,9 @@ def which(name: str) -> str | None:
 
 
 def frozen() -> bool:
-    """Running from an installer's build (PyInstaller), with no Python of its own to run it with."""
-    return bool(getattr(sys, "frozen", False))
-
-
-def restore_dll_search() -> None:
-    """Installed on Windows, PyInstaller points this process's DLL search at its own folder, and every program
-    it starts inherits that: an AI tool, the browser, the editor for the settings would find Chatmon's DLLs
-    before their own. Once Qt's are loaded (or before running another tool), put it back as Windows has it."""
-    if sys.platform == "win32" and frozen():
-        import ctypes
-
-        ctypes.windll.kernel32.SetDllDirectoryW(None)
+    """Running from an installer's build (compiled by Nuitka, standalone), with no Python to run it with."""
+    compiled = globals().get("__compiled__")  # Nuitka gives each module it compiles one
+    return bool(getattr(compiled, "standalone", False))
 
 
 def command_line(windowless: bool = False) -> list[str]:

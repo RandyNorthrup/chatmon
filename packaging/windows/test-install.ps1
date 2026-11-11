@@ -1,8 +1,8 @@
 # Install Chatmon from its installer, check what it set up, run it, uninstall it, and check that it all
 # went again. For CI's fresh Windows machines: it really installs, for the current user, with every option.
 #   pwsh packaging/windows/test-install.ps1 dist\Chatmon-x.y.z-windows-x64-setup.exe x.y.z [-Unsigned]
-# A release's installer and uninstaller must be signed by Randy Northrup; -Unsigned, for one built
-# without signing, checks they aren't. chatmon.exe and chatmonw.exe are never signed: packaging/README.md.
+# A release's installer, its uninstaller and Chatmon's programs must be signed by Randy Northrup, and every
+# library beside them by someone; -Unsigned, for one built without signing, checks ours aren't.
 param([Parameter(Mandatory)] [string]$Setup, [Parameter(Mandatory)] [string]$Version, [switch]$Unsigned)
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
@@ -23,9 +23,9 @@ function Check($what, $ok) {
     if (-not $ok) { throw "FAILED: $what" }
     Write-Host "ok: $what"
 }
-function Signature($what, $file, [switch]$Never) {
+function Signature($what, $file) {
     $sig = Get-AuthenticodeSignature $file
-    if ($Never -or $Unsigned) {
+    if ($Unsigned) {
         Check "$what isn't signed ($($sig.Status))" ($sig.Status -eq "NotSigned")
     } else {
         $by = "$($sig.SignerCertificate.Subject), timestamped by $($sig.TimeStamperCertificate.Subject)"
@@ -43,9 +43,14 @@ Signature "the installer" $Setup
 $p = Start-Process $Setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/TASKS=startmenu,desktop,path,autostart" -Wait -PassThru
 Check "the installer finished (exit $($p.ExitCode))" ($p.ExitCode -eq 0)
 Check "chatmon.exe and chatmonw.exe in $app" ((Test-Path "$app\chatmon.exe") -and (Test-Path "$app\chatmonw.exe"))
+Check "nothing left of an older version's PyInstaller build" (-not (Test-Path "$app\_internal"))
 Signature "the uninstaller" "$app\unins000.exe"
-Signature "chatmon.exe" "$app\chatmon.exe" -Never
-Signature "chatmonw.exe" "$app\chatmonw.exe" -Never
+Signature "chatmon.exe" "$app\chatmon.exe"
+Signature "chatmonw.exe" "$app\chatmonw.exe"
+if (-not $Unsigned) {
+    $bad = Get-ChildItem $app -Recurse -File -Include *.exe, *.dll, *.pyd | Where-Object { (Get-AuthenticodeSignature $_.FullName).Status -ne "Valid" }
+    Check "every program and library installed is signed$(if ($bad) { ': not ' + ($bad.Name -join ', ') })" (-not $bad)
+}
 Check "a Start menu entry that starts chatmonw.exe" ((Test-Path $startMenu) -and ((Shortcut $startMenu) -eq "$app\chatmonw.exe"))
 Check "a desktop icon that starts chatmonw.exe" ((Test-Path $desktop) -and ((Shortcut $desktop) -eq "$app\chatmonw.exe"))
 Check "its folder on your PATH" ((UserPath) -contains $app)

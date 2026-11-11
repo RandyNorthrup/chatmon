@@ -1,14 +1,14 @@
 """Build Chatmon's installers and packages, and check an installed one works.
 
-  python packaging/build.py windows   dist/Chatmon-<v>-windows-x64-setup.exe     PyInstaller, then Inno Setup 6
-  python packaging/build.py macos     dist/Chatmon-<v>-macos-<arch>.pkg, .dmg    PyInstaller, pkgbuild, hdiutil
+  python packaging/build.py windows   dist/Chatmon-<v>-windows-x64-setup.exe     Nuitka, then Inno Setup 6
+  python packaging/build.py macos     dist/Chatmon-<v>-macos-<arch>.pkg, .dmg    Nuitka, pkgbuild, hdiutil
   python packaging/build.py linux     dist/chatmon_<v>-1_all.deb, -1.noarch.rpm nfpm, for the system's Python and PyQt6
   python packaging/build.py version   the version they're built as (chatmon/__init__.py's)
   python packaging/build.py smoke CLI APP [--version V]
       Start an installed Chatmon (APP), talk to it with its command line (CLI), and quit it, in a scratch
       home of its own and without a screen (Qt's offscreen platform).
 
-Needs PyInstaller (windows, macos), Inno Setup 6's ISCC (windows: on PATH, in its usual folders, or $ISCC)
+Needs Nuitka and a C compiler (windows: Visual Studio's; macos: Xcode's), Inno Setup 6's ISCC (windows: on PATH, in its usual folders, or $ISCC)
 and nfpm (linux: on PATH or $NFPM). Only the standard library here, so smoke runs on any Python.
 """
 
@@ -29,6 +29,7 @@ PACKAGING = ROOT / "packaging"
 BUILD = ROOT / "build"
 DIST = ROOT / "dist"
 BUNDLE_ID = "io.github.randynorthrup.chatmon"
+MACOS_PROGRAM = "chatmon-app"  # Chatmon.app/Contents/MacOS/chatmon-app; packaging/macos/scripts/postinstall runs it
 
 
 def version() -> str:
@@ -41,42 +42,82 @@ def run(*argv, **kwargs) -> subprocess.CompletedProcess:
     return subprocess.run([str(a) for a in argv], check=True, **kwargs)
 
 
-def pyinstaller() -> Path:
-    """Freeze Chatmon with PyInstaller; returns where it put it."""
-    out = BUILD / "pyinstaller"
-    run(sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--distpath", out, "--workpath", BUILD / "pyinstaller-work", PACKAGING / "chatmon.spec")
+def nuitka(out: Path, *options: str) -> Path:
+    """Compile Chatmon with Nuitka into a standalone program of its own, a Python included; returns its folder.
+
+    Every line of Python, Chatmon's and the standard library's, is compiled into the program itself, and
+    the rest are its DLLs (or shared libraries) and Chatmon's pictures. So whatever runs is a program or
+    a library a signature can cover: nothing is read from an archive, or from after a program's end."""
+    shutil.rmtree(out, ignore_errors=True)
+    run(
+        sys.executable, "-m", "nuitka", "--mode=standalone", "--deployment",
+        "--enable-plugin=pyqt6", "--noinclude-qt-translations",
+        "--include-package=chatmon", "--include-package-data=chatmon",  # its modules imported where used, its pictures
+        "--nofollow-import-to=tkinter,unittest,pydoc_data,test",
+        "--python-flag=no_site", "--python-flag=isolated",  # nothing from PYTHONPATH, user site-packages or the current folder
+        f"--output-dir={out}", *options, PACKAGING / "entry.py",
+    )
     return out
+
+
+def _same_files(a: Path, b: Path, *, besides: set[str]) -> None:
+    """Two builds' folders hold the same files, byte for byte, but for `besides`."""
+    def files(root: Path) -> dict[str, Path]:
+        return {p.relative_to(root).as_posix(): p for p in root.rglob("*") if p.is_file() and p.name not in besides}
+    fa, fb = files(a), files(b)
+    differ = sorted(set(fa) ^ set(fb)) + sorted(n for n in set(fa) & set(fb) if fa[n].read_bytes() != fb[n].read_bytes())
+    if differ:
+        sys.exit(f"{a} and {b} differ: {differ[:10]}")
+
+
+def _pe_overlay(exe: Path) -> int:
+    """How many bytes a Windows program has after its last section: what its signature would have to take on
+    trust, and what nothing in it should ever read."""
+    data = exe.read_bytes()
+    pe = int.from_bytes(data[0x3C:0x40], "little")
+    sections = int.from_bytes(data[pe + 6 : pe + 8], "little")
+    table = pe + 24 + int.from_bytes(data[pe + 20 : pe + 22], "little")
+    end = max(
+        int.from_bytes(data[at + 20 : at + 24], "little") + int.from_bytes(data[at + 16 : at + 20], "little")
+        for at in range(table, table + 40 * sections, 40)
+    )
+    return len(data) - end
 
 
 # -- Windows
 
 
-def _version_info(v: str) -> None:
-    """The version, name and maker that Explorer and Task Manager show for chatmon.exe and chatmonw.exe."""
-    numbers = (tuple(int(n) for n in re.findall(r"\d+", v)[:3]) + (0, 0, 0, 0))[:4]
-    strings = {
-        "CompanyName": "Randy Northrup",
-        "FileDescription": "Chatmon",
-        "FileVersion": v,
-        "InternalName": "chatmon",
-        "LegalCopyright": "Copyright (c) 2026 Randy Northrup. MIT License.",
-        "ProductName": "Chatmon",
-        "ProductVersion": v,
-    }
-    table = ",\n          ".join(f"StringStruct({k!r}, {s!r})" for k, s in strings.items())
-    BUILD.mkdir(exist_ok=True)
-    (BUILD / "version_info.txt").write_text(
-        f"""VSVersionInfo(
-  ffi=FixedFileInfo(filevers={numbers}, prodvers={numbers}, mask=0x3f, flags=0x0, OS=0x40004, fileType=0x1, subtype=0x0, date=(0, 0)),
-  kids=[
-    StringFileInfo([StringTable('040904B0', [
-          {table}])]),
-    VarFileInfo([VarStruct('Translation', [1033, 1200])]),
-  ],
-)
-""",
-        encoding="utf-8",
+def windows() -> Path:
+    v = version()
+    numbers = ".".join((re.findall(r"\d+", v)[:3] + ["0", "0", "0", "0"])[:4])
+    common = (
+        "--output-folder-name=Chatmon", f"--windows-icon-from-ico={PACKAGING / 'icons' / 'chatmon.ico'}",
+        "--company-name=Randy Northrup", "--product-name=Chatmon", "--file-description=Chatmon",
+        f"--file-version={numbers}", f"--product-version={numbers}", "--copyright=Copyright (c) 2026 Randy Northrup. MIT License.",
     )
+    # Two programs on the same files: chatmon.exe, a console program (hooks, the command line), and chatmonw.exe,
+    # with no console window (the Start menu, the desktop, autostart). Built apart, then one beside the other.
+    console = nuitka(BUILD / "nuitka-console", *common, "--windows-console-mode=force", "--output-filename=chatmon.exe") / "Chatmon.dist"
+    windowless = nuitka(
+        BUILD / "nuitka-windowless", *common, "--windows-console-mode=disable", "--output-filename=chatmonw.exe",
+        # No console, no stdout or stderr, as for pythonw: Chatmon then keeps what it has to say in its log.
+        "--force-stdout-spec={NONE}", "--force-stderr-spec={NONE}",
+    ) / "Chatmon.dist"
+    _same_files(console, windowless, besides={"chatmon.exe", "chatmonw.exe"})
+    frozen = BUILD / "nuitka" / "Chatmon"
+    shutil.rmtree(frozen.parent, ignore_errors=True)
+    shutil.copytree(console, frozen)
+    shutil.copy2(windowless / "chatmonw.exe", frozen / "chatmonw.exe")
+    for program in ("chatmon.exe", "chatmonw.exe"):
+        if not (frozen / program).exists():
+            sys.exit(f"Nuitka made no {program}")
+        if overlay := _pe_overlay(frozen / program):
+            sys.exit(f"{program} carries {overlay} bytes after its last section")
+    DIST.mkdir(exist_ok=True)
+    run(_iscc(), f"/DAppVersion={v}", f"/DSourceDir={frozen}", f"/DOutputDir={DIST}", PACKAGING / "windows" / "chatmon.iss")
+    setup = DIST / f"Chatmon-{v}-windows-x64-setup.exe"
+    print(f"\n{setup}  {setup.stat().st_size // 2**20} MB")
+    return setup
 
 
 def _iscc() -> str:
@@ -90,27 +131,34 @@ def _iscc() -> str:
     sys.exit("Inno Setup 6 isn't installed (or set ISCC to its ISCC.exe).")
 
 
-def windows() -> Path:
-    v = version()
-    _version_info(v)
-    frozen = pyinstaller() / "Chatmon"
-    for program in ("chatmon.exe", "chatmonw.exe"):
-        if not (frozen / program).exists():
-            sys.exit(f"PyInstaller made no {program}")
-    DIST.mkdir(exist_ok=True)
-    run(_iscc(), f"/DAppVersion={v}", f"/DSourceDir={frozen}", f"/DOutputDir={DIST}", PACKAGING / "windows" / "chatmon.iss")
-    setup = DIST / f"Chatmon-{v}-windows-x64-setup.exe"
-    print(f"\n{setup}  {setup.stat().st_size // 2**20} MB")
-    return setup
-
-
 # -- macOS
 
 
 def macos() -> list[Path]:
     v = version()
     arch = {"x86_64": "intel", "arm64": "arm64"}.get(platform.machine(), platform.machine())
-    app = pyinstaller() / "Chatmon.app"
+    out = nuitka(
+        BUILD / "nuitka", "--macos-create-app-bundle", "--macos-app-mode=ui-element",  # menu bar, no Dock icon
+        # Not "Chatmon": beside it, Nuitka links Chatmon's pictures in as "chatmon", the same name to macOS.
+        f"--output-filename={MACOS_PROGRAM}", "--macos-app-name=Chatmon", f"--macos-app-version={v}",
+        f"--macos-signed-app-name={BUNDLE_ID}", f"--macos-app-icon={PACKAGING / 'icons' / 'chatmon.icns'}",
+    )
+    bundles = list(out.glob("*.app"))
+    if len(bundles) != 1:
+        sys.exit(f"Nuitka made {[b.name for b in bundles]} in {out}")
+    app = out / "Chatmon.app"
+    if bundles[0] != app:
+        bundles[0].rename(app)
+    if not (app / "Contents" / "MacOS" / MACOS_PROGRAM).is_file():
+        sys.exit(f"{app} has no Contents/MacOS/{MACOS_PROGRAM}")
+    plist = app / "Contents" / "Info.plist"
+    for key, kind, value in (
+        ("CFBundleName", "string", "Chatmon"), ("CFBundleDisplayName", "string", "Chatmon"),
+        ("CFBundleIdentifier", "string", BUNDLE_ID), ("CFBundleShortVersionString", "string", v), ("CFBundleVersion", "string", v),
+        ("LSUIElement", "bool", "YES"), ("NSHighResolutionCapable", "bool", "YES"),
+        ("NSHumanReadableCopyright", "string", "Copyright (c) 2026 Randy Northrup. MIT License."),
+    ):
+        run("plutil", "-replace", key, f"-{kind}", value, plist)
     run("codesign", "--force", "--deep", "--sign", "-", app)  # ad hoc: Apple silicon runs nothing unsigned
     work = BUILD / "macos"
     shutil.rmtree(work, ignore_errors=True)
@@ -123,6 +171,8 @@ def macos() -> list[Path]:
     # Installed where it belongs, never "relocated" to wherever another copy of the app happens to be.
     run("pkgbuild", "--analyze", "--root", work / "root", work / "component.plist")
     run("plutil", "-replace", "0.BundleIsRelocatable", "-bool", "NO", work / "component.plist")
+    # And it replaces an older version's bundle whole: nothing of that one (a program since renamed) is left in it.
+    run("plutil", "-replace", "0.BundleOverwriteAction", "-string", "upgrade", work / "component.plist")
     run("pkgbuild", "--root", work / "root", "--component-plist", work / "component.plist", "--identifier", BUNDLE_ID, "--version", v,
         "--install-location", "/", "--scripts", scripts, work / "Chatmon.pkg")
     run("productbuild", "--synthesize", "--package", work / "Chatmon.pkg", work / "distribution.xml")
