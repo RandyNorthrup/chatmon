@@ -71,10 +71,16 @@ class StageWindow(QWidget):
         self.winId()  # the native window, so clicks can pass through before it first shows
         self.input = clickthrough.for_window(self)
         self._closing = False
+        self._covered = False
+
+    def set_covered(self, on: bool) -> None:
+        if on != self._covered:
+            self._covered = on
+            self.setVisible(not on)
 
     def set_screen(self, screen: QScreen, geometry: QRect) -> None:
         self.setGeometry(geometry)
-        if not self.isVisible():
+        if not self.isVisible() and not self._covered:
             self.show()
         # A screen of another scale (a 4K monitor beside a laptop's, or the scale setting changed): sprites for it.
         self.stage.scale_changed(screen.devicePixelRatio())
@@ -378,6 +384,7 @@ class Stage(QObject):
     message_closed = pyqtSignal()
     menu_closed = pyqtSignal()
     scale_changed_to = pyqtSignal(float)  # device pixels per stage pixel: draw the sprites for it
+    away_changed = pyqtSignal(bool)  # the overlay heard you've been away from the keyboard a while (True), or are back
 
     def __init__(self, sprites: Sprites, behavior: Behavior, surface_factory=make_surface):
         super().__init__()
@@ -424,6 +431,27 @@ class Stage(QObject):
     def show_message(self, title: str, text: str = "", buttons=None, timeout_s: float | None = 12) -> None:
         self.bubble.show(title, text, buttons, timeout_s, self._clock())
         self._key = None
+
+    # -- full-screen windows, and you being away
+
+    def away(self, on: bool) -> None:
+        """The surface heard you've been away from the keyboard and mouse a while (or are back)."""
+        self.away_changed.emit(on)
+
+    def raise_above(self, on: bool) -> None:
+        """Above full-screen windows too (an alert or the ask box needs you), or giving way to them."""
+        if hasattr(self.surface, "raise_above"):
+            self.surface.raise_above(on)
+
+    def set_covered(self, on: bool) -> None:
+        """A full-screen window is in front on this screen: out of its way (the window surfaces; the overlay's
+        compositor does it itself)."""
+        if hasattr(self.surface, "set_covered"):
+            self.surface.set_covered(on)
+
+    def native_window(self) -> int:
+        win = getattr(self.surface, "winId", None)
+        return int(win()) if win is not None else 0
 
     def dismiss_message(self) -> None:
         self.bubble.dismiss(self._clock())

@@ -103,7 +103,12 @@ PASTE_IMAGE_MAX = 32 * 1024 * 1024  # bytes of a pasted picture (a screenshot of
 # What a paste into the ask box takes, best first: copied files, then a picture, then text.
 RICH_TYPES = ("text/uri-list", "image/png", "image/jpeg")
 
-LAYER_OVERLAY = 3
+LAYER_TOP, LAYER_OVERLAY = 2, 3
+LAYER_SURFACE_SET_LAYER = 8  # layer-shell version 2
+# ext-idle-notify-v1: told when you've been away from the keyboard and mouse a while, and when you're back.
+IDLE_NOTIFIER_GET_IDLE, IDLE_NOTIFIER_GET_INPUT_IDLE = 1, 2  # get_input_idle_notification: version 2
+EV_IDLE_IDLED, EV_IDLE_RESUMED = 0, 1
+IDLE_AFTER_MS = 300_000
 ANCHOR_ALL = 1 | 2 | 4 | 8  # top, bottom, left, right: the whole output
 KEYBOARD_NONE, KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND = 0, 1, 2  # on_demand: layer-shell version 4
 KEYMAP_XKB_V1 = 1
@@ -129,6 +134,7 @@ WANTED = {
     "zwp_text_input_manager_v3": 1,  # input methods (fcitx5, IBus...) through the compositor
     "wl_data_device_manager": 3,  # the clipboard
     "zwp_primary_selection_device_manager_v1": 1,  # selected text, pasted with the middle button
+    "ext_idle_notifier_v1": 2,  # 2: input idle (a video playing doesn't count as you being there)
 }
 NEEDED = {"wl_compositor": 4, "wl_shm": 1, "zwlr_layer_shell_v1": 1}
 
@@ -503,6 +509,9 @@ class LayerSurface(QObject):
         self._kb_wanted = False  # whether the stage wants it (the ask box is open)
         self._kb_grab = False
         self._kb_mode = KEYBOARD_NONE
+        self._raised = False  # wanted above full-screen windows (an alert, the ask box), whichever surface is up
+        self._layer_level = LAYER_OVERLAY  # where the surface up now is
+        self._idle: int | None = None
         self._repeat_rate, self._repeat_delay = REPEAT_RATE, REPEAT_DELAY
         self._repeat_key: tuple[int, xkb.Key] | None = None
         self._repeat_timer = QTimer(self)
@@ -534,6 +543,7 @@ class LayerSurface(QObject):
 
     def _start(self) -> None:
         self._add_text_inputs()
+        self._add_idle_watch()
         for selection in self.selections.values():
             selection.add_devices()
         self._notifier = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Type.Read, self)
@@ -716,6 +726,7 @@ class LayerSurface(QObject):
                 self.conn.listen(oid, lambda op, a, s=oid: self._seat_event(s, op, a))
                 if self._notifier is not None:  # a seat that came later
                     self._add_text_inputs()
+                    self._add_idle_watch()
                     for selection in self.selections.values():
                         selection.add_devices()
             elif interface not in self.globals:
@@ -922,6 +933,40 @@ class LayerSurface(QObject):
         self._flush()
 
 
+    # -- away from the desk (ext-idle-notify-v1)
+
+    def _add_idle_watch(self) -> None:
+        """Hear when you've not touched the keyboard or mouse for IDLE_AFTER_MS, and when you're back (the
+        first seat's; one is enough to tell)."""
+        notifier = self.globals.get("ext_idle_notifier_v1")
+        if notifier is None or self._idle is not None or not self._seat_versions:
+            return
+        seat = next(iter(self._seat_versions))
+        self._idle = self.conn.new_id(self._idle_event)
+        request = IDLE_NOTIFIER_GET_INPUT_IDLE if notifier[1] >= 2 else IDLE_NOTIFIER_GET_IDLE
+        self.conn.request(notifier[0], request, "nuo", self._idle, IDLE_AFTER_MS, seat)
+        self._flush()
+
+    def _idle_event(self, opcode: int, args: bytes) -> None:
+        if opcode in (EV_IDLE_IDLED, EV_IDLE_RESUMED):
+            away = getattr(self.stage, "away", None)
+            if away is not None:
+                away(opcode == EV_IDLE_IDLED)
+
+    # -- above full-screen windows, or under them
+
+    def raise_above(self, on: bool) -> None:
+        """On top of everything, a full-screen window too (while an alert or the ask box needs you), or on
+        the layer that gives way to full-screen windows, as layer-shell means it to."""
+        self._raised = on
+        layer = LAYER_OVERLAY if on else LAYER_TOP
+        if self._layer is None or layer == self._layer_level or self.globals["zwlr_layer_shell_v1"][1] < 2:
+            return
+        self._layer_level = layer
+        self.conn.request(self._layer, LAYER_SURFACE_SET_LAYER, "u", layer)
+        self.conn.request(self._surface, SURFACE_COMMIT)
+        self._flush()
+
     # -- input methods (text-input-unstable-v3)
 
     def _add_text_inputs(self) -> None:
@@ -1018,7 +1063,10 @@ class LayerSurface(QObject):
             c.request(self.globals["wp_fractional_scale_manager_v1"][0], FRACTIONAL_GET, "no", self._fractional, self._surface)
         self._layer = c.new_id(self._layer_event)
         output = self._output.id if self._output is not None else None
-        c.request(self.globals["zwlr_layer_shell_v1"][0], LAYER_SHELL_GET_LAYER_SURFACE, "noous", self._layer, self._surface, output, LAYER_OVERLAY, NAMESPACE)
+        # The top layer, under a full-screen video, game or slides, where layer-shell has one (version 2 can
+        # move it above them for an alert); without that, the overlay, as before.
+        self._layer_level = LAYER_TOP if self.globals["zwlr_layer_shell_v1"][1] >= 2 and not self._raised else LAYER_OVERLAY
+        c.request(self.globals["zwlr_layer_shell_v1"][0], LAYER_SHELL_GET_LAYER_SURFACE, "noous", self._layer, self._surface, output, self._layer_level, NAMESPACE)
         c.request(self._layer, LAYER_SURFACE_SET_SIZE, "uu", 0, 0)  # the whole output, from the anchors
         c.request(self._layer, LAYER_SURFACE_SET_ANCHOR, "u", ANCHOR_ALL)
         c.request(self._layer, LAYER_SURFACE_SET_EXCLUSIVE_ZONE, "i", -1)  # over panels too, not pushed aside by them

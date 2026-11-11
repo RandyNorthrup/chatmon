@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import os
 import re
-import shutil
 import signal
 import sys
 import threading
@@ -21,7 +20,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiAppli
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, events, heads_up, offline, paths, reminders, report, styles, updates
+from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, events, heads_up, offline, paths, presence, reminders, report, styles, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -102,6 +101,14 @@ class Companion(QObject):
         self.server_problem = server_problem  # why hooks can't reach it, if they can't
         self.state = State.load()
         self.config, self.config_error = load_config()
+        # Whether you're there, and whether now's a time for quiet: the platform's own word for each.
+        self.desk = presence.Desk(QGuiApplication.platformName())
+        self._quiet: str | None = None  # why bubbles from the background wait, if they do
+        self._held: list = []  # what waited, shown once it's not quiet
+        self._idle_away = False
+        self._reduce_motion = self.desk.reduce_motion()
+        self._high_contrast = self.desk.high_contrast()
+        self._walk_picked = False  # walking turned on or off from the menu: the system's reduce-motion no longer decides
         self.brains = brains.load_brains(self.config["ai"])
         self.reminders = reminders.ReminderBook.from_list(self.state.get("reminders", []))
         self.breaks = reminders.BreakTracker(self.config["breaks"]["every_minutes"], time.time())
@@ -121,6 +128,7 @@ class Companion(QObject):
         self._last_wall = time.time()
         self._last_ask = 0.0
         self._update_counts: dict[str, int] = {}
+        self._restart_needed = False
 
         screen = QGuiApplication.primaryScreen().availableGeometry()
         x = float(self.state.get("x", screen.x() + screen.width() * 0.8))
@@ -148,6 +156,9 @@ class Companion(QObject):
         self.stage.menu_requested.connect(self.show_menu)
         self.stage.head_moved.connect(self._follow)
         self.stage.message_closed.connect(self._message_closed)
+        self.stage.away_changed.connect(self._overlay_away)
+        if self._reduce_motion:  # the system asks for less movement: standing still, unless you say walk
+            self.behavior.set_walk(False, time.monotonic())
         self.stage.menu_closed.connect(self._menu_closed)
         self.stage.scale_changed_to.connect(self._set_sprite_scale)
         self.ask_box.closed.connect(self._ask_closed)
@@ -198,10 +209,11 @@ class Companion(QObject):
 
         self._watch_screen_lock()
         self._every(5_000, self._check_reminders)
+        self._every(5_000, self._check_quiet)
         self._every(30_000, self._check_time)
         self._every(60_000, self._check_system)
         self._every(int(self.config["heads_up"]["updates_every_hours"] * 3600_000), self._check_updates)
-        QTimer.singleShot(120_000, self._check_updates)
+        QTimer.singleShot(600_000 if sys.platform == "win32" else 120_000, self._check_updates)
         QTimer.singleShot(1500, self._greet)
         QTimer.singleShot(45_000, self._maybe_check_updates)
         self._every(3600_000, self._maybe_check_updates)
@@ -266,10 +278,20 @@ class Companion(QObject):
 
     # -- talking
 
+    def _with_you(self) -> bool:
+        """You're using Chatmon right now (its ask box or menu is open): it's no time to hold back."""
+        return self.ask_box.isVisible() or self._menu_open
+
     def say(self, title: str, text: str = "", buttons=None, timeout_s: float | None = 12) -> None:
         if self._alert_key is not None:  # don't talk over something that needs you
             self._later(partial(self.say, title, text, buttons, timeout_s))
             return
+        if self._quiet and not self._with_you():  # a full-screen app, a presentation, Do Not Disturb: later
+            self._held = (self._held + [partial(self.say, title, text, buttons, timeout_s)])[-5:]
+            return
+        notice = self.desk.notice_seconds()  # how long you've asked notifications to stay up (Windows)
+        if timeout_s is not None and notice:
+            timeout_s = max(timeout_s, notice)
         self.stage.show_message(title, text, buttons, timeout_s)
 
     def alert(self, key: str, title: str, text: str, buttons=None) -> None:
@@ -277,11 +299,58 @@ class Companion(QObject):
         if self._alert_key is not None:
             self._later(partial(self.alert, key, title, text, buttons))
             return
+        if self._quiet and self.desk.covered(self.stage.native_window()):
+            # Under a full-screen app: it waits for you, and the system's own notification says so now
+            # (which follows your Do Not Disturb). macOS's needs a signed app: there it just waits.
+            self._held = (self._held + [partial(self.alert, key, title, text, buttons)])[-5:]
+            if sys.platform != "darwin" and QSystemTrayIcon.supportsMessages():
+                self.tray.showMessage(title, text.replace("**", "").replace("*", ""), QSystemTrayIcon.MessageIcon.Information, 10_000)
+            return
         self._alert_key = key
         self.behavior.set_hidden(False, self._now())
         self._menu_changed()
         self.behavior.set_alert(True, self._now())
+        self.stage.raise_above(True)  # above a full-screen window: it needs you
         self.stage.show_message(title, text, buttons or [("OK", None)], None)
+
+    # -- you being away, and times for quiet
+
+    def _overlay_away(self, away: bool) -> None:
+        self.desk.overlay_idle_since = time.monotonic() if away else None
+        self._check_away()
+
+    def _check_away(self) -> None:
+        """Away from the keyboard and mouse a while counts toward a break, locked or not."""
+        idle = self.desk.idle_seconds()
+        if idle is None:
+            return
+        now = time.time()
+        if idle >= presence.AWAY_AFTER:
+            self.breaks.away(now - idle)
+            self._idle_away = True
+        elif self._idle_away:
+            self._idle_away = False
+            self.breaks.back(now)
+
+    def _check_quiet(self) -> None:
+        was = self._quiet
+        self._quiet = self.desk.quiet()
+        self.stage.set_covered(self.desk.covered(self.stage.native_window()) and self._alert_key is None)
+        if was and not self._quiet and self._held:
+            held, self._held = self._held, []
+            for i, show in enumerate(held):
+                QTimer.singleShot(600 * (i + 1), show)
+
+    def _check_accessibility(self) -> None:
+        """Reduced motion and high contrast: followed as they change, unless you chose otherwise."""
+        motion, contrast = self.desk.reduce_motion(), self.desk.high_contrast()
+        if (motion, contrast) == (self._reduce_motion, self._high_contrast):
+            return
+        self._reduce_motion, self._high_contrast = motion, contrast
+        self._apply_bubble_style()
+        if not self._walk_picked:
+            self.behavior.set_walk(bool(self.config["walk"]) and not motion, self._now())
+        self._menu_changed()
 
     def _later(self, show) -> None:
         self._waiting = (self._waiting + [show])[-5:]
@@ -290,6 +359,8 @@ class Companion(QObject):
         if self._alert_key is not None:
             self._alert_key = None
             self.behavior.set_alert(False, self._now())
+            if not self.ask_box.isVisible():
+                self.stage.raise_above(False)
         if self._waiting:
             QTimer.singleShot(400, self._waiting.pop(0))
 
@@ -329,6 +400,7 @@ class Companion(QObject):
             self.set_hidden(False)
         self.behavior.wake(now)
         self.behavior.set_attending(True, now)
+        self.stage.raise_above(True)  # you asked for it: above anything full screen
         self.stage.dismiss_message()
         if now - self._last_ask > 15 * 60 and self.chat.messages:
             self._start_chat()  # a while since: a fresh one (the last is in History)
@@ -357,6 +429,8 @@ class Companion(QObject):
             self.ask_box.set_resettable(bool(self.chat.messages))
 
     def _ask_closed(self) -> None:
+        if self._alert_key is None:
+            self.stage.raise_above(False)
         now = self._now()
         self._asking_name = False
         self._renaming = None
@@ -962,6 +1036,8 @@ class Companion(QObject):
             self.breaks.away(self._last_wall)
             self.breaks.back(now)
         self._last_wall = now
+        self._check_away()
+        self._check_accessibility()
         if self._menu_clock != self._time_labels():
             self._menu_changed()
         mono = self._now()
@@ -1023,27 +1099,38 @@ class Companion(QObject):
     def _check_updates(self) -> None:
         if not self.config["heads_up"]["updates"]:
             return
-        # Both read what the system already knows (no network): the desktop's own updater refreshes it.
-        checks = [
-            ("apt", ["apt", "list", "--upgradable"], heads_up.count_apt),
-            ("flatpak", ["flatpak", "remote-ls", "--updates", "--cached", "--columns=application"], heads_up.count_flatpak),
-        ]
-        checks = [c for c in checks if shutil.which(c[1][0])]
+        # Each reads what the system already knows (no network): the desktop's own updater keeps it fresh.
+        checks = heads_up.update_checks()
         self._update_counts = {}
-        for name, command, count in checks:
+        self._restart_needed = False
+        for check in checks:
             proc = QProcess(self)
-            proc.finished.connect(partial(self._updates_counted, proc, name, count, len(checks)))
-            proc.start(command[0], command[1:])
+            proc.finished.connect(partial(self._updates_counted, proc, check, len(checks)))
+            proc.errorOccurred.connect(partial(self._update_check_failed, proc, check, len(checks)))
+            proc.start(check.argv[0], check.argv[1:])
 
-    def _updates_counted(self, proc: QProcess, name: str, count, expected: int, code: int, _status) -> None:
+    def _update_check_failed(self, proc: QProcess, check: heads_up.UpdateCheck, expected: int, error) -> None:
+        if error == QProcess.ProcessError.FailedToStart:
+            proc.deleteLater()
+            self._tally_updates(check.name, 0, expected)
+
+    def _updates_counted(self, proc: QProcess, check: heads_up.UpdateCheck, expected: int, code: int, _status) -> None:
         output = bytes(proc.readAllStandardOutput()).decode("utf-8", errors="replace")
         proc.deleteLater()
-        self._update_counts[name] = count(output) if code == 0 else 0
+        if check.name == "windows":
+            self._restart_needed = heads_up.windows_restart_needed(output)
+        self._tally_updates(check.name, check.count(output, code) or 0, expected)
+
+    def _tally_updates(self, name: str, count: int, expected: int) -> None:
+        self._update_counts[name] = count
         if len(self._update_counts) == expected:
-            notice = self.watcher.updates(sum(self._update_counts.values()), date.today())
+            notice = self.watcher.updates(sum(self._update_counts.values()), date.today(), self._restart_needed)
             if notice and not self.stage.message_visible():
                 self.behavior.react("wave", self._now())
-                self.say(notice.title, notice.text, [("OK", None)], timeout_s=60)
+                buttons = [("OK", None)]
+                if sys.platform == "win32":
+                    buttons.insert(0, ("Open Windows Update", partial(QDesktopServices.openUrl, QUrl("ms-settings:windowsupdate"))))
+                self.say(notice.title, notice.text, buttons, timeout_s=60)
 
     # -- updating Chatmon, what's new, and reporting problems
 
@@ -1609,13 +1696,20 @@ class Companion(QObject):
         return name if name in styles.STYLES else MATCH
 
     def _bubble_style(self) -> styles.Style:
-        """A style chosen by name wins; otherwise the bubbles match the companion."""
+        """A style chosen by name wins; otherwise high contrast (the system's setting) gets the plain one,
+        in the desktop's own colours, and else the bubbles match the companion."""
         name = self._bubble_style_name()
+        if name == MATCH and self._high_contrast and not self.state.get("bubble_style"):
+            return styles.get("plain")
         return styles.get(self._companion().bubble_style if name == MATCH else name)
 
     def _bubble_effects(self) -> bool:
+        """Moving edges, unless you turned them off, or the system asks for reduced motion (and you didn't
+        turn them on)."""
         picked = self.state.get("bubble_effects")
-        return bool(self.config["bubble_effects"] if picked is None else picked)
+        if picked is not None:
+            return bool(picked)
+        return bool(self.config["bubble_effects"]) and not self._reduce_motion
 
     def _apply_bubble_style(self) -> None:
         style, animate = self._bubble_style(), self._bubble_effects()
@@ -1645,6 +1739,7 @@ class Companion(QObject):
         self.save()
 
     def _set_walk(self, on: bool) -> None:
+        self._walk_picked = True
         self.behavior.set_walk(on, self._now())
         self._menu_changed()
 

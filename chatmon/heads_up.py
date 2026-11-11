@@ -7,10 +7,13 @@ until you plug in, a full disk once a day, waiting updates once a day.
 from __future__ import annotations
 
 import os
+import re
 import shutil
-from dataclasses import dataclass
+import sys
+from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
+from typing import Callable
 
 
 @dataclass
@@ -63,12 +66,90 @@ def read_disks(folders: list[Path]) -> list[tuple[str, float]]:
     return out
 
 
-def count_apt(output: str) -> int:
-    return sum(1 for line in output.splitlines() if "upgradable from" in line)
+# -- updates waiting: each system's own tool, reading what it already knows (no network, no administrator)
 
 
-def count_flatpak(output: str) -> int:
-    return sum(1 for line in output.splitlines() if line.strip())
+def count_apt(output: str, code: int = 0) -> int | None:
+    return sum(1 for line in output.splitlines() if "upgradable from" in line) if code == 0 else None
+
+
+def count_flatpak(output: str, code: int = 0) -> int | None:
+    return sum(1 for line in output.splitlines() if line.strip()) if code == 0 else None
+
+
+def count_dnf(output: str, code: int) -> int | None:
+    """`dnf check-update --cacheonly`: exit code 100 with a line for each package ("name.arch  version  repo"),
+    0 with none."""
+    if code == 0:
+        return 0
+    if code != 100:
+        return None
+    lines = []
+    for line in output.splitlines():
+        if line.startswith(("Obsoleting", "Security:", "Last metadata")) or line.startswith(" "):
+            continue
+        if re.match(r"^\S+\.\S+\s+\S+\s+\S+\s*$", line):
+            lines.append(line)
+    return len(lines)
+
+
+def count_pacman(output: str, code: int) -> int | None:
+    """`pacman -Qu`: a line for each package; exit code 1 when there are none."""
+    if code == 1 and not output.strip():
+        return 0
+    return sum(1 for line in output.splitlines() if line.strip()) if code == 0 else None
+
+
+def count_zypper(output: str, code: int) -> int | None:
+    """`zypper --no-refresh --xmlout list-updates`: an <update> for each."""
+    if code != 0:
+        return None
+    return len(re.findall(r'<update\b[^>]*\bkind="package"', output))
+
+
+def count_windows(output: str, code: int) -> int | None:
+    """Windows Update, searched offline: "<count>|<restart needed>"."""
+    m = re.fullmatch(r"(\d+)\|(True|False)", output.strip())
+    return int(m.group(1)) if code == 0 and m else None
+
+
+def windows_restart_needed(output: str) -> bool:
+    return output.strip().endswith("|True")
+
+
+# What Windows Update knows already (Online = false: from its last look, no network); the plain Users group
+# may ask both. https://learn.microsoft.com/en-us/windows/win32/wua_sdk/secured-methods-and-properties-in-the-wua-api
+_WINDOWS_UPDATES = (
+    "$ErrorActionPreference = 'Stop';"
+    "$q = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateSearcher(); $q.Online = $false;"
+    "$n = $q.Search(\"IsInstalled=0 and IsHidden=0 and Type='Software'\").Updates.Count;"
+    "$r = (New-Object -ComObject Microsoft.Update.SystemInfo).RebootRequired;"
+    "[Console]::Out.Write(\"$n|$r\")"
+)
+
+
+@dataclass(frozen=True)
+class UpdateCheck:
+    name: str
+    argv: list[str]
+    count: Callable[[str, int], int | None] = field(compare=False)  # (output, exit code) -> how many, None: couldn't tell
+
+
+def update_checks() -> list[UpdateCheck]:
+    """This system's ways of knowing about waiting updates, each from what it already knows."""
+    if sys.platform == "win32":
+        shell = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
+        return [UpdateCheck("windows", [str(shell), "-NoProfile", "-NonInteractive", "-Command", _WINDOWS_UPDATES], count_windows)]
+    if sys.platform == "darwin":
+        return []  # macOS tells you itself, in System Settings
+    checks = [
+        UpdateCheck("apt", ["apt", "list", "--upgradable"], count_apt),
+        UpdateCheck("dnf", ["dnf", "check-update", "--cacheonly", "--quiet"], count_dnf),
+        UpdateCheck("pacman", ["pacman", "-Qu"], count_pacman),
+        UpdateCheck("zypper", ["zypper", "--no-refresh", "--quiet", "--xmlout", "list-updates"], count_zypper),
+        UpdateCheck("flatpak", ["flatpak", "remote-ls", "--updates", "--cached", "--columns=application"], count_flatpak),
+    ]
+    return [c for c in checks if shutil.which(c.argv[0])]
 
 
 class Watcher:
@@ -105,9 +186,11 @@ class Watcher:
                 out.append(Notice(f"disk:{folder}", "Disk almost full", f"The disk holding {folder} is {percent:.0f}% full.", urgent=True))
         return out
 
-    def updates(self, count: int, today: date) -> Notice | None:
-        if count <= 0 or self._updates_told == today:
+    def updates(self, count: int, today: date, restart: bool = False) -> Notice | None:
+        if (count <= 0 and not restart) or self._updates_told == today:
             return None
         self._updates_told = today
+        if restart:
+            return Notice("updates", "Restart to finish updating", "Your computer has installed updates that need a restart to finish.")
         plural = "s" if count != 1 else ""
         return Notice("updates", "Updates waiting", f"{count} system update{plural} waiting to install.")

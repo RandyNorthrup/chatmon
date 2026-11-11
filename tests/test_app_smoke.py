@@ -667,3 +667,98 @@ def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
     assert "1. Timer" in listed and "2. Reminder" in listed
     c.submit("cancel reminder 1")
     assert [r.text for r in c.reminders.upcoming()] == ["stretch"]
+
+
+class PretendDesk:
+    """The platform's readings, set by the test."""
+
+    def __init__(self):
+        self.idle, self.why_quiet, self.is_covered, self.motion, self.contrast, self.notice = 0.0, None, False, False, False, None
+        self.overlay_idle_since = None
+
+    def idle_seconds(self):
+        return self.idle
+
+    def quiet(self):
+        return self.why_quiet
+
+    def covered(self, _window):
+        return self.is_covered
+
+    def reduce_motion(self):
+        return self.motion
+
+    def high_contrast(self):
+        return self.contrast
+
+    def notice_seconds(self):
+        return self.notice
+
+
+def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
+    c = companion
+    c.desk = desk = PretendDesk()
+    spin(1.8)
+    c.stage.dismiss_message()
+    spin(0.3)
+    desk.why_quiet = "a presentation"
+    c._check_quiet()
+    c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+    spin(0.2)
+    assert not c.stage.message_visible() and len(c._held) == 1
+    c.open_ask()  # you're using Chatmon: what you ask for isn't held back
+    c.submit("status")
+    assert "Brain:" in c.ask_box.answer.toPlainText()
+    c.ask_box.dismiss()
+    desk.why_quiet = None
+    c._check_quiet()
+    spin(1.0)
+    assert c.stage.message_visible() and c.stage.bubble.title == "Claude finished" and c._held == []
+
+
+def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(companion, monkeypatch):
+    from PyQt6.QtWidgets import QSystemTrayIcon
+
+    c = companion
+    c.desk = desk = PretendDesk()
+    shown = []
+    monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
+    monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: shown.append((title, text)))
+    desk.why_quiet, desk.is_covered = "a full-screen game", True
+    c._check_quiet()
+    c.alert("reminder:x", "Reminder", "**Stretch**")
+    assert c._alert_key is None and len(c._held) == 1
+    if sys.platform != "darwin":
+        assert shown == [("Reminder", "Stretch")]
+    desk.why_quiet, desk.is_covered = None, False
+    c._check_quiet()
+    spin(1.0)
+    assert c._alert_key == "reminder:x" and c.stage.bubble.title == "Reminder"
+
+
+def test_being_away_from_the_keyboard_counts_as_a_break(companion):
+    c = companion
+    c.desk = desk = PretendDesk()
+    c.breaks.active_since = time.time() - 3600
+    desk.idle = 600.0
+    c._check_away()
+    assert c.breaks.away_since is not None
+    desk.idle = 2.0
+    c._check_away()
+    assert c.breaks.away_since is None and time.time() - c.breaks.active_since < 5  # ten minutes away: a break taken
+
+
+def test_reduced_motion_and_high_contrast_unless_you_chose(companion):
+    c = companion
+    c.desk = desk = PretendDesk()
+    c.state.set("bubble_effects", None)
+    c.state.set("bubble_style", None)
+    desk.motion, desk.contrast = True, True
+    c._check_accessibility()
+    assert not c._bubble_effects() and c._bubble_style().name == "plain" and not c.behavior.walk_enabled
+    c._pick_style("fire")  # your pick wins
+    c._set_bubble_effects(True)
+    assert c._bubble_style().name == "fire" and c._bubble_effects()
+    desk.notice = 30.0
+    c.say("hello", timeout_s=5)
+    assert c.stage.bubble._expires - c.stage.bubble._shown_at == pytest.approx(30.0)
