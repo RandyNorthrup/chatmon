@@ -92,7 +92,9 @@ jobs:
           # Then this one, as Chatmon's updater runs it: silently, as the last install was, and Chatmon starts again.
           $env:QT_QPA_PLATFORM = "offscreen"
           $setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName
-          $p = Start-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/relaunch=1" -Wait -PassThru
+          # Not Start-Process -Wait: that waits for what the installer starts too, and it starts Chatmon again.
+          $p = Start-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/relaunch=1" -PassThru
+          $p.WaitForExit()
           if ($p.ExitCode) { throw "Updating failed: $($p.ExitCode)" }
           $app = Join-Path $env:LOCALAPPDATA "Programs\Chatmon"
           for ($i = 0; $i -lt 30 -and -not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe"); $i++) { Start-Sleep 1 }
