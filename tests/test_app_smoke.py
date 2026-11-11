@@ -901,6 +901,8 @@ def test_settings_shows_whats_in_use_and_saving_applies_it_and_keeps_it(companio
 
     c = companion
     monkeypatch.setattr(autostart, "set_enabled", lambda on: None)
+    c._reduce_motion = False  # walking to start with, whatever this machine's own setting
+    c.behavior.set_walk(c._walks(), c._now())
     c.open_settings()
     w = c._settings_window
     assert w.isVisible() and w.size.value() == int(c.config["size"]) and w.walk.isChecked() == c.behavior.walk_enabled
@@ -1023,3 +1025,23 @@ def test_break_reminders_and_focus_alerts_can_be_turned_off_and_on(companion, mo
     c.reminders.add(time.time() - 1, "25-minute focus", "focus")
     c._check_reminders()
     assert c.stage.bubble.title == "Focus session done!"
+
+
+def test_saving_settings_never_sets_it_walking_against_reduced_motion(companion, monkeypatch):
+    from chatmon import autostart
+
+    c = companion
+    monkeypatch.setattr(autostart, "set_enabled", lambda on: None)
+    c._walk_picked = False
+    c._reduce_motion = True  # the system asks for less movement
+    c.behavior.set_walk(c._walks(), c._now())
+    assert not c.behavior.walk_enabled
+    c.open_settings()
+    c._settings_window.size.setValue(140)  # something else entirely
+    c._settings_window._save()
+    assert not c.behavior.walk_enabled  # still standing
+    c.reload(quietly=True)
+    assert not c.behavior.walk_enabled
+    c._set_walk(True)  # you chose: that wins
+    c.reload(quietly=True)
+    assert c.behavior.walk_enabled

@@ -11,7 +11,7 @@ def test_template_is_valid_and_matches_defaults():
 def test_first_run_writes_the_template(tmp_path):
     path = tmp_path / "config.toml"
     config, error = load_config(path)
-    assert error is None and path.read_text() == TEMPLATE and config["size"] == 120
+    assert error is None and path.read_text(encoding="utf-8") == TEMPLATE and config["size"] == 120
 
 
 def test_user_values_merge_over_defaults(tmp_path):

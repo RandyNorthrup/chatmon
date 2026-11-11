@@ -367,9 +367,12 @@ class Companion(QObject):
             return
         self._reduce_motion, self._high_contrast = motion, contrast
         self._apply_bubble_style()
-        if not self._walk_picked:
-            self.behavior.set_walk(bool(self.config["walk"]) and not motion, self._now())
+        self.behavior.set_walk(self._walks(), self._now())
         self._menu_changed()
+
+    def _walks(self) -> bool:
+        """Walking, as the settings say; the system's reduced motion stills it, unless you chose yourself."""
+        return bool(self.config["walk"]) and (self._walk_picked or not self._reduce_motion)
 
     def _later(self, show) -> None:
         self._waiting = (self._waiting + [show])[-5:]
@@ -2136,7 +2139,7 @@ class Companion(QObject):
         self.breaks.every = float(self.config["breaks"]["every_minutes"]) * 60
         self._show_sprites()
         self._show_icon()
-        self.behavior.set_walk(bool(self.config["walk"]), self._now())
+        self.behavior.set_walk(self._walks(), self._now())  # reduced motion still counts after a reload
         self.behavior.sleep_after = float(self.config["sleep_after_minutes"]) * 60
         self.behavior.speed = int(self.config["size"]) * 0.4
         self._apply_bubble_style()
