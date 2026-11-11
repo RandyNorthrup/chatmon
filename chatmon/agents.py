@@ -343,12 +343,12 @@ class ClaudeCode(Agent):
 
     def status(self) -> str:
         try:
-            mine = self._mine()
+            mine = self._mine()  # once: each look starts Claude Code's command line, a second or so
         except AgentError:
             mine = None
-        if mine and not mine.get("enabled", True):
-            return "installed but off"
-        return super().status()
+        if mine:
+            return "connected" if mine.get("enabled", True) else "installed but off"
+        return "found" if self.detected() else "not found"
 
     def connect(self) -> str:
         _needs_on_path()

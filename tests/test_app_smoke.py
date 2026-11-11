@@ -272,6 +272,51 @@ def test_senders_that_stop_waiting_are_all_heard(companion, monkeypatch):
     assert heard == sent
 
 
+def test_looks_at_the_agents_one_look_at_a_time(companion, monkeypatch):
+    """Each look at how the agents stand starts their command lines, and every refill of the menu asks for
+    one: asked again while looking, it looks once more when done, never several at once."""
+    c = companion
+    looks = []
+    monkeypatch.setattr(c.background, "run", lambda work, then: looks.append((work, then)))
+    c._refreshing, c._refresh_next = False, None  # whatever starting up began
+    c._refresh_agents()
+    c._refresh_agents()
+    c._refresh_agents(True)  # the one that moves hooks over from the old name: not to be lost
+    assert len(looks) == 1
+    looks[0][1]({"claude": "found"})
+    assert len(looks) == 2 and looks[1][0].args == (True,)
+    looks[1][1]({"claude": "found"})
+    assert len(looks) == 2 and not c._refreshing
+    # Filling the menu in again looks only once what it knows has gone stale.
+    from chatmon import app as appmod
+
+    monkeypatch.setattr(c, "_look_again", lambda: None)  # the brains' look, not the agents'
+    c._fill_menu()
+    assert len(looks) == 2
+    c._agents_seen -= appmod.AGENTS_FRESH + 1
+    c._fill_menu()
+    assert len(looks) == 3 and looks[2][0].args == (False,)
+
+
+def test_asks_for_no_session_bus_on_macos(monkeypatch):
+    """macOS has no D-Bus session bus to hear the screen lock on. Asked anyway, an Intel Mac with Homebrew's
+    dbus has Qt find its libdbus and wait on it at every start."""
+    import types
+
+    from chatmon import app as appmod
+
+    asked = []
+    fake = types.ModuleType("PyQt6.QtDBus")
+    fake.QDBusConnection = types.SimpleNamespace(sessionBus=lambda: asked.append(True) or types.SimpleNamespace(isConnected=lambda: False))
+    monkeypatch.setitem(sys.modules, "PyQt6.QtDBus", fake)
+    monkeypatch.setattr(sys, "platform", "darwin")
+    appmod.Companion._watch_screen_lock(types.SimpleNamespace())
+    assert asked == []
+    monkeypatch.setattr(sys, "platform", "linux")
+    appmod.Companion._watch_screen_lock(types.SimpleNamespace())
+    assert asked == [True]  # where there is one, it still listens
+
+
 def test_quits_when_asked(companion, monkeypatch):
     """`chatmon quit` (an installer about to update it): it answers first, then quits, saving as it goes."""
     quits = []
