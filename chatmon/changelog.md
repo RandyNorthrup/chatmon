@@ -18,7 +18,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 
 ### Changes
 - **macOS:** the chatmon is on every Space, takes the keyboard only when you open the chat, and finds your AI tools and keys when started from Finder or at login. It also counts the system updates waiting.
-- **Linux:** starting at login and the password prompt for updates follow the desktop's standards, and updates waiting are counted on Fedora, Arch and openSUSE too. Locking the screen counts as a break on GNOME, Hyprland and Sway, not only KDE.
+- **Linux:** starting at login and the password prompt for updates follow the desktop's standards, and updates waiting are counted on Fedora, Arch and openSUSE too. Time away counts as a break on every desktop: the screen locking and the computer sleeping (through logind, GNOME and KDE), and time without input (on Hyprland, Sway, KDE and GNOME too).
 - **Windows:** Chatmon has its own identity in Windows, Remote Desktop gets a Chatmon of its own, and a restart to finish Windows updates gets a heads-up.
 - On Windows, Chatmon is compiled with Nuitka: the installer is about a sixth smaller.
 

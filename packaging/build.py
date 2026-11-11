@@ -48,8 +48,9 @@ def notes(v: str) -> str:
     return (
         release.markdown("##")
         + "\n\n## Install or update\n\n"
-        + "Chatmon 0.6.0 and later update themselves (**Help & updates** in the menu). Or download the installer for your "
-        + "computer below; `SHA256SUMS.txt` lists each file's checksum.\n\n"
+        + "Chatmon 0.6.0 and later update themselves (**Help & updates** in the menu); coming from 0.5 or earlier, install "
+        + "this one by hand, once. Download the installer for your computer below; `SHA256SUMS.txt` lists each file's "
+        + "checksum, and `SHA256SUMS.txt.sig` is its signature by Chatmon's release key.\n\n"
         + "```sh\npipx install --force git+https://github.com/RandyNorthrup/chatmon\n```\n"
     )
 
