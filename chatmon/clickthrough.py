@@ -4,7 +4,9 @@ bubbles, so the window can cover the screen without getting in the way.
 - X11 and XWayland: an X input shape (the SHAPE extension, through libXext),
   which changes only where clicks land, never what's drawn.
 - Windows and macOS: the whole window ignores the mouse except while the
-  pointer is over something of ours, checked every frame.
+  pointer is over something of ours, checked every frame. On Windows that's
+  the native window's WS_EX_TRANSPARENT style, never Qt's window flags (see
+  WindowsPointerToggle).
 - Anything else: Qt's window mask (on Wayland, the surface's input region).
 """
 
@@ -71,7 +73,8 @@ class XShapeInput:
 
 
 class PointerToggle:
-    """Windows and macOS: switch mouse input on only under the pointer."""
+    """macOS: switch mouse input on only under the pointer, with Qt's
+    WindowTransparentForInput."""
 
     def __init__(self, widget: QWidget):
         self._widget = widget
@@ -81,18 +84,55 @@ class PointerToggle:
         pass
 
     def follow_pointer(self, hit) -> None:
-        handle = self._widget.windowHandle()
-        if handle is None:
-            return
         local = self._widget.mapFromGlobal(QCursor.pos())
+        # A press on the chatmon keeps the mouse until it's let go: a drag can outrun the sprite.
         dragging = QGuiApplication.mouseButtons() != Qt.MouseButton.NoButton and bool(self._accepting)
-        accepting = bool(hit(local)) or dragging
-        if accepting != self._accepting:
+        # Not bool(hit): the bubble's first button is index 0, and a click on it would go through.
+        self._accept(hit(local) is not None or dragging)
+
+    def _accept(self, accepting: bool) -> None:
+        handle = self._widget.windowHandle()
+        if handle is not None and accepting != self._accepting:
             self._accepting = accepting
             handle.setFlag(Qt.WindowType.WindowTransparentForInput, not accepting)
 
     def close(self) -> None:
         pass
+
+
+GWL_EXSTYLE = -20
+WS_EX_TRANSPARENT = 0x20  # on a layered window: every click goes through it, to the window below
+
+
+class WindowsPointerToggle(PointerToggle):
+    """Windows: the same, by switching WS_EX_TRANSPARENT on the stage's native
+    window and nothing else.
+
+    Not with Qt's WindowTransparentForInput: changing a flag makes Qt work out
+    the window's whole extended style again, and that drops WS_EX_LAYERED for a
+    moment. Windows throws away a layered window's picture when it does, and the
+    stage only redraws what changed, so the next frame put up just that patch:
+    the chatmon vanished, and since a layered window lets clicks through
+    wherever it's transparent, it couldn't be clicked either."""
+
+    def __init__(self, widget: QWidget):
+        super().__init__(widget)
+        user32 = ctypes.WinDLL("user32", use_last_error=True)
+        self._get_style = user32.GetWindowLongPtrW
+        self._get_style.restype, self._get_style.argtypes = ctypes.c_ssize_t, [ctypes.c_void_p, ctypes.c_int]
+        self._set_style = user32.SetWindowLongPtrW
+        self._set_style.restype, self._set_style.argtypes = ctypes.c_ssize_t, [ctypes.c_void_p, ctypes.c_int, ctypes.c_ssize_t]
+        self._accept(False)  # the window covers the screen: clicks go through it from the start
+
+    def _accept(self, accepting: bool) -> None:
+        # The style is read every frame, not remembered: if Qt ever sets the window's styles again, the
+        # next frame puts this one back.
+        hwnd = int(self._widget.winId())
+        style = self._get_style(hwnd, GWL_EXSTYLE)
+        wanted = style & ~WS_EX_TRANSPARENT if accepting else style | WS_EX_TRANSPARENT
+        if style and wanted != style:
+            self._set_style(hwnd, GWL_EXSTYLE, wanted)
+        self._accepting = accepting
 
 
 class MaskInput:
@@ -126,6 +166,8 @@ def for_window(widget: QWidget):
             return XShapeInput(widget)
         except OSError:
             return MaskInput(widget)
-    if platform in ("windows", "cocoa"):
+    if platform == "windows":
+        return WindowsPointerToggle(widget)
+    if platform == "cocoa":
         return PointerToggle(widget)
     return MaskInput(widget)
