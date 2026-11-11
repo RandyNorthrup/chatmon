@@ -7,6 +7,7 @@ import json
 import os
 import socket
 import sys
+import time
 from typing import Any
 
 from . import paths
@@ -97,9 +98,7 @@ def deliver(message: dict[str, Any], timeout: float = 0.5) -> str:
     try:
         if os.stat(name).st_uid != os.getuid():
             return FOREIGN  # someone else's socket: never tell them what our agents are doing
-        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
-            sock.settimeout(timeout)
-            sock.connect(name)
+        with _connect(name, timeout) as sock:
             sock.sendall(data)
             try:
                 sock.recv(len(ACK))
@@ -108,6 +107,35 @@ def deliver(message: dict[str, Any], timeout: float = 0.5) -> str:
         return SENT
     except OSError:
         return ABSENT
+
+
+QUEUE_FULL_WAIT = 1.0  # seconds a sender keeps trying while the companion's queue of new connections is full
+
+
+# A full queue of connections: EAGAIN on Linux; macOS and the BSDs refuse instead, as they do when nobody
+# listens (a socket file left by a crash), so there a refusal is tried again for a moment too.
+_QUEUE_FULL: tuple[type[OSError], ...] = (BlockingIOError,) if sys.platform.startswith("linux") else (BlockingIOError, ConnectionRefusedError)
+
+
+def _connect(name: str, timeout: float) -> socket.socket:
+    """A connection to the companion's socket. When its queue of connections not yet taken is full (about
+    fifty, while it's busy drawing: several agents' hooks at once), that isn't nobody there: try again for
+    a moment instead of saying it isn't running. No socket at all fails at once, as before."""
+    deadline = time.monotonic() + QUEUE_FULL_WAIT
+    while True:
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.settimeout(timeout)
+        try:
+            sock.connect(name)
+            return sock
+        except _QUEUE_FULL:
+            sock.close()
+            if time.monotonic() >= deadline:
+                raise
+            time.sleep(0.02)
+        except BaseException:
+            sock.close()
+            raise
 
 
 def _send_pipe(data: bytes, timeout: float) -> str:
