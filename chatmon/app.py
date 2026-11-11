@@ -130,7 +130,7 @@ class Companion(QObject):
         self._last_ask = 0.0
         self._update_counts: dict[str, int] = {}
         self._restart_needed = False
-        self._update_procs: list[QProcess] = []  # the system's update checks, while they run
+        self._update_procs: list = []  # the system's update checks, while they run: QProcesses, and PackageKit's count
 
         screen = QGuiApplication.primaryScreen().availableGeometry()
         x = float(self.state.get("x", screen.x() + screen.width() * 0.8))
@@ -1133,6 +1133,14 @@ class Companion(QObject):
         self._update_counts = {}
         self._restart_needed = False
         for check in checks:
+            if check.name == "packagekit":
+                from . import packagekit
+
+                counter = packagekit.UpdateCount(self)
+                self._update_procs.append(counter)
+                counter.counted.connect(partial(self._packagekit_counted, counter, len(checks)))
+                counter.start()
+                continue
             proc = QProcess(self)
             self._update_procs.append(proc)
             proc.finished.connect(partial(self._updates_counted, proc, check, len(checks)))
@@ -1147,6 +1155,11 @@ class Companion(QObject):
             proc.deleteLater()
             self._tally_updates(check.name, 0, expected)
 
+    def _packagekit_counted(self, counter, expected: int, count: int | None) -> None:
+        self._forget_update_proc(counter)
+        counter.deleteLater()
+        self._tally_updates("packagekit", count or 0, expected)
+
     def _forget_update_proc(self, proc: QProcess) -> None:
         if proc in self._update_procs:
             self._update_procs.remove(proc)
@@ -1155,6 +1168,10 @@ class Companion(QObject):
         """Quitting: the checks still running stop here, never to be heard from again (a QProcess destroyed
         while it runs says it finished, as it goes)."""
         for proc in self._update_procs:
+            if not isinstance(proc, QProcess):  # PackageKit's count: a D-Bus transaction, not a process
+                if not sip.isdeleted(proc):
+                    proc.stop()
+                continue
             if not sip.isdeleted(proc):
                 proc.finished.disconnect()
                 proc.errorOccurred.disconnect()

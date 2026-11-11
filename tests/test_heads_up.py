@@ -162,3 +162,12 @@ def test_batteries_in_different_units_are_averaged_and_a_mouses_is_left_out(tmp_
     (_battery(tmp_path, "BAT2", 5, "Discharging") / "scope").write_text("Device\n")
     assert heads_up.sysfs_battery(tmp_path) == (60.0, True)
     assert heads_up.sysfs_battery(tmp_path / "none") is None
+
+
+def test_packagekit_counts_where_chatmon_knows_no_package_manager(monkeypatch):
+    monkeypatch.setattr(heads_up.sys, "platform", "linux")
+    monkeypatch.setattr(heads_up, "_packagekit", lambda: True)
+    monkeypatch.setattr(heads_up.shutil, "which", lambda name: "/usr/bin/flatpak" if name == "flatpak" else None)
+    assert [c.name for c in heads_up.update_checks()] == ["flatpak", "packagekit"]
+    monkeypatch.setattr(heads_up.shutil, "which", lambda name: f"/usr/bin/{name}" if name == "apt" else None)
+    assert [c.name for c in heads_up.update_checks()] == ["apt"]  # apt's own answer, not PackageKit's too

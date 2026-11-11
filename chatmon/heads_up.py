@@ -217,7 +217,19 @@ def update_checks() -> list[UpdateCheck]:
         UpdateCheck("zypper", ["zypper", "--no-refresh", "--quiet", "--xmlout", "list-updates"], count_zypper),
         UpdateCheck("flatpak", ["flatpak", "remote-ls", "--updates", "--cached", "--columns=application"], count_flatpak),
     ]
-    return [c for c in checks if shutil.which(c.argv[0])]
+    found = [c for c in checks if shutil.which(c.argv[0])]
+    if not any(c.name != "flatpak" for c in found) and _packagekit():
+        # A package manager Chatmon doesn't ask itself (Gentoo's, Slackware's...): PackageKit, where there is one.
+        found.append(UpdateCheck("packagekit", [], lambda _output, _code: None))  # counted over D-Bus (packagekit.py)
+    return found
+
+
+def _packagekit() -> bool:
+    try:
+        from . import packagekit
+    except ImportError:  # no QtDBus
+        return False
+    return packagekit.present()
 
 
 class Watcher:
