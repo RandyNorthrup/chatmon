@@ -145,8 +145,9 @@ class UpdateCheck:
 def update_checks() -> list[UpdateCheck]:
     """This system's ways of knowing about waiting updates, each from what it already knows."""
     if sys.platform == "win32":
-        shell = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
-        return [UpdateCheck("windows", [str(shell), "-NoProfile", "-NonInteractive", "-Command", _WINDOWS_UPDATES], count_windows)]
+        from .paths import powershell
+
+        return [UpdateCheck("windows", powershell(_WINDOWS_UPDATES), count_windows)]
     if sys.platform == "darwin":
         # What macOS found at its own last look (--no-scan: no network, no administrator).
         return [UpdateCheck("softwareupdate", ["/usr/sbin/softwareupdate", "--list", "--no-scan"], count_softwareupdate)]

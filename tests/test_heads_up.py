@@ -98,7 +98,10 @@ def test_each_platform_has_its_own_checks(monkeypatch):
 
     monkeypatch.setattr(heads_up.sys, "platform", "win32")
     (check,) = heads_up.update_checks()
-    assert check.name == "windows" and check.argv[0].lower().endswith("powershell.exe") and "Online = $false" in check.argv[-1]
+    import base64
+
+    assert check.name == "windows" and check.argv[0].lower().endswith("powershell.exe") and check.argv[-2] == "-EncodedCommand"
+    assert "Online = $false" in base64.b64decode(check.argv[-1]).decode("utf-16-le")
     monkeypatch.setattr(heads_up.sys, "platform", "linux")
     monkeypatch.setattr(heads_up.shutil, "which", lambda name: f"/usr/bin/{name}" if name in ("dnf", "flatpak") else None)
     assert [c.name for c in heads_up.update_checks()] == ["dnf", "flatpak"]

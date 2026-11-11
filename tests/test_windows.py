@@ -460,3 +460,41 @@ def test_the_pipe_is_named_for_you_and_this_session(qapp):
     identity = winpipe.my_identity()
     assert re.fullmatch(r"S-1-5-[\d-]+-\d+", identity)
     assert paths.server_name() == f"chatmon-{identity}"
+
+
+# -- PowerShell, as Chatmon really runs it
+
+
+def test_a_script_with_quotes_reaches_powershell_whole():
+    """-Command would strip its double quotes and run something else; -EncodedCommand doesn't."""
+    import subprocess
+
+    from chatmon import paths
+
+    script = '[Console]::Out.Write("a|$("b" + "c")|d")'  # double quotes, inside and out
+    out = subprocess.run(paths.powershell(script), capture_output=True, text=True, timeout=120)
+    assert out.returncode == 0 and out.stdout == "a|bc|d", out.stderr
+
+
+def test_the_updaters_signature_check_reads_a_real_signed_file():
+    """What the updater asks Windows of an installer, asked of Microsoft's own signed PowerShell here."""
+    import os
+    from pathlib import Path
+
+    from chatmon import updates
+
+    signed = Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
+    status, signer, issuer, usages = updates.windows_signer(signed)
+    assert status == "Valid" and "Microsoft" in signer and "Microsoft" in issuer and "1.3.6.1.5.5.7.3.3" in usages  # code signing
+    assert "isn't Randy Northrup's" in updates.verify(signed, updates.sha256(signed), updates.WINDOWS)  # Microsoft's, not his
+
+
+def test_the_windows_update_check_runs_and_says_something_readable():
+    import subprocess
+
+    from chatmon import heads_up
+
+    (check,) = heads_up.update_checks()
+    out = subprocess.run(check.argv, capture_output=True, text=True, timeout=300)
+    # It answers "<count>|<restart>", or, where the runner's Windows Update service won't search, fails plainly.
+    assert check.count(out.stdout, out.returncode) is not None or out.returncode != 0, (out.stdout, out.stderr)

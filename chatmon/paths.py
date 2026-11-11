@@ -193,6 +193,17 @@ def login_environment(timeout: float = 4.0) -> list[str]:
     return adopted
 
 
+def powershell(script: str) -> list[str]:
+    """Windows PowerShell running `script`, as one argument nothing can garble: -EncodedCommand (UTF-16LE,
+    base64). Passed as -Command, a script's double quotes are stripped on the way in by Windows PowerShell's
+    own reading of its command line, and the script never runs as written."""
+    import base64
+
+    system = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32"
+    encoded = base64.b64encode(script.encode("utf-16-le")).decode("ascii")
+    return [str(system / "WindowsPowerShell" / "v1.0" / "powershell.exe"), "-NoProfile", "-NonInteractive", "-EncodedCommand", encoded]
+
+
 def frozen() -> bool:
     """Running from an installer's build, with no Python of its own to run it with: compiled by Nuitka
     (Windows), which gives each module it compiles a __compiled__, or frozen by PyInstaller (macOS)."""

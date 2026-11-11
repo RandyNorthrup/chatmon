@@ -182,14 +182,13 @@ def sha256(path: Path) -> str:
 def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
     """(status, signer, issuer, extended key usages) of a file's Authenticode signature, as Windows sees it.
     Slow (PowerShell starts): off the screen's thread."""
-    system = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32"
     script = (
         "$s = Get-AuthenticodeSignature -LiteralPath $env:CHATMON_UPDATE; $c = $s.SignerCertificate;"
         "[Console]::Out.Write(\"$($s.Status)|$($c.Subject)|$($c.Issuer)|$(($c.EnhancedKeyUsageList.ObjectId) -join ';')\")"
     )
     try:
         out = subprocess.run(
-            [str(system / "WindowsPowerShell" / "v1.0" / "powershell.exe"), "-NoProfile", "-NonInteractive", "-Command", script],
+            paths.powershell(script),
             env={**os.environ, "CHATMON_UPDATE": str(path)},  # the path as data, never as part of the script
             capture_output=True, text=True, timeout=120, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         )
