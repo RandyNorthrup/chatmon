@@ -1,18 +1,25 @@
 #!/bin/sh
 # After the .pkg has put Chatmon.app in /Applications: a `chatmon` command on PATH, which runs the app's
 # own program, for your coding agents' hooks and the command line. Left alone if it's something else
-# (a pip or pipx install of your own, say).
+# (a pip or pipx install of your own, say), and always left alone if it's a link: this runs as root, and
+# writing through a link someone left there would write wherever it points.
 set -e
 LINK=/usr/local/bin/chatmon
 APP=/Applications/Chatmon.app/Contents/MacOS/Chatmon
+if [ -L "$LINK" ]; then
+    exit 0
+fi
 if [ -e "$LINK" ] && ! grep -q "Chatmon.app" "$LINK" 2>/dev/null; then
     exit 0
 fi
 mkdir -p /usr/local/bin
-cat > "$LINK" <<EOF
+# Written beside it and moved into place: mv replaces the name itself, never following anything there.
+tmp=$(mktemp /usr/local/bin/.chatmon.XXXXXX)
+cat > "$tmp" <<SCRIPT
 #!/bin/sh
 # Chatmon's command line, put here by its installer: the app's own program.
 exec "$APP" "\$@"
-EOF
-chmod 755 "$LINK"
+SCRIPT
+chmod 755 "$tmp"
+mv -f "$tmp" "$LINK"
 exit 0
