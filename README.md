@@ -171,8 +171,16 @@ own state folder, so upgrades can't take it away again.
 | **+** in the ask box             | Attach files, a picture or text; or paste them (Ctrl+V), or drop them on it |
 | **History** in the ask box       | Your chats: carry on with one, rename it, pin it to the top, save it as Markdown, or delete it |
 
-Besides questions, the ask box understands *help*, *status* (the brain and its model, battery, disks,
-reminders), *hide*, *new chat*, and the reminder, timer and focus phrases above.
+Besides questions, the ask box does a lot without any AI: reminders and timers, focus sessions, notes, a
+stopwatch, sums (*15% of 80*), unit conversions (*5 km in miles*), the time and date (*days until
+Christmas*), coins and dice (*roll 2d6*), passwords, and *status* (battery, disks, reminders, the brain in
+use). Ask it *help* for the full list. These are answered at once, marked as answered without AI, never
+sent anywhere, and never part of a chat; anything else goes to the brain you picked.
+
+It keeps out of your way: bubbles wait while a full-screen app, a presentation or Do Not Disturb is on, and
+the chatmon gives way to full-screen windows (something that needs you still comes through as a system
+notification). Time away from the keyboard counts toward a break, locked or not, as does sleep. Reduced
+motion and high contrast are followed unless you choose otherwise.
 
 ## Brains: what answers your questions
 
@@ -317,6 +325,11 @@ details.
   API keys only travel over HTTPS; plain HTTP is allowed only to a server on this computer, and a redirect
   is never followed, so a key goes only where the settings say. Settings and state files, and the copies
   made while connecting an agent, are readable by you alone.
+- **What it notices about you stays with it.** How long since you last typed, whether a full-screen app
+  or Do Not Disturb is on, and your accessibility settings are read from your own system, as you use it,
+  and never kept or sent anywhere. To tell a full-screen app is in front, it looks only at the front
+  window's size and state (Windows, X11), never its title or contents; on macOS and the Wayland overlay the
+  system keeps the chatmon out of a full-screen app's way itself.
 - **Answers are only shown.** Links open in your browser only if they're web or mail links, and an image
   in an answer is never loaded (it would have the app read the file it names).
 
@@ -380,6 +393,10 @@ screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland des
 | `chatmon/changelog.py`    | What's new in each version (`changelog.md`)            |
 | `chatmon/report.py`       | Reporting a problem: GitHub's form, filled in          |
 | `chatmon/chats.py`        | Chats kept on this computer, to carry on with          |
+| `chatmon/offline.py`      | What it answers without any AI                         |
+| `chatmon/presence.py`     | Away, quiet and accessibility, each platform's own way |
+| `chatmon/linuxsession.py` | Hearing the screen lock and sleep, on Linux            |
+| `chatmon/macnative.py`    | What Chatmon tells macOS itself (Spaces, activation)   |
 | `chatmon/attachments.py`  | Files, pictures and text attached to a question        |
 | `chatmon/integrations/`   | The Claude Code plugin                                 |
 | `art/`                    | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
