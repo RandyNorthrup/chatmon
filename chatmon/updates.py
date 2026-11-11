@@ -24,6 +24,7 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from PyQt6 import sip
 from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QUrl, pyqtSignal
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
@@ -477,12 +478,16 @@ class Updater(QObject):
         proc.start(program, args)
 
     def _not_started(self, proc: QProcess, error) -> None:
+        if sip.isdeleted(proc):
+            return
         if error == QProcess.ProcessError.FailedToStart:
             proc.deleteLater()
             self.busy = False
             self.failed.emit(f"The update wasn't installed: {Path(proc.program()).name} couldn't start.")
 
     def _installed(self, proc: QProcess, code: int) -> None:
+        if sip.isdeleted(proc):  # Chatmon quitting while it ran
+            return
         err = bytes(proc.readAllStandardError()).decode("utf-8", errors="replace").strip()
         proc.deleteLater()
         self.busy = False

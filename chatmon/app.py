@@ -130,6 +130,7 @@ class Companion(QObject):
         self._last_ask = 0.0
         self._update_counts: dict[str, int] = {}
         self._restart_needed = False
+        self._update_procs: list[QProcess] = []  # the system's update checks, while they run
 
         screen = QGuiApplication.primaryScreen().availableGeometry()
         x = float(self.state.get("x", screen.x() + screen.width() * 0.8))
@@ -1114,16 +1115,38 @@ class Companion(QObject):
         self._restart_needed = False
         for check in checks:
             proc = QProcess(self)
+            self._update_procs.append(proc)
             proc.finished.connect(partial(self._updates_counted, proc, check, len(checks)))
             proc.errorOccurred.connect(partial(self._update_check_failed, proc, check, len(checks)))
             proc.start(check.argv[0], check.argv[1:])
 
     def _update_check_failed(self, proc: QProcess, check: heads_up.UpdateCheck, expected: int, error) -> None:
+        if sip.isdeleted(proc):
+            return
         if error == QProcess.ProcessError.FailedToStart:
+            self._forget_update_proc(proc)
             proc.deleteLater()
             self._tally_updates(check.name, 0, expected)
 
+    def _forget_update_proc(self, proc: QProcess) -> None:
+        if proc in self._update_procs:
+            self._update_procs.remove(proc)
+
+    def _stop_update_checks(self) -> None:
+        """Quitting: the checks still running stop here, never to be heard from again (a QProcess destroyed
+        while it runs says it finished, as it goes)."""
+        for proc in self._update_procs:
+            if not sip.isdeleted(proc):
+                proc.finished.disconnect()
+                proc.errorOccurred.disconnect()
+                proc.kill()
+                proc.waitForFinished(1000)
+        self._update_procs.clear()
+
     def _updates_counted(self, proc: QProcess, check: heads_up.UpdateCheck, expected: int, code: int, _status) -> None:
+        if sip.isdeleted(proc):
+            return
+        self._forget_update_proc(proc)
         output = bytes(proc.readAllStandardOutput()).decode("utf-8", errors="replace")
         proc.deleteLater()
         if check.name == "windows":
@@ -1782,6 +1805,7 @@ class Companion(QObject):
             self._show_sprites()
 
     def quit(self) -> None:
+        self._stop_update_checks()
         self._save_chat()
         self.desk.close()
         global _problem

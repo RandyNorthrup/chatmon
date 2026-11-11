@@ -765,3 +765,19 @@ def test_reduced_motion_and_high_contrast_unless_you_chose(companion):
     desk.notice = 30.0
     c.say("hello", timeout_s=5)
     assert c.stage.bubble._expires - c.stage.bubble._shown_at == pytest.approx(30.0)
+
+
+def test_quitting_while_a_system_update_check_runs_is_quiet(companion, monkeypatch):
+    """A slow check (macOS' softwareupdate) still running at quit: stopped, never read after it's gone."""
+    from chatmon import heads_up
+
+    c = companion
+    slow = [sys.executable, "-c", "import time; time.sleep(30)"]
+    monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("slow", slow, lambda out, code: 0)])
+    c.config["heads_up"]["updates"] = True
+    c._check_updates()
+    spin(0.3)
+    assert len(c._update_procs) == 1
+    c._stop_update_checks()
+    spin(0.3)
+    assert c._update_procs == []
