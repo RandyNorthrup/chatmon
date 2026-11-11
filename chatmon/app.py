@@ -29,6 +29,7 @@ from .sprites import Sprites
 
 PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
+AGENTS_FRESH = 30  # seconds a look at how the agents stand holds good for filling in the menu
 MATCH = "match"  # the bubble style that follows the companion
 
 HELP = """\
@@ -138,6 +139,9 @@ class Companion(QObject):
         self._menu_timer.timeout.connect(self._fill_menu)
         self._menu_clock: tuple = ()
         self._agent_status: dict[str, str] = {}
+        self._refreshing = False  # finding out, off the screen's thread, how each agent stands
+        self._refresh_next: bool | None = None  # asked again meanwhile: whether that look migrates too
+        self._agents_seen = float("-inf")  # when the last look came back
         self._renamed = paths.first_run_since_rename()  # Penguin companion became Chatmon
         self.background = Background()
         self._looking = False  # finding out, off the screen's thread, whether model servers here are running
@@ -493,7 +497,12 @@ class Companion(QObject):
 
             self._lock_watcher = winlock.LockWatcher(self._screen_locked)
             return
-        try:  # D-Bus: Linux and the BSDs; elsewhere (macOS) suspend gaps stand in for it
+        if sys.platform == "darwin":
+            # Suspend gaps stand in for it. PyQt ships QtDBus on macOS too, and on an Intel Mac with
+            # Homebrew's dbus Qt finds its libdbus and asks for a session bus macOS doesn't have: a wait
+            # on the screen's thread at every start, and a thread of its own, for nothing.
+            return
+        try:  # D-Bus: Linux and the BSDs
             from PyQt6.QtDBus import QDBusConnection
         except ImportError:
             return
@@ -709,7 +718,8 @@ class Companion(QObject):
         self._companion_menu(m.addMenu("Companion"))
         self._style_menu(m.addMenu("Bubble style"))
         self._agents_menu(m.addMenu("AI agents"))
-        self._refresh_agents()
+        if not self._refreshing and self._now() - self._agents_seen > AGENTS_FRESH:
+            self._refresh_agents()  # changed outside Chatmon, maybe; a look under way fills the menu in again
         walk = m.addAction("Walk around")
         walk.setCheckable(True)
         walk.setChecked(self.behavior.walk_enabled)
@@ -804,8 +814,22 @@ class Companion(QObject):
 
     def _refresh_agents(self, migrate: bool = False) -> None:
         """How each agent stands, off the main thread. The first time, hooks connected under the old name
-        (penguin-companion) are swapped for chatmon's first."""
-        self.background.run(partial(self._agent_statuses, migrate), self._agents_known)
+        (penguin-companion) are swapped for chatmon's first. One look at a time: each starts the agents'
+        own command lines (a second or so each), and every refill of the menu asks for one. Asked again
+        meanwhile, it looks once more when this one is done."""
+        if self._refreshing:
+            self._refresh_next = migrate or bool(self._refresh_next)
+            return
+        self._refreshing = True
+        self.background.run(partial(self._agent_statuses, migrate), self._agents_refreshed)
+
+    def _agents_refreshed(self, status) -> None:
+        self._refreshing = False
+        self._agents_seen = self._now()
+        again, self._refresh_next = self._refresh_next, None
+        self._agents_known(status)
+        if again is not None:
+            self._refresh_agents(again)
 
     @staticmethod
     def _agent_statuses(migrate: bool) -> dict[str, str]:

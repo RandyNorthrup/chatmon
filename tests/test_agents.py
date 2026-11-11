@@ -244,6 +244,20 @@ def test_claude_switches_a_switched_off_plugin_back_on(monkeypatch):
     assert not any(c[:2] == ["plugin", "install"] for c in fake.calls)
 
 
+def test_claude_status_takes_one_look(monkeypatch):
+    """Each look starts Claude Code's command line, a second or so: how it stands takes one."""
+    for installed, expected in (
+        ([], "found"),
+        ([{"id": "chatmon@chatmon", "enabled": True}], "connected"),
+        ([{"id": "chatmon@chatmon", "enabled": False}], "installed but off"),
+        ([{"id": "penguin-companion@penguin-companion", "enabled": True}], "connected"),  # not moved over yet
+    ):
+        fake = FakeClaude(installed=installed)
+        monkeypatch.setattr(agents, "_run_json", fake)
+        assert agents.ClaudeCode().status() == expected
+        assert fake.calls == [["plugin", "list", "--json"]]
+
+
 def test_claude_needs_chatmon_on_path(monkeypatch):
     monkeypatch.setattr(agents, "_run_json", FakeClaude())
     monkeypatch.setattr(agents.shutil, "which", lambda name: None if name == "chatmon" else f"/usr/bin/{name}")
