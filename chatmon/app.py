@@ -791,9 +791,22 @@ class Companion(QObject):
         for name in local[: max(0, room)]:
             self._attach(lambda name=name: attachments.from_path(Path(name)))
 
+    def _attach_dropped(self, dropped: list) -> None:
+        """Files that aren't on disk (winfiles.Dropped: out of Outlook or a zip), already read."""
+        room = attachments.MAX_COUNT - len(self.attached)
+        if len(dropped) > room:
+            self.say("That's a lot of files", f"I took the first {max(0, room)}: {attachments.MAX_COUNT} attachments at most.", timeout_s=8)
+        for item in dropped[: max(0, room)]:
+            if item.problem:
+                self._attached_one(attachments.AttachError(f"{item.name} {item.problem}"))
+            else:
+                self._attach(lambda item=item: attachments.from_bytes(item.data, item.name))
+
     def _attach_pasted(self, kind: str, payload) -> None:
         if kind == "files":
             self._attach_files_named(list(payload))
+        elif kind == "named":
+            self._attach_dropped(list(payload))
         elif kind == "image":
             self._attach(lambda: attachments.from_image(payload))
         elif kind == "text":

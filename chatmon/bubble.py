@@ -7,6 +7,7 @@ its notch pointing at the penguin, or the plain one in the desktop's own colours
 from __future__ import annotations
 
 import os
+import sys
 import time
 from dataclasses import dataclass
 from typing import Callable
@@ -355,7 +356,9 @@ class Entry(QLineEdit):
 
 
 def clipboard_contents(mime: QMimeData | None) -> tuple[str, object] | None:
-    """("files", [paths]), ("image", QImage) or ("text", str): what a paste would bring, best first."""
+    """("files", [paths]), ("image", QImage) or ("text", str): what a paste would bring, best first. On
+    Windows, a drop or a paste can also bring ("named", [winfiles.Dropped]): files that aren't on disk, which
+    windrop.py reads, not Qt."""
     if mime is None:
         return None
     files = [os.path.normpath(u.toLocalFile()) for u in mime.urls() if u.isLocalFile()] if mime.hasUrls() else []
@@ -392,7 +395,7 @@ class AskBox(QWidget):
     reset_requested = pyqtSignal()
     history_requested = pyqtSignal(QPoint)  # where to show the list of chats (screen coordinates)
     attach_requested = pyqtSignal(QPoint)  # where to show what can be attached
-    pasted = pyqtSignal(str, object)  # ("files", [paths]) or ("image", QImage) or ("text", str): to attach
+    pasted = pyqtSignal(str, object)  # what clipboard_contents found: to attach
     attachment_removed = pyqtSignal(int)
 
     WIDTH = 380
@@ -462,6 +465,7 @@ class AskBox(QWidget):
         layout.addLayout(row)
         self._attached = 0
         self.setAcceptDrops(True)
+        self._drop_target = None  # Windows: Chatmon's own (windrop.DropTarget), in place of Qt's
         self.hint = QLabel()
         self.hint.setObjectName("hint")
         layout.addWidget(self.hint)
@@ -590,7 +594,13 @@ class AskBox(QWidget):
 
     def paste_clipboard(self) -> None:
         """Ctrl+V, or Paste: files and pictures attach; long text attaches; short text goes in the field."""
-        found = clipboard_contents(QGuiApplication.clipboard().mimeData())
+        found = None
+        if sys.platform == "win32":  # files that aren't on disk (copied out of Outlook or a zip): never through Qt
+            from . import windrop
+
+            named = windrop.clipboard_named()
+            found = ("named", named) if named else None
+        found = found or clipboard_contents(QGuiApplication.clipboard().mimeData())
         if found is not None:
             self.take_paste(*found)
 
@@ -616,8 +626,21 @@ class AskBox(QWidget):
         found = clipboard_contents(event.mimeData())
         if found is not None:
             event.acceptProposedAction()
-            kind, payload = found
-            self.pasted.emit(kind, payload) if kind != "text" else self.take_paste(kind, payload)
+            self.take_drop(*found)
+
+    def take_drop(self, kind: str, payload) -> None:
+        self.pasted.emit(kind, payload) if kind != "text" else self.take_paste(kind, payload)
+
+    def _own_drops(self) -> None:
+        """On Windows, this window's drops go to Chatmon's own drop target (windrop.py), not Qt's, which
+        corrupts the heap reading a file dropped out of a zip."""
+        if sys.platform != "win32" or QGuiApplication.platformName() != "windows" or self.stage_draws_art:
+            return
+        if self._drop_target is None:
+            from . import windrop
+
+            self._drop_target = windrop.DropTarget(self.entry.isVisible, self.take_drop)
+        self._drop_target.attach(int(self.winId()))
 
     def _below(self, widget: QWidget) -> QPoint:
         return widget.mapToGlobal(QPoint(0, widget.height()))
@@ -741,6 +764,7 @@ class AskBox(QWidget):
 
     def showEvent(self, event) -> None:
         super().showEvent(event)
+        self._own_drops()
         if QGuiApplication.platformName() == "cocoa" and not self.stage_draws_art:
             from . import macnative
 

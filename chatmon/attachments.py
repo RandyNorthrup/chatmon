@@ -23,6 +23,7 @@ MAX_COUNT = 10  # attachments to one question
 MAX_TEXT = 200 * 1024  # bytes of one text file: past this it's cut, and says so
 MAX_IMAGE_FILE = 30 * 2**20  # bytes of an image file to read at all (it's made smaller before sending)
 MAX_PDF = 20 * 2**20
+MAX_FILE = max(MAX_IMAGE_FILE, MAX_PDF)  # bytes of a file to read at all
 MAX_TOTAL = 20 * 2**20  # bytes of everything sent with one question
 LONG_EDGE = 1568  # px: images are scaled down to this on their long side (what the APIs read at full detail)
 MAX_IMAGE = 4 * 2**20  # bytes of one image as sent (the APIs take up to 5 MB)
@@ -146,17 +147,35 @@ def from_path(path: Path) -> Attachment:
     if not stat.S_ISREG(info.st_mode):
         os.close(fd)
         raise AttachError(f"{name} isn't a file")
-    if info.st_size > max(MAX_IMAGE_FILE, MAX_PDF):
+    if info.st_size > MAX_FILE:
         os.close(fd)
         raise AttachError(f"{name} is too big ({info.st_size // 2**20} MB)")
     try:
         with os.fdopen(fd, "rb") as f:
             head = f.read(16)
             mime = _sniff(head)
-            limit = MAX_PDF if mime == "application/pdf" else MAX_IMAGE_FILE if mime else MAX_TEXT + 4
-            raw = head + f.read(limit - len(head) + 1)
+            raw = head + f.read(_limit(mime) - len(head) + 1)
     except OSError as exc:
         raise AttachError(f"couldn't read {name} ({exc.strerror or exc})") from None
+    return _judged(raw, name, mime)
+
+
+def from_bytes(data: bytes, name: str) -> Attachment:
+    """A file's contents that aren't on disk (dragged out of Outlook or a zip), judged as from_path judges a
+    file's."""
+    if len(data) > MAX_FILE:
+        raise AttachError(f"{name} is too big ({len(data) // 2**20} MB)")
+    mime = _sniff(data[:16])
+    return _judged(data[: _limit(mime) + 1], name, mime)
+
+
+def _limit(mime: str | None) -> int:
+    """Bytes of a file of this kind worth reading: past it, a PDF or a picture is too big and text is cut."""
+    return MAX_PDF if mime == "application/pdf" else MAX_IMAGE_FILE if mime else MAX_TEXT + 4
+
+
+def _judged(raw: bytes, name: str, mime: str | None) -> Attachment:
+    """A file's first _limit(mime) + 1 bytes (or all of it, if fewer), as an attachment."""
     if mime == "application/pdf":
         if len(raw) > MAX_PDF:
             raise AttachError(f"{name} is too big ({MAX_PDF // 2**20} MB at most for a PDF)")

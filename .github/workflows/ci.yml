@@ -27,6 +27,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       QT_QPA_PLATFORM: offscreen
+      CHATMON_TEST_CLIPBOARD: "1"  # a runner's clipboard is nobody's: Windows' paste tests put things on it
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -45,6 +46,11 @@ jobs:
           fi
       - run: python -m pip install PyQt6 psutil pytest
       - run: python -m pytest -q
+      - name: What Windows tells Chatmon's own windows, on its real windowing
+        if: runner.os == 'Windows'
+        env:
+          QT_QPA_PLATFORM: windows
+        run: python -m pytest -q tests/test_windows.py -k "tells_the_display or drop_target or zip or paste"
       - name: What Chatmon tells AppKit itself, on macOS's real window server
         if: runner.os == 'macOS'
         env:

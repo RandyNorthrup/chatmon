@@ -615,3 +615,194 @@ def test_the_windows_update_check_runs_and_says_something_readable():
     out = subprocess.run(check.argv, capture_output=True, text=True, timeout=300)
     # It answers "<count>|<restart>", or, where the runner's Windows Update service won't search, fails plainly.
     assert check.count(out.stdout, out.returncode) is not None or out.returncode != 0, (out.stdout, out.stderr)
+
+
+# -- what's dropped or pasted: Windows' own data objects, read without Qt
+
+
+IID_IDATAOBJECT = uuid.UUID("0000010e-0000-0000-c000-000000000046").bytes_le
+
+
+def ole():
+    """COM and OLE on this thread, as Qt's windows platform has them (the offscreen one doesn't)."""
+    ctypes.WinDLL("ole32").OleInitialize(None)
+
+
+def shell_data_object(*paths):
+    """Explorer's own data object for these items (all in one folder, or one zip): what it hands a drop, or
+    puts on the clipboard. The caller releases it."""
+    from ctypes import POINTER, byref, c_void_p, wintypes
+
+    from chatmon import windrop
+
+    ole()
+    shell32 = ctypes.WinDLL("shell32")
+    shell32.SHParseDisplayName.argtypes = [wintypes.LPCWSTR, c_void_p, POINTER(c_void_p), wintypes.ULONG, POINTER(wintypes.ULONG)]
+    shell32.SHCreateShellItemArrayFromIDLists.argtypes = [wintypes.UINT, POINTER(c_void_p), POINTER(c_void_p)]
+    pidls = []
+    for path in paths:
+        pidl = c_void_p()
+        if shell32.SHParseDisplayName(str(path), None, byref(pidl), 0, None) != 0:
+            pytest.skip(f"Explorer can't open {path} here")
+        pidls.append(pidl.value)
+    items, data = c_void_p(), c_void_p()
+    assert shell32.SHCreateShellItemArrayFromIDLists(len(pidls), (c_void_p * len(pidls))(*pidls), byref(items)) == 0
+    bind = windrop._method(items.value, 3, c_void_p, c_void_p, c_void_p, POINTER(c_void_p))  # IShellItemArray::BindToHandler
+    bhid_data_object = uuid.UUID("b8c0bd9f-ed24-455c-83e6-d5390c4fe8c4").bytes_le
+    assert bind(items.value, None, bhid_data_object, IID_IDATAOBJECT, byref(data)) == 0
+    windrop._release(items.value)
+    return data.value
+
+
+def a_zip(tmp_path):
+    import zipfile
+
+    from PyQt6.QtCore import QBuffer, QByteArray, QIODevice
+    from PyQt6.QtGui import QColor, QImage
+
+    image = QImage(4, 3, QImage.Format.Format_RGB32)
+    image.fill(QColor("red"))
+    png = QByteArray()
+    device = QBuffer(png)
+    device.open(QIODevice.OpenModeFlag.WriteOnly)
+    image.save(device, "PNG")
+    path = tmp_path / "bundle.zip"
+    with zipfile.ZipFile(path, "w") as z:
+        z.writestr("hello.txt", "hello from a zip")
+        z.writestr("dot.png", bytes(png))
+        z.writestr("photos/inner.txt", "inside a folder")
+    return path
+
+
+def test_files_out_of_a_zip_are_read_as_windows_hands_them(qapp, tmp_path):
+    """Explorer's zip folder answers for a file's contents with a stream, even asked for memory: taken as
+    what it is (Qt reads it as memory, and corrupts the heap). Its folder's files come too, by name."""
+    from chatmon import windrop
+
+    zipped = a_zip(tmp_path)
+    data = shell_data_object(zipped / "hello.txt", zipped / "dot.png", zipped / "photos")
+    try:
+        kind, named = windrop.DataObject(data).contents()
+    finally:
+        windrop._release(data)
+    assert kind == "named" and [(d.name, d.problem) for d in named] == [("hello.txt", ""), ("dot.png", ""), ("inner.txt", "")]
+    assert named[0].data == b"hello from a zip" and named[2].data == b"inside a folder" and named[1].data.startswith(b"\x89PNG")
+
+
+def test_the_ask_boxs_drop_target_takes_a_drop_only_while_you_can_type(qapp, tmp_path):
+    """Chatmon's drop target, called as Windows calls it: through its COM interface."""
+    from ctypes import POINTER, byref, c_void_p, wintypes
+
+    from chatmon import windrop
+
+    wanted, got = [True], []
+    target = windrop.DropTarget(lambda: wanted[0], lambda kind, payload: got.append((kind, payload)))
+    query = windrop._method(target.ptr, 0, c_void_p, POINTER(c_void_p))
+    unknown, unseen = c_void_p(), c_void_p()
+    assert query(target.ptr, windrop.IID_IDROPTARGET, byref(unknown)) == 0 and unknown.value == target.ptr
+    assert query(target.ptr, bytes(16), byref(unseen)) == windrop.E_NOINTERFACE and not unseen.value
+    enter = windrop._method(target.ptr, 3, c_void_p, wintypes.DWORD, ctypes.c_uint64, POINTER(wintypes.DWORD))
+    over = windrop._method(target.ptr, 4, wintypes.DWORD, ctypes.c_uint64, POINTER(wintypes.DWORD))
+    leave = windrop._method(target.ptr, 5)
+    drop = windrop._method(target.ptr, 6, c_void_p, wintypes.DWORD, ctypes.c_uint64, POINTER(wintypes.DWORD))
+    zipped = a_zip(tmp_path)
+    data = shell_data_object(zipped / "hello.txt")
+    try:
+        effect = wintypes.DWORD(windrop.DROPEFFECT_COPY | 2)  # copy or move, as Explorer offers
+        assert enter(target.ptr, data, 0, 0, byref(effect)) == 0 and effect.value == windrop.DROPEFFECT_COPY
+        wanted[0] = False  # the box closed as the drag went on
+        effect.value = 3
+        over(target.ptr, 0, 0, byref(effect))
+        assert effect.value == windrop.DROPEFFECT_NONE
+        effect.value = 3
+        assert drop(target.ptr, data, 0, 0, byref(effect)) == 0 and effect.value == windrop.DROPEFFECT_NONE
+        wanted[0] = True
+        leave(target.ptr)
+        effect.value = 3
+        enter(target.ptr, data, 0, 0, byref(effect))
+        effect.value = 3
+        assert drop(target.ptr, data, 0, 0, byref(effect)) == 0 and effect.value == windrop.DROPEFFECT_COPY
+    finally:
+        windrop._release(data)
+    assert got == []  # once the drop is over
+    qapp.processEvents()
+    assert [(kind, [(d.name, d.data) for d in payload]) for kind, payload in got] == [("named", [("hello.txt", b"hello from a zip")])]
+
+
+def test_pictures_text_and_files_on_disk_come_through_it_too(qapp, tmp_path):
+    from ctypes import POINTER, byref, c_void_p, wintypes
+
+    from PyQt6.QtCore import QBuffer, QByteArray, QIODevice
+    from PyQt6.QtGui import QColor, QImage
+
+    from chatmon import windrop
+
+    ole()
+    shell32, kernel32 = ctypes.WinDLL("shell32"), ctypes.WinDLL("kernel32")
+    kernel32.GlobalAlloc.restype, kernel32.GlobalAlloc.argtypes = c_void_p, [wintypes.UINT, ctypes.c_size_t]
+    kernel32.GlobalLock.restype, kernel32.GlobalLock.argtypes = c_void_p, [c_void_p]
+    kernel32.GlobalUnlock.argtypes = [c_void_p]
+    shell32.SHCreateDataObject.argtypes = [c_void_p, wintypes.UINT, c_void_p, c_void_p, c_void_p, POINTER(c_void_p)]
+
+    def holding(*formats):
+        data = c_void_p()
+        assert shell32.SHCreateDataObject(None, 0, None, None, IID_IDATAOBJECT, byref(data)) == 0
+        set_data = windrop._method(data.value, 7, POINTER(windrop.FORMATETC), POINTER(windrop.STGMEDIUM), wintypes.BOOL)
+        for cf, raw in formats:
+            memory = kernel32.GlobalAlloc(0x2, len(raw))  # GMEM_MOVEABLE
+            ctypes.memmove(kernel32.GlobalLock(memory), raw, len(raw))
+            kernel32.GlobalUnlock(memory)
+            etc = windrop.FORMATETC(cf, None, windrop.DVASPECT_CONTENT, -1, windrop.TYMED_HGLOBAL)
+            assert set_data(data.value, byref(etc), byref(windrop.STGMEDIUM(windrop.TYMED_HGLOBAL, memory, None)), True) == 0
+        return data.value
+
+    def contents(data):
+        try:
+            return windrop.DataObject(data).contents()
+        finally:
+            windrop._release(data)
+
+    image = QImage(5, 4, QImage.Format.Format_ARGB32)
+    image.fill(QColor(0, 128, 255))
+    saved = {}
+    for fmt in ("PNG", "BMP"):
+        buffer = QByteArray()
+        device = QBuffer(buffer)
+        device.open(QIODevice.OpenModeFlag.WriteOnly)
+        image.save(device, fmt)
+        saved[fmt] = bytes(buffer)
+    dib = saved["BMP"][14:]  # a .bmp without its file header: CF_DIB, as programs put a picture on the clipboard
+    text = "Hello, wörld".encode("utf-16-le") + b"\0\0"
+
+    kind, got = contents(holding((windrop.CF_PNG, saved["PNG"]), (windrop.CF_UNICODETEXT, text)))
+    assert kind == "image" and (got.width(), got.height()) == (5, 4)  # a picture first, its text second
+    kind, got = contents(holding((windrop.CF_DIB, dib)))
+    assert kind == "image" and (got.width(), got.height()) == (5, 4) and QColor(got.pixel(2, 2)).blue() == 255
+    assert contents(holding((windrop.CF_UNICODETEXT, text))) == ("text", "Hello, wörld")
+    assert contents(holding()) is None
+    on_disk = tmp_path / "notes.txt"
+    on_disk.write_text("on disk")
+    assert contents(shell_data_object(on_disk)) == ("files", [str(on_disk)])
+
+
+@pytest.mark.skipif(not os.environ.get("CHATMON_TEST_CLIPBOARD"), reason="puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1")
+def test_a_paste_of_files_copied_out_of_a_zip(qapp, tmp_path):
+    """Copied in Explorer, pasted into the ask box: read from the clipboard's own data object, never by Qt."""
+    from chatmon import windrop
+    from chatmon.bubble import AskBox
+
+    zipped = a_zip(tmp_path)
+    data = shell_data_object(zipped / "hello.txt", zipped / "dot.png")
+    ole32 = ctypes.WinDLL("ole32")
+    ole32.OleSetClipboard.argtypes = [ctypes.c_void_p]
+    assert ole32.OleSetClipboard(data) == 0
+    try:
+        named = windrop.clipboard_named()
+        assert [(d.name, d.problem) for d in named] == [("hello.txt", ""), ("dot.png", "")] and named[0].data == b"hello from a zip"
+        box, got = AskBox(), []
+        box.pasted.connect(lambda kind, payload: got.append((kind, [d.name for d in payload])))
+        box.paste_clipboard()
+        assert got == [("named", ["hello.txt", "dot.png"])]
+    finally:
+        ole32.OleSetClipboard(None)
+        windrop._release(data)

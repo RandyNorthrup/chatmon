@@ -618,6 +618,23 @@ def test_pasted_file_lists_are_capped_and_never_reach_network_paths(companion, t
     assert len(looked) == attachments.MAX_COUNT and not any(n.startswith(("//", "\\\\")) for n in looked)
 
 
+def test_files_that_arent_on_disk_attach_as_files_do(companion):
+    """Out of Outlook or a zip (on Windows): read already, each judged as a file on disk would be."""
+    from chatmon import attachments
+    from chatmon.winfiles import Dropped
+
+    c = companion
+    c.open_ask()
+    c._attach_pasted("named", [Dropped("notes.txt", b"buy milk"), Dropped("report.pdf", b"%PDF-1.7 ..."),
+                               Dropped("Re: lunch.msg", b"", "couldn't be read")])
+    assert until(lambda: len(c.attached) == 2)
+    assert sorted((a.name, a.kind) for a in c.attached) == [("notes.txt", attachments.TEXT), ("report.pdf", attachments.PDF)]  # read side by side
+    assert c.stage.bubble.title == "Couldn't attach that" and "Re: lunch.msg couldn't be read" in c.stage.bubble._text
+    c._attach_pasted("named", [Dropped(f"{i}.txt", b"x") for i in range(attachments.MAX_COUNT)])
+    assert until(lambda: len(c.attached) == attachments.MAX_COUNT)
+    assert c.stage.bubble.title == "That's a lot of files"
+
+
 def test_offline_answers_are_marked_and_kept_out_of_the_chat(companion, monkeypatch):
     c = companion
     brain = PretendBrain(c, monkeypatch)
