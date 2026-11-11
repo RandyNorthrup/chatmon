@@ -22,7 +22,7 @@ DEFAULTS: dict[str, Any] = {
     "ai": {"brain": "auto", "timeout_seconds": 180, "brains": {}},
     "agents": {"show_replies": False},
     "updates": {"check": True},
-    "chats": {"keep": True},
+    "chats": {"keep": True, "context_tokens": 48000, "instructions": ""},
     "breaks": {"every_minutes": 60, "snooze_minutes": 10},
     "focus": {"minutes": 25},
     "heads_up": {
@@ -138,10 +138,19 @@ show_replies = false
 [chats]
 # Keep your chats on this computer, so you can come back to one and carry on
 # (the menu's "Chats", or "History" in the ask box). They're readable by you
-# alone, and "Clear chat history" deletes them. What you attach (files, text,
-# pictures) isn't kept, only its name. The menu's "Keep chat history"
+# alone, and "Clear chat history" deletes them. Text you attach is kept with
+# its chat, so you can ask about it later (it goes only to the brain you gave
+# it to); pictures and PDFs only by name. The menu's "Keep chat history"
 # overrides this.
 keep = true
+# How much of a chat a brain is sent with each question, at most, in tokens
+# (about 3.5 characters each). Past this, the earlier part goes as a summary,
+# with the turns that bear on your question word for word. More costs more
+# with an API. A model's own limit always comes first.
+context_tokens = 48000
+# Your instructions for every chat, sent with every question to every brain:
+# how to answer, what you do, what language. Settings has these too.
+instructions = ""
 
 [updates]
 # Look for a new Chatmon once a day, download it, check it's the real one, and

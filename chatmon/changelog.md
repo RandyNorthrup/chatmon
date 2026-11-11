@@ -4,6 +4,12 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 
 ## 0.7.0
 
+### New
+- **Chats remember the whole conversation.** Follow-ups and questions about anything said earlier work however long a chat gets, with every brain alike. A brain gets the latest turns word for word, a summary of the earlier part (made once, by the brain you're asking, and kept with the chat), and the earlier turns that bear on your question, word for word. How much is sent is up to you (`[chats] context_tokens`), and never more than the model can take: a model server's own limit is asked for, and a brain that says a question was too long is asked again, with less.
+- **Instructions for every chat**, and **instructions for one chat** (its menu, under **Chats**): how to answer, what you do, what language. Every brain gets them with every question.
+- **Memory.** *Remember that I use Arch*, and every brain you ask knows it, in every chat. *What do you remember* lists it; *forget that …* takes it out. Only what you say, in so many words: nothing is picked out of your chats.
+- **Ask about what you attached, later.** Text you attach is kept with its chat (readable by you alone), so you can come back to it after Chatmon restarts. It goes only to the brain you gave it to.
+
 ### Changes
 - The chatmon stops walking while the pointer is over it, so it's easy to click, and carries on when the pointer leaves.
 - **Linux:** the app's entry has **Bring out Chatmon** and **Quit Chatmon** in the launcher and dock.
@@ -12,6 +18,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Hyprland:** the screen locking counts as a break with hyprlock too, which doesn't tell logind.
 
 ### Fixes
+- **Privacy:** Codex no longer keeps a session file of each question you ask it through Chatmon, and OpenAI's and xAI's APIs are asked not to store your questions (they keep them 30 days otherwise). Anthropic's API reads a chat's earlier turns from its cache, at a fraction of the price.
 - **Linux:** something that needs you, under a full-screen app, reaches you as a notification on every desktop, with or without a tray. With no tray (GNOME, out of the box), Chatmon says once where its menu is.
 - **Linux:** a laptop with two batteries gets its battery warnings for both together, as the desktop's battery icon shows them, not for the first alone.
 

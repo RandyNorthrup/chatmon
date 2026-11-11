@@ -345,3 +345,57 @@ def test_programs_are_looked_for_now_and_then_not_on_every_menu(monkeypatch):
     assert grok.available() and looks == ["grok", "grok"]
     monkeypatch.setattr(paths, "FOUND_FOR", 0)  # and once it's old
     assert grok.available() and looks == ["grok", "grok", "grok"]
+
+
+# -- how much a model takes at once (context.py fits a chat to it)
+
+
+def test_each_servers_own_word_for_its_context_window():
+    from chatmon import brains
+
+    assert brains._from_ollama_ps({"models": [{"name": "llama3.2:latest", "context_length": 8192}]}, "llama3.2") == 8192
+    assert brains._from_ollama_ps({"models": [{"name": "qwen3:8b", "context_length": 4096}]}, "auto") == 4096
+    assert brains._from_ollama_ps({"models": []}, "llama3.2") is None  # not loaded yet: not known
+    assert brains._from_llamacpp_props({"default_generation_settings": {"n_ctx": 16384}}, "") == 16384
+    assert brains._from_model_list({"data": [{"id": "a", "max_model_len": 32768}]}, "a") == 32768  # vLLM
+    assert brains._from_model_list({"data": [{"id": "x/y", "context_length": 200000}]}, "x/y") == 200000  # OpenRouter
+    assert brains._from_model_list({"data": [{"id": "m", "top_provider": {"context_length": 64000}}]}, "m") == 64000
+    assert brains._from_model_list({"data": [{"id": "gpt"}]}, "gpt") is None  # OpenAI's says nothing
+    lm = {"models": [{"key": "q", "max_context_length": 131072, "loaded_instances": [{"config": {"context_length": 8192}}]}]}
+    assert brains._from_lmstudio(lm, "q") == 8192  # loaded with less than its most
+
+
+def test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed(qapp):
+    import http.server
+    import threading
+
+    from chatmon import brains
+
+    class Server(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            if self.path == "/v1/models":
+                self.send_response(302)
+                self.send_header("location", "http://example.com/steal")
+                self.end_headers()
+                return
+            body = b'{"models": [{"name": "tiny:latest", "context_length": 2048}]}' if self.path == "/api/ps" else b"{}"
+            self.send_response(200 if self.path == "/api/ps" else 404)
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *args):
+            pass
+
+    server = http.server.HTTPServer(("127.0.0.1", 0), Server)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    try:
+        brain = brains.Brain("ollama", "openai", url=f"http://127.0.0.1:{server.server_port}/v1", model="tiny", local=True, api_key="secret")
+        assert brains.context_window(brain) == brains.LOCAL_WINDOW and not brains.window_known(brain)
+        assert brains.learn_window(brain) == 2048 and brains.context_window(brain) == 2048
+        brains.shrink_window(brain, 3000)
+        assert brains.context_window(brain) == 1024
+    finally:
+        server.shutdown()
+        brains._windows.clear()
+    remote = brains.Brain("x", "openai", url="http://203.0.113.9/v1", model="m")
+    assert brains.learn_window(remote) is None  # plain HTTP only to this computer

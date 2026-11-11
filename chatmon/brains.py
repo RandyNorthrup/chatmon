@@ -24,6 +24,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import urllib.request
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -52,7 +53,8 @@ PRESETS: dict[str, dict] = {
     "codex": {
         "type": "command",
         "label": "Codex",
-        "command": ["codex", "exec", "--skip-git-repo-check", "--sandbox", "read-only", "--output-last-message", "{output_file}", "-"],
+        # --ephemeral: no session file left in ~/.codex for each question.
+        "command": ["codex", "exec", "--ephemeral", "--skip-git-repo-check", "--sandbox", "read-only", "--output-last-message", "{output_file}", "-"],
         "model_args": ["-m", "{model}"],
         "efforts": ["low", "medium", "high", "xhigh"],
         "effort_args": ["-c", 'model_reasoning_effort="{effort}"'],
@@ -114,6 +116,9 @@ PRESETS: dict[str, dict] = {
         "thinking_fields": {"off": {"reasoning.effort": "none"}},
         "thinking_models": {"off": ["gpt-6.1-terra", "gpt-6-luna"]},  # Sol and Astra always reason
         "api_key_env": "OPENAI_API_KEY",
+        # Not kept on OpenAI's side (by default for 30 days): each question carries its chat itself.
+        # https://developers.openai.com/api/docs/guides/conversation-state
+        "extra": {"store": False},
     },
     "gemini-api": {
         "type": "openai",
@@ -133,6 +138,7 @@ PRESETS: dict[str, dict] = {
         "efforts": ["low", "medium", "high", "xhigh"],
         "model_efforts": {"grok-4.20-0309-non-reasoning": []},
         "api_key_env": "XAI_API_KEY",
+        "extra": {"store": False},  # not kept on xAI's side (30 days by default) https://docs.x.ai/developers/model-capabilities/text/generate-text
     },
     "meta-api": {
         "type": "openai",
@@ -558,6 +564,119 @@ def check_url(url: str) -> None:
         raise BrainError(f"{url} isn't HTTPS; only a server on this computer may use plain HTTP")
 
 
+# -- context windows: how much a brain's model can take at once (context.py fits a chat to it)
+
+LOCAL_WINDOW = 4_096  # a model server here, until it says: Ollama's own default on a small GPU
+HOSTED_WINDOW = 128_000  # a hosted model's, at the least these days; a chat is sent far less (context.py)
+_WINDOW_FIELDS = ("max_model_len", "context_length", "max_context_length", "context_window", "contextLength", "loaded_context_length")
+_windows: dict[str, int] = {}  # learned this run: brain, server and model -> tokens
+
+
+def _window_key(brain: Brain) -> str:
+    return f"{brain.name}|{brain.url}|{brain.model}"
+
+
+def context_window(brain: Brain) -> int:
+    """The tokens `brain`'s model takes at once, as far as Chatmon knows."""
+    known = _windows.get(_window_key(brain))
+    if known:
+        return known
+    return LOCAL_WINDOW if brain.local else HOSTED_WINDOW
+
+
+def window_known(brain: Brain) -> bool:
+    return _window_key(brain) in _windows
+
+
+def shrink_window(brain: Brain, sent_tokens: int) -> None:
+    """It said a question of about `sent_tokens` was too long: from now on, half that."""
+    _windows[_window_key(brain)] = max(1_024, min(context_window(brain), sent_tokens) // 2)
+
+
+def learn_window(brain: Brain) -> int | None:
+    """Ask `brain`'s server how much its model takes at once, and remember it. Slow (network): off the screen's
+    thread. Local servers each say it their own way; a hosted API's model list may say it (OpenRouter, Mistral,
+    Groq, DeepSeek); OpenAI's and Anthropic's needn't (all theirs take far more than a chat is sent)."""
+    if brain.type != "openai" or not brain.url:
+        return None
+    root = brain.url.rstrip("/")
+    if root.endswith("/v1"):
+        root = root[: -len("/v1")]
+    asks = [(f"{brain.url.rstrip('/')}/models", _from_model_list)]
+    if brain.local:
+        asks += [(f"{root}/api/ps", _from_ollama_ps), (f"{root}/props", _from_llamacpp_props), (f"{root}/api/v1/models", _from_lmstudio)]
+    for url, read in asks:
+        try:
+            window = read(_get_json(url, brain), brain.model)
+        except (OSError, ValueError, BrainError):
+            continue
+        if isinstance(window, int) and window >= 512:
+            _windows[_window_key(brain)] = window
+            return window
+    return None
+
+
+class _NoRedirects(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):  # a key goes only where the settings say
+        return None
+
+
+def _get_json(url: str, brain: Brain, timeout: float = 2.0):
+    check_url(url)
+    request = urllib.request.Request(url, headers={"authorization": f"Bearer {brain.key()}"} if brain.key() else {})
+    with urllib.request.build_opener(_NoRedirects).open(request, timeout=timeout) as reply:
+        if reply.status != 200:
+            raise ValueError(f"HTTP {reply.status}")
+        return json.loads(reply.read(4 * 2**20))
+
+
+def _pick(entries, model: str, *names: str) -> dict | None:
+    entries = [e for e in entries if isinstance(e, dict)] if isinstance(entries, list) else []
+    for e in entries:
+        if model and model != "auto" and {model, f"{model}:latest"} & {e.get(n) for n in names}:  # Ollama's own tag
+            return e
+    return entries[0] if entries and (not model or model == "auto") else None
+
+
+def _field(entry) -> int | None:
+    if not isinstance(entry, dict):
+        return None
+    for name in _WINDOW_FIELDS:
+        value = entry.get(name)
+        if isinstance(value, int) and not isinstance(value, bool):
+            return value
+    top = entry.get("top_provider")
+    return _field(top) if isinstance(top, dict) else None
+
+
+def _from_model_list(data, model: str) -> int | None:
+    """/v1/models: vLLM (max_model_len), OpenRouter (context_length), Mistral, Groq, DeepSeek..."""
+    return _field(_pick(data.get("data") if isinstance(data, dict) else None, model, "id"))
+
+
+def _from_ollama_ps(data, model: str) -> int | None:
+    """Ollama's /api/ps: the context a loaded model actually has (not its most: Ollama sets it by memory)."""
+    loaded = _pick(data.get("models") if isinstance(data, dict) else None, model, "name", "model")
+    return loaded.get("context_length") if isinstance(loaded, dict) else None
+
+
+def _from_llamacpp_props(data, _model: str) -> int | None:
+    settings = data.get("default_generation_settings") if isinstance(data, dict) else None
+    return settings.get("n_ctx") if isinstance(settings, dict) else None
+
+
+def _from_lmstudio(data, model: str) -> int | None:
+    """LM Studio's /api/v1/models: a loaded instance's context, else the model's most."""
+    entry = _pick(data.get("models", data.get("data")) if isinstance(data, dict) else None, model, "key", "id")
+    if not isinstance(entry, dict):
+        return None
+    for instance in entry.get("loaded_instances") or []:
+        config = instance.get("config") if isinstance(instance, dict) else None
+        if isinstance(config, dict) and isinstance(config.get("context_length"), int):
+            return config["context_length"]
+    return _field(entry)
+
+
 def cant_take(brain: Brain, attached: list[Attachment]) -> str | None:
     """Why this brain can't be given these attachments (None: it can)."""
     kinds = {a.kind for a in attached}
@@ -654,6 +773,10 @@ def anthropic_request(brain: Brain, system: str, history, question: str, attache
     if brain.model in _FALLBACK_MODELS:
         headers["anthropic-beta"] = _FALLBACK_BETA
         body["fallbacks"] = "default"
+    if not brain.url or expand_url(brain.url) == ANTHROPIC_URL:
+        # Automatic caching: each question's chat, up to its last turn, is read again from the cache (a small part
+        # of the price) while you're still talking. Anthropic's own API: elsewhere the field can be refused.
+        body["cache_control"] = {"type": "ephemeral"}
     return _custom(brain, headers, body)
 
 

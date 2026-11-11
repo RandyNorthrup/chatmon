@@ -529,7 +529,7 @@ def test_chats_can_be_renamed_pinned_saved_and_deleted(companion, monkeypatch, t
     c._fill_menu()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
     item = next(a.menu() for a in chats_menu.actions() if a.text().startswith("★ Cat names"))
-    assert [a.text() for a in item.actions() if a.text()] == ["Carry on", "Rename…", "Unpin", "Save as Markdown…", "Delete…"]
+    assert [a.text() for a in item.actions() if a.text()] == ["Carry on", "Rename…", "Instructions for this chat…", "Unpin", "Save as Markdown…", "Delete…"]
 
     out = tmp_path / "saved.md"
     monkeypatch.setattr(appmod.QFileDialog, "getSaveFileName", lambda *a: (str(out), "Markdown (*.md)"))
@@ -810,3 +810,86 @@ def test_in_power_saver_mode_the_stage_draws_less_often(companion):
     c._power_saving(False)
     spin(0.2)
     assert c.stage._timer.interval() in (1000 // penguin.FPS, 1000 // penguin.SLOW_FPS)
+
+
+class PretendContextBrain(PretendBrain):
+    """Records the system prompt too, and what the summary step was asked."""
+
+    def __init__(self, c, monkeypatch, kind="anthropic"):
+        super().__init__(c, monkeypatch, kind)
+        self.systems, self.summaries = [], []
+        monkeypatch.setattr(
+            c.asker, "ask",
+            lambda brain, system, history, question, timeout, attached=(): (self.asked.append((history, question, list(attached))), self.systems.append(system)),
+        )
+        monkeypatch.setattr(c.compactor, "ask", lambda brain, system, history, question, timeout, attached=(): self.summaries.append(question))
+
+
+def test_a_long_chat_is_summed_up_first_then_asked_with_the_summary(companion, monkeypatch):
+    c = companion
+    brain = PretendContextBrain(c, monkeypatch)
+    monkeypatch.setattr(c, "_context_cap", lambda: 6_000)
+    c.open_ask()
+    for i in range(40):
+        c.submit(f"question {i} " + "q" * 300)
+        brain.answer(f"answer {i} " + "a" * 300)
+    asked_before = len(brain.asked)
+    c.submit("And the very first question?")
+    assert len(brain.asked) == asked_before or brain.summaries  # a summary first, when it's needed
+    while len(brain.asked) == asked_before:
+        assert "Catching Pretend API up" in c.ask_box.answer.toPlainText()
+        c._compacted("NOTES: they asked 40 questions.")
+    history, question, _ = brain.asked[-1]
+    assert question == "And the very first question?" and "NOTES: they asked 40 questions." in brain.systems[-1]
+    assert c.chat.summary.startswith("NOTES") and 0 < c.chat.summarized <= 40 and len(history) < 40
+    assert c.chat_book.load(c.chat.id).summary == c.chat.summary  # kept with the chat
+
+
+def test_too_long_after_all_is_asked_once_more_with_less(companion, monkeypatch):
+    from chatmon import brains
+
+    c = companion
+    brain = PretendContextBrain(c, monkeypatch)
+    c.open_ask()
+    for i in range(5):
+        c.submit(f"question {i}")
+        brain.answer(f"answer {i}")
+    c.submit("one more")
+    before = len(brain.asked)
+    c._failed("Pretend API: prompt is too long: 9000 tokens > 8000 maximum")
+    assert len(brain.asked) == before + 1 and brains.window_known(brain.brain)  # again, at once, with less
+    c._failed("Pretend API: prompt is too long: 9000 tokens > 8000 maximum")
+    assert len(brain.asked) == before + 1 and "didn't work" in c.ask_box.answer.toPlainText()  # once only
+    brains._windows.clear()
+
+
+def test_instructions_and_memory_go_with_every_question(companion, monkeypatch):
+    c = companion
+    brain = PretendContextBrain(c, monkeypatch)
+    c.memory = __import__("chatmon.memory", fromlist=["Memory"]).Memory([], c.memory.where)
+    c.state.set("instructions", "Be brief.")
+    c.open_ask()
+    c.submit("remember that I use Arch")
+    assert brain.asked == [] and "I'll remember that" in c.ask_box.answer.toPlainText()  # Chatmon's own
+    c._ask_chat_instructions(c.chat.id)
+    c.submit("Answer in French.")
+    assert c.chat.instructions == "Answer in French." and brain.asked == []
+    c.submit("How do I update?")
+    system = brain.systems[-1]
+    assert "Be brief." in system and "Answer in French." in system and "I use Arch" in system
+    c.submit("forget that I use Arch")
+    assert c.memory.texts() == []
+
+
+def test_api_requests_keep_nothing_on_the_providers_side_and_cache_the_chat():
+    from chatmon import brains
+
+    loaded = brains.load_brains({"brain": "auto", "brains": {}})
+    assert "--ephemeral" in loaded["codex"].command  # no session file left behind for each question
+    for name in ("openai-api", "xai-api"):
+        _, body = brains.responses_request(loaded[name], "s", [], "q")
+        assert body["store"] is False
+    _, body = brains.anthropic_request(loaded["anthropic-api"], "s", [("q", "a")], "q2")
+    assert body["cache_control"] == {"type": "ephemeral"}
+    elsewhere = brains.replace(loaded["anthropic-api"], url="https://proxy.example.com/v1/messages")
+    assert "cache_control" not in brains.anthropic_request(elsewhere, "s", [], "q")[1]

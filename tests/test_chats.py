@@ -163,17 +163,19 @@ def test_brains_that_cant_take_something_say_so():
 def test_a_chat_is_saved_privately_and_read_back(tmp_path):
     book = chats.ChatBook(tmp_path)
     chat = chats.Chat()
-    chat.add(chats.Message("user", "What's in this?", sent="What's in this?\n\nAttached:\n<file>…", attached=["notes.md", "p.png"]))
+    chat.add(chats.Message("user", "What's in this?", sent="What's in this?\n\nAttached:\n<file>…", attached=["notes.md", "p.png"], brain="Claude Code"))
     chat.add(chats.Message("assistant", "A plan.", brain="Claude Code"))
+    chat.instructions, chat.summary, chat.summarized = "Answer in French.", "", 0
     book.save(chat)
     path = tmp_path / f"{chat.id}.json"
     if sys.platform != "win32":
-        assert stat.S_IMODE(path.stat().st_mode) == 0o600
+        assert stat.S_IMODE(path.stat().st_mode) == 0o600  # yours alone: it holds what you attached
     back = book.load(chat.id)
     assert back.title == "What's in this?" and [m.text for m in back.messages] == ["What's in this?", "A plan."]
-    saved = path.read_text()
-    assert "<file>" not in saved and "sent" not in saved and "keep" not in saved  # what was attached: its name, never itself
-    assert back.history("Claude Code") == [("What's in this?\n\n(Attached then: notes.md, p.png)", "A plan.")]
+    assert "keep" not in path.read_text() and back.instructions == "Answer in French."
+    # What was attached comes back for the brain it went to, after a restart too; any other gets its name.
+    assert back.history("Claude Code") == [("What's in this?\n\nAttached:\n<file>…", "A plan.")]
+    assert back.history("Ollama") == [("What's in this?\n\n(Attached then: notes.md, p.png)", "A plan.")]
 
 
 def test_attached_text_goes_again_only_to_the_brain_it_went_to():

@@ -20,7 +20,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiAppli
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, events, heads_up, offline, paths, presence, reminders, report, styles, sysnotify, updates
+from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, context, events, heads_up, memory, offline, paths, presence, reminders, report, styles, sysnotify, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -54,6 +54,7 @@ HELP_ALL = """\
 - **Passwords:** *password* · *password 32*
 - **Your computer:** *status* (battery, disks, reminders, the brain in use)
 - **Me:** *hide* · *new chat* · *rename chat* · *history* · *what's new* · *check for updates* · *report a problem* · *version*
+- **Memory:** *remember that I use Arch* · *what do you remember* · *forget that I use Arch* · *forget everything*. What you ask me to remember goes with every question, to whichever AI you ask: that's what it's for.
 
 Anything else goes to the AI you picked, under **Brain** in my menu.
 """
@@ -153,6 +154,13 @@ class Companion(QObject):
         else:
             self.stage.keep_clear_of(self.ask_box)
         self.asker = brains.Asker(self)
+        self.compactor = brains.Asker(self)  # sums up a chat's earlier part, when a question needs that first
+        self.compactor.answered.connect(self._compacted)
+        self.compactor.failed.connect(self._compact_failed)
+        self._folding: tuple | None = None  # (chat id, pairs the summary will stand for, the question waiting)
+        self._asked: dict | None = None  # what the question on its way went with: to ask once more, with less
+        self.memory = memory.Memory.load()
+        self._instructing: str | None = None  # the chat whose instructions the box is asking for
 
         self.stage.clicked.connect(self.on_click)
         self.stage.menu_requested.connect(self.show_menu)
@@ -455,7 +463,10 @@ class Companion(QObject):
         now = self._now()
         self._asking_name = False
         self._renaming = None
+        self._instructing = None
         self.asker.cancel()
+        self.compactor.cancel()
+        self._folding = None
         self.behavior.set_thinking(False, now)
         self.behavior.set_talking(False, now)
         self.behavior.set_attending(self._menu_open, now)
@@ -470,6 +481,8 @@ class Companion(QObject):
         """A question on its way belongs to the chat it was asked in: leaving that chat drops it."""
         if self._asking is not None:
             self.asker.cancel()
+            self.compactor.cancel()
+            self._folding = None
             self._asking = None
             self.behavior.set_thinking(False, self._now())
 
@@ -539,6 +552,7 @@ class Companion(QObject):
         item = menu.addMenu(f"{mark}{chat.title or 'A chat'}   ·   {chats.when(chat.updated)}{here}")
         item.addAction("Carry on", partial(self._resume_chat, chat.id))
         item.addAction("Rename…", partial(self._ask_new_name, chat.id))
+        item.addAction("Instructions for this chat…", partial(self._ask_chat_instructions, chat.id))
         item.addAction("Unpin" if chat.pinned else "Pin to the top", partial(self._pin_chat, chat.id, not chat.pinned))
         item.addAction("Save as Markdown…", partial(self._export_chat, chat.id))
         item.addSeparator()
@@ -564,6 +578,25 @@ class Companion(QObject):
         self.ask_box.chatting(False)
         self.ask_box.set_attachments([])
         self.ask_box.entry.selectAll()
+
+    def _ask_chat_instructions(self, chat_id: str) -> None:
+        chat = self._chat_by_id(chat_id)
+        if chat is None:
+            return
+        self._instructing = chat_id
+        self.ask_box.open(
+            self.stage.head_point(), "Instructions for this chat", "Sent with each question in this chat · Enter to save · empty to remove",
+            "How to answer in this chat", prefill=chat.instructions,
+        )
+        self.ask_box.chatting(False)
+        self.ask_box.set_attachments([])
+        self.ask_box.entry.selectAll()
+
+    def _set_chat_instructions(self, chat_id: str, text: str) -> None:
+        chat = self._chat_by_id(chat_id)
+        if chat is not None:
+            chat.instructions = " ".join(text.split())[: chats.MAX_INSTRUCTIONS]
+            self._changed_chat(chat)
 
     def _rename(self, chat_id: str, title: str) -> None:
         chat = self._chat_by_id(chat_id)
@@ -761,6 +794,11 @@ class Companion(QObject):
             self._rename(chat_id, text)
             self.open_ask()  # back to the chat, renamed
             return
+        if self._instructing is not None:
+            chat_id, self._instructing = self._instructing, None
+            self._set_chat_instructions(chat_id, text)
+            self.open_ask()
+            return
         if not self.attached and self._local(text):  # with something attached, it's a question
             return
         brain = self._brain()
@@ -784,9 +822,64 @@ class Companion(QObject):
         you = f"**You:** {text}" + (f"\n\n*Attached: {attachments.mentioned(attached)}*" if attached else "")
         self.ask_box.set_answer(self._transcript(f"{you}\n\n*{brain.label} is thinking…*"), at_end=True)
         self.behavior.set_thinking(True, now)
-        question = text or "Have a look at what I attached."
-        system = brains.system_prompt(self.name, self._companion().label.lower())
-        self.asker.ask(brain, system, self.chat.history(brain.label)[-8:], question, float(self.config["ai"]["timeout_seconds"]), attached)
+        self._send(brain, text or "Have a look at what I attached.", attached)
+
+    # -- what a question goes with: the chat, fitted to the brain (context.py), your instructions and memory
+
+    def _instructions(self) -> str:
+        """Yours, for every chat: Settings, else the settings file."""
+        picked = self.state.get("instructions")
+        return str(self.config["chats"].get("instructions", "") if picked is None else picked)
+
+    def _context_cap(self) -> int:
+        picked = self.state.get("context_tokens")
+        try:
+            cap = int(self.config["chats"].get("context_tokens", context.DEFAULT_CAP) if picked is None else picked)
+        except (TypeError, ValueError):
+            cap = context.DEFAULT_CAP
+        return max(2_000, min(cap, 2_000_000))
+
+    def _send(self, brain: brains.Brain, question: str, attached, *, fold: bool = True, retried: bool = False) -> None:
+        """Ask `brain`, with as much of the chat as it can take: first summing up the chat's earlier part, when
+        it has outgrown that (a step of its own, said in the box)."""
+        chat, timeout = self.chat, float(self.config["ai"]["timeout_seconds"])
+        base = brains.system_prompt(self.name, self._companion().label.lower())
+        everywhere, remembered = self._instructions(), self.memory.texts()
+        asked_tokens = context.tokens(attachments.in_question(question, attached)) + attachments.media_tokens(attached)
+        room = context.budget(brains.context_window(brain), self._context_cap(), context.system_text(base, everywhere, chat.instructions, remembered), asked_tokens)
+        plan = context.plan(chat.history(brain.label), chat.history(), chat.summary, chat.summarized, room, question, fold)
+        if plan.fold:
+            self._folding = (chat.id, plan.fold_to, room, brain, question, attached, retried)
+            system, request = context.summary_request(plan.summary, plan.fold, room)
+            self.ask_box.set_answer(self._transcript(f"*Catching {brain.label} up on this chat's earlier part…*"), at_end=True)
+            self.compactor.ask(brain, system, [], request, timeout)
+            return
+        system = context.system_text(base, everywhere, chat.instructions, remembered, plan.summary, plan.recalled)
+        sent = context.tokens(system) + sum(context.pair_tokens(pair) for pair in plan.recent) + asked_tokens
+        self._asked = {"brain": brain, "question": question, "attached": attached, "retried": retried, "tokens": sent}
+        self.asker.ask(brain, system, plan.recent, question, timeout, attached)
+        if brain.type == "openai" and not brains.window_known(brain):
+            self.background.run(partial(brains.learn_window, brain), lambda _window: None)  # for the next question
+
+    def _compacted(self, summary: str) -> None:
+        folding, self._folding = self._folding, None
+        if folding is None or self._asking is None or folding[0] != self.chat.id or self._asking[0] != self.chat.id:
+            return  # the question went (another chat, or you closed the box)
+        _, covers, room, brain, question, attached, retried = folding
+        if not summary.strip():
+            self._send(brain, question, attached, fold=False, retried=retried)
+            return
+        self.chat.summary, self.chat.summarized = context.clip(summary.strip(), max(300, room // 5)), covers
+        self._save_chat()
+        self._send(brain, question, attached, retried=retried)
+
+    def _compact_failed(self, _error: str) -> None:
+        """No summary: the question goes anyway, with the recent turns and the earlier ones that bear on it."""
+        folding, self._folding = self._folding, None
+        if folding is None or self._asking is None or folding[0] != self.chat.id or self._asking[0] != self.chat.id:
+            return
+        _, _covers, _room, brain, question, attached, retried = folding
+        self._send(brain, question, attached, fold=False, retried=retried)
 
     def _answered(self, answer: str) -> None:
         now = self._now()
@@ -797,8 +890,11 @@ class Companion(QObject):
         _, text, attached = self._asking
         self._asking = None
         sent = attachments.in_question(text or "Have a look at what I attached.", attached)
-        brain = self._brain(wait=False)
+        asked = self._asked
+        brain = asked["brain"] if asked else self._brain(wait=False)
         label = brain.label if brain else ""
+        if brain is not None and brain.local:
+            self.background.run(partial(brains.learn_window, brain), lambda _window: None)  # a model loaded now says its own
         self.chat.add(chats.Message("user", text, sent=sent if sent != text else "", attached=[a.name for a in attached], brain=label))
         self.chat.add(chats.Message("assistant", answer, brain=label))
         self._save_chat()
@@ -808,6 +904,12 @@ class Companion(QObject):
         QTimer.singleShot(int(min(max(len(answer) / 18, 2), 10) * 1000), lambda: self.behavior.set_talking(False, self._now()))
 
     def _failed(self, error: str) -> None:
+        asked = self._asked
+        if asked and not asked["retried"] and context.too_long(error) and self._asking is not None and self._asking[0] == self.chat.id:
+            # Too long for it after all (a window smaller than it said, or than guessed): once more, with half.
+            brains.shrink_window(asked["brain"], asked["tokens"])
+            self._send(asked["brain"], asked["question"], asked["attached"], retried=True)
+            return
         self.behavior.set_thinking(False, self._now())
         if self._asking is None or self._asking[0] != self.chat.id:
             self._asking = None
@@ -821,6 +923,25 @@ class Companion(QObject):
             self.ask_box.entry.setText(text)
         self.ask_box.set_answer(self._transcript(f"**You:** {text}\n\n*Hmm, that didn't work.* {error}"), at_end=True)
 
+    def _memory_reply(self, kind: str, what: str) -> str:
+        """Remembering for every chat, as you asked, and forgetting it again: Chatmon's own (memory.py)."""
+        if kind == "remember":
+            refused = self.memory.add(what)
+            return refused or f"I'll remember that: *{what.strip(' .')}*. Every brain you ask gets it with each question."
+        if kind == "forget":
+            gone = self.memory.forget(what)
+            if not gone:
+                return "I don't remember anything like that. *What do you remember* lists it all."
+            return "Forgotten: " + "; ".join(f"*{g}*" for g in gone) + "."
+        if kind == "forget-all":
+            n = len(self.memory.items)
+            self.memory.clear()
+            return f"Forgotten, all {n} of them." if n else "There was nothing to forget."
+        if not self.memory.items:
+            return "Nothing yet. Tell me *remember that …* and I'll keep it for every chat."
+        listed = "\n".join(f"- {i.text}" for i in self.memory.items)
+        return f"What I remember, for every chat:\n\n{listed}\n\n*Forget that …* takes one out."
+
     def _offline(self, question: str, reply: str) -> None:
         """An answer of Chatmon's own: shown under the chat, marked as such, and never part of it (no brain
         sees it, and it isn't kept)."""
@@ -829,6 +950,11 @@ class Companion(QObject):
     def _local(self, text: str) -> bool:
         """What Chatmon does by itself, without any AI: True if it was that. Anything else is the AI's."""
         now = self._now()
+        asked = memory.command(text)
+        if asked is not None:
+            self._offline(text, self._memory_reply(*asked))
+            self._menu_changed()
+            return True
         command = reminders.parse_command(text, datetime.now())
         if command is not None and command.kind == "unclear":
             asked = re.match(r"^(?:please\s+)?remind me\b[\s,:]*(.*)$", text.strip(), re.I | re.S)

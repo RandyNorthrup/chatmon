@@ -1,11 +1,11 @@
 """Your chats with your chatmon, kept on this computer so you can come back to one and carry on.
 
-Each chat is a JSON file of its own in Chatmon's state folder, readable by you alone. What's kept is what
-you saw: your questions, the answers, and the names of what you attached, never the files or text
-themselves. Attached text is sent again with later questions only to the brain it was first sent to, and
-only until Chatmon quits. Nothing leaves your computer but what you ask
-a brain. "Keep chat history" off (the menu, or `[chats] keep = false`) keeps chats in memory only, and
-"Clear chat history" deletes them all.
+Each chat is a JSON file of its own in Chatmon's state folder, readable by you alone. What's kept is the
+conversation: your questions (with the text of what you attached, so a brain can be asked about it later;
+pictures and PDFs by name only), the answers, the chat's own instructions, and a summary of its earlier part
+once it's longer than a brain is sent at once. Attached text goes again only to the brain it was first sent
+to. Nothing leaves your computer but what you ask a brain. "Keep chat history" off (the menu, or
+`[chats] keep = false`) keeps chats in memory only, and "Clear chat history" deletes them all.
 """
 
 from __future__ import annotations
@@ -22,7 +22,8 @@ from pathlib import Path
 from . import paths
 from .settings import private
 
-MAX_FILE = 8 * 2**20  # bytes: a chat file bigger than this isn't read (it isn't one of ours)
+MAX_FILE = 64 * 2**20  # bytes: a chat file bigger than this isn't read (it isn't one of ours)
+MAX_INSTRUCTIONS = 4000  # characters of a chat's own instructions
 TITLE_LENGTH = 60
 _ID = re.compile(r"[0-9a-f]{32}")
 
@@ -32,7 +33,7 @@ class Message:
     role: str  # "user" or "assistant"
     text: str  # what's shown: the question as typed, or the answer
     at: float = field(default_factory=time.time)
-    sent: str = ""  # a question as the brain got it (with attached text): in memory only, never saved
+    sent: str = ""  # a question as the brain got it, with the text attached to it: only ever sent to that brain
     attached: list[str] = field(default_factory=list)  # names of what was attached
     brain: str = ""  # who answered (an answer), or who was asked (a question)
 
@@ -47,6 +48,9 @@ class Chat:
     pinned: bool = False  # kept at the top of the list
     named: bool = False  # its title is one you gave it
     keep: bool = True  # saved as it goes (not saved itself): off for a chat begun while history was off
+    instructions: str = ""  # yours, for this chat: sent with each question in it, before the ones for every chat
+    summary: str = ""  # the conversation's earlier part, in short: what a brain gets in place of it (context.py)
+    summarized: int = 0  # how many of the first (question, answer) pairs the summary stands for
 
     def rename(self, title: str) -> None:
         self.title, self.named = title_for(title), True
@@ -122,15 +126,20 @@ def _from_json(data: object) -> Chat | None:
         for m in raw if isinstance(raw, list) else []:
             if isinstance(m, dict) and m.get("role") in ("user", "assistant") and isinstance(m.get("text"), str):
                 names = m.get("attached")
+                sent = m.get("sent")
                 messages.append(
                     Message(
-                        m["role"], m["text"], _time(m.get("at")), "",
+                        m["role"], m["text"], _time(m.get("at")), sent if isinstance(sent, str) and m["role"] == "user" else "",
                         [n for n in names if isinstance(n, str)] if isinstance(names, list) else [], str(m.get("brain") or ""),
                     )
                 )
+        summarized = data.get("summarized")
         return Chat(
             str(data["id"]), str(data.get("title") or "")[:200], _time(data.get("created")), _time(data.get("updated")), messages,
             data.get("pinned") is True, data.get("named") is True,
+            instructions=str(data.get("instructions") or "")[:MAX_INSTRUCTIONS],
+            summary=str(data.get("summary") or ""),
+            summarized=summarized if isinstance(summarized, int) and not isinstance(summarized, bool) and summarized > 0 else 0,
         )
     except (TypeError, ValueError, OverflowError, AttributeError):
         return None
@@ -159,7 +168,8 @@ class ChatBook:
         data = asdict(chat)
         data.pop("keep", None)
         for m in data["messages"]:
-            m.pop("sent", None)  # attached text: never on disk
+            if not m.get("sent") or m["sent"] == m["text"]:
+                m.pop("sent", None)  # nothing attached: the question is its text
         tmp.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
         private(tmp)
         os.replace(tmp, path)
