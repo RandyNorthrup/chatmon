@@ -35,7 +35,9 @@ DEFAULTS: dict[str, Any] = {
 }
 
 TEMPLATE = """\
-# Chatmon settings. Save this file, then pick "Reload settings" from your
+# Chatmon settings. Most of these are in Settings (the menu's "Settings…"),
+# and what you set there wins over this file. Save this file, then pick
+# "Reload settings file" from your
 # chatmon's menu (right-click it), or restart it.
 
 # What your companion is called. Empty: it asks the first time it runs.

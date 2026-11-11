@@ -24,7 +24,7 @@ from . import __version__, agents, attachments, autostart, brains, changelog, ch
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
-from .settings import State, load_config
+from .settings import State, load_config, merge
 from .sprites import Sprites
 
 PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
@@ -53,7 +53,7 @@ HELP_ALL = """\
 - **Chance:** *flip a coin* · *roll 2d6* · *random number between 1 and 10* · *pick one: tacos, sushi or pizza*
 - **Passwords:** *password* · *password 32*
 - **Your computer:** *status* (battery, disks, reminders, the brain in use)
-- **Me:** *hide* · *new chat* · *rename chat* · *history* · *what's new* · *check for updates* · *report a problem* · *version*
+- **Me:** *settings* · *hide* · *new chat* · *rename chat* · *history* · *what's new* · *check for updates* · *report a problem* · *version*
 - **Memory:** *remember that I use Arch* · *what do you remember* · *forget that I use Arch* · *forget everything*. What you ask me to remember goes with every question, to whichever AI you ask: that's what it's for.
 
 Anything else goes to the AI you picked, under **Brain** in my menu.
@@ -102,7 +102,8 @@ class Companion(QObject):
         self.server = server
         self.server_problem = server_problem  # why hooks can't reach it, if they can't
         self.state = State.load()
-        self.config, self.config_error = load_config()
+        self.config, self.config_error = self._load_config()
+        self._settings_window = None
         # Whether you're there, and whether now's a time for quiet: the platform's own word for each.
         self.desk = presence.Desk(QGuiApplication.platformName())
         self._quiet: str | None = None  # why bubbles from the background wait, if they do
@@ -110,7 +111,7 @@ class Companion(QObject):
         self._idle_away = False
         self._reduce_motion = self.desk.reduce_motion()
         self._high_contrast = self.desk.high_contrast()
-        self._walk_picked = False  # walking turned on or off from the menu: the system's reduce-motion no longer decides
+        self._walk_picked = "walk" in (self.state.get("settings") or {})  # turned on or off by you: reduce-motion no longer decides
         self.brains = brains.load_brains(self.config["ai"])
         self.reminders = reminders.ReminderBook.from_list(self.state.get("reminders", []))
         self.breaks = reminders.BreakTracker(self.config["breaks"]["every_minutes"], time.time())
@@ -997,6 +998,9 @@ class Companion(QObject):
             self._new_chat()
         elif word in ("rename chat", "rename this chat", "name this chat") and self.chat.messages:
             self._ask_new_name(self.chat.id)
+        elif word in ("settings", "preferences", "options", "open settings"):
+            self.ask_box.dismiss()
+            self.open_settings()
         elif word in ("history", "chats", "my chats", "chat history"):
             self._show_history(self.ask_box.history_button.mapToGlobal(QPoint(0, self.ask_box.history_button.height())))
         elif word in ("what's new", "whats new", "what is new", "changes", "changelog", "release notes"):
@@ -1655,8 +1659,8 @@ class Companion(QObject):
         if self.updater.ready is not None and self.updater.release is not None:
             m.addAction(f"Update to Chatmon {self.updater.release.version}", self._update_now)
         self._help_menu(m.addMenu("Help & updates"))
-        m.addAction("Edit settings…", lambda: QDesktopServices.openUrl(QUrl.fromLocalFile(str(paths.config_file()))))
-        m.addAction("Reload settings", self.reload)
+        m.addAction("Settings…", self.open_settings)
+        m.addAction("Reload settings file", self.reload)
         m.addAction("Quit", self.quit)
         self._look_again()
 
@@ -1937,6 +1941,9 @@ class Companion(QObject):
 
     def _set_walk(self, on: bool) -> None:
         self._walk_picked = True
+        self._override(("walk",), on)  # remembered, as Settings remembers it
+        self.state.save()
+        self.config["walk"] = on
         self.behavior.set_walk(on, self._now())
         self._menu_changed()
 
@@ -1944,8 +1951,120 @@ class Companion(QObject):
         autostart.set_enabled(on)
         self._menu_changed()
 
-    def reload(self) -> None:
-        self.config, self.config_error = load_config()
+    def _load_config(self) -> tuple[dict, str | None]:
+        """The settings file, with what you set in Settings (or the menu) laid over it."""
+        config, error = load_config()
+        overrides = self.state.get("settings")
+        if isinstance(overrides, dict):
+            config = merge(config, overrides)
+        return config, error
+
+    def _override(self, path: tuple[str, ...], value) -> None:
+        """Keep a setting you made (Settings, the menu) over the settings file's."""
+        settings = self.state.get("settings")
+        settings = settings if isinstance(settings, dict) else {}
+        node = settings
+        for key in path[:-1]:
+            if not isinstance(node.get(key), dict):
+                node[key] = {}
+            node = node[key]
+        node[path[-1]] = value
+        self.state.set("settings", settings)
+
+    # -- Settings: a window for it all (settingswin.py)
+
+    SETTINGS_PATHS = {  # the window's name for a setting: where it lives in the settings
+        "size": ("size",), "walk": ("walk",), "sleep_after_minutes": ("sleep_after_minutes",),
+        "timeout_seconds": ("ai", "timeout_seconds"), "show_replies": ("agents", "show_replies"),
+        "breaks_every": ("breaks", "every_minutes"), "snooze": ("breaks", "snooze_minutes"), "focus": ("focus", "minutes"),
+        "battery_low": ("heads_up", "battery_low"), "battery_critical": ("heads_up", "battery_critical"),
+        "disk_full": ("heads_up", "disk_full_percent"), "updates_heads_up": ("heads_up", "updates"),
+        "updates_every_hours": ("heads_up", "updates_every_hours"),
+    }
+
+    def _settings_values(self) -> tuple[dict, dict]:
+        c = self.config
+        values = {
+            "name": str(self.state.get("name") or c["name"] or ""), "companion": self._companion().id,
+            "size": int(c["size"]), "walk": bool(self.behavior.walk_enabled), "sleep_after_minutes": int(c["sleep_after_minutes"]),
+            "autostart": autostart.enabled(), "bubble_style": self._bubble_style_name(), "bubble_effects": self._bubble_effects(),
+            "check_updates": self._checks_updates(), "brain": str(self.state.get("brain") or ""),
+            "timeout_seconds": int(c["ai"]["timeout_seconds"]), "show_replies": bool(c["agents"]["show_replies"]),
+            "keep_chats": self._keeps_chats(), "context_tokens": self._context_cap(), "instructions": self._instructions(),
+            "memory": self.memory.texts(),
+            "breaks_every": int(c["breaks"]["every_minutes"]), "snooze": int(c["breaks"]["snooze_minutes"]), "focus": int(c["focus"]["minutes"]),
+            "battery_low": int(c["heads_up"]["battery_low"]), "battery_critical": int(c["heads_up"]["battery_critical"]),
+            "disk_full": int(c["heads_up"]["disk_full_percent"]), "updates_heads_up": bool(c["heads_up"]["updates"]),
+            "updates_every_hours": int(c["heads_up"]["updates_every_hours"]),
+        }
+        current = self._brain(wait=False)
+        matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()
+        choices = {
+            "companions": [(x.id, x.label) for x in companions.COMPANIONS.values() if companions.get(x.id) is x],
+            "bubble_styles": [(MATCH, f"Match companion ({matching})")] + [(x.name, x.label) for x in styles.STYLES.values()],
+            "brains": [("", f"Automatic ({current.label if current and not self.state.get('brain') else 'the first one found'})")]
+            + [(b.name, b.label if b.available(wait=False) else f"{b.label} ({b.why_not()})") for b in self.brains.values()],
+        }
+        return values, choices
+
+    def open_settings(self) -> None:
+        from .settingswin import SettingsWindow
+
+        if self._settings_window is not None and not sip.isdeleted(self._settings_window):
+            self._settings_window.raise_()
+            self._settings_window.activateWindow()
+            return
+        values, choices = self._settings_values()
+        window = SettingsWindow(values, choices)
+        window.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        window.setWindowIcon(self.tray.icon())
+        window.saved.connect(self._apply_settings)
+        window.open_file.connect(lambda: QDesktopServices.openUrl(QUrl.fromLocalFile(str(paths.config_file()))))
+        self._settings_window = window
+        window.show()
+        window.raise_()
+        window.activateWindow()
+
+    def _apply_settings(self, changed: dict) -> None:
+        """What you set in Settings: each with the menu's own setter where there is one, the rest kept over
+        the settings file and taken up at once."""
+        if not changed:
+            return
+        if "name" in changed:
+            self.state.set("name", changed["name"][:40] or None)
+        if "companion" in changed:
+            self._pick_companion(changed["companion"])
+        if "bubble_style" in changed:
+            self.state.set("bubble_style", changed["bubble_style"])
+        if "bubble_effects" in changed:
+            self.state.set("bubble_effects", changed["bubble_effects"])
+        if "check_updates" in changed:
+            self._set_check_updates(changed["check_updates"])
+        if "brain" in changed:
+            self.state.set("brain", changed["brain"] or None)
+        if "keep_chats" in changed:
+            self.state.set("keep_chats", changed["keep_chats"])
+            if not changed["keep_chats"]:
+                self.chat.keep = False
+        if "autostart" in changed:
+            autostart.set_enabled(changed["autostart"])
+        if "instructions" in changed:
+            self.state.set("instructions", changed["instructions"])
+        if "context_tokens" in changed:
+            self.state.set("context_tokens", int(changed["context_tokens"]))
+        if "memory" in changed:
+            self.memory.items = [memory.Item(t, time.time()) for t in changed["memory"]][: memory.MAX_ITEMS]
+            self.memory.save()
+        for key, path in self.SETTINGS_PATHS.items():
+            if key in changed:
+                self._override(path, changed[key])
+        if "walk" in changed:
+            self._walk_picked = True
+        self.state.save()
+        self.reload(quietly=True)
+
+    def reload(self, quietly: bool = False) -> None:
+        self.config, self.config_error = self._load_config()
         if self.config_error:
             self.say("I couldn't read my settings", f"`{self.config_error}`", timeout_s=30)
             return
@@ -1959,7 +2078,8 @@ class Companion(QObject):
         self.behavior.speed = int(self.config["size"]) * 0.4
         self._apply_bubble_style()
         self._menu_changed()
-        self.say("Settings reloaded", timeout_s=3)
+        if not quietly:
+            self.say("Settings reloaded", timeout_s=3)
 
     def _set_sprite_scale(self, scale: float) -> None:
         """The stage's screen has this many device pixels to a pixel: draw the penguin with them."""

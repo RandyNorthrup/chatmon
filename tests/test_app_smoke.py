@@ -893,3 +893,50 @@ def test_api_requests_keep_nothing_on_the_providers_side_and_cache_the_chat():
     assert body["cache_control"] == {"type": "ephemeral"}
     elsewhere = brains.replace(loaded["anthropic-api"], url="https://proxy.example.com/v1/messages")
     assert "cache_control" not in brains.anthropic_request(elsewhere, "s", [], "q")[1]
+
+
+def test_settings_shows_whats_in_use_and_saving_applies_it_and_keeps_it(companion, monkeypatch):
+    from chatmon import autostart
+
+    c = companion
+    monkeypatch.setattr(autostart, "set_enabled", lambda on: None)
+    c.open_settings()
+    w = c._settings_window
+    assert w.isVisible() and w.size.value() == int(c.config["size"]) and w.walk.isChecked() == c.behavior.walk_enabled
+    c.open_settings()
+    assert c._settings_window is w  # one window, brought forward
+    w.walk.setChecked(False)
+    w.size.setValue(150)
+    w.battery_low.setValue(30)
+    w.instructions.setPlainText("Be brief.")
+    w.new_memory.setText("I use Arch")
+    w.context_tokens.setValue(20_000)
+    w._save()
+    assert not c.behavior.walk_enabled and c.config["size"] == 150 and c.config["heads_up"]["battery_low"] == 30
+    assert c._instructions() == "Be brief." and c.memory.texts() == ["I use Arch"] and c._context_cap() == 20_000
+    # Kept over the settings file: still there when it's read again (a restart).
+    config, _ = c._load_config()
+    assert config["walk"] is False and config["size"] == 150 and config["heads_up"]["battery_low"] == 30
+    # The menu's walking toggle and Settings agree.
+    c._set_walk(True)
+    assert c._load_config()[0]["walk"] is True
+
+
+def test_settings_hands_back_only_what_changed(qapp):
+    from chatmon.settingswin import SettingsWindow
+
+    values = {
+        "name": "Pip", "companion": "penguin", "size": 120, "walk": True, "sleep_after_minutes": 10, "autostart": False,
+        "bubble_style": "match", "bubble_effects": True, "check_updates": True, "brain": "", "timeout_seconds": 180,
+        "show_replies": False, "keep_chats": True, "context_tokens": 48000, "instructions": "", "memory": ["a"],
+        "breaks_every": 60, "snooze": 10, "focus": 25, "battery_low": 20, "battery_critical": 10, "disk_full": 90,
+        "updates_heads_up": True, "updates_every_hours": 6,
+    }
+    choices = {"companions": [("penguin", "Penguin")], "bubble_styles": [("match", "Match")], "brains": [("", "Automatic")]}
+    w = SettingsWindow(values, choices)
+    got = []
+    w.saved.connect(got.append)
+    w.focus.setValue(50)
+    w._save()
+    assert got == [{"focus": 50}]
+    w.close()

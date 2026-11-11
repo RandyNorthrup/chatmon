@@ -340,13 +340,16 @@ Found a security problem? Please open a private
 
 ## Settings
 
-`config.toml`, created on first run with every setting explained: the name, size, walking, how soon it
-naps, the companion and its bubble style, brains and their models, effort and thinking, whether agents'
-replies show, break and focus lengths, and heads-up thresholds. **Edit settings…** in the menu opens it;
-**Reload settings** applies it. It lives in `~/.config/chatmon/` on Linux,
-`~/Library/Application Support/chatmon/` on macOS and `%APPDATA%\chatmon\` on Windows. `state.json` (in
-`~/.local/state/chatmon/` on Linux, in a `state` folder next to the settings elsewhere) keeps the name,
-reminders, the chatmon and brain choices you made in the menu, and its spot on the screen.
+**Settings…** in the menu (or *settings* in the chat) opens a window with all of it: the name, the companion,
+its size, walking and naps, bubble style, starting at login, updates, the brain, chats (how much of a chat a
+brain is sent, your instructions for every chat, and what it remembers about you), breaks and focus, and the
+heads-up thresholds. What you set there, and in the menu, is kept in `state.json` (in `~/.local/state/chatmon/`
+on Linux, in a `state` folder next to the settings elsewhere), with the reminders, notes and its spot on the
+screen, and wins over the settings file.
+
+The settings file, `config.toml`, has every setting explained, and is where your own brains go. It lives in
+`~/.config/chatmon/` on Linux, `~/Library/Application Support/chatmon/` on macOS and `%APPDATA%\chatmon\` on
+Windows. **Open the settings file** in Settings opens it; **Reload settings file** in the menu applies it.
 
 ## How it's put together
 

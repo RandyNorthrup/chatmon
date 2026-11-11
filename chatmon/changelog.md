@@ -8,9 +8,11 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Chats remember the whole conversation.** Follow-ups and questions about anything said earlier work however long a chat gets, with every brain alike. A brain gets the latest turns word for word, a summary of the earlier part (made once, by the brain you're asking, and kept with the chat), and the earlier turns that bear on your question, word for word. How much is sent is up to you (`[chats] context_tokens`), and never more than the model can take: a model server's own limit is asked for, and a brain that says a question was too long is asked again, with less.
 - **Instructions for every chat**, and **instructions for one chat** (its menu, under **Chats**): how to answer, what you do, what language. Every brain gets them with every question.
 - **Memory.** *Remember that I use Arch*, and every brain you ask knows it, in every chat. *What do you remember* lists it; *forget that …* takes it out. Only what you say, in so many words: nothing is picked out of your chats.
+- **Settings, in a window.** **Settings…** in the menu (or *settings* in the chat): the name, companion, size, walking, bubble style, the brain, chats, your instructions and memory, breaks and focus, and the heads-up thresholds, without editing a file. What you set there is kept, and wins over the settings file, which still works.
 - **Ask about what you attached, later.** Text you attach is kept with its chat (readable by you alone), so you can come back to it after Chatmon restarts. It goes only to the brain you gave it to.
 
 ### Changes
+- **Walk around** in the menu is remembered after a restart, as Settings remembers it.
 - The chatmon stops walking while the pointer is over it, so it's easy to click, and carries on when the pointer leaves.
 - **Linux:** the app's entry has **Bring out Chatmon** and **Quit Chatmon** in the launcher and dock.
 - **Linux:** in power-saver mode, the chatmon draws less often.
