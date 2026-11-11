@@ -151,6 +151,7 @@ class Companion(QObject):
         self.updater.up_to_date.connect(self._up_to_date)
         self.updater.failed.connect(self._update_failed)
         self.updater.installing.connect(self.quit)
+        self.updater.handed_over.connect(lambda: self.say("Updating…", "The installer has it from here. I'll be back in a moment.", timeout_s=60))
         self._checking_by_hand = False  # a check you asked for says what it found, even "nothing new"
         self._install_kind: str | None = None
         self._problem_told = False

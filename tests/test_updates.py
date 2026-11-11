@@ -379,3 +379,23 @@ def test_the_macos_install_script_checks_its_own_copy(tmp_path):
         out = subprocess.run(["/usr/bin/osascript", "-e", script], env=env, capture_output=True, text=True, cwd=tmp_path)
         assert (out.returncode == 0 and "installing" in out.stdout) is ok, out
     assert not (tmp_path / "pwned").exists()
+
+
+def test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit(qapp, github, monkeypatch):
+    """Turned down at Windows' prompt to install for everyone, the installer stops: Chatmon must still be there."""
+    from PyQt6.QtCore import QEventLoop, QTimer
+
+    github(b"the real installer")
+    updater, seen = run_updater(qapp)
+    updater.kind = updates.WINDOWS
+    monkeypatch.setattr(updates, "verify", lambda path, expected, kind: None)
+    monkeypatch.setattr(updates, "installer_command", lambda kind, path, expected="": ("setup.exe", ["/VERYSILENT", "/relaunch=1"], {}))
+    started, events = [], []
+    monkeypatch.setattr(updates.QProcess, "startDetached", lambda *a: started.append(a) or (True, 0))
+    updater.installing.connect(lambda: events.append("quit"))
+    updater.handed_over.connect(lambda: events.append("handed over"))
+    updater.install()
+    loop = QEventLoop()
+    QTimer.singleShot(200, loop.quit)
+    loop.exec()
+    assert started and events == ["handed over"] and not updater.busy

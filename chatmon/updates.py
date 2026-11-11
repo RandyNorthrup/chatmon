@@ -286,7 +286,8 @@ class Updater(QObject):
     newer_only = pyqtSignal(object, str)  # Release, why not downloaded or how to get it: newer, not downloaded
     up_to_date = pyqtSignal()
     failed = pyqtSignal(str)
-    installing = pyqtSignal()  # it's being installed: quit now
+    installing = pyqtSignal()  # it's installed (macOS, Linux, pipx): quit, for the new one to start
+    handed_over = pyqtSignal()  # Windows' installer has it from here, and quits Chatmon when it's ready to
 
     def __init__(self, background, parent: QObject | None = None):
         super().__init__(parent)
@@ -438,8 +439,8 @@ class Updater(QObject):
     # -- installing
 
     def install(self) -> None:
-        """Install the verified download. Windows' installer takes over (and Chatmon quits); elsewhere the
-        system asks for your password, then Chatmon starts again updated."""
+        """Install the verified download. Windows' installer takes over (it asks Chatmon to quit when it's
+        ready, and starts it again); elsewhere the system asks for your password, then Chatmon starts again."""
         if self.ready is None or self.release is None or not self.ready.exists() or self.busy:
             return self.failed.emit("There's no update ready to install.")
         if installer_command(self.kind, self.ready, self._expected) is None:
@@ -457,10 +458,12 @@ class Updater(QObject):
             return self.failed.emit(f"The update wasn't installed: {why if not isinstance(why, Exception) else 'it could not be checked'}.")
         program, args, env = installer_command(self.kind, self.ready, self._expected)
         if self.kind == WINDOWS:
+            # Chatmon stays: the installer asks it to quit (`chatmon quit`) once it's going ahead, and starts it
+            # again after. Turned down (Windows asking to install for everyone, say), Chatmon is still here.
+            self.busy = False
             if not QProcess.startDetached(program, args, str(self.ready.parent))[0]:
-                self.busy = False
                 return self.failed.emit("The update wasn't installed: its installer couldn't start.")
-            self.installing.emit()
+            self.handed_over.emit()
             return
         proc = QProcess(self)
         environment = QProcessEnvironment.systemEnvironment()
