@@ -415,6 +415,7 @@ class AskBox(QWidget):
         self._frames = QTimer(self)  # redraws an animated bubble while it's open
         self._frames.setInterval(1000 // ANIM_FPS)
         self._frames.timeout.connect(self.update)
+        self.seen = True  # off while nothing on screen can be seen (set_seen): no frames
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(*self._margins)
@@ -500,10 +501,15 @@ class AskBox(QWidget):
         return True
 
     def _run_frames(self) -> None:
-        if self.isVisible() and self.animate and self.art is not None and not self.stage_draws_art:
+        if self.isVisible() and self.seen and self.animate and self.art is not None and not self.stage_draws_art:
             self._frames.start()
         else:
             self._frames.stop()
+
+    def set_seen(self, on: bool) -> None:
+        """Whether anything on screen can be seen (Windows: not while locked, or with the display off)."""
+        self.seen = on
+        self._run_frames()
 
     def open(self, anchor: QPoint, title: str, hint: str, placeholder: str, text: str = "", prefill: str = "", activate: bool = True) -> None:
         """Show it above `anchor`; `activate` gives it the keyboard (you asked for it)."""

@@ -430,6 +430,7 @@ class Stage(QObject):
         self._timer.setTimerType(Qt.TimerType.PreciseTimer)
         self._timer.timeout.connect(self._tick)
         self.power_saving = False  # the system's power-saver mode: fewer frames
+        self.drawing: bool | None = True  # off while nothing on screen can be seen: no frames at all; None once closed
         self._timer.start(1000 // FPS)
 
     # -- what the app uses
@@ -442,6 +443,18 @@ class Stage(QObject):
     def show_message(self, title: str, text: str = "", buttons=None, timeout_s: float | None = 12) -> None:
         self.bubble.show(title, text, buttons, timeout_s, self._clock())
         self._key = None
+
+    def set_drawing(self, on: bool) -> None:
+        """Stop drawing, and the clock that moves it on, while nothing on screen can be seen (Windows asks it
+        of apps while the session is locked or its display is off); carry on where it was when it can."""
+        if self.drawing is None or on == self.drawing:  # closed, or no change
+            return
+        self.drawing = on
+        if on:
+            self._key = None  # everything drawn again, as it is now
+            self._timer.start()
+        else:
+            self._timer.stop()
 
     # -- full-screen windows, and you being away
 
@@ -613,6 +626,7 @@ class Stage(QObject):
 
     def close_stage(self) -> None:
         self._timer.stop()
+        self.drawing = None  # for good: set_drawing never starts it again
         self.surface.close()
 
     # -- screens: the stage covers the one the penguin is on

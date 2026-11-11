@@ -1277,7 +1277,7 @@ class Companion(QObject):
         if sys.platform == "win32":
             from . import winlock
 
-            self._lock_watcher = winlock.LockWatcher(self._screen_locked, self._sleeping)
+            self._lock_watcher = winlock.LockWatcher(self._screen_locked, self._sleeping, seen=self._seen, saving=self._power_saving)
             return
         if sys.platform == "darwin":
             # PyQt ships QtDBus on macOS too, and on an Intel Mac with Homebrew's dbus Qt finds its libdbus and
@@ -1292,6 +1292,12 @@ class Companion(QObject):
 
     def _power_saving(self, on: bool) -> None:
         self.stage.power_saving = on
+
+    def _seen(self, on: bool) -> None:
+        """Whether anything on screen can be seen (Windows: not while locked, or with the display off).
+        Nothing is drawn while it can't, as Microsoft asks of apps; it all carries on when it can."""
+        self.stage.set_drawing(on)
+        self.ask_box.set_seen(on)
 
     @pyqtSlot(bool)
     def _screen_locked(self, locked: bool) -> None:

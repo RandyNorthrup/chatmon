@@ -813,6 +813,29 @@ def test_in_power_saver_mode_the_stage_draws_less_often(companion):
     assert c.stage._timer.interval() in (1000 // penguin.FPS, 1000 // penguin.SLOW_FPS)
 
 
+def test_nothing_is_drawn_while_nothing_can_be_seen(companion, monkeypatch):
+    """Locked, or the display off: no frames at all, the stage's or an animated ask box's; then on from there."""
+    c = companion
+    c.open_ask()
+    drawn = []
+    monkeypatch.setattr(c.stage, "_tick", lambda real=c.stage._tick: (drawn.append(1), real())[1])
+    c.stage._timer.timeout.disconnect()
+    c.stage._timer.timeout.connect(c.stage._tick)
+    c._seen(False)
+    assert not c.stage._timer.isActive() and not c.ask_box._frames.isActive()
+    c.say("While you were out", "A message.")
+    spin(0.3)
+    assert drawn == []
+    c._seen(True)
+    spin(0.3)
+    assert drawn and c.stage._timer.isActive() and c.stage.message_visible()
+    assert c.ask_box._frames.isActive() == bool(c.ask_box.animate and c.ask_box.art is not None and not c.ask_box.stage_draws_art)
+    c.stage.close_stage()
+    c._seen(False)
+    c._seen(True)  # closed for good: never started again
+    assert not c.stage._timer.isActive()
+
+
 class PretendContextBrain(PretendBrain):
     """Records the system prompt too, and what the summary step was asked."""
 

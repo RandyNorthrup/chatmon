@@ -357,10 +357,75 @@ def test_hears_remote_disconnects_and_sleep(qapp):
         tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMSUSPEND)
         tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMSUSPEND)  # the same news twice: once
         tell(winlock.WM_POWERBROADCAST, winlock.PBT_APMRESUMEAUTOMATIC)
-        tell(winlock.WM_POWERBROADCAST, 0x8013)  # PBT_POWERSETTINGCHANGE: not ours
+        tell(winlock.WM_POWERBROADCAST, 0x8013)  # PBT_POWERSETTINGCHANGE, with no setting: nothing
         assert away == [True, False] and slept == [True, False]
     finally:
         watcher.close()
+
+
+def test_hears_the_display_and_energy_saver(qapp):
+    """Nothing can be seen while the display is off or the session locked; Energy Saver (or, before Windows
+    11 24H2, battery saver) asks for fewer frames. As Windows sends them: a POWERBROADCAST_SETTING each."""
+    from ctypes import wintypes
+
+    from PyQt6 import sip
+
+    from chatmon import winlock
+
+    seen, saving = [], []
+    watcher = winlock.LockWatcher(lambda away: None, seen=seen.append, saving=saving.append)
+    try:
+        def setting(guid, value):
+            data = winlock.POWERBROADCAST_SETTING((ctypes.c_ubyte * 16)(*guid.bytes_le), 4, (ctypes.c_ubyte * 4)(*value.to_bytes(4, "little")))
+            msg = wintypes.MSG(watcher.hwnd, winlock.WM_POWERBROADCAST, winlock.PBT_POWERSETTINGCHANGE, ctypes.addressof(data))
+            return watcher.nativeEventFilter(b"windows_generic_MSG", sip.voidptr(ctypes.addressof(msg)))
+
+        def session(change):
+            msg = wintypes.MSG(watcher.hwnd, winlock.WM_WTSSESSION_CHANGE, change, 0)
+            watcher.nativeEventFilter(b"windows_generic_MSG", sip.voidptr(ctypes.addressof(msg)))
+
+        assert setting(winlock.SESSION_DISPLAY_STATUS, 1) == (False, 0)  # on, as it stands: no news, never kept from Qt
+        setting(winlock.SESSION_DISPLAY_STATUS, 2)  # dimmed: still seen
+        setting(winlock.SESSION_DISPLAY_STATUS, 0)
+        session(winlock.WTS_SESSION_LOCK)  # locked as the display went off: still unseen, once
+        setting(winlock.SESSION_DISPLAY_STATUS, 1)  # on for the lock screen
+        session(winlock.WTS_SESSION_UNLOCK)
+        session(winlock.WTS_REMOTE_DISCONNECT)
+        session(winlock.WTS_REMOTE_CONNECT)
+        assert seen == [False, True, False, True]
+
+        setting(winlock.POWER_SAVING_STATUS, 1)  # battery saver
+        setting(winlock.POWER_SAVING_STATUS, 0)
+        setting(winlock.ENERGY_SAVER_STATUS, 2)  # high savings
+        setting(winlock.POWER_SAVING_STATUS, 0)  # once Energy Saver speaks, its word is the one
+        setting(winlock.ENERGY_SAVER_STATUS, 1)  # standard: still saving
+        setting(winlock.ENERGY_SAVER_STATUS, 0)
+        assert saving == [True, False, True, False]
+    finally:
+        watcher.close()
+
+
+def test_windows_tells_the_display_and_energy_saver_as_they_stand(qapp):
+    """Registered on a real window, Windows says each setting at once, as it stands (needs the real windows
+    platform: the offscreen one has no native windows)."""
+    from PyQt6.QtGui import QGuiApplication
+
+    from chatmon import winlock
+
+    if QGuiApplication.platformName() != "windows":
+        pytest.skip("needs QT_QPA_PLATFORM=windows")
+    watcher = winlock.LockWatcher(lambda away: None)
+    try:
+        assert len(watcher._power) == 3  # each registered
+        deadline = time.monotonic() + 5
+        while winlock.SESSION_DISPLAY_STATUS not in watcher._settings and time.monotonic() < deadline:
+            qapp.processEvents()
+            time.sleep(0.02)
+        assert watcher._settings.get(winlock.SESSION_DISPLAY_STATUS) in (1, 2) and watcher.display_on  # this test is being watched
+        assert winlock.ENERGY_SAVER_STATUS in watcher._settings or winlock.POWER_SAVING_STATUS in watcher._settings
+    finally:
+        watcher.close()
+    assert watcher._power == []
 
 
 # -- no console windows
