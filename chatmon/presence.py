@@ -4,9 +4,9 @@
   Windows GetLastInputInfo; macOS CGEventSourceSecondsSinceLastEventType; on Linux, the Wayland overlay's
   ext-idle-notify-v1 (told to us by layer.py), GNOME's IdleMonitor, or X11's XScreenSaver extension.
 - Whether to hold bubbles back: a full-screen app or a presentation (Windows SHQueryUserNotificationState,
-  and a full-screen window in front on the chatmon's monitor), quiet hours, or Do Not Disturb (KDE's
-  notification server, GNOME's show-banners). On the Wayland overlay and on macOS the system itself keeps
-  the chatmon out of a full-screen app's way.
+  and a full-screen window in front on the chatmon's monitor), quiet hours, Windows 11's Focus (winfocus.py),
+  or Do Not Disturb (KDE's notification server, GNOME's show-banners). On the Wayland overlay and on macOS
+  the system itself keeps the chatmon out of a full-screen app's way.
 - Reduced motion and high contrast, which the chatmon follows unless you chose otherwise.
 
 Every reading is best effort: one that can't be had says None (don't know), never raises.
@@ -295,6 +295,7 @@ class Desk:
         self._x11: _X11 | None = None
         self._desktop = (os.environ.get("XDG_CURRENT_DESKTOP") or "").lower()
         self._gnome: dict[str, _GSetting] = {}
+        self._focus = None  # Windows 11's Focus, asked on a thread of its own (winfocus.Focus)
 
     def _gsetting(self, schema: str, key: str) -> str | None:
         if "gnome" not in self._desktop or sys.platform in ("win32", "darwin"):
@@ -306,6 +307,19 @@ class Desk:
     def close(self) -> None:
         for setting in self._gnome.values():
             setting.close()
+        if self._focus is not None:
+            self._focus.close()
+
+    def _win_focus(self) -> bool:
+        """Windows 11's Focus is on, as of the last time its thread asked (a moment ago)."""
+        if self._focus is None:
+            try:
+                from . import winfocus
+
+                self._focus = winfocus.Focus()
+            except (ImportError, OSError, RuntimeError):
+                return False
+        return self._focus.active is True
 
     def _x(self) -> _X11 | None:
         if self.platform != "xcb" or os.environ.get("WAYLAND_DISPLAY"):  # XWayland sees X windows alone
@@ -333,7 +347,7 @@ class Desk:
     def quiet(self) -> str | None:
         """Why bubbles should wait (a full-screen app, a presentation, Do Not Disturb), or None."""
         if sys.platform == "win32":
-            return _win_quiet()
+            return _win_quiet() or ("Focus" if self._win_focus() else None)
         if sys.platform == "darwin":
             return None  # full-screen apps have their own Space, which the chatmon stays out of
         if "kde" in self._desktop:

@@ -20,7 +20,51 @@ def test_windows_readings():
     assert presence._win_high_contrast() in (True, False)
     assert presence._win_covered(0) is False  # no stage window: nothing to cover
     desk = presence.Desk("windows")
-    assert desk.quiet() in (None, *presence._QUNS.values()) and isinstance(desk.reduce_motion(), bool)
+    try:
+        assert desk.quiet() in (None, "Focus", *presence._QUNS.values()) and isinstance(desk.reduce_motion(), bool)
+    finally:
+        desk.close()
+
+
+@windows
+def test_windows_11s_focus_is_read_off_the_screens_thread():
+    """FocusSessionManager, from WinRT through ctypes, on a thread of its own: Windows 11 answers True or
+    False; a Windows without Focus (Windows 10, Windows Server) says it can't tell."""
+    import threading
+    import time
+
+    from chatmon import winfocus
+
+    focus = winfocus.Focus(every=0.2)
+    try:
+        has_focus = sys.getwindowsversion().build >= 23504 and sys.getwindowsversion().product_type == 1  # a workstation
+        deadline = time.monotonic() + 10
+        while focus.active is None and time.monotonic() < deadline and has_focus:
+            time.sleep(0.05)
+        assert focus.active in ((True, False) if has_focus else (True, False, None))
+        assert any(t.name == "chatmon-focus" for t in threading.enumerate()) == (focus.active is not None)
+    finally:
+        focus.close()
+    assert focus.active is None and not focus._thread.is_alive()
+
+
+@windows
+def test_focus_holds_bubbles_on_windows(monkeypatch):
+    desk = presence.Desk("windows")
+    monkeypatch.setattr(presence, "_win_quiet", lambda: None)
+
+    class On:
+        active = True
+
+        def close(self):
+            pass
+
+    desk._focus = On()
+    assert desk.quiet() == "Focus"
+    desk._focus.active = None  # can't tell: not quiet
+    assert desk.quiet() is None
+    monkeypatch.setattr(presence, "_win_quiet", lambda: "a presentation")
+    assert desk.quiet() == "a presentation"  # what SHQueryUserNotificationState says comes first
 
 
 @macos
@@ -36,7 +80,7 @@ def test_every_reading_answers_or_says_it_cant(qapp):
     desk = presence.Desk("offscreen")
     idle = desk.idle_seconds()
     assert idle is None or idle >= 0
-    assert desk.quiet() in (None, "Do Not Disturb", "a full-screen app", *presence._QUNS.values())
+    assert desk.quiet() in (None, "Do Not Disturb", "a full-screen app", "Focus", *presence._QUNS.values())
     assert desk.covered(0) in (True, False)
     assert isinstance(desk.reduce_motion(), bool) and isinstance(desk.high_contrast(), bool)
 
