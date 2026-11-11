@@ -60,7 +60,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "startmenu"; Description: "Add Chatmon to the &Start menu"; GroupDescription: "Shortcuts:"
 Name: "desktop"; Description: "Put a Chatmon icon on the &desktop"; GroupDescription: "Shortcuts:"; Flags: unchecked
 Name: "path"; Description: "Let my coding agents' hooks run chatmon (adds it to &PATH)"; GroupDescription: "Coding agents:"
-Name: "autostart"; Description: "Start Chatmon when I &log in"; GroupDescription: "Starting:"; Flags: unchecked
+; Not in an install for everyone: there it would be the administrator's login it changed, not yours (Chatmon's
+; own menu turns it on for whoever uses it).
+Name: "autostart"; Description: "Start Chatmon when I &log in"; GroupDescription: "Starting:"; Flags: unchecked; Check: not IsAdminInstallMode
 
 [InstallDelete]
 ; An update's files replace the last version's whole: nothing of it is left behind to be loaded. Each
@@ -92,7 +94,7 @@ Name: "{autodesktop}\Chatmon"; Filename: "{app}\chatmonw.exe"; Comment: "Your de
 
 [Registry]
 ; The same value Chatmon's own "Start when I log in" sets, so its menu shows it ticked.
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Chatmon"; ValueData: """{app}\chatmonw.exe"""; Tasks: autostart
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Chatmon"; ValueData: """{app}\chatmonw.exe"""; Tasks: autostart; Check: not IsAdminInstallMode
 
 [Run]
 Filename: "{app}\chatmonw.exe"; Description: "Start Chatmon now"; Flags: nowait postinstall skipifsilent
