@@ -8,6 +8,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Linux:** the app's entry has **Bring out Chatmon** and **Quit Chatmon** in the launcher and dock.
 - **Linux:** in power-saver mode, the chatmon draws less often.
 - **Linux:** waiting updates are counted through PackageKit on systems whose package manager Chatmon doesn't ask itself.
+- **Hyprland:** the screen locking counts as a break with hyprlock too, which doesn't tell logind.
 
 ### Fixes
 - **Linux:** something that needs you, under a full-screen app, reaches you as a notification on every desktop, with or without a tray. With no tray (GNOME, out of the box), Chatmon says once where its menu is.

@@ -393,6 +393,7 @@ class Stage(QObject):
     menu_closed = pyqtSignal()
     scale_changed_to = pyqtSignal(float)  # device pixels per stage pixel: draw the sprites for it
     away_changed = pyqtSignal(bool)  # the overlay heard you've been away from the keyboard a while (True), or are back
+    lock_changed = pyqtSignal(bool)  # the overlay heard the session lock (True) or unlock (Hyprland)
 
     def __init__(self, sprites: Sprites, behavior: Behavior, surface_factory=make_surface):
         super().__init__()
@@ -446,6 +447,10 @@ class Stage(QObject):
     def away(self, on: bool) -> None:
         """The surface heard you've been away from the keyboard and mouse a while (or are back)."""
         self.away_changed.emit(on)
+
+    def locked(self, on: bool) -> None:
+        """The surface heard the session lock (or unlock)."""
+        self.lock_changed.emit(on)
 
     def raise_above(self, on: bool) -> None:
         """Above full-screen windows too (an alert or the ask box needs you), or giving way to them."""

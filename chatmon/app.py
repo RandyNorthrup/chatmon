@@ -159,6 +159,7 @@ class Companion(QObject):
         self.stage.head_moved.connect(self._follow)
         self.stage.message_closed.connect(self._message_closed)
         self.stage.away_changed.connect(self._overlay_away)
+        self.stage.lock_changed.connect(self._screen_locked)  # Hyprland's word, beside logind's
         if self._reduce_motion:  # the system asks for less movement: standing still, unless you say walk
             self.behavior.set_walk(False, time.monotonic())
         self.stage.menu_closed.connect(self._menu_closed)

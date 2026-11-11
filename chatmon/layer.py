@@ -108,6 +108,10 @@ LAYER_SURFACE_SET_LAYER = 8  # layer-shell version 2
 # ext-idle-notify-v1: told when you've been away from the keyboard and mouse a while, and when you're back.
 IDLE_NOTIFIER_GET_IDLE, IDLE_NOTIFIER_GET_INPUT_IDLE = 1, 2  # get_input_idle_notification: version 2
 EV_IDLE_IDLED, EV_IDLE_RESUMED = 0, 1
+# hyprland-lock-notify-v1: Hyprland's own word that the session locked, whichever locker did it (hyprlock tells
+# logind nothing). https://github.com/hyprwm/hyprland-protocols/blob/main/protocols/hyprland-lock-notify-v1.xml
+LOCK_NOTIFIER_GET_LOCK_NOTIFICATION = 1
+EV_LOCK_LOCKED, EV_LOCK_UNLOCKED = 0, 1
 IDLE_AFTER_MS = 300_000
 ANCHOR_ALL = 1 | 2 | 4 | 8  # top, bottom, left, right: the whole output
 KEYBOARD_NONE, KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND = 0, 1, 2  # on_demand: layer-shell version 4
@@ -135,6 +139,7 @@ WANTED = {
     "wl_data_device_manager": 3,  # the clipboard
     "zwp_primary_selection_device_manager_v1": 1,  # selected text, pasted with the middle button
     "ext_idle_notifier_v1": 2,  # 2: input idle (a video playing doesn't count as you being there)
+    "hyprland_lock_notifier_v1": 1,  # Hyprland: the session locking and unlocking
 }
 NEEDED = {"wl_compositor": 4, "wl_shm": 1, "zwlr_layer_shell_v1": 1}
 
@@ -512,6 +517,7 @@ class LayerSurface(QObject):
         self._raised = False  # wanted above full-screen windows (an alert, the ask box), whichever surface is up
         self._layer_level = LAYER_OVERLAY  # where the surface up now is
         self._idle: int | None = None
+        self._lock_notification: int | None = None
         self._repeat_rate, self._repeat_delay = REPEAT_RATE, REPEAT_DELAY
         self._repeat_key: tuple[int, xkb.Key] | None = None
         self._repeat_timer = QTimer(self)
@@ -544,6 +550,7 @@ class LayerSurface(QObject):
     def _start(self) -> None:
         self._add_text_inputs()
         self._add_idle_watch()
+        self._add_lock_watch()
         for selection in self.selections.values():
             selection.add_devices()
         self._notifier = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Type.Read, self)
@@ -952,6 +959,20 @@ class LayerSurface(QObject):
             away = getattr(self.stage, "away", None)
             if away is not None:
                 away(opcode == EV_IDLE_IDLED)
+
+    def _add_lock_watch(self) -> None:
+        notifier = self.globals.get("hyprland_lock_notifier_v1")
+        if notifier is None or self._lock_notification is not None:
+            return
+        self._lock_notification = self.conn.new_id(self._lock_event)
+        self.conn.request(notifier[0], LOCK_NOTIFIER_GET_LOCK_NOTIFICATION, "n", self._lock_notification)
+        self._flush()
+
+    def _lock_event(self, opcode: int, _args: bytes) -> None:
+        if opcode in (EV_LOCK_LOCKED, EV_LOCK_UNLOCKED):
+            locked = getattr(self.stage, "locked", None)
+            if locked is not None:
+                locked(opcode == EV_LOCK_LOCKED)
 
     # -- above full-screen windows, or under them
 

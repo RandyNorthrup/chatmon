@@ -61,6 +61,7 @@ PROTOCOLS = [
     Path("/usr/share/wayland-protocols/staging/fractional-scale/fractional-scale-v1.xml"),
     Path("/usr/share/wayland-protocols/staging/ext-idle-notify/ext-idle-notify-v1.xml"),
     Path("/usr/share/wlr-protocols/unstable/wlr-layer-shell-unstable-v1.xml"),
+    Path("/usr/share/hyprland-protocols/protocols/hyprland-lock-notify-v1.xml"),
 ]
 
 CHECKS = {  # constant: (interface, "request" or "event", name)
@@ -107,6 +108,9 @@ CHECKS = {  # constant: (interface, "request" or "event", name)
     "IDLE_NOTIFIER_GET_INPUT_IDLE": ("ext_idle_notifier_v1", "request", "get_input_idle_notification"),
     "EV_IDLE_IDLED": ("ext_idle_notification_v1", "event", "idled"),
     "EV_IDLE_RESUMED": ("ext_idle_notification_v1", "event", "resumed"),
+    "LOCK_NOTIFIER_GET_LOCK_NOTIFICATION": ("hyprland_lock_notifier_v1", "request", "get_lock_notification"),
+    "EV_LOCK_LOCKED": ("hyprland_lock_notification_v1", "event", "locked"),
+    "EV_LOCK_UNLOCKED": ("hyprland_lock_notification_v1", "event", "unlocked"),
     "DATA_DEVICE_MANAGER_CREATE_SOURCE": ("wl_data_device_manager", "request", "create_data_source"),
     "DATA_DEVICE_MANAGER_GET_DEVICE": ("wl_data_device_manager", "request", "get_data_device"),
     "DATA_DEVICE_SET_SELECTION": ("wl_data_device", "request", "set_selection"),
@@ -243,9 +247,13 @@ class FakeStage:
     def __init__(self):
         self.calls = []
         self.away_calls = []
+        self.lock_calls = []
 
     def away(self, on):
         self.away_calls.append(on)
+
+    def locked(self, on):
+        self.lock_calls.append(on)
 
     def paint(self, p, region):
         p.fillRect(QRect(10, 10, 50, 50), QColor(255, 0, 0))
@@ -456,7 +464,7 @@ def _configured(qapp, layer_version=4):
         [
             ("wl_compositor", 6), ("wl_shm", 1), ("wl_seat", 7), ("wl_output", 4), ("zwlr_layer_shell_v1", layer_version),
             ("zwp_text_input_manager_v3", 1), ("wl_data_device_manager", 3), ("zwp_primary_selection_device_manager_v1", 1),
-            ("ext_idle_notifier_v1", 2),
+            ("ext_idle_notifier_v1", 2), ("hyprland_lock_notifier_v1", 1),
         ],
         start=1,
     ):
@@ -484,6 +492,7 @@ def _configured(qapp, layer_version=4):
         "idle_notifier": bound["ext_idle_notifier_v1"],
         "seat": bound["wl_seat"],
         "idle_request": wayland.decode("nuo", named(reqs, bound["ext_idle_notifier_v1"], layer.IDLE_NOTIFIER_GET_INPUT_IDLE)[0]),
+        "lock_request": wayland.decode("n", named(reqs, bound["hyprland_lock_notifier_v1"], layer.LOCK_NOTIFIER_GET_LOCK_NOTIFICATION)[0]),
     }
     (get,) = named(reqs, bound["zwlr_layer_shell_v1"], layer.LAYER_SHELL_GET_LAYER_SURFACE)
     ids["layer"], ids["surface"] = wayland.decode("noous", get)[:2]
@@ -754,5 +763,18 @@ def test_it_hears_when_youre_away_from_the_keyboard_and_back(qapp):
     server.send(surf._idle, layer.EV_IDLE_RESUMED)
     conn.read()
     assert stage.away_calls == [True, False]
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_it_hears_hyprland_lock_and_unlock(qapp):
+    conn, server, stage, surf, ids = _configured(qapp)
+    assert ids["lock_request"] == [surf._lock_notification]
+    server.send(surf._lock_notification, layer.EV_LOCK_LOCKED)
+    conn.read()
+    server.send(surf._lock_notification, layer.EV_LOCK_UNLOCKED)
+    conn.read()
+    assert stage.lock_calls == [True, False]
     surf.close()
     server.sock.close()
