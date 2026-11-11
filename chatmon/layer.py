@@ -146,6 +146,31 @@ WANTED = {
 NEEDED = {"wl_compositor": 4, "wl_shm": 1, "zwlr_layer_shell_v1": 1}
 
 
+def offered(env=os.environ) -> bool:
+    """Does this compositor offer what the overlay needs? Asked before Qt starts, so that where it does, Qt can
+    run on Wayland itself (its own windows, Settings and dialogs, sharp at any scale) instead of through
+    XWayland, which only a stage that's an X window needs (app.run)."""
+    if not sys.platform.startswith("linux") or env.get(STAGE_ENV) == "window":
+        return False
+    conn = Connection.open(env)
+    if conn is None:
+        return False
+    found: dict[str, int] = {}
+
+    def global_(opcode: int, args: bytes) -> None:
+        if opcode == EV_REGISTRY_GLOBAL:
+            _name, interface, version = decode("usu", args)
+            found[interface] = max(version, found.get(interface, 0))
+
+    try:
+        conn.request(DISPLAY_ID, 1, "n", conn.new_id(global_))  # wl_display.get_registry
+        return conn.roundtrip() and all(found.get(name, 0) >= version for name, version in NEEDED.items())
+    except (OSError, wayland.WaylandError):
+        return False
+    finally:
+        conn.close()
+
+
 def wanted(env=os.environ) -> bool:
     """Whether to try a layer-shell stage at all."""
     if not sys.platform.startswith("linux") or env.get(STAGE_ENV) == "window":

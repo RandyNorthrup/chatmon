@@ -835,3 +835,38 @@ def test_files_dragged_onto_the_ask_box_are_taken_and_elsewhere_refused(qapp):
     assert surf.selections["clipboard"].drag is None
     surf.close()
     server.sock.close()
+
+
+def _compositor_offering(globals_, monkeypatch):
+    """A pretend compositor in a thread, answering get_registry and sync: what layer.offered() asks."""
+    import threading
+
+    client, server_sock = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
+    server = Server(server_sock)
+
+    def answer():
+        registry = None
+        deadline = time.monotonic() + 5
+        while time.monotonic() < deadline:
+            for oid, op, payload in server.requests():
+                if oid == wayland.DISPLAY_ID and op == 1:
+                    (registry,) = wayland.decode("n", payload)
+                    for name, (interface, version) in enumerate(globals_, start=1):
+                        server.send(registry, layer.EV_REGISTRY_GLOBAL, "usu", name, interface, version)
+                elif oid == wayland.DISPLAY_ID and op == 0:
+                    (callback,) = wayland.decode("n", payload)
+                    server.send(callback, 0, "u", 1)  # wl_callback.done
+                    return
+            time.sleep(0.01)
+
+    threading.Thread(target=answer, daemon=True).start()
+    monkeypatch.setattr(layer.Connection, "open", classmethod(lambda cls, env=None: wayland.Connection(client)))
+
+
+@linux_only
+def test_qt_runs_on_wayland_itself_only_where_the_overlay_can_be(monkeypatch):
+    _compositor_offering([("wl_compositor", 6), ("wl_shm", 1), ("zwlr_layer_shell_v1", 5)], monkeypatch)
+    assert layer.offered({})  # Hyprland, Sway, KDE...
+    _compositor_offering([("wl_compositor", 6), ("wl_shm", 1)], monkeypatch)
+    assert not layer.offered({})  # GNOME: the stage is an X window, so Qt goes through XWayland
+    assert not layer.offered({layer.STAGE_ENV: "window"})  # asked for a window

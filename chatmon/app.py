@@ -2274,10 +2274,17 @@ def open_server(reached: str = events.ABSENT) -> tuple[QLocalServer | None, str 
 
 
 def run() -> int:
-    # On Wayland a window can't place itself or stay above other windows, so
-    # the window runs through XWayland, where it can.
-    if sys.platform.startswith("linux") and os.environ.get("XDG_SESSION_TYPE") == "wayland" and os.environ.get("DISPLAY") and "QT_QPA_PLATFORM" not in os.environ:
-        os.environ["QT_QPA_PLATFORM"] = "xcb"
+    if sys.platform.startswith("linux") and os.environ.get("XDG_SESSION_TYPE") == "wayland" and "QT_QPA_PLATFORM" not in os.environ:
+        from . import layer
+
+        if layer.offered():
+            # The stage is a layer-shell overlay of its own (layer.py): Qt runs on Wayland itself, its windows
+            # sharp at any scale; through XWayland if Qt's Wayland plugin isn't installed.
+            os.environ["QT_QPA_PLATFORM"] = "wayland;xcb"
+        elif os.environ.get("DISPLAY"):
+            # No overlay (GNOME): a Wayland window can't place itself or stay above others, so the stage is an X
+            # window, through XWayland, where it can.
+            os.environ["QT_QPA_PLATFORM"] = "xcb"
     _log_without_a_console()
     if sys.platform == "darwin":
         os.environ.setdefault("QT_MAC_SET_RAISE_PROCESS", "0")  # raising a window mustn't make Chatmon the active app

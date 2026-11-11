@@ -19,6 +19,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Linux:** in power-saver mode, the chatmon draws less often.
 - **Linux:** waiting updates are counted through PackageKit on systems whose package manager Chatmon doesn't ask itself.
 - **Hyprland:** the screen locking counts as a break with hyprlock too, which doesn't tell logind.
+- **Wayland:** where the chatmon is an overlay (Hyprland, Sway, KDE...), Chatmon's own windows, Settings and dialogs, are Wayland windows, sharp at any scale, no longer drawn through XWayland.
 - **Wayland:** files, pictures and text dragged onto the open chat are attached, on Hyprland, Sway and other compositors with the overlay, as they are elsewhere.
 - **Linux:** attaching files and saving a chat use your desktop's own file chooser (through its portal), on Hyprland and Sway too.
 
