@@ -6,6 +6,7 @@ its notch pointing at the penguin, or the plain one in the desktop's own colours
 
 from __future__ import annotations
 
+import os
 import time
 from dataclasses import dataclass
 from typing import Callable
@@ -357,7 +358,7 @@ def clipboard_contents(mime: QMimeData | None) -> tuple[str, object] | None:
     """("files", [paths]), ("image", QImage) or ("text", str): what a paste would bring, best first."""
     if mime is None:
         return None
-    files = [u.toLocalFile() for u in mime.urls() if u.isLocalFile()] if mime.hasUrls() else []
+    files = [os.path.normpath(u.toLocalFile()) for u in mime.urls() if u.isLocalFile()] if mime.hasUrls() else []
     if files:
         return "files", files
     if mime.hasImage():
@@ -373,7 +374,7 @@ def overlay_contents(mime: str, data: bytes) -> tuple[str, object] | None:
     """The same, from the overlay's own clipboard (a type and its bytes)."""
     if mime == "text/uri-list":
         files = [QUrl(line.strip()).toLocalFile() for line in data.decode("utf-8", errors="replace").splitlines() if line.startswith("file://")]
-        return ("files", [f for f in files if f]) if any(files) else None
+        return ("files", [os.path.normpath(f) for f in files if f]) if any(files) else None
     if mime.startswith("image/"):
         image = QImage.fromData(data)
         return ("image", image) if not image.isNull() else None

@@ -18,7 +18,7 @@ from chatmon.attachments import AttachError
 
 def test_a_text_file_is_quoted_in_the_question(tmp_path):
     f = tmp_path / "notes.md"
-    f.write_text("# Plan\nship it", encoding="utf-8")
+    f.write_bytes("# Plan\nship it".encode())
     a = attachments.from_path(f)
     assert (a.kind, a.name, a.text) == ("text", "notes.md", "# Plan\nship it")
     q = attachments.in_question("What do you think?", [a], marker="c0de")

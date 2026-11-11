@@ -135,6 +135,8 @@ def from_path(path: Path) -> Attachment:
         # judged by what was opened: nothing can be swapped in between.
         fd = os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0) | getattr(os, "O_BINARY", 0))
     except OSError as exc:
+        if os.path.isdir(path):  # Windows won't open a folder at all
+            raise AttachError(f"{name} isn't a file") from None
         raise AttachError(f"couldn't open {name} ({exc.strerror or exc})") from None
     try:
         info = os.fstat(fd)
