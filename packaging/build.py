@@ -220,11 +220,13 @@ def smoke(cli: str, app: str, expected: str | None = None) -> None:
         if say("say", "still here").returncode != 0:
             sys.exit(f"the app never answered:\n{_output(home, log)}")
         print("it answered")
-        say("quit")
+        asked = say("quit")
+        if asked.returncode != 0:  # the request itself didn't get there: say why, not just that it's still running
+            sys.exit(f"`quit` didn't reach it (exit {asked.returncode}): {asked.stderr.strip()}\n{_output(home, log)}")
         try:
             code = running.wait(30)
         except subprocess.TimeoutExpired:
-            sys.exit(f"it didn't quit when asked:\n{_output(home, log)}")
+            sys.exit(f"it was asked to quit and didn't, in 30 s:\n{_stack(running.pid)}\n{_output(home, log)}")
         if code != 0:
             sys.exit(f"it quit with exit code {code}:\n{_output(home, log)}")
         print("it quit when asked: all good")
@@ -232,6 +234,18 @@ def smoke(cli: str, app: str, expected: str | None = None) -> None:
         if running.poll() is None:
             running.kill()
         shutil.rmtree(home, ignore_errors=True)
+
+
+def _stack(pid: int) -> str:
+    """Where a process that won't quit is stuck, as far as the system can show without a debugger: macOS's
+    `sample` (native stacks of every thread), else nothing."""
+    if sys.platform == "darwin" and shutil.which("sample"):
+        try:
+            shown = subprocess.run(["sample", str(pid), "3"], capture_output=True, text=True, timeout=60)
+            return "where it was:\n" + (shown.stdout or shown.stderr)[-12000:]
+        except (OSError, subprocess.SubprocessError) as exc:
+            return f"(couldn't sample it: {exc})"
+    return ""
 
 
 def _output(home: Path, log: Path) -> str:
