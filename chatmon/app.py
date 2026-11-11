@@ -618,14 +618,25 @@ class Companion(QObject):
         if chat is None:
             return
         safe = "".join(c if c.isalnum() or c in " -_" else " " for c in chat.title or "chat").strip()[:60] or "chat"
-        shown = self.ask_box.isVisible()
-        if shown:
-            self.ask_box.pause()  # the save dialog needs the keyboard
-        try:
-            name, _ = QFileDialog.getSaveFileName(None, "Save the chat", str(Path.home() / f"{safe}.md"), "Markdown (*.md);;Text (*.txt)")
-        finally:
+
+        def with_qt() -> None:
+            shown = self.ask_box.isVisible()
             if shown:
-                self.ask_box.resume()
+                self.ask_box.pause()  # the save dialog needs the keyboard
+            try:
+                name, _ = QFileDialog.getSaveFileName(None, "Save the chat", str(Path.home() / f"{safe}.md"), "Markdown (*.md);;Text (*.txt)")
+            finally:
+                if shown:
+                    self.ask_box.resume()
+            self._write_chat(chat, name)
+
+        if self._chooser() is not None:
+            self._through_portal(lambda then, fallback: self._file_chooser.save_file("Save the chat", Path.home(), f"{safe}.md", then, fallback),
+                                 lambda names: self._write_chat(chat, names[0] if names else ""), with_qt)
+        else:
+            with_qt()
+
+    def _write_chat(self, chat: chats.Chat, name: str) -> None:
         if not name:
             return
         try:
@@ -726,6 +737,13 @@ class Companion(QObject):
             self.ask_box.paste_clipboard()
 
     def _attach_files(self) -> None:
+        if self._chooser() is not None:
+            self._through_portal(lambda then, fallback: self._file_chooser.open_files("Attach to your question", Path.home(), then, fallback),
+                                 self._attach_files_named, self._attach_files_with_qt)
+        else:
+            self._attach_files_with_qt()
+
+    def _attach_files_with_qt(self) -> None:
         # The system's file dialog needs the keyboard, which the ask box holds on the overlay: out of its way meanwhile.
         self.ask_box.pause()
         try:
@@ -733,6 +751,33 @@ class Companion(QObject):
         finally:
             self.ask_box.resume()
         self._attach_files_named(files)
+
+    def _chooser(self):
+        """The desktop's own file chooser (portal.py), on Linux where the portal has one; else None (Qt's)."""
+        if not hasattr(self, "_file_chooser"):
+            self._file_chooser = None
+            if sys.platform.startswith("linux"):
+                try:
+                    from . import portal
+
+                    if portal.available():
+                        self._file_chooser = portal.FileChooser(self)
+                except ImportError:  # no QtDBus
+                    pass
+        return self._file_chooser
+
+    def _through_portal(self, ask, then, fallback) -> None:
+        """`ask(then, fallback)` the portal, the ask box out of the keyboard's way until it answers."""
+        shown = self.ask_box.isVisible()
+        if shown:
+            self.ask_box.pause()
+
+        def done(run, *args) -> None:
+            if shown:
+                self.ask_box.resume()
+            run(*args)
+
+        ask(lambda names: done(then, names), lambda: done(fallback))
 
     def _attach_files_named(self, names: list[str]) -> None:
         room = attachments.MAX_COUNT - len(self.attached)

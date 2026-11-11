@@ -46,6 +46,7 @@ def companion(tmp_path, monkeypatch):
     QLocalServer.removeServer(paths.server_name())
     assert server.listen(paths.server_name()), server.errorString()
     c = appmod.Companion(qapp, server)
+    c._file_chooser = None  # Qt's dialogs, which the tests stand in for: never the desktop's portal
     yield c
     c.quit()
     server.close()
@@ -940,3 +941,58 @@ def test_settings_hands_back_only_what_changed(qapp):
     w._save()
     assert got == [{"focus": 50}]
     w.close()
+
+
+def test_on_linux_the_desktops_own_chooser_picks_what_to_attach_and_where_to_save(companion, monkeypatch, tmp_path):
+    c = companion
+    PretendBrain(c, monkeypatch)
+    picked = tmp_path / "notes.txt"
+    picked.write_text("buy milk")
+    out = tmp_path / "chat.md"
+
+    class Chooser:
+        def __init__(self):
+            self.asked = []
+
+        def open_files(self, title, folder, then, fallback):
+            self.asked.append(title)
+            then([str(picked)])
+
+        def save_file(self, title, folder, name, then, fallback):
+            self.asked.append((title, name))
+            then([str(out)])
+
+    c._file_chooser = chooser = Chooser()
+    c.open_ask()
+    c._attach_files()
+    spin(1.0)
+    assert chooser.asked == ["Attach to your question"] and [a.name for a in c.attached] == ["notes.txt"]
+    c.submit("What's this?")
+    c._answered("A list.")
+    c._export_chat(c.chat.id)
+    assert chooser.asked[-1][1] == "What s this.md" and "A list." in out.read_text()
+    assert c.ask_box.isVisible()  # back, once the chooser answered
+
+
+def test_without_a_chooser_the_portal_falls_back_to_qts_dialog(companion, monkeypatch):
+    from chatmon import app as appmod
+
+    c = companion
+    used = []
+
+    class Broken:
+        def open_files(self, title, folder, then, fallback):
+            fallback()  # no backend, or it failed
+
+    c._file_chooser = Broken()
+    monkeypatch.setattr(appmod.QFileDialog, "getOpenFileNames", lambda *a: (used.append("qt"), ([], ""))[1])
+    c.open_ask()
+    c._attach_files()
+    assert used == ["qt"]
+
+
+def test_portal_file_uris_become_local_paths_only():
+    pytest.importorskip("PyQt6.QtDBus")
+    from chatmon import portal
+
+    assert portal.paths_from(["file:///home/me/My%20Notes.txt", "sftp://host/x", "file:///tmp/a"]) == ["/home/me/My Notes.txt", "/tmp/a"]

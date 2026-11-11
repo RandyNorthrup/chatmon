@@ -18,6 +18,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Linux:** in power-saver mode, the chatmon draws less often.
 - **Linux:** waiting updates are counted through PackageKit on systems whose package manager Chatmon doesn't ask itself.
 - **Hyprland:** the screen locking counts as a break with hyprlock too, which doesn't tell logind.
+- **Linux:** attaching files and saving a chat use your desktop's own file chooser (through its portal), on Hyprland and Sway too.
 
 ### Fixes
 - **Privacy:** Codex and Muse Code no longer keep a session of each question you ask them through Chatmon, and OpenAI's and xAI's APIs are asked not to store your questions (they keep them 30 days otherwise). Anthropic's API reads a chat's earlier turns from its cache, at a fraction of the price.
