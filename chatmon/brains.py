@@ -70,7 +70,8 @@ PRESETS: dict[str, dict] = {
     "muse": {
         "type": "command",
         "label": "Muse Code",
-        "command": ["muse", "exec", "--preset", "empty", "--prompt-file", "{prompt_file}"],
+        # --no-session-log: no session kept of each question. https://dev.meta.ai/docs/muse-code/configuration
+        "command": ["muse", "exec", "--preset", "empty", "--no-session-log", "--prompt-file", "{prompt_file}"],
         "tools_off": True,  # the empty preset: no tools
         "models": ["muse-spark-1.3", "muse-ember-1.0", "muse-wonder-1.0"],
         "model_args": ["--model", "{model}"],

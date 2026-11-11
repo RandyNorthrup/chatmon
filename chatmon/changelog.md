@@ -18,7 +18,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Hyprland:** the screen locking counts as a break with hyprlock too, which doesn't tell logind.
 
 ### Fixes
-- **Privacy:** Codex no longer keeps a session file of each question you ask it through Chatmon, and OpenAI's and xAI's APIs are asked not to store your questions (they keep them 30 days otherwise). Anthropic's API reads a chat's earlier turns from its cache, at a fraction of the price.
+- **Privacy:** Codex and Muse Code no longer keep a session of each question you ask them through Chatmon, and OpenAI's and xAI's APIs are asked not to store your questions (they keep them 30 days otherwise). Anthropic's API reads a chat's earlier turns from its cache, at a fraction of the price.
 - **Linux:** something that needs you, under a full-screen app, reaches you as a notification on every desktop, with or without a tray. With no tray (GNOME, out of the box), Chatmon says once where its menu is.
 - **Linux:** a laptop with two batteries gets its battery warnings for both together, as the desktop's battery icon shows them, not for the first alone.
 
