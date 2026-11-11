@@ -31,7 +31,8 @@ from urllib.parse import urlsplit
 from PyQt6.QtCore import QByteArray, QObject, QProcess, QProcessEnvironment, QTimer, QUrl, pyqtSignal
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
-from . import paths
+from . import attachments, paths
+from .attachments import IMAGE, PDF, Attachment
 from .events import INTERNAL_ENV
 
 # Model ids current as of 10 November 2026 (checked on each provider's own pages); the menu offers the
@@ -553,12 +554,26 @@ def check_url(url: str) -> None:
         raise BrainError(f"{url} isn't HTTPS; only a server on this computer may use plain HTTP")
 
 
+def cant_take(brain: Brain, attached: list[Attachment]) -> str | None:
+    """Why this brain can't be given these attachments (None: it can). Text goes to every brain."""
+    kinds = {a.kind for a in attached}
+    if brain.type == "command" and kinds & {IMAGE, PDF}:
+        return (
+            f"{brain.label} runs here with its file tools off, so it can be given text but not pictures or PDFs. "
+            "For those, pick an API under **Brain** (or a model server here that can see images)."
+        )
+    if brain.type == "openai" and PDF in kinds:
+        return f"{brain.label} can't read PDFs this way. The Anthropic and OpenAI APIs can, or attach the text instead."
+    return None
+
+
 def system_prompt(name: str, kind: str) -> str:
     """`kind`: which chatmon it is, as in "fire red panda"."""
     return (
         f"You are {name}, a small {kind} desktop companion. Answer the person's "
         "question helpfully and briefly: a few sentences unless they ask for more. Plain text or "
-        "light Markdown. You can't see their screen or files and you can't run anything."
+        "light Markdown. You can't see their screen or files and you can't run anything, but you can read "
+        "what they attach to a question."
     )
 
 
@@ -581,13 +596,44 @@ def _messages(history: list[tuple[str, str]], question: str) -> list[dict]:
     return out
 
 
-def anthropic_request(brain: Brain, system: str, history, question: str) -> tuple[dict, dict]:
+def _with_attachments(messages: list[dict], attached, part) -> list[dict]:
+    """The last (the new) question's content as parts: each image or PDF made by `part`, then its text."""
+    media = [part(a) for a in attached or () if a.kind in (IMAGE, PDF)]
+    if media:
+        last = messages[-1]
+        messages[-1] = {**last, "content": [*media, {"type": "text", "text": last["content"]}]}
+    return messages
+
+
+def _anthropic_part(a: Attachment) -> dict:
+    return {"type": "image" if a.kind == IMAGE else "document", "source": {"type": "base64", "media_type": a.mime, "data": a.b64()}}
+
+
+def _chat_part(a: Attachment) -> dict:
+    return {"type": "image_url", "image_url": {"url": a.data_url()}}
+
+
+def _responses_part(a: Attachment) -> dict:
+    if a.kind == IMAGE:
+        return {"type": "input_image", "image_url": a.data_url()}
+    return {"type": "input_file", "filename": a.name, "file_data": a.data_url()}
+
+
+def _responses_text(messages: list[dict]) -> list[dict]:
+    """The Responses API names a question's text part "input_text"."""
+    for m in messages:
+        if isinstance(m["content"], list):
+            m["content"] = [{"type": "input_text", "text": p["text"]} if p.get("type") == "text" else p for p in m["content"]]
+    return messages
+
+
+def anthropic_request(brain: Brain, system: str, history, question: str, attached=()) -> tuple[dict, dict]:
     headers = {"x-api-key": brain.key(), "anthropic-version": ANTHROPIC_VERSION, "content-type": "application/json"}
     body = {
         "model": brain.model,
         "max_tokens": 16000,
         "system": system,
-        "messages": _messages(history, question),
+        "messages": _with_attachments(_messages(history, question), attached, _anthropic_part),
     }
     if brain.effort:
         body["output_config"] = {"effort": brain.effort}
@@ -600,21 +646,21 @@ def anthropic_request(brain: Brain, system: str, history, question: str) -> tupl
     return _custom(brain, headers, body)
 
 
-def openai_request(brain: Brain, system: str, history, question: str) -> tuple[dict, dict]:
+def openai_request(brain: Brain, system: str, history, question: str, attached=()) -> tuple[dict, dict]:
     headers = {"content-type": "application/json"}
     if brain.key():
         headers["authorization"] = f"Bearer {brain.key()}"
-    body = {"model": brain.model, "messages": [{"role": "system", "content": system}] + _messages(history, question)}
+    body = {"model": brain.model, "messages": [{"role": "system", "content": system}] + _with_attachments(_messages(history, question), attached, _chat_part)}
     if brain.effort and brain.effort_levels():
         _set(body, brain.effort_field or "reasoning_effort", brain.effort)
     return _custom(brain, headers, _thinking_fields(brain, body))
 
 
-def responses_request(brain: Brain, system: str, history, question: str) -> tuple[dict, dict]:
+def responses_request(brain: Brain, system: str, history, question: str, attached=()) -> tuple[dict, dict]:
     headers = {"content-type": "application/json"}
     if brain.key():
         headers["authorization"] = f"Bearer {brain.key()}"
-    body = {"model": brain.model, "instructions": system, "input": _messages(history, question)}
+    body = {"model": brain.model, "instructions": system, "input": _responses_text(_with_attachments(_messages(history, question), attached, _responses_part))}
     if brain.effort and brain.effort_levels():
         _set(body, brain.effort_field or "reasoning.effort", brain.effort)
     return _custom(brain, headers, _thinking_fields(brain, body))
@@ -775,9 +821,18 @@ class Asker(QObject):
     def busy(self) -> bool:
         return self._proc is not None or self._reply is not None
 
-    def ask(self, brain: Brain, system: str, history: list[tuple[str, str]], question: str, timeout_s: float) -> None:
+    def ask(self, brain: Brain, system: str, history: list[tuple[str, str]], question: str, timeout_s: float, attached=()) -> None:
+        """Ask `question`, after the conversation so far. `attached`: files, pictures and text you added
+        to this question (text is quoted in it, for every brain; pictures and PDFs go only to those that
+        can take them: see cant_take)."""
         self.cancel()
         self._brain = brain
+        attached = list(attached or ())
+        refused = cant_take(brain, attached)
+        if refused:
+            QTimer.singleShot(0, lambda: self.failed.emit(refused))
+            return
+        question = attachments.in_question(question, attached)
         self._timer.start(int(timeout_s * 1000))
         if brain.type == "command":
             self._run(brain, text_prompt(system, history, question))
@@ -791,10 +846,10 @@ class Asker(QObject):
             QTimer.singleShot(0, lambda: self.failed.emit(error))
             return
         if brain.model in ("", "auto"):  # a local server: ask it which model it has
-            self._then = lambda model: self._post(url, *request(_with_model(brain, model), system, history, question))
+            self._then = lambda model: self._post(url, *request(_with_model(brain, model), system, history, question, attached))
             self._get(expand_url(brain.url).rstrip("/") + "/models", brain)
             return
-        self._post(url, *request(brain, system, history, question))
+        self._post(url, *request(brain, system, history, question, attached))
 
     def cancel(self) -> None:
         self._timer.stop()

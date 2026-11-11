@@ -5,6 +5,8 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 ## 0.6.0
 
 ### New
+- **Chats you can come back to.** Your chats are kept on this computer, readable by you alone. **History** in the chat, or **Chats** in the menu, picks one up where you left off, and the whole conversation scrolls like a chat app's. Rename a chat, pin it to the top, save it as Markdown, or delete it.
+- **Attach files, pictures and text.** The **+** in the chat, Ctrl+V, or dropping files on it. Text goes to every brain; pictures and PDFs to the ones that can read them, and a brain that can't says so first.
 - **Updates in one click.** Chatmon checks for a new version once a day, downloads it, and checks that it's the real one before it asks to install it. Turn it off under **Help & updates** in the menu.
 - **What's new.** After an update, Chatmon shows what changed. **Help & updates → What's new** shows it again.
 - **Report a problem** from the menu opens a GitHub issue with your Chatmon version and system filled in. When something goes wrong, Chatmon offers to report it.

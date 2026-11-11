@@ -22,6 +22,7 @@ DEFAULTS: dict[str, Any] = {
     "ai": {"brain": "auto", "timeout_seconds": 180, "brains": {}},
     "agents": {"show_replies": False},
     "updates": {"check": True},
+    "chats": {"keep": True},
     "breaks": {"every_minutes": 60, "snooze_minutes": 10},
     "focus": {"minutes": 25},
     "heads_up": {
@@ -133,6 +134,13 @@ timeout_seconds = 180
 # Show the last words of an agent's reply when it finishes. Off by default:
 # replies can hold code or secrets you'd rather not have on screen.
 show_replies = false
+
+[chats]
+# Keep your chats on this computer, so you can come back to one and carry on
+# (the menu's "Chats", or "History" in the ask box). They're readable by you
+# alone, and "Clear chat history" deletes them. Pictures and PDFs you attach
+# aren't kept, only their names. The menu's "Keep chat history" overrides this.
+keep = true
 
 [updates]
 # Look for a new Chatmon once a day, download it, check it's the real one, and

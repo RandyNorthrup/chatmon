@@ -10,7 +10,7 @@ import time
 from dataclasses import dataclass
 from typing import Callable
 
-from PyQt6.QtCore import QPoint, QPointF, QRect, QRectF, QSizeF, Qt, QTimer, QUrl, pyqtSignal
+from PyQt6.QtCore import QMimeData, QPoint, QPointF, QRect, QRectF, QSizeF, Qt, QTimer, QUrl, pyqtSignal
 from PyQt6.QtGui import (
     QAbstractTextDocumentLayout,
     QColor,
@@ -18,6 +18,8 @@ from PyQt6.QtGui import (
     QFont,
     QFontMetricsF,
     QGuiApplication,
+    QImage,
+    QKeySequence,
     QPainter,
     QPainterPath,
     QPalette,
@@ -328,6 +330,57 @@ class SpeechBubble:
             p.drawText(b.rect, Qt.AlignmentFlag.AlignCenter, b.label)
 
 
+class Entry(QLineEdit):
+    """The field you type a question in. Pasting files, a picture or a long text attaches it (`pasted`)
+    rather than squeezing it onto one line; a short text pastes as usual."""
+
+    paste_requested = pyqtSignal()
+
+    def keyPressEvent(self, event) -> None:
+        if event.matches(QKeySequence.StandardKey.Paste):
+            self.paste_requested.emit()
+        else:
+            super().keyPressEvent(event)
+
+    def contextMenuEvent(self, event) -> None:
+        menu = self.createStandardContextMenu()
+        for action in menu.actions():
+            if action.objectName() == "edit-paste":
+                action.triggered.disconnect()
+                action.triggered.connect(self.paste_requested.emit)
+                action.setEnabled(not self.isReadOnly())
+        menu.exec(event.globalPos())
+        menu.deleteLater()
+
+
+def clipboard_contents(mime: QMimeData | None) -> tuple[str, object] | None:
+    """("files", [paths]), ("image", QImage) or ("text", str): what a paste would bring, best first."""
+    if mime is None:
+        return None
+    files = [u.toLocalFile() for u in mime.urls() if u.isLocalFile()] if mime.hasUrls() else []
+    if files:
+        return "files", files
+    if mime.hasImage():
+        image = mime.imageData()
+        if isinstance(image, QImage) and not image.isNull():
+            return "image", image
+    if mime.hasText() and mime.text():
+        return "text", mime.text()
+    return None
+
+
+def overlay_contents(mime: str, data: bytes) -> tuple[str, object] | None:
+    """The same, from the overlay's own clipboard (a type and its bytes)."""
+    if mime == "text/uri-list":
+        files = [QUrl(line.strip()).toLocalFile() for line in data.decode("utf-8", errors="replace").splitlines() if line.startswith("file://")]
+        return ("files", [f for f in files if f]) if any(files) else None
+    if mime.startswith("image/"):
+        image = QImage.fromData(data)
+        return ("image", image) if not image.isNull() else None
+    text = data.decode("utf-8", errors="replace")
+    return ("text", text) if text else None
+
+
 class AskBox(QWidget):
     """The bubble you type questions into, with real Qt widgets since it needs
     the keyboard. A window of its own, or drawn on the Wayland overlay by the
@@ -336,6 +389,10 @@ class AskBox(QWidget):
     closed = pyqtSignal()
     submitted = pyqtSignal(str)
     reset_requested = pyqtSignal()
+    history_requested = pyqtSignal(QPoint)  # where to show the list of chats (screen coordinates)
+    attach_requested = pyqtSignal(QPoint)  # where to show what can be attached
+    pasted = pyqtSignal(str, object)  # ("files", [paths]) or ("image", QImage) or ("text", str): to attach
+    attachment_removed = pyqtSignal(int)
 
     WIDTH = 380
     MAX_ANSWER = 320
@@ -365,6 +422,10 @@ class AskBox(QWidget):
         self.title = QLabel()
         self.title.setObjectName("title")
         top.addWidget(self.title, 1)
+        self.history_button = QToolButton(text="History", autoRaise=True)
+        self.history_button.setToolTip("Your earlier chats: pick one to carry on")
+        self.history_button.clicked.connect(lambda: self.history_requested.emit(self._below(self.history_button)))
+        top.addWidget(self.history_button)
         self.reset_button = QToolButton(text="New chat", autoRaise=True)
         self.reset_button.clicked.connect(self.reset_requested.emit)
         top.addWidget(self.reset_button)
@@ -379,9 +440,26 @@ class AskBox(QWidget):
         self.answer.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.answer.document().setDocumentMargin(2)
         layout.addWidget(self.answer)
-        self.entry = QLineEdit()
+        self.chips = QWidget()  # what's attached to the next question, each with its ✕
+        self.chips_layout = QHBoxLayout(self.chips)
+        self.chips_layout.setContentsMargins(0, 0, 0, 0)
+        self.chips_layout.setSpacing(4)
+        self.chips.hide()
+        layout.addWidget(self.chips)
+        row = QHBoxLayout()
+        row.setSpacing(6)
+        self.attach_button = QToolButton(text="+")
+        self.attach_button.setObjectName("attach")
+        self.attach_button.setToolTip("Attach files, a picture or text (or paste them in)")
+        self.attach_button.clicked.connect(lambda: self.attach_requested.emit(self._below(self.attach_button)))
+        row.addWidget(self.attach_button)
+        self.entry = Entry()
         self.entry.returnPressed.connect(self._submit)
-        layout.addWidget(self.entry)
+        self.entry.paste_requested.connect(self.paste_clipboard)
+        row.addWidget(self.entry, 1)
+        layout.addLayout(row)
+        self._attached = 0
+        self.setAcceptDrops(True)
         self.hint = QLabel()
         self.hint.setObjectName("hint")
         layout.addWidget(self.hint)
@@ -433,6 +511,8 @@ class AskBox(QWidget):
         self.entry.setPlaceholderText(placeholder)
         self.entry.setText(prefill)
         self.entry.show()
+        self.attach_button.show()
+        self.history_button.show()
         self.reset_button.hide()
         self._anchor = QPoint(anchor)
         self.set_answer(text)
@@ -452,10 +532,100 @@ class AskBox(QWidget):
         no field to type in."""
         self.open(anchor, title, hint, "", text=markdown)
         self.entry.hide()
+        self.attach_button.hide()
+        self.history_button.hide()
+        self.set_attachments([])
         self.answer.setFocus()  # it scrolls with the keys, and passes Esc on to close
         self._fit()
 
-    def set_answer(self, markdown: str) -> None:
+    def chatting(self, on: bool) -> None:
+        """Asking questions (on), or something else (naming the chatmon): only questions take attachments
+        and have a history."""
+        self.attach_button.setVisible(on)
+        self.history_button.setVisible(on)
+
+    def set_attachments(self, labels: list[str]) -> None:
+        """Show what's attached to the next question, each with a ✕ that takes it off."""
+        while self.chips_layout.count():
+            item = self.chips_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+        self._attached = len(labels)
+        metrics = QFontMetricsF(_font(9))
+        room, used, shown = self._content_width(), 0.0, 0
+        for i, label in enumerate(labels):
+            name = label.rpartition(" (")[0] or label  # "notes.md (2 KB)": the name on the chip, the size in its tip
+            more = 64 if i < len(labels) - 1 else 0  # room left for "+2 more"
+            space = min(150.0, room - used - more - 22 - metrics.horizontalAdvance("  ✕"))  # 22: padding and border
+            if shown and space < 56:  # too little for a name you could read
+                break
+            text = metrics.elidedText(name, Qt.TextElideMode.ElideMiddle, max(space, 56)) + "  ✕"
+            width = metrics.horizontalAdvance(text) + 22
+            chip = QToolButton(text=text)
+            chip.setObjectName("chip")
+            chip.setToolTip(f"{label}: click to take it off")
+            chip.clicked.connect(lambda _=False, i=i: self.attachment_removed.emit(i))
+            self.chips_layout.addWidget(chip)
+            used += width + 4
+            shown += 1
+        shown = labels[:shown]
+        if len(labels) > len(shown):
+            more = QLabel(f"+{len(labels) - len(shown)} more")
+            more.setObjectName("hint")
+            self.chips_layout.addWidget(more)
+        self.chips_layout.addStretch(1)
+        self.chips.setVisible(bool(labels))
+        self._fit()
+
+    def paste_clipboard(self) -> None:
+        """Ctrl+V, or Paste: files and pictures attach; long text attaches; short text goes in the field."""
+        found = clipboard_contents(QGuiApplication.clipboard().mimeData())
+        if found is not None:
+            self.take_paste(*found)
+
+    def paste_overlay(self, mime: str, data: bytes) -> None:
+        """A paste on the Wayland overlay, from its own clipboard."""
+        found = overlay_contents(mime, data)
+        if found is not None:
+            self.take_paste(*found)
+
+    def take_paste(self, kind: str, payload) -> None:
+        from .attachments import long_paste
+
+        if kind == "text" and not long_paste(payload):
+            self.entry.insert(" ".join(payload.splitlines()))
+        else:
+            self.pasted.emit(kind, payload)
+
+    def dragEnterEvent(self, event) -> None:
+        if self.entry.isVisible() and clipboard_contents(event.mimeData()) is not None:
+            event.acceptProposedAction()
+
+    def dropEvent(self, event) -> None:
+        found = clipboard_contents(event.mimeData())
+        if found is not None:
+            event.acceptProposedAction()
+            kind, payload = found
+            self.pasted.emit(kind, payload) if kind != "text" else self.take_paste(kind, payload)
+
+    def _below(self, widget: QWidget) -> QPoint:
+        return widget.mapToGlobal(QPoint(0, widget.height()))
+
+    def pause(self) -> None:
+        """Out of the way while a dialog of the system's is open (it needs the keyboard): back with resume()."""
+        self.hide()
+        self._frames.stop()
+
+    def resume(self) -> None:
+        self.show()
+        self.raise_()
+        self.activateWindow()
+        self.entry.setFocus()
+        self._run_frames()
+
+    def set_answer(self, markdown: str, at_end: bool = False) -> None:
+        """What the bubble shows above the field: an answer, or the whole chat (`at_end`: scrolled to its
+        latest, as a chat is read)."""
         if markdown:
             self.answer.setMarkdown(markdown)
             without_images(self.answer.document())
@@ -467,7 +637,8 @@ class AskBox(QWidget):
             self.answer.clear()
             self.answer.hide()
         self._fit()
-        self.answer.verticalScrollBar().setValue(0)
+        bar = self.answer.verticalScrollBar()
+        bar.setValue(bar.maximum() if at_end else 0)
 
     def set_resettable(self, on: bool) -> None:
         self.reset_button.setVisible(on)
@@ -512,7 +683,7 @@ class AskBox(QWidget):
 
     def _submit(self) -> None:
         text = self.entry.text().strip()
-        if text:
+        if text or (self._attached and self.attach_button.isVisible()):
             self.entry.clear()
             self.submitted.emit(text)
 
@@ -537,6 +708,13 @@ class AskBox(QWidget):
                          selection-background-color: {accent}; }}
             QToolButton {{ color: {title.name()}; border: none; padding: 2px 6px; }}
             QToolButton:hover {{ color: {accent}; }}
+            QToolButton#attach {{ color: {accent}; border: 1.5px solid {accent}; border-radius: 13px;
+                                  min-width: 24px; max-width: 24px; min-height: 24px; max-height: 24px;
+                                  padding: 0 0 2px 0; font-size: 14pt; font-weight: 700; background: {base.name()}; }}
+            QToolButton#attach:hover {{ color: {base.name()}; background: {accent}; }}
+            QToolButton#chip {{ color: {text.name()}; border: 1px solid {accent}; border-radius: 9px;
+                                padding: 1px 8px; font-size: 9pt; background: {base.name()}; }}
+            QToolButton#chip:hover {{ color: {accent}; }}
             QScrollBar:vertical {{ width: 6px; background: transparent; margin: 0; }}
             QScrollBar::handle:vertical {{ background: {accent}; border-radius: 3px; min-height: 24px; }}
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height: 0; }}

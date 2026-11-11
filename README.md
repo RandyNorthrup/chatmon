@@ -166,8 +166,10 @@ own state folder, so upgrades can't take it away again.
 | -------------------------------- | -------------------------------------------------------- |
 | Click it                         | Opens the ask box (or wakes up, or answers an alert)     |
 | Drag it                          | Comes along; let go and it drops back to the taskbar     |
-| Right-click it, or the tray icon | The menu: ask, remind, focus timer, reminders, brain, companion, bubble style, AI agents, walk, hide, settings |
+| Right-click it, or the tray icon | The menu: ask, chats, remind, focus timer, reminders, brain, companion, bubble style, AI agents, walk, hide, help & updates, settings |
 | Click the tray icon              | Hides it, or brings it back                              |
+| **+** in the ask box             | Attach files, a picture or text; or paste them (Ctrl+V), or drop them on it |
+| **History** in the ask box       | Your chats: carry on with one, rename it, pin it to the top, save it as Markdown, or delete it |
 
 Besides questions, the ask box understands *help*, *status* (the brain and its model, battery, disks,
 reminders), *hide*, *new chat*, and the reminder, timer and focus phrases above.
@@ -267,8 +269,17 @@ details.
 - **Nothing is collected.** No telemetry, no accounts. What leaves your computer is a question you type,
   sent to the brain you chose, and once a day, Chatmon asking GitHub for its latest release (it says only
   that it's Chatmon and which version; GitHub sees your IP address, as any website does). **Help & updates
-  → Check for updates every day** turns that off. Conversations live in memory and are gone when Chatmon
-  quits or after 15 minutes idle.
+  → Check for updates every day** turns that off.
+- **Your chats stay on this computer.** They're kept in Chatmon's state folder, one file each, readable by
+  you alone, so **Chats** (or **History** in the ask box) can bring one back to carry on. What's kept is
+  what you saw: your questions, the text you attached (it was part of the question), the answers, and the
+  names of pictures and PDFs, never the files. **Keep chat history** off keeps them only until Chatmon
+  quits; **Clear chat history** deletes them all.
+- **What you attach goes only to the brain you ask, and only what you picked.** Chatmon reads a file when
+  you attach it, never a folder, a device or a pipe, and nothing else on your computer. Text goes to every
+  brain, quoted in your question; pictures (made smaller first) and PDFs only to the brains that can read
+  them, and a brain that can't says so before anything is sent. The command-line AI tools still run with
+  their file tools off.
 - **An update installs only if it's the real one, and only when you say so.** The release's list of
   checksums (`SHA256SUMS.txt`) must be signed with Chatmon's release key, whose public half is built into
   Chatmon, and the download must match its checksum there; on Windows the installer must also be signed by
@@ -365,6 +376,8 @@ screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland des
 | `chatmon/ed25519.py`      | Checking the release key's signature (no extra libraries) |
 | `chatmon/changelog.py`    | What's new in each version (`changelog.md`)            |
 | `chatmon/report.py`       | Reporting a problem: GitHub's form, filled in          |
+| `chatmon/chats.py`        | Chats kept on this computer, to carry on with          |
+| `chatmon/attachments.py`  | Files, pictures and text attached to a question        |
 | `chatmon/integrations/`   | The Claude Code plugin                                 |
 | `art/`                    | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
 | `packaging/`              | The installers and packages, and how they're built ([packaging/README.md](packaging/README.md)) |

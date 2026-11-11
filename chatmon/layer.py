@@ -99,6 +99,9 @@ PRIMARY_SOURCE_OFFER, PRIMARY_SOURCE_DESTROY = 0, 1
 EV_PRIMARY_SOURCE_SEND, EV_PRIMARY_SOURCE_CANCELLED = 0, 1
 TEXT_TYPES = ("text/plain;charset=utf-8", "UTF8_STRING", "text/plain", "TEXT", "STRING")  # best first
 PASTE_MAX = 4 * 1024 * 1024  # bytes of clipboard text to take at most
+PASTE_IMAGE_MAX = 32 * 1024 * 1024  # bytes of a pasted picture (a screenshot of a big screen)
+# What a paste into the ask box takes, best first: copied files, then a picture, then text.
+RICH_TYPES = ("text/uri-list", "image/png", "image/jpeg")
 
 LAYER_OVERLAY = 3
 ANCHOR_ALL = 1 | 2 | 4 | 8  # top, bottom, left, right: the whole output
@@ -297,6 +300,27 @@ class Selection:
         def done(data: bytes) -> None:
             self.readers.remove(reader)
             then(data.decode("utf-8", errors="replace"))
+
+        reader.finished.connect(done)
+
+    def paste_rich(self, then) -> None:
+        """Copied files, a picture or text, whichever is offered first in that order: then(type, bytes)."""
+        if self.current is None:
+            return
+        types = self.offers.get(self.current, set())
+        mime = next((t for t in RICH_TYPES if t in types), None) or next((t for t in TEXT_TYPES if t in types), None)
+        if mime is None:
+            return
+        read_fd, write_fd = os.pipe2(os.O_CLOEXEC)
+        self.conn.request(self.current, self.ch.offer_receive, "sh", mime, write_fd)
+        os.close(write_fd)
+        self.surface._flush()
+        reader = PipeReader(read_fd, PASTE_IMAGE_MAX if mime.startswith("image/") else PASTE_MAX, self.surface)
+        self.readers.append(reader)
+
+        def done(data: bytes) -> None:
+            self.readers.remove(reader)
+            then("text/plain" if mime in TEXT_TYPES else mime, data)
 
         reader.finished.connect(done)
 
@@ -575,6 +599,10 @@ class LayerSurface(QObject):
     def paste(self, then, which: str = "clipboard") -> None:
         """Read the clipboard's (or primary selection's) text; hand it to `then`."""
         self.selections[which].paste(then)
+
+    def paste_rich(self, then) -> None:
+        """Read the clipboard's files, picture or text; hand (type, bytes) to `then`."""
+        self.selections["clipboard"].paste_rich(then)
 
     def copy(self, text: str, which: str = "clipboard") -> None:
         """Put text on the clipboard (or primary selection), for any app to paste."""
