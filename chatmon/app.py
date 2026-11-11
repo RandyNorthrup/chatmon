@@ -16,7 +16,7 @@ from pathlib import Path
 
 from PyQt6 import sip
 from PyQt6.QtCore import QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
-from PyQt6.QtGui import QActionGroup, QDesktopServices, QGuiApplication, QIcon
+from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiApplication, QIcon
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
@@ -1045,6 +1045,14 @@ def _log_exception(kind, value, tb) -> None:
     traceback.print_exception(kind, value, tb, file=sys.stderr)
 
 
+def _find_fonts(app: QApplication) -> None:
+    """Have Qt find its fonts now, before the chatmon is on screen. The first text it measures makes it
+    read every font installed, and the first character that font lacks (the bubbles' ✕) makes it work
+    out which fonts to fall back on. With a few thousand fonts installed, as Windows PCs can have, each
+    takes seconds; left to the first bubble, the chatmon froze mid-wave while they happened."""
+    QFontMetricsF(app.font()).horizontalAdvance("Chatmon ✕")
+
+
 LOG_LIMIT = 1_000_000  # bytes; past this the log starts over, the last one kept as chatmon.log.old
 
 
@@ -1127,6 +1135,7 @@ def run() -> int:
         return 0
     if problem:
         print(f"{problem} Hooks won't reach Chatmon.", file=sys.stderr)
+    _find_fonts(app)
     companion = Companion(app, server, server_problem=problem)
     # Windows ending the session (logging off, shutting down) says so with aboutToQuit and then ends the app
     # there and then: nothing after app.exec() gets to run.
