@@ -9,3 +9,12 @@ Terminal=false
 Categories=Utility;
 Keywords=penguin;pet;companion;assistant;AI;agent;reminder;timer;
 StartupNotify=false
+Actions=show;quit;
+
+[Desktop Action show]
+Name=Bring out Chatmon
+Exec=chatmon
+
+[Desktop Action quit]
+Name=Quit Chatmon
+Exec=chatmon quit

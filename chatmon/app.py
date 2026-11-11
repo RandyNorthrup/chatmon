@@ -20,7 +20,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiAppli
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, events, heads_up, offline, paths, presence, reminders, report, styles, updates
+from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, events, heads_up, offline, paths, presence, reminders, report, styles, sysnotify, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -209,6 +209,8 @@ class Companion(QObject):
         self.tray.activated.connect(self._tray_clicked)
         self.tray.show()
         self.app.setWindowIcon(self.tray.icon())
+        if sys.platform.startswith("linux"):
+            QTimer.singleShot(60_000, self._no_tray_news)  # a minute in: a tray starting with the desktop is up by then
 
         self._watch_screen_lock()
         self._every(5_000, self._check_reminders)
@@ -306,9 +308,11 @@ class Companion(QObject):
             # Under a full-screen app: it waits for you, and the system's own notification says so now
             # (which follows your Do Not Disturb). macOS's needs a signed app: there it just waits.
             self._held = (self._held + [partial(self.alert, key, title, text, buttons)])[-5:]
-            if sys.platform != "darwin" and QSystemTrayIcon.supportsMessages():
-                # Only that something's waiting: the system keeps notifications (Action Center, a phone linked
-                # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
+            # Only that something's waiting: the system keeps notifications (Action Center, a phone linked
+            # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
+            if sys.platform.startswith("linux"):
+                sysnotify.send(title, "Chatmon has something for you.")  # tray or not
+            elif sys.platform != "darwin" and QSystemTrayIcon.supportsMessages():
                 self.tray.showMessage(title, "Chatmon has something for you.", QSystemTrayIcon.MessageIcon.Information, 10_000)
             return
         self._alert_key = key
@@ -368,6 +372,17 @@ class Companion(QObject):
                 self.stage.raise_above(False)
         if self._waiting:
             QTimer.singleShot(400, self._waiting.pop(0))
+
+    def _no_tray_news(self) -> None:
+        """No tray here (stock GNOME, without the AppIndicator extension): where the menu is, said once ever."""
+        if QSystemTrayIcon.isSystemTrayAvailable() or self.state.get("told_no_tray"):
+            return
+        if self.stage.message_visible() or self.ask_box.isVisible():
+            QTimer.singleShot(60_000, self._no_tray_news)  # not over something else
+            return
+        self.state.set("told_no_tray", True)
+        self.state.save()
+        self.say("No tray icon here", "My menu is on me: right-click me. After **Hide**, click me when I peek, or open Chatmon from your apps, to bring me back.", timeout_s=20)
 
     def _greet(self) -> None:
         if self.config_error:

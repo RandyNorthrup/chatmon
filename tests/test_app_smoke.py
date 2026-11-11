@@ -727,6 +727,9 @@ def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(com
     shown = []
     monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
     monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: shown.append((title, text)))
+    from chatmon import sysnotify
+
+    monkeypatch.setattr(sysnotify, "send", lambda title, text: shown.append((title, text)) or True)  # Linux: tray or not
     desk.why_quiet, desk.is_covered = "a full-screen game", True
     c._check_quiet()
     c.alert("reminder:x", "Reminder", "**Stretch**")
@@ -781,3 +784,16 @@ def test_quitting_while_a_system_update_check_runs_is_quiet(companion, monkeypat
     c._stop_update_checks()
     spin(0.3)
     assert c._update_procs == []
+
+
+def test_with_no_tray_it_says_once_where_its_menu_is(companion, monkeypatch):
+    from PyQt6.QtWidgets import QSystemTrayIcon
+
+    c = companion
+    monkeypatch.setattr(QSystemTrayIcon, "isSystemTrayAvailable", staticmethod(lambda: False))
+    c.stage.dismiss_message()
+    c._no_tray_news()
+    assert c.stage.bubble.title == "No tray icon here" and c.state.get("told_no_tray")
+    c.stage.dismiss_message()
+    c._no_tray_news()
+    assert not c.stage.message_visible()  # once ever
