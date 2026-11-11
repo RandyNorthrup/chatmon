@@ -226,3 +226,23 @@ def test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after():
     frames, t = run(b, t, t + 1)
     assert frames[0].anim == "walk" and frames[-1].x != frames[0].x  # the same walk, on its way again
     assert b._target in (target, None)
+
+
+def test_turning_walking_off_while_a_walk_waits_under_the_pointer_ends_it():
+    b = make(seed=3, sleep_after=0)
+    _, t = _until(b, 0, lambda f, b: f.anim == "walk")
+    b.hovered = True
+    _, t = run(b, t, t + 2)
+    b.set_walk(False, t)  # off while the walk waits
+    b.hovered = False
+    frames, _ = run(b, t, t + 120)
+    assert all(f.anim != "walk" for f in frames) and len({f.x for f in frames}) == 1  # it doesn't come back
+
+
+def test_with_walking_off_the_pointer_coming_and_going_never_starts_a_walk():
+    b = make(seed=3, sleep_after=0, walk=False)
+    t = 0.0
+    for _ in range(20):
+        b.hovered = not b.hovered
+        frames, t = run(b, t, t + 6)
+        assert all(f.anim != "walk" for f in frames)
