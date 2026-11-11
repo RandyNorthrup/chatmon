@@ -34,14 +34,15 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Qt's system libraries
         if: runner.os == 'Linux'
-        # The runner image has them already; apt makes sure. When the runner can't reach Ubuntu's archive (its
-        # DNS has failed for hours at a time), go on only if every one of them really is here.
+        # When the runner can't resolve Ubuntu's own archive hosts (their DNS has failed for hours at a time),
+        # kernel.org's mirror of it: apt checks Ubuntu's signatures on whatever it's served, from any mirror.
         run: |
-          if ! { sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3; }; then
-            echo "::warning::Ubuntu's archive is out of reach; using the libraries the runner image already has"
-            for lib in libEGL.so.1 libGL.so.1 libxkbcommon.so.0 libfontconfig.so.1 libdbus-1.so.3; do
-              ldconfig -p | grep -q "$lib" || { echo "$lib is missing"; exit 1; }
-            done
+          packages=(libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3)
+          if ! { sudo apt-get update && sudo apt-get install -y "${packages[@]}"; }; then
+            echo "::warning::Ubuntu's archive is out of reach; trying kernel.org's mirror of it"
+            sudo sed -i -E 's#https?://[a-z.]*ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources
+            sudo rm -f /etc/apt/apt-mirrors.txt
+            sudo apt-get update && sudo apt-get install -y "${packages[@]}"
           fi
       - run: python -m pip install PyQt6 psutil pytest
       - run: python -m pytest -q

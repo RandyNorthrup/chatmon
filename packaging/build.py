@@ -193,7 +193,15 @@ def macos() -> list[Path]:
     (dmg_root / "Applications").symlink_to("/Applications")
     dmg = DIST / f"Chatmon-{v}-macos-{arch}.dmg"
     dmg.unlink(missing_ok=True)
-    run("hdiutil", "create", "-volname", "Chatmon", "-srcfolder", dmg_root, "-ov", "-format", "UDZO", dmg)
+    # hdiutil can find what it just made "busy" for a moment (macOS indexing it): a few tries, a little apart.
+    for attempt in range(4):
+        try:
+            run("hdiutil", "create", "-volname", "Chatmon", "-srcfolder", dmg_root, "-ov", "-format", "UDZO", dmg)
+            break
+        except subprocess.CalledProcessError:
+            if attempt == 3:
+                raise
+            time.sleep(5 * (attempt + 1))
     for out in (pkg, dmg):
         print(f"{out}  {out.stat().st_size // 2**20} MB")
     return [pkg, dmg]
