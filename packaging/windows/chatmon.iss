@@ -1,5 +1,7 @@
 ; Chatmon's Windows installer (Inno Setup 6). packaging/build.py windows builds it:
 ;   ISCC /DAppVersion=x.y.z /DSourceDir=<PyInstaller's Chatmon folder> /DOutputDir=<folder> chatmon.iss
+; A release's is built signed (.github/workflows/packages.yml): /DSignWith=<name> /S<name>=<command $f>
+; has Inno Setup sign the uninstaller and the installer as it makes them.
 ;
 ; Installs for you alone (no administrator needed) or, if you choose, for everyone. Its choices:
 ; a Start menu entry, a desktop icon (off unless you tick it), chatmon on PATH for your coding agents'
@@ -46,6 +48,10 @@ SolidCompression=yes
 ChangesEnvironment=yes
 CloseApplications=yes
 RestartApplications=no
+#ifdef SignWith
+SignTool={#SignWith}
+SignedUninstaller=yes
+#endif
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

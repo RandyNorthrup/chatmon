@@ -19,6 +19,32 @@ quits it, and uninstalls it. When a release is published, it adds them all to th
 wheel and sdist; the release's tag has to match `chatmon/__init__.py`'s version. A pull request that
 touches `packaging/`, or running the workflow by hand, builds and checks them without publishing.
 
+## Signing (Windows)
+
+A release's Windows installer, and the uninstaller it puts beside Chatmon, are signed by Randy Northrup
+through Azure Artifact Signing, and timestamped, so they stay valid after the certificate expires.
+Windows then names Randy Northrup as their publisher. SmartScreen goes by reputation as well as by
+signature, and builds it for each new file as people download it, so a new version may still be asked
+about for a while; the prompt then names its publisher.
+
+The workflow's `sign-windows` job does it. It's the only job that can sign: Azure trusts GitHub's
+sign-in only from this repository's `release` environment, which only `v*` tags can use, and its identity
+may only sign with that one certificate profile. It runs nothing from PyPI and none of Chatmon: it takes
+the Chatmon the `windows` job froze, and Inno Setup builds the installer around it again, signing each of
+the two as it makes it. Another job then installs that installer, runs it, uninstalls it, and checks both
+signatures, before it's published.
+
+**`chatmon.exe` and `chatmonw.exe` aren't signed, on purpose.** PyInstaller's bootloader finds the
+Python it runs by searching its own file from the end. Windows leaves a file's certificate table out of
+what its signature covers ([CVE-2013-3900](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900);
+the stricter check is off unless you turn it on), so anyone could put their own code in a signed copy's
+table, where the bootloader would find it first and run it, while Windows still called the file signed
+by Randy Northrup. Inno Setup's installer reads its files from where a part its signature covers says
+they are, so it can't be led astray like that. SmartScreen asks only about downloaded files, so for most
+people the installer's signature is the one that counts. Smart App Control, on the Windows 11 computers
+that have it on, checks every program, and may block an unsigned one it doesn't know; signing them
+safely needs a bootloader that stops searching where the certificate table starts.
+
 ## Making them yourself
 
 On the platform you're building for, from the repository's root:
@@ -40,8 +66,7 @@ computer whose Chatmon you want to keep set up as it is.
 
 ## Not yet
 
-- **Signing.** The Windows installer and the macOS app aren't signed, so Windows SmartScreen and macOS
-  Gatekeeper ask the first time. Signing needs a code-signing certificate on Windows and an Apple
-  Developer ID (and notarization) on macOS.
+- **Signing on macOS.** The macOS app isn't signed, so Gatekeeper asks the first time. That needs an
+  Apple Developer ID, and notarization.
 - **Other Linux distributions**: pipx works on any of them (see the README).
 - Inno Setup is free for non-commercial use, which Chatmon is; a commercial fork would need its license.
