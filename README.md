@@ -101,9 +101,11 @@ Then start it the way you start anything else: the Start menu, Launchpad or Spot
 app menu (or `chatmon` in a terminal). On macOS it lives in the menu bar, not the Dock. The Linux
 packages run on your system's Python and PyQt6, which apt and dnf install along with them.
 
-The installers aren't signed yet, so the first time you'll be asked to trust them: on Windows,
-SmartScreen's **More info**, then **Run anyway**; on macOS, **System Settings → Privacy & Security →
-Open Anyway**. To uninstall: **Settings → Apps** on Windows, `sudo apt remove chatmon` or
+The Windows installer, and Chatmon's programs, are signed by Randy Northrup. For a while after a new
+version comes out, SmartScreen may still ask about it: check it names Randy Northrup, then **More info** and
+**Run anyway**. The macOS app isn't signed yet, so the first time, **System Settings → Privacy & Security →
+Open Anyway**. From 0.6.0 on, Chatmon updates itself: it says when a new version is ready, and installs it
+when you click **Update now**. To uninstall: **Settings → Apps** on Windows, `sudo apt remove chatmon` or
 `sudo dnf remove chatmon` on Linux, and on macOS drag Chatmon to the Trash (after a `.pkg`, also
 `sudo rm /usr/local/bin/chatmon`). Your settings stay, for next time.
 
