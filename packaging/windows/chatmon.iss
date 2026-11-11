@@ -95,6 +95,8 @@ Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: 
 
 [Run]
 Filename: "{app}\chatmonw.exe"; Description: "Start Chatmon now"; Flags: nowait postinstall skipifsilent
+; Chatmon updating itself runs this silently with /relaunch=1: it starts again once the update is in, as you.
+Filename: "{app}\chatmonw.exe"; Flags: nowait runasoriginaluser; Check: Relaunch
 
 [Code]
 const
@@ -123,6 +125,11 @@ begin
   if FileExists(ExpandConstant('{app}\chatmon.exe')) then
     if Exec(ExpandConstant('{app}\chatmon.exe'), 'quit', '', SW_HIDE, ewWaitUntilTerminated, Code) and (Code = 0) then
       Sleep(1500);
+end;
+
+function Relaunch: Boolean;
+begin
+  Result := ExpandConstant('{param:relaunch|0}') = '1';
 end;
 
 function PrepareToInstall(var NeedsRestart: Boolean): String;

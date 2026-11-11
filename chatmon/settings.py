@@ -21,6 +21,7 @@ DEFAULTS: dict[str, Any] = {
     "bubble_effects": True,
     "ai": {"brain": "auto", "timeout_seconds": 180, "brains": {}},
     "agents": {"show_replies": False},
+    "updates": {"check": True},
     "breaks": {"every_minutes": 60, "snooze_minutes": 10},
     "focus": {"minutes": 25},
     "heads_up": {
@@ -132,6 +133,12 @@ timeout_seconds = 180
 # Show the last words of an agent's reply when it finishes. Off by default:
 # replies can hold code or secrets you'd rather not have on screen.
 show_replies = false
+
+[updates]
+# Look for a new Chatmon once a day, download it, check it's the real one, and
+# ask before installing it. Only the request for the latest release is sent, to
+# GitHub. The menu's "Help & updates" overrides this.
+check = true
 
 [breaks]
 # Nudge you to take a break after this many minutes at the screen (0: off).

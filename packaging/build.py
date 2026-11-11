@@ -4,6 +4,7 @@
   python packaging/build.py macos     dist/Chatmon-<v>-macos-<arch>.pkg, .dmg    PyInstaller, pkgbuild, hdiutil
   python packaging/build.py linux     dist/chatmon_<v>-1_all.deb, -1.noarch.rpm nfpm, for the system's Python and PyQt6
   python packaging/build.py version   the version they're built as (chatmon/__init__.py's)
+  python packaging/build.py notes [V] a release's notes, from chatmon/changelog.md (gh release create --notes-file)
   python packaging/build.py smoke CLI APP [--version V]
       Start an installed Chatmon (APP), talk to it with its command line (CLI), and quit it, in a scratch
       home of its own and without a screen (Qt's offscreen platform).
@@ -34,6 +35,23 @@ BUNDLE_ID = "io.github.randynorthrup.chatmon"
 def version() -> str:
     text = (ROOT / "chatmon" / "__init__.py").read_text(encoding="utf-8")
     return re.search(r'__version__ = "([^"]+)"', text).group(1)
+
+
+def notes(v: str) -> str:
+    """A release's notes: its part of chatmon/changelog.md, then how to install it."""
+    sys.path.insert(0, str(ROOT))
+    from chatmon import changelog
+
+    release = changelog.find(v)
+    if release is None or not release.sections:
+        sys.exit(f"chatmon/changelog.md has nothing for {v}: write what's new in it first.")
+    return (
+        release.markdown("##")
+        + "\n\n## Install or update\n\n"
+        + "Chatmon 0.6.0 and later update themselves (**Help & updates** in the menu). Or download the installer for your "
+        + "computer below; `SHA256SUMS.txt` lists each file's checksum.\n\n"
+        + "```sh\npipx install --force git+https://github.com/RandyNorthrup/chatmon\n```\n"
+    )
 
 
 def run(*argv, **kwargs) -> subprocess.CompletedProcess:
@@ -294,6 +312,9 @@ def _output(home: Path, log: Path) -> str:
 def main(argv: list[str]) -> None:
     if argv == ["version"]:
         print(version())
+        return
+    if argv and argv[0] == "notes" and len(argv) <= 2:
+        print(notes(argv[1] if len(argv) == 2 else version()), end="")
         return
     if not argv or argv[0] not in ("windows", "macos", "linux", "smoke"):
         sys.exit(__doc__)

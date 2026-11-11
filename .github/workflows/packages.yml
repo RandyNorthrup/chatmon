@@ -36,6 +36,7 @@ jobs:
         run: |
           version=$(python packaging/build.py version)
           [ "$TAG" = "v$version" ] || { echo "Release $TAG, but chatmon/__init__.py says $version"; exit 1; }
+          python packaging/build.py notes "$version" > /dev/null  # what's new in it, which Chatmon shows after updating
       - run: python -m pip install build==1.6.1
       - run: python -m build
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -79,7 +80,7 @@ jobs:
         run: |
           tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select(any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')
           gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-windows-x64-setup.exe" --dir "$RUNNER_TEMP/last"
-      - name: Install the last release, then this one over it, run it, uninstall it
+      - name: Install the last release, update it to this one, run it, uninstall it
         shell: pwsh
         env:
           VERSION: ${{ steps.version.outputs.version }}
@@ -88,7 +89,20 @@ jobs:
           $p = Start-Process $last.FullName -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/TASKS=startmenu" -Wait -PassThru
           if ($p.ExitCode) { throw "$($last.Name) failed: $($p.ExitCode)" }
           Write-Host "Installed $($last.Name)"
-          ./packaging/windows/test-install.ps1 (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName $env:VERSION -Unsigned
+          # Then this one, as Chatmon's updater runs it: silently, as the last install was, and Chatmon starts again.
+          $env:QT_QPA_PLATFORM = "offscreen"
+          $setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName
+          $p = Start-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/relaunch=1" -Wait -PassThru
+          if ($p.ExitCode) { throw "Updating failed: $($p.ExitCode)" }
+          $app = Join-Path $env:LOCALAPPDATA "Programs\Chatmon"
+          for ($i = 0; $i -lt 30 -and -not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe"); $i++) { Start-Sleep 1 }
+          if (-not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe")) { throw "Chatmon didn't start again after updating" }
+          if ((& "$app\chatmon.exe" --version) -ne $env:VERSION) { throw "Not updated to $env:VERSION" }
+          & "$app\chatmon.exe" quit
+          for ($i = 0; $i -lt 30 -and (Get-Process chatmonw -ErrorAction SilentlyContinue); $i++) { Start-Sleep 1 }
+          Write-Host "Updated to $env:VERSION and started again"
+          Remove-Item Env:QT_QPA_PLATFORM
+          ./packaging/windows/test-install.ps1 $setup $env:VERSION -Unsigned
       - name: Keep the unsigned installer with the run
         if: github.event_name != 'release' && !startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -240,6 +254,12 @@ jobs:
         env:
           VERSION: ${{ needs.windows.outputs.version }}
         run: ./packaging/windows/test-install.ps1 (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName $env:VERSION
+      - name: Chatmon's own updater would install it
+        shell: pwsh
+        run: |
+          python -m pip install PyQt6==6.11.0 PyQt6-Qt6==6.11.2
+          $setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName
+          python -c "import sys; from pathlib import Path; from chatmon import updates; f = Path(sys.argv[1]); print(updates.windows_signer(f)); why = updates.verify(f, updates.sha256(f), updates.WINDOWS); sys.exit(why)" $setup
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: package-windows
@@ -344,5 +364,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}
         run: |
+          # Chatmon installs an update only if it matches its checksum here (and, on Windows, is signed).
+          (cd dist && sha256sum -- * > SHA256SUMS.txt && cat SHA256SUMS.txt)
           ls -l dist
           gh release upload "$TAG" dist/* --clobber --repo "$GITHUB_REPOSITORY"
