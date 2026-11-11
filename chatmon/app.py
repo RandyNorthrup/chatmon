@@ -4,6 +4,7 @@ keeps an eye on for you."""
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import signal
 import sys
@@ -20,7 +21,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiAppli
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, events, heads_up, paths, reminders, report, styles, updates
+from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, events, heads_up, offline, paths, reminders, report, styles, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -35,13 +36,28 @@ MATCH = "match"  # the bubble style that follows the companion
 HELP = """\
 **Click me** to ask anything, **drag me** anywhere, **right-click** for the menu.
 
-I also understand, without any AI:
-- *remind me in 20m to stretch* · *remind me at 3pm to call Sam*
-- *timer 10 min for the pasta* · *focus 50*
-- *status* — battery, disk, reminders
-- *hide* — I'll duck behind the taskbar and peek out now and then
-- *what's new* · *check for updates* · *report a problem*
+I also do plenty without any AI, like *remind me in 20m to stretch*, *timer 10 min*, *note: buy milk*,
+*5 km in miles* or *roll 2d6*. Ask me *help* to see it all.
 """
+
+HELP_ALL = """\
+**Without any AI** (nothing leaves your computer, and none of it goes in a chat):
+
+- **Reminders and timers:** *remind me in 20m to stretch* · *remind me at 3pm to call Sam* · *timer 10 min for the pasta* · *reminders* · *cancel reminder 2* · *clear reminders*
+- **Focus and breaks:** *focus 50* · *stop focus*
+- **Notes:** *note: buy milk* · *notes* · *delete note 2* · *clear notes*
+- **Stopwatch:** *stopwatch* · *stop stopwatch*
+- **Sums:** *2 + 2 * 3* · *15% of 80* · *sqrt(2)* · *calc 2^10*
+- **Units:** *5 km in miles* · *70 f to c* · *3 cups to ml* · *2 GB in MiB*
+- **Time and days:** *time* · *date* · *what week is it* · *days until Christmas* · *days until 2027-01-01*
+- **Chance:** *flip a coin* · *roll 2d6* · *random number between 1 and 10* · *pick one: tacos, sushi or pizza*
+- **Passwords:** *password* · *password 32*
+- **Your computer:** *status* (battery, disks, reminders, the brain in use)
+- **Me:** *hide* · *new chat* · *rename chat* · *history* · *what's new* · *check for updates* · *report a problem* · *version*
+
+Anything else goes to the AI you picked, under **Brain** in my menu.
+"""
+NO_AI = "Answered here, without any AI."
 
 
 class Background(QObject):
@@ -65,6 +81,15 @@ class Background(QObject):
         threading.Thread(target=go, daemon=True).start()
 
 
+def offline_clock(elapsed: float, seconds: bool = True) -> str:
+    """How long the stopwatch has run: "4:05", "1:02:09"; without `seconds`, "4 min", "1:02 h" (for the menu)."""
+    s = int(max(0, elapsed))
+    h, m, sec = s // 3600, s // 60 % 60, s % 60
+    if not seconds:
+        return f"{h}:{m:02d} h" if h else f"{m} min"
+    return f"{h}:{m:02d}:{sec:02d}" if h else f"{m}:{sec:02d}"
+
+
 def pretty(source: str) -> str:
     return PRETTY.get(source.lower(), source[:1].upper() + source[1:])
 
@@ -86,6 +111,7 @@ class Companion(QObject):
         self.attached: list[attachments.Attachment] = []  # for the next question
         self._asking: tuple[str, str, list[attachments.Attachment]] | None = None  # (chat id, question, attached), on its way
         self._renaming: str | None = None  # the chat whose new name the box is asking for
+        self._stopwatch: float | None = None  # when the stopwatch started (monotonic), while it runs
         self.agents: dict[str, tuple[str, float]] = {}  # source: (state, since)
         self._last_event: tuple[str, str] | None = None
         self._last_event_at = 0.0
@@ -700,13 +726,22 @@ class Companion(QObject):
             self.ask_box.entry.setText(text)
         self.ask_box.set_answer(self._transcript(f"**You:** {text}\n\n*Hmm, that didn't work.* {error}"), at_end=True)
 
+    def _offline(self, question: str, reply: str) -> None:
+        """An answer of Chatmon's own: shown under the chat, marked as such, and never part of it (no brain
+        sees it, and it isn't kept)."""
+        self.ask_box.set_answer(self._transcript(f"**You:** {question}\n\n{reply}\n\n*{NO_AI}*"), at_end=True)
+
     def _local(self, text: str) -> bool:
-        """Reminders, timers and the like, handled without any AI."""
+        """What Chatmon does by itself, without any AI: True if it was that. Anything else is the AI's."""
         now = self._now()
         command = reminders.parse_command(text, datetime.now())
+        if command is not None and command.kind == "unclear":
+            asked = re.match(r"^(?:please\s+)?remind me\b[\s,:]*(.*)$", text.strip(), re.I | re.S)
+            if asked and offline.reminder_or_question(asked.group(1)):
+                return False  # "remind me how decorators work": a question, not a reminder
         if command is not None:
             if command.kind == "unclear":
-                self.ask_box.set_answer("When should I remind you? Try *remind me in 20m to stretch* or *remind me at 3pm to call Sam*.")
+                self._offline(text, "When should I remind you? Try *remind me in 20m to stretch* or *remind me at 3pm to call Sam*.")
             elif command.kind == "focus":
                 self.ask_box.dismiss()
                 self.start_focus(command.minutes or float(self.config["focus"]["minutes"]))
@@ -715,14 +750,25 @@ class Companion(QObject):
                 self.save()
                 when = reminders.describe(r.due, time.time())
                 what = f"Timer set: **{r.text}**, done {when}." if r.kind == "timer" else f"I'll remind you {when}: **{r.text}**"
-                self.ask_box.set_answer(what)
+                self._offline(text, what)
                 self.behavior.react("hop", now)
+            return True
+        kept = offline.parse_kept(text)
+        if kept is not None:
+            self._offline(text, self._kept(kept))
+            return True
+        reply = offline.answer(text, datetime.now())
+        if reply is not None:
+            self._offline(text, reply)
             return True
         word = text.lower().strip(" ?!.")
         if word in ("help", "what can you do", "commands"):
-            self.ask_box.set_answer(HELP)
+            self._offline(text, HELP_ALL)
         elif word in ("status", "battery", "system status", "how's my computer"):
-            self.ask_box.set_answer(self._status())
+            self._offline(text, self._status())
+        elif word in ("stop focus", "end focus", "cancel focus"):
+            self.stop_focus()
+            self._offline(text, "Focus stopped.")
         elif word in ("hide", "go hide", "go away"):
             self.ask_box.dismiss()
             self.set_hidden(True)
@@ -744,10 +790,92 @@ class Companion(QObject):
             self.ask_box.set_answer("Opening an idea form in your browser…")
             self.report_problem(report.IDEA)
         elif word in ("version", "what version", "which version"):
-            self.ask_box.set_answer(f"I'm Chatmon {__version__}.")
+            self._offline(text, f"I'm Chatmon {__version__}.")
         else:
             return False
         return True
+
+    # -- notes, the stopwatch, and reminders by number
+
+    MAX_NOTES = 200
+    MAX_NOTE = 2000  # characters
+
+    def _notes(self) -> list[dict]:
+        notes = self.state.get("notes")
+        return [n for n in notes if isinstance(n, dict) and isinstance(n.get("text"), str)] if isinstance(notes, list) else []
+
+    def _kept(self, asked: offline.Asked) -> str:
+        """Notes, the stopwatch and reminders, which Chatmon keeps: do what's asked, say what was done."""
+        notes = self._notes()
+        upcoming = [r for r in self.reminders.upcoming() if r.kind != "focus"]
+        if asked.kind == "note":
+            if len(notes) >= self.MAX_NOTES:
+                return f"I keep {self.MAX_NOTES} notes at most: *delete note 1* makes room."
+            notes.append({"text": asked.arg[: self.MAX_NOTE], "at": time.time()})
+            self._set_notes(notes)
+            self.behavior.react("hop", self._now())
+            return f"Noted (note {len(notes)})."
+        if asked.kind == "notes":
+            return "\n".join(f"{i}. {n['text']}" for i, n in enumerate(notes, 1)) if notes else "No notes yet: *note: buy milk* makes one."
+        if asked.kind == "delete note":
+            i = int(asked.arg)
+            if not 1 <= i <= len(notes):
+                return f"There's no note {i}." + (f" You have {len(notes)}." if notes else "")
+            gone = notes.pop(i - 1)
+            self._set_notes(notes)
+            return f"Deleted note {i}: {gone['text'][:80]}"
+        if asked.kind == "clear notes":
+            self._set_notes([])
+            return f"Deleted {len(notes)} note{'s' if len(notes) != 1 else ''}."
+        if asked.kind == "stopwatch":
+            if self._stopwatch is None:
+                self._stopwatch = self._now()
+                self._menu_changed()
+                return "Stopwatch started. *stop stopwatch* stops it."
+            return f"Stopwatch: **{offline_clock(self._now() - self._stopwatch)}** and counting."
+        if asked.kind == "stop stopwatch":
+            if self._stopwatch is None:
+                return "The stopwatch isn't running: *stopwatch* starts it."
+            took, self._stopwatch = self._now() - self._stopwatch, None
+            self._menu_changed()
+            return f"Stopwatch stopped at **{offline_clock(took)}**."
+        if asked.kind == "reminders":
+            if not upcoming:
+                return "No reminders or timers set."
+            return "\n".join(f"{i}. {r.kind.capitalize()} {reminders.describe(r.due, time.time())}: {r.text}" for i, r in enumerate(upcoming, 1))
+        if asked.kind == "cancel reminder":
+            i = int(asked.arg)
+            if not 1 <= i <= len(upcoming):
+                return f"There's no reminder {i}: *reminders* lists them."
+            self._cancel(upcoming[i - 1].id)
+            return f"Cancelled: {upcoming[i - 1].text}"
+        if asked.kind == "clear reminders":
+            for r in upcoming:
+                self.reminders.cancel(r.id)
+            self.save()
+            return f"Cancelled {len(upcoming)} reminder{'s' if len(upcoming) != 1 else ''}."
+        return "Hmm."
+
+    def _set_notes(self, notes: list[dict]) -> None:
+        self.state.set("notes", notes)
+        self.state.save()
+        self._menu_changed()
+
+    def _copy(self, text: str) -> None:
+        """Onto the clipboard: the overlay's own, where Chatmon draws on one."""
+        if hasattr(self.stage.surface, "copy"):
+            self.stage.clipboard_copy(text)
+        else:
+            QGuiApplication.clipboard().setText(text)
+
+    def _notes_menu(self, sub: QMenu) -> None:
+        for i, note in enumerate(self._notes(), 1):
+            text = " ".join(note["text"].split())
+            item = sub.addMenu(f"{i}. {text[:48] + '…' if len(text) > 48 else text}")
+            item.addAction("Copy", partial(self._copy, note["text"]))
+            item.addAction("Delete", partial(self._kept, offline.Asked("delete note", str(i))))
+        sub.addSeparator()
+        sub.addAction("Add a note…", partial(self.open_ask, "note: "))
 
     def _status(self) -> str:
         lines = []
@@ -1188,7 +1316,13 @@ class Companion(QObject):
         now = time.time()
         focus = self.reminders.focus()
         left = max(1, round((focus.due - now) / 60)) if focus else None
-        return (left, tuple(reminders.describe(r.due, now) for r in self.reminders.upcoming() if r.kind != "focus"))
+        watch = offline_clock(self._now() - self._stopwatch, seconds=False) if self._stopwatch is not None else None
+        return (left, watch, tuple(reminders.describe(r.due, now) for r in self.reminders.upcoming() if r.kind != "focus"))
+
+    def _offline_in_box(self, words: str) -> None:
+        """Do something from the menu as if it were asked in the box, and show it there."""
+        self.open_ask()
+        self._local(words)
 
     def _fill_menu(self) -> None:
         self._menu_timer.stop()
@@ -1208,6 +1342,10 @@ class Companion(QObject):
             sub = m.addMenu("Focus timer")
             for minutes in sorted({15, 25, 50, int(self.config["focus"]["minutes"])}):
                 sub.addAction(f"{minutes} minutes", partial(self.start_focus, minutes))
+        if self._stopwatch is not None:
+            m.addAction(f"Stop the stopwatch ({offline_clock(self._now() - self._stopwatch, seconds=False)})", partial(self._offline_in_box, "stop stopwatch"))
+        notes = self._notes()
+        self._notes_menu(m.addMenu(f"Notes ({len(notes)})" if notes else "Notes"))
         upcoming = [r for r in self.reminders.upcoming() if r.kind != "focus"]
         if upcoming:
             sub = m.addMenu(f"Reminders ({len(upcoming)})")

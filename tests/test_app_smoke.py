@@ -614,3 +614,56 @@ def test_pasted_file_lists_are_capped_and_never_reach_network_paths(companion, t
     assert until(lambda: len(c.attached) == attachments.MAX_COUNT)
     spin(0.2)
     assert len(looked) == attachments.MAX_COUNT and not any(n.startswith(("//", "\\\\")) for n in looked)
+
+
+def test_offline_answers_are_marked_and_kept_out_of_the_chat(companion, monkeypatch):
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    c.submit("What's a good name for a cat?")
+    brain.answer("Mochi.")
+    c.submit("5 km in miles")
+    shown = c.ask_box.answer.toPlainText()
+    assert "3.107 miles" in shown and "without any AI" in shown and "Mochi." in shown  # under the chat
+    assert len(brain.asked) == 1 and len(c.chat.messages) == 2  # no brain asked, nothing added
+    c.submit("password")
+    assert len(c.chat.messages) == 2 and "password" not in c.chat_book.load(c.chat.id).markdown().lower()
+
+
+def test_a_question_that_only_sounds_like_a_command_goes_to_the_ai(companion, monkeypatch):
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    for question in ("remind me how python decorators work", "what is the capital of France?", "how do I set a timer in python"):
+        c.submit(question)
+        assert brain.asked[-1][1] == question
+    assert c.reminders.upcoming() == []
+
+
+def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
+    c = companion
+    c.open_ask()
+    c.submit("note: buy milk")
+    c.submit("note: call Sam")
+    assert [n["text"] for n in c.state.get("notes")] == ["buy milk", "call Sam"]
+    c.submit("notes")
+    shown = " ".join(c.ask_box.answer.toMarkdown().split())
+    assert "1. buy milk 2. call Sam" in shown  # a numbered list
+    c.submit("delete note 1")
+    assert [n["text"] for n in c.state.get("notes")] == ["call Sam"]
+    c._fill_menu()
+    labels = [a.text() for a in c.menu.actions()]
+    assert "Notes (1)" in labels
+    c.submit("stopwatch")
+    assert c._stopwatch is not None
+    c._fill_menu()
+    assert any(a.text().startswith("Stop the stopwatch") for a in c.menu.actions())
+    c.submit("stop stopwatch")
+    assert c._stopwatch is None and "Stopwatch stopped at" in c.ask_box.answer.toPlainText()
+    c.submit("remind me in 30m to stretch")
+    c.submit("timer 10 min for the pasta")
+    c.submit("reminders")
+    listed = " ".join(c.ask_box.answer.toMarkdown().split())
+    assert "1. Timer" in listed and "2. Reminder" in listed
+    c.submit("cancel reminder 1")
+    assert [r.text for r in c.reminders.upcoming()] == ["stretch"]
