@@ -78,6 +78,13 @@ class StageWindow(QWidget):
             self._covered = on
             self.setVisible(not on)
 
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        if QGuiApplication.platformName() == "cocoa":  # every Space, not full-screen apps' (macnative.py)
+            from . import macnative
+
+            macnative.float_everywhere(self)
+
     def set_screen(self, screen: QScreen, geometry: QRect) -> None:
         self.setGeometry(geometry)
         if not self.isVisible() and not self._covered:

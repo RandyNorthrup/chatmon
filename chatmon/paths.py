@@ -6,6 +6,7 @@ from __future__ import annotations
 import getpass
 import os
 import shutil
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -135,6 +136,41 @@ def which(name: str) -> str | None:
     found = shutil.which(name)
     _found[key] = (now, found)
     return found
+
+
+# Variables a login shell sets that are its own, or this moment's, not the environment a program should get.
+_SHELL_ONLY = {"PWD", "OLDPWD", "SHLVL", "_", "PS1", "PS2", "PROMPT", "RPROMPT", "TERM", "TERM_PROGRAM", "TERM_SESSION_ID", "COLUMNS", "LINES"}
+
+
+def login_environment(timeout: float = 4.0) -> list[str]:
+    """macOS: an app started from Finder, the Dock or at login gets launchd's bare PATH (/usr/bin:/bin:...) and
+    none of what your shell sets, so AI tools in /opt/homebrew/bin, ~/.local/bin or npm's folder aren't found,
+    and API keys set in ~/.zshrc aren't seen. Take your login shell's environment, as a terminal would have
+    it, without changing anything already set; failing that, the usual folders on PATH. Returns the names set."""
+    if sys.platform != "darwin":
+        return []
+    shell = os.environ.get("SHELL") or "/bin/zsh"
+    found: dict[str, str] = {}
+    if os.path.isabs(shell) and os.access(shell, os.X_OK):
+        try:
+            out = subprocess.run([shell, "-l", "-i", "-c", "/usr/bin/env -0"], capture_output=True, timeout=timeout, stdin=subprocess.DEVNULL)
+            for item in out.stdout.split(b"\0"):
+                name, eq, value = item.partition(b"=")
+                if eq and name and not name.startswith(b"\n"):
+                    found[name.decode("utf-8", "replace")] = value.decode("utf-8", "replace")
+        except (OSError, subprocess.SubprocessError):
+            pass
+    usual = ["/opt/homebrew/bin", "/usr/local/bin", str(Path.home() / ".local" / "bin"), str(Path.home() / ".npm-global" / "bin")]
+    path = found.get("PATH") or os.pathsep.join([*usual, os.environ.get("PATH", "")])
+    adopted = []
+    if path != os.environ.get("PATH"):
+        os.environ["PATH"] = os.pathsep.join(dict.fromkeys(p for p in path.split(os.pathsep) + os.environ.get("PATH", "").split(os.pathsep) if p))
+        adopted.append("PATH")
+    for name, value in found.items():
+        if name not in os.environ and name not in _SHELL_ONLY:
+            os.environ[name] = value
+            adopted.append(name)
+    return adopted
 
 
 def frozen() -> bool:

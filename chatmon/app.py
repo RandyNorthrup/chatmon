@@ -1392,7 +1392,9 @@ class Companion(QObject):
             self._menu_timer.start(0)
 
     def _tray_clicked(self, reason) -> None:
-        if reason == QSystemTrayIcon.ActivationReason.Trigger:
+        # On macOS opening the menu-bar menu is a Trigger too (Qt says so as the menu starts): there the menu's
+        # own Hide / Come out does it.
+        if reason == QSystemTrayIcon.ActivationReason.Trigger and sys.platform != "darwin":
             self.set_hidden(not self.behavior.hidden)
 
     def _menu_changed(self) -> None:
@@ -1868,6 +1870,10 @@ def run() -> int:
     if sys.platform.startswith("linux") and os.environ.get("XDG_SESSION_TYPE") == "wayland" and os.environ.get("DISPLAY") and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "xcb"
     _log_without_a_console()
+    if sys.platform == "darwin":
+        os.environ.setdefault("QT_MAC_SET_RAISE_PROCESS", "0")  # raising a window mustn't make Chatmon the active app
+        if not os.environ.get("TERM_PROGRAM"):  # started from Finder, the Dock or at login, not a terminal
+            paths.login_environment()
     # PyQt aborts the whole app on an exception that escapes a slot; log it and carry on instead.
     sys.excepthook = _log_exception
     reached = events.deliver({"type": "show"})

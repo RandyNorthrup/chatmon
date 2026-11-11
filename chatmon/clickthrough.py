@@ -100,6 +100,21 @@ class PointerToggle:
         pass
 
 
+class MacPointerToggle(PointerToggle):
+    """macOS: the same, with the window's own setIgnoresMouseEvents:, not Qt's flag (which has Qt set the whole
+    window up again, its Spaces too, each time)."""
+
+    def _accept(self, accepting: bool) -> None:
+        if accepting == self._accepting:
+            return
+        from . import macnative
+
+        if macnative.ignore_mouse(self._widget, not accepting):
+            self._accepting = accepting
+        else:
+            super()._accept(accepting)
+
+
 GWL_EXSTYLE = -20
 WS_EX_TRANSPARENT = 0x20  # on a layered window: every click goes through it, to the window below
 
@@ -169,5 +184,5 @@ def for_window(widget: QWidget):
     if platform == "windows":
         return WindowsPointerToggle(widget)
     if platform == "cocoa":
-        return PointerToggle(widget)
+        return MacPointerToggle(widget)
     return MaskInput(widget)

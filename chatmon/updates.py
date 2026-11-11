@@ -77,7 +77,9 @@ def install_kind() -> str:
     if paths.frozen():
         if sys.platform == "win32" and (Path(sys.executable).parent / "unins000.exe").exists():
             return WINDOWS
-        if sys.platform == "darwin":
+        # Only the one in Applications, where the .pkg installs it (a copy run from elsewhere would get a
+        # second Chatmon in Applications, and not be updated itself).
+        if sys.platform == "darwin" and Path(sys.executable).resolve().is_relative_to("/Applications/Chatmon.app"):
             return MACOS
         return MANUAL
     package = Path(__file__).resolve().parent

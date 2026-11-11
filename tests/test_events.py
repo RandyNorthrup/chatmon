@@ -215,3 +215,39 @@ def test_a_full_queue_of_connections_is_waited_out_not_taken_for_absence(monkeyp
     started = time.monotonic()
     monkeypatch.setattr(paths, "server_name", lambda: str(folder / "nobody.sock"))
     assert events.deliver({"type": "say", "text": "hi"}) == events.ABSENT and time.monotonic() - started < 0.5
+
+
+def test_a_mac_app_started_from_finder_gets_your_login_shells_environment(tmp_path, monkeypatch):
+    """launchd gives it /usr/bin:/bin and no keys; your shell would have /opt/homebrew/bin and OPENAI_API_KEY."""
+    import sys
+
+    if sys.platform == "win32":
+        pytest.skip("a pretend shell script: not on Windows")
+    from chatmon import paths
+
+    shell = tmp_path / "zsh"
+    shell.write_text("#!/bin/sh\nprintf 'PATH=/opt/homebrew/bin:/usr/bin:/bin\\0OPENAI_API_KEY=from-zshrc\\0HOME=/elsewhere\\0PWD=/somewhere\\0'\n")
+    shell.chmod(0o755)
+    monkeypatch.setattr(paths.sys, "platform", "darwin")
+    monkeypatch.setenv("SHELL", str(shell))
+    monkeypatch.setenv("PATH", "/usr/bin:/bin")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    adopted = paths.login_environment()
+    import os
+
+    assert os.environ["PATH"].split(os.pathsep)[0] == "/opt/homebrew/bin" and "/usr/bin" in os.environ["PATH"]
+    assert os.environ["OPENAI_API_KEY"] == "from-zshrc" and os.environ["HOME"] == str(tmp_path)  # nothing set is changed
+    assert "PWD" not in adopted and "OPENAI_API_KEY" in adopted
+
+
+def test_without_an_answer_from_the_shell_the_usual_folders(tmp_path, monkeypatch):
+    from chatmon import paths
+
+    monkeypatch.setattr(paths.sys, "platform", "darwin")
+    monkeypatch.setenv("SHELL", str(tmp_path / "no-such-shell"))
+    monkeypatch.setenv("PATH", "/usr/bin:/bin")
+    paths.login_environment()
+    import os
+
+    assert os.environ["PATH"].startswith("/opt/homebrew/bin" + os.pathsep + "/usr/local/bin")
