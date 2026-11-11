@@ -87,6 +87,7 @@ class Behavior:
         self.lift = 0.0
         self.stance = "front"
         self.held = self.falling = False
+        self.hovered = False  # the pointer is over it: a walk waits, standing, until the pointer leaves
         self.hidden = self.alert = self.talking = self.thinking = self.attending = False
         self.working_since: float | None = None
         self.asleep = False
@@ -204,6 +205,9 @@ class Behavior:
         if wanted != self.mood and (not self._clip.reaction or wanted in ("alert", "hidden")):
             self._plan(wanted, now)
         clip = self._clip
+        if clip.anim == "walk" and self.hovered:
+            self._clip_start += dt  # the walk's own clock waits too: it carries on where it stopped
+            return Frame("idle", 0, clip.mirror, self.x, self.lift)
         if clip.anim == "walk" and self._target is not None:
             step = self.speed * dt
             if abs(self._target - self.x) <= step:

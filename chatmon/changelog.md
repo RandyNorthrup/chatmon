@@ -5,6 +5,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 ## 0.7.0
 
 ### Changes
+- The chatmon stops walking while the pointer is over it, so it's easy to click, and carries on when the pointer leaves.
 - **Linux:** the app's entry has **Bring out Chatmon** and **Quit Chatmon** in the launcher and dock.
 - **Linux:** in power-saver mode, the chatmon draws less often.
 - **Linux:** waiting updates are counted through PackageKit on systems whose package manager Chatmon doesn't ask itself.

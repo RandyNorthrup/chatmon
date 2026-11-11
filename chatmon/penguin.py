@@ -845,6 +845,7 @@ class Stage(QObject):
         if self._press is None:
             hover = self._target_at(pos.toPoint())
             self.bubble.hover = hover if isinstance(hover, int) else None
+            self.behavior.hovered = hover == "penguin"
             return
         if self._press_on != "penguin":
             return
@@ -880,6 +881,7 @@ class Stage(QObject):
 
     def pointer_left(self) -> None:
         self.bubble.hover = None
+        self.behavior.hovered = False
 
     def _set_cursor(self, shape: str) -> None:
         set_cursor = getattr(self.surface, "set_cursor", None)

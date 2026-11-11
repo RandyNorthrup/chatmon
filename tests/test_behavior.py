@@ -213,3 +213,16 @@ def test_turning_walking_off_cancels_a_walk_still_queued_behind_its_turn():
     b.set_walk(False, t)
     frames, _ = run(b, t, t + 60)
     assert all(f.anim != "walk" for f in frames)
+
+
+def test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after():
+    b = make(seed=3, sleep_after=0)
+    f, t = _until(b, 0, lambda f, b: f.anim == "walk")
+    target = b._target
+    b.hovered = True
+    frames, t = run(b, t, t + 5)
+    assert all(f.anim == "idle" for f in frames) and len({f.x for f in frames}) == 1  # standing, where it was
+    b.hovered = False
+    frames, t = run(b, t, t + 1)
+    assert frames[0].anim == "walk" and frames[-1].x != frames[0].x  # the same walk, on its way again
+    assert b._target in (target, None)
