@@ -83,3 +83,10 @@ def test_a_full_screen_app_over_the_chatmon_is_seen(cocoa):
         other.wait(10)
     assert _until(cocoa, lambda: not macnative.full_screen_over(view), 12)
     stage.close()
+
+
+def test_the_login_item_says_how_it_stands(cocoa):
+    """Only asked, never changed, here: run from source, the main bundle is Python's, not Chatmon.app."""
+    from chatmon import macnative
+
+    assert macnative.login_item() in (macnative.NOT_REGISTERED, macnative.ENABLED, macnative.REQUIRES_APPROVAL, macnative.NOT_FOUND)

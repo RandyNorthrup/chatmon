@@ -9,6 +9,7 @@
 - Chatmon becomes the active app only when you open the ask box, never when a bubble shows.
 - Whether a full-screen app is over the chatmon's screen, from CoreGraphics' window list: bounds, layers and
   owners only, which need no Screen Recording permission (titles and contents would).
+- Starting at login as a login item of its own (SMAppService), not an unattributed LaunchAgent.
 """
 
 from __future__ import annotations
@@ -42,6 +43,9 @@ class _ObjC:
         self.obj = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> id
         self.ulong = ctypes.CFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> NSUInteger
         self.long = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> NSInteger
+        self.text = ctypes.CFUNCTYPE(ctypes.c_char_p, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> const char *
+        # -> BOOL, taking an NSError ** to fill in
+        self.ok = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))(send)
         self.set_ulong = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong)(send)
         self.set_bool = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_bool)(send)
         self.responds = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)
@@ -223,3 +227,43 @@ def fills_from_top(screen: tuple[float, float, float, float], windows: list[Wind
             return True
     return False
 
+
+# -- Starting at login (macOS 13): Chatmon.app itself as a login item, through SMAppService. It's listed by name
+#    in System Settings › General › Login Items, where turning it off is seen in Chatmon's menu too; a
+#    LaunchAgent is only an unattributed background item there. It works with Chatmon's ad hoc signature, and a
+#    registration outlasts an update to a newly signed build (both checked on macOS 15).
+#    https://developer.apple.com/documentation/servicemanagement/smappservice/mainapp
+
+NOT_REGISTERED, ENABLED, REQUIRES_APPROVAL, NOT_FOUND = 0, 1, 2, 3  # SMAppService.Status
+
+
+def _main_app_service() -> tuple[_ObjC | None, int]:
+    rt = _rt()
+    if rt is None:
+        return None, 0
+    try:
+        ctypes.cdll.LoadLibrary("/System/Library/Frameworks/ServiceManagement.framework/ServiceManagement")
+    except OSError:
+        return None, 0
+    cls = rt.cls("SMAppService")  # nil before macOS 13
+    service = rt.obj(cls, rt.sel("mainAppService")) if cls else 0
+    return (rt, service) if service else (None, 0)
+
+
+def login_item() -> int | None:
+    """The app's login item: one of the statuses above, or None where there's no SMAppService."""
+    rt, service = _main_app_service()
+    return rt.long(service, rt.sel("status")) if rt else None
+
+
+def set_login_item(on: bool) -> str | None:
+    """Make the app a login item, or stop it being one. None if done, else why it wasn't."""
+    rt, service = _main_app_service()
+    if rt is None:
+        return "this macOS has no SMAppService"
+    error = ctypes.c_void_p()
+    if rt.ok(service, rt.sel("registerAndReturnError:" if on else "unregisterAndReturnError:"), ctypes.byref(error)):
+        return None
+    described = rt.obj(error.value, rt.sel("localizedDescription")) if error.value else 0
+    text = rt.text(described, rt.sel("UTF8String")) if described else None
+    return text.decode("utf-8", "replace") if text else "macOS didn't say why"

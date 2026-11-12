@@ -1,5 +1,6 @@
-"""Start the companion when you log in: a .desktop file on Linux, a
-LaunchAgent on macOS, a Run key in the registry on Windows."""
+"""Start the companion when you log in: a .desktop file on Linux, a Run key in the registry on Windows. On
+macOS, Chatmon.app is a login item of its own (SMAppService, macnative.py), listed by name in System Settings ›
+General › Login Items and turned off there or here alike; run from source or pip, a LaunchAgent starts it."""
 
 from __future__ import annotations
 
@@ -52,9 +53,21 @@ def _launch_agent(label: str = _LABEL) -> Path:
     return Path.home() / "Library" / "LaunchAgents" / f"{label}.plist"
 
 
+def _login_item() -> int | None:
+    """Chatmon.app's login item status (macnative's), when this is Chatmon.app on macOS 13 or later; else None.
+    Run from source or pip, there's no app of its own to be one: the main bundle would be Python's."""
+    if sys.platform != "darwin" or not paths.frozen() or ".app/Contents/MacOS/" not in sys.executable:
+        return None
+    from . import macnative
+
+    return macnative.login_item()
+
+
 def where() -> str:
     if sys.platform == "win32":
         return f"HKEY_CURRENT_USER\\{_RUN_KEY}\\{_NAME}"
+    if _login_item() is not None:
+        return "Login Items, in System Settings › General"
     return str(_launch_agent() if sys.platform == "darwin" else _desktop_file())
 
 
@@ -69,7 +82,9 @@ def enabled() -> bool:
         except OSError:
             return False
     if sys.platform == "darwin":
-        return _launch_agent().exists()
+        from . import macnative
+
+        return _login_item() == macnative.ENABLED or _launch_agent().exists()
     return _desktop_file().exists() or _desktop_file(paths.APP).exists()
 
 
@@ -96,8 +111,15 @@ def migrate() -> bool:
 
 
 def refresh() -> bool:
-    """On Windows, autostart turned on before there was chatmonw runs chatmon.exe, which opens a console
-    window at every login and keeps it open: run Chatmon without one instead. Returns whether it did."""
+    """Bring starting at login up to date, as it starts. On Windows, autostart turned on before there was
+    chatmonw runs chatmon.exe, which opens a console window at every login and keeps it open: run Chatmon
+    without one instead. On macOS, Chatmon.app started by an older version's LaunchAgent becomes a login item
+    of its own instead. Returns whether it changed anything."""
+    if sys.platform == "darwin":
+        if _login_item() is None or not _launch_agent().exists():
+            return False
+        set_enabled(True)
+        return not _launch_agent().exists()
     if sys.platform != "win32":
         return False
     import winreg
@@ -129,6 +151,19 @@ def set_enabled(on: bool) -> None:
                 except OSError:
                     pass
         return
+    if _login_item() is not None:  # Chatmon.app on macOS 13 or later
+        from . import macnative
+
+        if not on:
+            if _login_item() in (macnative.ENABLED, macnative.REQUIRES_APPROVAL):
+                macnative.set_login_item(False)
+            _launch_agent().unlink(missing_ok=True)
+            return
+        problem = macnative.set_login_item(True)
+        if problem is None:
+            _launch_agent().unlink(missing_ok=True)  # an older version's: starting once at login is enough
+            return
+        print(f"{paths.APP}: couldn't add Chatmon to Login Items ({problem}), so a LaunchAgent starts it", file=sys.stderr)
     path = _launch_agent() if sys.platform == "darwin" else _desktop_file()
     if not on:
         path.unlink(missing_ok=True)

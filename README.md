@@ -135,7 +135,9 @@ battery levels on Windows and macOS, also install `psutil`.
 
 The first time, it asks what it should be called. Right-click it and tick **Start when I log in** to keep
 it around. On Windows that starts `chatmonw`, which installs alongside `chatmon` and runs it without a
-console window; run that way, Chatmon writes any problems to `chatmon.log` in its state folder.
+console window; run that way, Chatmon writes any problems to `chatmon.log` in its state folder. On macOS,
+Chatmon.app becomes one of your Login Items, listed by name in System Settings › General › Login Items,
+where you can turn it off too (run from source or pip, a LaunchAgent starts it instead).
 
 <details>
 <summary><b>Coming from Penguin companion</b></summary>
