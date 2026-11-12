@@ -208,6 +208,7 @@ class Companion(QObject):
         self._refresh_next: bool | None = None  # asked again meanwhile: whether that look migrates too
         self._agents_seen = float("-inf")  # when the last look came back
         self._offer_due = False  # an offer to connect agents waits for the screen to be clear
+        self._offered: set[str] = set()  # agents offered since Chatmon started; unanswered, they're asked again next time
         self._renamed = paths.first_run_since_rename()  # Penguin companion became Chatmon
         self.background = Background()
         self.updater = updates.Updater(self.background, self)
@@ -1946,39 +1947,43 @@ class Companion(QObject):
     OFFER_AGAIN_MS = 30_000  # something's on screen: offer again this much later
 
     def _offer_agents(self) -> None:
-        """What's new about the agents here, said once each with a button that does something about it: agents
-        found that Chatmon hasn't asked about yet, offered together (connected, they tell your chatmon what
-        they're doing), and an agent that was connected and has since been switched off, as Claude Code does to
-        the plugin when a window open from before it was connected saves its settings. What was last seen of
-        each is kept (state's "agent_status"), so nothing is asked twice. Waits while something is on screen,
-        and never while the agents can't reach Chatmon anyway."""
+        """What's new about the agents here, said with a button that does something about it: agents found that
+        Chatmon hasn't asked about yet, offered together (connected, they tell your chatmon what they're doing),
+        and an agent that was connected and has since been switched off, as Claude Code does to the plugin when a
+        window open from before it was connected saves its settings. An answer is kept (state's "agent_status"
+        holds what was last seen of each), so nothing answered is asked again; a bubble that went unanswered
+        (you were away, or closed it) is asked again the next time Chatmon starts, never twice in one run.
+        Waits while something is on screen, and never while the agents can't reach Chatmon anyway."""
         status = self._agent_status
         if not status or self.server_problem:
             return
         before = dict(self.state.get("agent_status") or {})
         new = [a for a in agents.AGENTS if status.get(a.name) == "found" and a.name not in before]
         off = [a for a in agents.AGENTS if status.get(a.name) == "installed but off" and before.get(a.name) == "connected"]
-        waiting = {a.name for a in new + off}
-        seen = {**before, **{name: state for name, state in status.items() if state != "not found" and name not in waiting}}
-        busy = self._asking_name or self._alert_key is not None or self._menu_open or self.ask_box.isVisible() or self.stage.message_visible()
-        # One bubble at a time, switched off first: whatever else is waiting is said on a later look.
-        shown = [] if busy else (off or new)
-        seen.update({a.name: status[a.name] for a in shown})
+        unanswered = {a.name for a in new + off}  # kept out of what's seen until there's an answer
+        seen = {**before, **{name: state for name, state in status.items() if state != "not found" and name not in unanswered}}
         if seen != before:
             self.state.set("agent_status", seen)
             self.state.save()
-        if waiting - {a.name for a in shown} and not self._offer_due:
+        new = [a for a in new if a.name not in self._offered]
+        off = [a for a in off if a.name not in self._offered]
+        busy = self._asking_name or self._alert_key is not None or self._menu_open or self.ask_box.isVisible() or self.stage.message_visible()
+        # One bubble at a time, switched off first: whatever else is waiting is said on a later look.
+        shown = [] if busy else (off or new)
+        self._offered |= {a.name for a in shown}
+        if {a.name for a in new + off} - self._offered and not self._offer_due:
             self._offer_due = True
             QTimer.singleShot(self.OFFER_AGAIN_MS, self._offer_agents_again)
         if not shown:
             return
+        answered = {a.name: status[a.name] for a in shown}
         if off:
             label = off[0].label if len(off) == 1 else "An agent"
             self.say(
                 f"{label} switched me off",
                 f"My plugin in {listed([a.label for a in off])} is off now. A window that was open when you connected it "
                 "may have saved its settings over mine. Switch it back on?",
-                [("Switch on", partial(self._connect_agents, off)), ("Leave it off", None)],
+                [("Switch on", partial(self._offer_answered, answered, off)), ("Leave it off", partial(self._offer_answered, answered, []))],
                 timeout_s=60,
             )
         else:
@@ -1988,9 +1993,16 @@ class Companion(QObject):
                 f"I found {listed([f'**{a.label}**' for a in new])} here. Connect {'it' if one else 'them'}, and I'll show you "
                 f"when {'it is' if one else 'they are'} working, when {'it needs' if one else 'they need'} you, and when "
                 f"{'it is' if one else 'they are'} done. You can change this any time under **AI agents** in my menu.",
-                [("Connect", partial(self._connect_agents, new)), ("Not now", None)],
+                [("Connect", partial(self._offer_answered, answered, new)), ("Not now", partial(self._offer_answered, answered, []))],
                 timeout_s=60,
             )
+
+    def _offer_answered(self, answered: dict[str, str], chosen: list[agents.Agent]) -> None:
+        """An offer was answered: keep that it was (so it isn't asked again), and connect what was chosen."""
+        self.state.set("agent_status", {**(self.state.get("agent_status") or {}), **answered})
+        self.state.save()
+        if chosen:
+            self._connect_agents(chosen)
 
     def _offer_agents_again(self) -> None:
         self._offer_due = False

@@ -2,11 +2,11 @@
 
 Each version's changes, newest first: what Chatmon shows after it updates, and each release's notes.
 
-## 0.8.1
+## 0.9.0
 
 ### New
-- **Your chatmon offers to connect the coding agents it finds**, once each: a bubble naming them, with **Connect** and **Not now**. Agents you install later are offered when they turn up. **AI agents** in the menu still changes them any time.
-- **Windows:** the installer can connect the coding agents it finds (**Connect the coding agents found here**, under **Coding agents**). An update installing itself never connects one.
+- **Your chatmon offers to connect the coding agents it finds**: a bubble naming them, with **Connect** and **Not now**. Once you've answered, it doesn't ask again; if you were away and the bubble went unanswered, it asks next time Chatmon starts. Agents you install later are offered when they turn up. **AI agents** in the menu still changes them any time.
+- **Windows:** the installer can connect the coding agents it finds (**Connect the coding agents found here**, under the PATH choice; off unless you tick it). An update installing itself never connects one.
 - When Claude Code switches Chatmon's plugin off after it was connected (a window that was open when you connected it saves its settings over the plugin's), your chatmon says so once, with **Switch on**.
 
 ### Fixes

@@ -5,8 +5,9 @@
 ;
 ; Installs for you alone (no administrator needed) or, if you choose, for everyone. Its choices:
 ; a Start menu entry, a desktop icon (off unless you tick it), chatmon on PATH for your coding agents'
-; hooks, connecting the agents found here, and starting at login. Uninstalling takes all of them back out,
-; disconnecting the agents connected to it too (however they were connected), and leaves your settings.
+; hooks, connecting the agents found here (off unless you tick it), and starting at login. Uninstalling
+; takes all of them back out, disconnecting the agents connected to it too (however they were connected),
+; and leaves your settings.
 
 #ifndef AppVersion
   #error Pass the version: /DAppVersion=x.y.z
@@ -61,9 +62,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "startmenu"; Description: "Add Chatmon to the &Start menu"; GroupDescription: "Shortcuts:"
 Name: "desktop"; Description: "Put a Chatmon icon on the &desktop"; GroupDescription: "Shortcuts:"; Flags: unchecked
 Name: "path"; Description: "Let my coding agents' hooks run chatmon (adds it to &PATH)"; GroupDescription: "Coding agents:"
-; Needs the one above: hooks run chatmon by name. Never in a silent install (Chatmon updating itself): connecting
-; an agent is something you choose, and an update mustn't connect one you left off.
-Name: "agents"; Description: "&Connect the coding agents found here (Claude Code, Codex, Gemini CLI...), so my chatmon reacts while they work"; GroupDescription: "Coding agents:"
+; Under the one above, since hooks run chatmon by name: unticking PATH unticks it. Off unless you tick it, and not
+; ticked along with PATH (dontinheritcheck): connecting an agent is something you choose, and Chatmon offers it
+; itself on its first run. Never in a silent install (Chatmon updating itself), so an update can't connect one
+; you left off.
+Name: "path\agents"; Description: "&Connect the coding agents found here (Claude Code, Codex, Gemini CLI...), so my chatmon reacts while they work"; Flags: unchecked dontinheritcheck
 ; Not in an install for everyone: there it would be the administrator's login it changed, not yours (Chatmon's
 ; own menu turns it on for whoever uses it).
 Name: "autostart"; Description: "Start Chatmon when I &log in"; GroupDescription: "Starting:"; Flags: unchecked; Check: not IsAdminInstallMode
@@ -163,7 +166,7 @@ begin
       AddToPath(EnvRoot, EnvKey, ExpandConstant('{app}'))
     else
       RemoveFromPath(EnvRoot, EnvKey, ExpandConstant('{app}'));
-    if WizardIsTaskSelected('path') and WizardIsTaskSelected('agents') and not WizardSilent then
+    if WizardIsTaskSelected('path\agents') and not WizardSilent then
       ConnectAgents;
   end;
 end;

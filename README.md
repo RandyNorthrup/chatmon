@@ -107,7 +107,9 @@ version comes out, SmartScreen may still ask about it: check it names Randy Nort
 Open Anyway**. From 0.6.0 on, Chatmon updates itself: it says when a new version is ready, and installs it
 when you click **Update now**. To uninstall: **Settings → Apps** on Windows, `sudo apt remove chatmon` or
 `sudo dnf remove chatmon` on Linux, and on macOS drag Chatmon to the Trash (after a `.pkg`, also
-`sudo rm /usr/local/bin/chatmon`). Your settings stay, for next time.
+`sudo rm /usr/local/bin/chatmon`). Your settings stay, for next time. On Linux and macOS, run
+`chatmon hooks disconnect all` first if you connected any coding agents, so none is left running a chatmon
+that's gone; the Windows uninstaller does that itself.
 
 ### With Python instead
 
@@ -242,9 +244,10 @@ follow their tools' documented options.
 
 ## AI agents: let them tell your chatmon what they're doing
 
-Your chatmon offers to connect the agents it finds, once each: a bubble with **Connect** and **Not now**.
-The Windows installer can connect them as it installs (**Connect the coding agents found here**). After
-that, right-click your chatmon, open **AI agents**, and tick or untick the ones you use; or from a terminal:
+Your chatmon offers to connect the agents it finds: a bubble with **Connect** and **Not now**, asked again
+only if it went unanswered. The Windows installer can connect them as it installs, if you tick **Connect
+the coding agents found here**. After that, right-click your chatmon, open **AI agents**, and tick or
+untick the ones you use; or from a terminal:
 
 ```sh
 chatmon hooks                 # what's here and what's connected
@@ -323,7 +326,9 @@ details.
   old name), refuses to edit a file it can't parse, never replaces something of yours (Codex allows only
   one `notify` program, Cline one script per event), and comes out again with `hooks disconnect`.
   Uninstalling Chatmon on Windows disconnects every agent connected to it, so none is left running a
-  chatmon that's gone.
+  chatmon that's gone. It does that as the account that runs the uninstaller: if Chatmon was installed for
+  everyone and another account approves the uninstall, run `chatmon hooks disconnect all` as yourself
+  first. On Linux and macOS, run it yourself before removing Chatmon.
 - **Hooks can't get in an agent's way.** `notify` prints nothing, always succeeds, finishes within about a
   second even if the agent never closes its input, and returns at once if Chatmon isn't running. The AI
   tools Chatmon runs for your own questions carry `CHATMON_INTERNAL=1`, so their hooks don't make it
