@@ -30,7 +30,6 @@ def test_windows_readings():
 def test_windows_11s_focus_is_read_off_the_screens_thread():
     """FocusSessionManager, from WinRT through ctypes, on a thread of its own: Windows 11 answers True or
     False; a Windows without Focus (Windows 10, Windows Server) says it can't tell."""
-    import threading
     import time
 
     from chatmon import winfocus
@@ -39,10 +38,11 @@ def test_windows_11s_focus_is_read_off_the_screens_thread():
     try:
         has_focus = sys.getwindowsversion().build >= 23504 and sys.getwindowsversion().product_type == 1  # a workstation
         deadline = time.monotonic() + 10
-        while focus.active is None and time.monotonic() < deadline and has_focus:
+        # it answers, or (finding no Focus) its thread ends
+        while focus.active is None and focus._thread.is_alive() and time.monotonic() < deadline:
             time.sleep(0.05)
         assert focus.active in ((True, False) if has_focus else (True, False, None))
-        assert any(t.name == "chatmon-focus" for t in threading.enumerate()) == (focus.active is not None)
+        assert focus._thread.is_alive() == (focus.active is not None)
     finally:
         focus.close()
     assert focus.active is None and not focus._thread.is_alive()
@@ -78,11 +78,14 @@ def test_macos_readings():
 
 def test_every_reading_answers_or_says_it_cant(qapp):
     desk = presence.Desk("offscreen")
-    idle = desk.idle_seconds()
-    assert idle is None or idle >= 0
-    assert desk.quiet() in (None, "Do Not Disturb", "a full-screen app", "Focus", *presence._QUNS.values())
-    assert desk.covered(0) in (True, False)
-    assert isinstance(desk.reduce_motion(), bool) and isinstance(desk.high_contrast(), bool)
+    try:
+        idle = desk.idle_seconds()
+        assert idle is None or idle >= 0
+        assert desk.quiet() in (None, "Do Not Disturb", "a full-screen app", "Focus", *presence._QUNS.values())
+        assert desk.covered(0) in (True, False)
+        assert isinstance(desk.reduce_motion(), bool) and isinstance(desk.high_contrast(), bool)
+    finally:
+        desk.close()  # on Windows, the Focus thread its quiet() started
 
 
 def test_the_overlay_tells_when_youre_away(qapp, monkeypatch):
