@@ -2247,6 +2247,11 @@ class Companion(QObject):
 
     def quit(self) -> None:
         self._stop_update_checks()
+        watcher = getattr(self, "_lock_watcher", None)
+        if watcher is not None and hasattr(watcher, "close"):
+            # Windows: its native event filter out of the application before it goes (Qt would go on calling
+            # a filter that's been freed), and the session and power notifications unregistered.
+            watcher.close()
         self._save_chat()
         self.desk.close()
         global _problem

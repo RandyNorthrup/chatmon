@@ -1217,3 +1217,22 @@ def test_the_ask_box_says_what_each_control_is(companion):
     from PyQt6.QtWidgets import QToolButton
 
     assert "Close" in [b.accessibleName() for b in box.findChildren(QToolButton)]
+
+
+
+def test_quitting_closes_what_listens_to_the_system(companion):
+    """Windows' lock watcher is a native event filter: left installed after quitting, Qt goes on calling it
+    once it's freed, a crash at some later event (as CI saw)."""
+    c = companion
+
+    class Watcher:
+        closed = 0
+
+        def close(self):
+            self.closed += 1
+
+    real, c._lock_watcher = getattr(c, "_lock_watcher", None), Watcher()
+    if real is not None and hasattr(real, "close"):
+        real.close()  # the real one, done with here
+    c.quit()
+    assert c._lock_watcher.closed == 1
