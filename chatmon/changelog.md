@@ -27,6 +27,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Windows:** attachments dragged out of Outlook, files out of a zip folder, and pictures out of a browser attach when dropped on the chat or pasted into it, as files on disk do.
 - **macOS:** bubbles wait while a full-screen app is over the chatmon, as they do on Windows and Linux, and come once you're back. Something that needs you waits too: macOS lets only apps signed with an Apple Developer ID send notifications.
 - **macOS:** **Start when I log in** makes Chatmon one of your Login Items, listed by name in System Settings › General › Login Items, and turning it off there shows in the menu too. Started at login by an older version, it moves over by itself.
+- **macOS:** the menu bar icon is the companion's silhouette, drawn in the menu bar's own colour, light or dark.
 
 ### Fixes
 - **Privacy:** Codex and Muse Code no longer keep a session of each question you ask them through Chatmon, and OpenAI's and xAI's APIs are asked not to store your questions (they keep them 30 days otherwise). Anthropic's API reads a chat's earlier turns from its cache, at a fraction of the price.

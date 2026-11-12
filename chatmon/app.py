@@ -25,7 +25,7 @@ from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
 from .settings import State, load_config, merge
-from .sprites import Sprites
+from .sprites import Sprites, silhouette
 
 PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
@@ -213,12 +213,12 @@ class Companion(QObject):
         self._problem_told = False
         self._looking = False  # finding out, off the screen's thread, whether model servers here are running
         self._fill_menu()
-        self.tray = QSystemTrayIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
+        self.tray = QSystemTrayIcon(self._tray_icon())
         self.tray.setContextMenu(self.menu)
         self.tray.setToolTip("Chatmon")
         self.tray.activated.connect(self._tray_clicked)
         self.tray.show()
-        self.app.setWindowIcon(self.tray.icon())
+        self.app.setWindowIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
         if sys.platform.startswith("linux"):
             QTimer.singleShot(60_000, self._no_tray_news)  # a minute in: a tray starting with the desktop is up by then
 
@@ -1934,10 +1934,19 @@ class Companion(QObject):
         if not self.sprites.load_next():
             self._preload.stop()
 
+    def _tray_icon(self) -> QIcon:
+        """The companion standing idle. In macOS's menu bar, its silhouette as a template image, which the menu
+        bar draws in its own colour (light or dark, as the menu bar is), as Apple's guidance asks."""
+        frame = self.sprites.frame("idle", 0, False)
+        if sys.platform != "darwin":
+            return QIcon(frame.pixmap)
+        icon = QIcon(silhouette(frame))
+        icon.setIsMask(True)
+        return icon
+
     def _show_icon(self) -> None:
-        icon = QIcon(self.sprites.frame("idle", 0, False).pixmap)
-        self.tray.setIcon(icon)
-        self.app.setWindowIcon(icon)
+        self.tray.setIcon(self._tray_icon())
+        self.app.setWindowIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
 
     def _companion_menu(self, sub: QMenu) -> None:
         group = QActionGroup(sub)

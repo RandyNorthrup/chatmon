@@ -1121,3 +1121,22 @@ def test_saving_settings_never_sets_it_walking_against_reduced_motion(companion,
     c._set_walk(True)  # you chose: that wins
     c.reload(quietly=True)
     assert c.behavior.walk_enabled
+
+
+def test_the_menu_bar_icon_is_a_template_image_on_macos(companion, monkeypatch):
+    """macOS's menu bar draws a template image in its own colour, light or dark, as Apple asks of menu bar
+    icons: the companion's silhouette, cut to what it covers. Elsewhere, the companion in colour."""
+    from PyQt6.QtGui import QImage
+
+    monkeypatch.setattr(sys, "platform", "darwin")
+    icon = companion._tray_icon()
+    assert icon.isMask()
+    frame = companion.sprites.frame("idle", 0, False)
+    (size,) = icon.availableSizes()
+    image = icon.pixmap(size).toImage().convertToFormat(QImage.Format.Format_ARGB32)
+    assert image.height() < frame.image.height() or image.width() < frame.image.width()  # cut to the drawing
+    colours = {image.pixelColor(x, y).getRgb()[:3] for y in range(image.height()) for x in range(image.width()) if image.pixelColor(x, y).alpha()}
+    assert colours == {(0, 0, 0)}
+    assert companion.app.windowIcon().availableSizes()  # windows and dialogs keep the colour one
+    monkeypatch.setattr(sys, "platform", "linux")
+    assert not companion._tray_icon().isMask()

@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from PyQt6.QtCore import QRect, Qt
-from PyQt6.QtGui import QImage, QPixmap, QTransform
+from PyQt6.QtGui import QImage, QPainter, QPixmap, QTransform
 
 # Animations drawn side-on (facing right), mirrored to face left.
 SIDE_VIEWS = {"walk", "beam"}
@@ -104,6 +104,26 @@ def _frame(img: QImage, anchor: int, scale: float) -> SpriteFrame:
         right, bottom = -int(-(r.right() + 1) // scale), -int(-(r.bottom() + 1) // scale)
         outline.append(QRect(left, top, right - left, bottom - top))
     return SpriteFrame(pixmap, img, anchor, outline, scale)
+
+
+def silhouette(frame: SpriteFrame) -> QPixmap:
+    """The frame's shape in black, cut to the pixels it covers: what macOS's menu bar takes as a template
+    image, which it draws in its own colour, light or dark as the menu bar is."""
+    img = frame.image
+    bounds = QRect()
+    for r in _outline(img):  # device pixels
+        bounds = bounds.united(r)
+    bounds = bounds.intersected(img.rect())
+    if bounds.isEmpty():
+        bounds = img.rect()
+    out = img.copy(bounds).convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
+    p = QPainter(out)
+    p.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceIn)  # keep each pixel's alpha, black
+    p.fillRect(out.rect(), Qt.GlobalColor.black)
+    p.end()
+    pixmap = QPixmap.fromImage(out)
+    pixmap.setDevicePixelRatio(frame.scale)
+    return pixmap
 
 
 class Sprites:
