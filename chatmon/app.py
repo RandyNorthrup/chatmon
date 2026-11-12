@@ -95,6 +95,11 @@ def pretty(source: str) -> str:
     return PRETTY.get(source.lower(), source[:1].upper() + source[1:])
 
 
+def listed(words: list[str]) -> str:
+    """"A", "A and B", "A, B and C"."""
+    return " and ".join(filter(None, [", ".join(words[:-1]), words[-1]])) if words else ""
+
+
 class Companion(QObject):
     def __init__(self, app: QApplication, server: QLocalServer, server_problem: str | None = None):
         super().__init__()
@@ -202,6 +207,8 @@ class Companion(QObject):
         self._refreshing = False  # finding out, off the screen's thread, how each agent stands
         self._refresh_next: bool | None = None  # asked again meanwhile: whether that look migrates too
         self._agents_seen = float("-inf")  # when the last look came back
+        self._offer_due = False  # an offer to connect agents waits for the screen to be clear
+        self._offered: set[str] = set()  # agents offered since Chatmon started; unanswered, they're asked again next time
         self._renamed = paths.first_run_since_rename()  # Penguin companion became Chatmon
         self.background = Background()
         self.updater = updates.Updater(self.background, self)
@@ -1934,6 +1941,107 @@ class Companion(QObject):
         if isinstance(status, dict) and status != self._agent_status:
             self._agent_status = status
             self._menu_changed()
+        if isinstance(status, dict):
+            self._offer_agents()
+
+    OFFER_AGAIN_MS = 30_000  # something's on screen: offer again this much later
+
+    def _offer_agents(self) -> None:
+        """What's new about the agents here, said with a button that does something about it: agents found that
+        Chatmon hasn't asked about yet, offered together (connected, they tell your chatmon what they're doing),
+        and an agent that was connected and has since been switched off, as Claude Code does to the plugin when a
+        window open from before it was connected saves its settings. An answer is kept (state's "agent_status"
+        holds what was last seen of each), so nothing answered is asked again; a bubble that went unanswered
+        (you were away, or closed it) is asked again the next time Chatmon starts, never twice in one run.
+        Waits while something is on screen, and never while the agents can't reach Chatmon anyway."""
+        status = self._agent_status
+        if not status or self.server_problem:
+            return
+        before = dict(self.state.get("agent_status") or {})
+        new = [a for a in agents.AGENTS if status.get(a.name) == "found" and a.name not in before]
+        off = [a for a in agents.AGENTS if status.get(a.name) == "installed but off" and before.get(a.name) == "connected"]
+        unanswered = {a.name for a in new + off}  # kept out of what's seen until there's an answer
+        seen = {**before, **{name: state for name, state in status.items() if state != "not found" and name not in unanswered}}
+        if seen != before:
+            self.state.set("agent_status", seen)
+            self.state.save()
+        new = [a for a in new if a.name not in self._offered]
+        off = [a for a in off if a.name not in self._offered]
+        busy = self._asking_name or self._alert_key is not None or self._menu_open or self.ask_box.isVisible() or self.stage.message_visible()
+        # One bubble at a time, switched off first: whatever else is waiting is said on a later look.
+        shown = [] if busy else (off or new)
+        self._offered |= {a.name for a in shown}
+        if {a.name for a in new + off} - self._offered and not self._offer_due:
+            self._offer_due = True
+            QTimer.singleShot(self.OFFER_AGAIN_MS, self._offer_agents_again)
+        if not shown:
+            return
+        answered = {a.name: status[a.name] for a in shown}
+        if off:
+            label = off[0].label if len(off) == 1 else "An agent"
+            self.say(
+                f"{label} switched me off",
+                f"My plugin in {listed([a.label for a in off])} is off now. A window that was open when you connected it "
+                "may have saved its settings over mine. Switch it back on?",
+                [("Switch on", partial(self._offer_answered, answered, off)), ("Leave it off", partial(self._offer_answered, answered, []))],
+                timeout_s=60,
+            )
+        else:
+            one = len(new) == 1
+            self.say(
+                "Shall I watch your coding agents?",
+                f"I found {listed([f'**{a.label}**' for a in new])} here. Connect {'it' if one else 'them'}, and I'll show you "
+                f"when {'it is' if one else 'they are'} working, when {'it needs' if one else 'they need'} you, and when "
+                f"{'it is' if one else 'they are'} done. You can change this any time under **AI agents** in my menu.",
+                [("Connect", partial(self._offer_answered, answered, new)), ("Not now", partial(self._offer_answered, answered, []))],
+                timeout_s=60,
+            )
+
+    def _offer_answered(self, answered: dict[str, str], chosen: list[agents.Agent]) -> None:
+        """An offer was answered: keep that it was (so it isn't asked again), and connect what was chosen."""
+        self.state.set("agent_status", {**(self.state.get("agent_status") or {}), **answered})
+        self.state.save()
+        if chosen:
+            self._connect_agents(chosen)
+
+    def _offer_agents_again(self) -> None:
+        self._offer_due = False
+        self._offer_agents()
+
+    def _connect_agents(self, chosen: list[agents.Agent]) -> None:
+        self.say(f"Connecting {listed([a.label for a in chosen])}…", timeout_s=30)
+
+        def connect_each() -> list:
+            results = []
+            for agent in chosen:
+                try:
+                    results.append((agent, agent.connect()))
+                except (agents.AgentError, OSError) as exc:
+                    results.append((agent, exc))
+            return results
+
+        self.background.run(connect_each, self._agents_connected)
+
+    def _agents_connected(self, results) -> None:
+        if isinstance(results, Exception):  # not one agent's trouble, which each reports itself: something of ours
+            self.say("Couldn't connect your agents", str(results), [("OK", None)], timeout_s=None)
+            self._refresh_agents()
+            return
+        done = [a.label for a, result in results if not isinstance(result, Exception)]
+        failed = [(a.label, result) for a, result in results if isinstance(result, Exception)]
+        if failed:
+            text = "\n\n".join(f"**{label}:** {exc}" for label, exc in failed)
+            if done:
+                text = f"{listed(done)} {'is' if len(done) == 1 else 'are'} connected.\n\n{text}"
+            self.say(f"Couldn't connect {listed([label for label, _ in failed])}", text, [("OK", None)], timeout_s=None)
+        elif done:
+            self.behavior.react("hop", self._now())
+            self.say(
+                f"Connected {listed(done)}",
+                "I'll show you what each is doing from its next session on: one that's open now has to be started again first.",
+                timeout_s=15,
+            )
+        self._refresh_agents()
 
     def _agents_menu(self, sub: QMenu) -> None:
         sub.addSection("Let them tell me what they're doing")
@@ -2390,6 +2498,7 @@ def run() -> int:
         os.environ.setdefault("QT_MAC_SET_RAISE_PROCESS", "0")  # raising a window mustn't make Chatmon the active app
         if not os.environ.get("TERM_PROGRAM"):  # started from Finder, the Dock or at login, not a terminal
             paths.login_environment()
+    paths.windows_environment()  # started by its installer, maybe, from before chatmon was on PATH
     # PyQt aborts the whole app on an exception that escapes a slot; log it and carry on instead.
     sys.excepthook = _log_exception
     reached = events.deliver({"type": "show"})

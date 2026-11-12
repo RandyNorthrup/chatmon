@@ -2,6 +2,19 @@
 
 Each version's changes, newest first: what Chatmon shows after it updates, and each release's notes.
 
+## 0.9.0
+
+### New
+- **Your chatmon offers to connect the coding agents it finds**: a bubble naming them, with **Connect** and **Not now**. Once you've answered, it doesn't ask again; if you were away and the bubble went unanswered, it asks next time Chatmon starts. Agents you install later are offered when they turn up. **AI agents** in the menu still changes them any time.
+- **Windows:** the installer can connect the coding agents it finds (**Connect the coding agents found here**, under the PATH choice; off unless you tick it). An update installing itself never connects one.
+- When Claude Code switches Chatmon's plugin off after it was connected (a window that was open when you connected it saves its settings over the plugin's), your chatmon says so once, with **Switch on**.
+
+### Fixes
+- **Claude Code installed only as the VS Code extension** (or Cursor's, or Windsurf's) connects: Chatmon uses the command line that the extension carries when there's no `claude` on PATH. Before, Claude Code showed as found but connecting it said it wasn't installed. With no command line anywhere, connecting now says how to add the plugin from Claude Code itself.
+- **Windows:** Chatmon started by its installer finds itself on PATH, so connecting agents from it works straight away, Claude Code included, and hooks run chatmon by name.
+- **Windows:** uninstalling Chatmon disconnects the coding agents connected to it. Before, they went on running a chatmon that was gone: Codex at the end of every turn.
+- `chatmon hooks disconnect all` touches only the agents that are connected. Before, it also rewrote (with a backup) the settings of an agent that had hooks of its own but none of Chatmon's.
+
 ## 0.8.0
 
 ### New

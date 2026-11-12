@@ -265,6 +265,78 @@ def test_claude_needs_chatmon_on_path(monkeypatch):
         agents.ClaudeCode().connect()
 
 
+def no_claude_on_path(monkeypatch):
+    monkeypatch.setattr(agents.shutil, "which", lambda name: None if name == "claude" else f"/usr/bin/{name}")
+
+
+def editor_extension(editor, version):
+    """A Claude Code extension as an editor keeps it, with the command line it carries."""
+    exe = "claude.exe" if sys.platform == "win32" else "claude"
+    binary = agents.Path.home() / editor / "extensions" / f"anthropic.claude-code-{version}-win32-x64" / "resources" / "native-binary" / exe
+    binary.parent.mkdir(parents=True)
+    binary.write_text("")
+    return str(binary)
+
+
+def test_claude_from_its_editor_extension_alone(monkeypatch):
+    """Installed only as the VS Code (or Cursor...) extension, Claude Code has no `claude` on PATH: the newest
+    extension's own command line connects it."""
+    no_claude_on_path(monkeypatch)
+    editor_extension(".vscode", "2.1.9")
+    newest = editor_extension(".vscode", "2.1.10")  # by number, not by name: 10 after 9
+    editor_extension(".cursor", "2.0.4")
+    (agents.Path.home() / ".vscode" / "extensions" / "anthropic.claude-code-2.2.0-win32-x64").mkdir()  # half removed: no binary
+    ran = []
+    fake = FakeClaude()
+
+    def run(argv, what):
+        ran.append(argv[0])
+        return fake(argv, what)
+
+    monkeypatch.setattr(agents, "_run_json", run)
+    claude = agents.ClaudeCode()
+    assert claude.program() == newest and claude.detected()
+    claude.connect()
+    assert claude.connected() and ["plugin", "install", "chatmon@chatmon"] in fake.calls
+    assert set(ran) == {newest}
+
+
+def test_claude_with_no_command_line_anywhere_says_how_to_connect_it(monkeypatch):
+    """Its settings are here but no `claude` is: it's found, and connecting says what to do in Claude Code."""
+    no_claude_on_path(monkeypatch)
+    claude = agents.ClaudeCode()
+    claude.config_path().parent.mkdir(parents=True)
+    assert claude.program() is None and claude.status() == "found"  # runs nothing: there's nothing to run
+    with pytest.raises(agents.AgentError, match="isn't on your PATH") as told:
+        claude.connect()
+    assert "/plugin install chatmon@chatmon" in str(told.value) and str(claude.marketplace_dir()) in str(told.value)
+    assert (claude.marketplace_dir() / ".claude-plugin" / "marketplace.json").exists()  # what that command adds
+
+
+def test_disconnect_all_touches_only_the_agents_connected(monkeypatch, capsys):
+    """What uninstalling runs: an agent with hooks of its own but none of ours keeps its file as it was."""
+    from chatmon import cli
+
+    monkeypatch.setattr(agents, "_run_json", FakeClaude())  # Claude Code and Muse: nothing of ours installed
+    monkeypatch.setattr(cli.paths, "windows_environment", lambda: False)
+    gemini, qwen = agents.Gemini(), agents.Qwen()
+    gemini.config_path().parent.mkdir(parents=True)
+    theirs = '{"hooks": {"AfterAgent": [{"hooks": [{"type": "command", "command": "my-linter"}]}]}}'
+    gemini.config_path().write_text(theirs)
+    qwen.connect()
+    assert cli.hooks(["disconnect", "all"]) == 0
+    assert not qwen.connected() and gemini.config_path().read_text() == theirs and not backups(gemini.config_path())
+    assert "Disconnected Qwen Code" in capsys.readouterr().out
+    assert cli.hooks(["disconnect", "all"]) == 0 and "No coding agents are connected." in capsys.readouterr().out
+
+
+def test_a_windows_path_gains_only_what_it_lacks():
+    current = r"C:\Windows;C:\Tools\;C:\Mine"
+    assert agents.paths.windows_path_with(current, [r"c:\tools", r"C:\Windows\\", ""]) == current
+    assert agents.paths.windows_path_with(current, [r"C:\Program Files\Chatmon", r"c:\program files\chatmon\\"]) == current + r";C:\Program Files\Chatmon"
+    assert agents.paths.windows_path_with("", [r"C:\A"]) == r"C:\A"
+
+
 def test_claude_plugin_files_match_the_installer():
     root = agents.ClaudeCode.packaged_marketplace()
     market = json.loads((root / ".claude-plugin" / "marketplace.json").read_text())

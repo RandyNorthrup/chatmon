@@ -37,8 +37,10 @@ def companion(tmp_path, monkeypatch):
 
     from chatmon import __version__
 
-    # Seen this version already (no what's new), and never looking for updates (no network in tests).
-    State(paths.state_file(), {"name": "Sparky", "x": 600, "seen_version": __version__, "check_updates": False}).save()
+    # Seen this version already (no what's new), asked about every agent already (no offer to connect them),
+    # and never looking for updates (no network in tests).
+    seen = {"name": "Sparky", "x": 600, "seen_version": __version__, "check_updates": False, "agent_status": {a.name: "found" for a in agents.AGENTS}}
+    State(paths.state_file(), seen).save()
     qapp = QApplication.instance() or QApplication([])
     qapp.setQuitOnLastWindowClosed(False)
     server = QLocalServer()
@@ -214,6 +216,85 @@ def test_first_run_after_the_rename_asks_about_plugin_agents(companion):
     c.stage.dismiss_message()
     c._agents_known({"claude": "found"})
     assert not c.stage.message_visible()  # once
+
+
+def bubble_text(c):
+    return c.stage.bubble.title + "\n" + c.stage.bubble.doc.toPlainText()
+
+
+def test_agents_found_are_offered_once_and_connect_from_the_bubble(companion, monkeypatch):
+    from chatmon import agents
+
+    c = companion
+    c.state.set("agent_status", {"cursor": "connected"})  # asked about nothing yet; one connected before
+    monkeypatch.setattr(c, "_refresh_agents", lambda *a, **k: None)
+    monkeypatch.setattr(agents.ClaudeCode, "connect", lambda self: "Connected Claude Code")
+
+    def taken(self):
+        raise agents.AgentError("Codex already runs something else when a turn ends.")
+
+    monkeypatch.setattr(agents.Codex, "connect", taken)
+    c._agents_known({"claude": "found", "codex": "found", "gemini": "not found", "cursor": "connected"})
+    text = bubble_text(c)
+    assert "Claude Code" in text and "Codex" in text and "Gemini" not in text and "Cursor" not in text and "AI agents" in text
+    assert c.state.get("agent_status") == {"cursor": "connected"}  # nothing answered yet
+    assert c.stage.press_button("Connect")
+    assert c.state.get("agent_status") == {"claude": "found", "codex": "found", "cursor": "connected"}
+    deadline = time.monotonic() + 10
+    while "Couldn't connect" not in c.stage.bubble.title and time.monotonic() < deadline:
+        spin(0.05)
+    text = bubble_text(c)
+    assert c.stage.bubble.title == "Couldn't connect Codex" and "Claude Code is connected" in text and "something else" in text
+    c.stage.dismiss_message()
+    c._agents_known({"claude": "connected", "codex": "found", "cursor": "connected"})
+    assert not c.stage.message_visible()  # asked once: Codex, left unconnected, isn't asked again
+
+
+def test_an_agent_switched_off_since_it_was_connected_is_said_once(companion):
+    c = companion
+    c.state.set("agent_status", {"claude": "connected", "codex": "found"})
+    c._agents_known({"claude": "installed but off", "codex": "found"})
+    assert c.stage.bubble.title == "Claude Code switched me off" and "Switch on" in [b.label for b in c.stage.bubble.buttons]
+    assert c.stage.press_button("Leave it off")
+    assert c.state.get("agent_status")["claude"] == "installed but off"
+    c._offered.clear()  # as if Chatmon had started again: answered, it still isn't asked
+    c._agents_known({"claude": "installed but off", "codex": "found"})
+    assert not c.stage.message_visible()
+
+
+def test_an_offer_left_unanswered_is_asked_again_next_time_chatmon_starts(companion):
+    c = companion
+    c.state.set("agent_status", {})
+    c._agents_known({"codex": "found"})
+    assert "Codex" in bubble_text(c)
+    c.stage.dismiss_message()  # timed out while you were away, or closed
+    assert c.state.get("agent_status") == {}
+    c._agents_known({"codex": "found"})
+    assert not c.stage.message_visible()  # not twice in one run
+    c._offered.clear()  # Chatmon started again
+    c._agents_known({"codex": "found"})
+    assert "Codex" in bubble_text(c)
+    assert c.stage.press_button("Not now")
+    assert c.state.get("agent_status") == {"codex": "found"}
+
+
+def test_the_offer_waits_while_something_is_on_screen(companion):
+    c = companion
+    c.state.set("agent_status", {})
+    c.say("Deploy finished.", timeout_s=None)
+    c._agents_known({"codex": "found"})
+    assert c.stage.bubble.title == "Deploy finished." and "codex" not in c.state.get("agent_status") and c._offer_due
+    c.stage.dismiss_message()
+    c._offer_agents_again()  # as the timer would, later
+    assert "Codex" in bubble_text(c) and c.state.get("agent_status") == {} and not c._offer_due
+
+
+def test_no_offer_while_agents_cant_reach_chatmon(companion):
+    c = companion
+    c.state.set("agent_status", {})
+    c.server_problem = "Another program has Chatmon's pipe."
+    c._agents_known({"codex": "found"})
+    assert not c.stage.message_visible() and c.state.get("agent_status") == {}
 
 
 def test_the_greeting_never_covers_a_message_that_came_first(companion):

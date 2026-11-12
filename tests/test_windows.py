@@ -806,3 +806,23 @@ def test_a_paste_of_files_copied_out_of_a_zip(qapp, tmp_path):
     finally:
         ole32.OleSetClipboard(None)
         windrop._release(data)
+
+
+def test_path_as_windows_keeps_it_is_added_to_a_stale_one(monkeypatch):
+    """Started by an installer, a program has the PATH from before the installer changed it: the folders
+    Windows keeps on PATH now come after it, and nothing already there moves."""
+    import winreg
+
+    with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+        try:
+            yours = winreg.ExpandEnvironmentStrings(winreg.QueryValueEx(key, "Path")[0])
+        except OSError:
+            pytest.skip("no PATH of your own here")
+    first = next((p for p in yours.split(";") if p.strip()), None)
+    if first is None:
+        pytest.skip("your own PATH is empty")
+    monkeypatch.setenv("PATH", r"C:\stale-only")
+    assert paths.windows_environment()
+    path = os.environ["PATH"].split(";")
+    assert path[0] == r"C:\stale-only" and first.strip() in path
+    assert not paths.windows_environment()  # once it's all there, nothing more

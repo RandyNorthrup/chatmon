@@ -126,9 +126,13 @@ class Agent:
     def config_path(self) -> Path | None:
         return None
 
+    def program(self) -> str | None:
+        """Its command line, where it's found."""
+        return paths.which(self.command) if self.command else None
+
     def detected(self) -> bool:
         path = self.config_path()
-        return bool(self.command and paths.which(self.command)) or bool(path and path.parent.exists())
+        return bool(self.program()) or bool(path and path.parent.exists())
 
     def connected(self) -> bool:
         raise NotImplementedError
@@ -263,6 +267,11 @@ def _needs_on_path() -> None:
         )
 
 
+# Editors built on VS Code, each keeping its extensions in ~/<folder>/extensions.
+EDITORS = (".vscode", ".vscode-insiders", ".vscode-oss", ".cursor", ".windsurf")
+_CLAUDE_EXTENSION = re.compile(r"anthropic\.claude-code-(\d+(?:\.\d+)*)", re.I)
+
+
 class ClaudeCode(Agent):
     """Claude Code gets Chatmon's hooks from a plugin, which Claude Code
     manages itself; editing its settings file under a running Claude Code
@@ -276,6 +285,45 @@ class ClaudeCode(Agent):
 
     def config_path(self) -> Path:
         return _home_env("CLAUDE_CONFIG_DIR", Path.home() / ".claude") / "settings.json"
+
+    def program(self) -> str | None:
+        """Claude Code's command line: on your PATH, or where its own installers put it, or else inside its
+        editor extension. Installed only as the extension (VS Code, Cursor, Windsurf...), Claude Code puts no
+        `claude` on PATH, but the extension carries the whole command line with it, and the plugins that one
+        installs are the extension's too: both read the same settings. The newest extension's, when an
+        editor has kept older ones."""
+        found = paths.which(self.command)
+        if found:
+            return found
+        exe = "claude.exe" if sys.platform == "win32" else "claude"
+        home = Path.home()
+        for installed in (home / ".local" / "bin" / exe, home / ".claude" / "local" / exe):
+            if installed.is_file():
+                return str(installed)
+        bundled = []
+        for editor in EDITORS:
+            try:
+                folders = list((home / editor / "extensions").iterdir())
+            except OSError:
+                continue
+            for folder in folders:
+                version = _CLAUDE_EXTENSION.match(folder.name)
+                binary = folder / "resources" / "native-binary" / exe
+                if version and binary.is_file():
+                    bundled.append((tuple(int(n) for n in version.group(1).split(".")), str(binary)))
+        return max(bundled)[1] if bundled else None
+
+    def _no_command_line(self) -> str:
+        return (
+            f"Claude Code's settings are here ({self.config_path().parent}), but not its command line, `claude`: "
+            "it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension."
+        )
+
+    def _claude(self, *args: str) -> object:
+        program = self.program()
+        if program is None:
+            raise AgentError(self._no_command_line())
+        return _run_json([program, *args], self.label)
 
     @staticmethod
     def packaged_marketplace() -> Path:
@@ -298,7 +346,7 @@ class ClaudeCode(Agent):
         return folder
 
     def _plugins(self) -> list:
-        found = _run_json(["claude", "plugin", "list", "--json"], self.label)
+        found = self._claude("plugin", "list", "--json")
         return found if isinstance(found, list) else []
 
     def _mine(self, plugin: str | None = None) -> dict | None:
@@ -334,9 +382,9 @@ class ClaudeCode(Agent):
 
     def _remove(self, plugin: str, marketplace: str) -> None:
         if self._mine(plugin) is not None:
-            _run_json(["claude", "plugin", "uninstall", plugin, "--scope", "user", "--json"], self.label)
+            self._claude("plugin", "uninstall", plugin, "--scope", "user", "--json")
         try:
-            _run_json(["claude", "plugin", "marketplace", "remove", marketplace, "--json"], self.label)
+            self._claude("plugin", "marketplace", "remove", marketplace, "--json")
         except AgentError:
             pass
 
@@ -352,15 +400,17 @@ class ClaudeCode(Agent):
     def connect(self) -> str:
         _needs_on_path()
         folder = self._publish()
-        markets = _run_json(["claude", "plugin", "marketplace", "list", "--json"], self.label)
+        if self.program() is None:  # Claude Code itself can still add it, from the copy just made
+            raise AgentError(f"{self._no_command_line()} In Claude Code, run `/plugin marketplace add {folder}`, then `/plugin install {self.PLUGIN}`.")
+        markets = self._claude("plugin", "marketplace", "list", "--json")
         names = {m.get("name") for m in markets} if isinstance(markets, list) else set()
         if self.MARKETPLACE not in names:
-            _run_json(["claude", "plugin", "marketplace", "add", str(folder), "--json"], self.label)
+            self._claude("plugin", "marketplace", "add", str(folder), "--json")
         mine = self._mine(self.PLUGIN)
         if mine is None:
-            _run_json(["claude", "plugin", "install", self.PLUGIN, "--scope", "user", "--json"], self.label)
+            self._claude("plugin", "install", self.PLUGIN, "--scope", "user", "--json")
         elif not mine.get("enabled", True):
-            _run_json(["claude", "plugin", "enable", self.PLUGIN, "--scope", "user", "--json"], self.label)
+            self._claude("plugin", "enable", self.PLUGIN, "--scope", "user", "--json")
         return (
             f"Connected Claude Code: the {self.PLUGIN} plugin is installed and on. It takes effect in new "
             "Claude Code sessions; a session that's open now can switch it off again when it saves its "
