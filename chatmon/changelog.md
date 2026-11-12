@@ -2,6 +2,12 @@
 
 Each version's changes, newest first: what Chatmon shows after it updates, and each release's notes.
 
+## 0.8.0
+
+### New
+- **Screen readers.** With a screen reader running, each bubble and answer is read out: by Orca itself (Orca 49 or later), by VoiceOver while Chatmon is the app in front, and as a system notification where there's no other way (Narrator, NVDA and JAWS read those on Windows). A bubble's buttons are read out too, and typing one in the chat presses it, also just after the chat opened over the bubble. Settings has it under **General**, on unless you turn it off.
+- The chat's controls have names a screen reader says: the conversation, the question, **Attach**, **Close**, and each attachment's **Remove**. The chatmon's window, where it's a window, is named Chatmon, and describes the bubble it's showing.
+
 ## 0.7.0
 
 ### New

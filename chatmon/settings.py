@@ -25,6 +25,7 @@ DEFAULTS: dict[str, Any] = {
     "chats": {"keep": True, "context_tokens": 48000, "instructions": ""},
     "breaks": {"remind": True, "every_minutes": 60, "snooze_minutes": 10},
     "focus": {"minutes": 25, "tell_when_done": True},
+    "accessibility": {"read_aloud": True},
     "heads_up": {
         "battery_low": 20,
         "battery_critical": 10,
@@ -170,6 +171,11 @@ snooze_minutes = 10
 minutes = 25
 # Say when a focus session ends.
 tell_when_done = true
+
+[accessibility]
+# With a screen reader running (Orca, VoiceOver, NVDA, JAWS, Narrator), have it
+# read out each bubble and answer, and what to type to press a bubble's buttons.
+read_aloud = true
 
 [heads_up]
 battery_low = 20          # percent; 0 turns battery warnings off

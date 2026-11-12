@@ -87,6 +87,8 @@ class SettingsWindow(QDialog):
         self.bubble_style = _combo(c["bubble_styles"], v["bubble_style"])
         self.bubble_effects = QCheckBox("Animate the bubbles' edges")
         self.bubble_effects.setChecked(v["bubble_effects"])
+        self.read_aloud = QCheckBox("Read bubbles and answers aloud with my screen reader")
+        self.read_aloud.setChecked(v["read_aloud"])
         self.check_updates = QCheckBox("Look for a new Chatmon once a day")
         self.check_updates.setChecked(v["check_updates"])
         form.addRow("Name", self.name)
@@ -96,6 +98,8 @@ class SettingsWindow(QDialog):
         form.addRow("Falls asleep after", self.sleep_after)
         form.addRow("Bubble style", self.bubble_style)
         form.addRow("", self.bubble_effects)
+        form.addRow("", self.read_aloud)
+        form.addRow("", _note("When one is running (Orca, VoiceOver, NVDA, JAWS, Narrator). Typing a bubble's button in the chat presses it."))
         form.addRow("", self.autostart)
         form.addRow("", self.check_updates)
         form.addRow("", _note("Updates are checked against the signed list of each release, and installed only when you say so."))
@@ -218,6 +222,7 @@ class SettingsWindow(QDialog):
             "bubble_style": self.bubble_style.currentData(),
             "bubble_effects": self.bubble_effects.isChecked(),
             "check_updates": self.check_updates.isChecked(),
+            "read_aloud": self.read_aloud.isChecked(),
             "brain": self.brain.currentData(),
             "timeout_seconds": self.timeout.value(),
             "show_replies": self.show_replies.isChecked(),

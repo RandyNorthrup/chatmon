@@ -186,7 +186,9 @@ or Focus (Windows 11) is on, and the chatmon gives way to full-screen windows (s
 comes through as a system notification; on macOS, where only an app signed with an Apple Developer ID may
 send one, it waits for you instead). Time away from the keyboard counts toward a break, locked or not,
 as does sleep. In power-saver mode it draws less often, and on Windows not at all while the screen is locked
-or off. Reduced motion and high contrast are followed unless you choose otherwise.
+or off. Reduced motion and high contrast are followed unless you choose otherwise. With a screen reader
+running, bubbles and answers are read out (by Orca 49+ or VoiceOver themselves, or as a notification, which
+Narrator, NVDA and JAWS read), and typing a bubble's button in the chat presses it.
 
 ## Brains: what answers your questions
 
@@ -407,6 +409,7 @@ screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland des
 | `chatmon/chats.py`        | Chats kept on this computer, to carry on with          |
 | `chatmon/offline.py`      | What it answers without any AI                         |
 | `chatmon/presence.py`     | Away, quiet and accessibility, each platform's own way |
+| `chatmon/a11y.py`         | Screen readers: is one running, and having it read out |
 | `chatmon/linuxsession.py` | Hearing the screen lock and sleep, on Linux            |
 | `chatmon/macnative.py`    | What Chatmon tells macOS itself (Spaces, activation)   |
 | `chatmon/attachments.py`  | Files, pictures and text attached to a question        |

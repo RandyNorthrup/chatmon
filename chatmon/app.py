@@ -20,7 +20,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiAppli
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, agents, attachments, autostart, brains, changelog, chats, companions, context, events, heads_up, memory, offline, paths, presence, reminders, report, styles, sysnotify, updates
+from . import __version__, a11y, agents, attachments, autostart, brains, changelog, chats, companions, context, events, heads_up, memory, offline, paths, presence, reminders, report, styles, sysnotify, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -161,6 +161,9 @@ class Companion(QObject):
         self._folding: tuple | None = None  # (chat id, pairs the summary will stand for, the question waiting)
         self._asked: dict | None = None  # what the question on its way went with: to ask once more, with less
         self.memory = memory.Memory.load()
+        self._reader: a11y.Reader | None = None  # the screen reader running, as last looked (a11y.py)
+        self._reader_seen = float("-inf")
+        self._answerable: tuple[float, list] | None = None  # (when, buttons) of a bubble the chat opened over
         self._instructing: str | None = None  # the chat whose instructions the box is asking for
 
         self.stage.clicked.connect(self.on_click)
@@ -312,6 +315,7 @@ class Companion(QObject):
         if timeout_s is not None and notice:
             timeout_s = max(timeout_s, notice)
         self.stage.show_message(title, text, buttons, timeout_s)
+        self._read_aloud(title, text, buttons)
 
     def alert(self, key: str, title: str, text: str, buttons=None) -> None:
         """Something needs you: the penguin waves its flippers until you answer."""
@@ -337,6 +341,52 @@ class Companion(QObject):
         self.behavior.set_alert(True, self._now())
         self.stage.raise_above(True)  # above a full-screen window: it needs you
         self.stage.show_message(title, text, buttons or [("OK", None)], None)
+        self._read_aloud(title, text, buttons or [("OK", None)], important=True)
+
+    # -- screen readers (a11y.py): what a bubble says, read out
+
+    READER_EVERY = 15.0  # seconds between looks for a screen reader starting or stopping
+    ANSWERABLE_FOR = 600.0  # seconds a bubble's buttons can still be typed after the chat opened over it
+
+    def _press_typed_button(self, text: str) -> bool:
+        """A bubble's button, typed in the chat: the one showing, or the one the chat opened over (opening it
+        closes the bubble, and typing is how a keyboard or a screen reader answers one)."""
+        if self.stage.press_button(text):
+            self._answerable = None
+            return True
+        if self._answerable is None or time.monotonic() - self._answerable[0] > self.ANSWERABLE_FOR:
+            return False
+        buttons = self._answerable[1]
+        index = a11y.typed_button([label for label, _ in buttons], text)
+        if index is None:
+            return False
+        self._answerable = None
+        action = buttons[index][1]
+        if action:
+            action()
+        return True
+
+    def _screen_reader(self) -> a11y.Reader | None:
+        if not self.config["accessibility"].get("read_aloud", True):
+            return None
+        now = time.monotonic()
+        if now - self._reader_seen > self.READER_EVERY:
+            self._reader, self._reader_seen = a11y.reader(), now
+        return self._reader
+
+    def _read_aloud(self, title: str, text: str = "", buttons=None, important: bool = False) -> None:
+        """Have a running screen reader say it: its own way where there's one (Orca, VoiceOver), else a
+        system notification, which screen readers read (Narrator, NVDA, JAWS on Windows)."""
+        reader = self._screen_reader()
+        if reader is None:
+            return
+        words = a11y.spoken(title, text, [label for label, _ in buttons or []])
+        if reader.speak is not None:
+            reader.speak(words, important)
+        elif sys.platform.startswith("linux"):
+            sysnotify.send(a11y.plain(title), words)
+        elif sys.platform == "win32" and QSystemTrayIcon.supportsMessages():
+            self.tray.showMessage(a11y.plain(title), words, QSystemTrayIcon.MessageIcon.Information, 15_000)
 
     # -- you being away, and times for quiet
 
@@ -440,6 +490,8 @@ class Companion(QObject):
         self.behavior.wake(now)
         self.behavior.set_attending(True, now)
         self.stage.raise_above(True)  # you asked for it: above anything full screen
+        if self.stage.message_visible() and self.stage.bubble.buttons:  # still answerable, by typing a button
+            self._answerable = (time.monotonic(), [(b.label, b.action) for b in self.stage.bubble.buttons])
         self.stage.dismiss_message()
         if now - self._last_ask > 15 * 60 and self.chat.messages:
             self._start_chat()  # a while since: a fresh one (the last is in History)
@@ -848,6 +900,9 @@ class Companion(QObject):
     def submit(self, text: str) -> None:
         now = self._now()
         self._last_ask = now
+        if not self.attached and self._press_typed_button(text):  # a bubble's button, by its label
+            self.ask_box.entry.clear()
+            return
         if self._asking_name:
             self._asking_name = False
             self.state.set("name", text.strip()[:40])
@@ -968,6 +1023,7 @@ class Companion(QObject):
         self._save_chat()
         self.ask_box.set_answer(self._transcript(), at_end=True)
         self.ask_box.set_resettable(True)
+        self._read_aloud(f"{label or 'The AI'} answered", answer)
         self.behavior.set_talking(True, now)
         QTimer.singleShot(int(min(max(len(answer) / 18, 2), 10) * 1000), lambda: self.behavior.set_talking(False, self._now()))
 
@@ -1014,6 +1070,7 @@ class Companion(QObject):
         """An answer of Chatmon's own: shown under the chat, marked as such, and never part of it (no brain
         sees it, and it isn't kept)."""
         self.ask_box.set_answer(self._transcript(f"**You:** {question}\n\n{reply}\n\n*{NO_AI}*"), at_end=True)
+        self._read_aloud(reply)
 
     def _local(self, text: str) -> bool:
         """What Chatmon does by itself, without any AI: True if it was that. Anything else is the AI's."""
@@ -2077,7 +2134,7 @@ class Companion(QObject):
         "focus": ("focus", "minutes"), "focus_done": ("focus", "tell_when_done"),
         "battery_low": ("heads_up", "battery_low"), "battery_critical": ("heads_up", "battery_critical"),
         "disk_full": ("heads_up", "disk_full_percent"), "updates_heads_up": ("heads_up", "updates"),
-        "updates_every_hours": ("heads_up", "updates_every_hours"),
+        "updates_every_hours": ("heads_up", "updates_every_hours"), "read_aloud": ("accessibility", "read_aloud"),
     }
 
     def _settings_values(self) -> tuple[dict, dict]:
@@ -2096,6 +2153,7 @@ class Companion(QObject):
             "battery_low": int(c["heads_up"]["battery_low"]), "battery_critical": int(c["heads_up"]["battery_critical"]),
             "disk_full": int(c["heads_up"]["disk_full_percent"]), "updates_heads_up": bool(c["heads_up"]["updates"]),
             "updates_every_hours": int(c["heads_up"]["updates_every_hours"]),
+            "read_aloud": bool(c["accessibility"]["read_aloud"]),
         }
         current = self._brain(wait=False)
         matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()

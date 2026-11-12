@@ -47,6 +47,7 @@ def companion(tmp_path, monkeypatch):
     assert server.listen(paths.server_name()), server.errorString()
     c = appmod.Companion(qapp, server)
     c._file_chooser = None  # Qt's dialogs, which the tests stand in for: never the desktop's portal
+    c._reader_seen = float("inf")  # no screen reader, never looked for: tests never talk to the desktop's
     yield c
     c.quit()
     server.close()
@@ -991,7 +992,7 @@ def test_settings_hands_back_only_what_changed(qapp):
         "bubble_style": "match", "bubble_effects": True, "check_updates": True, "brain": "", "timeout_seconds": 180,
         "show_replies": False, "keep_chats": True, "context_tokens": 48000, "instructions": "", "memory": ["a"],
         "breaks_every": 60, "snooze": 10, "focus": 25, "battery_low": 20, "battery_critical": 10, "disk_full": 90,
-        "updates_heads_up": True, "updates_every_hours": 6, "break_reminders": True, "focus_done": True,
+        "updates_heads_up": True, "updates_every_hours": 6, "break_reminders": True, "focus_done": True, "read_aloud": True,
     }
     choices = {"companions": [("penguin", "Penguin")], "bubble_styles": [("match", "Match")], "brains": [("", "Automatic")]}
     w = SettingsWindow(values, choices)
@@ -1140,3 +1141,79 @@ def test_the_menu_bar_icon_is_a_template_image_on_macos(companion, monkeypatch):
     assert companion.app.windowIcon().availableSizes()  # windows and dialogs keep the colour one
     monkeypatch.setattr(sys, "platform", "linux")
     assert not companion._tray_icon().isMask()
+
+
+class PretendReader:
+    def __init__(self, c, speaks=True):
+        from chatmon import a11y
+
+        self.said = []
+        c._reader = a11y.Reader("Orca", (lambda text, important: self.said.append((text, important))) if speaks else None)
+        c._reader_seen = float("inf")
+
+
+def test_a_screen_reader_hears_bubbles_alerts_and_answers(companion, monkeypatch):
+    c = companion
+    reader = PretendReader(c)
+    brain = PretendBrain(c, monkeypatch)
+    c.say("Time for a break?", "You've been at it **an hour**.", [("Taking one", None), ("Snooze 10 min", None)])
+    text, important = reader.said[-1]
+    assert text == "Time for a break? You've been at it an hour. To answer, type “Taking one” or “Snooze 10 min” in the chat."
+    assert not important
+    c.stage.dismiss_message()
+    c.alert("reminder:x", "Reminder", "Stretch")
+    assert reader.said[-1] == ("Reminder. Stretch. To answer, type “OK” in the chat.", True)
+    c.stage.dismiss_message()
+    c._message_closed()  # the alert answered
+    c.open_ask()
+    c.submit("How tall is Everest?")
+    brain.answer("About 8,849 m.")
+    assert reader.said[-1][0] == "Pretend API answered. About 8,849 m."
+
+
+def test_without_a_way_to_speak_linux_reads_it_through_a_notification(companion, monkeypatch):
+    from chatmon import sysnotify
+
+    c = companion
+    PretendReader(c, speaks=False)
+    sent = []
+    monkeypatch.setattr(sysnotify, "send", lambda title, text: sent.append((title, text)) or True)
+    monkeypatch.setattr(sys, "platform", "linux")
+    c.say("Reminder", "Stretch")
+    assert sent == [("Reminder", "Reminder. Stretch.")]
+
+
+def test_reading_aloud_can_be_turned_off(companion):
+    c = companion
+    reader = PretendReader(c)
+    c.config["accessibility"]["read_aloud"] = False
+    c.say("Hello", "there")
+    assert reader.said == []
+
+
+def test_typing_a_bubbles_button_presses_it(companion):
+    c = companion
+    pressed = []
+    c.say("Update ready", "Chatmon 9.9", [("Install", lambda: pressed.append("install")), ("Later", None)])
+    c.open_ask()
+    c.submit("install")
+    assert pressed == ["install"] and not c.stage.message_visible()
+    c.say("Reminder", "Stretch", [("Snooze 10 min", lambda: pressed.append("snooze")), ("Done", None)])
+    c.submit("snooze")  # its start, being one button's alone, while the bubble shows over the open chat
+    assert pressed == ["install", "snooze"]
+    c.ask_box.dismiss()
+    c.say("Reminder", "Stretch", [("Snooze 10 min", lambda: pressed.append("snooze")), ("Done", None)])
+    c.open_ask()
+    c.submit("do")  # too short to be anyone's: a question for the AI, as typed
+    assert pressed == ["install", "snooze"]
+
+
+def test_the_ask_box_says_what_each_control_is(companion):
+    c = companion
+    c.open_ask()
+    box = c.ask_box
+    assert box.entry.accessibleName() == box.title.text() and box.answer.accessibleName() == "Conversation"
+    assert box.attach_button.accessibleName() == "Attach"
+    from PyQt6.QtWidgets import QToolButton
+
+    assert "Close" in [b.accessibleName() for b in box.findChildren(QToolButton)]

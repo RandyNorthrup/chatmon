@@ -436,6 +436,7 @@ class AskBox(QWidget):
         top.addWidget(self.reset_button)
         close = QToolButton(text="✕", autoRaise=True)
         close.setToolTip("Close (Esc)")
+        close.setAccessibleName("Close")
         close.clicked.connect(self.dismiss)
         top.addWidget(close)
         layout.addLayout(top)
@@ -444,6 +445,7 @@ class AskBox(QWidget):
         self.answer.setFrameShape(QTextBrowser.Shape.NoFrame)
         self.answer.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.answer.document().setDocumentMargin(2)
+        self.answer.setAccessibleName("Conversation")
         layout.addWidget(self.answer)
         self.chips = QWidget()  # what's attached to the next question, each with its ✕
         self.chips_layout = QHBoxLayout(self.chips)
@@ -456,6 +458,8 @@ class AskBox(QWidget):
         self.attach_button = QToolButton(text="+")
         self.attach_button.setObjectName("attach")
         self.attach_button.setToolTip("Attach files, a picture or text (or paste them in)")
+        self.attach_button.setAccessibleName("Attach")
+        self.attach_button.setAccessibleDescription("Files, a picture or text; or paste them in")
         self.attach_button.clicked.connect(lambda: self.attach_requested.emit(self._below(self.attach_button)))
         row.addWidget(self.attach_button)
         self.entry = Entry()
@@ -519,6 +523,9 @@ class AskBox(QWidget):
         """Show it above `anchor`; `activate` gives it the keyboard (you asked for it)."""
         self.title.setText(title)
         self.hint.setText(QFontMetricsF(self.hint.font()).elidedText(hint, Qt.TextElideMode.ElideRight, self._content_width() - 2))
+        self.setAccessibleName(title)  # a screen reader says what the box is for as you come to it
+        self.entry.setAccessibleName(title)
+        self.entry.setAccessibleDescription(hint)
         self.entry.setPlaceholderText(placeholder)
         self.entry.setText(prefill)
         self.entry.show()
@@ -579,6 +586,7 @@ class AskBox(QWidget):
             chip = QToolButton(text=text)
             chip.setObjectName("chip")
             chip.setToolTip(f"{label}: click to take it off")
+            chip.setAccessibleName(f"Remove {label}")
             chip.clicked.connect(lambda _=False, i=i: self.attachment_removed.emit(i))
             self.chips_layout.addWidget(chip)
             used += width + 4

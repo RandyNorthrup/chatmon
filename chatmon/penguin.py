@@ -65,6 +65,7 @@ class StageWindow(QWidget):
         flags |= Qt.WindowType.X11BypassWindowManagerHint if xcb else Qt.WindowType.Tool
         super().__init__(None, flags)
         self.stage = stage
+        self.setAccessibleName("Chatmon")  # what a screen reader calls it; its bubble is its description
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setAttribute(Qt.WidgetAttribute.WA_MacAlwaysShowToolWindow)  # macOS hides tool windows otherwise
@@ -444,6 +445,11 @@ class Stage(QObject):
 
     def show_message(self, title: str, text: str = "", buttons=None, timeout_s: float | None = 12) -> None:
         self.bubble.show(title, text, buttons, timeout_s, self._clock())
+        describe = getattr(self.surface, "setAccessibleDescription", None)  # the window's: the bubble, in words
+        if describe is not None:
+            from .a11y import spoken
+
+            describe(spoken(title, text, [label for label, _ in buttons or []]))
         self._key = None
 
     def set_drawing(self, on: bool) -> None:
@@ -508,6 +514,20 @@ class Stage(QObject):
 
     def message_visible(self) -> bool:
         return self.bubble.visible()
+
+    def press_button(self, typed: str) -> bool:
+        """The bubble's button whose label was typed (or the start of it, if that's one button's alone),
+        pressed as a click would: the keyboard's and a screen reader's way to answer a bubble."""
+        from .a11y import typed_button
+
+        index = typed_button([b.label for b in self.bubble.buttons], typed) if self.bubble.visible() else None
+        if index is None:
+            return False
+        action = self.bubble.buttons[index].action
+        self.dismiss_message()
+        if action:
+            action()
+        return True
 
     def head_point(self) -> QPoint:
         """Above the penguin's head, in screen coordinates: where bubbles point."""
