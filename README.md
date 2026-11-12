@@ -242,7 +242,9 @@ follow their tools' documented options.
 
 ## AI agents: let them tell your chatmon what they're doing
 
-Right-click your chatmon, open **AI agents**, and tick the ones you use; or from a terminal:
+Your chatmon offers to connect the agents it finds, once each: a bubble with **Connect** and **Not now**.
+The Windows installer can connect them as it installs (**Connect the coding agents found here**). After
+that, right-click your chatmon, open **AI agents**, and tick or untick the ones you use; or from a terminal:
 
 ```sh
 chatmon hooks                 # what's here and what's connected
@@ -253,7 +255,7 @@ chatmon hooks show cursor     # how to do it by hand
 
 | Agent              | How it's connected                                                    |
 | ------------------ | --------------------------------------------------------------------- |
-| Claude Code        | A Claude Code plugin, installed with `claude plugin`                  |
+| Claude Code        | A Claude Code plugin, installed with `claude plugin` (on your PATH, or inside Claude Code's VS Code, Cursor or Windsurf extension) |
 | Codex              | Its `notify` program, in `~/.codex/config.toml`                       |
 | Gemini CLI         | Hooks in `~/.gemini/settings.json`                                    |
 | Muse Code          | A Muse plugin, installed and approved with `muse plugins`             |
@@ -265,6 +267,8 @@ chatmon hooks show cursor     # how to do it by hand
 | Devin CLI          | Hooks in `~/.config/devin/config.json`                                |
 
 In Claude Code you can also add the plugin yourself: `/plugin install chatmon --marketplace RandyNorthrup/chatmon`.
+A window of Claude Code that was open when you connected it can switch the plugin off again when it saves its
+settings; your chatmon says so once, with a button to switch it back on.
 
 For anything else (Aider, Kiro, OpenCode, Amp, a CI script), have it run
 `chatmon notify working|needs-you|done|success|error --source NAME`; `chatmon hooks show any` has the
@@ -313,10 +317,13 @@ details.
 - **Agents' replies stay off the screen** unless you set `agents.show_replies = true`; they can hold code
   or secrets you'd rather not have on show during a screen share. Your chatmon shows what an agent is
   waiting for, and never your prompts.
-- **Connecting an agent is always your choice.** Each connection backs up the file it changes first
+- **Connecting an agent is always your choice.** Your chatmon asks before it connects anything (and an
+  update never connects one you left off). Each connection backs up the file it changes first
   (`<file>.chatmon-backup-<time>`), touches only entries that run `chatmon` (or `penguin-companion`, its
   old name), refuses to edit a file it can't parse, never replaces something of yours (Codex allows only
   one `notify` program, Cline one script per event), and comes out again with `hooks disconnect`.
+  Uninstalling Chatmon on Windows disconnects every agent connected to it, so none is left running a
+  chatmon that's gone.
 - **Hooks can't get in an agent's way.** `notify` prints nothing, always succeeds, finishes within about a
   second even if the agent never closes its input, and returns at once if Chatmon isn't running. The AI
   tools Chatmon runs for your own questions carry `CHATMON_INTERNAL=1`, so their hooks don't make it

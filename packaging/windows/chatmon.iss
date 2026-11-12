@@ -5,7 +5,8 @@
 ;
 ; Installs for you alone (no administrator needed) or, if you choose, for everyone. Its choices:
 ; a Start menu entry, a desktop icon (off unless you tick it), chatmon on PATH for your coding agents'
-; hooks, and starting at login. Uninstalling takes all of them back out, and leaves your settings.
+; hooks, connecting the agents found here, and starting at login. Uninstalling takes all of them back out,
+; disconnecting the agents connected to it too (however they were connected), and leaves your settings.
 
 #ifndef AppVersion
   #error Pass the version: /DAppVersion=x.y.z
@@ -60,6 +61,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "startmenu"; Description: "Add Chatmon to the &Start menu"; GroupDescription: "Shortcuts:"
 Name: "desktop"; Description: "Put a Chatmon icon on the &desktop"; GroupDescription: "Shortcuts:"; Flags: unchecked
 Name: "path"; Description: "Let my coding agents' hooks run chatmon (adds it to &PATH)"; GroupDescription: "Coding agents:"
+; Needs the one above: hooks run chatmon by name. Never in a silent install (Chatmon updating itself): connecting
+; an agent is something you choose, and an update mustn't connect one you left off.
+Name: "agents"; Description: "&Connect the coding agents found here (Claude Code, Codex, Gemini CLI...), so my chatmon reacts while they work"; GroupDescription: "Coding agents:"
 ; Not in an install for everyone: there it would be the administrator's login it changed, not yours (Chatmon's
 ; own menu turns it on for whoever uses it).
 Name: "autostart"; Description: "Start Chatmon when I &log in"; GroupDescription: "Starting:"; Flags: unchecked; Check: not IsAdminInstallMode
@@ -141,13 +145,41 @@ begin
   Result := '';
 end;
 
+{ Connect the coding agents found here, as you (in an install for everyone too): their settings are in your
+  home folder. chatmon reads PATH as Windows has it now, so it finds itself there by name. }
+procedure ConnectAgents;
+var
+  Code: Integer;
+begin
+  WizardForm.StatusLabel.Caption := 'Connecting your coding agents...';
+  ExecAsOriginalUser(ExpandConstant('{app}\chatmon.exe'), 'hooks connect all', '', SW_HIDE, ewWaitUntilTerminated, Code);
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then
+  begin
     if WizardIsTaskSelected('path') then
       AddToPath(EnvRoot, EnvKey, ExpandConstant('{app}'))
     else
       RemoveFromPath(EnvRoot, EnvKey, ExpandConstant('{app}'));
+    if WizardIsTaskSelected('path') and WizardIsTaskSelected('agents') and not WizardSilent then
+      ConnectAgents;
+  end;
+end;
+
+{ Take Chatmon's hooks back out of the coding agents connected to it, while chatmon.exe is still here to do
+  it: left in, they'd go on running a chatmon that's gone (Codex at the end of every turn). Only agents that
+  are connected are touched. As whoever uninstalls (Setup's "as the original user" isn't there at uninstall
+  time): you, in an install for you alone. }
+procedure DisconnectAgents;
+var
+  Code: Integer;
+begin
+  if not FileExists(ExpandConstant('{app}\chatmon.exe')) then exit;
+  if not UninstallSilent then
+    UninstallProgressForm.StatusLabel.Caption := 'Disconnecting your coding agents...';
+  Exec(ExpandConstant('{app}\chatmon.exe'), 'hooks disconnect all', '', SW_HIDE, ewWaitUntilTerminated, Code);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
@@ -157,6 +189,7 @@ begin
   if CurUninstallStep = usUninstall then
   begin
     QuitChatmon;
+    DisconnectAgents;
     RemoveFromPath(EnvRoot, EnvKey, ExpandConstant('{app}'));
     { Starting at login, whether set here or from Chatmon's own menu, if it starts this one. }
     if RegQueryStringValue(HKCU, RunKey, 'Chatmon', Command) then

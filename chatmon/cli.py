@@ -145,6 +145,7 @@ def _real_source(source: str | None) -> str | None:
 def hooks(args: list[str]) -> int:
     from . import agents
 
+    paths.windows_environment()  # run by the installer, from before it put chatmon on PATH
     action = args[0] if args else "list"
     target = args[1] if len(args) > 1 else None
     if action == "list":
@@ -159,7 +160,12 @@ def hooks(args: list[str]) -> int:
     if action not in ("connect", "disconnect") or not target:
         print(USAGE, end="", file=sys.stderr)
         return 2
-    chosen = [a for a in agents.AGENTS if a.detected()] if target == "all" else [agents.find(target)]
+    if target == "all":  # connecting, every agent found here; disconnecting, only those connected: nobody else's file is touched
+        chosen = [a for a in agents.AGENTS if (a.detected() if action == "connect" else a.connected())]
+        if not chosen:
+            print("No coding agents found here." if action == "connect" else "No coding agents are connected.")
+    else:
+        chosen = [agents.find(target)]
     if chosen == [None]:
         print(f"Unknown agent {target!r}. Known: {', '.join(a.name for a in agents.AGENTS)}", file=sys.stderr)
         return 2

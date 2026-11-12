@@ -205,6 +205,53 @@ def login_environment(timeout: float = 4.0) -> list[str]:
     return adopted
 
 
+_MACHINE_ENVIRONMENT = r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
+
+
+def windows_path_with(current: str, folders: list[str]) -> str:
+    """A Windows PATH: `current` as it is, then each of `folders` it doesn't have yet (in any case, with or
+    without a backslash on the end)."""
+
+    def key(folder: str) -> str:
+        return folder.strip().rstrip("\\/").casefold()
+
+    have = {key(p) for p in current.split(";") if p.strip()}
+    added = []
+    for folder in folders:
+        if folder.strip() and key(folder) not in have:
+            have.add(key(folder))
+            added.append(folder.strip())
+    return ";".join([p for p in current.split(";") if p] + added) if added else current
+
+
+def windows_environment() -> bool:
+    """Windows: the folders Windows keeps on PATH now, the computer's and yours, after those this process
+    started with. A program gets its environment from whatever started it, and one an installer starts gets
+    the installer's, from before it put chatmon on PATH: Chatmon started by its own installer ("Start Chatmon
+    now", an update), or connecting agents from it, wouldn't find chatmon on PATH, so hooks would get a full
+    path, and Claude Code's plugin, which runs chatmon by name, couldn't be connected at all. Nothing already
+    on PATH moves. Returns whether anything was added."""
+    if sys.platform != "win32":
+        return False
+    import winreg
+
+    folders: list[str] = []
+    for root, key in ((winreg.HKEY_LOCAL_MACHINE, _MACHINE_ENVIRONMENT), (winreg.HKEY_CURRENT_USER, "Environment")):
+        try:
+            with winreg.OpenKey(root, key) as handle:
+                value, _ = winreg.QueryValueEx(handle, "Path")
+        except OSError:
+            continue
+        if isinstance(value, str):
+            folders += winreg.ExpandEnvironmentStrings(value).split(";")
+    current = os.environ.get("PATH", "")
+    path = windows_path_with(current, folders)
+    if path == current:
+        return False
+    os.environ["PATH"] = path
+    return True
+
+
 # Windows PowerShell's own modules first. Started from PowerShell 7 (a terminal, a script), Chatmon passes on
 # PowerShell 7's module path, and Windows PowerShell would load PowerShell 7's modules, which it can't:
 # Get-AuthenticodeSignature and every other module command fail. Set before the script, it's what they load.
