@@ -4,9 +4,10 @@
   Windows GetLastInputInfo; macOS CGEventSourceSecondsSinceLastEventType; on Linux, the Wayland overlay's
   ext-idle-notify-v1 (told to us by layer.py), GNOME's IdleMonitor, or X11's XScreenSaver extension.
 - Whether to hold bubbles back: a full-screen app or a presentation (Windows SHQueryUserNotificationState,
-  and a full-screen window in front on the chatmon's monitor), quiet hours, Windows 11's Focus (winfocus.py),
-  or Do Not Disturb (KDE's notification server, GNOME's show-banners). On the Wayland overlay and on macOS
-  the system itself keeps the chatmon out of a full-screen app's way.
+  and a full-screen window in front on the chatmon's monitor; on macOS, a full-screen app over the chatmon's
+  screen, from CoreGraphics' window list in macnative.py), quiet hours, Windows 11's Focus (winfocus.py), or
+  Do Not Disturb (KDE's notification server, GNOME's show-banners). On the Wayland overlay and on macOS the
+  system itself keeps the chatmon out of a full-screen app's way.
 - Reduced motion and high contrast, which the chatmon follows unless you chose otherwise.
 
 Every reading is best effort: one that can't be had says None (don't know), never raises.
@@ -344,12 +345,14 @@ class Desk:
         x = self._x()
         return x.idle() if x else None
 
-    def quiet(self) -> str | None:
-        """Why bubbles should wait (a full-screen app, a presentation, Do Not Disturb), or None."""
+    def quiet(self, stage_window: int = 0) -> str | None:
+        """Why bubbles should wait (a full-screen app, a presentation, Do Not Disturb), or None. `stage_window`
+        is the stage's native window, which macOS needs: its full-screen apps are on one screen at a time."""
         if sys.platform == "win32":
             return _win_quiet() or ("Focus" if self._win_focus() else None)
         if sys.platform == "darwin":
-            return None  # full-screen apps have their own Space, which the chatmon stays out of
+            # A full-screen app has a Space of its own, which the chatmon stays out of: bubbles there go unseen.
+            return "a full-screen app" if self.covered(stage_window) else None
         if "kde" in self._desktop:
             bus = _session_bus()
             if bus and _dbus_call(bus, "org.freedesktop.Notifications", "/org/freedesktop/Notifications",
@@ -366,6 +369,12 @@ class Desk:
         """Is a full-screen window in front, over the chatmon's own screen? Then it stays out of the way."""
         if sys.platform == "win32":
             return _win_covered(stage_window)
+        if sys.platform == "darwin":
+            if self.platform != "cocoa":  # only Qt's cocoa windows are NSViews to ask AppKit about
+                return False
+            from . import macnative
+
+            return macnative.full_screen_over(stage_window)
         x = self._x()
         return bool(x and x.fullscreen_in_front())
 

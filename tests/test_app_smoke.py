@@ -698,7 +698,7 @@ class PretendDesk:
     def idle_seconds(self):
         return self.idle
 
-    def quiet(self):
+    def quiet(self, _window=0):
         return self.why_quiet
 
     def covered(self, _window):
@@ -736,6 +736,24 @@ def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
     c._check_quiet()
     spin(1.0)
     assert c.stage.message_visible() and c.stage.bubble.title == "Claude finished" and c._held == []
+
+
+def test_on_macos_an_ask_box_left_open_under_a_full_screen_app_holds_nothing_back(companion, monkeypatch):
+    """A full-screen app's Space on macOS shows none of Chatmon's windows: an ask box left open is no sign
+    you're there, and bubbles wait all the same. Elsewhere, an open ask box means you're using Chatmon."""
+    c = companion
+    c.desk = desk = PretendDesk()
+    spin(1.8)
+    c.stage.dismiss_message()
+    c.open_ask()
+    desk.why_quiet = desk.is_covered = "a full-screen app"
+    c._check_quiet()
+    monkeypatch.setattr(sys, "platform", "darwin")
+    c.say("Claude finished", timeout_s=8)
+    assert len(c._held) == 1 and c.stage.bubble.title != "Claude finished"
+    monkeypatch.setattr(sys, "platform", "win32")
+    c.say("Codex finished", timeout_s=8)
+    assert len(c._held) == 1 and c.stage.bubble.title == "Codex finished"
 
 
 def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(companion, monkeypatch):

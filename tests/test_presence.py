@@ -76,6 +76,36 @@ def test_macos_readings():
     assert desk.quiet() is None and isinstance(desk.reduce_motion(), bool)
 
 
+def test_a_full_screen_app_fills_the_chatmons_screen_from_its_top_edge():
+    """As macOS's window list has it: a full-screen app's window, or either half of Split View, starts at the
+    screen's very top (no menu bar); every other window starts below the menu bar."""
+    from chatmon.macnative import Window, fills_from_top
+
+    screen = (0.0, 0.0, 1280.0, 1024.0)
+    full = Window(pid=7, layer=0, on_screen=True, bounds=(0.0, 0.0, 1280.0, 1024.0))
+    left_half = Window(7, 0, True, (0.0, 0.0, 636.0, 1024.0))
+    maximized = Window(7, 0, True, (0.0, 25.0, 1280.0, 920.0))  # below the menu bar
+    title_strip = Window(7, 0, True, (0.0, -44.0, 1280.0, 44.0))  # a full-screen app's hidden title bar
+    menu_bar = Window(9, 24, True, (0.0, 0.0, 1280.0, 25.0))  # not an app's window
+    elsewhere = Window(7, 0, True, (1280.0, 0.0, 1920.0, 1080.0))  # full screen, on the other monitor
+    assert fills_from_top(screen, [maximized, full]) and fills_from_top(screen, [left_half])
+    assert not fills_from_top(screen, [maximized, title_strip, menu_bar, elsewhere])
+    assert fills_from_top((1280.0, 0.0, 1920.0, 1080.0), [elsewhere])
+
+
+def test_bubbles_wait_on_macos_while_a_full_screen_app_is_over_the_chatmon(monkeypatch):
+    from chatmon import macnative
+
+    over = []
+    monkeypatch.setattr(macnative, "full_screen_over", lambda view: view in over)
+    monkeypatch.setattr(presence.sys, "platform", "darwin")
+    desk = presence.Desk("cocoa")
+    assert desk.quiet(1234) is None and not desk.covered(1234)
+    over.append(1234)
+    assert desk.quiet(1234) == "a full-screen app" and desk.covered(1234)
+    assert presence.Desk("offscreen").quiet(1234) is None  # only Qt's cocoa windows are NSViews to ask about
+
+
 def test_every_reading_answers_or_says_it_cant(qapp):
     desk = presence.Desk("offscreen")
     try:

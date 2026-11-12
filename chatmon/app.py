@@ -294,7 +294,11 @@ class Companion(QObject):
     # -- talking
 
     def _with_you(self) -> bool:
-        """You're using Chatmon right now (its ask box or menu is open): it's no time to hold back."""
+        """You're using Chatmon right now (its ask box or menu is open): it's no time to hold back. Not on
+        macOS under a full-screen app (the one quiet there): its Space shows none of Chatmon's windows, the ask
+        box included, so one left open there is no sign of you."""
+        if sys.platform == "darwin" and self._quiet:
+            return False
         return self.ask_box.isVisible() or self._menu_open
 
     def say(self, title: str, text: str = "", buttons=None, timeout_s: float | None = 12) -> None:
@@ -316,7 +320,9 @@ class Companion(QObject):
             return
         if self._quiet and self.desk.covered(self.stage.native_window()):
             # Under a full-screen app: it waits for you, and the system's own notification says so now
-            # (which follows your Do Not Disturb). macOS's needs a signed app: there it just waits.
+            # (which follows your Do Not Disturb). macOS's needs an app signed with an Apple Developer ID:
+            # Chatmon's ad hoc signed one asks and is never answered (UNUserNotificationCenter), so there
+            # it just waits.
             self._held = (self._held + [partial(self.alert, key, title, text, buttons)])[-5:]
             # Only that something's waiting: the system keeps notifications (Action Center, a phone linked
             # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
@@ -353,7 +359,7 @@ class Companion(QObject):
 
     def _check_quiet(self) -> None:
         was = self._quiet
-        self._quiet = self.desk.quiet()
+        self._quiet = self.desk.quiet(self.stage.native_window())
         self.stage.set_covered(self.desk.covered(self.stage.native_window()) and self._alert_key is None)
         if was and not self._quiet and self._held:
             held, self._held = self._held, []

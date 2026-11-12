@@ -76,6 +76,8 @@ class StageWindow(QWidget):
         self._covered = False
 
     def set_covered(self, on: bool) -> None:
+        if QGuiApplication.platformName() == "cocoa":
+            return  # macOS keeps it out of full-screen apps' Spaces itself, and that's how one is told (macnative.py)
         if on != self._covered:
             self._covered = on
             self.setVisible(not on)

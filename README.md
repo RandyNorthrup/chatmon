@@ -181,7 +181,8 @@ sent anywhere, and never part of a chat; anything else goes to the brain you pic
 
 It keeps out of your way: bubbles wait while a full-screen app, a presentation, Do Not Disturb (KDE, GNOME)
 or Focus (Windows 11) is on, and the chatmon gives way to full-screen windows (something that needs you still
-comes through as a system notification). Time away from the keyboard counts toward a break, locked or not,
+comes through as a system notification; on macOS, where only an app signed with an Apple Developer ID may
+send one, it waits for you instead). Time away from the keyboard counts toward a break, locked or not,
 as does sleep. In power-saver mode it draws less often, and on Windows not at all while the screen is locked
 or off. Reduced motion and high contrast are followed unless you choose otherwise.
 
@@ -331,8 +332,10 @@ details.
 - **What it notices about you stays with it.** How long since you last typed, whether a full-screen app,
   Do Not Disturb or Focus is on, and your accessibility settings are read from your own system, as you use it,
   and never kept or sent anywhere. To tell a full-screen app is in front, it looks only at the front
-  window's size and state (Windows, X11), never its title or contents; on macOS and the Wayland overlay the
-  system keeps the chatmon out of a full-screen app's way itself.
+  window's size and state (Windows, X11), never its title or contents. On macOS and the Wayland overlay the
+  system keeps the chatmon out of a full-screen app's way itself; on macOS, whether that's happened is told
+  from where windows are and whose they are, which needs no Screen Recording permission, never from what
+  they show.
 - **Answers are only shown.** Links open in your browser only if they're web or mail links, and an image
   in an answer is never loaded (it would have the app read the file it names).
 
