@@ -61,7 +61,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 Name: "startmenu"; Description: "Add Chatmon to the &Start menu"; GroupDescription: "Shortcuts:"
 Name: "desktop"; Description: "Put a Chatmon icon on the &desktop"; GroupDescription: "Shortcuts:"; Flags: unchecked
-Name: "path"; Description: "Let my coding agents' hooks run chatmon (adds it to &PATH)"; GroupDescription: "Coding agents:"
+; checkablealone: with the task under it unticked (as it is unless you tick it), this one stays ticked; without
+; it, Inno unticks a task whose child tasks are all unticked.
+Name: "path"; Description: "Let my coding agents' hooks run chatmon (adds it to &PATH)"; GroupDescription: "Coding agents:"; Flags: checkablealone
 ; Under the one above, since hooks run chatmon by name: unticking PATH unticks it. Off unless you tick it, and not
 ; ticked along with PATH (dontinheritcheck): connecting an agent is something you choose, and Chatmon offers it
 ; itself on its first run. Never in a silent install (Chatmon updating itself), so an update can't connect one
