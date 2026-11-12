@@ -42,7 +42,10 @@ BUNDLE(  # noqa: F821
         "CFBundleShortVersionString": VERSION,
         "CFBundleVersion": VERSION,
         "LSUIElement": True,  # it lives on the desktop and in the menu bar: no Dock icon
+        "LSMinimumSystemVersion": "13.0",  # Qt 6.11's own minimum, and SMAppService's (starting at login)
         "NSHighResolutionCapable": True,
+        # What macOS shows when it asks you to let Chatmon reach a model server on another computer.
+        "NSLocalNetworkUsageDescription": "Chatmon talks to model servers on your network, such as Ollama or LM Studio on another computer, when you choose one as its brain.",
         "NSHumanReadableCopyright": "Copyright (c) 2026 Randy Northrup. MIT License.",
     },
 )

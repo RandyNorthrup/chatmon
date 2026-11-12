@@ -104,9 +104,23 @@ def test_without_a_runtime_folder_the_socket_is_in_a_private_one(tmp_path, monke
     monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
     monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "state"))
     monkeypatch.setattr(paths.Path, "home", lambda: tmp_path)
+    monkeypatch.setattr(paths, "SOCKET_PATH_MAX", 4096)  # pytest's own folders are long enough to need the next test's way
     sock = paths.socket_path()
     assert tmp_path in sock.parents and "/tmp/" not in str(sock).replace(str(tmp_path), "")
     assert (sock.parent.stat().st_mode & 0o777) == 0o700
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="macOS's temporary folder of your own")
+def test_a_long_user_name_puts_the_socket_in_your_own_temporary_folder(monkeypatch):
+    """A socket's address is 104 bytes on macOS: past about 37 characters of user name, the usual path won't
+    fit. Then it's in the temporary folder macOS keeps for you alone, the same for every process of yours."""
+    monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
+    monkeypatch.setattr(paths.Path, "home", lambda: Path("/Users") / ("a" * 40))
+    sock = paths.socket_path()
+    assert len(os.fsencode(sock)) <= paths.SOCKET_PATH_MAX and sock.name == "chatmon.sock"
+    folder = sock.parent.stat()
+    assert folder.st_uid == os.getuid() and folder.st_mode & 0o777 == 0o700
+    assert paths.socket_path() == sock  # the CLI and hooks work it out the same way
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="a named pipe there")

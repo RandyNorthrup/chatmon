@@ -90,19 +90,31 @@ def work_dir() -> Path:
     return path
 
 
+SOCKET_PATH_MAX = 103  # bytes in a Unix socket's address on macOS (sun_path), less its terminating NUL
+_CS_DARWIN_USER_TEMP_DIR = 65537  # confstr: your own temporary folder, /var/folders/…/T/, yours alone (0700)
+
+
 def socket_path() -> Path:
     run = os.environ.get("XDG_RUNTIME_DIR")
     if run:
         return Path(run) / f"{APP}.sock"
-    # No runtime folder (an ssh session, a container): a folder of our own, not the shared /tmp, where
+    # No runtime folder (macOS, an ssh session, a container): a folder of our own, not the shared /tmp, where
     # another user could take the name first and hear every agent's events.
     folder = state_dir() / "run"
+    path = folder / f"{APP}.sock"
+    if sys.platform == "darwin" and len(os.fsencode(path)) > SOCKET_PATH_MAX:
+        # A user name of more than about 37 characters makes it too long to be a socket's address. macOS keeps
+        # a temporary folder for each user, open to them alone: the same for the app, the CLI and every hook.
+        try:
+            return Path(os.confstr(_CS_DARWIN_USER_TEMP_DIR)) / f"{APP}.sock"
+        except (OSError, ValueError, TypeError):
+            pass
     try:
         folder.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(folder, 0o700)
     except OSError:
         pass
-    return folder / f"{APP}.sock"
+    return path
 
 
 def server_name() -> str:

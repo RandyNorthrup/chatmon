@@ -93,7 +93,7 @@ Download the one for your computer from the [latest release](https://github.com/
 | Your computer                          | Download                                         | Then                                                     |
 | -------------------------------------- | ------------------------------------------------ | -------------------------------------------------------- |
 | **Windows** 10 or 11                   | `Chatmon-<version>-windows-x64-setup.exe`        | Run it. It installs for you alone (no administrator needed) and asks whether to add Chatmon to the Start menu and the desktop, and to start it when you log in. |
-| **macOS**, Apple silicon or Intel      | `Chatmon-<version>-macos-arm64.pkg` or `-intel.pkg` | Open it. Chatmon goes in Applications, and the `chatmon` command your agents' hooks run goes on your PATH. (The `.dmg` is the same app to drag in yourself, without that command.) |
+| **macOS** 13+, Apple silicon or Intel  | `Chatmon-<version>-macos-arm64.pkg` or `-intel.pkg` | Open it. Chatmon goes in Applications, and the `chatmon` command your agents' hooks run goes on your PATH. (The `.dmg` is the same app to drag in yourself, without that command.) |
 | **Ubuntu** 24.04+, **Debian** 13+      | `chatmon_<version>-1_all.deb`                    | `sudo apt install ./chatmon_<version>-1_all.deb`         |
 | **Fedora** 44+                         | `chatmon-<version>-1.noarch.rpm`                 | `sudo dnf install ./chatmon-<version>-1.noarch.rpm`      |
 
@@ -323,8 +323,9 @@ details.
   shell; a model, effort or thinking choice is used only if it's one the brain takes, and a model name
   that could pass for a flag is refused.
 - **Only you can talk to it.** Hooks reach it through a local socket (a named pipe on Windows) open to
-  your user account alone, in a folder of its own when there's no session runtime folder, never in shared
-  `/tmp`; a hook sends only to a socket you own, and messages are size-limited. Pipe names on Windows are
+  your user account alone, in a folder of its own when there's no session runtime folder (on macOS, with a
+  user name too long for that path to be a socket's address, the temporary folder macOS keeps for you
+  alone), never in shared `/tmp`; a hook sends only to a socket you own, and messages are size-limited. Pipe names on Windows are
   shared by every user of the PC, so a hook first checks that the pipe's server runs as you, and Chatmon
   claims its pipe name before it listens; if another user got there first, it won't listen and says so.
 - **Keys** are read from environment variables (or `${VAR}` in a header) and are never written to logs.

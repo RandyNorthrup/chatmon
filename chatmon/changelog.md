@@ -35,6 +35,8 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Linux:** a laptop with two batteries gets its battery warnings for both together, as the desktop's battery icon shows them, not for the first alone.
 - **Windows:** the file dialogs for attaching files and saving a chat open above the chatmon, never under it.
 - **Windows:** an update's signature is checked by Windows itself, without PowerShell, so updates install on PCs where PowerShell is blocked.
+- **macOS:** hooks and the `chatmon` command reach Chatmon whatever the length of your user name; past about 37 characters, its socket's address was too long for macOS.
+- **macOS:** Chatmon says it needs macOS 13 or later, and says why when macOS asks whether it may reach a model server on your network.
 
 ## 0.6.0
 
