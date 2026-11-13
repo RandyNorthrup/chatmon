@@ -174,7 +174,7 @@ own state folder, so upgrades can't take it away again.
 | Drag it                          | Comes along; let go and it drops back to the taskbar     |
 | Right-click it, or the tray icon | The menu: ask, chats, remind, focus timer, reminders, brain, companion, bubble style, AI agents, walk, hide, help & updates, settings |
 | Click the tray icon              | Hides it, or brings it back                              |
-| **+** in the ask box             | Attach files, a picture or text; or paste them (Ctrl+V), or drop them on it |
+| **+** in the ask box             | Attach files, a picture or text; or paste them (Ctrl+V, Cmd+V on macOS), or drop them on it |
 | **History** in the ask box       | Your chats: carry on with one, rename it, pin it to the top, save it as Markdown, or delete it |
 
 Besides questions, the ask box does a lot without any AI: reminders and timers, focus sessions, notes, a
@@ -353,6 +353,9 @@ details.
   system keeps the chatmon out of a full-screen app's way itself; on macOS, whether that's happened is told
   from where windows are and whose they are, which needs no Screen Recording permission, never from what
   they show.
+- **The clipboard is read only when you paste** into the ask box: Ctrl+V (Cmd+V), **Paste** in its
+  right-click menu, or **+** › **Paste from the clipboard**. On macOS each comes through a menu of macOS's
+  own, so macOS, which can ask before an app reads the clipboard, knows it was you.
 - **Answers are only shown.** Links open in your browser only if they're web or mail links, and an image
   in an answer is never loaded (it would have the app read the file it names).
 

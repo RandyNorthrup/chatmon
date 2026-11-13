@@ -30,7 +30,7 @@ from PyQt6.QtGui import (
     QTextCursor,
     QTextDocument,
 )
-from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QTextBrowser, QToolButton, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QMenu, QTextBrowser, QToolButton, QVBoxLayout, QWidget
 
 from . import bubbleart, styles
 
@@ -344,7 +344,40 @@ class Entry(QLineEdit):
         else:
             super().keyPressEvent(event)
 
+    def edit_menu(self) -> QMenu:
+        """Undo to Select All, as Qt's own menu for a field has them, without reading the clipboard to open: Qt's
+        does, to enable Paste, which macOS takes for Chatmon reading it unasked."""
+        menu = QMenu(self)
+        writable, chosen = not self.isReadOnly(), self.hasSelectedText()
+        for entry in (
+            ("Undo", self.undo, writable and self.isUndoAvailable()),
+            ("Redo", self.redo, writable and self.isRedoAvailable()),
+            None,
+            ("Cut", self.cut, writable and chosen),
+            ("Copy", self.copy, chosen),
+            ("Paste", self.paste_requested.emit, writable),
+            ("Delete", self.del_, writable and chosen),
+            None,
+            ("Select All", self.selectAll, bool(self.text()) and self.selectedText() != self.text()),
+        ):
+            if entry is None:
+                menu.addSeparator()
+                continue
+            label, act, on = entry
+            menu.addAction(label, act).setEnabled(on)
+        return menu
+
     def contextMenuEvent(self, event) -> None:
+        if QGuiApplication.platformName() == "cocoa":
+            # Its own menu, shown as a native one: Paste chosen in a menu Qt draws is no paste of yours to macOS,
+            # which then asks whether Chatmon may, or inside that menu can't ask and stops it (macnative.py).
+            from . import macnative
+
+            menu = self.edit_menu()
+            if not macnative.popup(menu, event.globalPos(), self):
+                menu.exec(event.globalPos())
+            menu.deleteLater()
+            return
         menu = self.createStandardContextMenu()
         for action in menu.actions():
             if action.objectName() == "edit-paste":

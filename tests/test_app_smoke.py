@@ -1319,12 +1319,16 @@ def test_quitting_closes_what_listens_to_the_system(companion):
     assert c._lock_watcher.closed == 1
 
 
-def test_the_ask_boxs_menus_stay_open_once_shown(companion):
-    """+ and History: nothing else holds their menus once shown, so a menu holds itself until it closes."""
+def test_the_ask_boxs_menus_stay_open_once_shown(companion, monkeypatch):
+    """+ and History: nothing else holds their menus once shown, so a menu holds itself until it closes. (Qt's
+    menus: macOS shows native ones, which tests can't, as they wait for a choice.)"""
     import gc
 
     from PyQt6.QtCore import QPoint
 
+    from chatmon import macnative
+
+    monkeypatch.setattr(macnative, "popup", lambda menu, pos, opener: False)
     c = companion
     c.open_ask()
 
@@ -1339,3 +1343,37 @@ def test_the_ask_boxs_menus_stay_open_once_shown(companion):
             w.close()
     c._show_history(QPoint(20, 20))
     assert "New chat" in showing()
+
+
+def test_the_chat_fields_own_menu_is_undo_to_select_all(companion):
+    entry = companion.ask_box.entry
+    entry.clear()
+    entry.insert("hello")  # as typed: it can be undone
+    entry.setSelection(1, 3)
+    pasted = []
+    entry.paste_requested.disconnect()  # the chat's own paste would read the real clipboard (on cocoa)
+    entry.paste_requested.connect(lambda: pasted.append(True))
+    menu = entry.edit_menu()
+    actions = {a.text(): a for a in menu.actions() if not a.isSeparator()}
+    assert list(actions) == ["Undo", "Redo", "Cut", "Copy", "Paste", "Delete", "Select All"]
+    assert [a.isEnabled() for a in actions.values()] == [True, False, True, True, True, True, True]
+    actions["Paste"].trigger()
+    assert pasted == [True]
+    actions["Delete"].trigger()
+    assert entry.text() == "ho"
+
+
+def test_on_macos_the_chat_field_shows_its_own_menu_natively(companion, monkeypatch):
+    """Qt's menu for a field reads the clipboard to open, and Paste chosen in a menu Qt draws makes macOS ask
+    whether Chatmon may paste (inside that menu, it stopped Chatmon): its own menu, as a native one."""
+    from PyQt6.QtCore import QPoint
+    from PyQt6.QtGui import QContextMenuEvent, QGuiApplication
+
+    from chatmon import macnative
+
+    shown = []
+    monkeypatch.setattr(QGuiApplication, "platformName", staticmethod(lambda: "cocoa"))
+    monkeypatch.setattr(macnative, "popup", lambda menu, pos, opener: shown.append([a.text() for a in menu.actions() if not a.isSeparator()]) or True)
+    entry = companion.ask_box.entry
+    entry.contextMenuEvent(QContextMenuEvent(QContextMenuEvent.Reason.Mouse, QPoint(5, 5), entry.mapToGlobal(QPoint(5, 5))))
+    assert shown == [["Undo", "Redo", "Cut", "Copy", "Paste", "Delete", "Select All"]]

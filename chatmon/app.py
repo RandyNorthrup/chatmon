@@ -15,8 +15,8 @@ from functools import partial
 from pathlib import Path
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
-from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiApplication, QIcon
+from PyQt6.QtCore import QEvent, QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
+from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiApplication, QIcon, QKeyEvent
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
@@ -188,6 +188,7 @@ class Companion(QObject):
         self.ask_box.attach_requested.connect(self._show_attach)
         self.ask_box.pasted.connect(self._attach_pasted)
         self.ask_box.attachment_removed.connect(self._remove_attachment)
+        QTimer.singleShot(0, self._mac_edit_menu)  # once Qt has made the menu bar, as the app starts
         self.asker.answered.connect(self._answered)
         self.asker.failed.connect(self._failed)
         self.server.newConnection.connect(self._accept)
@@ -503,6 +504,7 @@ class Companion(QObject):
         if now - self._last_ask > 15 * 60 and self.chat.messages:
             self._start_chat()  # a while since: a fresh one (the last is in History)
         self._last_ask = now
+        self._mac_edit_menu()  # still there (it's put back if the menu bar was made again)
         anchor = self.stage.head_point()
         if self._asking_name:
             self.ask_box.open(
@@ -720,13 +722,34 @@ class Companion(QObject):
             self.say(f"Delete “{chat.title or 'this chat'}”?", "It can't be brought back.", [("Delete it", partial(self._delete_chat, chat_id)), ("Keep it", None)], timeout_s=30)
 
     def _popup(self, menu: QMenu, pos: QPoint) -> None:
-        """A menu of the moment, where it can be seen: drawn by the stage on the Wayland overlay."""
+        """A menu of the moment, where it can be seen: drawn by the stage on the Wayland overlay, and on macOS a
+        native one, so a paste chosen there is yours to macOS (macnative.py)."""
         if self.stage.draws_menus():
             self.stage.open_menu(menu, pos, owned=True)
-        else:
-            sip.transferto(menu, None)  # it outlives the caller's hold on it, until it closes
-            menu.aboutToHide.connect(menu.deleteLater)
-            menu.popup(pos)
+            return
+        if QGuiApplication.platformName() == "cocoa":
+            from . import macnative
+
+            if macnative.popup(menu, pos, self.ask_box):
+                return
+        sip.transferto(menu, None)  # it outlives the caller's hold on it, until it closes
+        menu.aboutToHide.connect(menu.deleteLater)
+        menu.popup(pos)
+
+    def _mac_edit_menu(self) -> None:
+        """macOS: Cmd+V through an Edit menu of Chatmon's own, so macOS knows you pasted (macnative.py)."""
+        if QGuiApplication.platformName() == "cocoa":
+            from . import macnative
+
+            macnative.edit_menu(self._paste_into_focus)
+
+    @staticmethod
+    def _paste_into_focus() -> None:
+        """The Edit menu's Paste: to the widget with the keyboard, as Cmd+V itself would have gone."""
+        widget = QApplication.focusWidget()
+        if widget is not None:
+            for kind in (QEvent.Type.KeyPress, QEvent.Type.KeyRelease):
+                QApplication.sendEvent(widget, QKeyEvent(kind, Qt.Key.Key_V, Qt.KeyboardModifier.ControlModifier, "v"))
 
     def _show_history(self, pos: QPoint) -> None:
         menu = QMenu()

@@ -90,3 +90,78 @@ def test_the_login_item_says_how_it_stands(cocoa):
     from chatmon import macnative
 
     assert macnative.login_item() in (macnative.NOT_REGISTERED, macnative.ENABLED, macnative.REQUIRES_APPROVAL, macnative.NOT_FOUND)
+
+
+def _objc():
+    """What the tests below ask of a native menu, with each call's exact prototype."""
+    import ctypes
+
+    from chatmon import macnative
+
+    rt = macnative._rt()
+    send = ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value
+    at = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_long)(send)  # itemAtIndex:
+    run = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_long)(send)  # performActionForItemAtIndex:
+    yes = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(send)
+
+    def items(menu):
+        return [at(menu, rt.sel("itemAtIndex:"), i) for i in range(rt.long(menu, rt.sel("numberOfItems")))]
+
+    def text(obj, name):
+        return rt.text(rt.obj(obj, rt.sel(name)), rt.sel("UTF8String")).decode()
+
+    return rt, items, text, lambda menu, i: run(menu, rt.sel("performActionForItemAtIndex:"), i), lambda o, name: yes(o, rt.sel(name))
+
+
+def test_cmd_v_comes_through_an_edit_menu_of_chatmons_own(cocoa):
+    """macOS counts a paste as yours only from a native menu item (its pasteboard privacy): Cmd+V is that one's."""
+    from chatmon import macnative
+
+    rt, items, text, perform, _ = _objc()
+    pasted = []
+    assert macnative.edit_menu(lambda: pasted.append(True))
+    assert macnative.edit_menu(lambda: pasted.append(True))  # once only
+    app = rt.obj(rt.cls("NSApplication"), rt.sel("sharedApplication"))
+    edits = [i for i in items(rt.obj(app, rt.sel("mainMenu"))) if text(i, "title") == "Edit" and rt.obj(i, rt.sel("submenu"))]
+    assert len(edits) == 1
+    edit = rt.obj(edits[0], rt.sel("submenu"))
+    (paste,) = items(edit)
+    assert text(paste, "title") == "Paste" and text(paste, "keyEquivalent") == "v"
+    perform(edit, 0)
+    assert pasted == [True]
+
+
+def test_a_menu_shown_natively_has_the_qmenus_items_and_triggers_its_actions(cocoa):
+    from PyQt6.QtWidgets import QMenu
+
+    from chatmon import macnative
+
+    rt, items, text, perform, yes = _objc()
+    chosen = []
+    menu = QMenu()
+    menu.addAction("Attach files…", lambda: chosen.append("attach"))
+    menu.addAction("&Paste from the clipboard", lambda: chosen.append("paste"))
+    menu.addAction("Nothing to take off").setEnabled(False)
+    menu.addSection("Your chats")
+    keep = menu.addAction("Keep chat history")
+    keep.setCheckable(True)
+    keep.setChecked(True)
+    menu.addMenu("A chat").addAction("Carry on", lambda: chosen.append("carry on"))
+    macnative._menus().actions = []
+    native = macnative._menus().mirror(menu)
+    listed = items(native)
+    assert [text(i, "title") for i in listed] == ["Attach files…", "Paste from the clipboard", "Nothing to take off", "", "Your chats", "Keep chat history", "A chat"]
+    assert [yes(i, "isEnabled") for i in listed] == [True, True, False, False, False, True, True]
+    assert yes(listed[3], "isSeparatorItem") and rt.long(listed[5], rt.sel("state")) == 1
+    perform(native, 1)
+    perform(native, 5)
+    perform(rt.obj(listed[6], rt.sel("submenu")), 0)
+    assert chosen == ["paste", "carry on"] and not keep.isChecked()
+
+
+def test_menu_text_is_as_macos_shows_it():
+    from chatmon import macnative
+
+    assert macnative.menu_text("&Paste") == "Paste"
+    assert macnative.menu_text("Save && quit") == "Save & quit"
+    assert macnative.menu_text("Cu&t\tCtrl+X") == "Cut"

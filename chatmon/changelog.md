@@ -6,6 +6,8 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 
 ### Fixes
 - **+** and **History** in the chat open their menus. Except on the Wayland overlay, clicking them showed nothing, so **Paste from the clipboard** and earlier chats couldn't be reached from the chat.
+- **macOS:** pasting into the chat counts as your own paste where macOS asks before an app reads the clipboard (macOS 15.4 and later can, and Apple means to make it the default): **Cmd+V**, **Paste** in the field's right-click menu and **+** › **Paste from the clipboard** paste without a prompt. Before, macOS asked at every paste, and as the right-click menu opened; choosing **Paste** in that menu then quit Chatmon.
+- **macOS:** the chat's menus (right-click in the field, **+** and **History**) are macOS's own.
 
 ## 0.9.0
 
