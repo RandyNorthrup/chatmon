@@ -250,7 +250,9 @@ def test_a_mac_app_started_from_finder_gets_your_login_shells_environment(tmp_pa
     monkeypatch.setenv("PATH", "/usr/bin:/bin")
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setenv("HOME", str(tmp_path))
-    adopted = paths.login_environment()
+    # What's taken from the shell, not how long a shell gets: a loaded machine can take longer than the app's
+    # 4 s just to start this one (#17), and then only the usual folders are added.
+    adopted = paths.login_environment(timeout=60)
     import os
 
     assert os.environ["PATH"].split(os.pathsep)[0] == "/opt/homebrew/bin" and "/usr/bin" in os.environ["PATH"]
