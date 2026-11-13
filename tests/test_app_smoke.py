@@ -1317,3 +1317,25 @@ def test_quitting_closes_what_listens_to_the_system(companion):
         real.close()  # the real one, done with here
     c.quit()
     assert c._lock_watcher.closed == 1
+
+
+def test_the_ask_boxs_menus_stay_open_once_shown(companion):
+    """+ and History: nothing else holds their menus once shown, so a menu holds itself until it closes."""
+    import gc
+
+    from PyQt6.QtCore import QPoint
+
+    c = companion
+    c.open_ask()
+
+    def showing() -> list[str]:  # no events handled first: one left by another test could close a menu
+        gc.collect()
+        return [a.text() for w in QApplication.topLevelWidgets() if isinstance(w, QMenu) and w.isVisible() and w is not c.menu for a in w.actions()]
+
+    c._show_attach(QPoint(20, 20))
+    assert "Paste from the clipboard" in showing()
+    for w in QApplication.topLevelWidgets():
+        if isinstance(w, QMenu) and w is not c.menu:
+            w.close()
+    c._show_history(QPoint(20, 20))
+    assert "New chat" in showing()

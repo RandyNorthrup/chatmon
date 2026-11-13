@@ -724,6 +724,7 @@ class Companion(QObject):
         if self.stage.draws_menus():
             self.stage.open_menu(menu, pos, owned=True)
         else:
+            sip.transferto(menu, None)  # it outlives the caller's hold on it, until it closes
             menu.aboutToHide.connect(menu.deleteLater)
             menu.popup(pos)
 

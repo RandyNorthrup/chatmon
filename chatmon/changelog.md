@@ -2,6 +2,11 @@
 
 Each version's changes, newest first: what Chatmon shows after it updates, and each release's notes.
 
+## 0.9.1
+
+### Fixes
+- **+** and **History** in the chat open their menus. Except on the Wayland overlay, clicking them showed nothing, so **Paste from the clipboard** and earlier chats couldn't be reached from the chat.
+
 ## 0.9.0
 
 ### New
