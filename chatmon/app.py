@@ -2421,7 +2421,21 @@ class Companion(QObject):
         self.tray.hide()
         self.stage.close_stage()
         self._close_connections()
+        self._stop_for_good()
         self.app.quit()
+
+    def _stop_for_good(self) -> None:
+        """Nothing of this Companion runs or paints once it's quit, whether or not it's ever freed: every timer it
+        owns stopped, its checks and its menu's refill, and its windows hidden. Left open, the ask box went on
+        redrawing its bubble 30 times a second, and the checks went on every few seconds. Only a process that
+        goes on after quitting sees it: the tests make one Companion after another, and nothing frees them."""
+        self.ask_box.hide()  # (its redraws stop as it hides)
+        for owner in (self, self.ask_box):
+            for timer in owner.findChildren(QTimer):
+                timer.stop()
+        window = self._settings_window
+        if window is not None and not sip.isdeleted(window):
+            window.close()
 
 
 _problem = None  # the running Companion's offer to report what went wrong

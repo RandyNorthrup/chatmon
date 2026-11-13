@@ -487,9 +487,36 @@ def test_quits_when_asked(companion, monkeypatch):
     monkeypatch.setattr(companion.app, "quit", lambda: quits.append(True))
     companion.handle({"type": "quit"})
     assert quits == []  # not under the sender: it hears back first
-    spin(0.1)
-    assert quits == [True]
+    assert until(lambda: quits == [True])
 
+
+
+def test_a_quit_companion_runs_and_paints_nothing_more(companion):
+    """Quitting stops every timer the Companion owns and hides its windows, freed or not: a quit one whose ask
+    box was open went on redrawing it 30 times a second, and its checks went on, under every later test (#16)."""
+    from PyQt6.QtCore import QEvent, QObject, QTimer
+
+    c = companion
+    c.open_ask()
+    c.say("Hello", "a bubble")
+    spin(0.2)
+    c.quit()
+    painted = []
+
+    class Paints(QObject):
+        def eventFilter(self, obj, event):
+            if event.type() == QEvent.Type.Paint and obj.isWidgetType() and obj.window() in (c.ask_box, c.stage.surface):
+                painted.append(type(obj).__name__)
+            return False
+
+    paints = Paints()
+    QApplication.instance().installEventFilter(paints)
+    try:
+        spin(0.5)
+    finally:
+        QApplication.instance().removeEventFilter(paints)
+    running = [t for owner in (c, c.ask_box, c.stage) for t in owner.findChildren(QTimer) if t.isActive()]
+    assert running == [] and painted == [] and not c.ask_box.isVisible()
 
 def test_after_an_update_it_shows_whats_new_once(companion):
     from chatmon import __version__
