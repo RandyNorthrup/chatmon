@@ -358,6 +358,10 @@ def test_senders_that_stop_waiting_are_all_heard(companion, monkeypatch):
     assert heard == sent
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="a Windows pipe takes a sender's bytes only once Chatmon reads that connection, so a message can't wait unread for it this way",
+)
 def test_senders_are_heard_in_the_order_they_came_whichever_qt_reads_first(companion, monkeypatch):
     """Qt says data has arrived on each connection separately, in no particular order. Two senders that each
     sent and hung up while Chatmon was busy (an agent's "working", then its "done") are heard in the order
@@ -377,8 +381,7 @@ def test_senders_are_heard_in_the_order_they_came_whichever_qt_reads_first(compa
         sender.connectToServer(paths.server_name())
         assert sender.waitForConnected(2000)
         sender.write(json.dumps(message).encode() + b"\n")
-        sender.flush()  # on Windows the pipe usually takes it at once, leaving nothing for waitForBytesWritten
-        assert sender.bytesToWrite() == 0 or sender.waitForBytesWritten(2000)
+        assert sender.waitForBytesWritten(2000)
         sender.abort()  # gave up waiting for its answer
         assert c.server.waitForNewConnection(2000)  # accepted, as the busy event loop would have
     first, second = c._connections
