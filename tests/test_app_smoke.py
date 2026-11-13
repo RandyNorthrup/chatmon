@@ -358,6 +358,33 @@ def test_senders_that_stop_waiting_are_all_heard(companion, monkeypatch):
     assert heard == sent
 
 
+def test_senders_are_heard_in_the_order_they_came_whichever_qt_reads_first(companion, monkeypatch):
+    """Qt says data has arrived on each connection separately, in no particular order. Two senders that each
+    sent and hung up while Chatmon was busy (an agent's "working", then its "done") are heard in the order
+    they came, even when Qt has read the second before the first."""
+    import json
+
+    from PyQt6.QtNetwork import QLocalSocket
+
+    from chatmon import paths
+
+    c = companion
+    heard = []
+    monkeypatch.setattr(c, "handle", heard.append)
+    sent = [{"type": "event", "event": "working", "source": "codex"}, {"type": "event", "event": "done", "source": "codex"}]
+    for message in sent:  # no event loop meanwhile: Chatmon is busy
+        sender = QLocalSocket()
+        sender.connectToServer(paths.server_name())
+        assert sender.waitForConnected(2000)
+        sender.write(json.dumps(message).encode() + b"\n")
+        assert sender.waitForBytesWritten(2000)
+        sender.abort()  # gave up waiting for its answer
+        assert c.server.waitForNewConnection(2000)  # accepted, as the busy event loop would have
+    first, second = c._connections
+    assert second.waitForReadyRead(2000) and not first.bytesAvailable()  # Qt has the second one's message first
+    c._read_connections()
+    assert heard == sent
+
 
 @pytest.mark.skipif(sys.platform == "win32", reason="a Unix socket, as hooks use on Linux and macOS")
 def test_quitting_closes_the_server_and_every_connection_still_open(companion):

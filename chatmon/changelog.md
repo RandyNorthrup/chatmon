@@ -2,6 +2,11 @@
 
 Each version's changes, newest first: what Chatmon shows after it updates, and each release's notes.
 
+## 0.9.2
+
+### Fixes
+- **Coding agents' news is heard in the order it was sent**, even when your computer is too busy for Chatmon to answer within the half second an agent's hook waits. Before, an agent's **done** could be heard before its **working**, leaving your chatmon showing it as still at work.
+
 ## 0.9.1
 
 ### Fixes

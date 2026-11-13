@@ -105,7 +105,9 @@ class Companion(QObject):
         super().__init__()
         self.app = app
         self.server = server
-        self._connections: set[QLocalSocket] = set()  # accepted and not yet done with: closed in quit()
+        # Connections accepted and not yet done with, in the order they came, each with what's been read of it
+        # so far: read in that order, and closed in quit().
+        self._connections: dict[QLocalSocket, bytearray] = {}
         self.server_problem = server_problem  # why hooks can't reach it, if they can't
         self.state = State.load()
         self.config, self.config_error = self._load_config()
@@ -1655,34 +1657,43 @@ class Companion(QObject):
         queued = Qt.ConnectionType.QueuedConnection
         while self.server.hasPendingConnections():
             sock = self.server.nextPendingConnection()
-            self._connections.add(sock)
-            buffer = bytearray()
-            sock.readyRead.connect(partial(self._received, sock, buffer, False), type=queued)
-            sock.disconnected.connect(partial(self._received, sock, buffer, True), type=queued)
-            QTimer.singleShot(0, partial(self._received, sock, buffer, False))  # anything already in
+            self._connections[sock] = bytearray()
+            sock.readyRead.connect(self._read_connections, type=queued)
+            sock.disconnected.connect(self._read_connections, type=queued)
+        QTimer.singleShot(0, self._read_connections)  # anything already in
 
-    def _received(self, sock: QLocalSocket, buffer: bytearray, closed: bool) -> None:
-        """Handle each complete line as it arrives and answer it, so the
-        sender can hang up knowing it got here."""
-        if sip.isdeleted(sock):  # done with before this call came round
-            return
-        if sock.bytesAvailable():  # (reading a socket Qt has closed only gets a warning)
-            buffer.extend(bytes(sock.readAll()))
-        if len(buffer) > events.MAX_MESSAGE:
-            buffer.clear()
-            sock.abort()
-            return
-        while b"\n" in buffer or (closed and buffer):
-            line, _, rest = bytes(buffer).partition(b"\n")
-            buffer[:] = rest
-            for message in events.parse_lines(line):
-                self.handle(message)
-            if not closed and sock.state() == QLocalSocket.LocalSocketState.ConnectedState:
-                sock.write(events.ACK)
-                sock.flush()
-        if closed:
-            self._connections.discard(sock)
-            sock.deleteLater()
+    def _read_connections(self) -> None:
+        """Handle each complete line as it arrives and answer it, so the sender can hang up knowing it got here:
+        every connection still open, in the order they came. Qt says data has arrived on each connection
+        separately, in no particular order, so a sender that hung up before its answer (half a second, on a
+        busy computer) could otherwise be heard after the one that came next: an agent's "done" before its
+        "working", leaving it shown as working. So each pass first takes in what the system already holds for
+        every earlier connection (waitForReadyRead(0) doesn't wait): whatever was sent before a later sender
+        connected is heard before that sender is."""
+        connected = QLocalSocket.LocalSocketState.ConnectedState
+        for sock, buffer in list(self._connections.items()):
+            if sip.isdeleted(sock):  # deleted by Qt along with its server
+                self._connections.pop(sock, None)
+                continue
+            if sock.state() == connected:
+                sock.waitForReadyRead(0)
+            if sock.bytesAvailable():  # (reading a socket Qt has closed only gets a warning)
+                buffer.extend(bytes(sock.readAll()))
+            if len(buffer) > events.MAX_MESSAGE:
+                buffer.clear()
+                sock.abort()
+            closed = sock.state() != connected  # the sender hung up, and all it sent is in
+            while b"\n" in buffer or (closed and buffer):
+                line, _, rest = bytes(buffer).partition(b"\n")
+                buffer[:] = rest
+                for message in events.parse_lines(line):
+                    self.handle(message)
+                if not closed and sock.state() == connected:
+                    sock.write(events.ACK)
+                    sock.flush()
+            if closed:
+                self._connections.pop(sock, None)
+                sock.deleteLater()
 
     def _close_connections(self) -> None:
         """No more messages: the server closed, and each connection still open aborted and deleted now (its
