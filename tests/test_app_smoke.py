@@ -377,7 +377,8 @@ def test_senders_are_heard_in_the_order_they_came_whichever_qt_reads_first(compa
         sender.connectToServer(paths.server_name())
         assert sender.waitForConnected(2000)
         sender.write(json.dumps(message).encode() + b"\n")
-        assert sender.waitForBytesWritten(2000)
+        sender.flush()  # on Windows the pipe usually takes it at once, leaving nothing for waitForBytesWritten
+        assert sender.bytesToWrite() == 0 or sender.waitForBytesWritten(2000)
         sender.abort()  # gave up waiting for its answer
         assert c.server.waitForNewConnection(2000)  # accepted, as the busy event loop would have
     first, second = c._connections
