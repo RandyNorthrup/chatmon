@@ -358,6 +358,52 @@ def test_senders_that_stop_waiting_are_all_heard(companion, monkeypatch):
     assert heard == sent
 
 
+
+@pytest.mark.skipif(sys.platform == "win32", reason="a Unix socket, as hooks use on Linux and macOS")
+def test_quitting_closes_the_server_and_every_connection_still_open(companion):
+    """A connection left open when a Companion quits outlived it, with its socket notifier: on macOS the next
+    connection given the same descriptor number, in another Companion in the same process (as the tests make
+    one after another), was read there and lost (#15). Quitting closes them all."""
+    import socket
+
+    from PyQt6 import sip
+
+    from chatmon import paths
+
+    c = companion
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sender:
+        sender.connect(paths.server_name())  # and stays connected, saying nothing yet
+        assert until(lambda: len(c._connections) == 1)
+        (held,) = c._connections
+        c.quit()
+        assert sip.isdeleted(held) and not c._connections and not c.server.isListening()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="a Unix socket, as hooks use on Linux and macOS")
+def test_chatmon_quit_hears_back_before_the_connections_close(companion):
+    """`chatmon quit` (an installer updating Chatmon) is answered first; quitting then closes the connections."""
+    import socket
+
+    from chatmon import events, paths
+
+    c = companion
+    answer = bytearray()
+
+    def heard_back() -> bool:  # without blocking: the companion answers on this thread
+        try:
+            answer.extend(sender.recv(16))
+        except BlockingIOError:
+            pass
+        return bytes(answer) == events.ACK
+
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sender:
+        sender.connect(paths.server_name())
+        sender.setblocking(False)
+        sender.sendall(b'{"type": "quit"}\n')
+        assert until(heard_back)
+        assert until(lambda: not c.server.isListening())
+    assert not c._connections
+
 def test_looks_at_the_agents_one_look_at_a_time(companion, monkeypatch):
     """Each look at how the agents stand starts their command lines, and every refill of the menu asks for
     one: asked again while looking, it looks once more when done, never several at once."""

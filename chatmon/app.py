@@ -105,6 +105,7 @@ class Companion(QObject):
         super().__init__()
         self.app = app
         self.server = server
+        self._connections: set[QLocalSocket] = set()  # accepted and not yet done with: closed in quit()
         self.server_problem = server_problem  # why hooks can't reach it, if they can't
         self.state = State.load()
         self.config, self.config_error = self._load_config()
@@ -1654,6 +1655,7 @@ class Companion(QObject):
         queued = Qt.ConnectionType.QueuedConnection
         while self.server.hasPendingConnections():
             sock = self.server.nextPendingConnection()
+            self._connections.add(sock)
             buffer = bytearray()
             sock.readyRead.connect(partial(self._received, sock, buffer, False), type=queued)
             sock.disconnected.connect(partial(self._received, sock, buffer, True), type=queued)
@@ -1679,7 +1681,21 @@ class Companion(QObject):
                 sock.write(events.ACK)
                 sock.flush()
         if closed:
+            self._connections.discard(sock)
             sock.deleteLater()
+
+    def _close_connections(self) -> None:
+        """No more messages: the server closed, and each connection still open aborted and deleted now (its
+        event loop may not run again). Left to outlive the Companion, a connection's socket notifier outlives
+        its descriptor too: on macOS, Qt's (one CFSocket per descriptor number) then takes the next connection
+        given that number, and its message is read and dropped there. Only another Companion in the same
+        process could be given it: the tests make one after another."""
+        self.server.close()
+        for sock in self._connections:
+            if not sip.isdeleted(sock):
+                sock.abort()
+                sip.delete(sock)
+        self._connections.clear()
 
     def handle(self, message: dict) -> None:
         message = events.clean(message)
@@ -2393,6 +2409,7 @@ class Companion(QObject):
         self.save()
         self.tray.hide()
         self.stage.close_stage()
+        self._close_connections()
         self.app.quit()
 
 
