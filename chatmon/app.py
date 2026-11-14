@@ -20,7 +20,7 @@ from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiAppli
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, a11y, agents, attachments, autostart, brains, changelog, chats, companions, context, events, heads_up, memory, messages, offline, paths, presence, reminders, report, styles, sysnotify, updates
+from . import __version__, a11y, agents, asking, attachments, autostart, brains, changelog, chats, companions, context, events, heads_up, memory, messages, offline, paths, presence, reminders, report, styles, sysnotify, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -132,7 +132,7 @@ class Companion(QObject):
         self.chat = chats.Chat()  # the one you're in: saved as it goes (if you keep them), resumable from History
         self.chat_book = chats.ChatBook()
         self.attached: list[attachments.Attachment] = []  # for the next question
-        self._asking: tuple[str, str, list[attachments.Attachment]] | None = None  # (chat id, question, attached), on its way
+        self.questions = asking.Questions()  # the question on its way to a brain, and the one waiting behind it
         self._renaming: str | None = None  # the chat whose new name the box is asking for
         self._stopwatch: float | None = None  # when the stopwatch started (monotonic), while it runs
         self.agents: dict[str, tuple[str, float]] = {}  # source: (state, since)
@@ -170,8 +170,6 @@ class Companion(QObject):
         self.compactor = brains.Asker(self)  # sums up a chat's earlier part, when a question needs that first
         self.compactor.answered.connect(self._compacted)
         self.compactor.failed.connect(self._compact_failed)
-        self._folding: tuple | None = None  # (chat id, pairs the summary will stand for, the question waiting)
-        self._asked: dict | None = None  # what the question on its way went with: to ask once more, with less
         self.memory = memory.Memory.load()
         self._reader: a11y.Reader | None = None  # the screen reader running, as last looked (a11y.py)
         self._reader_seen = float("-inf")
@@ -582,9 +580,9 @@ class Companion(QObject):
         self._asking_name = False
         self._renaming = None
         self._instructing = None
-        self.asker.cancel()
+        self.asker.cancel()  # Esc stops the answer, and the question waiting goes too
         self.compactor.cancel()
-        self._folding = None
+        self.questions.drop()
         self.behavior.set_thinking(False, now)
         self.behavior.set_talking(False, now)
         self.behavior.set_attending(self._menu_open, now)
@@ -597,11 +595,10 @@ class Companion(QObject):
 
     def _drop_question(self) -> None:
         """A question on its way belongs to the chat it was asked in: leaving that chat drops it."""
-        if self._asking is not None:
+        if self.questions.current is not None:
             self.asker.cancel()
             self.compactor.cancel()
-            self._folding = None
-            self._asking = None
+            self.questions.drop()
             self.behavior.set_thinking(False, self._now())
 
     def _start_chat(self) -> None:
@@ -616,7 +613,8 @@ class Companion(QObject):
         self.ask_box.set_answer("*New chat. Ask away.*")
 
     def _transcript(self, pending: str = "") -> str:
-        """The chat as the box shows it: each question and its answer, newest at the bottom."""
+        """The chat as the box shows it: each question and its answer, newest at the bottom, then what's still to
+        be answered, then `pending` (an answer of Chatmon's own, a word about the question)."""
         parts = []
         for m in self.chat.messages[-40:]:
             if m.role == "user":
@@ -626,9 +624,18 @@ class Companion(QObject):
                 parts.append(line)
             else:
                 parts.append(m.text)
+        parts += asking.tail(self.questions, self._thinking())
         if pending:
             parts.append(pending)
         return "\n\n".join(parts)
+
+    def _thinking(self) -> str:
+        """What the brain is doing about the question on its way."""
+        question = self.questions.current
+        label = question.brain.label if question is not None and question.brain is not None else "The AI"
+        if question is not None and question.fold is not None:
+            return f"Catching {label} up on this chat's earlier part…"
+        return f"{label} is thinking…"
 
     def _save_chat(self) -> None:
         if self._keeps_chats() and self.chat.keep and self.chat.messages:
@@ -1017,13 +1024,17 @@ class Companion(QObject):
             self.ask_box.entry.setText(text)
             self.ask_box.set_answer(self._transcript(f"*{refused}*"), at_end=True)
             return
+        if self.questions.full():  # kept, to send once those are answered
+            self.ask_box.entry.setText(text)
+            self.ask_box.set_answer(self._transcript("*One question is waiting already. Send this once that one goes, or Esc to stop them.*"), at_end=True)
+            return
         self.attached.clear()
         self.ask_box.set_attachments([])
-        self._asking = (self.chat.id, text, attached)
-        you = f"**You:** {text}" + (f"\n\n*Attached: {attachments.mentioned(attached)}*" if attached else "")
-        self.ask_box.set_answer(self._transcript(f"{you}\n\n*{brain.label} is thinking…*"), at_end=True)
-        self.behavior.set_thinking(True, now)
-        self._send(brain, text or "Have a look at what I attached.", attached)
+        question = asking.Question(self.chat.id, text, attached, brain)
+        if self.questions.ask(question):  # else it waits for the one on its way: a brain answers one at a time
+            self.behavior.set_thinking(True, now)
+            self._send(question)
+        self.ask_box.set_answer(self._transcript(), at_end=True)
 
     # -- what a question goes with: the chat, fitted to the brain (context.py), your instructions and memory
 
@@ -1040,9 +1051,10 @@ class Companion(QObject):
             cap = context.DEFAULT_CAP
         return max(2_000, min(cap, 2_000_000))
 
-    def _send(self, brain: brains.Brain, question: str, attached, *, fold: bool = True, retried: bool = False) -> None:
-        """Ask `brain`, with as much of the chat as it can take: first summing up the chat's earlier part, when
+    def _send(self, q: asking.Question, *, fold: bool = True) -> None:
+        """Ask `q`'s brain, with as much of the chat as it can take: first summing up the chat's earlier part, when
         it has outgrown that (a step of its own, said in the box)."""
+        brain, question, attached = q.brain, q.asked(), q.attached
         chat, timeout = self.chat, float(self.config["ai"]["timeout_seconds"])
         base = brains.system_prompt(self.name, self._companion().label.lower())
         everywhere, remembered = self._instructions(), self.memory.texts()
@@ -1050,80 +1062,87 @@ class Companion(QObject):
         room = context.budget(brains.context_window(brain), self._context_cap(), context.system_text(base, everywhere, chat.instructions, remembered), asked_tokens)
         plan = context.plan(chat.history(brain.label), chat.history(), chat.summary, chat.summarized, room, question, fold)
         if plan.fold:
-            self._folding = (chat.id, plan.fold_to, room, brain, question, attached, retried)
+            q.fold = asking.Fold(plan.fold_to, room)
             system, request = context.summary_request(plan.summary, plan.fold, room)
-            self.ask_box.set_answer(self._transcript(f"*Catching {brain.label} up on this chat's earlier part…*"), at_end=True)
+            self.ask_box.set_answer(self._transcript(), at_end=True)
             self.compactor.ask(brain, system, [], request, timeout)
             return
         system = context.system_text(base, everywhere, chat.instructions, remembered, plan.summary, plan.recalled)
-        sent = context.tokens(system) + sum(context.pair_tokens(pair) for pair in plan.recent) + asked_tokens
-        self._asked = {"brain": brain, "question": question, "attached": attached, "retried": retried, "tokens": sent}
+        q.tokens = context.tokens(system) + sum(context.pair_tokens(pair) for pair in plan.recent) + asked_tokens
         self.asker.ask(brain, system, plan.recent, question, timeout, attached)
         if brain.type == "openai" and not brains.window_known(brain):
             self.background.run(partial(brains.learn_window, brain), lambda _window: None)  # for the next question
 
     def _compacted(self, summary: str) -> None:
-        folding, self._folding = self._folding, None
-        if folding is None or self._asking is None or folding[0] != self.chat.id or self._asking[0] != self.chat.id:
+        q = self.questions.answering(self.chat.id)
+        if q is None or q.fold is None:
             return  # the question went (another chat, or you closed the box)
-        _, covers, room, brain, question, attached, retried = folding
+        fold, q.fold = q.fold, None
         if not summary.strip():
-            self._send(brain, question, attached, fold=False, retried=retried)
+            self._send(q, fold=False)
             return
-        self.chat.summary, self.chat.summarized = context.clip(summary.strip(), max(300, room // 5)), covers
+        self.chat.summary, self.chat.summarized = context.clip(summary.strip(), max(300, fold.room // 5)), fold.covers
         self._save_chat()
-        self._send(brain, question, attached, retried=retried)
+        self._send(q)
 
     def _compact_failed(self, _error: str) -> None:
         """No summary: the question goes anyway, with the recent turns and the earlier ones that bear on it."""
-        folding, self._folding = self._folding, None
-        if folding is None or self._asking is None or folding[0] != self.chat.id or self._asking[0] != self.chat.id:
+        q = self.questions.answering(self.chat.id)
+        if q is None or q.fold is None:
             return
-        _, _covers, _room, brain, question, attached, retried = folding
-        self._send(brain, question, attached, fold=False, retried=retried)
+        q.fold = None
+        self._send(q, fold=False)
 
     def _answered(self, answer: str) -> None:
         now = self._now()
-        self.behavior.set_thinking(False, now)
-        if self._asking is None or self._asking[0] != self.chat.id:  # asked in a chat since left: not this one's
-            self._asking = None
+        q = self.questions.answering(self.chat.id)
+        if q is None:  # asked in a chat since left: not this one's
+            self.behavior.set_thinking(False, now)
+            self.questions.drop()
             return
-        _, text, attached = self._asking
-        self._asking = None
-        sent = attachments.in_question(text or "Have a look at what I attached.", attached)
-        asked = self._asked
-        brain = asked["brain"] if asked else self._brain(wait=False)
-        label = brain.label if brain else ""
-        if brain is not None and brain.local:
-            self.background.run(partial(brains.learn_window, brain), lambda _window: None)  # a model loaded now says its own
-        self.chat.add(chats.Message("user", text, sent=sent if sent != text else "", attached=[a.name for a in attached], brain=label))
+        sent = attachments.in_question(q.asked(), q.attached)
+        label = q.brain.label if q.brain else ""
+        if q.brain is not None and q.brain.local:
+            self.background.run(partial(brains.learn_window, q.brain), lambda _window: None)  # a model loaded now says its own
+        self.chat.add(chats.Message("user", q.text, sent=sent if sent != q.text else "", attached=[a.name for a in q.attached], brain=label))
         self.chat.add(chats.Message("assistant", answer, brain=label))
         self._save_chat()
+        self._next_question(now)
         self.ask_box.set_answer(self._transcript(), at_end=True)
         self.ask_box.set_resettable(True)
         self._read_aloud(f"{label or 'The AI'} answered", answer)
         self.behavior.set_talking(True, now)
         QTimer.singleShot(int(min(max(len(answer) / 18, 2), 10) * 1000), lambda: self.behavior.set_talking(False, self._now()))
 
+    def _next_question(self, now: float) -> None:
+        """The question on its way is done with: the one waiting goes now, if there is one."""
+        waiting = self.questions.finish()
+        if waiting is None:
+            self.behavior.set_thinking(False, now)
+        else:
+            self._send(waiting)
+
     def _failed(self, error: str) -> None:
-        asked = self._asked
-        if asked and not asked["retried"] and context.too_long(error) and self._asking is not None and self._asking[0] == self.chat.id:
+        now = self._now()
+        q = self.questions.answering(self.chat.id)
+        if q is not None and not q.retried and context.too_long(error):
             # Too long for it after all (a window smaller than it said, or than guessed): once more, with half.
-            brains.shrink_window(asked["brain"], asked["tokens"])
-            self._send(asked["brain"], asked["question"], asked["attached"], retried=True)
+            brains.shrink_window(q.brain, q.tokens)
+            q.retried = True
+            self._send(q)
             return
-        self.behavior.set_thinking(False, self._now())
-        if self._asking is None or self._asking[0] != self.chat.id:
-            self._asking = None
+        if q is None:
+            self.behavior.set_thinking(False, now)
+            self.questions.drop()
             return
-        _, text, attached = self._asking
-        self._asking = None
-        # Back in the box, to try again (or with another brain).
-        self.attached = attached + self.attached
+        # Back in the box, to try again (or with another brain); the one waiting goes meanwhile.
+        self.attached = q.attached + self.attached
         self.ask_box.set_attachments([a.label() for a in self.attached])
-        if text and not self.ask_box.entry.text():
-            self.ask_box.entry.setText(text)
-        self.ask_box.set_answer(self._transcript(f"**You:** {text}\n\n*Hmm, that didn't work.* {error}"), at_end=True)
+        if q.text and not self.ask_box.entry.text():
+            self.ask_box.entry.setText(q.text)
+        self._next_question(now)
+        self.questions.failure = (q.text, error)
+        self.ask_box.set_answer(self._transcript(), at_end=True)
 
     def _memory_reply(self, kind: str, what: str) -> str:
         """Remembering for every chat, as you asked, and forgetting it again: Chatmon's own (memory.py)."""
@@ -1831,7 +1850,7 @@ class Companion(QObject):
         if self._menu_open and not self.stage.menu.is_open():
             self._menu_open = False
             self.behavior.set_attending(self.ask_box.isVisible(), self._now())
-        if self._menu_stale:
+        if self._menu_stale and not self._quitting:
             self._menu_stale = False
             self._menu_timer.start(0)
 
@@ -1843,7 +1862,10 @@ class Companion(QObject):
 
     def _menu_changed(self) -> None:
         """Something the menu shows changed: fill it in again, once things settle,
-        and never under an open menu (its items would vanish under the pointer)."""
+        and never under an open menu (its items would vanish under the pointer). Never once quit: a look at the
+        brains or the agents finishing late would set the refill going again."""
+        if self._quitting:
+            return
         if self.menu.isVisible() or self.stage.menu.is_open():
             self._menu_stale = True
         else:

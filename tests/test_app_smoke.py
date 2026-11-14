@@ -764,7 +764,7 @@ def test_an_answer_for_a_chat_youve_left_goes_nowhere(companion, monkeypatch):
     c.submit("a secret question")
     asked_in = c.chat.id
     c._new_chat()  # while it's thinking
-    assert cancelled and c._asking is None
+    assert cancelled and c.questions.current is None
     brain.answer("the secret answer")  # arrives anyway
     assert c.chat.messages == [] and c.chat_book.load(asked_in) is None and c.chat_book.recent() == []
     c.submit("one")
@@ -836,6 +836,62 @@ def test_offline_answers_are_marked_and_kept_out_of_the_chat(companion, monkeypa
     assert len(c.chat.messages) == 2 and "password" not in c.chat_book.load(c.chat.id).markdown().lower()
 
 
+def test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat(companion, monkeypatch):
+    """A brain answers one question at a time, and asking it another dropped the first: now the second waits."""
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    c.submit("What's a good name for a cat?")
+    c.submit("And for a dog?")
+    assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?"]  # asked once: the first isn't dropped
+    shown = c.ask_box.answer.toPlainText()
+    assert "What's a good name for a cat?" in shown and "Pretend API is thinking" in shown
+    assert "And for a dog?" in shown and "Still answering, Esc to stop" in shown
+    c.submit("5 km in miles")  # Chatmon's own answers don't wait
+    shown = c.ask_box.answer.toPlainText()
+    assert "3.107 miles" in shown and "What's a good name for a cat?" in shown and "And for a dog?" in shown  # nothing vanished
+    c.submit("And for a fish?")  # one waiting is enough: this stays in the box
+    assert c.ask_box.entry.text() == "And for a fish?" and "One question is waiting already" in c.ask_box.answer.toPlainText()
+    c.ask_box.entry.clear()
+    brain.answer("Mochi.")
+    assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?", "And for a dog?"]
+    assert brain.asked[-1][0] == [("What's a good name for a cat?", "Mochi.")]  # with the first answer to go on
+    brain.answer("Biscuit.")
+    assert [(m.role, m.text) for m in c.chat.messages] == [
+        ("user", "What's a good name for a cat?"), ("assistant", "Mochi."), ("user", "And for a dog?"), ("assistant", "Biscuit."),
+    ]
+    shown = c.ask_box.answer.toPlainText()
+    assert shown.index("Mochi.") < shown.index("And for a dog?") < shown.index("Biscuit.") and "thinking" not in shown
+
+
+def test_closing_the_box_stops_the_answer_and_the_question_waiting(companion, monkeypatch):
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    c.submit("first")
+    c.submit("second")
+    c.ask_box.dismiss()  # Esc
+    brain.answer("late")
+    assert c.chat.messages == [] and c.questions.current is None and len(brain.asked) == 1
+    c.open_ask()
+    c.submit("third")
+    assert brain.asked[-1][1] == "third"  # nothing left waiting in front of it
+
+
+def test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes(companion, monkeypatch):
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    c.submit("first")
+    c.submit("second")
+    c._failed("Pretend API took too long to answer.")
+    assert c.ask_box.entry.text() == "first" and brain.asked[-1][1] == "second"
+    shown = c.ask_box.answer.toPlainText()
+    assert "didn't work" in shown and "took too long" in shown and "Pretend API is thinking" in shown
+    brain.answer("2")
+    assert [m.text for m in c.chat.messages] == ["second", "2"]
+
+
 def test_a_question_that_only_sounds_like_a_command_goes_to_the_ai(companion, monkeypatch):
     c = companion
     brain = PretendBrain(c, monkeypatch)
@@ -843,6 +899,7 @@ def test_a_question_that_only_sounds_like_a_command_goes_to_the_ai(companion, mo
     for question in ("remind me how python decorators work", "what is the capital of France?", "how do I set a timer in python"):
         c.submit(question)
         assert brain.asked[-1][1] == question
+        brain.answer("An answer.")
     assert c.reminders.upcoming() == []
 
 
