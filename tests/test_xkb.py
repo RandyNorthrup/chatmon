@@ -64,3 +64,53 @@ def test_the_keypad_says_so():
     key = kb.press(KP_1)
     assert key.text == "1" and key.modifiers & Qt.KeyboardModifier.KeypadModifier
     kb.close()
+
+
+# The keys that are V, C, X, A, Z on a US keyboard (evdev codes), and Alt's modifier mask in these keymaps.
+V, C, X, Z = 47, 46, 45, 44
+ALT = 8
+RUSSIAN = 1  # the layout index of "ru" in a "us,ru" keymap
+
+
+def test_shortcuts_on_a_russian_layout_are_the_latin_keys():
+    kb = board("us,ru")
+    kb.set_modifiers(0, 0, 0, RUSSIAN)
+    assert kb.press(V).text == "м"  # typing is Russian
+    for code, qt in ((V, Qt.Key.Key_V), (C, Qt.Key.Key_C), (X, Qt.Key.Key_X), (A, Qt.Key.Key_A), (Z, Qt.Key.Key_Z)):
+        kb.set_modifiers(CTRL, 0, 0, RUSSIAN)
+        key = kb.press(code)
+        assert (key.key, key.modifiers) == (qt.value, Qt.KeyboardModifier.ControlModifier), qt
+        assert kb.release(code).key == qt.value
+    kb.set_modifiers(ALT, 0, 0, RUSSIAN)
+    assert kb.press(V).key == Qt.Key.Key_V.value  # Alt too: a menu's accelerator
+    kb.set_modifiers(SHIFT | CTRL, 0, 0, RUSSIAN)
+    assert kb.press(Z).key == Qt.Key.Key_Z.value  # Ctrl+Shift+Z, redo
+    kb.set_modifiers(0, 0, 0, RUSSIAN)
+    assert kb.press(V).key == ord("М")  # without Ctrl or Alt it's a Russian letter
+    kb.close()
+
+
+def test_a_layout_with_no_latin_partner_keeps_its_own_symbol():
+    kb = board("ru")
+    kb.set_modifiers(CTRL, 0, 0, 0)
+    assert kb.press(V).key == ord("М")
+    kb.close()
+
+
+def test_latin_layouts_are_left_alone():
+    kb = board("us,ru")
+    kb.set_modifiers(CTRL, 0, 0, 0)  # US active
+    assert kb.press(V).key == Qt.Key.Key_V.value
+    kb.close()
+    kb = board("de")
+    kb.set_modifiers(CTRL, 0, 0, 0)
+    assert kb.press(Y).key == Qt.Key.Key_Z.value  # a German Z is Ctrl+Z where it is, not where the US has it
+    kb.close()
+
+
+def test_the_latin_symbol_comes_from_the_first_layout_that_has_one():
+    """With Dvorak first, Ctrl and the key that is Dvorak's Q is Ctrl+Q, whatever the US layout after it says."""
+    kb = board("us,ru,us", "dvorak,,")
+    kb.set_modifiers(CTRL, 0, 0, RUSSIAN)
+    assert kb.press(X).key == Qt.Key.Key_Q.value  # Dvorak has Q where the US has X
+    kb.close()

@@ -18,7 +18,8 @@ from PyQt6.QtCore import Qt
 
 EVDEV_OFFSET = 8  # Wayland sends evdev codes; XKB key codes are 8 higher
 FORMAT_TEXT_V1 = 1
-MODS_EFFECTIVE = 1 << 3
+MODS_LATCHED, MODS_LOCKED, MODS_EFFECTIVE = 1 << 1, 1 << 2, 1 << 3
+LATIN1 = range(0x20, 0x100)  # keysyms that are Latin-1 characters: the ones shortcuts are made of
 COMPOSE_COMPOSING, COMPOSE_COMPOSED, COMPOSE_CANCELLED = 1, 2, 3
 
 # Keysyms that aren't characters, and the Qt keys they are.
@@ -97,7 +98,29 @@ def library() -> ctypes.CDLL | None:
     ):
         f = getattr(lib, fn)
         f.restype, f.argtypes = res, args
+    # What finding a key's Latin symbol takes (Keyboard._latin_sym); a libxkbcommon older than 0.4 lacks some,
+    # and shortcuts then work as they did before, on Latin layouts only.
+    for fn, res, args in (
+        ("xkb_keymap_num_layouts_for_key", u32, [p, u32]),
+        ("xkb_keymap_key_get_syms_by_level", i, [p, u32, u32, u32, ctypes.POINTER(ctypes.POINTER(u32))]),
+        ("xkb_keymap_min_keycode", u32, [p]),
+        ("xkb_keymap_max_keycode", u32, [p]),
+        ("xkb_state_key_get_layout", u32, [p, u32]),
+        ("xkb_state_key_get_level", u32, [p, u32, u32]),
+        ("xkb_state_serialize_mods", u32, [p, i]),
+    ):
+        try:
+            f = getattr(lib, fn)
+        except AttributeError:
+            continue
+        f.restype, f.argtypes = res, args
     return lib
+
+
+LATIN_CALLS = (
+    "xkb_keymap_num_layouts_for_key", "xkb_keymap_key_get_syms_by_level", "xkb_keymap_min_keycode",
+    "xkb_keymap_max_keycode", "xkb_state_key_get_layout", "xkb_state_key_get_level", "xkb_state_serialize_mods",
+)
 
 
 def _locale(env=os.environ) -> str:
@@ -125,6 +148,7 @@ class Keyboard:
             self.close()
             raise ValueError("couldn't read the keymap")
         self._state = lib.xkb_state_new(self._keymap)
+        self._latin = all(hasattr(lib, fn) for fn in LATIN_CALLS)
         self._compose_table = lib.xkb_compose_table_new_from_locale(self._ctx, _locale().encode(), 0)
         self._compose = lib.xkb_compose_state_new(self._compose_table, 0) if self._compose_table else None
 
@@ -175,15 +199,23 @@ class Keyboard:
                 text = self._utf8(self.lib.xkb_compose_state_get_utf8, self._compose)
                 sym = self.lib.xkb_compose_state_get_one_sym(self._compose) or sym
                 self.lib.xkb_compose_state_reset(self._compose)
-        return self._key(sym, text)
+        return self._key(sym, text, xkb_code)
 
     def release(self, code: int) -> Key:
         xkb_code = code + EVDEV_OFFSET
         sym = self.lib.xkb_state_key_get_one_sym(self._state, xkb_code)
-        return self._key(sym, self._utf8(self.lib.xkb_state_key_get_utf8, self._state, xkb_code))
+        return self._key(sym, self._utf8(self.lib.xkb_state_key_get_utf8, self._state, xkb_code), xkb_code)
 
-    def _key(self, sym: int, text: str) -> Key:
+    def _key(self, sym: int, text: str, xkb_code: int) -> Key:
         mods = self.modifiers()
+        # Ctrl or Alt with a letter of a non-Latin layout (Cyrillic, Greek, Hebrew...) is a shortcut, and
+        # shortcuts are Latin letters: Ctrl+V is the key that is V in another layout you have, as in Qt's own
+        # windows. The text stays what the layout types.
+        if (
+            mods & (Qt.KeyboardModifier.ControlModifier | Qt.KeyboardModifier.AltModifier)
+            and sym not in LATIN1 and sym not in SPECIAL and sym not in KEYPAD
+        ):
+            sym = self._latin_sym(xkb_code) or sym
         if sym in KEYPAD:
             mods |= Qt.KeyboardModifier.KeypadModifier
         if sym in SPECIAL:
@@ -205,6 +237,38 @@ class Keyboard:
         char = self._utf8(self.lib.xkb_keysym_to_utf8, sym) or text
         key = ord(char.upper()[0]) if len(char.upper()) == 1 else (ord(char[0]) if char else 0)
         return Key(key, text, mods)
+
+    def _latin_sym(self, xkb_code: int) -> int:
+        """The key's Latin-1 symbol in the first other layout that has one at the same level, or 0. As Qt's
+        QXkbCommon::lookupLatinKeysym: not if a key of an earlier layout already types that symbol (with us
+        Dvorak, ru and us, Ctrl+Q is Dvorak's Q, not the key that is Q in the last layout)."""
+        if not self._latin:
+            return 0
+        lib, keymap, state = self.lib, self._keymap, self._state
+        current = lib.xkb_state_key_get_layout(state, xkb_code)
+        syms = ctypes.POINTER(ctypes.c_uint32)()
+        found, found_in = 0, 0
+        for layout in range(lib.xkb_keymap_num_layouts_for_key(keymap, xkb_code)):
+            if layout == current:
+                continue
+            level = lib.xkb_state_key_get_level(state, xkb_code, layout)
+            if lib.xkb_keymap_key_get_syms_by_level(keymap, xkb_code, layout, level, ctypes.byref(syms)) == 1 and syms[0] in LATIN1:
+                found, found_in = syms[0], layout
+                break
+        if not found or not found_in:
+            return found
+        latched = lib.xkb_state_serialize_mods(state, MODS_LATCHED)
+        locked = lib.xkb_state_serialize_mods(state, MODS_LOCKED)
+        query = lib.xkb_state_new(keymap)
+        try:
+            first, last = lib.xkb_keymap_min_keycode(keymap), lib.xkb_keymap_max_keycode(keymap)
+            for earlier in range(found_in):
+                lib.xkb_state_update_mask(query, 0, latched, locked, 0, 0, earlier)
+                if any(lib.xkb_state_key_get_one_sym(query, other) == found for other in range(first, last)):
+                    return 0
+        finally:
+            lib.xkb_state_unref(query)
+        return found
 
     @staticmethod
     def _utf8(fn, *args) -> str:

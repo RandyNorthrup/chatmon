@@ -241,6 +241,25 @@ def test_the_box_uses_the_overlays_clipboard(stage):
     assert box.entry.text() == "two lines"
 
 
+def test_ctrl_v_pastes_under_a_russian_layout(stage):
+    """The keys the overlay's keyboard makes from a us,ru keymap with Russian active, as the stage gets them."""
+    lib = xkb.library()
+    if lib is None:
+        pytest.skip("libxkbcommon isn't installed (the overlay is Linux only)")
+    s, box = stage
+    board = xkb.Keyboard(lib, xkb.keymap_from_names(lib, "us,ru"))
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    s.keyboard_focus(True)
+    board.set_modifiers(0, 0, 0, 1)
+    s.key(board.press(47), True, False)  # the key that is V in the US: a Russian letter
+    assert box.entry.text() == "м"
+    board.set_modifiers(4, 0, 0, 1)  # Ctrl
+    s.key(board.press(47), True, False)
+    assert box.entry.text() == "мfrom another app"
+    board.close()
+
+
 def test_selecting_is_the_primary_selection_and_middle_click_pastes_it(stage):
     s, box = stage
     s.surface.copied = []

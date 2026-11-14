@@ -256,6 +256,7 @@ class FakeStage:
         self.away_calls = []
         self.lock_calls = []
         self.drops = []
+        self.keys = []
 
     def away(self, on):
         self.away_calls.append(on)
@@ -290,6 +291,7 @@ class FakeStage:
 
     def key(self, key, pressed, repeat):
         self.calls.append(("key", key.text, pressed))
+        self.keys.append(key)
 
     def input_method(self, preedit, cursor, commit, before, after):
         self.calls.append(("im", preedit, cursor, commit, before, after))
@@ -539,6 +541,33 @@ def test_typing_reaches_the_stage_through_the_keymap(qapp):
     conn.read()
     keys = [c for c in stage.calls if c[0] in ("key", "keyboard")]
     assert keys == [("keyboard", True), ("key", "z", True), ("key", "z", False), ("key", "A", True), ("keyboard", False)]
+    surf.close()
+    server.sock.close()
+
+
+def _send_keymap(server, ids, xkb, lib, layout):
+    keymap = xkb.keymap_from_names(lib, layout).encode() + b"\0"
+    fd = os.memfd_create("keymap")
+    os.write(fd, keymap)
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_KEYMAP, "uhu", layer.KEYMAP_XKB_V1, fd, len(keymap))
+    os.close(fd)
+
+
+@linux_only
+def test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout(qapp):
+    xkb, lib = _xkb()
+    conn, server, stage, surf, ids = _configured(qapp)
+    _send_keymap(server, ids, xkb, lib, "us,ru")
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 1, ids["surface"], b"")
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_MODIFIERS, "uuuuu", 2, 0, 0, 0, 1)  # Russian
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 3, 0, 47, 1)  # the key that's V in the US
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 4, 0, 47, 0)
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_MODIFIERS, "uuuuu", 5, 4, 0, 0, 1)  # Ctrl held, still Russian
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 6, 0, 47, 1)
+    conn.read()
+    typed, _released, shortcut = stage.keys
+    assert typed.text == "м" and typed.key == ord("М")
+    assert shortcut.key == Qt.Key.Key_V.value and shortcut.modifiers == Qt.KeyboardModifier.ControlModifier  # paste
     surf.close()
     server.sock.close()
 
