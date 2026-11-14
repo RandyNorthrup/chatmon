@@ -2,44 +2,44 @@
 making sure it's the real one, and installing it when you say so.
 
 What's sent: the request for the latest release (to api.github.com, as "Chatmon/<version>"), and the
-downloads. What makes a download the real one, on every platform: the release's list of checksums,
-SHA256SUMS.txt, must be signed by Chatmon's release key (Ed25519; only its public half is here), and the
-download must match the checksum that list gives it. On Windows the installer must also be signed by Randy
+downloads. What makes a download the real one, on every platform (releasecheck.py): the release's list of
+checksums, SHA256SUMS.txt, must be signed by Chatmon's release key (Ed25519; only its public half is here), and
+the download must match the checksum that list gives it. On Windows the installer must also be signed by Randy
 Northrup's own certificate from Microsoft's identity-verified code signing, which Windows checks again as it
-runs it. Everything is checked again just before it's installed; on macOS and Linux, that's done as root on
-a copy only root can change. Where Chatmon can't install an update itself (run from a source checkout, or a
-pip install of your own), it only says one is out, and how to get it.
+runs it. Everything is checked again just before it's installed. On macOS and Linux root does that itself, on
+copies only root can change, with the check and the release key of the Chatmon installed (never code you could
+change), and installs only a newer Chatmon: what it's handed is the download and the signed list, never a
+checksum to take on trust. Where Chatmon can't install an update itself (run from a source checkout, or a pip
+install of your own), it only says one is out, and how to get it.
 """
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import platform
 import re
+import shlex
 import shutil
+import stat
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QUrl, pyqtSignal
+from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QTimer, QUrl, pyqtSignal
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
-from . import __version__, changelog, ed25519, paths
+from . import __version__, changelog, paths, releasecheck
+from .releasecheck import DEB, MACOS, MANUAL, PIPX, RPM, SUMS, SUMS_SIG, WINDOWS, sha256, signed_sums
 
 REPO = "RandyNorthrup/chatmon"
 LATEST = f"https://api.github.com/repos/{REPO}/releases/latest"
 PAGE = f"https://github.com/{REPO}/releases/latest"
 DOWNLOADS = f"https://github.com/{REPO}/releases/download/"
-SUMS = "SHA256SUMS.txt"
-SUMS_SIG = "SHA256SUMS.txt.sig"  # its Ed25519 signature: 64 bytes
-# Chatmon's release key, whose private half is a secret of the repository's `release` environment: the
-# Packages workflow signs each release's SHA256SUMS.txt with it. More than one: a new key goes in here, in
-# a release the old one signs, before releases are signed with it.
-RELEASE_KEYS = ("bbd18835445b00c2582eb08bf1954af37966075ab3a0afdb4a32612e9a6090cf",)
+RELEASE_KEYS = releasecheck.RELEASE_KEYS  # the keys a release's list of checksums may be signed with
 SECURE = "https://"  # where every download must come from, after any redirect
 MAX_DOWNLOAD = 400 * 2**20  # bytes: far past any installer, short of filling a disk
 MAX_REPLY = 1 * 2**20  # bytes of GitHub's answer about a release, or of its checksums
@@ -53,9 +53,12 @@ IDENTITY = "1.3.6.1.4.1.311.97.15158122.532186155.467764996.339863661"
 CHECK_EVERY = 20 * 3600  # seconds between automatic checks: about once a day, whenever Chatmon runs
 HELPER = "/usr/lib/chatmon/install-update"  # the .deb's and .rpm's own: root's side of installing an update
 PKEXEC = "/usr/bin/pkexec"
-
-# How this Chatmon was installed, which decides how it updates.
-WINDOWS, MACOS, DEB, RPM, PIPX, MANUAL = "windows", "macos", "deb", "rpm", "pipx", "manual"
+SYSTEM_PACKAGE = Path("/usr/lib/chatmon")  # where the .deb and .rpm put Chatmon's package
+# Asking the system's package manager whether it installed Chatmon: the first that says yes is how.
+PACKAGE_QUERIES = ((DEB, ["/usr/bin/dpkg-query", "-W", "chatmon"]), (RPM, ["/usr/bin/rpm", "-q", "chatmon"]))
+MAC_APP = Path("/Applications/Chatmon.app")  # where the .pkg installs it
+INSTALLING = "install-"  # the start of each fresh folder a Windows installer is run from (prepare)
+RETRY_AFTER = 3600  # seconds until a download that couldn't be checked yet (TryLater) is looked at again
 
 
 def newer(version: str, than: str = __version__) -> bool:
@@ -79,13 +82,14 @@ def install_kind() -> str:
         if sys.platform == "win32" and (Path(sys.executable).parent / "unins000.exe").exists():
             return WINDOWS
         # Only the one in Applications, where the .pkg installs it (a copy run from elsewhere would get a
-        # second Chatmon in Applications, and not be updated itself).
-        if sys.platform == "darwin" and Path(sys.executable).resolve().is_relative_to("/Applications/Chatmon.app"):
+        # second Chatmon in Applications, and not be updated itself), and only as the .pkg left it, the
+        # system's: root checks an update with the app's own code, and an app you could change can't vouch.
+        if sys.platform == "darwin" and Path(sys.executable).resolve().is_relative_to(MAC_APP) and root_owned(MAC_APP):
             return MACOS
         return MANUAL
     package = Path(__file__).resolve().parent
-    if sys.platform.startswith("linux") and package.parent == Path("/usr/lib/chatmon"):
-        for kind, query in ((DEB, ["/usr/bin/dpkg-query", "-W", "chatmon"]), (RPM, ["/usr/bin/rpm", "-q", "chatmon"])):
+    if sys.platform.startswith("linux") and package.parent == SYSTEM_PACKAGE:
+        for kind, query in PACKAGE_QUERIES:
             if os.path.exists(query[0]):
                 try:
                     if subprocess.run(query, capture_output=True, timeout=10).returncode == 0:
@@ -102,25 +106,27 @@ def install_kind() -> str:
     return MANUAL
 
 
+def root_owned(app: Path) -> bool:
+    """macOS: a Chatmon.app as its .pkg leaves it, root's and writable by root alone, at its top. (Root's side
+    checks every file of its own copy of it before trusting any.)"""
+    try:
+        for folder in (app, app / "Contents", app / "Contents" / "MacOS", app / "Contents" / "Resources"):
+            info = os.lstat(folder)
+            if info.st_uid != 0 or not stat.S_ISDIR(info.st_mode) or info.st_mode & (stat.S_IWGRP | stat.S_IWOTH):
+                return False
+    except OSError:
+        return False
+    return True
+
+
 def asset_name(kind: str, version: str, machine: str | None = None) -> str | None:
     """The release file that updates this kind of install."""
-    machine = (machine or platform.machine()).lower()
-    if kind == WINDOWS:
-        return f"Chatmon-{version}-windows-x64-setup.exe"
-    if kind == MACOS:
-        return f"Chatmon-{version}-macos-{'arm64' if machine in ('arm64', 'aarch64') else 'intel'}.pkg"
-    if kind == DEB:
-        return f"chatmon_{version}-1_all.deb"
-    if kind == RPM:
-        return f"chatmon-{version}-1.noarch.rpm"
-    if kind == PIPX:
-        return f"chatmon-{version}-py3-none-any.whl"
-    return None
+    return releasecheck.asset_name(kind, version, machine or platform.machine())
 
 
 def how_to_update(kind: str, version: str) -> str:
     """For a Chatmon that can't update itself: how to get the new one."""
-    if kind != MANUAL:
+    if kind != MANUAL or paths.frozen():
         return "Download its installer from the release page, and run it."
     if _editable():
         return "This Chatmon runs from a folder you installed it from: `git pull` there to update."
@@ -154,29 +160,10 @@ def parse_release(data: object) -> Release | None:
     return Release(tag[1:], str(data.get("body") or ""), page if page.startswith(f"https://github.com/{REPO}/") else PAGE, assets)
 
 
-def signed_sums(text: bytes, signature: bytes, keys=RELEASE_KEYS) -> dict[str, str] | None:
-    """The checksums in a release's SHA256SUMS.txt, if Chatmon's release key signed it; None if it didn't."""
-    if not any(ed25519.verify(bytes.fromhex(key), text, signature) for key in keys):
-        return None
-    return parse_sums(text.decode("utf-8", errors="replace"))
-
-
-def parse_sums(text: str) -> dict[str, str]:
-    """SHA256SUMS.txt: "<hex>  <name>" a line (sha256sum's own format; "*" marks binary mode)."""
-    out = {}
-    for line in text.splitlines():
-        m = re.fullmatch(r"([0-9a-fA-F]{64}) [ *](.+)", line.strip())
-        if m:
-            out[m.group(2).strip()] = m.group(1).lower()
-    return out
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(1 << 20), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def sums_for(download: Path) -> tuple[Path, Path]:
+    """Where the signed list of checksums that vouched for a download, and its signature, wait beside it: what
+    root checks again, itself, before installing it."""
+    return download.with_name(f"{download.name}.{SUMS}"), download.with_name(f"{download.name}.{SUMS_SIG}")
 
 
 def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
@@ -191,16 +178,66 @@ def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
         return "Unknown", str(exc)[:200], "", []
 
 
+class TryLater(str):
+    """Why a download can't be installed yet, for a reason that may pass: Windows couldn't look up whether its
+    certificate has been revoked (no connection to the certificate's servers). Never installed meanwhile; the
+    updater looks again later."""
+
+
 def verify(path: Path, expected: str, kind: str) -> str | None:
     """Why this download mustn't be installed, or None: it's the one the release's signed list gives (and,
-    on Windows, signed by Randy Northrup). Slow: off the screen's thread."""
+    on Windows, signed by Randy Northrup, with a certificate that hasn't been revoked). A TryLater says why not
+    yet. Slow: off the screen's thread."""
     if sha256(path) != expected:
         return "the download doesn't match the release's checksum"
     if kind == WINDOWS:
         status, signer, issuer, usages = windows_signer(path)
+        if status == "Revoked":
+            return f"its signing certificate has been revoked{' (' + signer + ')' if signer else ''}"
+        if status == "RevocationUnknown":
+            return TryLater("Windows couldn't check that its signing certificate hasn't been revoked (are you offline?)")
         if status != "Valid" or not SIGNER.fullmatch(signer) or not ISSUER.fullmatch(issuer) or IDENTITY not in usages:
             return f"its signature isn't Randy Northrup's ({status}{', ' + signer if signer else ''})"
     return None
+
+
+@dataclass
+class Prepared:
+    """A download checked again just before it's installed, and the file to install it from."""
+
+    path: Path
+    hold: int | None = None  # Windows: wintrust.hold's handle, which keeps `path` as it is until Chatmon quits
+
+
+def prepare(download: Path, expected: str, kind: str) -> Prepared | str:
+    """Checked again just before it's installed (it may have waited days for you to say yes): the file to
+    install, or why not (a TryLater: not yet). On Windows that's a copy in a fresh folder, held so that nobody
+    can write, rename or delete it, nor rename its folder, from before the check until Chatmon quits (the
+    installer, started from it, reads itself as it goes): what's checked is what runs. Slow: off the screen's
+    thread."""
+    if kind != WINDOWS:
+        why = verify(download, expected, kind)
+        return why if why is not None else Prepared(download)
+    place = Path(tempfile.mkdtemp(prefix=INSTALLING, dir=download.parent))
+    copy = place / download.name
+    hold = None
+    try:
+        shutil.copyfile(download, copy)
+        if sys.platform == "win32":
+            from . import wintrust
+
+            hold = wintrust.hold(copy)
+        why = verify(copy, expected, kind)
+    except OSError as exc:
+        why = f"it couldn't be copied to be installed ({exc.strerror or exc})"
+    if why is None:
+        return Prepared(copy, hold)
+    if hold is not None:
+        from . import wintrust
+
+        wintrust.release(hold)
+    shutil.rmtree(place, ignore_errors=True)
+    return why
 
 
 def folder() -> Path:
@@ -219,28 +256,51 @@ def folder() -> Path:
     return path
 
 
-# macOS: run as root (macOS asks for your password), on a copy in a folder only root can change, checked
-# again there. The path and checksum come in as data (quoted form), never as part of the script itself.
+# macOS: root's side of installing an update (macOS asks for your password first). The AppleScript only hands
+# _MACOS_ROOT, and the paths of the download and its signed list, to a shell as data (quoted form): none of it
+# is ever part of the script itself.
 _MACOS_SCRIPT = (
+    'set c to system attribute "CHATMON_ROOT"\n'
     'set f to system attribute "CHATMON_UPDATE"\n'
-    'set h to system attribute "CHATMON_SHA256"\n'
-    'do shell script "d=$(/usr/bin/mktemp -d /private/tmp/chatmon-update.XXXXXXXX) && trap \'/bin/rm -rf \\"$d\\"\' EXIT && '
-    '/bin/cp -- " & quoted form of f & " \\"$d/update.pkg\\" && '
-    '[ \\"$(/usr/bin/shasum -a 256 \\"$d/update.pkg\\" | /usr/bin/cut -d\' \' -f1)\\" = " & quoted form of h & " ] && '
-    '/usr/sbin/installer -pkg \\"$d/update.pkg\\" -target /" with administrator privileges'
+    'set s to system attribute "CHATMON_SUMS"\n'
+    'set g to system attribute "CHATMON_SIG"\n'
+    'do shell script "/bin/sh -c " & quoted form of c & " chatmon-update " & quoted form of f & " " & quoted form of s & " " '
+    '& quoted form of g with administrator privileges'
 )
+# What runs as root: a copy of Chatmon.app in a folder only root can write, then checked: every file of it must be
+# root's and writable by root alone, as the .pkg installs it. Checking the copy leaves no moment to swap the app
+# between the check and its use, and nobody but root can make a root-owned file. Only then does the copy's own
+# install-update (packaging/macos/install-update) check the download, with the copy's own Python and release key
+# (releasecheck.py: signed, and newer than this Chatmon), and install it.
+_MACOS_ROOT = """set -eu
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+export PATH
+umask 077
+app=/Applications/Chatmon.app
+d=$(mktemp -d /private/tmp/chatmon-update.XXXXXXXX)
+trap 'rm -rf "$d"' EXIT
+ditto --noqtn "$app" "$d/Chatmon.app"
+if [ -n "$(find "$d/Chatmon.app" \\( ! -user root -o -perm +022 \\) -print | head -n 1)" ]; then
+    echo "Chatmon.app isn't the system's own (its .pkg didn't install it), so it can't check its own update: install this one from the release page." >&2
+    exit 3
+fi
+/bin/sh "$d/Chatmon.app/Contents/Resources/install-update" "$d" "$@"
+"""
 
 
-def installer_command(kind: str, path: Path, expected: str = "") -> tuple[str, list[str], dict[str, str]] | None:
-    """(program, arguments, environment) that installs a verified download; None where it can't be done here."""
+def installer_command(kind: str, path: Path) -> tuple[str, list[str], dict[str, str]] | None:
+    """(program, arguments, environment) that installs a verified download; None where it can't be done here.
+    On macOS and Linux root gets the download and the signed list beside it (sums_for), to check itself."""
     if kind == WINDOWS:
         # Silent, as the last install was (for you, or for everyone), and Chatmon starts again afterwards.
         # An install for everyone asks Windows to elevate it, and Windows checks its signature as it does.
         return str(path), ["/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/relaunch=1"], {}
+    sums, signature = sums_for(path)
     if kind == MACOS:
-        return "/usr/bin/osascript", ["-e", _MACOS_SCRIPT], {"CHATMON_UPDATE": str(path), "CHATMON_SHA256": expected}
+        env = {"CHATMON_ROOT": _MACOS_ROOT, "CHATMON_UPDATE": str(path), "CHATMON_SUMS": str(sums), "CHATMON_SIG": str(signature)}
+        return "/usr/bin/osascript", ["-e", _MACOS_SCRIPT], env
     if kind in (DEB, RPM) and os.access(PKEXEC, os.X_OK) and os.access(HELPER, os.X_OK):
-        return PKEXEC, [HELPER, str(path), expected], {}
+        return PKEXEC, [HELPER, str(path), str(sums), str(signature)], {}
     if kind == PIPX:
         pipx = shutil.which("pipx")  # your own tool, run as you: no more than you could do yourself
         if pipx:
@@ -296,7 +356,13 @@ class Updater(QObject):
         self.release: Release | None = None
         self.ready: Path | None = None  # the verified download, for self.release
         self._expected = ""  # its checksum, from the signed list: checked again just before it's installed
+        self._signed: tuple[bytes, bytes] = (b"", b"")  # that list and its signature, for root to check again
+        self._held: Prepared | None = None  # Windows: the installer's held copy, kept as it is until Chatmon quits
         self.busy = False
+        self.retry = QTimer(self)  # a check that couldn't finish for now (TryLater), tried again
+        self.retry.setSingleShot(True)
+        self.retry.setInterval(RETRY_AFTER * 1000)
+        self.retry.timeout.connect(lambda: self.check(self.kind))
 
     # -- checking
 
@@ -306,6 +372,7 @@ class Updater(QObject):
         if self.busy:
             return
         self.busy = True
+        self.retry.stop()
         self._by_hand = by_hand
         if kind is None and self.kind is None:
             self._background.run(install_kind, self._kind_known)
@@ -357,7 +424,7 @@ class Updater(QObject):
         if name is None or name not in release.assets or not {SUMS, SUMS_SIG} <= set(release.assets) or installer_command(self.kind, folder() / name) is None:
             return self._only_tell(how_to_update(self.kind, release.version))
         done = folder() / name
-        if self.ready == done and done.exists() and self._expected:
+        if self.ready == done and self._expected and all(p.exists() for p in (done, *sums_for(done))):
             self.busy = False
             self.available.emit(release)
             return
@@ -378,11 +445,14 @@ class Updater(QObject):
         expected = sums.get(name)
         if expected is None:
             return self._fail(f"the release's signed list has no checksum for {name}")
+        self._signed = (text, signature)
         part = folder() / (name + ".part")
         try:
-            for old in folder().iterdir():  # last time's, of whatever version
-                if old.name != name and old.is_file():
+            for old in folder().iterdir():  # last time's, of whatever version (this one's are all named after it)
+                if not old.name.startswith(name) and old.is_file():
                     old.unlink()
+                elif old.name.startswith(INSTALLING) and old.is_dir():  # an installer's copy, no longer held
+                    shutil.rmtree(old, ignore_errors=True)
             self._file = open(part, "wb")
         except OSError as exc:
             return self._fail(f"couldn't save the download ({exc.strerror or exc})")
@@ -419,10 +489,17 @@ class Updater(QObject):
         self._background.run(lambda: verify(part, expected, kind), lambda why: self._verified(why, part, folder() / name, expected))
 
     def _verified(self, why, part: Path, done: Path, expected: str) -> None:
+        if isinstance(why, TryLater):
+            part.unlink(missing_ok=True)
+            self._fail(f"{why}; I'll look again in an hour")
+            self.retry.start()
+            return
         if why is not None:
             part.unlink(missing_ok=True)
             return self._fail(str(why) if not isinstance(why, Exception) else f"couldn't check the download ({why})")
         try:
+            for path, data in zip(sums_for(done), self._signed, strict=True):
+                path.write_bytes(data)
             os.replace(part, done)
         except OSError as exc:
             part.unlink(missing_ok=True)
@@ -438,25 +515,34 @@ class Updater(QObject):
         ready, and starts it again); elsewhere the system asks for your password, then Chatmon starts again."""
         if self.ready is None or self.release is None or not self.ready.exists() or self.busy:
             return self.failed.emit("There's no update ready to install.")
-        if installer_command(self.kind, self.ready, self._expected) is None:
+        if installer_command(self.kind, self.ready) is None:
             return self.failed.emit("This Chatmon can't install updates itself.")
         self.busy = True
         # Checked again, just before: it may have waited days for you to say yes.
         ready, expected, kind = self.ready, self._expected, self.kind
-        self._background.run(lambda: verify(ready, expected, kind), self._install_checked)
+        self._background.run(lambda: prepare(ready, expected, kind), self._install_checked)
 
-    def _install_checked(self, why) -> None:
-        if why is not None:
+    def _install_checked(self, prepared) -> None:
+        if isinstance(prepared, TryLater):  # not known bad: kept, to try again
+            self.busy = False
+            return self.failed.emit(f"The update wasn't installed yet: {prepared}. Try again once you're online.")
+        if not isinstance(prepared, Prepared):
             self.busy = False
             self.ready.unlink(missing_ok=True)
             self.ready = None
-            return self.failed.emit(f"The update wasn't installed: {why if not isinstance(why, Exception) else 'it could not be checked'}.")
-        program, args, env = installer_command(self.kind, self.ready, self._expected)
+            return self.failed.emit(f"The update wasn't installed: {prepared if not isinstance(prepared, Exception) else 'it could not be checked'}.")
+        program, args, env = installer_command(self.kind, prepared.path)
         if self.kind == WINDOWS:
             # Chatmon stays: the installer asks it to quit (`chatmon quit`) once it's going ahead, and starts it
-            # again after. Turned down (Windows asking to install for everyone, say), Chatmon is still here.
+            # again after. Turned down (Windows asking to install for everyone, say), Chatmon is still here. Its
+            # copy stays held until Chatmon quits (the installer reads itself as it goes).
             self.busy = False
-            if not QProcess.startDetached(program, args, str(self.ready.parent))[0]:
+            if self._held is not None and self._held.hold is not None:
+                from . import wintrust
+
+                wintrust.release(self._held.hold)  # a copy from an install that was turned down
+            self._held = prepared
+            if not QProcess.startDetached(program, args, str(prepared.path.parent))[0]:
                 return self.failed.emit("The update wasn't installed: its installer couldn't start.")
             self.handed_over.emit()
             return
@@ -489,9 +575,11 @@ class Updater(QObject):
             if self.kind in (DEB, RPM) and code == 127:  # pkexec: no prompt to ask with, or not allowed
                 return self.failed.emit(
                     "The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
-                    f"In a terminal: `sudo {HELPER} '{self.ready}' {self._expected}`"
+                    f"In a terminal: `sudo {shlex.join([HELPER, str(self.ready), *map(str, sums_for(self.ready))])}`"
                 )
             detail = err.splitlines()[-1] if err else f"exit code {code}"
+            if detail.startswith("The update wasn't installed"):  # root's own check said why, in a sentence
+                return self.failed.emit(detail)
             return self.failed.emit(f"The update wasn't installed ({detail}).")
         relaunch = relaunch_command(self.kind)
         if relaunch is not None:

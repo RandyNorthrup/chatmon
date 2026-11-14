@@ -1,0 +1,806 @@
+red drills from docs\delivery\reports\m1a\drill-spec.json
+python: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-1y03_2tc
+copied 219 files
+
+=== drill AC-01-VERIFY-signature (M1A-01) on chatmon/releasecheck.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_releasecheck.py::test_a_tampered_list_is_refused tests/test_releasecheck.py::test_a_bad_signature_is_refused
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.33s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_______________________ test_a_tampered_list_is_refused _______________________
+
+release = <function release.<locals>.make at 0x000001988501DBC0>
+
+    def test_a_tampered_list_is_refused(release):
+        """The list changed after it was signed: here, its checksum for the package swapped for another file's."""
+        package, sums, signature = release(data=b"the real package")
+        evil = package.with_name("evil.deb")
+        evil.write_bytes(b"something else")
+        tampered = sums.replace(hashlib.sha256(b"the real package").hexdigest().encode(), hashlib.sha256(b"something else").hexdigest().encode())
+        assert tampered != sums
+>       with pytest.raises(releasecheck.Refused, match="isn't signed"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE Refused
+
+tests\test_releasecheck.py:96: Failed
+_______________________ test_a_bad_signature_is_refused _______________________
+
+release = <function release.<locals>.make at 0x0000019884FE7270>
+
+    def test_a_bad_signature_is_refused(release):
+        package, sums, signature = release()
+        other_secret, _ = ed25519_sign.new_key()
+        flipped = bytearray(signature)
+        flipped[10] ^= 1
+        for bad in (bytes(64), bytes(flipped), ed25519_sign.sign(other_secret, sums), signature[:63], b""):
+>           with pytest.raises(releasecheck.Refused, match="isn't signed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE Refused
+
+tests\test_releasecheck.py:108: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_releasecheck.py::test_a_tampered_list_is_refused - Failed: ...
+FAILED tests/test_releasecheck.py::test_a_bad_signature_is_refused - Failed: ...
+2 failed in 0.36s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.33s
+
+=== drill AC-01-VERIFY-version (M1A-01) on chatmon/releasecheck.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_releasecheck.py::test_an_older_or_the_same_version_is_refused
+-- green: exit 0, 4 passed
+....                                                                     [100%]
+4 passed in 0.36s
+-- red: exit 1
+FF..                                                                     [100%]
+================================== FAILURES ===================================
+_____________ test_an_older_or_the_same_version_is_refused[9.0.0] _____________
+
+release = <function release.<locals>.make at 0x000001CFAC439BC0>
+installed = '9.0.0'
+
+    @pytest.mark.parametrize("installed", ["9.0.0", "9.0", "9.0.1", "10.0.0"])
+    def test_an_older_or_the_same_version_is_refused(release, installed):
+        package, sums, signature = release()
+>       with pytest.raises(releasecheck.Refused, match="isn't newer"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE Refused
+
+tests\test_releasecheck.py:123: Failed
+______________ test_an_older_or_the_same_version_is_refused[9.0] ______________
+
+release = <function release.<locals>.make at 0x000001CFAC417270>
+installed = '9.0'
+
+    @pytest.mark.parametrize("installed", ["9.0.0", "9.0", "9.0.1", "10.0.0"])
+    def test_an_older_or_the_same_version_is_refused(release, installed):
+        package, sums, signature = release()
+>       with pytest.raises(releasecheck.Refused, match="isn't newer"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE Refused
+
+tests\test_releasecheck.py:123: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_releasecheck.py::test_an_older_or_the_same_version_is_refused[9.0.0]
+FAILED tests/test_releasecheck.py::test_an_older_or_the_same_version_is_refused[9.0]
+2 failed, 2 passed in 0.49s
+-- restored green: exit 0, 4 passed
+....                                                                     [100%]
+4 passed in 0.35s
+
+=== drill AC-01-USER-handoff (M1A-01) on chatmon/updates.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_updates.py::test_root_is_handed_the_signed_list_never_a_checksum
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.42s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_root_is_handed_the_signed_list_never_a_checksum _____________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-759/test_root_is_handed_the_signed0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FA8E42C40>
+
+    def test_root_is_handed_the_signed_list_never_a_checksum(tmp_path, monkeypatch):
+        """Linux: pkexec runs the package's own install-update on the download, the release's signed list and its
+        signature, which root checks itself; nothing in the call is a checksum it would take on trust."""
+        for name in ("pkexec", "install-update"):
+            (tmp_path / name).write_text("#!/bin/sh\n")
+            (tmp_path / name).chmod(0o755)
+        monkeypatch.setattr(updates, "PKEXEC", str(tmp_path / "pkexec"))
+        monkeypatch.setattr(updates, "HELPER", str(tmp_path / "install-update"))
+        deb = tmp_path / "updates" / "chatmon_9.0.0-1_all.deb"
+        for kind in ("deb", "rpm"):
+            program, args, env = updates.installer_command(kind, deb)
+            sums, signature = updates.sums_for(deb)
+>           assert (program, args, env) == (str(tmp_path / "pkexec"), [str(tmp_path / "install-update"), str(deb), str(sums), str(signature)], {})
+E           AssertionError: assert ('C:\\Users\\...0000000'], {}) == ('C:\\Users\\...txt.sig'], {})
+E             
+E             At index 1 diff: ['C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-759\\test_root_is_handed_the_signed0\\install-update', 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-759\\test_root_is_handed_the_signed0\\updates\\chatmon_9.0.0-1_all.deb', '0000000000000000000000000000000000000000000000000000000000000000'] != ['C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-759\\test_root_is_handed_the_signed0\\install-update', 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-759\\test_root_is_handed_the_signed0\\updat...
+E             
+E             ...Full output truncated, use '-vv' to show
+
+tests\test_updates.py:146: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_updates.py::test_root_is_handed_the_signed_list_never_a_checksum
+1 failed in 0.45s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+
+=== drill AC-03-sqos (M1A-03) on chatmon/winpipe.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_winpipe.py::test_a_server_learns_who_you_are_but_can_never_act_as_you
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.25s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_a_server_learns_who_you_are_but_can_never_act_as_you __________
+
+pipe_name = 'chatmon-test-20808-ae0d120c'
+
+    def test_a_server_learns_who_you_are_but_can_never_act_as_you(pipe_name):
+        server = Squatter(pipe_name)
+        server.start()
+        server.ready.wait()
+        try:
+            said = events.deliver({"type": "say", "text": "hello"}, timeout=5)
+        finally:
+            server.close()
+        assert said == events.SENT
+        assert events.parse_lines(server.received[0]) == [{"type": "say", "text": "hello"}]
+>       assert server.levels == [SECURITY_IDENTIFICATION_LEVEL]  # never Impersonation (2), what CreateFile grants by default
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert [2] == [1]
+E         
+E         At index 0 diff: 2 != 1
+E         Use -v to get more diff
+
+tests\test_winpipe.py:116: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_winpipe.py::test_a_server_learns_who_you_are_but_can_never_act_as_you
+1 failed in 0.29s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.23s
+
+=== drill AC-03-owner (M1A-03) on chatmon/winpipe.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_winpipe.py::test_a_pipe_someone_else_serves_is_told_nothing
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.22s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_a_pipe_someone_else_serves_is_told_nothing _______________
+
+pipe_name = 'chatmon-test-34328-64bb6c3e'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000011A7AB3DCD0>
+
+    def test_a_pipe_someone_else_serves_is_told_nothing(pipe_name, monkeypatch):
+        """Its server runs as someone else (here: a process that can't be looked into, as another user's can't)."""
+        monkeypatch.setattr(winpipe, "_OpenProcess", lambda *args: None)
+        server = Squatter(pipe_name)
+        server.start()
+        server.ready.wait()
+        try:
+            said = events.deliver({"type": "event", "event": "done", "message": "the secret plan"}, timeout=2)
+        finally:
+            server.close()
+>       assert said == events.FOREIGN and server.received == [b""] and server.levels == []
+E       AssertionError: assert ('sent' == 'foreign'
+E         
+E         - foreign
+E         + sent)
+
+tests\test_winpipe.py:129: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_winpipe.py::test_a_pipe_someone_else_serves_is_told_nothing
+1 failed in 0.27s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+
+=== drill AC-04-gate (M1A-04) on chatmon/agents.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_agents.py::test_elevated_no_agents_command_line_ever_starts
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_elevated_no_agents_command_line_ever_starts _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002C8ED20CFC0>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-762/test_elevated_no_agents_comman0')
+
+    def test_elevated_no_agents_command_line_ever_starts(monkeypatch, tmp_path):
+        claude_ran = stand_in_agent(tmp_path, monkeypatch, "claude")
+        muse_ran = stand_in_agent(tmp_path, monkeypatch, "muse")
+        stand_in_agent(tmp_path, monkeypatch, "chatmon")  # on PATH, as connecting Claude Code needs
+        monkeypatch.setattr(agents, "elevated", lambda: True)
+        claude, muse = agents.ClaudeCode(), agents.Muse()
+        assert claude.status() == "found" and not claude.connected() and not claude.legacy()
+        assert not muse.connected() and not muse.legacy()
+        for agent in (claude, muse):
+>           with pytest.raises(agents.AgentError, match="administrator"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE AgentError
+
+tests\test_agents.py:590: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_agents.py::test_elevated_no_agents_command_line_ever_starts
+1 failed in 0.66s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+
+=== drill AC-05-revocation-asked (M1A-05) on chatmon/wintrust.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_wintrust.py::test_revocation_is_asked_for_the_whole_chain
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.31s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_revocation_is_asked_for_the_whole_chain _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021FA9BCEFD0>
+
+    def test_revocation_is_asked_for_the_whole_chain(monkeypatch):
+        """The real WinVerifyTrust, watched on the way in: every check asks about revocation, and a properly signed
+        file still checks out (or, offline, says it couldn't tell: never just "Valid" without looking)."""
+        signed, real, asked = signed_file(), wintrust._WinVerifyTrust, []
+    
+        def watched(window, action, data):
+            if data._obj.dwStateAction == wintrust.WTD_STATEACTION_VERIFY:
+                asked.append((data._obj.fdwRevocationChecks, data._obj.dwProvFlags))
+            return real(window, action, data)
+    
+        monkeypatch.setattr(wintrust, "_WinVerifyTrust", watched)
+        status = wintrust.signer(signed)[0]
+>       assert asked == [(wintrust.WTD_REVOKE_WHOLECHAIN, wintrust.WTD_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT)]
+E       assert [(0, 128)] == [(1, 128)]
+E         
+E         At index 0 diff: (0, 128) != (1, 128)
+E         Use -v to get more diff
+
+tests\test_wintrust.py:49: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wintrust.py::test_revocation_is_asked_for_the_whole_chain
+1 failed in 0.37s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.30s
+
+=== drill AC-05-try-later (M1A-05) on chatmon/updates.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_updates.py::test_a_revoked_certificate_is_never_installed_and_an_unknown_one_not_yet
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.59s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__ test_a_revoked_certificate_is_never_installed_and_an_unknown_one_not_yet ___
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-765/test_a_revoked_certificate_is_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024170B32B10>
+
+    def test_a_revoked_certificate_is_never_installed_and_an_unknown_one_not_yet(tmp_path, monkeypatch):
+        f = tmp_path / "setup.exe"
+        f.write_bytes(b"setup")
+        good = hashlib.sha256(b"setup").hexdigest()
+        usages = ["1.3.6.1.5.5.7.3.3", updates.IDENTITY]
+        monkeypatch.setattr(updates, "windows_signer", lambda path: ("Revoked", OURS, MICROSOFT, usages))
+        why = updates.verify(f, good, updates.WINDOWS)
+        assert "revoked" in why and not isinstance(why, updates.TryLater)  # even Randy Northrup's own: never
+        monkeypatch.setattr(updates, "windows_signer", lambda path: ("RevocationUnknown", OURS, MICROSOFT, usages))
+        why = updates.verify(f, good, updates.WINDOWS)
+>       assert isinstance(why, updates.TryLater) and "revoked" in why  # never passed: not yet
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (False)
+E        +  where False = isinstance("its signature isn't Randy Northrup's (RevocationUnknown, CN=Randy Northrup, O=Randy Northrup, L=Ventura, S=California, C=US)", <class 'chatmon.updates.TryLater'>)
+E        +    where <class 'chatmon.updates.TryLater'> = updates.TryLater
+
+tests\test_updates.py:563: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_updates.py::test_a_revoked_certificate_is_never_installed_and_an_unknown_one_not_yet
+1 failed in 0.44s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.42s
+
+=== drill AC-06-hold (M1A-06) on chatmon/updates.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.06s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_the_windows_installer_runs_from_a_copy_nobody_can_change ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001772ABB72F0>
+github = <function github.<locals>.publish at 0x000001772AD00B40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001772A786FD0>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-768/test_the_windows_installer_run0')
+
+    @pytest.mark.skipif(sys.platform != "win32", reason="holding a file open against changes: Windows")
+    def test_the_windows_installer_runs_from_a_copy_nobody_can_change(qapp, github, monkeypatch, tmp_path):
+        """From before its check until after it's started: the copy can't be written, renamed or deleted, nor its
+        folder renamed, while the download it came from can still be swapped, to no effect."""
+        import os
+    
+        github(b"the real installer")
+        updater, _ = run_updater(qapp)
+        updater.kind = updates.WINDOWS
+        monkeypatch.setattr(updates, "installer_command", REAL_INSTALLER_COMMAND)
+    
+        def unchangeable(path):
+            refused = []
+            for change in (lambda: open(path, "r+b").close(), lambda: os.replace(path, tmp_path / "moved"),
+                           lambda: os.remove(path), lambda: os.replace(path.parent, tmp_path / "moved-folder")):
+                try:
+                    change()
+                except PermissionError:
+                    refused.append(True)
+            return len(refused) == 4
+    
+        checked = []
+    
+        def signer(path):
+            checked.append((path, unchangeable(path)))
+            return "Valid", OURS, MICROSOFT, ["1.3.6.1.5.5.7.3.3", updates.IDENTITY]
+    
+        started = []
+        monkeypatch.setattr(updates, "windows_signer", signer)
+        monkeypatch.setattr(updates.QProcess, "startDetached", lambda program, args, cwd: started.append((program, cwd, unchangeable(Path(program)))) or (True, 0))
+        updater.install()
+        spin(300)
+        try:
+>           ((path, held_at_check),) = checked
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+E           ValueError: not enough values to unpack (expected 1, got 0)
+
+tests\test_updates.py:632: ValueError
+=========================== short test summary info ===========================
+FAILED tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change
+1 failed in 1.05s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.00s
+
+=== drill AC-07-prune (M1A-07) on chatmon/agents.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_agents.py::test_backups_are_private_new_files_and_only_the_newest_five_are_kept
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.34s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_backups_are_private_new_files_and_only_the_newest_five_are_kept _____
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-771/test_backups_are_private_new_f0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000290836ACFC0>
+
+    def test_backups_are_private_new_files_and_only_the_newest_five_are_kept(tmp_path, monkeypatch):
+        settings = tmp_path / "settings.json"
+        monkeypatch.setattr(agents.time, "strftime", lambda fmt: "20261114-120000")  # all in the same second
+        taken = settings.with_name("settings.json.chatmon-backup-20261114-120000")
+        taken.write_text("someone else's file")  # already at the first name: never written over, nor through
+        if sys.platform != "win32":
+            victim = tmp_path / "victim"
+            victim.write_text("precious")
+            settings.with_name(taken.name + "-2").symlink_to(victim)
+        for i in range(8):
+            settings.write_text(json.dumps({"n": i}))
+            if sys.platform != "win32":
+                settings.chmod(0o644)  # readable by others, as settings files often are
+            copy = agents.backup(settings)
+            assert copy.read_text() == json.dumps({"n": i})
+            if i == 0:  # the names already there were passed over, not written
+                assert copy.name == taken.name + ("-2" if sys.platform == "win32" else "-3")
+                assert taken.read_text() == "someone else's file"
+            if sys.platform != "win32":
+                assert copy.stat().st_mode & 0o777 == 0o600
+        if sys.platform != "win32":
+            assert victim.read_text() == "precious"
+        kept = [p for p in backups(settings) if not p.is_symlink()]
+>       assert len(kept) == agents.BACKUPS_KEPT == 5
+E       AssertionError: assert 9 == 5
+E        +  where 9 = len([WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-771/test_backups_are_private_new_f0/settings.js.../Temp/pytest-of-Randy/pytest-771/test_backups_are_private_new_f0/settings.json.chatmon-backup-20261114-120000-6'), ...])
+E        +  and   5 = agents.BACKUPS_KEPT
+
+tests\test_agents.py:653: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_agents.py::test_backups_are_private_new_files_and_only_the_newest_five_are_kept
+1 failed in 0.42s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.33s
+
+=== drill AC-08-codex-top (M1A-08) on chatmon/agents.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_agents.py::test_codex_takes_a_config_with_arrays_inside_arrays tests/test_agents.py::test_codex_connect_then_disconnect_changes_nothing_but_notify
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 3.25s
+-- red: exit 1
+        current = parsed.get("notify")
+        if current and not is_ours(" ".join(map(str, current))):
+            raise AgentError(
+                f"Codex already runs {current!r} when a turn ends, and it takes only one program. "
+                f"Not replacing it; see `chatmon hooks show codex` to do it by hand."
+            )
+        line = "notify = [" + ", ".join(json.dumps(a) for a in self._argv()) + "]"
+        new = self._at_top(self._without_ours(text, parsed), line)
+        try:
+            after = tomllib.loads(new)
+        except tomllib.TOMLDecodeError:
+            after = {}
+        # Only notify may change: every other key, at every depth, exactly as it was.
+        if after.get("notify") != self._argv() or self._others(after) != self._others(parsed):
+>           raise AgentError("Couldn't add the notify line cleanly; not touching the file.")
+E           chatmon.agents.AgentError: Couldn't add the notify line cleanly; not touching the file.
+
+chatmon\agents.py:609: AgentError
+________ test_codex_connect_then_disconnect_changes_nothing_but_notify ________
+
+    def test_codex_connect_then_disconnect_changes_nothing_but_notify():
+        codex = agents.Codex()
+        path = codex.config_path()
+        path.parent.mkdir(parents=True)
+        for seed in range(300):
+            doc = random_codex_config(random.Random(seed))
+            original = tomllib.loads(doc)  # a valid config, or the generator is wrong
+            path.write_text(doc, encoding="utf-8")
+>           codex.connect()
+
+tests\test_agents.py:754: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <chatmon.agents.Codex object at 0x0000014CC9225F90>
+
+    def connect(self) -> str:
+        text = self._text()
+        parsed = self._parse(text)
+        current = parsed.get("notify")
+        if current and not is_ours(" ".join(map(str, current))):
+            raise AgentError(
+                f"Codex already runs {current!r} when a turn ends, and it takes only one program. "
+                f"Not replacing it; see `chatmon hooks show codex` to do it by hand."
+            )
+        line = "notify = [" + ", ".join(json.dumps(a) for a in self._argv()) + "]"
+        new = self._at_top(self._without_ours(text, parsed), line)
+        try:
+            after = tomllib.loads(new)
+        except tomllib.TOMLDecodeError:
+            after = {}
+        # Only notify may change: every other key, at every depth, exactly as it was.
+        if after.get("notify") != self._argv() or self._others(after) != self._others(parsed):
+>           raise AgentError("Couldn't add the notify line cleanly; not touching the file.")
+E           chatmon.agents.AgentError: Couldn't add the notify line cleanly; not touching the file.
+
+chatmon\agents.py:609: AgentError
+=========================== short test summary info ===========================
+FAILED tests/test_agents.py::test_codex_takes_a_config_with_arrays_inside_arrays
+FAILED tests/test_agents.py::test_codex_connect_then_disconnect_changes_nothing_but_notify
+2 failed in 0.50s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 4.14s
+
+=== drill AC-09-ORDER-swap (M1A-09) on chatmon/attachments.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_attachments.py::test_a_file_swapped_between_the_look_and_the_open_is_refused
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.31s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_a_file_swapped_between_the_look_and_the_open_is_refused _________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-778/test_a_file_swapped_between_th0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028CDD5CE780>
+
+    def test_a_file_swapped_between_the_look_and_the_open_is_refused(tmp_path, monkeypatch):
+        f = tmp_path / "report.txt"
+        f.write_text("what was looked at", encoding="utf-8")
+        other = tmp_path / "other.txt"
+        other.write_text("what was swapped in", encoding="utf-8")
+        real = os.open
+    
+        def swap_then_open(path, *args, **kwargs):
+            os.replace(other, f)  # another file at the same name, between os.stat and os.open
+            return real(path, *args, **kwargs)
+    
+        monkeypatch.setattr(attachments.os, "open", swap_then_open)
+>       with pytest.raises(attachments.AttachError, match="changed as it was opened"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AttachError
+
+tests\test_attachments.py:69: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_attachments.py::test_a_file_swapped_between_the_look_and_the_open_is_refused
+1 failed in 0.31s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+
+=== drill AC-09-ORDER-look-first (M1A-09) on chatmon/attachments.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_attachments.py::test_a_folder_is_refused_without_being_opened
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.32s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_a_folder_is_refused_without_being_opened ________________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-781/test_a_folder_is_refused_witho0')
+opened = ['C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-781\\test_a_folder_is_refused_witho0']
+
+    def test_a_folder_is_refused_without_being_opened(tmp_path, opened):
+>       with pytest.raises(attachments.AttachError, match="isn't a file"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: "isn't a file"
+E         Actual message: "couldn't open test_a_folder_is_refused_witho0 (Permission denied)"
+
+tests\test_attachments.py:42: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_attachments.py::test_a_folder_is_refused_without_being_opened
+1 failed in 0.35s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.30s
+
+=== drill AC-09-REMOTE-drive (M1A-09) on chatmon/attachments.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_attachments.py::test_windows_mapped_drives_are_refused_and_local_ones_taken
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.37s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_windows_mapped_drives_are_refused_and_local_ones_taken _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B53FF2E650>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-784/test_windows_mapped_drives_are0')
+opened = ['C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-784\\test_windows_mapped_drives_are0\\notes.txt']
+
+    @pytest.mark.skipif(sys.platform != "win32", reason="Windows paths and drives")
+    def test_windows_mapped_drives_are_refused_and_local_ones_taken(monkeypatch, tmp_path, opened):
+        f = tmp_path / "notes.txt"
+        f.write_text("local", encoding="utf-8")
+        assert attachments._drive_type(os.path.splitdrive(str(f))[0] + "\\") != attachments.DRIVE_REMOTE  # the real answer, here
+        assert attachments.from_path(Path("\\\\?\\" + str(f))).text == "local"  # a local path, spelled the long way
+        remote = os.path.splitdrive(str(f))[0].upper()
+        monkeypatch.setattr(attachments, "_drive_type", lambda root: attachments.DRIVE_REMOTE if root.upper().startswith(remote) else 3)
+        opened.clear()
+>       with pytest.raises(attachments.AttachError, match="network drive"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AttachError
+
+tests\test_attachments.py:120: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_attachments.py::test_windows_mapped_drives_are_refused_and_local_ones_taken
+1 failed in 0.41s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.39s
+
+=== drill AC-11-local (M1A-11) on chatmon/paths.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_paths.py::test_on_windows_everything_lives_on_this_computer
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_on_windows_everything_lives_on_this_computer ______________
+
+windows = (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-787/test_on_windows_everything_liv0/Roaming'), WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-787/test_on_windows_everything_liv0/Local'))
+
+    def test_on_windows_everything_lives_on_this_computer(windows):
+        roaming, local = windows
+>       assert paths.config_file() == local / "chatmon" / "config.toml"
+E       AssertionError: assert WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-787/test_on_windows_everything_liv0/Roaming/chatmon/config.toml') == ((WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-787/test_on_windows_everything_liv0/Local') / 'chatmon') / 'config.toml')
+E        +  where WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-787/test_on_windows_everything_liv0/Roaming/chatmon/config.toml') = <function config_file at 0x00000280A18B8250>()
+E        +    where <function config_file at 0x00000280A18B8250> = paths.config_file
+
+tests\test_paths.py:40: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_paths.py::test_on_windows_everything_lives_on_this_computer
+1 failed in 0.38s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.33s
+
+=== drill AC-11-newer-wins (M1A-11) on chatmon/paths.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_paths.py::test_they_join_whats_on_this_computer_already_the_newer_file_winning
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_they_join_whats_on_this_computer_already_the_newer_file_winning _____
+
+windows = (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-792/test_they_join_whats_on_this_c0/Roaming'), WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-792/test_they_join_whats_on_this_c0/Local'))
+
+    def test_they_join_whats_on_this_computer_already_the_newer_file_winning(windows):
+        roaming, local = windows
+        fill(local / "chatmon", {"updates/chatmon-9.exe": "a download", "state/chats/b.json": "newer here", "state/state.json": "older here"})
+        fill(roaming / "chatmon", {**BEFORE_0_10, "state/chats/b.json": "older there"})
+        now = time.time()
+        os.utime(local / "chatmon" / "state" / "state.json", (now - 100, now - 100))
+        os.utime(roaming / "chatmon" / "state" / "chats" / "b.json", (now - 100, now - 100))
+        paths.migrate()
+>       assert contents(local / "chatmon") == {**BEFORE_0_10, "updates/chatmon-9.exe": "a download", "state/chats/b.json": "newer here"}
+E       assert {'config.toml...ownload', ...} == {'config.toml...n': '{}', ...}
+E         
+E         Omitting 5 identical items, use -vv to show
+E         Differing items:
+E         {'state/state.json': 'older here'} != {'state/state.json': '{"x": 630}'}
+E         Use -v to get more diff
+
+tests\test_paths.py:65: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_paths.py::test_they_join_whats_on_this_computer_already_the_newer_file_winning
+1 failed in 0.38s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.29s
+
+=== drill AC-12-kind (M1A-12) on chatmon/updates.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_updates.py::test_a_chatmon_installed_by_the_system_says_which_package_manager
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_a_chatmon_installed_by_the_system_says_which_package_manager ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FD7FFB2C40>
+
+    def test_a_chatmon_installed_by_the_system_says_which_package_manager(monkeypatch):
+        monkeypatch.setattr(updates.paths, "frozen", lambda: False)
+        monkeypatch.setattr(updates.sys, "platform", "linux")
+        monkeypatch.setattr(updates, "SYSTEM_PACKAGE", Path(updates.__file__).resolve().parent.parent)  # this one, as if there
+    
+        def says(code):
+            return [sys.executable, "-c", f"raise SystemExit({code})"]  # a real program that answers yes (0) or no
+    
+        monkeypatch.setattr(updates, "PACKAGE_QUERIES", ((updates.DEB, says(1)), (updates.RPM, says(0))))
+>       assert updates.install_kind() == updates.RPM
+E       AssertionError: assert 'deb' == 'rpm'
+E         
+E         - rpm
+E         + deb
+
+tests\test_updates.py:203: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_updates.py::test_a_chatmon_installed_by_the_system_says_which_package_manager
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.48s
+
+=== drill AC-12-relaunch (M1A-12) on chatmon/updates.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.58s
+-- red: exit 1
+F.                                                                       [100%]
+================================== FAILURES ===================================
+____ test_an_install_runs_root_side_then_relaunches_or_says_why[installed] ____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000255092CF2F0>
+github = <function github.<locals>.publish at 0x00000255093B4B40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025508D43100>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-796/test_an_install_runs_root_side0')
+outcome = 'installed'
+
+    @pytest.mark.parametrize("outcome", ["installed", "refused"])
+    def test_an_install_runs_root_side_then_relaunches_or_says_why(qapp, github, monkeypatch, tmp_path, outcome):
+        """The whole way after you say yes, with a real child process standing in for pkexec and the root side: it
+        gets the download and its signed list, and Chatmon relaunches and quits, or stays and says why."""
+        github(b"the real installer")
+        updater, seen = run_updater(qapp)
+        assert seen[0][0] == "available"
+        record = tmp_path / "root-side-args"
+        helper = tmp_path / "root_side.py"
+        helper.write_text(ROOT_SIDE)
+        helper.chmod(0o755)  # as the package installs install-update
+        monkeypatch.setattr(updates, "installer_command", REAL_INSTALLER_COMMAND)
+        monkeypatch.setattr(updates, "PKEXEC", sys.executable)  # "pkexec HELPER ..." becomes "python root_side.py ..."
+        monkeypatch.setattr(updates, "HELPER", str(helper))
+        real_command = updates.installer_command
+    
+        def with_record(kind, path):
+            program, args, env = real_command(kind, path)
+            return program, [args[0], str(record), *(["fail"] if outcome == "refused" else []), *args[1:]], env
+    
+        monkeypatch.setattr(updates, "installer_command", with_record)
+        relaunched, events = [], []
+        monkeypatch.setattr(updates.QProcess, "startDetached", lambda *a: relaunched.append(a) or (True, 0))
+        updater.installing.connect(lambda: events.append("quit"))
+        updater.failed.connect(events.append)
+        ready = updater.ready
+        updater.install()
+        for _ in range(100):
+            if events:
+                break
+            spin(50)
+        given = record.read_text().split("\n")
+        sums, signature = updates.sums_for(ready)
+        assert given[-3:] == [str(ready), str(sums), str(signature)]
+        if outcome == "installed":
+>           assert events == ["quit"] and relaunched == [("/bin/sh", ["-c", "sleep 2; exec /usr/bin/chatmon"])]
+E           AssertionError: assert (['quit'] == ['quit']
+E             
+E             Use -v to get more diff and [] == [('/bin/sh', ...in/chatmon'])]
+E             
+E             Right contains one more item: ('/bin/sh', ['-c', 'sleep 2; exec /usr/bin/chatmon'])
+E             Use -v to get more diff)
+
+tests\test_updates.py:274: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[installed]
+1 failed, 1 passed in 1.57s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.61s
+
+=== drill AC-M6A-14-pin (M6A-14) on packaging/build.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_packaging.py::test_release_notes_pin_the_pipx_install_to_the_release
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_release_notes_pin_the_pipx_install_to_the_release ____________
+
+    def test_release_notes_pin_the_pipx_install_to_the_release():
+        from chatmon import __version__
+    
+        notes = build_module().notes(__version__)
+>       assert f"pipx install --force git+https://github.com/RandyNorthrup/chatmon@v{__version__}\n" in notes
+E       assert 'pipx install --force git+https://github.com/RandyNorthrup/chatmon@v0.9.2\n' in "## Fixes\n- **Coding agents' news is heard in the order it was sent**, even when your computer is too busy for Chatmo...signature by Chatmon's release key.\n\n```sh\npipx install --force git+https://github.com/RandyNorthrup/chatmon\n```\n"
+
+tests\test_packaging.py:120: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_packaging.py::test_release_notes_pin_the_pipx_install_to_the_release
+1 failed in 0.34s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.33s
+
+=== summary
+PASS AC-01-VERIFY-signature
+PASS AC-01-VERIFY-version
+PASS AC-01-USER-handoff
+PASS AC-03-sqos
+PASS AC-03-owner
+PASS AC-04-gate
+PASS AC-05-revocation-asked
+PASS AC-05-try-later
+PASS AC-06-hold
+PASS AC-07-prune
+PASS AC-08-codex-top
+PASS AC-09-ORDER-swap
+PASS AC-09-ORDER-look-first
+PASS AC-09-REMOTE-drive
+PASS AC-11-local
+PASS AC-11-newer-wins
+PASS AC-12-kind
+PASS AC-12-relaunch
+PASS AC-M6A-14-pin

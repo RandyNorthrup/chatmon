@@ -4,7 +4,6 @@ keeps an eye on for you."""
 from __future__ import annotations
 
 import os
-import re
 import signal
 import sys
 import threading
@@ -16,11 +15,11 @@ from pathlib import Path
 
 from PyQt6 import sip
 from PyQt6.QtCore import QEvent, QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
-from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiApplication, QIcon, QKeyEvent
+from PyQt6.QtGui import QDesktopServices, QFontMetricsF, QGuiApplication, QIcon, QKeyEvent
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, a11y, agents, attachments, autostart, brains, changelog, chats, companions, context, events, heads_up, memory, offline, paths, presence, reminders, report, styles, sysnotify, updates
+from . import __version__, a11y, agents, asking, attachments, autostart, brains, changelog, chats, commands, companions, context, events, heads_up, memory, menus, messages, paths, presence, reminders, report, styles, sysnotify, updates
 from .behavior import Behavior
 from .bubble import AskBox
 from .penguin import Stage
@@ -29,8 +28,9 @@ from .sprites import Sprites, silhouette
 
 PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
-AGENTS_FRESH = 30  # seconds a look at how the agents stand holds good for filling in the menu
 MATCH = "match"  # the bubble style that follows the companion
+MAX_CONNECTIONS = 64  # hook connections open at once (each is a moment's); past that a new one is turned away
+UPDATE_CHECK_TIMEOUT_S = 60  # a system update check still running after this long is stopped, and counts as none
 APP_USER_MODEL_ID = "RandyNorthrup.Chatmon"  # Windows: the app's identity (packaging/windows/chatmon.iss gives its shortcuts it too)
 
 HELP = """\
@@ -40,24 +40,6 @@ I also do plenty without any AI, like *remind me in 20m to stretch*, *timer 10 m
 *5 km in miles* or *roll 2d6*. Ask me *help* to see it all.
 """
 
-HELP_ALL = """\
-**Without any AI** (nothing leaves your computer, and none of it goes in a chat):
-
-- **Reminders and timers:** *remind me in 20m to stretch* · *remind me at 3pm to call Sam* · *timer 10 min for the pasta* · *reminders* · *cancel reminder 2* · *clear reminders*
-- **Focus and breaks:** *focus 50* · *stop focus* · *breaks off* · *breaks on* · *focus alerts off* · *focus alerts on*
-- **Notes:** *note: buy milk* · *notes* · *delete note 2* · *clear notes*
-- **Stopwatch:** *stopwatch* · *stop stopwatch*
-- **Sums:** *2 + 2 * 3* · *15% of 80* · *sqrt(2)* · *calc 2^10*
-- **Units:** *5 km in miles* · *70 f to c* · *3 cups to ml* · *2 GB in MiB*
-- **Time and days:** *time* · *date* · *what week is it* · *days until Christmas* · *days until 2027-01-01*
-- **Chance:** *flip a coin* · *roll 2d6* · *random number between 1 and 10* · *pick one: tacos, sushi or pizza*
-- **Passwords:** *password* · *password 32*
-- **Your computer:** *status* (battery, disks, reminders, the brain in use)
-- **Me:** *settings* · *hide* · *new chat* · *rename chat* · *history* · *what's new* · *check for updates* · *report a problem* · *version*
-- **Memory:** *remember that I use Arch* · *what do you remember* · *forget that I use Arch* · *forget everything*. What you ask me to remember goes with every question, to whichever AI you ask: that's what it's for.
-
-Anything else goes to the AI you picked, under **Brain** in my menu.
-"""
 NO_AI = "Answered here, without any AI."
 
 
@@ -80,15 +62,6 @@ class Background(QObject):
             self.finished.emit(then, result)
 
         threading.Thread(target=go, daemon=True).start()
-
-
-def offline_clock(elapsed: float, seconds: bool = True) -> str:
-    """How long the stopwatch has run: "4:05", "1:02:09"; without `seconds`, "4 min", "1:02 h" (for the menu)."""
-    s = int(max(0, elapsed))
-    h, m, sec = s // 3600, s // 60 % 60, s % 60
-    if not seconds:
-        return f"{h}:{m:02d} h" if h else f"{m} min"
-    return f"{h}:{m:02d}:{sec:02d}" if h else f"{m}:{sec:02d}"
 
 
 def pretty(source: str) -> str:
@@ -115,32 +88,44 @@ class Companion(QObject):
         # Whether you're there, and whether now's a time for quiet: the platform's own word for each.
         self.desk = presence.Desk(QGuiApplication.platformName())
         self._quiet: str | None = None  # why bubbles from the background wait, if they do
-        self._held: list = []  # what waited, shown once it's not quiet
+        self.messages = messages.MessageQueue()  # what's to be said, in order (messages.py)
+        self._message_timer = QTimer(self)  # looks at the queue again when something waiting may show
+        self._message_timer.setSingleShot(True)
+        self._message_timer.timeout.connect(self._show_next)
+        self._quitting = False
         self._idle_away = False
         self._reduce_motion = self.desk.reduce_motion()
         self._high_contrast = self.desk.high_contrast()
         self._walk_picked = "walk" in (self.state.get("settings") or {})  # turned on or off by you: reduce-motion no longer decides
         self.brains = brains.load_brains(self.config["ai"])
         self.reminders = reminders.ReminderBook.from_list(self.state.get("reminders", []))
+        self._sync_focus_hold()  # a focus session from before a restart still holds what comes on its own
         self.breaks = reminders.BreakTracker(self.config["breaks"]["every_minutes"], time.time())
         self.watcher = self._make_watcher()
         self.chat = chats.Chat()  # the one you're in: saved as it goes (if you keep them), resumable from History
         self.chat_book = chats.ChatBook()
+        self.command_table = commands.Table()  # what Chatmon does by itself, by its phrases (commands.py)
         self.attached: list[attachments.Attachment] = []  # for the next question
-        self._asking: tuple[str, str, list[attachments.Attachment]] | None = None  # (chat id, question, attached), on its way
+        self.questions = asking.Questions()  # the question on its way to a brain, and the one waiting behind it
         self._renaming: str | None = None  # the chat whose new name the box is asking for
         self._stopwatch: float | None = None  # when the stopwatch started (monotonic), while it runs
         self.agents: dict[str, tuple[str, float]] = {}  # source: (state, since)
         self._last_event: tuple[str, str] | None = None
         self._last_event_at = 0.0
-        self._alert_key: str | None = None
-        self._waiting: list = []  # messages held back while an alert is up
+        self._alert_key: str | None = None  # what the alert showing is about
         self._asking_name = False
         self._last_wall = time.time()
         self._last_ask = 0.0
         self._update_counts: dict[str, int] = {}
+        self._reading_system = False  # the battery and disks, being read off the screen's thread
+        self._offline_shown = 0  # answers of Chatmon's own shown so far: a late one doesn't cover a newer one
         self._restart_needed = False
-        self._update_procs: list = []  # the system's update checks, while they run: QProcesses, and PackageKit's count
+        self._update_procs: dict = {}  # the system's update checks while they run (QProcesses, PackageKit's count): their names
+        self._update_round = 0  # which look at the system's updates this is: a late answer from an earlier one is ignored
+        self._update_expected = 0
+        self._update_deadline = QTimer(self)
+        self._update_deadline.setSingleShot(True)
+        self._update_deadline.timeout.connect(self._update_checks_timed_out)
 
         screen = QGuiApplication.primaryScreen().availableGeometry()
         x = float(self.state.get("x", screen.x() + screen.width() * 0.8))
@@ -166,8 +151,6 @@ class Companion(QObject):
         self.compactor = brains.Asker(self)  # sums up a chat's earlier part, when a question needs that first
         self.compactor.answered.connect(self._compacted)
         self.compactor.failed.connect(self._compact_failed)
-        self._folding: tuple | None = None  # (chat id, pairs the summary will stand for, the question waiting)
-        self._asked: dict | None = None  # what the question on its way went with: to ask once more, with less
         self.memory = memory.Memory.load()
         self._reader: a11y.Reader | None = None  # the screen reader running, as last looked (a11y.py)
         self._reader_seen = float("-inf")
@@ -198,15 +181,9 @@ class Companion(QObject):
 
         # The menu is always filled in: a tray that shows it over D-Bus (Waybar,
         # and other StatusNotifierItem trays) reads it before asking for it to open.
-        self.menu = QMenu()
-        self.menu.aboutToShow.connect(self._fill_menu)
-        self.menu.aboutToHide.connect(self._menu_closed)  # the QMenu popup; the stage's menu says so itself
+        self.menus = menus.Menus(self)
+        self.menu = self.menus.menu
         self._menu_open = False
-        self._menu_stale = False
-        self._menu_timer = QTimer(self)
-        self._menu_timer.setSingleShot(True)
-        self._menu_timer.timeout.connect(self._fill_menu)
-        self._menu_clock: tuple = ()
         self._agent_status: dict[str, str] = {}
         self._refreshing = False  # finding out, off the screen's thread, how each agent stands
         self._refresh_next: bool | None = None  # asked again meanwhile: whether that look migrates too
@@ -226,7 +203,7 @@ class Companion(QObject):
         self._install_kind: str | None = None
         self._problem_told = False
         self._looking = False  # finding out, off the screen's thread, whether model servers here are running
-        self._fill_menu()
+        self.menus.fill()
         self.tray = QSystemTrayIcon(self._tray_icon())
         self.tray.setContextMenu(self.menu)
         self.tray.setToolTip("Chatmon")
@@ -258,7 +235,7 @@ class Companion(QObject):
 
     @property
     def name(self) -> str:
-        return self.config["name"] or self.state.get("name") or self._companion().nickname
+        return self.state.get("name") or self.config["name"] or self._companion().nickname
 
     def _every(self, ms: int, fn) -> None:
         timer = QTimer(self)
@@ -272,8 +249,7 @@ class Companion(QObject):
     def _brain(self, wait: bool = True) -> brains.Brain | None:
         """The brain to ask, with the model, effort and thinking picked for it from the menu. `wait` off:
         as far as can be told without holding up the screen (for the menu)."""
-        brain = brains.choose(self.brains, self.config["ai"]["brain"], self.state.get("brain"), wait)
-        return brain.with_options(self._brain_options(brain.name)) if brain else None
+        return commands.brain_in_use(self.brains, self.config, self.state, wait)
 
     def _look_again(self) -> None:
         """Find out, off the screen's thread, what the menu couldn't wait to (whether model servers on this
@@ -289,9 +265,6 @@ class Companion(QObject):
 
         self.background.run(brains.look_again, looked)
 
-    def _brain_options(self, name: str) -> dict:
-        return dict((self.state.get("brain_options") or {}).get(name) or {})
-
     def _now(self) -> float:
         return time.monotonic()
 
@@ -303,6 +276,7 @@ class Companion(QObject):
         self.state.set("x", round(self.behavior.x))
         self.state.set("reminders", self.reminders.to_list())
         self.state.save()
+        self._sync_focus_hold()
         self._menu_changed()  # reminders and focus show in it
 
     # -- talking
@@ -315,44 +289,72 @@ class Companion(QObject):
             return False
         return self.ask_box.isVisible() or self._menu_open
 
-    def say(self, title: str, text: str = "", buttons=None, timeout_s: float | None = 12) -> None:
-        if self._alert_key is not None:  # don't talk over something that needs you
-            self._later(partial(self.say, title, text, buttons, timeout_s))
-            return
-        if self._quiet and not self._with_you():  # a full-screen app, a presentation, Do Not Disturb: later
-            self._held = (self._held + [partial(self.say, title, text, buttons, timeout_s)])[-5:]
-            return
+    def say(self, title: str, text: str = "", buttons=None, timeout_s: float | None = 12, *, key: str | None = None, background: bool = False) -> None:
+        """A bubble, once what matters more has been seen (messages.py). `key` names what it's about, so newer news
+        of the same thing replaces it; `background`: it came on its own (an agent, a script, a heads-up), not from
+        something you did, so a focus session holds it."""
         notice = self.desk.notice_seconds()  # how long you've asked notifications to stay up (Windows)
         if timeout_s is not None and notice:
             timeout_s = max(timeout_s, notice)
-        self.stage.show_message(title, text, buttons, timeout_s)
-        self._read_aloud(title, text, buttons)
+        self._post(messages.Message(title, text, buttons, timeout_s, key=key, background=background))
 
-    def alert(self, key: str, title: str, text: str, buttons=None) -> None:
-        """Something needs you: the penguin waves its flippers until you answer."""
-        if self._alert_key is not None:
-            self._later(partial(self.alert, key, title, text, buttons))
-            return
-        if self._quiet and self.desk.covered(self.stage.native_window()):
+    def alert(self, key: str, title: str, text: str, buttons=None, *, reminder: bool = False) -> None:
+        """Something needs you: the penguin waves its flippers until you answer. `reminder`: one of yours, which
+        waits for an agent's alert but goes before anything else. Either comes on its own."""
+        priority = messages.REMINDER if reminder else messages.ALERT
+        message = messages.Message(title, text, buttons or [("OK", None)], None, key=key, priority=priority, alert=True, background=True)
+        if not self._post(message):
             # Under a full-screen app: it waits for you, and the system's own notification says so now
             # (which follows your Do Not Disturb). macOS's needs an app signed with an Apple Developer ID:
             # Chatmon's ad hoc signed one asks and is never answered (UNUserNotificationCenter), so there
             # it just waits.
-            self._held = (self._held + [partial(self.alert, key, title, text, buttons)])[-5:]
             # Only that something's waiting: the system keeps notifications (Action Center, a phone linked
             # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
             if sys.platform.startswith("linux"):
                 sysnotify.send(title, "Chatmon has something for you.")  # tray or not
             elif sys.platform != "darwin" and QSystemTrayIcon.supportsMessages():
                 self.tray.showMessage(title, "Chatmon has something for you.", QSystemTrayIcon.MessageIcon.Information, 10_000)
+
+    def _post(self, message: messages.Message) -> bool:
+        """Queue it and show whatever's due; False if a hold (quiet, focus) keeps it back."""
+        message.yours = self._with_you()
+        self.messages.add(message)
+        self._show_next()
+        return self.messages.passes(message)
+
+    def _show_next(self) -> None:
+        """Show what the queue says is due now, and look again when it says to."""
+        if self._quitting:
             return
-        self._alert_key = key
-        self.behavior.set_hidden(False, self._now())
-        self._menu_changed()
-        self.behavior.set_alert(True, self._now())
-        self.stage.raise_above(True)  # above a full-screen window: it needs you
-        self.stage.show_message(title, text, buttons or [("OK", None)], None)
-        self._read_aloud(title, text, buttons or [("OK", None)], important=True)
+        now = time.monotonic()
+        message = self.messages.next(now, self.stage.message_visible())
+        if message is not None:
+            self._display(message)
+        wake = self.messages.wake_at(now)
+        if wake is None:
+            self._message_timer.stop()
+        else:
+            self._message_timer.start(max(0, int((wake - now) * 1000)))
+
+    def _display(self, message: messages.Message) -> None:
+        now = self._now()
+        if message.alert:
+            self._alert_key = message.key
+            self.behavior.set_hidden(False, now)
+            self._menu_changed()
+            self.behavior.set_alert(True, now)
+            self.stage.raise_above(True)  # above a full-screen window: it needs you
+        else:
+            self._end_alert()  # newer news of the same thing: the agent got its answer elsewhere, say
+        self.stage.show_message(message.title, message.text, message.buttons, message.timeout_s)
+        self._read_aloud(message.title, message.text, message.buttons, important=message.alert)
+
+    def _end_alert(self) -> None:
+        if self._alert_key is not None:
+            self._alert_key = None
+            self.behavior.set_alert(False, self._now())
+            if not self.ask_box.isVisible():
+                self.stage.raise_above(False)
 
     # -- screen readers (a11y.py): what a bubble says, read out
 
@@ -419,13 +421,25 @@ class Companion(QObject):
             self.breaks.back(now)
 
     def _check_quiet(self) -> None:
-        was = self._quiet
         self._quiet = self.desk.quiet(self.stage.native_window())
-        self.stage.set_covered(self.desk.covered(self.stage.native_window()) and self._alert_key is None)
-        if was and not self._quiet and self._held:
-            held, self._held = self._held, []
-            for i, show in enumerate(held):
-                QTimer.singleShot(600 * (i + 1), show)
+        covered = self.desk.covered(self.stage.native_window())
+        self.stage.set_covered(covered and self._alert_key is None)
+        if self._quiet:
+            # A full-screen app, a presentation, Do Not Disturb: what came while you were using Chatmon shows, and
+            # an alert does unless a full-screen window covers the companion; the rest waits until it's over.
+            self.messages.hold("quiet", lambda m: m.yours or (m.alert and not covered))
+        elif self.messages.holding("quiet"):
+            self.messages.release("quiet")
+            self._show_soon(600)  # a moment after it ends
+
+    def _sync_focus_hold(self) -> None:
+        """A focus session holds what comes on its own (agents, scripts, heads-ups) below a reminder: it shows once
+        the session is over, after what the session's end says."""
+        if self.reminders.focus() is not None:
+            self.messages.hold("focus", lambda m: not m.background or m.priority <= messages.REMINDER)
+        elif self.messages.holding("focus"):
+            self.messages.release("focus")
+            self._show_soon(400)
 
     def _check_accessibility(self) -> None:
         """Reduced motion and high contrast: followed as they change, unless you chose otherwise."""
@@ -441,17 +455,15 @@ class Companion(QObject):
         """Walking, as the settings say; the system's reduced motion stills it, unless you chose yourself."""
         return bool(self.config["walk"]) and (self._walk_picked or not self._reduce_motion)
 
-    def _later(self, show) -> None:
-        self._waiting = (self._waiting + [show])[-5:]
-
     def _message_closed(self) -> None:
-        if self._alert_key is not None:
-            self._alert_key = None
-            self.behavior.set_alert(False, self._now())
-            if not self.ask_box.isVisible():
-                self.stage.raise_above(False)
-        if self._waiting:
-            QTimer.singleShot(400, self._waiting.pop(0))
+        self._end_alert()
+        self.messages.closed()
+        self._show_soon(400)  # a moment between one bubble and the next
+
+    def _show_soon(self, ms: int) -> None:
+        """Look at the queue again in a moment (a bubble just closed, a hold just ended)."""
+        if not self._quitting:
+            self._message_timer.start(ms)
 
     def _no_tray_news(self) -> None:
         """No tray here (stock GNOME, without the AppIndicator extension): where the menu is, said once ever."""
@@ -462,7 +474,8 @@ class Companion(QObject):
             return
         self.state.set("told_no_tray", True)
         self.state.save()
-        self.say("No tray icon here", "My menu is on me: right-click me. After **Hide**, click me when I peek, or open Chatmon from your apps, to bring me back.", timeout_s=20)
+        self.say("No tray icon here", "My menu is on me: right-click me. After **Hide**, click me when I peek, or open Chatmon from your apps, to bring me back.", timeout_s=20,
+                 background=True)
 
     def _greet(self) -> None:
         if self.config_error:
@@ -520,7 +533,7 @@ class Companion(QObject):
             )
             self.ask_box.chatting(False)
         else:
-            brain = self._brain()
+            brain = self._brain(wait=False)  # only for the hint: as far as can be told without holding up the screen
             via = f"answers from {brain.label}" if brain else "no AI set up yet; reminders and timers still work"
             self.ask_box.open(
                 anchor, f"Ask {self.name}", f"Enter to ask · Esc to close · {via}", "Ask anything, or: remind me in 20m to stretch",
@@ -538,9 +551,9 @@ class Companion(QObject):
         self._asking_name = False
         self._renaming = None
         self._instructing = None
-        self.asker.cancel()
+        self.asker.cancel()  # Esc stops the answer, and the question waiting goes too
         self.compactor.cancel()
-        self._folding = None
+        self.questions.drop()
         self.behavior.set_thinking(False, now)
         self.behavior.set_talking(False, now)
         self.behavior.set_attending(self._menu_open, now)
@@ -553,11 +566,10 @@ class Companion(QObject):
 
     def _drop_question(self) -> None:
         """A question on its way belongs to the chat it was asked in: leaving that chat drops it."""
-        if self._asking is not None:
+        if self.questions.current is not None:
             self.asker.cancel()
             self.compactor.cancel()
-            self._folding = None
-            self._asking = None
+            self.questions.drop()
             self.behavior.set_thinking(False, self._now())
 
     def _start_chat(self) -> None:
@@ -572,7 +584,8 @@ class Companion(QObject):
         self.ask_box.set_answer("*New chat. Ask away.*")
 
     def _transcript(self, pending: str = "") -> str:
-        """The chat as the box shows it: each question and its answer, newest at the bottom."""
+        """The chat as the box shows it: each question and its answer, newest at the bottom, then what's still to
+        be answered, then `pending` (an answer of Chatmon's own, a word about the question)."""
         parts = []
         for m in self.chat.messages[-40:]:
             if m.role == "user":
@@ -582,9 +595,18 @@ class Companion(QObject):
                 parts.append(line)
             else:
                 parts.append(m.text)
+        parts += asking.tail(self.questions, self._thinking())
         if pending:
             parts.append(pending)
         return "\n\n".join(parts)
+
+    def _thinking(self) -> str:
+        """What the brain is doing about the question on its way."""
+        question = self.questions.current
+        label = question.brain.label if question is not None and question.brain is not None else "The AI"
+        if question is not None and question.fold is not None:
+            return f"Catching {label} up on this chat's earlier part…"
+        return f"{label} is thinking…"
 
     def _save_chat(self) -> None:
         if self._keeps_chats() and self.chat.keep and self.chat.messages:
@@ -592,45 +614,6 @@ class Companion(QObject):
                 self.chat_book.save(self.chat)
             except OSError as exc:
                 print(f"{paths.APP}: couldn't save the chat: {exc}", file=sys.stderr)
-
-    RECENT_CHATS = 12  # in the menu itself; the rest under "Older chats"
-
-    def _chats_menu(self, sub: QMenu, in_box: bool = False) -> None:
-        """Your chats, each with what can be done with it, and keeping or clearing them all."""
-        sub.addAction("New chat", self._new_chat if in_box else self._open_new_chat)
-        if self.chat.messages:
-            sub.addAction("Rename this chat…", partial(self._ask_new_name, self.chat.id))
-        recent = self.chat_book.recent() if self._keeps_chats() else []
-        if recent:
-            sub.addSection("Your chats")
-            for chat in recent[: self.RECENT_CHATS]:
-                self._chat_item(sub, chat)
-            if len(recent) > self.RECENT_CHATS:
-                older = sub.addMenu(f"Older chats ({len(recent) - self.RECENT_CHATS})")
-                for chat in recent[self.RECENT_CHATS :]:
-                    self._chat_item(older, chat)
-        else:
-            empty = sub.addAction("No saved chats yet" if self._keeps_chats() else "Chats aren't being kept")
-            empty.setEnabled(False)
-        sub.addSeparator()
-        keep = sub.addAction("Keep chat history")
-        keep.setCheckable(True)
-        keep.setChecked(self._keeps_chats())
-        keep.toggled.connect(self._set_keep_chats)
-        sub.addAction("Clear chat history…", self._ask_to_clear_chats)
-
-    def _chat_item(self, menu: QMenu, chat: chats.Chat) -> None:
-        """One chat: carry on with it, rename, pin, save or delete it."""
-        mark = "★ " if chat.pinned else ""
-        here = "  (this one)" if chat.id == self.chat.id else ""
-        item = menu.addMenu(f"{mark}{chat.title or 'A chat'}   ·   {chats.when(chat.updated)}{here}")
-        item.addAction("Carry on", partial(self._resume_chat, chat.id))
-        item.addAction("Rename…", partial(self._ask_new_name, chat.id))
-        item.addAction("Instructions for this chat…", partial(self._ask_chat_instructions, chat.id))
-        item.addAction("Unpin" if chat.pinned else "Pin to the top", partial(self._pin_chat, chat.id, not chat.pinned))
-        item.addAction("Save as Markdown…", partial(self._export_chat, chat.id))
-        item.addSeparator()
-        item.addAction("Delete…", partial(self._ask_to_delete_chat, chat.id))
 
     def _chat_by_id(self, chat_id: str) -> chats.Chat | None:
         return self.chat if chat_id == self.chat.id else self.chat_book.load(chat_id)
@@ -754,9 +737,13 @@ class Companion(QObject):
             for kind in (QEvent.Type.KeyPress, QEvent.Type.KeyRelease):
                 QApplication.sendEvent(widget, QKeyEvent(kind, Qt.Key.Key_V, Qt.KeyboardModifier.ControlModifier, "v"))
 
-    def _show_history(self, pos: QPoint) -> None:
+    def _show_history(self, pos: QPoint | None = None) -> None:
+        """Your chats, in a menu by the ask box's History button (or at `pos`)."""
+        if pos is None:
+            button = self.ask_box.history_button
+            pos = button.mapToGlobal(QPoint(0, button.height()))
         menu = QMenu()
-        self._chats_menu(menu, in_box=True)
+        menus.chats_menu(self, menu, in_box=True)
         self._popup(menu, pos)
 
     def _open_new_chat(self) -> None:
@@ -973,13 +960,17 @@ class Companion(QObject):
             self.ask_box.entry.setText(text)
             self.ask_box.set_answer(self._transcript(f"*{refused}*"), at_end=True)
             return
+        if self.questions.full():  # kept, to send once those are answered
+            self.ask_box.entry.setText(text)
+            self.ask_box.set_answer(self._transcript("*One question is waiting already. Send this once that one goes, or Esc to stop them.*"), at_end=True)
+            return
         self.attached.clear()
         self.ask_box.set_attachments([])
-        self._asking = (self.chat.id, text, attached)
-        you = f"**You:** {text}" + (f"\n\n*Attached: {attachments.mentioned(attached)}*" if attached else "")
-        self.ask_box.set_answer(self._transcript(f"{you}\n\n*{brain.label} is thinking…*"), at_end=True)
-        self.behavior.set_thinking(True, now)
-        self._send(brain, text or "Have a look at what I attached.", attached)
+        question = asking.Question(self.chat.id, text, attached, brain)
+        if self.questions.ask(question):  # else it waits for the one on its way: a brain answers one at a time
+            self.behavior.set_thinking(True, now)
+            self._send(question)
+        self.ask_box.set_answer(self._transcript(), at_end=True)
 
     # -- what a question goes with: the chat, fitted to the brain (context.py), your instructions and memory
 
@@ -996,9 +987,10 @@ class Companion(QObject):
             cap = context.DEFAULT_CAP
         return max(2_000, min(cap, 2_000_000))
 
-    def _send(self, brain: brains.Brain, question: str, attached, *, fold: bool = True, retried: bool = False) -> None:
-        """Ask `brain`, with as much of the chat as it can take: first summing up the chat's earlier part, when
+    def _send(self, q: asking.Question, *, fold: bool = True) -> None:
+        """Ask `q`'s brain, with as much of the chat as it can take: first summing up the chat's earlier part, when
         it has outgrown that (a step of its own, said in the box)."""
+        brain, question, attached = q.brain, q.asked(), q.attached
         chat, timeout = self.chat, float(self.config["ai"]["timeout_seconds"])
         base = brains.system_prompt(self.name, self._companion().label.lower())
         everywhere, remembered = self._instructions(), self.memory.texts()
@@ -1006,255 +998,99 @@ class Companion(QObject):
         room = context.budget(brains.context_window(brain), self._context_cap(), context.system_text(base, everywhere, chat.instructions, remembered), asked_tokens)
         plan = context.plan(chat.history(brain.label), chat.history(), chat.summary, chat.summarized, room, question, fold)
         if plan.fold:
-            self._folding = (chat.id, plan.fold_to, room, brain, question, attached, retried)
+            q.fold = asking.Fold(plan.fold_to, room)
             system, request = context.summary_request(plan.summary, plan.fold, room)
-            self.ask_box.set_answer(self._transcript(f"*Catching {brain.label} up on this chat's earlier part…*"), at_end=True)
+            self.ask_box.set_answer(self._transcript(), at_end=True)
             self.compactor.ask(brain, system, [], request, timeout)
             return
         system = context.system_text(base, everywhere, chat.instructions, remembered, plan.summary, plan.recalled)
-        sent = context.tokens(system) + sum(context.pair_tokens(pair) for pair in plan.recent) + asked_tokens
-        self._asked = {"brain": brain, "question": question, "attached": attached, "retried": retried, "tokens": sent}
+        q.tokens = context.tokens(system) + sum(context.pair_tokens(pair) for pair in plan.recent) + asked_tokens
         self.asker.ask(brain, system, plan.recent, question, timeout, attached)
         if brain.type == "openai" and not brains.window_known(brain):
             self.background.run(partial(brains.learn_window, brain), lambda _window: None)  # for the next question
 
     def _compacted(self, summary: str) -> None:
-        folding, self._folding = self._folding, None
-        if folding is None or self._asking is None or folding[0] != self.chat.id or self._asking[0] != self.chat.id:
+        q = self.questions.answering(self.chat.id)
+        if q is None or q.fold is None:
             return  # the question went (another chat, or you closed the box)
-        _, covers, room, brain, question, attached, retried = folding
+        fold, q.fold = q.fold, None
         if not summary.strip():
-            self._send(brain, question, attached, fold=False, retried=retried)
+            self._send(q, fold=False)
             return
-        self.chat.summary, self.chat.summarized = context.clip(summary.strip(), max(300, room // 5)), covers
+        self.chat.summary, self.chat.summarized = context.clip(summary.strip(), max(300, fold.room // 5)), fold.covers
         self._save_chat()
-        self._send(brain, question, attached, retried=retried)
+        self._send(q)
 
     def _compact_failed(self, _error: str) -> None:
         """No summary: the question goes anyway, with the recent turns and the earlier ones that bear on it."""
-        folding, self._folding = self._folding, None
-        if folding is None or self._asking is None or folding[0] != self.chat.id or self._asking[0] != self.chat.id:
+        q = self.questions.answering(self.chat.id)
+        if q is None or q.fold is None:
             return
-        _, _covers, _room, brain, question, attached, retried = folding
-        self._send(brain, question, attached, fold=False, retried=retried)
+        q.fold = None
+        self._send(q, fold=False)
 
     def _answered(self, answer: str) -> None:
         now = self._now()
-        self.behavior.set_thinking(False, now)
-        if self._asking is None or self._asking[0] != self.chat.id:  # asked in a chat since left: not this one's
-            self._asking = None
+        q = self.questions.answering(self.chat.id)
+        if q is None:  # asked in a chat since left: not this one's
+            self.behavior.set_thinking(False, now)
+            self.questions.drop()
             return
-        _, text, attached = self._asking
-        self._asking = None
-        sent = attachments.in_question(text or "Have a look at what I attached.", attached)
-        asked = self._asked
-        brain = asked["brain"] if asked else self._brain(wait=False)
-        label = brain.label if brain else ""
-        if brain is not None and brain.local:
-            self.background.run(partial(brains.learn_window, brain), lambda _window: None)  # a model loaded now says its own
-        self.chat.add(chats.Message("user", text, sent=sent if sent != text else "", attached=[a.name for a in attached], brain=label))
+        sent = attachments.in_question(q.asked(), q.attached)
+        label = q.brain.label if q.brain else ""
+        if q.brain is not None and q.brain.local:
+            self.background.run(partial(brains.learn_window, q.brain), lambda _window: None)  # a model loaded now says its own
+        self.chat.add(chats.Message("user", q.text, sent=sent if sent != q.text else "", attached=[a.name for a in q.attached], brain=label))
         self.chat.add(chats.Message("assistant", answer, brain=label))
         self._save_chat()
+        self._next_question(now)
         self.ask_box.set_answer(self._transcript(), at_end=True)
         self.ask_box.set_resettable(True)
         self._read_aloud(f"{label or 'The AI'} answered", answer)
         self.behavior.set_talking(True, now)
         QTimer.singleShot(int(min(max(len(answer) / 18, 2), 10) * 1000), lambda: self.behavior.set_talking(False, self._now()))
 
+    def _next_question(self, now: float) -> None:
+        """The question on its way is done with: the one waiting goes now, if there is one."""
+        waiting = self.questions.finish()
+        if waiting is None:
+            self.behavior.set_thinking(False, now)
+        else:
+            self._send(waiting)
+
     def _failed(self, error: str) -> None:
-        asked = self._asked
-        if asked and not asked["retried"] and context.too_long(error) and self._asking is not None and self._asking[0] == self.chat.id:
+        now = self._now()
+        q = self.questions.answering(self.chat.id)
+        if q is not None and not q.retried and context.too_long(error):
             # Too long for it after all (a window smaller than it said, or than guessed): once more, with half.
-            brains.shrink_window(asked["brain"], asked["tokens"])
-            self._send(asked["brain"], asked["question"], asked["attached"], retried=True)
+            brains.shrink_window(q.brain, q.tokens)
+            q.retried = True
+            self._send(q)
             return
-        self.behavior.set_thinking(False, self._now())
-        if self._asking is None or self._asking[0] != self.chat.id:
-            self._asking = None
+        if q is None:
+            self.behavior.set_thinking(False, now)
+            self.questions.drop()
             return
-        _, text, attached = self._asking
-        self._asking = None
-        # Back in the box, to try again (or with another brain).
-        self.attached = attached + self.attached
+        # Back in the box, to try again (or with another brain); the one waiting goes meanwhile.
+        self.attached = q.attached + self.attached
         self.ask_box.set_attachments([a.label() for a in self.attached])
-        if text and not self.ask_box.entry.text():
-            self.ask_box.entry.setText(text)
-        self.ask_box.set_answer(self._transcript(f"**You:** {text}\n\n*Hmm, that didn't work.* {error}"), at_end=True)
+        if q.text and not self.ask_box.entry.text():
+            self.ask_box.entry.setText(q.text)
+        self._next_question(now)
+        self.questions.failure = (q.text, error)
+        self.ask_box.set_answer(self._transcript(), at_end=True)
 
-    def _memory_reply(self, kind: str, what: str) -> str:
-        """Remembering for every chat, as you asked, and forgetting it again: Chatmon's own (memory.py)."""
-        if kind == "remember":
-            refused = self.memory.add(what)
-            return refused or f"I'll remember that: *{what.strip(' .')}*. Every brain you ask gets it with each question."
-        if kind == "forget":
-            gone = self.memory.forget(what)
-            if not gone:
-                return "I don't remember anything like that. *What do you remember* lists it all."
-            return "Forgotten: " + "; ".join(f"*{g}*" for g in gone) + "."
-        if kind == "forget-all":
-            n = len(self.memory.items)
-            self.memory.clear()
-            return f"Forgotten, all {n} of them." if n else "There was nothing to forget."
-        if not self.memory.items:
-            return "Nothing yet. Tell me *remember that …* and I'll keep it for every chat."
-        listed = "\n".join(f"- {i.text}" for i in self.memory.items)
-        return f"What I remember, for every chat:\n\n{listed}\n\n*Forget that …* takes one out."
-
-    def _offline(self, question: str, reply: str) -> None:
+    def _offline(self, question: str, reply: str, spoken: str | None = None) -> None:
         """An answer of Chatmon's own: shown under the chat, marked as such, and never part of it (no brain
-        sees it, and it isn't kept)."""
+        sees it, and it isn't kept). `spoken`: what a screen reader is told instead, when the answer itself
+        mustn't leave the box (it may be read out through a system notification, which keeps a history)."""
+        self._offline_shown += 1
         self.ask_box.set_answer(self._transcript(f"**You:** {question}\n\n{reply}\n\n*{NO_AI}*"), at_end=True)
-        self._read_aloud(reply)
+        self._read_aloud(spoken or reply)
 
     def _local(self, text: str) -> bool:
         """What Chatmon does by itself, without any AI: True if it was that. Anything else is the AI's."""
-        now = self._now()
-        asked = memory.command(text)
-        if asked is not None:
-            self._offline(text, self._memory_reply(*asked))
-            self._menu_changed()
-            return True
-        command = reminders.parse_command(text, datetime.now())
-        if command is not None and command.kind == "unclear":
-            asked = re.match(r"^(?:please\s+)?remind me\b[\s,:]*(.*)$", text.strip(), re.I | re.S)
-            if asked and offline.reminder_or_question(asked.group(1)):
-                return False  # "remind me how decorators work": a question, not a reminder
-        if command is not None:
-            if command.kind == "unclear":
-                self._offline(text, "When should I remind you? Try *remind me in 20m to stretch* or *remind me at 3pm to call Sam*.")
-            elif command.kind == "focus":
-                self.ask_box.dismiss()
-                self.start_focus(command.minutes or float(self.config["focus"]["minutes"]))
-            else:
-                r = self.reminders.add(command.due.timestamp(), command.text, command.kind)
-                self.save()
-                when = reminders.describe(r.due, time.time())
-                what = f"Timer set: **{r.text}**, done {when}." if r.kind == "timer" else f"I'll remind you {when}: **{r.text}**"
-                self._offline(text, what)
-                self.behavior.react("hop", now)
-            return True
-        kept = offline.parse_kept(text)
-        if kept is not None:
-            self._offline(text, self._kept(kept))
-            return True
-        reply = offline.answer(text, datetime.now())
-        if reply is not None:
-            self._offline(text, reply)
-            return True
-        word = text.lower().strip(" ?!.")
-        if word in ("help", "what can you do", "commands"):
-            self._offline(text, HELP_ALL)
-        elif word in ("status", "battery", "system status", "how's my computer"):
-            self._offline(text, self._status())
-        elif word in ("stop focus", "end focus", "cancel focus"):
-            self.stop_focus()
-            self._offline(text, "Focus stopped.")
-        elif word in ("hide", "go hide", "go away"):
-            self.ask_box.dismiss()
-            self.set_hidden(True)
-        elif word in ("new chat", "/new", "reset"):
-            self._new_chat()
-        elif word in ("rename chat", "rename this chat", "name this chat") and self.chat.messages:
-            self._ask_new_name(self.chat.id)
-        elif word in ("breaks off", "no breaks", "stop break reminders", "break reminders off", "breaks on", "break reminders on"):
-            on = word in ("breaks on", "break reminders on")
-            self._override(("breaks", "remind"), on)
-            self.state.save()
-            self.config["breaks"]["remind"] = on
-            self._offline(text, "Break reminders are on." if on else "No more break reminders. *Breaks on* brings them back.")
-        elif word in ("focus alerts off", "focus notifications off", "focus alerts on", "focus notifications on"):
-            on = word.endswith(" on")
-            self._override(("focus", "tell_when_done"), on)
-            self.state.save()
-            self.config["focus"]["tell_when_done"] = on
-            self._offline(text, "I'll say when a focus session ends." if on else "Focus sessions will end quietly. *Focus alerts on* brings it back.")
-        elif word in ("settings", "preferences", "options", "open settings"):
-            self.ask_box.dismiss()
-            self.open_settings()
-        elif word in ("history", "chats", "my chats", "chat history"):
-            self._show_history(self.ask_box.history_button.mapToGlobal(QPoint(0, self.ask_box.history_button.height())))
-        elif word in ("what's new", "whats new", "what is new", "changes", "changelog", "release notes"):
-            self.show_whats_new()
-        elif word in ("check for updates", "update", "updates", "update yourself", "install update"):
-            self.ask_box.dismiss()
-            self._update_now() if self.updater.ready else self.check_for_updates()
-        elif word in ("report a problem", "report a bug", "report bug", "bug", "report"):
-            self.ask_box.set_answer("Opening a problem report in your browser…")
-            self.report_problem()
-        elif word in ("suggest an idea", "feature request", "suggest a feature", "idea"):
-            self.ask_box.set_answer("Opening an idea form in your browser…")
-            self.report_problem(report.IDEA)
-        elif word in ("version", "what version", "which version"):
-            self._offline(text, f"I'm Chatmon {__version__}.")
-        else:
-            return False
-        return True
-
-    # -- notes, the stopwatch, and reminders by number
-
-    MAX_NOTES = 200
-    MAX_NOTE = 2000  # characters
-
-    def _notes(self) -> list[dict]:
-        notes = self.state.get("notes")
-        return [n for n in notes if isinstance(n, dict) and isinstance(n.get("text"), str)] if isinstance(notes, list) else []
-
-    def _kept(self, asked: offline.Asked) -> str:
-        """Notes, the stopwatch and reminders, which Chatmon keeps: do what's asked, say what was done."""
-        notes = self._notes()
-        upcoming = [r for r in self.reminders.upcoming() if r.kind != "focus"]
-        if asked.kind == "note":
-            if len(notes) >= self.MAX_NOTES:
-                return f"I keep {self.MAX_NOTES} notes at most: *delete note 1* makes room."
-            notes.append({"text": asked.arg[: self.MAX_NOTE], "at": time.time()})
-            self._set_notes(notes)
-            self.behavior.react("hop", self._now())
-            return f"Noted (note {len(notes)}). *delete note {len(notes)}* takes it back."
-        if asked.kind == "notes":
-            return "\n".join(f"{i}. {n['text']}" for i, n in enumerate(notes, 1)) if notes else "No notes yet: *note: buy milk* makes one."
-        if asked.kind == "delete note":
-            i = int(asked.arg)
-            if not 1 <= i <= len(notes):
-                return f"There's no note {i}." + (f" You have {len(notes)}." if notes else "")
-            gone = notes.pop(i - 1)
-            self._set_notes(notes)
-            return f"Deleted note {i}: {gone['text'][:80]}"
-        if asked.kind == "clear notes":
-            self._set_notes([])
-            return f"Deleted {len(notes)} note{'s' if len(notes) != 1 else ''}."
-        if asked.kind == "stopwatch":
-            if self._stopwatch is None:
-                self._stopwatch = self._now()
-                self._menu_changed()
-                return "Stopwatch started. *stop stopwatch* stops it."
-            return f"Stopwatch: **{offline_clock(self._now() - self._stopwatch)}** and counting."
-        if asked.kind == "stop stopwatch":
-            if self._stopwatch is None:
-                return "The stopwatch isn't running: *stopwatch* starts it."
-            took, self._stopwatch = self._now() - self._stopwatch, None
-            self._menu_changed()
-            return f"Stopwatch stopped at **{offline_clock(took)}**."
-        if asked.kind == "reminders":
-            if not upcoming:
-                return "No reminders or timers set."
-            return "\n".join(f"{i}. {r.kind.capitalize()} {reminders.describe(r.due, time.time())}: {r.text}" for i, r in enumerate(upcoming, 1))
-        if asked.kind == "cancel reminder":
-            i = int(asked.arg)
-            if not 1 <= i <= len(upcoming):
-                return f"There's no reminder {i}: *reminders* lists them."
-            self._cancel(upcoming[i - 1].id)
-            return f"Cancelled: {upcoming[i - 1].text}"
-        if asked.kind == "clear reminders":
-            for r in upcoming:
-                self.reminders.cancel(r.id)
-            self.save()
-            return f"Cancelled {len(upcoming)} reminder{'s' if len(upcoming) != 1 else ''}."
-        return "Hmm."
-
-    def _set_notes(self, notes: list[dict]) -> None:
-        self.state.set("notes", notes)
-        self.state.save()
-        self._menu_changed()
+        return commands.run(self, text, self.command_table)
 
     def _copy(self, text: str) -> None:
         """Onto the clipboard: the overlay's own, where Chatmon draws on one."""
@@ -1263,30 +1099,23 @@ class Companion(QObject):
         else:
             QGuiApplication.clipboard().setText(text)
 
-    def _notes_menu(self, sub: QMenu) -> None:
-        for i, note in enumerate(self._notes(), 1):
-            text = " ".join(note["text"].split())
-            item = sub.addMenu(f"{i}. {text[:48] + '…' if len(text) > 48 else text}")
-            item.addAction("Copy", partial(self._copy, note["text"]))
-            item.addAction("Delete", partial(self._kept, offline.Asked("delete note", str(i))))
-        sub.addSeparator()
-        sub.addAction("Add a note…", partial(self.open_ask, "note: "))
+    def _show_status(self, question: str) -> None:
+        """The *status* command: battery, disks and which brain would answer are found out off the screen's thread,
+        then shown, unless something else has been answered meanwhile."""
+        self._offline(question, "*Looking…*")
+        shown, upcoming = self._offline_shown, self.reminders.upcoming()
 
-    def _status(self) -> str:
-        lines = []
-        battery = heads_up.read_battery()
-        if battery:
-            lines.append(f"- Battery: {battery[0]:.0f}%{' (plugged in)' if battery[1] else ''}")
-        for folder, percent in heads_up.read_disks(heads_up.disk_folders()):
-            lines.append(f"- Disk for {folder}: {percent:.0f}% full")
-        upcoming = self.reminders.upcoming()
-        for r in upcoming[:5]:
-            lines.append(f"- {r.kind.capitalize()} {reminders.describe(r.due, time.time())}: {r.text}")
-        if not upcoming:
-            lines.append("- No reminders set")
-        brain = self._brain()
-        lines.append(f"- Brain: {brain.label if brain else 'none'}" + (f" ({brains.describe(brain)})" if brain and brains.describe(brain) else ""))
-        return "\n".join(lines)
+        def look() -> str:
+            brain = self._brain()
+            battery, disks = heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders())
+            detail = brains.describe(brain) if brain else ""
+            return "\n".join(commands.status_lines(battery, disks, upcoming, time.time(), brain.label if brain else None, detail))
+
+        def looked(status) -> None:
+            if self._offline_shown == shown and not self._quitting:
+                self._offline(question, status if isinstance(status, str) else f"I couldn't look: {status}")
+
+        self.background.run(look, looked)
 
     # -- hiding
 
@@ -1342,9 +1171,9 @@ class Companion(QObject):
         buttons = [(f"Snooze {snooze:g} min", partial(self._snooze, rest, snooze)), ("Done", None)]
         if len(rest) == 1:
             title = "Time's up!" if rest[0].kind == "timer" else "Reminder"
-            self.alert(f"reminder:{rest[0].id}", title, line(rest[0]), buttons)
+            self.alert(f"reminder:{rest[0].id}", title, line(rest[0]), buttons, reminder=True)
         else:
-            self.alert("reminders", "Reminders", "\n".join(f"- {line(r)}" for r in rest), buttons)
+            self.alert("reminders", "Reminders", "\n".join(f"- {line(r)}" for r in rest), buttons, reminder=True)
 
     def _snooze(self, due: list[reminders.Reminder], minutes: float) -> None:
         for r in due:
@@ -1359,8 +1188,7 @@ class Companion(QObject):
         self._last_wall = now
         self._check_away()
         self._check_accessibility()
-        if self._menu_clock != self._time_labels():
-            self._menu_changed()
+        self.menus.tick()  # a countdown in the menu says what's left: the menu isn't built again for it
         mono = self._now()
         for source, (state, since) in list(self.agents.items()):
             if state == "working" and mono - since > WORK_EXPIRES:
@@ -1427,11 +1255,23 @@ class Companion(QObject):
     # -- heads-ups
 
     def _check_system(self) -> None:
+        """The battery and the disks, read off the screen's thread (UPower over D-Bus, psutil and each disk can
+        take a moment), one reading at a time."""
+        if self._reading_system:
+            return
+        self._reading_system = True
+        self.background.run(_read_system, self._system_read)
+
+    def _system_read(self, reading) -> None:
+        self._reading_system = False
+        if isinstance(reading, Exception) or self._quitting:
+            return
+        battery, disks = reading
         notices = []
-        battery = self.watcher.battery(heads_up.read_battery())
-        if battery:
-            notices.append(battery)
-        notices += self.watcher.disks(heads_up.read_disks(heads_up.disk_folders()), date.today())
+        low = self.watcher.battery(battery)
+        if low:
+            notices.append(low)
+        notices += self.watcher.disks(disks, date.today())
         for notice in notices:
             self.alert(notice.key, notice.title, notice.text)
 
@@ -1440,6 +1280,8 @@ class Companion(QObject):
             return
         # Each reads what the system already knows (no network): the desktop's own updater keeps it fresh.
         checks = heads_up.update_checks()
+        self._update_round += 1
+        tag, self._update_expected = self._update_round, len(checks)
         self._update_counts = {}
         self._restart_needed = False
         for check in checks:
@@ -1447,36 +1289,45 @@ class Companion(QObject):
                 from . import packagekit
 
                 counter = packagekit.UpdateCount(self)
-                self._update_procs.append(counter)
-                counter.counted.connect(partial(self._packagekit_counted, counter, len(checks)))
+                self._update_procs[counter] = check.name
+                counter.counted.connect(partial(self._packagekit_counted, tag, counter))
                 counter.start()
                 continue
             proc = QProcess(self)
-            self._update_procs.append(proc)
-            proc.finished.connect(partial(self._updates_counted, proc, check, len(checks)))
-            proc.errorOccurred.connect(partial(self._update_check_failed, proc, check, len(checks)))
+            self._update_procs[proc] = check.name
+            proc.finished.connect(partial(self._updates_counted, tag, proc, check))
+            proc.errorOccurred.connect(partial(self._update_check_failed, tag, proc, check))
             proc.start(check.argv[0], check.argv[1:])
+        if checks:
+            self._update_deadline.start(int(UPDATE_CHECK_TIMEOUT_S * 1000))
 
-    def _update_check_failed(self, proc: QProcess, check: heads_up.UpdateCheck, expected: int, error) -> None:
+    def _update_check_failed(self, tag: int, proc: QProcess, check: heads_up.UpdateCheck, error) -> None:
         if sip.isdeleted(proc):
             return
         if error == QProcess.ProcessError.FailedToStart:
             self._forget_update_proc(proc)
             proc.deleteLater()
-            self._tally_updates(check.name, 0, expected)
+            self._tally_updates(tag, check.name, 0)
 
-    def _packagekit_counted(self, counter, expected: int, count: int | None) -> None:
+    def _packagekit_counted(self, tag: int, counter, count: int | None) -> None:
         self._forget_update_proc(counter)
         counter.deleteLater()
-        self._tally_updates("packagekit", count or 0, expected)
+        self._tally_updates(tag, "packagekit", count or 0)
 
-    def _forget_update_proc(self, proc: QProcess) -> None:
-        if proc in self._update_procs:
-            self._update_procs.remove(proc)
+    def _forget_update_proc(self, proc) -> None:
+        self._update_procs.pop(proc, None)
+
+    def _update_checks_timed_out(self) -> None:
+        """A check still running a minute on (a tool waiting on the network or a lock, say) is stopped, and counts as
+        none, so the others are still heard."""
+        late = list(self._update_procs.values())
+        self._stop_update_checks()
+        for name in late:
+            self._tally_updates(self._update_round, name, 0)
 
     def _stop_update_checks(self) -> None:
-        """Quitting: the checks still running stop here, never to be heard from again (a QProcess destroyed
-        while it runs says it finished, as it goes)."""
+        """The checks still running stop here, never to be heard from again (a QProcess destroyed while it runs says
+        it finished, as it goes): at quitting, or when they took too long."""
         for proc in self._update_procs:
             if not isinstance(proc, QProcess):  # PackageKit's count: a D-Bus transaction, not a process
                 if not sip.isdeleted(proc):
@@ -1489,26 +1340,29 @@ class Companion(QObject):
                 proc.waitForFinished(1000)
         self._update_procs.clear()
 
-    def _updates_counted(self, proc: QProcess, check: heads_up.UpdateCheck, expected: int, code: int, _status) -> None:
+    def _updates_counted(self, tag: int, proc: QProcess, check: heads_up.UpdateCheck, code: int, _status) -> None:
         if sip.isdeleted(proc):
             return
         self._forget_update_proc(proc)
         output = bytes(proc.readAllStandardOutput()).decode("utf-8", errors="replace")
         proc.deleteLater()
-        if check.name == "windows":
+        if check.name == "windows" and tag == self._update_round:
             self._restart_needed = heads_up.windows_restart_needed(output)
-        self._tally_updates(check.name, check.count(output, code) or 0, expected)
+        self._tally_updates(tag, check.name, check.count(output, code) or 0)
 
-    def _tally_updates(self, name: str, count: int, expected: int) -> None:
+    def _tally_updates(self, tag: int, name: str, count: int) -> None:
+        if tag != self._update_round:
+            return  # from an earlier look, answering late: this one's counts are its own
         self._update_counts[name] = count
-        if len(self._update_counts) == expected:
+        if len(self._update_counts) == self._update_expected:
+            self._update_deadline.stop()
             notice = self.watcher.updates(sum(self._update_counts.values()), date.today(), self._restart_needed)
-            if notice and not self.stage.message_visible():
+            if notice:  # told once a day: it waits its turn behind a bubble on screen, rather than going unsaid
                 self.behavior.react("wave", self._now())
                 buttons = [("OK", None)]
                 if sys.platform == "win32":
                     buttons.insert(0, ("Open Windows Update", partial(QDesktopServices.openUrl, QUrl("ms-settings:windowsupdate"))))
-                self.say(notice.title, notice.text, buttons, timeout_s=60)
+                self.say(notice.title, notice.text, buttons, timeout_s=60, key="system-updates", background=True)
 
     # -- updating Chatmon, what's new, and reporting problems
 
@@ -1532,7 +1386,7 @@ class Companion(QObject):
         self.updater.check(self._install_kind, by_hand=True)
 
     def _update_available(self, release: updates.Release) -> None:
-        self._checking_by_hand = False
+        by_hand, self._checking_by_hand = self._checking_by_hand, False
         self._install_kind = self.updater.kind
         self._menu_changed()
         self.behavior.react("wave", self._now())
@@ -1540,16 +1394,17 @@ class Companion(QObject):
             f"Chatmon {release.version} is ready",
             "Downloaded and checked. Updating takes a moment, then I'll be right back.",
             [("Update now", self._update_now), ("What's new", partial(self._show_release_notes, release)), ("Later", None)],
-            timeout_s=90,
+            timeout_s=90, key="chatmon-update", background=not by_hand,
         )
 
     def _update_out(self, release: updates.Release, how: str) -> None:
-        self._checking_by_hand = False
+        by_hand, self._checking_by_hand = self._checking_by_hand, False
         self._install_kind = self.updater.kind
         first = ("Release page", partial(QDesktopServices.openUrl, QUrl(release.page)))
         if "metered" in how:
             first = ("Download it", self.check_for_updates)
-        self.say(f"Chatmon {release.version} is out", how, [first, ("What's new", partial(self._show_release_notes, release)), ("OK", None)], timeout_s=60)
+        self.say(f"Chatmon {release.version} is out", how, [first, ("What's new", partial(self._show_release_notes, release)), ("OK", None)], timeout_s=60,
+                 key="chatmon-update", background=not by_hand)
 
     def _up_to_date(self) -> None:
         self._install_kind = self.updater.kind
@@ -1621,24 +1476,7 @@ class Companion(QObject):
         buttons = [("Report it", self.report_problem)]
         if log_file().exists():
             buttons.append(("Open the log", self.open_log))
-        self.say("Something went wrong in me", "I kept going, but you can tell my maker what happened.", buttons + [("OK", None)], timeout_s=45)
-
-    def _help_menu(self, sub: QMenu) -> None:
-        sub.addAction(f"What's new in {__version__}", self.show_whats_new)
-        if self.updater.ready is not None and self.updater.release is not None:
-            sub.addAction(f"Install Chatmon {self.updater.release.version}", self._update_now)
-        else:
-            sub.addAction("Check for updates now", self.check_for_updates)
-        auto = sub.addAction("Check for updates every day")
-        auto.setCheckable(True)
-        auto.setChecked(self._checks_updates())
-        auto.toggled.connect(self._set_check_updates)
-        sub.addSeparator()
-        sub.addAction("Report a problem…", self.report_problem)
-        sub.addAction("Suggest an idea…", partial(self.report_problem, report.IDEA))
-        sub.addAction("Open the log", self.open_log)
-        version = sub.addAction(f"Chatmon {__version__}")
-        version.setEnabled(False)
+        self.say("Something went wrong in me", "I kept going, but you can tell my maker what happened.", buttons + [("OK", None)], timeout_s=45, background=True)
 
     def _set_check_updates(self, on: bool) -> None:
         self.state.set("check_updates", on)
@@ -1657,6 +1495,11 @@ class Companion(QObject):
         queued = Qt.ConnectionType.QueuedConnection
         while self.server.hasPendingConnections():
             sock = self.server.nextPendingConnection()
+            if len(self._connections) >= MAX_CONNECTIONS:  # a flood (only you can connect, but a script can loop)
+                sock.abort()
+                sock.deleteLater()
+                continue
+            sock.setReadBufferSize(events.MAX_MESSAGE + 1)  # Qt holds no more than a message for it, and a byte to tell
             self._connections[sock] = bytearray()
             sock.readyRead.connect(self._read_connections, type=queued)
             sock.disconnected.connect(self._read_connections, type=queued)
@@ -1677,20 +1520,25 @@ class Companion(QObject):
                 continue
             if sock.state() == connected:
                 sock.waitForReadyRead(0)
-            if sock.bytesAvailable():  # (reading a socket Qt has closed only gets a warning)
-                buffer.extend(bytes(sock.readAll()))
-            if len(buffer) > events.MAX_MESSAGE:
-                buffer.clear()
-                sock.abort()
-            closed = sock.state() != connected  # the sender hung up, and all it sent is in
-            while b"\n" in buffer or (closed and buffer):
-                line, _, rest = bytes(buffer).partition(b"\n")
-                buffer[:] = rest
-                for message in events.parse_lines(line):
-                    self.handle(message)
-                if not closed and sock.state() == connected:
-                    sock.write(events.ACK)
-                    sock.flush()
+            while True:
+                if sock.bytesAvailable():  # (reading a socket Qt has closed only gets a warning)
+                    # Never more than a message held for one connection: one longer is never going to be heard.
+                    buffer.extend(bytes(sock.read(events.MAX_MESSAGE + 1 - len(buffer))))
+                if len(buffer) > events.MAX_MESSAGE:
+                    buffer.clear()
+                    sock.abort()
+                more = sock.bytesAvailable() > 0
+                closed = sock.state() != connected and not more  # the sender hung up, and all it sent is in
+                while b"\n" in buffer or (closed and buffer):
+                    line, _, rest = bytes(buffer).partition(b"\n")
+                    buffer[:] = rest
+                    for message in events.parse_lines(line):
+                        self.handle(message)
+                    if not closed and sock.state() == connected:
+                        sock.write(events.ACK)
+                        sock.flush()
+                if not more:
+                    break
             if closed:
                 self._connections.pop(sock, None)
                 sock.deleteLater()
@@ -1717,13 +1565,15 @@ class Companion(QObject):
         elif kind == "say" and message.get("text"):
             self.behavior.wake(now)
             self.behavior.react("talk", now)
-            self.say(self.name, str(message["text"]), timeout_s=15)
+            self.say(self.name, str(message["text"]), timeout_s=15, background=True)
         elif kind == "remind":
             command = reminders.parse_command("remind me " + str(message.get("text", "")), datetime.now())
             if command and command.kind == "reminder":
                 r = self.reminders.add(command.due.timestamp(), command.text)
                 self.save()
                 self.say("Reminder set", f"{reminders.describe(r.due, time.time())}: {r.text}", timeout_s=6)
+        elif kind == "ask":  # `chatmon ask [TEXT]`: a hotkey, a launcher, a script
+            self.open_ask(str(message.get("text") or ""))
         elif kind == "show":
             self.set_hidden(False)
             self.behavior.poke(now)
@@ -1741,6 +1591,7 @@ class Companion(QObject):
         self.behavior.wake(now)
         if event == "working":
             self.agents[source] = ("working", now)
+            self.messages.withdraw(key)  # a needs-you still waiting no longer stands
             if self._alert_key == key:
                 self.stage.dismiss_message()
         elif event == "needs-you":
@@ -1748,6 +1599,7 @@ class Companion(QObject):
             self.alert(key, f"{label} needs you", text or f"{label} is waiting for you.")
         else:
             self.agents.pop(source, None)
+            self.messages.withdraw(key)
             if self._alert_key == key:
                 self.stage.dismiss_message()
             # An agent's reply can hold code or secrets: on screen only if you said so.
@@ -1756,26 +1608,26 @@ class Companion(QObject):
             if event == "done":
                 self.behavior.react("hop", now)
                 if not self.ask_box.isVisible():
-                    self.say(f"{label} finished", snippet, timeout_s=8)
+                    self.say(f"{label} finished", snippet, timeout_s=8, key=key, background=True)
             elif event == "success":
                 self.behavior.react("beam", now)
-                self.say(f"{label}: success!", snippet, timeout_s=8)
+                self.say(f"{label}: success!", snippet, timeout_s=8, key=key, background=True)
             elif event == "error":
-                self.say(f"{label} hit a problem", snippet or "Take a look when you can.", timeout_s=20)
+                self.say(f"{label} hit a problem", snippet or "Take a look when you can.", timeout_s=20, key=key, background=True)
         self._update_working()
 
     def _update_working(self) -> None:
         working = any(state == "working" for state, _ in self.agents.values())
         self.behavior.set_working(working, self._now())
 
-    # -- menus
+    # -- menus (menus.py)
 
     def show_menu(self, pos: QPoint) -> None:
         """The penguin's own menu (right-click): it stands still and looks at you while it's open."""
         self._menu_open = True
         self.behavior.set_attending(True, self._now())
         if self.stage.draws_menus():
-            self._fill_menu()
+            self.menus.opening()  # the stage draws it: no aboutToShow
             self.stage.open_menu(self.menu, pos)
         else:
             self.menu.popup(pos)
@@ -1784,9 +1636,7 @@ class Companion(QObject):
         if self._menu_open and not self.stage.menu.is_open():
             self._menu_open = False
             self.behavior.set_attending(self.ask_box.isVisible(), self._now())
-        if self._menu_stale:
-            self._menu_stale = False
-            self._menu_timer.start(0)
+        self.menus.closed()
 
     def _tray_clicked(self, reason) -> None:
         # On macOS opening the menu-bar menu is a Trigger too (Qt says so as the menu starts): there the menu's
@@ -1795,145 +1645,13 @@ class Companion(QObject):
             self.set_hidden(not self.behavior.hidden)
 
     def _menu_changed(self) -> None:
-        """Something the menu shows changed: fill it in again, once things settle,
-        and never under an open menu (its items would vanish under the pointer)."""
-        if self.menu.isVisible() or self.stage.menu.is_open():
-            self._menu_stale = True
-        else:
-            self._menu_timer.start(0)
-
-    def _time_labels(self) -> tuple:
-        """The parts of the menu that change with the clock."""
-        now = time.time()
-        focus = self.reminders.focus()
-        left = max(1, round((focus.due - now) / 60)) if focus else None
-        watch = offline_clock(self._now() - self._stopwatch, seconds=False) if self._stopwatch is not None else None
-        return (left, watch, tuple(reminders.describe(r.due, now) for r in self.reminders.upcoming() if r.kind != "focus"))
+        """Something the menu shows changed: it's filled in again once things settle (menus.py)."""
+        self.menus.changed()
 
     def _offline_in_box(self, words: str) -> None:
         """Do something from the menu as if it were asked in the box, and show it there."""
         self.open_ask()
         self._local(words)
-
-    def _fill_menu(self) -> None:
-        self._menu_timer.stop()
-        self._menu_clock = self._time_labels()
-        m = self.menu
-        for sub in m.findChildren(QMenu, options=Qt.FindChildOption.FindDirectChildrenOnly):
-            sub.deleteLater()  # clear() keeps submenus
-        m.clear()
-        m.addAction(f"Ask {self.name}…", self.open_ask)
-        self._chats_menu(m.addMenu("Chats"))
-        m.addAction("Remind me…", partial(self.open_ask, "remind me in "))
-        focus = self.reminders.focus()
-        if focus:
-            left = max(1, round((focus.due - time.time()) / 60))
-            m.addAction(f"Stop focus ({left} min left)", self.stop_focus)
-        else:
-            sub = m.addMenu("Focus timer")
-            for minutes in sorted({15, 25, 50, int(self.config["focus"]["minutes"])}):
-                sub.addAction(f"{minutes} minutes", partial(self.start_focus, minutes))
-        if self._stopwatch is not None:
-            m.addAction(f"Stop the stopwatch ({offline_clock(self._now() - self._stopwatch, seconds=False)})", partial(self._offline_in_box, "stop stopwatch"))
-        notes = self._notes()
-        self._notes_menu(m.addMenu(f"Notes ({len(notes)})" if notes else "Notes"))
-        upcoming = [r for r in self.reminders.upcoming() if r.kind != "focus"]
-        if upcoming:
-            sub = m.addMenu(f"Reminders ({len(upcoming)})")
-            for r in upcoming:
-                sub.addAction(f"✕  {reminders.describe(r.due, time.time())}: {r.text}", partial(self._cancel, r.id))
-        m.addSeparator()
-        self._brain_menu(m.addMenu("Brain"))
-        self._companion_menu(m.addMenu("Companion"))
-        self._style_menu(m.addMenu("Bubble style"))
-        self._agents_menu(m.addMenu("AI agents"))
-        if not self._refreshing and self._now() - self._agents_seen > AGENTS_FRESH:
-            self._refresh_agents()  # changed outside Chatmon, maybe; a look under way fills the menu in again
-        walk = m.addAction("Walk around")
-        walk.setCheckable(True)
-        walk.setChecked(self.behavior.walk_enabled)
-        walk.toggled.connect(self._set_walk)
-        m.addAction("Come out" if self.behavior.hidden else "Hide (peek now and then)", partial(self.set_hidden, not self.behavior.hidden))
-        login = m.addAction("Start when I log in")
-        login.setCheckable(True)
-        login.setChecked(autostart.enabled())
-        login.toggled.connect(self._set_autostart)
-        m.addSeparator()
-        if self.updater.ready is not None and self.updater.release is not None:
-            m.addAction(f"Update to Chatmon {self.updater.release.version}", self._update_now)
-        self._help_menu(m.addMenu("Help & updates"))
-        m.addAction("Settings…", self.open_settings)
-        m.addAction("Reload settings file", self.reload)
-        m.addAction("Quit", self.quit)
-        self._look_again()
-
-    def _brain_menu(self, sub: QMenu) -> None:
-        group = QActionGroup(sub)
-        current = self._brain(wait=False)
-        picked = self.state.get("brain")
-        auto = sub.addAction(f"Automatic ({current.label if current else 'none found'})")
-        auto.setCheckable(True)
-        auto.setChecked(not picked)
-        auto.triggered.connect(partial(self._pick_brain, None))
-        group.addAction(auto)
-        groups = (
-            ("AI tools you're signed in to", lambda b: b.type == "command"),
-            ("On this computer", lambda b: b.local),
-            ("APIs (billed per question; pick one to use it)", lambda b: b.type != "command" and not b.local),
-        )
-        for title, belongs in groups:
-            sub.addSection(title)
-            for brain in (b for b in self.brains.values() if belongs(b)):
-                ok = brain.available(wait=False)
-                action = sub.addAction(brain.label if ok else f"{brain.label} ({brain.why_not()})")
-                action.setCheckable(True)
-                action.setEnabled(ok)
-                action.setChecked(picked == brain.name)
-                action.triggered.connect(partial(self._pick_brain, brain.name))
-                group.addAction(action)
-        if current is not None:
-            self._brain_options_menu(sub, current)
-
-    THINKING = {"auto": "Automatic (the model's own choice)", "on": "On", "off": "Off"}
-
-    def _brain_options_menu(self, sub: QMenu, brain: brains.Brain) -> None:
-        """How the brain in use answers: its model, how hard it thinks, whether it thinks at all."""
-        modes = brain.thinking_modes()
-        if not (brain.models or brain.effort_levels() or len(modes) > 1):
-            return
-        sub.addSection(f"{brain.label}: how it answers")
-        base = self.brains[brain.name]  # as set up, before any picks: its defaults
-        if brain.models:
-            own = "The tool’s own choice" if brain.type == "command" else "Its own default"
-            menu = sub.addMenu(f"Model: {brain.model or own.lower()}")
-            group = QActionGroup(menu)
-            if not base.model:
-                self._option(menu, group, own, not brain.model, None, brain.name, "model", "")
-            for model in dict.fromkeys([*brain.models, *([brain.model] if brain.model else [])]):
-                label = model + ("  (default)" if model == base.model else "")
-                # Any model can be picked: an effort or thinking it doesn't take is dropped with the switch.
-                self._option(menu, group, label, brain.model == model, brain.refuses(model=model, effort="", thinking="auto"), brain.name, "model", model)
-        levels = brain.effort_levels()
-        if levels:
-            menu = sub.addMenu(f"Effort: {brain.effort or 'the model’s default'}")
-            group = QActionGroup(menu)
-            self._option(menu, group, "The model’s default", not brain.effort, None, brain.name, "effort", "")
-            for level in levels:
-                label = level + ("  (default)" if level == base.effort else "")
-                self._option(menu, group, label, brain.effort == level, brain.refuses(effort=level), brain.name, "effort", level)
-        if len(modes) > 1:
-            menu = sub.addMenu(f"Thinking: {self.THINKING[brain.thinking].split(' (')[0]}")
-            group = QActionGroup(menu)
-            for mode in modes:
-                self._option(menu, group, self.THINKING[mode], brain.thinking == mode, brain.refuses(thinking=mode), brain.name, "thinking", mode)
-
-    def _option(self, menu: QMenu, group: QActionGroup, label: str, checked: bool, refused: str | None, brain: str, key: str, value: str) -> None:
-        action = menu.addAction(label if refused is None else f"{label}  ({refused})")
-        action.setCheckable(True)
-        action.setChecked(checked)
-        action.setEnabled(refused is None)
-        action.triggered.connect(partial(self._set_brain_option, brain, key, value))
-        group.addAction(action)
 
     def _set_brain_option(self, brain: str, key: str, value: str) -> None:
         options = dict(self.state.get("brain_options") or {})
@@ -1987,7 +1705,7 @@ class Companion(QObject):
                 self.say(
                     self.name,
                     f"I'm Chatmon now. If {' or '.join(unsure)} was connected before, tick it again under **AI agents** in my menu.",
-                    timeout_s=30,
+                    timeout_s=30, background=True,
                 )
         if isinstance(status, dict) and status != self._agent_status:
             self._agent_status = status
@@ -2035,7 +1753,7 @@ class Companion(QObject):
                 f"My plugin in {listed([a.label for a in off])} is off now. A window that was open when you connected it "
                 "may have saved its settings over mine. Switch it back on?",
                 [("Switch on", partial(self._offer_answered, answered, off)), ("Leave it off", partial(self._offer_answered, answered, []))],
-                timeout_s=60,
+                timeout_s=60, key="offer-agents", background=True,
             )
         else:
             one = len(new) == 1
@@ -2045,7 +1763,7 @@ class Companion(QObject):
                 f"when {'it is' if one else 'they are'} working, when {'it needs' if one else 'they need'} you, and when "
                 f"{'it is' if one else 'they are'} done. You can change this any time under **AI agents** in my menu.",
                 [("Connect", partial(self._offer_answered, answered, new)), ("Not now", partial(self._offer_answered, answered, []))],
-                timeout_s=60,
+                timeout_s=60, key="offer-agents", background=True,
             )
 
     def _offer_answered(self, answered: dict[str, str], chosen: list[agents.Agent]) -> None:
@@ -2093,24 +1811,6 @@ class Companion(QObject):
                 timeout_s=15,
             )
         self._refresh_agents()
-
-    def _agents_menu(self, sub: QMenu) -> None:
-        sub.addSection("Let them tell me what they're doing")
-        missing = []
-        for agent in agents.AGENTS:
-            state = self._agent_status.get(agent.name, "found" if agent.detected() else "not found")
-            if state == "not found":
-                missing.append(agent.label)
-                continue
-            action = sub.addAction(agent.label + (" (installed but off)" if state == "installed but off" else ""))
-            action.setCheckable(True)
-            action.setChecked(state == "connected")
-            action.toggled.connect(partial(self._set_agent, agent))
-        if missing:
-            note = sub.addAction("Not found here: " + ", ".join(missing))
-            note.setEnabled(False)
-        sub.addSeparator()
-        sub.addAction("Another agent or script…", self._other_agents)
 
     def _set_agent(self, agent: agents.Agent, on: bool) -> None:
         self.say(f"{'Connecting' if on else 'Disconnecting'} {agent.label}…", timeout_s=20)
@@ -2164,17 +1864,6 @@ class Companion(QObject):
         self.tray.setIcon(self._tray_icon())
         self.app.setWindowIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
 
-    def _companion_menu(self, sub: QMenu) -> None:
-        group = QActionGroup(sub)
-        current = self._companion().id
-        for companion in companions.COMPANIONS.values():
-            action = sub.addAction(companion.label)
-            action.setCheckable(True)
-            action.setChecked(companion.id == current)
-            action.setEnabled(companions.get(companion.id) is companion)  # its strips are installed
-            action.triggered.connect(partial(self._pick_companion, companion.id))
-            group.addAction(action)
-
     def _pick_companion(self, name: str) -> None:
         if name == self._companion().id:
             return
@@ -2185,24 +1874,6 @@ class Companion(QObject):
         self._apply_bubble_style()  # "Match companion" follows it
         self._menu_changed()
         self.behavior.react("wave", self._now())
-
-    def _style_menu(self, sub: QMenu) -> None:
-        group = QActionGroup(sub)
-        current = self._bubble_style_name()
-        matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()
-        for name, label in [(MATCH, f"Match companion ({matching})")] + [(s.name, s.label) for s in styles.STYLES.values()]:
-            action = sub.addAction(label)
-            action.setCheckable(True)
-            action.setChecked(name == current)
-            action.triggered.connect(partial(self._pick_style, name))
-            group.addAction(action)
-            if name == MATCH:
-                sub.addSeparator()
-        sub.addSeparator()
-        moving = sub.addAction("Animate bubbles")
-        moving.setCheckable(True)
-        moving.setChecked(self._bubble_effects())
-        moving.toggled.connect(self._set_bubble_effects)
 
     def _bubble_style_name(self) -> str:
         """The style picked from the menu, else the one in the settings: a style's name, or MATCH."""
@@ -2405,6 +2076,8 @@ class Companion(QObject):
             self._show_sprites()
 
     def quit(self) -> None:
+        self._quitting = True
+        self.menus.stop()
         self._stop_update_checks()
         watcher = getattr(self, "_lock_watcher", None)
         if watcher is not None and hasattr(watcher, "close"):
@@ -2441,6 +2114,11 @@ class Companion(QObject):
 _problem = None  # the running Companion's offer to report what went wrong
 
 
+def _read_system() -> tuple:
+    """The battery and the disks, as they are now: slow, so never on the screen's thread."""
+    return heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders())
+
+
 def _log_exception(kind, value, tb) -> None:
     traceback.print_exception(kind, value, tb, file=sys.stderr)
     if _problem is not None and not issubclass(kind, KeyboardInterrupt):
@@ -2472,11 +2150,24 @@ def _log_without_a_console() -> None:
         log.parent.mkdir(parents=True, exist_ok=True)
         if log.exists() and log.stat().st_size > LOG_LIMIT:
             os.replace(log, log.with_name(log.name + ".old"))
-        stream = open(log, "a", encoding="utf-8", errors="replace", buffering=1)
+        stream = _open_private(log)
     except OSError:
         return
     sys.stdout = sys.stderr = stream
     print(f"--- Chatmon started {datetime.now():%Y-%m-%d %H:%M:%S}")
+
+
+def _open_private(path: Path):
+    """`path`, opened to add to, readable and writable only by you on Linux and macOS (a log says what went wrong,
+    and where): made that way, and made so if an older Chatmon made it at the umask."""
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND | getattr(os, "O_CLOEXEC", 0) | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    try:
+        if hasattr(os, "fchmod"):
+            os.fchmod(fd, 0o600)
+        return os.fdopen(fd, "a", encoding="utf-8", errors="replace", buffering=1)
+    except BaseException:
+        os.close(fd)
+        raise
 
 
 _instance_lock: int | None = None  # the lock this Chatmon holds while it runs (Linux, macOS)

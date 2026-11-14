@@ -8,17 +8,17 @@ chats for you. "What do you remember" lists it; "forget that I use Arch", the me
 from __future__ import annotations
 
 import json
-import os
 import re
 import time
 from dataclasses import dataclass
 from pathlib import Path
 
 from . import paths
-from .settings import private
+from .settings import read_kept, write_private
 
 MAX_ITEMS = 100
 MAX_LENGTH = 500  # characters of one thing to remember
+MAX_FILE = 2**20  # bytes: a memory file bigger than this isn't one of ours, and is kept aside, never written over
 
 # "remember that …", "remember: …", "remember I …", "remember my …" (never "remember to …": that's a reminder's,
 # and "remember when we …?" is a question for the AI).
@@ -39,22 +39,20 @@ def path() -> Path:
 
 
 class Memory:
-    def __init__(self, items: list[Item], where: Path):
+    def __init__(self, items: list[Item], where: Path, problem: str | None = None):
         self.items, self.where = items, where
+        self.problem = problem  # a sentence for you when the file was damaged and had to be recovered
 
     @classmethod
     def load(cls, where: Path | None = None) -> Memory:
         where = where or path()
         items = []
-        try:
-            data = json.loads(where.read_text(encoding="utf-8")) if where.stat().st_size <= 2**20 else []
-        except (OSError, ValueError):
-            data = []
-        for d in data if isinstance(data, list) else []:
+        data, problem = read_kept(where, lambda d: isinstance(d, list), MAX_FILE)
+        for d in data or []:
             if isinstance(d, dict) and isinstance(d.get("text"), str) and d["text"].strip():
                 at = d.get("at")
                 items.append(Item(d["text"].strip()[:MAX_LENGTH], float(at) if isinstance(at, (int, float)) else 0.0))
-        return cls(items[:MAX_ITEMS], where)
+        return cls(items[:MAX_ITEMS], where, problem)
 
     def texts(self) -> list[str]:
         return [i.text for i in self.items]
@@ -94,11 +92,7 @@ class Memory:
         self.save()
 
     def save(self) -> None:
-        self.where.parent.mkdir(parents=True, exist_ok=True)
-        tmp = self.where.with_suffix(".tmp")
-        tmp.write_text(json.dumps([{"text": i.text, "at": i.at} for i in self.items], ensure_ascii=False, indent=1), encoding="utf-8")
-        private(tmp)
-        os.replace(tmp, self.where)
+        write_private(self.where, json.dumps([{"text": i.text, "at": i.at} for i in self.items], ensure_ascii=False, indent=1))
 
 
 def command(text: str) -> tuple[str, str] | None:

@@ -51,7 +51,8 @@ def notes(v: str) -> str:
         + "Chatmon 0.6.0 and later update themselves (**Help & updates** in the menu); coming from 0.5 or earlier, install "
         + "this one by hand, once. Download the installer for your computer below; `SHA256SUMS.txt` lists each file's "
         + "checksum, and `SHA256SUMS.txt.sig` is its signature by Chatmon's release key.\n\n"
-        + "```sh\npipx install --force git+https://github.com/RandyNorthrup/chatmon\n```\n"
+        # Pinned to this release's tag: the notes stay true after the next one, and main is never installed.
+        + f"```sh\npipx install --force git+https://github.com/RandyNorthrup/chatmon@v{v}\n```\n"
     )
 
 
@@ -166,6 +167,11 @@ def macos() -> list[Path]:
     v = version()
     arch = {"x86_64": "intel", "arm64": "arm64"}.get(platform.machine(), platform.machine())
     app = pyinstaller() / "Chatmon.app"
+    # Root's side of installing an update, inside the app (and so sealed by its signature): updates.py runs it
+    # from a copy of the app it has checked is root's alone, as the .pkg installs it.
+    helper = app / "Contents" / "Resources" / "install-update"
+    helper.write_bytes((PACKAGING / "macos" / "install-update").read_bytes().replace(b"\r\n", b"\n"))
+    helper.chmod(0o755)
     run("codesign", "--force", "--deep", "--sign", "-", app)  # ad hoc: Apple silicon runs nothing unsigned
     work = BUILD / "macos"
     shutil.rmtree(work, ignore_errors=True)
@@ -180,8 +186,10 @@ def macos() -> list[Path]:
     run("plutil", "-replace", "0.BundleIsRelocatable", "-bool", "NO", work / "component.plist")
     # And it replaces an older version's bundle whole: nothing of that one is left in it to run.
     run("plutil", "-replace", "0.BundleOverwriteAction", "-string", "upgrade", work / "component.plist")
+    # Installed as root's (--ownership recommended, pkgbuild's default, said outright): updating checks the
+    # update with the app's own code, which must be root's alone to be trusted (chatmon/updates.py).
     run("pkgbuild", "--root", work / "root", "--component-plist", work / "component.plist", "--identifier", BUNDLE_ID, "--version", v,
-        "--install-location", "/", "--scripts", scripts, work / "Chatmon.pkg")
+        "--ownership", "recommended", "--install-location", "/", "--scripts", scripts, work / "Chatmon.pkg")
     run("productbuild", "--synthesize", "--package", work / "Chatmon.pkg", work / "distribution.xml")
     distribution = (work / "distribution.xml").read_text(encoding="utf-8")  # the installer's window says "Chatmon"
     (work / "distribution.xml").write_text(distribution.replace("<options ", "<title>Chatmon</title>\n    <options ", 1), encoding="utf-8")
@@ -255,9 +263,13 @@ def smoke(cli: str, app: str, expected: str | None = None) -> None:
     cli, app = (shutil.which(p) or str(Path(p).resolve()) for p in (cli, app))  # a command's name, or a path to it
     home =Path(tempfile.mkdtemp(prefix="cm-", dir=None if sys.platform == "win32" else "/tmp"))  # a short path: macOS caps socket paths
     env = dict(os.environ, QT_QPA_PLATFORM="offscreen", HOME=str(home), USERPROFILE=str(home), APPDATA=str(home / "AppData"),
-               XDG_CONFIG_HOME=str(home / ".config"), XDG_STATE_HOME=str(home / ".state"), XDG_RUNTIME_DIR=str(home))
+               LOCALAPPDATA=str(home / "AppData" / "Local"), XDG_CONFIG_HOME=str(home / ".config"), XDG_STATE_HOME=str(home / ".state"),
+               XDG_RUNTIME_DIR=str(home))
+    # An address of its own (paths.INSTANCE_ENV), whatever Chatmon you have running: on Windows the pipe is named
+    # after your account, whatever the folders. (USERNAME did that for Chatmons before 0.6.)
+    env["CHATMON_INSTANCE"] = f"smoke-{os.getpid()}"
     if sys.platform == "win32":
-        env["USERNAME"] = f"chatmon-smoke-{os.getpid()}"  # a pipe of its own, whatever Chatmon you have running
+        env["USERNAME"] = f"chatmon-smoke-{os.getpid()}"
     env.pop("CHATMON_INTERNAL", None)
 
     def say(*args: str, timeout: float = 30) -> subprocess.CompletedProcess:

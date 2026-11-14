@@ -3,3 +3,6 @@
 *.sh text eol=lf
 packaging/linux/chatmon text eol=lf
 packaging/macos/scripts/* text eol=lf
+packaging/linux/install-update text eol=lf
+packaging/linux/verify-update text eol=lf
+packaging/macos/install-update text eol=lf

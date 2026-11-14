@@ -1,0 +1,842 @@
+[
+  {
+    "id": "M5-01-removed-when-due",
+    "requirement": "M5-01",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "        for r in due:\n            r.fired = True\n        return due",
+      "replace": "        self.items = [r for r in self.items if r.due > now]\n        return due"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_a_fired_reminder_stays_until_done_or_snoozed"
+    ],
+    "expected": [
+      "test_a_fired_reminder_stays_until_done_or_snoozed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "dd06a3b7883bdcacf78ca8257af04d202c079e9dd7c51d217cef5f23e7081b97",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_fired_reminder_stays_until_done_or_snoozed ______________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-01-fired-not-saved",
+    "requirement": "M5-01",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "reminder.fired = entry.get(\"fired\") is True",
+      "replace": "reminder.fired = False"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_unacknowledged_reminders_come_back_at_start"
+    ],
+    "expected": [
+      "test_unacknowledged_reminders_come_back_at_start"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "77faefc2c17241e5eda9fde11927107cb5370e020c03bb95be736361919e199c",
+    "mutated_exit": 1,
+    "observed": "______________ test_unacknowledged_reminders_come_back_at_start _______________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-01-old-saves-change",
+    "requirement": "M5-01",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "if k not in _LATER_FIELDS or v != _LATER_FIELDS[k]",
+      "replace": "if k"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_reminders_saved_before_repeats_read_back_unchanged"
+    ],
+    "expected": [
+      "test_reminders_saved_before_repeats_read_back_unchanged"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "c3c50df7c6eb70106bf64513ff2ce76c2671d2939d6836406dc3317bc2661a69",
+    "mutated_exit": 1,
+    "observed": "___________ test_reminders_saved_before_repeats_read_back_unchanged ___________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-02-weekday-ignored",
+    "requirement": "M5-02",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "return \"weekday\", _DAYS[m.group(\"day\").lower()], (m.group(\"which\") or \"\").lower() == \"next\"",
+      "replace": "return \"day\", now.date(), False"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_days_and_dates"
+    ],
+    "expected": [
+      "test_days_and_dates"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "bb29c30fc5b964a1d6a341b0e22f68ae5edc55451e308c78ab759e00d9eebdaa",
+    "mutated_exit": 1,
+    "observed": "___ test_days_and_dates[remind me friday at 3pm to call Sam-due0-call Sam] ____",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-02-bare-hour-am",
+    "requirement": "M5-02",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "hours = (h, (h + 12) % 24) if",
+      "replace": "hours = (h,) if"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_a_bare_hour_is_whichever_of_am_and_pm_comes_next"
+    ],
+    "expected": [
+      "test_a_bare_hour_is_whichever_of_am_and_pm_comes_next"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "c3f76464b37a60217f8c5b4725051622fa5071a8a93c467564334efb03181104",
+    "mutated_exit": 1,
+    "observed": "_ test_a_bare_hour_is_whichever_of_am_and_pm_comes_next[said_at0-remind me at 3 to x-due0] _",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-02-leftovers-guessed",
+    "requirement": "M5-02",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "if bad or leftovers or (seconds and timed)",
+      "replace": "if bad or (seconds and timed)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_time_words_that_cant_all_be_placed_are_ambiguous"
+    ],
+    "expected": [
+      "test_time_words_that_cant_all_be_placed_are_ambiguous"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "8483d8d26fb789e22f22bd4d6e51540db1b031e8b9d8a4e425592e9e69b16cd1",
+    "mutated_exit": 1,
+    "observed": "_ test_time_words_that_cant_all_be_placed_are_ambiguous[remind me friday tomorrow to x-friday tomorrow] _",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-02-in-by-wall-clock",
+    "requirement": "M5-02",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "return _at(start + seconds, now), None",
+      "replace": "return now + timedelta(seconds=seconds), None"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_in_is_real_time_across_daylight_saving"
+    ],
+    "expected": [
+      "test_in_is_real_time_across_daylight_saving"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "b387b62b9a1d042acd4694b50c2da5dabb18a80f87c8294254c804f5ad606e63",
+    "mutated_exit": 1,
+    "observed": "_________________ test_in_is_real_time_across_daylight_saving _________________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-03-every-not-read",
+    "requirement": "M5-03",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "every = words.take(_EVERY_RE)",
+      "replace": "every = None"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_repeating_reminders"
+    ],
+    "expected": [
+      "test_repeating_reminders"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "08f75c3b8b9e19a9e3cae902e178f8db7f12744206898a4cc60498eda4baa047",
+    "mutated_exit": 1,
+    "observed": "_ test_repeating_reminders[remind me every day at 9 to stand up-due0-daily@09:00-stand up] _",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-03-done-repeat-removed",
+    "requirement": "M5-03",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "        if r.repeat:\n            r.due = next_time(r.repeat, max(",
+      "replace": "        if False:\n            r.due = next_time(r.repeat, max("
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_a_repeating_reminder_moves_on_when_done"
+    ],
+    "expected": [
+      "test_a_repeating_reminder_moves_on_when_done"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "64da78ba91963396af8fd418a399efd2ff9f46718c93635bbd2866d639e7cf8c",
+    "mutated_exit": 1,
+    "observed": "________________ test_a_repeating_reminder_moves_on_when_done _________________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-03-repeat-by-real-days",
+    "requirement": "M5-03",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "moment = _on_wall(day, hour, minute, start).timestamp()",
+      "replace": "moment = start.replace(hour=hour, minute=minute, second=0, microsecond=0).timestamp() + k * DAY"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_a_daily_reminder_keeps_its_hour_across_daylight_saving"
+    ],
+    "expected": [
+      "test_a_daily_reminder_keeps_its_hour_across_daylight_saving"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "772c9794bd0257f1a9370422fbcb9adeec0bac357cc9df6fdb0ebdc2903297aa",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_daily_reminder_keeps_its_hour_across_daylight_saving _________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-04-no-hour-snooze",
+    "requirement": "M5-04",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "_SNOOZES = (5, 15, 60)",
+      "replace": "_SNOOZES = (5, 15)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning"
+    ],
+    "expected": [
+      "test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "01b583d5ab1f36473430e1ecd660b18a50ff17ed1713fdee2888b7a181d35f55",
+    "mutated_exit": 1,
+    "observed": "_ test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning _",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-04-tomorrow-by-real-day",
+    "requirement": "M5-04",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "tomorrow = _on_wall(today.date() + timedelta(days=1), DEFAULT_HOUR, 0, today)",
+      "replace": "tomorrow = _at(_on_wall(today.date(), DEFAULT_HOUR, 0, today).timestamp() + DAY, today)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving"
+    ],
+    "expected": [
+      "test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "9a2877c57d3cabf2b67f60b1de6deefae391e7e34682eecb84005e28983f5d96",
+    "mutated_exit": 1,
+    "observed": "___ test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving ____",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-04-snooze-stays-fired",
+    "requirement": "M5-04",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "r.due, r.fired = until, False",
+      "replace": "r.due = until"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_a_fired_reminder_stays_until_done_or_snoozed"
+    ],
+    "expected": [
+      "test_a_fired_reminder_stays_until_done_or_snoozed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "b7265b21aef3ec77e2a67bcf76f98698ee8307bced2f9fbdb880cea27a3da222",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_fired_reminder_stays_until_done_or_snoozed ______________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-04-blank-edit-accepted",
+    "requirement": "M5-04",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "if text is not None and not text.strip():",
+      "replace": "if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_a_reminder_can_be_edited"
+    ],
+    "expected": [
+      "test_a_reminder_can_be_edited"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "2eb27276c327394af79ba80b4730157b55f726fdeabce52de942de3acc76d1cb",
+    "mutated_exit": 1,
+    "observed": "________________________ test_a_reminder_can_be_edited ________________________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-05-qlocale-unused",
+    "requirement": "M5-05",
+    "file": "chatmon/localefmt.py",
+    "mutation": {
+      "find": "    locale = _locale()\n    if locale is None:\n        return f\"{(when.hour % 12)",
+      "replace": "    locale = _locale()\n    if True:\n        return f\"{(when.hour % 12)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_localefmt.py::test_british_english_writes_24_hour_times_and_day_first_dates"
+    ],
+    "expected": [
+      "test_british_english_writes_24_hour_times_and_day_first_dates"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "63ae9268fce086a90995f6e49ade895524767f93981f56c05f6375de6a4974af",
+    "baseline_exit": 0,
+    "mutated_sha256": "3ff452740d0382d55f9a56a45f47b5ddebb4669655a5caf37b2e35915cd16adc",
+    "mutated_exit": 1,
+    "observed": "________ test_british_english_writes_24_hour_times_and_day_first_dates ________",
+    "after_sha256": "63ae9268fce086a90995f6e49ade895524767f93981f56c05f6375de6a4974af",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-05-loads-qt",
+    "requirement": "M5-05",
+    "file": "chatmon/localefmt.py",
+    "mutation": {
+      "find": "        if qtcore is None:\n            return None\n",
+      "replace": "        if qtcore is None:\n            from PyQt6 import QtCore as qtcore\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_localefmt.py::test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment"
+    ],
+    "expected": [
+      "test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "63ae9268fce086a90995f6e49ade895524767f93981f56c05f6375de6a4974af",
+    "baseline_exit": 0,
+    "mutated_sha256": "be1994e864895fff24ba87b0abec15fd276e72394b31fb20fe16feca2697becd",
+    "mutated_exit": 1,
+    "observed": "_ test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment _",
+    "after_sha256": "63ae9268fce086a90995f6e49ade895524767f93981f56c05f6375de6a4974af",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-05-c-locale-shown",
+    "requirement": "M5-05",
+    "file": "chatmon/localefmt.py",
+    "mutation": {
+      "find": "if qtcore is not None and locale.language() == qtcore.QLocale.Language.C:",
+      "replace": "if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_localefmt.py::test_no_locale_at_all_is_plain_english_not_qts_c_look"
+    ],
+    "expected": [
+      "test_no_locale_at_all_is_plain_english_not_qts_c_look"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "63ae9268fce086a90995f6e49ade895524767f93981f56c05f6375de6a4974af",
+    "baseline_exit": 0,
+    "mutated_sha256": "c38b455529723d64b278d4a223a889531fd193f81c7a5cc563a47bd05c0d8319",
+    "mutated_exit": 1,
+    "observed": "____________ test_no_locale_at_all_is_plain_english_not_qts_c_look ____________",
+    "after_sha256": "63ae9268fce086a90995f6e49ade895524767f93981f56c05f6375de6a4974af",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-05-offline-12-hour",
+    "requirement": "M5-05",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "return f\"It's **{localefmt.time_of_day(now)}**.\"",
+      "replace": "return f\"It's **{(now.hour % 12) or 12}:{now.minute:02d} {'AM' if now.hour < 12 else 'PM'}**.\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_localefmt.py::test_reminders_and_offline_answers_write_times_the_locales_way"
+    ],
+    "expected": [
+      "test_reminders_and_offline_answers_write_times_the_locales_way"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "87ec4ea63a291baa5e9bc4da2a9ea2f12d35566b2f850efd185f4333c43e463f",
+    "mutated_exit": 1,
+    "observed": "_______ test_reminders_and_offline_answers_write_times_the_locales_way ________",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-06-english-dropped",
+    "requirement": "M5-06",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "for source in (_table(own, \"commands\"), known):",
+      "replace": "for source in (_table(own, \"commands\") or known,):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood"
+    ],
+    "expected": [
+      "test_another_languages_phrases_and_help_with_english_always_understood"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "bf527085b4aea8765524fd973b483282ef3725166932a2bd5cc470dc7880dc44",
+    "mutated_exit": 1,
+    "observed": "___ test_another_languages_phrases_and_help_with_english_always_understood ____",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-06-help-not-translated",
+    "requirement": "M5-06",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "name = mine.get(\"name\") if isinstance(mine.get(\"name\"), str) else section[\"name\"]",
+      "replace": "name = section[\"name\"]"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood"
+    ],
+    "expected": [
+      "test_another_languages_phrases_and_help_with_english_always_understood"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "bcc149a8fe42c11aa20bb7e80eb80a7e3c2c2d64aa823fcf6f57ff03a48608cf",
+    "mutated_exit": 1,
+    "observed": "___ test_another_languages_phrases_and_help_with_english_always_understood ____",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-06-broken-file-raises",
+    "requirement": "M5-06",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "        except (OSError, ValueError):\n            continue",
+      "replace": "        except OSError:\n            continue"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_offline.py::test_a_missing_or_broken_translation_leaves_english"
+    ],
+    "expected": [
+      "test_a_missing_or_broken_translation_leaves_english"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "9b53f687446aad5f109532f145a633e04ed791f4d760f745ab9f96963ad512c0",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_missing_or_broken_translation_leaves_english _____________",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-06-phrases-not-normalized",
+    "requirement": "M5-06",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "return self.commands.get(normal(text))",
+      "replace": "return self.commands.get(text)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_offline.py::test_fixed_commands_are_read_from_the_phrase_data"
+    ],
+    "expected": [
+      "test_fixed_commands_are_read_from_the_phrase_data"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "0d1ebce62f23bdf7c1d1bcf98fe2edf381118dfa4da79616791ef9b8db806324",
+    "mutated_exit": 1,
+    "observed": "__ test_fixed_commands_are_read_from_the_phrase_data[What can you do?-help] ___",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-07-401-digits",
+    "requirement": "M5-07",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "abs(value) >= _TOO_MANY_DIGITS",
+      "replace": "abs(value) >= _TOO_MANY_DIGITS * 10"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_parser_properties.py::test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+    ],
+    "expected": [
+      "test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "df41cab1669cff3a6069a188a88ee129c8943c2c0ade139668fc718b0598e03f",
+    "mutated_exit": 1,
+    "observed": "________ test_a_sum_is_answered_or_refused_quickly_and_never_too_long _________",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-07-type-error-escapes",
+    "requirement": "M5-07",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "    except (ValueError, TypeError):\n        raise ValueError(\"that can't be worked out\")",
+      "replace": "    except ValueError:\n        raise ValueError(\"that can't be worked out\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_parser_properties.py::test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+    ],
+    "expected": [
+      "test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "4e0176a4c8e745928680ee879ed1b3af699f82bcef8d07ae20842f7d25d60479",
+    "mutated_exit": 1,
+    "observed": "________ test_a_sum_is_answered_or_refused_quickly_and_never_too_long _________",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-07-past-longest",
+    "requirement": "M5-07",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "if due is None or not 0 < due.timestamp() - now.timestamp() <= LONGEST:",
+      "replace": "if due is None:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_parser_properties.py::test_a_reminders_time_is_always_ahead_and_never_too_far"
+    ],
+    "expected": [
+      "test_a_reminders_time_is_always_ahead_and_never_too_far"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "54be9cf2ccee9351ee0f5279e4444f920d1229a366603f0a3436af4a7f1bff87",
+    "mutated_exit": 1,
+    "observed": "___________ test_a_reminders_time_is_always_ahead_and_never_too_far ___________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-07-in-by-wall-clock",
+    "requirement": "M5-07",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "return _at(start + seconds, now), None",
+      "replace": "return now + timedelta(seconds=seconds), None"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_parser_properties.py::test_in_is_that_many_seconds_of_real_time"
+    ],
+    "expected": [
+      "test_in_is_that_many_seconds_of_real_time"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "baseline_exit": 0,
+    "mutated_sha256": "b387b62b9a1d042acd4694b50c2da5dabb18a80f87c8294254c804f5ad606e63",
+    "mutated_exit": 1,
+    "observed": "__________________ test_in_is_that_many_seconds_of_real_time __________________",
+    "after_sha256": "7bbf2d4f8ab6dcf40e002bb15c348d47613db49c307aa5524f6e5c526b0638c0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-08-working-first",
+    "requirement": "M5-08",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "_STATE_ORDER = {\"needs-you\": 0, \"working\": 1}",
+      "replace": "_STATE_ORDER = {\"needs-you\": 1, \"working\": 0}"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_offline.py::test_agents_at_a_glance"
+    ],
+    "expected": [
+      "test_agents_at_a_glance"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "d4bda42ec18b1a9d6b2edcf01df01dd599b38a168e3c9b9ec070e57ce3e8b59a",
+    "mutated_exit": 1,
+    "observed": "___________________________ test_agents_at_a_glance ___________________________",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-08-span-off-by-one",
+    "requirement": "M5-08",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "    if s < 3600:\n        return f\"{s // 60} min\"",
+      "replace": "    if s <= 3600:\n        return f\"{s // 60} min\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_offline.py::test_spans"
+    ],
+    "expected": [
+      "test_spans"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "baseline_exit": 0,
+    "mutated_sha256": "be9f70a90e1b468f147050b57764abcf9060746aac73a3a51ea8a6753ef9a9e4",
+    "mutated_exit": 1,
+    "observed": "____________________________ test_spans[3600-1 h] _____________________________",
+    "after_sha256": "db3de0ad74819c9543c74e46be50479fb3fd40e1ff3bc886dc6215c3bed98ed1",
+    "restored_exit": 0
+  }
+]

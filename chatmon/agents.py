@@ -3,8 +3,11 @@
 Each agent has its own way of running a command when something happens.
 Connecting writes Chatmon's `notify` command into that agent's own settings;
 disconnecting takes it out again. Every change is something you ask for, is
-made after a backup of the file it changes, and only ever touches entries that
-run chatmon (or penguin-companion, its old name).
+made after a backup of the file it changes (readable by you alone; the last few
+are kept), and only ever touches entries that run chatmon (or penguin-companion,
+its old name). Run as an administrator or root (an uninstall for everyone),
+Chatmon only edits files: it never starts an agent's own command line, which is
+found in folders you can write to.
 
 Hooks connected under the old name still work (penguin-companion stays as an
 alias for now); `migrate()` swaps them for chatmon's, and the app does that for
@@ -13,6 +16,7 @@ each agent when it starts.
 
 from __future__ import annotations
 
+import itertools
 import json
 import os
 import re
@@ -74,12 +78,71 @@ def shell_line(argv: list[str]) -> str:
     return subprocess.list2cmdline(argv) if sys.platform == "win32" else shlex.join(argv)
 
 
+BACKUPS_KEPT = 5  # per file: the newest, older ones removed
+
+
 def backup(path: Path) -> Path | None:
+    """A copy of `path`, beside it, before Chatmon changes it. Readable by you alone whatever the original's
+    permissions (these files can hold tokens), always a new file (O_EXCL: never written through anything already
+    at its name), and only the newest BACKUPS_KEPT of a file's are kept."""
     if not path.exists():
         return None
-    copy = path.with_name(f"{path.name}.chatmon-backup-{time.strftime('%Y%m%d-%H%M%S')}")
-    shutil.copy2(path, copy)
+    data = path.read_bytes()
+    stamp = f"{path.name}.chatmon-backup-{time.strftime('%Y%m%d-%H%M%S')}"
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    for n in itertools.count(1):
+        copy = path.with_name(stamp if n == 1 else f"{stamp}-{n}")  # two in one second: -2, -3...
+        try:
+            fd = os.open(copy, flags, 0o600)
+        except FileExistsError:
+            continue
+        break
+    try:
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+    except BaseException:
+        copy.unlink(missing_ok=True)
+        raise
+    _prune_backups(path)
     return copy
+
+
+def _prune_backups(path: Path) -> None:
+    prefix = f"{path.name}.chatmon-backup-"
+    found = []
+    for item in path.parent.iterdir():
+        if item.name.startswith(prefix) and item.is_file() and not item.is_symlink():
+            found.append((item.stat().st_mtime_ns, len(item.name), item.name, item))
+    for *_, item in sorted(found)[:-BACKUPS_KEPT]:
+        item.unlink(missing_ok=True)
+
+
+def elevated() -> bool:
+    """Running with an administrator's rights (Windows: an elevated token) or as root. An agent's command line
+    is found on your PATH and in folders you can write to, so an elevated Chatmon never starts one: it would run
+    as an administrator whatever had been put there. If it can't tell, it counts as elevated."""
+    if sys.platform != "win32":
+        return os.geteuid() == 0
+    import ctypes
+    from ctypes import wintypes
+
+    token_query, token_elevation = 0x0008, 20  # TOKEN_QUERY; TokenElevation, a TOKEN_INFORMATION_CLASS
+    advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.GetCurrentProcess.restype = wintypes.HANDLE
+    advapi32.OpenProcessToken.argtypes = [wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE)]
+    advapi32.GetTokenInformation.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)]
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    token = wintypes.HANDLE()
+    if not advapi32.OpenProcessToken(kernel32.GetCurrentProcess(), token_query, ctypes.byref(token)):
+        return True
+    try:
+        value, size = wintypes.DWORD(), wintypes.DWORD()
+        if not advapi32.GetTokenInformation(token, token_elevation, ctypes.byref(value), ctypes.sizeof(value), ctypes.byref(size)):
+            return True
+        return bool(value.value)
+    finally:
+        kernel32.CloseHandle(token)
 
 
 def write_atomic(path: Path, text: str, encoding: str = "utf-8") -> None:
@@ -259,6 +322,17 @@ def _run_json(argv: list[str], what: str) -> object:
     return {}
 
 
+def _agent_cli(argv: list[str], what: str) -> object:
+    """An agent's own command line (Claude Code's, Muse Code's), run as you: never with an administrator's or
+    root's rights (see elevated)."""
+    if elevated():
+        raise AgentError(
+            f"I don't start {what}'s command line with administrator rights (it's found in folders you can write to). "
+            f"Run `chatmon hooks` as yourself to change {what}."
+        )
+    return _run_json(argv, what)
+
+
 def _needs_on_path() -> None:
     if not shutil.which(paths.APP):
         raise AgentError(
@@ -323,7 +397,7 @@ class ClaudeCode(Agent):
         program = self.program()
         if program is None:
             raise AgentError(self._no_command_line())
-        return _run_json([program, *args], self.label)
+        return _agent_cli([program, *args], self.label)
 
     @staticmethod
     def packaged_marketplace() -> Path:
@@ -357,6 +431,8 @@ class ClaudeCode(Agent):
         return found.get(self.PLUGIN) or found.get(self.LEGACY_PLUGIN)
 
     def connected(self) -> bool:
+        if elevated():  # Claude Code's command line isn't asked: the marketplace Chatmon gave it says
+            return self.marketplace_dir().exists()
         try:
             mine = self._mine()
         except AgentError:
@@ -418,6 +494,16 @@ class ClaudeCode(Agent):
         )
 
     def disconnect(self) -> str:
+        if elevated():
+            # Files only: Claude Code drops a marketplace whose folder has gone, and its plugin with it.
+            folder = self.marketplace_dir()
+            if not folder.exists():
+                return "Claude Code wasn't connected."
+            shutil.rmtree(folder)
+            return (
+                f"Disconnected Claude Code: removed the marketplace Chatmon gave it ({folder}), so it drops the "
+                f"{self.PLUGIN} plugin when it next starts"
+            )
         self._remove(self.PLUGIN, self.MARKETPLACE)
         if self.legacy():
             self._remove(self.LEGACY_PLUGIN, self.LEGACY_MARKETPLACE)
@@ -438,7 +524,7 @@ class Codex(Agent):
     """Codex runs one `notify` program, with a JSON summary, when a turn ends."""
 
     name, label, command = "codex", "Codex", "codex"
-    _LINE = re.compile(r"^\s*notify\s*=.*$", re.M)
+    _LINE = re.compile(r"^[ \t]*notify[ \t]*=.*$\n?", re.M)  # a whole line, its line break too
 
     def config_path(self) -> Path:
         return _home_env("CODEX_HOME", Path.home() / ".codex") / "config.toml"
@@ -470,21 +556,56 @@ class Codex(Agent):
             return False
         return isinstance(current, list) and is_legacy(" ".join(map(str, current)))
 
+    @staticmethod
+    def _others(parsed: dict) -> dict:
+        return {key: value for key, value in parsed.items() if key != "notify"}
+
+    def _without_ours(self, text: str, parsed: dict) -> str:
+        """`text` without its top-level notify line, if that one runs chatmon (as it is, if not). The line that
+        is: removing it leaves every other key as it was. A line like it in a table, or in a multi-line string,
+        stays."""
+        current = parsed.get("notify")
+        if not (isinstance(current, list) and is_ours(" ".join(map(str, current)))):
+            return text
+        for m in self._LINE.finditer(text):
+            if not is_ours(m.group(0)):
+                continue
+            candidate = text[: m.start()] + text[m.end() :]
+            try:
+                if tomllib.loads(candidate) == self._others(parsed):
+                    return candidate
+            except tomllib.TOMLDecodeError:
+                continue
+        raise AgentError(f"Couldn't find Chatmon's notify line in {self.config_path()} on a line of its own; not touching the file.")
+
+    @staticmethod
+    def _at_top(text: str, line: str) -> str:
+        """`line` before the first line that isn't blank or a comment: nothing can have begun there yet (no
+        table, array or string), so it's always a top-level key."""
+        lines = text.splitlines(keepends=True)
+        at = next((i for i, item in enumerate(lines) if item.strip() and not item.lstrip().startswith("#")), len(lines))
+        head, rest = "".join(lines[:at]), "".join(lines[at:])
+        if head and not head.endswith("\n"):
+            head += "\n"
+        return head + line + "\n" + ("\n" + rest.lstrip("\n") if rest.strip() else "")
+
     def connect(self) -> str:
         text = self._text()
-        current = self._parse(text).get("notify")
+        parsed = self._parse(text)
+        current = parsed.get("notify")
         if current and not is_ours(" ".join(map(str, current))):
             raise AgentError(
                 f"Codex already runs {current!r} when a turn ends, and it takes only one program. "
                 f"Not replacing it; see `chatmon hooks show codex` to do it by hand."
             )
         line = "notify = [" + ", ".join(json.dumps(a) for a in self._argv()) + "]"
-        text = self._LINE.sub(lambda m: "" if is_ours(m.group(0)) else m.group(0), text)
-        header = re.search(r"^\s*\[", text, re.M)  # a top-level key has to come before the first table
-        at = header.start() if header else len(text)
-        before, after = text[:at].rstrip("\n"), text[at:]
-        new = (before + "\n" if before.strip() else "") + line + "\n" + ("\n" + after if after else "")
-        if self._parse(new).get("notify") != self._argv():
+        new = self._at_top(self._without_ours(text, parsed), line)
+        try:
+            after = tomllib.loads(new)
+        except tomllib.TOMLDecodeError:
+            after = {}
+        # Only notify may change: every other key, at every depth, exactly as it was.
+        if after.get("notify") != self._argv() or self._others(after) != self._others(parsed):
             raise AgentError("Couldn't add the notify line cleanly; not touching the file.")
         saved = backup(self.config_path())
         write_atomic(self.config_path(), new)
@@ -492,12 +613,13 @@ class Codex(Agent):
 
     def disconnect(self) -> str:
         text = self._text()
-        ours = [m for m in self._LINE.finditer(text) if is_ours(m.group(0))]
-        if not ours:
+        parsed = self._parse(text)
+        current = parsed.get("notify")
+        if not (isinstance(current, list) and is_ours(" ".join(map(str, current)))):
             return "Codex wasn't connected."
-        new = self._LINE.sub(lambda m: "" if is_ours(m.group(0)) else m.group(0), text)
-        new = re.sub(r"\A\n+", "", new)
-        self._parse(new)
+        new = re.sub(r"\A\n+", "", self._without_ours(text, parsed))
+        if self._parse(new) != self._others(parsed):
+            raise AgentError("Couldn't take the notify line out cleanly; not touching the file.")
         saved = backup(self.config_path())
         write_atomic(self.config_path(), new)
         return f"Disconnected Codex: {self.config_path()} (backup: {saved})"
@@ -534,7 +656,7 @@ class Muse(Agent):
         }
 
     def _muse(self, *args: str) -> dict:
-        found = _run_json(["muse", "plugins", *args, "--json"], self.label)
+        found = _agent_cli(["muse", "plugins", *args, "--json"], self.label)
         return found if isinstance(found, dict) else {}
 
     def _installed(self) -> set[str]:
@@ -545,6 +667,8 @@ class Muse(Agent):
         return {(p.get("plugin") or {}).get("id") for p in plugins if isinstance(p, dict)}
 
     def connected(self) -> bool:
+        if elevated():  # Muse Code's command line isn't asked: the plugin Chatmon gave it says
+            return self.bundle_dir().exists()
         return bool({self.PLUGIN, self.LEGACY_PLUGIN} & self._installed())
 
     def legacy(self) -> bool:
@@ -563,6 +687,11 @@ class Muse(Agent):
         return f"Connected Muse Code: installed and approved its {self.PLUGIN} plugin (from {folder})"
 
     def disconnect(self) -> str:
+        if elevated():  # only Muse Code's own command line can remove its plugin: say so, change nothing
+            raise AgentError(
+                "Only Muse Code's own command line can remove its plugin, and I don't start it with administrator "
+                "rights. Run `chatmon hooks disconnect muse` as yourself."
+            )
         installed = self._installed() & {self.PLUGIN, self.LEGACY_PLUGIN}
         if not installed:
             return "Muse Code wasn't connected."

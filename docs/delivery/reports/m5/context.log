@@ -1,0 +1,15 @@
+# Observed 2026-11-14T19:32:34Z in /c/Users/Randy/Coding/chatmon-wt/m5
+$ verify-delivery.py --observe-context
+{
+  "platform": "windows",
+  "tools": {
+    "python": "3.14.10"
+  }
+}
+$ python -c 'import ... versions'
+pytest 9.2.0
+PyQt6 6.11.0 Qt 6.11.0
+hypothesis 6.170.15
+tzdata 2026.6
+$ ruff --version
+ruff 0.17.4

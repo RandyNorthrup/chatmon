@@ -1,0 +1,78 @@
+{
+  "library": "~/Documents/ContentLibrary/explainer-channel/sfx",
+  "rate": 44100,
+  "target_rms_db": -24,
+  "peak_db": -1.0,
+  "cues": {
+    "needs-you": {
+      "source": "ui/double-ding.wav",
+      "alternatives": [
+        "ui/notification-ding.wav",
+        "chatmon/needs-you-chirp-a.wav",
+        "chatmon/needs-you-chirp-b.wav"
+      ],
+      "max_s": 1.0,
+      "fade_ms": 80,
+      "gain_db": 2
+    },
+    "reminder": {
+      "source": "ui/gentle-chime.wav",
+      "alternatives": [
+        "chatmon/reminder-chime-a.wav"
+      ],
+      "max_s": 1.8,
+      "fade_ms": 250,
+      "gain_db": 2
+    },
+    "focus-done": {
+      "source": "cartoon/harp-gliss-up.wav",
+      "alternatives": [
+        "chatmon/focus-done-sparkle-b.wav",
+        "chatmon/focus-done-sparkle-a.wav",
+        "cartoon/reveal-sparkle.wav"
+      ],
+      "max_s": 1.5,
+      "fade_ms": 250,
+      "gain_db": 1
+    },
+    "done": {
+      "source": "cartoon/stat-sting-up.wav",
+      "alternatives": [
+        "cartoon/lightbulb-ping.wav",
+        "chatmon/done-hop-a.wav",
+        "chatmon/done-hop-b.wav"
+      ],
+      "max_s": 0.8,
+      "fade_ms": 80,
+      "gain_db": 0
+    },
+    "success": {
+      "source": "chatmon/success-beam-a.wav",
+      "alternatives": [
+        "cartoon/reveal-sparkle.wav",
+        "chatmon/success-beam-b.wav"
+      ],
+      "max_s": 0.9,
+      "fade_ms": 120,
+      "gain_db": 0
+    },
+    "error": {
+      "source": "cartoon/stat-sting-down.wav",
+      "alternatives": [
+        "chatmon/error-bonk-a.wav"
+      ],
+      "max_s": 0.8,
+      "fade_ms": 100,
+      "gain_db": 0
+    },
+    "pop": {
+      "source": "ui/message-pop.wav",
+      "alternatives": [
+        "chatmon/pop-a.wav"
+      ],
+      "max_s": 0.3,
+      "fade_ms": 40,
+      "gain_db": -4
+    }
+  }
+}

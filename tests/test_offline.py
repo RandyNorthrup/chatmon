@@ -1,15 +1,26 @@
 """What Chatmon answers without any AI, and, as much, what it leaves for the AI: a question that only
 mentions a timer, a note or a sum is never taken for one."""
 
+import json
 import random
+import shutil
 import time
+import warnings
 from datetime import datetime
 
 import pytest
 
-from chatmon import offline
+from chatmon import localefmt, memory, offline, reminders
 
 NOW = datetime(2026, 11, 11, 15, 4)  # a Wednesday
+
+
+@pytest.fixture(autouse=True)
+def plain_english():
+    """What's written here is checked in plain English, whatever the machine's locale (test_localefmt.py has the rest)."""
+    localefmt.set_locale(None)
+    yield
+    localefmt.set_locale()
 
 
 @pytest.mark.parametrize(
@@ -198,3 +209,156 @@ def test_pasted_text_with_runs_of_spaces_is_never_slow():
 def test_no_complex_numbers_and_no_huge_random_ranges():
     assert offline.answer("(-8)**0.5", NOW) == "Hmm: that has no real answer."
     assert offline.answer("random number between 1 and " + "9" * 5000, NOW) is None
+
+
+def test_a_whole_number_answer_has_at_most_400_digits():
+    assert offline.calculate("10**399") == 10**399  # 400 digits
+    for too_big in ("10**400", "10**399 * 10", "1e308 % of 1e308"):
+        with pytest.raises(OverflowError):
+            offline.calculate(too_big)
+
+
+# -- the phrases are data, one file per language (M5-06)
+
+EXPECTED_HELP = """\
+**Without any AI** (nothing leaves your computer, and none of it goes in a chat):
+
+- **Reminders and timers:** *remind me in 20m to stretch* · *remind me friday at 3pm to call Sam* · *remind me every weekday at 9 to stand up* · *timer 10 min for the pasta* · *reminders* · *cancel reminder 2* · *clear reminders*
+- **Focus and breaks:** *focus 50* · *stop focus* · *breaks off* · *breaks on* · *focus alerts off* · *focus alerts on*
+- **Notes:** *note: buy milk* · *notes* · *delete note 2* · *clear notes*
+- **Stopwatch:** *stopwatch* · *stop stopwatch*
+- **Sums:** *2 + 2 * 3* · *15% of 80* · *sqrt(2)* · *calc 2^10*
+- **Units:** *5 km in miles* · *70 f to c* · *3 cups to ml* · *2 GB in MiB*
+- **Time and days:** *time* · *date* · *what week is it* · *days until Christmas* · *days until 2027-01-01*
+- **Chance:** *flip a coin* · *roll 2d6* · *random number between 1 and 10* · *pick one: tacos, sushi or pizza*
+- **Passwords:** *password* · *password 32*
+- **Your computer:** *status* (battery, disks, reminders, the brain in use)
+- **AI agents:** *agents* (which are working, and which need you)
+- **Me:** *settings* · *hide* · *new chat* · *rename chat* · *history* · *what's new* · *check for updates* · *report a problem* · *version*
+- **Memory:** *remember that I use Arch* · *what do you remember* · *forget that I use Arch* · *forget everything*. What you ask me to remember goes with every question, to whichever AI you ask: that's what it's for.
+
+Anything else goes to the AI you picked, under **Brain** in my menu.
+"""
+
+
+def test_help_lists_everything_done_without_any_ai():
+    assert offline.help_text("en") == EXPECTED_HELP
+
+
+def test_the_help_follows_the_persons_language_and_is_english_when_theres_no_translation():
+    from PyQt6.QtCore import QLocale
+
+    localefmt.set_locale(QLocale(QLocale.Language.German, QLocale.Country.Germany))
+    assert offline.phrases().language == "en"  # only English ships
+    assert offline.help_text() == EXPECTED_HELP
+    assert offline.answer("what time is it", NOW) == "It's **15:04**."  # and its times are still German's
+
+
+def test_every_example_in_the_help_is_understood_without_any_ai():
+    examples = [e for s in offline.phrases("en").sections for e in s.examples]
+    assert len(examples) >= 50  # guards the loop below against an empty help
+    for e in examples:
+        reminder = reminders.parse_command(e, NOW)
+        understood = offline.command(e, "en") or offline.parse_kept(e) or offline.answer(e, NOW) or memory.command(e) or (reminder and reminder.kind != "unclear")
+        assert understood, e
+
+
+@pytest.mark.parametrize(
+    "said, command",
+    [
+        ("What can you do?", "help"),
+        ("How’s my computer", "status"),
+        ("  GO   away! ", "hide"),
+        ("/new", "new chat"),
+        ("stop break reminders", "breaks off"),
+        ("focus notifications on", "focus alerts on"),
+        ("Release notes.", "what's new"),
+        ("what are my agents doing?", "agents"),
+        ("report a bug", "report a problem"),
+        ("which version", "version"),
+        ("what is love", None),
+    ],
+)
+def test_fixed_commands_are_read_from_the_phrase_data(said, command):
+    assert offline.command(said, "en") == command
+
+
+def test_a_phrase_means_one_command_only():
+    data = json.loads((offline.PHRASES / "en.json").read_text(encoding="utf-8"))
+    said = [offline.normal(p) for phrases in data["commands"].values() for p in phrases]
+    assert len(said) > 100 and len(said) == len(set(said))
+
+
+def test_another_languages_phrases_and_help_with_english_always_understood(tmp_path):
+    shutil.copy(offline.PHRASES / "en.json", tmp_path / "en.json")
+    (tmp_path / "fr.json").write_text(json.dumps({
+        "commands": {"help": ["aide", "Que sais-tu faire"], "notes": ["mes notes"], "made up": ["bidule"], "hide": ["help"]},
+        "templates": {"note": ["note : {text}"], "delete note": ["supprimer la note {n}"], "nonsense": ["x {n}"], "clear notes": ["{n} {text}"]},
+        "question_words": ["pourquoi"],
+        "help": {
+            "title": "**Sans IA** :",
+            "sections": [{"id": "notes", "name": "Notes", "examples": ["note : acheter du lait", "mes notes"]}, {"id": "me", "name": "Moi"}],
+            "footer": "Le reste va à l'IA.",
+        },
+    }), encoding="utf-8")
+    fr = offline.load_phrases("fr_CA", tmp_path)
+    assert fr.language == "fr"
+    assert fr.command("Aide") == fr.command("que sais-tu faire ?") == "help"
+    assert fr.command("help") == "help"  # English is always understood, and means what it means in English
+    assert fr.command("mes notes") == "notes" and fr.command("bidule") is None
+    assert fr.template("supprimer la note 3") == fr.template("delete note 3") == ("delete note", "3")
+    assert fr.template("note : acheter du lait") == ("note", "acheter du lait")
+    assert fr.template("x 3") is None
+    assert fr.asks("pourquoi pas") and fr.asks("why not")
+    shown = fr.help()
+    assert shown.startswith("**Sans IA** :\n\n") and shown.endswith("\n\nLe reste va à l'IA.\n")
+    assert "- **Notes:** *note : acheter du lait* · *mes notes*\n" in shown
+    assert "- **Moi:** *settings* · *hide* · *new chat*" in shown  # named in French, its examples English's
+    assert "- **Sums:** *2 + 2 * 3*" in shown  # not translated: English
+
+
+def test_a_missing_or_broken_translation_leaves_english(tmp_path):
+    shutil.copy(offline.PHRASES / "en.json", tmp_path / "en.json")
+    (tmp_path / "de.json").write_text("{not json", encoding="utf-8")
+    (tmp_path / "es.json").write_text("[1, 2]", encoding="utf-8")
+    english = offline.load_phrases("en", tmp_path)
+    for language in ("de_DE", "es", "pt_BR", "../en", "en_GB", ""):
+        book = offline.load_phrases(language, tmp_path)
+        assert book.language == "en" and book.command("help") == "help"
+        assert book.help() == english.help() == EXPECTED_HELP
+    (tmp_path / "en.json").unlink()
+    with pytest.raises(OSError):
+        offline.load_phrases("en", tmp_path)  # English is part of Chatmon: without it, something's broken
+
+
+# -- AI agents at a glance (M5-08)
+
+
+def test_agents_at_a_glance():
+    agents = {"claude": ("needs-you", 1000.0), "codex": ("working", 400.0), "gemini": ("needs-you", 700.0), "muse": ("working", 3500.0)}
+    assert offline.agents_report(agents, 3600.0) == (
+        "- **Gemini** needs you (waiting 48 min)\n"
+        "- **Claude** needs you (waiting 43 min)\n"
+        "- **Codex** is working (53 min so far)\n"
+        "- **Muse** is working (1 min so far)"
+    )
+    plain = offline.agents_report({"claude": ("needs-you", 0.0)}, 4000.0, label={"claude": "Claude Code"}.get, markdown=False)
+    assert plain == "Claude Code needs you (waiting 1 h 6 min)"
+    assert offline.agents_report({}, 0) == "No AI agent is working or waiting for you."
+    assert offline.agents_report({"x": ("thinking", 0.0)}, 10) == "- **X**: thinking"
+
+
+@pytest.mark.parametrize(
+    "seconds, said",
+    [(-5, "under a minute"), (59, "under a minute"), (60, "1 min"), (3599, "59 min"), (3600, "1 h"), (3660, "1 h 1 min"),
+     (86399, "23 h 59 min"), (86400, "1 day"), (3 * 86400 + 5, "3 days")],
+)
+def test_spans(seconds, said):
+    assert offline.span(seconds) == said
+
+
+def test_the_calculator_reads_what_is_typed_without_pythons_own_warnings():
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        assert offline.calculate("1or 2") is None and offline.answer("3if 4", NOW) is None
+    assert [str(w.message) for w in caught] == []

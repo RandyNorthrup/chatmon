@@ -1,0 +1,14 @@
+............................................................ss.......... [ 48%]
+.........................................................ssss....ss..... [ 96%]
+......                                                                   [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_settings.py:154: file modes are POSIX's; on Windows these folders are the user's by their ACLs
+SKIPPED [1] tests\test_settings.py:190: file modes are POSIX's; on Windows these folders are the user's by their ACLs
+SKIPPED [1] tests\test_keychain.py:83: the macOS Keychain
+SKIPPED [1] tests\test_keychain.py:139: Linux with dbus-run-session
+SKIPPED [1] tests\test_keychain.py:154: Linux with dbus-run-session
+SKIPPED [1] tests\test_keychain.py:165: Linux with dbus-run-session
+SKIPPED [1] tests\test_portowner.py:45: Linux's /proc/net/tcp
+SKIPPED [1] tests\test_portowner.py:58: Linux's /proc/net/tcp
+142 passed, 8 skipped in 30.51s
+pytest exit=0

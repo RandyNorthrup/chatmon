@@ -1,8 +1,13 @@
+import os
+import sys
 from dataclasses import replace
+
 import pytest
 
 from chatmon import brains
 from chatmon.brains import Brain, BrainError
+
+REAL_REACHABLE = brains.reachable  # before the fixture below stands in for it
 
 
 def test_presets_and_overrides(monkeypatch):
@@ -17,6 +22,16 @@ def test_presets_and_overrides(monkeypatch):
 @pytest.fixture(autouse=True)
 def nothing_running_here(monkeypatch):
     monkeypatch.setattr(brains, "reachable", lambda url, timeout=0.15, wait=True: False)
+
+
+@pytest.fixture(autouse=True)
+def no_saved_keys():
+    """Keys from a keychain of the test's own, never the computer's."""
+    from chatmon import keychain
+
+    before = keychain.use(keychain.InMemory())
+    yield
+    keychain.use(before)
 
 
 def test_choose_prefers_picked_then_configured_then_first(monkeypatch):
@@ -104,9 +119,23 @@ def test_auto_never_picks_a_paid_api(monkeypatch):
     assert brains.choose(custom, "auto", None).name == "mine"
 
 
-def test_a_running_local_server_is_picked_with_its_own_model(monkeypatch):
+@pytest.fixture
+def servers(monkeypatch):
+    """Which local ports a process of yours listens on, as portowner would say (it's tested on its own)."""
+    from chatmon import portowner
+
+    yours: dict[int, bool] = {}
+    monkeypatch.setattr(portowner, "mine", lambda port: yours.get(port, False))
+    monkeypatch.setattr(brains, "_owned", {})
+    monkeypatch.setattr(brains, "_unsure_owner", set())
+    monkeypatch.setattr(brains, "_confirmed", set())
+    return yours
+
+
+def test_a_running_local_server_is_picked_with_its_own_model(monkeypatch, servers):
     monkeypatch.setattr(brains.shutil, "which", lambda name: None)
     monkeypatch.setattr(brains, "reachable", lambda url, timeout=0.15, wait=True: "11434" in url)
+    servers[11434] = True
     found = brains.load_brains({})
     chosen = brains.choose(found, "auto", None)
     assert chosen.name == "ollama" and chosen.model == "auto"
@@ -399,3 +428,320 @@ def test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed(qapp)
         brains._windows.clear()
     remote = brains.Brain("x", "openai", url="http://203.0.113.9/v1", model="m")
     assert brains.learn_window(remote) is None  # plain HTTP only to this computer
+
+
+# -- what a command-line brain is given (M1B-01, M1B-02, M1B-05)
+
+
+def _answer(asker, brain, wait_s: float = 40) -> dict:
+    from replay_server import ask
+
+    return ask(asker, brain, wait_s=wait_s)
+
+
+def test_a_command_brain_gets_only_what_it_needs_of_the_environment(qapp, monkeypatch):
+    import json
+    import sys
+
+    monkeypatch.setenv("CHATMON_TEST_CANARY", "a token for something else")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-another-providers-key")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-its-own")
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", "/its/own/config")
+    monkeypatch.setenv("HTTPS_PROXY", "http://proxy.example:3128")
+    monkeypatch.setenv("TMP", "/a/temp/folder")
+    script = "import json, os, sys; sys.stdin.read(); print(json.dumps(dict(os.environ)))"
+    brain = brains.replace(brains.load_brains({})["claude"], command=[sys.executable, "-c", script], output="")
+    got = _answer(brains.Asker(), brain)
+    env = {k.upper(): v for k, v in json.loads(got["answered"]).items()}
+    assert "CHATMON_TEST_CANARY" not in env and "OPENAI_API_KEY" not in env
+    assert env["ANTHROPIC_API_KEY"] == "sk-ant-its-own" and env["CLAUDE_CONFIG_DIR"] == "/its/own/config"  # its own sign-in
+    assert env["HTTPS_PROXY"] == "http://proxy.example:3128" and env["CHATMON_INTERNAL"] == "1" and env["NO_COLOR"] == "1"
+    assert env["PATH"] == os.environ["PATH"] and env["TMP"] == "/a/temp/folder"
+
+
+def test_the_allowlist_takes_names_in_any_case_and_endings_after_a_star():
+    brain = brains.Brain("mine", "command", command=["x"], env=["MY_TOOL_*"], api_key_env="MY_KEY", requires=["MY_REGION"])
+    given = brains.command_environment(brain, {
+        "Path": "/bin", "SystemRoot": r"C:\Windows", "LC_ALL": "C", "my_tool_token": "t", "MY_TOOL": "not a match",
+        "MY_KEY": "k", "MY_REGION": "eu", "AWS_SECRET_ACCESS_KEY": "nope", "GITHUB_TOKEN": "nope",
+    })
+    assert set(given) == {"Path", "SystemRoot", "LC_ALL", "my_tool_token", "MY_KEY", "MY_REGION", "CHATMON_INTERNAL", "NO_COLOR"}
+
+
+def test_claude_code_is_started_without_tools_mcp_servers_or_anyone_asked():
+    command = brains.load_brains({})["claude"].command
+    assert command[command.index("--tools") + 1] == "" and "--strict-mcp-config" in command
+    assert command[command.index("--permission-mode") + 1] == "dontAsk"
+
+
+@pytest.mark.skipif(not __import__("shutil").which("claude"), reason="Claude Code isn't installed here")
+def test_claude_codes_own_help_lists_every_flag_and_mode_it_is_given():
+    import shutil
+    import subprocess
+
+    out = subprocess.run([shutil.which("claude"), "--help"], capture_output=True, text=True, timeout=60, encoding="utf-8", errors="replace").stdout
+    for flag in [a for a in brains.load_brains({})["claude"].command[1:] if a.startswith("-")]:
+        assert flag in out, flag
+    assert '"dontAsk"' in out  # one of the modes it lists, not an unlisted alias
+
+
+def test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept(qapp, tmp_path, monkeypatch):
+    import subprocess
+    import time
+    import sys
+    import tempfile
+
+    ended = subprocess.Popen([sys.executable, "-c", "pass"])
+    ended.wait()
+    running = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        made = {}
+        for name in (f"chatmon-ask-{ended.pid}-a1", f"chatmon-ask-{running.pid}-b2", f"chatmon-ask-{os.getpid()}-c3", "chatmon-ask-old_d4", "chatmon-ask-new_e5"):
+            made[name] = tmp_path / name
+            made[name].mkdir()
+            (made[name] / "question-1.txt").write_text("attached text", encoding="utf-8")
+        old = time.time() - 2 * 3600
+        os.utime(made["chatmon-ask-old_d4"], (old, old))  # from before 0.10, and hours old
+        (tmp_path / "chatmon-ask-not-a-folder").write_text("x")
+        monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
+        monkeypatch.setattr(brains, "_tidied", False)
+        brains.Asker()  # as Chatmon starts
+        left = sorted(p.name for p in tmp_path.iterdir())
+        assert left == sorted([f"chatmon-ask-{running.pid}-b2", f"chatmon-ask-{os.getpid()}-c3", "chatmon-ask-new_e5", "chatmon-ask-not-a-folder"])
+        brains.Asker()
+        assert sorted(p.name for p in tmp_path.iterdir()) == left  # once a run
+    finally:
+        running.kill()
+        running.wait()
+
+
+# -- whose model server it is (M1B-03)
+
+
+def test_automatic_uses_only_a_model_server_of_yours_or_one_you_confirmed(monkeypatch, servers):
+    monkeypatch.setattr(brains.shutil, "which", lambda name: None)
+    monkeypatch.setattr(brains, "reachable", lambda url, timeout=0.15, wait=True: "11434" in url)
+    found = brains.load_brains({})
+    assert brains.choose(found, "auto", None) is None  # someone's listening on 11434, but not you
+    assert brains.choose(found, "auto", "ollama").name == "ollama"  # picked by name: your own choice
+    assert brains.choose(found, "ollama", None).name == "ollama"
+    brains.confirm_server("http://localhost:11434/v1")
+    assert brains.confirmed_servers() == ["localhost:11434"] and brains.choose(found, "auto", None).name == "ollama"
+    brains._confirmed.clear()
+    servers[11434] = True
+    brains._owned.clear()
+    assert brains.choose(found, "auto", None).name == "ollama"
+
+
+def test_a_server_elsewhere_is_never_counted_as_yours(servers):
+    servers[11434] = True  # even with something of yours on the same port here
+    assert not brains.trusted("http://192.168.1.20:11434/v1") and brains.trusted("http://127.0.0.1:11434/v1")
+    assert brains.trusted("http://[::1]:11434/v1") and brains.trusted("http://localhost:11434/v1")
+
+
+def test_whose_server_it_is_is_found_off_the_screens_thread(monkeypatch, servers):
+    import threading
+
+    from chatmon import portowner
+
+    asked, says = [], portowner.mine  # the servers fixture's
+    servers[1234] = True
+    monkeypatch.setattr(portowner, "mine", lambda port: (asked.append(threading.current_thread() is threading.main_thread()), says(port))[1])
+    assert brains.trusted("http://localhost:1234/v1", wait=False) is False and asked == [] and brains.unsure()
+    result = []
+    thread = threading.Thread(target=lambda: result.append(brains.look_again()))
+    thread.start()
+    thread.join(10)
+    assert result == [True] and asked == [False] and brains.trusted("http://localhost:1234/v1", wait=False) is True
+
+
+# -- never holding up the screen (M1B-10, M1B-11)
+
+
+def test_cancelling_a_command_brain_returns_at_once_and_stops_it(qapp, tmp_path):
+    import sys
+    import time
+
+    from replay_server import spin
+
+    started = tmp_path / "started"
+    script = f"import sys, time; sys.stdin.read(); open(r'{started}', 'w').write('x'); time.sleep(60)"
+    asker = brains.Asker()
+    asker.ask(brains.Brain("slow", "command", label="Slow", command=[sys.executable, "-c", script]), "", [], "hi", 60)
+    deadline = time.monotonic() + 15
+    while not started.exists() and time.monotonic() < deadline:
+        spin(0.05)
+    proc, folder = asker._proc, asker._dir
+    began = time.monotonic()
+    asker.cancel()
+    assert time.monotonic() - began < 0.25 and not asker.busy()
+    from PyQt6 import sip
+    from PyQt6.QtCore import QProcess
+
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline and not sip.isdeleted(proc) and proc.state() != QProcess.ProcessState.NotRunning:
+        spin(0.05)
+    spin(0.2)
+    assert sip.isdeleted(proc) or proc.state() == QProcess.ProcessState.NotRunning
+    assert not folder.exists()  # its folder goes once it has ended
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="cmd.exe and the tools npm installs as .cmd files are Windows'")
+def test_cancelling_on_windows_stops_the_tool_behind_a_cmd_file_without_waiting(qapp, tmp_path, monkeypatch):
+    import time
+
+    from replay_server import spin
+
+    child = tmp_path / "child.pid"
+    (tmp_path / "slowbrain.cmd").write_text(
+        f'@"{sys.executable}" -c "import os, time; open(r\'{child}\', \'w\').write(str(os.getpid())); time.sleep(60)"\r\n', encoding="utf-8"
+    )
+    monkeypatch.setenv("PATH", str(tmp_path) + os.pathsep + os.environ["PATH"])
+    asker = brains.Asker()
+    asker.ask(brains.Brain(name="slow", type="command", label="Slow", command=["slowbrain"]), "", [], "hi", 60)
+    deadline = time.monotonic() + 15
+    while not (child.exists() and child.read_text()) and time.monotonic() < deadline:
+        spin(0.05)
+    pid = int(child.read_text())
+    real = brains._end_tree
+    monkeypatch.setattr(brains, "_end_tree", lambda root: (time.sleep(2), real(root))[1])  # as slow as taskkill was
+    began = time.monotonic()
+    asker.cancel()
+    assert time.monotonic() - began < 0.25  # ending the tree can take seconds: never on the screen's thread
+    deadline = time.monotonic() + 10
+    while brains._alive(pid) and time.monotonic() < deadline:
+        spin(0.1)
+    assert not brains._alive(pid), "the tool the .cmd file started is still running"
+
+
+def test_finding_the_brain_never_probes_on_the_screens_thread_and_remembers(qapp, monkeypatch, servers):
+    import threading
+    import time
+
+    from replay_server import spin
+
+    monkeypatch.setattr(brains, "reachable", REAL_REACHABLE)
+    monkeypatch.setattr(brains, "_reachable", {})
+    monkeypatch.setattr(brains, "_unsure", set())
+    monkeypatch.setattr(brains.shutil, "which", lambda name: None)
+    looks = []
+
+    def look(url, timeout):
+        looks.append(threading.current_thread() is threading.main_thread())
+        time.sleep(0.3)  # Windows takes this long, and more, to say nothing listens
+        brains._reachable[url] = (time.monotonic(), "11434" in url)
+        return "11434" in url
+
+    monkeypatch.setattr(brains, "_look", look)
+    servers[11434] = True
+    finder, got = brains.Finder(), []
+    began = time.monotonic()
+    assert finder.find(brains.load_brains({}), "auto", None, got.append) is None  # not known yet
+    assert time.monotonic() - began < 0.25 and not any(looks)  # it may have begun looking: elsewhere (blocking: 1.2 s)
+    deadline = time.monotonic() + 10
+    while not got and time.monotonic() < deadline:
+        spin(0.05)
+    assert [b.name for b in got] == ["ollama"] and looks and not any(looks) and finder.last.name == "ollama"
+    before = len(looks)
+    assert finder.find(brains.load_brains({}), "auto", None, got.append).name == "ollama"  # remembered: at once
+    spin(0.1)
+    assert len(got) == 2 and len(looks) == before
+
+
+def test_a_brain_setting_of_the_wrong_kind_is_left_out_and_said_never_a_crash():
+    problems = []
+    found = brains.load_brains({"brains": {
+        "claude": {"command": "claude -p --tools Bash"},  # a string: once a command line made of its letters
+        "mine": {"type": "command", "command": ["my-llm"], "thinking_fields": 5, "env": "MY_*", "stream": "yes"},
+        "odd": "not a table",
+    }}, problems)
+    assert found["claude"].command == brains.PRESETS["claude"]["command"]
+    assert found["mine"].command == ["my-llm"] and found["mine"].thinking_fields == {} and found["mine"].env == []
+    assert "odd" not in found
+    assert problems == ["ai.brains.claude.command should be a list of text, so it's left out",
+                        "ai.brains.mine.thinking_fields should be a table of tables, so it's left out",
+                        "ai.brains.mine.env should be a list of text, so it's left out",
+                        "ai.brains.mine.stream should be true or false, so it's left out"]
+
+
+def test_ending_a_brains_processes_never_takes_one_that_only_shares_an_old_parents_number():
+    """Windows hands a finished process's number to the next one: a program whose parent finished long ago still
+    names that number as its parent. Only what was made after the brain is the brain's."""
+    made = {100: 50, 101: 60, 102: 70, 7: 10, 8: 80}  # 7 is older than 100: its parent was another 100, long gone
+    children = {100: [101, 7], 101: [102], 7: [8]}
+    closed = []
+    tree = brains._tree(100, children, lambda pid: (pid, made[pid]) if pid in made else None, closed.append)
+    assert sorted(h for h, _ in tree) == [100, 101, 102] and closed == [7]  # nor 8, which 7 started
+    assert brains._tree(5, children, lambda pid: None, closed.append) == []  # gone already: nothing
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows' process tree")
+def test_ending_a_tree_on_windows_ends_the_brain_and_what_it_started_and_nothing_else():
+    import subprocess
+    import time
+
+    child = "import subprocess, sys, time; c = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)']); print(c.pid, flush=True); time.sleep(60)"
+    other = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
+    root = subprocess.Popen(["cmd", "/c", sys.executable, "-c", child], stdout=subprocess.PIPE, text=True)
+    try:
+        grandchild = int(root.stdout.readline())
+        assert brains._end_tree(root.pid) >= 3
+        root.wait(10)
+        deadline = time.monotonic() + 10
+        while brains._alive(grandchild) and time.monotonic() < deadline:
+            time.sleep(0.05)
+        assert not brains._alive(grandchild) and other.poll() is None and brains._alive(os.getpid())
+    finally:
+        other.kill()
+        root.kill()
+
+
+LET_GO = r"""
+import gc, os, sys, time
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+os.environ["QT_QPA_PLATFORM"] = "offscreen"
+from PyQt6.QtCore import QEventLoop, QTimer, qInstallMessageHandler
+from PyQt6.QtWidgets import QApplication
+said = []
+qInstallMessageHandler(lambda kind, context, text: said.append(text))
+app = QApplication([])
+from chatmon import brains
+flag = Path(sys.argv[2]) / "started"
+def spin(s):
+    loop = QEventLoop()
+    QTimer.singleShot(int(s * 1000), loop.quit)
+    loop.exec()
+sleeper = Path(sys.argv[2]) / "sleeper.py"
+sleeper.write_text("import sys, time\nopen(sys.argv[1], 'w').write('x')\ntime.sleep(60)\n")
+if sys.platform == "win32":  # as npm installs a tool: a .cmd file, with the real program under it
+    (Path(sys.argv[2]) / "slowbrain.cmd").write_text('@"' + sys.executable + '" "' + str(sleeper) + '" "' + str(flag) + '"\r\n')
+    os.environ["PATH"] = sys.argv[2] + os.pathsep + os.environ["PATH"]
+    command = ["slowbrain"]
+else:
+    command = [sys.executable, str(sleeper), str(flag)]
+for _ in range(4):  # it went wrong about seven times in ten: four tries all but always catch it
+    flag.unlink(missing_ok=True)
+    asker = brains.Asker()
+    asker.ask(brains.Brain("slow", "command", label="Slow", command=command), "", [], "hi", 60)
+    deadline = time.monotonic() + 20
+    while not flag.exists() and time.monotonic() < deadline:
+        spin(0.05)
+    asker.cancel()
+    del asker  # straight away, its process not yet ended
+    gc.collect()
+    spin(0.5)
+spin(1)
+print("survived", [t for t in said if "Destroyed while" in t])
+"""
+
+
+def test_an_asker_let_go_of_straight_after_cancelling_takes_nothing_down(tmp_path):
+    """Qt deleting a process it still thought was running, with the Asker that made it, ended the whole app on
+    Windows (0xC0000409). Run apart: a crash here must not take the tests with it."""
+    import subprocess
+    from pathlib import Path
+
+    out = subprocess.run([sys.executable, "-c", LET_GO, str(Path(__file__).resolve().parent.parent), str(tmp_path)],
+                         capture_output=True, text=True, timeout=90)
+    assert out.returncode == 0 and "survived []" in out.stdout, (hex(out.returncode & 0xFFFFFFFF), out.stdout[-500:], out.stderr[-2000:])

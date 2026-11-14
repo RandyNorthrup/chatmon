@@ -1,0 +1,23 @@
+M2-13 bubble lifetime
+  style=electric, seconds=60.0, frames_drawn=1780, ms_total=5290.9, ms_per_frame=2.97
+  style=fire, seconds=60.0, frames_drawn=1780, ms_total=2563.3, ms_per_frame=1.44
+  style=ghost, seconds=60.0, frames_drawn=1780, ms_total=17073.7, ms_per_frame=9.59
+  style=fairy, seconds=60.0, frames_drawn=1780, ms_total=8780.7, ms_per_frame=4.93
+  style=leaf, seconds=60.0, frames_drawn=1780, ms_total=841.4, ms_per_frame=0.47
+M2-14 ask box, one second
+  style=electric, seconds=1.0, box_paints=22, child_paints=169
+  style=fire, seconds=1.0, box_paints=23, child_paints=170
+  style=ghost, seconds=1.0, box_paints=22, child_paints=169
+  style=fairy, seconds=1.0, box_paints=23, child_paints=170
+  style=leaf, seconds=1.0, box_paints=23, child_paints=170
+M2-15 notch moving
+  style=electric, animate=False, still_notch_ms_per_draw=0.178, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=2.826, moving_notch_kpx_composed_per_draw=239.7
+  style=electric, animate=True, still_notch_ms_per_draw=3.39, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=10.597, moving_notch_kpx_composed_per_draw=239.7
+  style=fire, animate=False, still_notch_ms_per_draw=0.214, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=2.329, moving_notch_kpx_composed_per_draw=230.5
+  style=fire, animate=True, still_notch_ms_per_draw=1.409, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=4.946, moving_notch_kpx_composed_per_draw=230.5
+  style=ghost, animate=False, still_notch_ms_per_draw=0.206, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=3.363, moving_notch_kpx_composed_per_draw=233.5
+  style=ghost, animate=True, still_notch_ms_per_draw=4.094, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=11.986, moving_notch_kpx_composed_per_draw=233.5
+  style=fairy, animate=False, still_notch_ms_per_draw=0.219, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=2.098, moving_notch_kpx_composed_per_draw=215.0
+  style=fairy, animate=True, still_notch_ms_per_draw=0.811, still_notch_kpx_composed_per_draw=1.8, moving_notch_ms_per_draw=9.357, moving_notch_kpx_composed_per_draw=482.5
+  style=leaf, animate=False, still_notch_ms_per_draw=0.233, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=2.789, moving_notch_kpx_composed_per_draw=266.4
+  style=leaf, animate=True, still_notch_ms_per_draw=0.322, still_notch_kpx_composed_per_draw=0.0, moving_notch_ms_per_draw=2.496, moving_notch_kpx_composed_per_draw=266.4
