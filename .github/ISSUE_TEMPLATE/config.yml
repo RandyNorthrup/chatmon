@@ -1,5 +1,8 @@
 blank_issues_enabled: true
 contact_links:
+  - name: Report a security problem
+    url: https://github.com/RandyNorthrup/chatmon/security/advisories/new
+    about: Privately, as a security advisory, so it can be fixed before it's public. SECURITY.md says more.
   - name: Chatmon's README
     url: https://github.com/RandyNorthrup/chatmon#readme
     about: How to install Chatmon, set up a brain and connect your coding agents.

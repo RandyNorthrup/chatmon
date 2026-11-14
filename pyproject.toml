@@ -35,7 +35,22 @@ classifiers = [
 
 [project.optional-dependencies]
 battery = ["psutil"]
-test = ["pytest"]
+test = ["pytest", "pytest-timeout", "hypothesis", "tzdata"]
+# Everything CI runs, at the versions it runs them: `pip install -e ".[dev]"`. packaging/requirements-dev.txt locks
+# the same versions with hashes (tests/test_requirements.py keeps the two in step).
+dev = [
+    "PyQt6==6.11.0",
+    "PyQt6-Qt6==6.11.2",
+    "psutil==7.2.2",
+    "pytest==9.2.0",
+    "pytest-timeout==2.4.0",
+    "coverage==7.17.0",
+    "hypothesis==6.170.14",
+    "tzdata==2026.6",
+    "ruff==0.17.3",
+    "mypy==2.4.1",
+    "zizmor==1.31.1",
+]
 
 [project.urls]
 Homepage = "https://github.com/RandyNorthrup/chatmon"
@@ -43,7 +58,6 @@ Issues = "https://github.com/RandyNorthrup/chatmon/issues"
 
 [project.scripts]
 chatmon = "chatmon.cli:main"
-penguin-companion = "chatmon.cli:main"  # the old name, kept for one release
 
 [project.gui-scripts]
 chatmonw = "chatmon.cli:main"  # on Windows, Chatmon without a console window: what autostart runs
@@ -67,10 +81,35 @@ chatmon = [
     "integrations/claude/.claude-plugin/marketplace.json",
     "integrations/claude/chatmon/.claude-plugin/plugin.json",
     "integrations/claude/chatmon/hooks/hooks.json",
+    "phrases/*.json",
+    "sounds/*.wav",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+minversion = "7.4"  # Ubuntu 24.04's, which CI's distribution job runs
+required_plugins = ["pytest-timeout"]  # the `timeout` below is its setting
+addopts = ["-rs", "--strict-markers"]  # say why each test skipped; a mistyped mark is an error, not a new mark
+timeout = 120  # pytest-timeout: a test that hangs fails, with every thread's stack, instead of holding up the run
+filterwarnings = [
+    "error",
+    # Unclosed sockets, files and processes are reported by the garbage collector in whichever test happens to be
+    # running, not the one that left them, so they're shown in the summary rather than failing that test.
+    # docs/delivery/m6a-ci-tooling.md lists the ones left to close.
+    "default::ResourceWarning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["chatmon"]
+relative_files = true  # each OS's data names files the same way, so CI can combine them
+
+[tool.coverage.paths]
+chatmon = ["chatmon", "*/chatmon", '*\chatmon']
+
+[tool.coverage.report]
+fail_under = 72  # Windows alone measured 74.9%, and Windows with Linux 82.7% (2026-11-14); CI combines three OSes
+precision = 1
 
 [tool.ruff]
 line-length = 170
@@ -78,3 +117,29 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["F", "E9", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["chatmon"]
+warn_unused_configs = true
+warn_redundant_casts = true
+strict_equality = true
+# Not warn_unreachable: CI checks each platform (--platform), and code for the others reads as unreachable. Not
+# explicit-override: @override needs Python 3.12, or typing_extensions, a new dependency, on 3.11.
+enable_error_code = ["redundant-expr", "truthy-bool", "unused-awaitable", "exhaustive-match", "ignore-without-code", "possibly-undefined"]
+
+[[tool.mypy.overrides]]
+# Modules mypy doesn't pass yet on Linux, Windows and macOS alike: each comes off this list once it does
+# (assessment item M6B-02). Every module not listed is checked, and CI fails on any error in one.
+module = [
+    "chatmon.a11y", "chatmon.agents", "chatmon.app", "chatmon.attachments", "chatmon.backup", "chatmon.brains",
+    "chatmon.bubble", "chatmon.bubbleart", "chatmon.cli", "chatmon.clickthrough", "chatmon.commands",
+    "chatmon.context", "chatmon.ed25519", "chatmon.events", "chatmon.heads_up", "chatmon.hotkey", "chatmon.keychain",
+    "chatmon.layer", "chatmon.libdbus", "chatmon.linuxsession", "chatmon.macnative", "chatmon.menus",
+    "chatmon.messages", "chatmon.offline", "chatmon.packagekit", "chatmon.paths", "chatmon.penguin", "chatmon.portal",
+    "chatmon.portowner", "chatmon.presence", "chatmon.reminders", "chatmon.richtext", "chatmon.settings",
+    "chatmon.settingswin", "chatmon.sound", "chatmon.sprites", "chatmon.stagemenu", "chatmon.updates",
+    "chatmon.wayland", "chatmon.windrop", "chatmon.winfocus", "chatmon.winlock", "chatmon.winpipe", "chatmon.winrt",
+    "chatmon.wintoast", "chatmon.wintrust", "chatmon.xkb",
+]
+ignore_errors = true

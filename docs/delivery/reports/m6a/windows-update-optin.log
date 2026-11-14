@@ -1,0 +1,13 @@
+# M6A-11 on Windows 11, Python 3.14.10, 2026-11-14T21:40:30Z
+$ python -m pytest -v -rs tests/test_windows.py -k windows_update_check
+timeout: 120.0s
+tests/test_windows.py::test_the_windows_update_check_runs_and_says_something_readable SKIPPED [100%]
+SKIPPED [1] tests\test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+====================== 1 skipped, 34 deselected in 1.00s ======================
+exit 0
+
+$ CHATMON_TEST_WINDOWS_UPDATE=1 python -m pytest -v -rs --durations=1 tests/test_windows.py -k windows_update_check
+tests/test_windows.py::test_the_windows_update_check_runs_and_says_something_readable PASSED [100%]
+58.02s call     tests/test_windows.py::test_the_windows_update_check_runs_and_says_something_readable
+================= 1 passed, 34 deselected in 60.71s (0:01:00) =================
+exit 0

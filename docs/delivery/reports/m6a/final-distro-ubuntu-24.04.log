@@ -1,0 +1,270 @@
+=== docker.io/library/ubuntu:24.04 on /var/tmp/m6a/src, 2026-11-14T21:57:47Z
+debconf: delaying package configuration, since apt-utils is not installed
+Ubuntu 24.04.5 LTS: Python 3.12.3, PyQt6 6.6.1, Qt 6.4.2
+...ss................................................................... [  6%]
+........................................................................ [ 12%]
+...........................................................sss..s....... [ 18%]
+........................................................................ [ 24%]
+.....s.....s...s........................................................ [ 30%]
+.............................s....s......ssss.s......................... [ 36%]
+..................................................................s..... [ 42%]
+..................s............................ssssss................... [ 48%]
+.sssssssss........s...............ssssss................................ [ 54%]
+........................................................................ [ 60%]
+.......................................sss..................s.....ss.sss [ 66%]
+s....s.s................................................................ [ 72%]
+........................................................................ [ 78%]
+............................ss.s..s..................................... [ 84%]
+........................................................................ [ 90%]
+..........s.........................ss.sssssssssssssssssssssssssssssssss [ 96%]
+ss...sssss......sssssssssssss.........                                   [100%]
+=============================== warnings summary ===============================
+tests/test_brains.py::test_a_redirect_never_takes_the_key_anywhere
+  /usr/lib/python3/dist-packages/_pytest/python.py:194: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 38977)>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed
+  /usr/lib/python3/dist-packages/_pytest/python.py:194: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 38387)>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_brains.py::test_automatic_uses_only_a_model_server_of_yours_or_one_you_confirmed
+  /home/chatmon-tests/chatmon/chatmon/brains.py:632: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 38673)>
+    effort_args=[str(a) for a in spec.get("effort_args", [])],
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_events.py::test_notify_never_waits_on_an_open_stdin
+  /usr/lib/python3/dist-packages/_pytest/monkeypatch.py:400: ResourceWarning: unclosed file <_io.TextIOWrapper name=33 mode='r' encoding='utf-8'>
+    setattr(obj, name, value)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_events.py::test_only_one_chatmon_holds_the_lock
+  /usr/lib/python3/dist-packages/_pytest/python.py:194: ResourceWarning: unclosed file <_io.TextIOWrapper name=33 encoding='utf-8'>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_events.py::test_a_shell_that_never_answers_is_stopped_whole
+  /home/chatmon-tests/chatmon/tests/test_events.py:346: ResourceWarning: unclosed file <_io.BufferedReader name=34>
+    paths.login_environment(timeout=0.5)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait
+  /usr/lib/python3.12/subprocess.py:1127: ResourceWarning: subprocess 2507 is still running
+    _warn("subprocess %s is still running" % self.pid,
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[installed]
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 42007)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[refused]
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 39099)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_newer_release_is_downloaded_checked_and_offered
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 41785)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_tampered_download_is_thrown_away_never_offered
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 40245)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_past_the_limit_is_stopped
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 33253)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_nothing_newer_says_so
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 35551)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_chatmon_that_cant_install_it_is_only_told
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 32951)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_is_checked_again_just_before_its_installed
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 36083)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_installer_that_wont_start_says_so_and_frees_the_updater
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 38013)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_checksums_not_signed_with_the_release_key_are_never_trusted
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 37767)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 43747)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_what_pkexec_said_is_told_plainly[126-password prompt was closed]
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 37233)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_what_pkexec_said_is_told_plainly[127-no password prompt running]
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 36041)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_that_cant_be_checked_yet_is_looked_at_again_within_the_hour
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 45719)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_that_cant_be_checked_at_install_time_is_kept_for_later
+  /usr/lib/python3/dist-packages/_pytest/fixtures.py:911: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 41635)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_wayland.py::test_qt_runs_on_wayland_itself_only_where_the_overlay_can_be
+  /usr/lib/python3.12/threading.py:1014: ResourceWarning: unclosed <socket.socket fd=38, family=1, type=1, proto=0>
+    del self._target, self._args, self._kwargs
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_a11y.py:62: Windows
+SKIPPED [1] tests/test_a11y.py:70: macOS
+SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:125: Windows links
+SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+SKIPPED [1] tests/test_brains.py:477: Claude Code isn't installed here
+SKIPPED [1] tests/test_brains.py:589: cmd.exe and the tools npm installs as .cmd files are Windows'
+SKIPPED [1] tests/test_brains.py:678: Windows' process tree
+SKIPPED [1] tests/test_chats.py:355: the roaming app-data folder is Windows'
+SKIPPED [1] tests/test_cli.py:89: only Windows keeps a program you're not using from coming to the front
+SKIPPED [1] tests/test_clickthrough.py:81: Windows only
+SKIPPED [1] tests/test_clickthrough.py:87: Windows only
+SKIPPED [1] tests/test_clickthrough.py:96: Windows only
+SKIPPED [1] tests/test_clickthrough.py:105: Windows only
+SKIPPED [1] tests/test_clickthrough.py:135: needs an X server (DISPLAY), as under Xvfb
+SKIPPED [1] tests/test_events.py:117: macOS's temporary folder of your own
+SKIPPED [1] tests/test_heads_up.py:135: macOS only
+SKIPPED [1] tests/test_hotkey.py:124: Windows only
+SKIPPED [1] tests/test_hotkey.py:150: Windows only
+SKIPPED [1] tests/test_hotkey.py:167: Windows only
+SKIPPED [1] tests/test_hotkey.py:221: macOS only
+SKIPPED [1] tests/test_hotkey.py:238: macOS only
+SKIPPED [1] tests/test_hotkey.py:318: Linux with Xvfb
+SKIPPED [1] tests/test_install_update.py:256: macOS's root code: ditto, BSD find, osascript
+SKIPPED [3] tests/test_install_update.py:267: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:282: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:291: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+SKIPPED [1] tests/test_linuxsession.py:28: no PackageKit here
+SKIPPED [1] tests/test_macnative.py:20: macOS only
+SKIPPED [1] tests/test_macnative.py:54: macOS only
+SKIPPED [1] tests/test_macnative.py:88: macOS only
+SKIPPED [1] tests/test_macnative.py:116: macOS only
+SKIPPED [1] tests/test_macnative.py:134: macOS only
+SKIPPED [1] tests/test_macnative.py:162: macOS only
+SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+SKIPPED [1] tests/test_portowner.py:54: no other account listens on anything here
+SKIPPED [1] tests/test_presence.py:14: Windows only
+SKIPPED [1] tests/test_presence.py:29: Windows only
+SKIPPED [1] tests/test_presence.py:51: Windows only
+SKIPPED [1] tests/test_presence.py:70: macOS only
+SKIPPED [1] tests/test_presence.py:139: no GNOME session here
+SKIPPED [1] tests/test_releasecheck.py:59: needs OpenSSL to compare with
+SKIPPED [1] tests/test_sound.py:156: no QtMultimedia, or no audio device to play to
+SKIPPED [1] tests/test_sound.py:181: Windows only
+SKIPPED [1] tests/test_sound.py:230: macOS only
+SKIPPED [1] tests/test_sound.py:303: no QtMultimedia, or no audio device to play to
+SKIPPED [1] tests/test_updates.py:599: holding a file open against changes: Windows
+SKIPPED [1] tests/test_wincaret.py:52: Windows only
+SKIPPED [1] tests/test_wincaret.py:87: Windows only
+SKIPPED [1] tests/test_windows.py:77: Windows only
+SKIPPED [1] tests/test_windows.py:87: Windows only
+SKIPPED [1] tests/test_windows.py:98: Windows only
+SKIPPED [1] tests/test_windows.py:102: Windows only
+SKIPPED [1] tests/test_windows.py:107: Windows only
+SKIPPED [1] tests/test_windows.py:127: Windows only
+SKIPPED [1] tests/test_windows.py:138: Windows only
+SKIPPED [1] tests/test_windows.py:153: Windows only
+SKIPPED [1] tests/test_windows.py:164: Windows only
+SKIPPED [1] tests/test_windows.py:197: Windows only
+SKIPPED [1] tests/test_windows.py:210: Windows only
+SKIPPED [1] tests/test_windows.py:224: Windows only
+SKIPPED [1] tests/test_windows.py:261: Windows only
+SKIPPED [1] tests/test_windows.py:279: Windows only
+SKIPPED [1] tests/test_windows.py:292: Windows only
+SKIPPED [1] tests/test_windows.py:315: Windows only
+SKIPPED [1] tests/test_windows.py:339: Windows only
+SKIPPED [1] tests/test_windows.py:366: Windows only
+SKIPPED [1] tests/test_windows.py:408: Windows only
+SKIPPED [1] tests/test_windows.py:434: Windows only
+SKIPPED [1] tests/test_windows.py:441: Windows only
+SKIPPED [1] tests/test_windows.py:479: Windows only
+SKIPPED [1] tests/test_windows.py:491: Windows only
+SKIPPED [1] tests/test_windows.py:502: Windows only
+SKIPPED [1] tests/test_windows.py:519: Windows only
+SKIPPED [1] tests/test_windows.py:535: Windows only
+SKIPPED [1] tests/test_windows.py:561: Windows only
+SKIPPED [1] tests/test_windows.py:583: Windows only
+SKIPPED [1] tests/test_windows.py:601: Windows only
+SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+SKIPPED [1] tests/test_windows.py:684: Windows only
+SKIPPED [1] tests/test_windows.py:699: Windows only
+SKIPPED [1] tests/test_windows.py:739: Windows only
+SKIPPED [1] tests/test_windows.py:795: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+SKIPPED [1] tests/test_windows.py:818: Windows only
+SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+SKIPPED [1] tests/test_wintoast.py:110: Windows only
+SKIPPED [1] tests/test_wintoast.py:122: Windows only
+SKIPPED [1] tests/test_wintoast.py:175: Windows only
+SKIPPED [1] tests/test_wintoast.py:194: Windows only
+SKIPPED [1] tests/test_wintoast.py:214: Windows only
+SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+1078 passed, 112 skipped, 23 warnings in 199.29s (0:03:19)
+exit 0 2026-11-14T22:01:48Z
