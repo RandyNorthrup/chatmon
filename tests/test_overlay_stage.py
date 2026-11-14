@@ -159,6 +159,70 @@ def test_its_context_menu_is_drawn_by_the_stage_too(stage):
     assert not s.menu.is_open()
 
 
+def test_esc_closes_an_open_menu_not_the_box_under_it(stage):
+    s, box = stage
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    s.keyboard_focus(True)
+    gpos = centre_of(box, box.entry)
+    s.press(gpos - QPointF(s.origin()), gpos, Qt.MouseButton.RightButton)
+    assert s.menu.is_open()
+    s.key(key("\x1b", Qt.Key.Key_Escape), True, False)
+    s.key(key("\x1b", Qt.Key.Key_Escape), False, False)
+    assert not s.menu.is_open() and box.isVisible()  # the menu went, the box stayed
+    s.key(key("\x1b", Qt.Key.Key_Escape), True, False)
+    assert not box.isVisible()  # with no menu open, Esc is the box's
+
+
+def test_the_keyboard_picks_from_the_penguins_menu_and_the_overlay_takes_it_while_open(stage):
+    s, box = stage
+    ran = []
+    menu = QMenu()
+    menu.addAction("Ask", lambda: ran.append("ask"))
+    menu.addAction("Hide", lambda: ran.append("hide"))
+    spin(0.1)
+    s.open_menu(menu, QPoint(300, 300))
+    assert s.surface.focus == [(True, True)]  # a popup menu takes the keyboard
+    spin(0.05)
+    s.surface.damaged = QRegion()
+    for k in (Qt.Key.Key_Down, Qt.Key.Key_Down):
+        s.key(key("", k), True, False)
+    spin(0.05)
+    panel = s.menu.panels[0]
+    assert s.surface.damaged.intersects(panel.item_rect(1).translated(panel.rect.topLeft()))  # the lit row drawn again
+    s.key(key("\r", Qt.Key.Key_Return), True, False)
+    assert ran == ["hide"] and not s.menu.is_open()
+    assert s.surface.focus[-1] == (False, False)  # and gives it back
+    menu.deleteLater()
+
+
+def test_closing_the_box_closes_its_context_menu(stage):
+    s, box = stage
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    gpos = centre_of(box, box.entry)
+    s.press(gpos - QPointF(s.origin()), gpos, Qt.MouseButton.RightButton)
+    assert s.menu.is_open()
+    box.dismiss()
+    spin(0.1)
+    assert not s.menu.is_open() and s.surface.input != [(0, 0, s._geo.width(), s._geo.height())]  # not catching every click
+
+
+def test_the_wheel_scrolls_a_long_menu(stage):
+    s, box = stage
+    menu = QMenu()
+    for i in range(80):
+        menu.addAction(f"Chat {i}")
+    s.open_menu(menu, QPoint(300, 50))
+    panel = s.menu.panels[0]
+    assert panel.scrolls()
+    centre = QPointF(panel.rect.center())
+    s.wheel(centre, centre + QPointF(s.origin()), 0, -120)
+    assert panel.scroll > 0
+    s.close_menu()
+    menu.deleteLater()
+
+
 def test_a_message_goes_above_the_open_box(stage):
     s, box = stage
     box.open(QPoint(400, 600), "Ask", "hint", "placeholder")

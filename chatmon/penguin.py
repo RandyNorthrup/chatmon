@@ -439,7 +439,7 @@ class Stage(QObject):
         self._grab = QPointF()
         self._dragging = False
         self._screen: QScreen | None = None
-        self.menu = StageMenu()
+        self.menu = StageMenu(clock=lambda: self._clock())
         self._menu_rects: list[QRect] = []
         self._owned_menu: QMenu | None = None
         self.hosted: Hosted | None = None
@@ -683,6 +683,7 @@ class Stage(QObject):
         self.menu.open(menu, QPointF(at - self._geo.topLeft()), QRect(0, 0, self._geo.width(), self._geo.height()))
         self._owned_menu = menu if owned else None
         self._key = None
+        self._menu_keyboard(True)
         self._wake()
 
     def close_menu(self) -> None:
@@ -693,8 +694,16 @@ class Stage(QObject):
     def _menu_gone(self) -> None:
         self._key = None
         self._close_owned()
+        self._menu_keyboard(False)
         self.menu_closed.emit()
         self._wake()
+
+    def _menu_keyboard(self, on: bool) -> None:
+        """The overlay takes the keyboard while its menu is open, as any popup menu does, and gives it back as
+        the menu closes; while the ask box is open the keyboard is already the overlay's, and stays."""
+        focus = getattr(self.surface, "focus_keyboard", None)
+        if focus is not None and self.draws_menus() and not (self.hosted is not None and self.hosted.visible()):
+            focus(on, on)
 
     def _close_owned(self) -> None:
         if self._owned_menu is not None:
@@ -707,6 +716,8 @@ class Stage(QObject):
         """The hosted widget opened (taking the keyboard if `grab`) or closed."""
         if not on:
             self._hosted_press = False
+            if self._owned_menu is not None:
+                self.close_menu()  # its context menu goes with it, not left catching clicks screen-wide
         focus = getattr(self.surface, "focus_keyboard", None)
         if focus is not None:
             focus(on, grab)
@@ -714,10 +725,18 @@ class Stage(QObject):
 
     def key(self, key, pressed: bool, repeat: bool) -> None:
         self._wake()
-        if self.hosted is None or not self.hosted.visible():
-            return
         kind = QEvent.Type.KeyPress if pressed else QEvent.Type.KeyRelease
         event = QKeyEvent(kind, int(key.key), key.modifiers, key.text, repeat)
+        if self.menu.is_open():  # an open menu has the keys, the ask box's Esc too
+            self.menu.key(event)
+            if not self.menu.is_open():
+                self._menu_gone()
+            chosen = self.menu.take_chosen()
+            if chosen is not None:
+                chosen.trigger()
+            return
+        if self.hosted is None or not self.hosted.visible():
+            return
         if pressed and hasattr(self.surface, "paste"):  # the overlay's clipboard, not Qt's
             for shortcut, do in (
                 (QKeySequence.StandardKey.Paste, self.hosted.paste),
@@ -757,7 +776,9 @@ class Stage(QObject):
 
     def wheel(self, pos: QPointF, gpos: QPointF, dx: int, dy: int) -> None:
         self._wake()
-        if self.hosted is not None and self.hosted.contains(gpos) and not self.menu.is_open():
+        if self.menu.is_open():
+            self.menu.wheel(pos, dy)
+        elif self.hosted is not None and self.hosted.contains(gpos):
             self.hosted.wheel(gpos, dx, dy)
 
     def scale_changed(self, scale: float) -> None:
@@ -849,7 +870,7 @@ class Stage(QObject):
         key = (
             (f.anim, f.index, f.mirror, penguin.topLeft(), self._z_phase),
             (bubble_box.topLeft(), self.bubble.hover, fade, self.bubble.anim_key(now)),
-            self.menu.key(),
+            self.menu.look(),
             self.hosted.anim_key(now) if self.hosted is not None else -1,
         )
         if key != self._key:
