@@ -1,0 +1,39 @@
+command: python -m pytest -q -p no:cacheprovider
+host: Windows 11 Pro 10.0.26200, Python 3.14.10, PyQt6 6.11.0 (offscreen)
+source: a3447706f7636ef052ee91e74c98aa574d1bbd79
+..s.s...............................s.................................s. [  6%]
+...............ssss..s..........................................F....... [ 13%]
+.......................................................s.s...ssss..s.... [ 19%]
+........................................................................ [ 26%]
+........................................................................ [ 32%]
+..............................................s......................... [ 39%]
+.................................................................sss.... [ 45%]
+ss.ssss...........s...ssssssssssssssssss..ssss.....s.......ssssss....... [ 52%]
+........................................................................ [ 58%]
+..........................................................s...ssssssss.. [ 65%]
+............s..ss...s....s.............................................. [ 71%]
+.................................................s...................... [ 78%]
+.ss..............................ss..................................... [ 84%]
+........................................................................ [ 91%]
+.....ss.......sssssssssssss.ssssssss..................s..............s.. [ 97%]
+...............sssssssss                                                 [100%]
+================================== FAILURES ===================================
+_____________ test_in_power_saver_mode_the_stage_draws_less_often _____________
+
+companion = <chatmon.app.Companion object at 0x000002729C1F3CF0>
+
+    def test_in_power_saver_mode_the_stage_draws_less_often(companion):
+        from chatmon import penguin
+    
+        c = companion
+        c._power_saving(True)
+        spin(0.2)
+>       assert c.stage._timer.interval() in (1000 // penguin.SAVER_FPS, 1000 // penguin.SAVER_SLOW_FPS)
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'chatmon.penguin' has no attribute 'SAVER_SLOW_FPS'
+
+tests\test_app_smoke.py:1465: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_in_power_saver_mode_the_stage_draws_less_often
+1 failed, 994 passed, 109 skipped in 176.83s (0:02:56)
+exit 1

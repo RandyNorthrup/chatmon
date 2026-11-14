@@ -1,0 +1,1100 @@
+red drills from docs\delivery\reports\m3\drill-spec.json
+python: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-ezu86avn
+copied 257 files
+
+=== drill M3-01-idle (M3-01) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_timer.py::test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.87s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none ______
+
+stage = (<chatmon.penguin.Stage object at 0x0000018FCB355DB0>, <test_stage_timer.Clock object at 0x0000018FCB3767B0>)
+
+    def test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none(stage):
+        s, clock = stage
+        follow_the_clock(s, clock, 5, check=False)  # the greeting wave
+        s.behavior.set_attending(True, clock.t)  # idle: still, blinking every 3-5 s
+        ticks = follow_the_clock(s, clock, 60)
+>       assert len(ticks) < 60 + 16 * 4  # a second at most while still, and each blink's frames: the old clock ticked 1800 times
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 3601 < (60 + (16 * 4))
+E        +  where 3601 = len([(5.016666666666654, Frame(anim='idle', index=0, mirror=False, x=400, lift=0.0), 0.016666666666666666), (5.03333333333...666666666), (5.099999999999987, Frame(anim='idle', index=0, mirror=False, x=400, lift=0.0), 0.016666666666666666), ...])
+
+tests\test_stage_timer.py:134: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_timer.py::test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none
+1 failed in 1.93s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.86s
+
+=== drill M3-01-missed (M3-01) on chatmon/behavior.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_timer.py::test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none tests/test_behavior.py::test_standing_still_it_names_the_next_change_seconds_ahead
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.09s
+-- red: exit 1
+            s.surface.damaged = QRegion()
+            before, where = s._frame, s._penguin.toAlignedRect()
+            s._tick()
+            drawn, wait = s._frame, s.next_tick_in
+            if before is not None and on_screen(before) != on_screen(drawn):
+                assert s.surface.damaged.intersects(where.united(s._penguin.toAlignedRect())), "a new frame, not drawn"
+            ticks.append((clock.t, drawn, wait))
+            if check:
+                twin.set_floor(s.behavior.left, s.behavior.right)
+                twin.tick(clock.t)
+                u, frame = clock.t + 0.001, s._frame_interval()
+                while u < clock.t + wait - frame:
+>                   assert on_screen(twin.tick(u)) == on_screen(drawn), f"changed at {u:.3f}; the stage slept until {clock.t + wait:.3f}"
+E                   AssertionError: changed at 9.217; the stage slept until 9.716
+E                   assert ('idle', 2, False, 400, 0) == ('idle', 0, False, 400, 0)
+E                     
+E                     At index 1 diff: 2 != 0
+E                     Use -v to get more diff
+
+tests\test_stage_timer.py:123: AssertionError
+_________ test_standing_still_it_names_the_next_change_seconds_ahead __________
+
+    def test_standing_still_it_names_the_next_change_seconds_ahead():
+        b = make(walk=False, sleep_after=0)
+        run(b, 0, 3)
+        b.set_attending(True, 3)  # idle: holds still, blinking every 3-5 s
+        later = copy.deepcopy(b)
+>       ticks = assert_nothing_missed(b, 3, 63)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_behavior.py:287: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+b = <chatmon.behavior.Behavior object at 0x000001B15ADC16A0>, start = 3
+end = 63
+
+    def assert_nothing_missed(b, start, end):
+        """Between two of the stage's ticks, a copy of the behaviour ticked 1000 times a second shows nothing
+        different (until the moment the next tick is due): sleeping that long missed no change on screen."""
+        ticks, t = [], start
+        while t < end:
+            twin = copy.deepcopy(b)
+            f = b.tick(t)
+            ticks.append(t)
+            wait = min(max(b.next_change(t) - t, 1 / 60), 1.0)
+            twin.tick(t)
+            u = t + 0.001
+            while u < t + wait - 0.0015:
+>               assert shown(twin.tick(u)) == shown(f), f"at {u:.3f} it showed {shown(twin.tick(u))}, the stage slept until {t + wait:.3f}"
+E               AssertionError: at 6.500 it showed ('idle', 2, False, 500, 0), the stage slept until 7.000
+E               assert ('idle', 2, False, 500, 0) == ('idle', 0, False, 500, 0)
+E                 
+E                 At index 1 diff: 2 != 0
+E                 Use -v to get more diff
+
+tests\test_behavior.py:276: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_timer.py::test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none
+FAILED tests/test_behavior.py::test_standing_still_it_names_the_next_change_seconds_ahead
+2 failed in 0.88s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.08s
+
+=== drill M3-01-quiet (M3-01) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_timer.py::test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.81s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops _________
+
+stage = (<chatmon.penguin.Stage object at 0x000002BADC0A5DB0>, <test_stage_timer.Clock object at 0x000002BADC0C67B0>)
+
+    def test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops(stage):
+        s, clock = stage
+        follow_the_clock(s, clock, 3, check=False)
+        s.set_covered(True)
+        s._tick()
+        assert s.next_tick_in == penguin.COVERED_TICK
+        s.set_covered(False)
+        s.behavior.set_hidden(True, clock.t)
+        ticks = follow_the_clock(s, clock, 15)
+        gone = [wait for (_, f, wait), (_, g, _) in zip(ticks, ticks[1:], strict=False) if f.anim is None and g.anim is None]
+        assert gone and all(wait == pytest.approx(penguin.IDLE_FLOOR) for wait in gone)  # nothing shown: once a second
+        s.set_drawing(False)
+        assert not s._timer.isActive()
+        s.behavior.set_alert(True, clock.t)
+        s.show_message("Reminder", "stretch")
+>       assert not s._timer.isActive()  # nothing is drawn while nothing can be seen
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert not True
+E        +  where True = <built-in method isActive of QTimer object at 0x000002BADC0A6710>()
+E        +    where <built-in method isActive of QTimer object at 0x000002BADC0A6710> = <PyQt6.QtCore.QTimer object at 0x000002BADC0A6710>.isActive
+E        +      where <PyQt6.QtCore.QTimer object at 0x000002BADC0A6710> = <chatmon.penguin.Stage object at 0x000002BADC0A5DB0>._timer
+
+tests\test_stage_timer.py:165: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_timer.py::test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops
+1 failed in 1.33s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.91s
+
+=== drill M3-01-pointer (M3-01) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_timer.py::test_the_pointer_is_polled_every_frame_only_near_the_chatmon
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.68s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_the_pointer_is_polled_every_frame_only_near_the_chatmon _________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001A8BB689D10>
+
+    def test_the_pointer_is_polled_every_frame_only_near_the_chatmon(qapp):
+        class Polling(Surface):
+            polls_pointer = True
+    
+        s, clock = make_stage(Polling)
+        s._tick()
+        x, y, w, h = s._inputs[0]
+        origin = s.origin()
+        s._cursor_pos = lambda: QPoint(x + w // 2, y + h // 2) + origin
+        s._poll_pointer()
+        assert s._pointer_timer.interval() == math.ceil(s._frame_interval() * 1000)
+        s._cursor_pos = lambda: QPoint(x + w + penguin.NEAR + 300, y) + origin
+        s._poll_pointer()
+>       assert s._pointer_timer.interval() == round(penguin.FAR_POLL * 1000)
+E       assert 17 == 100
+E        +  where 17 = <built-in method interval of QTimer object at 0x000001A8BB68A850>()
+E        +    where <built-in method interval of QTimer object at 0x000001A8BB68A850> = <PyQt6.QtCore.QTimer object at 0x000001A8BB68A850>.interval
+E        +      where <PyQt6.QtCore.QTimer object at 0x000001A8BB68A850> = <chatmon.penguin.Stage object at 0x000001A8BB689E50>._pointer_timer
+E        +  and   100 = round((0.1 * 1000))
+E        +    where 0.1 = penguin.FAR_POLL
+
+tests\test_stage_timer.py:201: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_timer.py::test_the_pointer_is_polled_every_frame_only_near_the_chatmon
+1 failed in 0.77s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.82s
+
+=== drill M3-02-refresh (M3-02) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_timer.py::test_while_it_moves_it_ticks_at_the_screens_refresh_rate
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.98s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_while_it_moves_it_ticks_at_the_screens_refresh_rate ___________
+
+stage = (<chatmon.penguin.Stage object at 0x0000022CF2B55DB0>, <test_stage_timer.Clock object at 0x0000022CF2B767B0>)
+
+    def test_while_it_moves_it_ticks_at_the_screens_refresh_rate(stage):
+        s, clock = stage
+        for hz, saving, expected in ((144, False, 1 / 144), (50, False, 1 / 50), (144, True, 1 / penguin.SAVER_FPS), (0, False, 1 / penguin.DEFAULT_HZ)):
+            screen = Screen(hz)
+            s._screen, s._screen_at = screen, lambda _point, screen=screen: screen
+            s.power_saving = saving
+            s.behavior.hold(400, 300, clock.t)
+            s.behavior.release(clock.t)  # falling: every frame
+            clock.t += 0.01
+            s._tick()
+>           assert s.behavior.falling and s.next_tick_in == pytest.approx(expected), (hz, saving)
+E           AssertionError: (144, False)
+E           assert (True and 0.016666666666666666 == 0.006944444444444444 ± 6.9e-09
+E            +  where True = <chatmon.behavior.Behavior object at 0x0000022CF2B76900>.falling
+E            +    where <chatmon.behavior.Behavior object at 0x0000022CF2B76900> = <chatmon.penguin.Stage object at 0x0000022CF2B55DB0>.behavior
+E             
+E             comparison failed
+E             Obtained: 0.016666666666666666
+E             Expected: 0.006944444444444444 ± 6.9e-09)
+
+tests\test_stage_timer.py:231: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_timer.py::test_while_it_moves_it_ticks_at_the_screens_refresh_rate
+1 failed in 0.83s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.89s
+
+=== drill M3-02-pixels (M3-02) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_timer.py::test_the_sprite_sits_on_the_device_pixel_grid
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.80s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_the_sprite_sits_on_the_device_pixel_grid ________________
+
+stage = (<chatmon.penguin.Stage object at 0x00000150EFFD5DB0>, <test_stage_timer.Clock object at 0x00000150EFFF67B0>)
+
+    def test_the_sprite_sits_on_the_device_pixel_grid(stage):
+        s, clock = stage
+        follow_the_clock(s, clock, 3, check=False)
+        s.behavior.set_attending(True, clock.t)
+        s.surface.scale = 2.0
+        halves = 0
+        for x in (400.0, 400.3, 400.6, 401.2, 401.7):
+            s.behavior.x = x
+            s._tick()
+            left, top = s._penguin.x(), s._penguin.y()
+            assert (left * 2).is_integer() and (top * 2).is_integer()
+            halves += not left.is_integer()
+            sprite = s.sprites.frame(s._frame.anim, s._frame.index, s._frame.mirror)
+            for (rx, ry, rw, rh), (ix, iy, iw, ih) in zip(sprite.rects, s.surface.inputs, strict=False):
+                # what takes clicks covers the outline wherever the half-pixel puts it
+                assert ix <= rx + left and ix + iw >= rx + rw + left and iy <= ry + top and iy + ih >= ry + rh + top
+>       assert halves >= 2  # not rounded to whole stage pixels
+        ^^^^^^^^^^^^^^^^^^
+E       assert 0 >= 2
+
+tests\test_stage_timer.py:252: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_timer.py::test_the_sprite_sits_on_the_device_pixel_grid
+1 failed in 0.83s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.72s
+
+=== drill M3-02-drag (M3-02) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_timer.py::test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.13s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock ___________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000022945BF9D10>
+
+    def test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock(qapp):
+        s, _clock = make_stage(clock=time.monotonic)
+        spin(0.3)
+        x, y, w, h = s.surface.inputs[len(s.surface.inputs) // 2]
+        grab = QPointF(x + w / 2, y + h / 2)
+        assert s._target_at(grab.toPoint()) == "penguin"
+        origin = QPointF(s.origin())
+        s.press(grab, grab + origin, Qt.MouseButton.LeftButton)
+        spin(0.05)
+        s._timer.stop()  # nothing else would bring a tick: only the move may
+        start = s._frame.x
+        to = grab + QPointF(40, -20)
+        s.move(to, to + origin)
+>       assert s._timer.isActive() and s._timer.remainingTime() <= math.ceil(s._frame_interval() * 1000)
+E       assert (True and 999 <= 17)
+E        +  where True = <built-in method isActive of QTimer object at 0x0000022945BFA710>()
+E        +    where <built-in method isActive of QTimer object at 0x0000022945BFA710> = <PyQt6.QtCore.QTimer object at 0x0000022945BFA710>.isActive
+E        +      where <PyQt6.QtCore.QTimer object at 0x0000022945BFA710> = <chatmon.penguin.Stage object at 0x0000022945BF9DB0>._timer
+E        +  and   999 = <built-in method remainingTime of QTimer object at 0x0000022945BFA710>()
+E        +    where <built-in method remainingTime of QTimer object at 0x0000022945BFA710> = <PyQt6.QtCore.QTimer object at 0x0000022945BFA710>.remainingTime
+E        +      where <PyQt6.QtCore.QTimer object at 0x0000022945BFA710> = <chatmon.penguin.Stage object at 0x0000022945BF9DB0>._timer
+E        +  and   17 = <built-in function ceil>((0.016666666666666666 * 1000))
+E        +    where <built-in function ceil> = math.ceil
+E        +    and   0.016666666666666666 = _frame_interval()
+E        +      where _frame_interval = <chatmon.penguin.Stage object at 0x0000022945BF9DB0>._frame_interval
+
+tests\test_stage_timer.py:272: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_timer.py::test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock
+1 failed in 1.18s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.14s
+
+=== drill M3-03-once (M3-03) on chatmon/sprites.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_sprites.py::test_a_frame_is_kept_once_with_a_mask_that_agrees_with_its_pixels
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.55s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_a_frame_is_kept_once_with_a_mask_that_agrees_with_its_pixels ______
+
+fresh = None
+
+    def test_a_frame_is_kept_once_with_a_mask_that_agrees_with_its_pixels(fresh):
+        frame = Sprites(paths.anim_dir(), 120, 2.0).frame("wave", 2, False)
+>       assert frame.pixmap.devicePixelRatio() == 2.0
+E       AssertionError: assert 1.0 == 2.0
+E        +  where 1.0 = <built-in method devicePixelRatio of QPixmap object at 0x000002382E624F50>()
+E        +    where <built-in method devicePixelRatio of QPixmap object at 0x000002382E624F50> = <PyQt6.QtGui.QPixmap object at 0x000002382E624F50>.devicePixelRatio
+E        +      where <PyQt6.QtGui.QPixmap object at 0x000002382E624F50> = SpriteFrame(pixmap=<PyQt6.QtGui.QPixmap object at 0x000002382E624F50>, mask=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...6, 66, 2), (22, 108, 72, 2), (20, 110, 76, 2), (19, 112, 77, 2), (19, 114, 77, 2), (24, 116, 68, 2), (33, 118, 50, 2))).pixmap
+
+tests\test_sprites.py:23: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sprites.py::test_a_frame_is_kept_once_with_a_mask_that_agrees_with_its_pixels
+1 failed in 0.49s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.52s
+
+=== drill M3-03-cache (M3-03) on chatmon/sprites.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_sprites.py::test_the_previous_screens_frames_are_kept_for_a_drag_back
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.56s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_the_previous_screens_frames_are_kept_for_a_drag_back __________
+
+fresh = None
+
+    def test_the_previous_screens_frames_are_kept_for_a_drag_back(fresh):
+        first = Sprites(paths.anim_dir(), 120, 1.0).frame("idle", 0, False)
+        second = Sprites(paths.anim_dir(), 120, 2.0).frame("idle", 0, False)
+        assert second is not first and second.scale == 2.0
+        again = Sprites(paths.anim_dir(), 120, 1.0)
+        assert again.frame("idle", 0, False) is first  # not cut again
+        Sprites(paths.anim_dir(), 120, 1.5).frame("idle", 0, False)  # a third screen: the oldest (2x) goes
+>       assert Sprites(paths.anim_dir(), 120, 1.0).frame("idle", 0, False) is first
+E       AssertionError: assert SpriteFrame(pixmap=<PyQt6.QtGui.QPixmap object at 0x0000022C3E5FC1D0>, mask=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...92, 78, 4), (22, 96, 74, 4), (24, 100, 68, 4), (27, 104, 62, 4), (21, 108, 74, 4), (20, 112, 76, 4), (25, 116, 66, 4))) is SpriteFrame(pixmap=<PyQt6.QtGui.QPixmap object at 0x0000022C3E4CE0D0>, mask=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...92, 78, 4), (22, 96, 74, 4), (24, 100, 68, 4), (27, 104, 62, 4), (21, 108, 74, 4), (20, 112, 76, 4), (25, 116, 66, 4)))
+E        +  where SpriteFrame(pixmap=<PyQt6.QtGui.QPixmap object at 0x0000022C3E5FC1D0>, mask=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...92, 78, 4), (22, 96, 74, 4), (24, 100, 68, 4), (27, 104, 62, 4), (21, 108, 74, 4), (20, 112, 76, 4), (25, 116, 66, 4))) = frame('idle', 0, False)
+E        +    where frame = <chatmon.sprites.Sprites object at 0x0000022C3E30B230>.frame
+E        +      where <chatmon.sprites.Sprites object at 0x0000022C3E30B230> = Sprites(WindowsPath('C:/Users/Randy/AppData/Local/Temp/chatmon-drill-ezu86avn/chatmon/anim'), 120, 1.0)
+E        +        where WindowsPath('C:/Users/Randy/AppData/Local/Temp/chatmon-drill-ezu86avn/chatmon/anim') = <function anim_dir at 0x0000022C3E35EF00>()
+E        +          where <function anim_dir at 0x0000022C3E35EF00> = paths.anim_dir
+
+tests\test_sprites.py:55: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sprites.py::test_the_previous_screens_frames_are_kept_for_a_drag_back
+1 failed in 0.62s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.58s
+
+=== drill M3-05-keys (M3-05) on chatmon/stagemenu.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stagemenu.py::test_the_keyboard_moves_opens_picks_and_closes
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.68s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_the_keyboard_moves_opens_picks_and_closes ________________
+
+menu = (<PyQt6.QtWidgets.QMenu object at 0x0000025318C83D90>, ['ask'], <PyQt6.QtGui.QAction object at 0x0000025318D54550>)
+
+    def test_the_keyboard_moves_opens_picks_and_closes(menu):
+        m, ran, _walk = menu
+        sm = opened(m)
+        assert press(sm, Qt.Key.Key_Down) and lit(sm) == "Ask"
+        press(sm, Qt.Key.Key_Down)
+        assert lit(sm) == "Brain"
+        press(sm, Qt.Key.Key_Down)  # over the separator
+        assert lit(sm) == "Walk around"
+        press(sm, Qt.Key.Key_End)
+        assert lit(sm) == "&Quit"
+        press(sm, Qt.Key.Key_Down)  # round to the top
+        assert lit(sm) == "Ask"
+        press(sm, Qt.Key.Key_Home)
+        press(sm, Qt.Key.Key_Up)
+        assert lit(sm) == "&Quit"
+        press(sm, Qt.Key.Key_B, "b")  # a letter: the next item starting with it
+        assert lit(sm) == "Brain" and len(sm.panels) == 1
+        press(sm, Qt.Key.Key_Right)  # into the submenu, its first item lit (not the section, not the disabled)
+        assert len(sm.panels) == 2 and lit(sm) == "Claude Code"
+        press(sm, Qt.Key.Key_Down)
+        assert lit(sm) == "Codex"  # the disabled one is skipped
+        press(sm, Qt.Key.Key_Left)
+        assert len(sm.panels) == 1 and lit(sm) == "Brain"
+        press(sm, Qt.Key.Key_Return)  # Enter on a submenu opens it
+        assert len(sm.panels) == 2
+        press(sm, Qt.Key.Key_Escape)  # Esc: back one menu
+        assert len(sm.panels) == 1 and sm.is_open()
+        press(sm, Qt.Key.Key_Up)
+        press(sm, Qt.Key.Key_Return)
+        assert not sm.is_open()
+        sm.take_chosen().trigger()
+        assert ran == ["ask"]
+        sm.open(m, QPointF(100, 100), SCREEN)
+        press(sm, Qt.Key.Key_Q, "q")  # its & letter picks it
+        assert not sm.is_open() and sm.take_chosen().text() == "&Quit"
+        sm.open(m, QPointF(100, 100), SCREEN)
+>       assert press(sm, Qt.Key.Key_Escape) and not sm.is_open()
+E       AssertionError: assert (True and not True)
+E        +  where True = press(<chatmon.stagemenu.StageMenu object at 0x0000025318CB0EC0>, <Key.Key_Escape: 16777216>)
+E        +    where <Key.Key_Escape: 16777216> = <enum 'Key'>.Key_Escape
+E        +      where <enum 'Key'> = Qt.Key
+E        +  and   True = is_open()
+E        +    where is_open = <chatmon.stagemenu.StageMenu object at 0x0000025318CB0EC0>.is_open
+
+tests\test_stagemenu.py:182: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stagemenu.py::test_the_keyboard_moves_opens_picks_and_closes
+1 failed in 0.74s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.77s
+
+=== drill M3-05-route (M3-05) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_esc_closes_an_open_menu_not_the_box_under_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.16s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_esc_closes_an_open_menu_not_the_box_under_it ______________
+
+stage = (<chatmon.penguin.Stage object at 0x000001586229A7B0>, <chatmon.bubble.AskBox object at 0x000001586229B390>)
+
+    def test_esc_closes_an_open_menu_not_the_box_under_it(stage):
+        s, box = stage
+        box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+        spin(0.1)
+        s.keyboard_focus(True)
+        gpos = centre_of(box, box.entry)
+        s.press(gpos - QPointF(s.origin()), gpos, Qt.MouseButton.RightButton)
+        assert s.menu.is_open()
+        s.key(key("\x1b", Qt.Key.Key_Escape), True, False)
+        s.key(key("\x1b", Qt.Key.Key_Escape), False, False)
+>       assert not s.menu.is_open() and box.isVisible()  # the menu went, the box stayed
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (not True)
+E        +  where True = is_open()
+E        +    where is_open = <chatmon.stagemenu.StageMenu object at 0x0000015861FA96A0>.is_open
+E        +      where <chatmon.stagemenu.StageMenu object at 0x0000015861FA96A0> = <chatmon.penguin.Stage object at 0x000001586229A7B0>.menu
+
+tests\test_overlay_stage.py:172: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_overlay_stage.py::test_esc_closes_an_open_menu_not_the_box_under_it
+1 failed in 1.52s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.87s
+
+=== drill M3-05-focus (M3-05) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_the_keyboard_picks_from_the_penguins_menu_and_the_overlay_takes_it_while_open
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.21s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_the_keyboard_picks_from_the_penguins_menu_and_the_overlay_takes_it_while_open _
+
+stage = (<chatmon.penguin.Stage object at 0x00000261C56D6B70>, <chatmon.bubble.AskBox object at 0x00000261C56D7610>)
+
+    def test_the_keyboard_picks_from_the_penguins_menu_and_the_overlay_takes_it_while_open(stage):
+        s, box = stage
+        ran = []
+        menu = QMenu()
+        menu.addAction("Ask", lambda: ran.append("ask"))
+        menu.addAction("Hide", lambda: ran.append("hide"))
+        spin(0.1)
+        s.open_menu(menu, QPoint(300, 300))
+>       assert s.surface.focus == [(True, True)]  # a popup menu takes the keyboard
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert [] == [(True, True)]
+E         
+E         Right contains one more item: (True, True)
+E         Use -v to get more diff
+
+tests\test_overlay_stage.py:185: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_overlay_stage.py::test_the_keyboard_picks_from_the_penguins_menu_and_the_overlay_takes_it_while_open
+1 failed in 3.52s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.36s
+
+=== drill M3-05-outline (M3-05) on chatmon/stagemenu.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stagemenu.py::test_it_draws_the_lit_row_solid_with_an_outline
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.65s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_it_draws_the_lit_row_solid_with_an_outline _______________
+
+menu = (<PyQt6.QtWidgets.QMenu object at 0x000002A532AC7D90>, [], <PyQt6.QtGui.QAction object at 0x000002A532B18550>)
+
+    def test_it_draws_the_lit_row_solid_with_an_outline(menu):
+        m, _ran, _walk = menu
+        sm = opened(m, at=QPointF(10, 10), area=QRect(0, 0, 400, 400))
+        img = render(sm)
+        inside = sm.panels[0].rect.center()
+        assert img.pixelColor(inside).alpha() > 200 and img.pixelColor(390, 390).alpha() == 0
+        press(sm, Qt.Key.Key_End)  # "Quit" lit, from the keyboard
+        img = render(sm)
+        panel = sm.panels[0]
+        row = panel.item_rect(panel.active).translated(panel.rect.topLeft())
+        colours = stagemenu.palette()
+        fill_at = img.pixelColor(row.right() - stagemenu.ARROW // 2, row.center().y())  # inside the row, away from the label
+        assert fill_at.alpha() == 255 and fill_at.rgb() == colours.hover.rgb()  # solid, not a tint
+        edge = img.pixelColor(row.left() + 4, row.center().y())  # where the outline runs
+>       assert contrast(edge, colours.hover) >= 1.5 and edge.rgb() != colours.hover.rgb()
+E       assert (1.0 >= 1.5)
+E        +  where 1.0 = contrast(<PyQt6.QtGui.QColor object at 0x000002A532DBBBD0>, <PyQt6.QtGui.QColor object at 0x000002A532DBBC50>)
+E        +    where <PyQt6.QtGui.QColor object at 0x000002A532DBBC50> = Palette(fill=<PyQt6.QtGui.QColor object at 0x000002A532DB86D0>, text=<PyQt6.QtGui.QColor object at 0x000002A532DBB150>... hover_text=<PyQt6.QtGui.QColor object at 0x000002A532DBB850>, focus=<PyQt6.QtGui.QColor object at 0x000002A532DBB9D0>).hover
+
+tests\test_stagemenu.py:255: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stagemenu.py::test_it_draws_the_lit_row_solid_with_an_outline
+1 failed in 0.77s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.80s
+
+=== drill M3-06-scroll (M3-06) on chatmon/stagemenu.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stagemenu.py::test_a_menu_taller_than_the_screen_scrolls
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.81s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_a_menu_taller_than_the_screen_scrolls __________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000020546F3FCF0>
+
+    def test_a_menu_taller_than_the_screen_scrolls(qapp):
+        m = QMenu()
+        for i in range(60):
+            m.addAction(f"Chat {i:02d}")
+        clock = Clock()
+        sm = opened(m, clock, at=QPointF(50, 20), area=QRect(0, 0, 600, 400))
+        panel = sm.panels[0]
+>       assert panel.rect.height() <= 400 - 2 * stagemenu.MARGIN and panel.scrolls()
+E       AssertionError: assert (1568 <= (400 - (2 * 4)))
+E        +  where 1568 = <built-in method height of QRect object at 0x0000020546E9BA50>()
+E        +    where <built-in method height of QRect object at 0x0000020546E9BA50> = PyQt6.QtCore.QRect(50, 4, 140, 1568).height
+E        +      where PyQt6.QtCore.QRect(50, 4, 140, 1568) = _Panel(menu=<PyQt6.QtWidgets.QMenu object at 0x0000020546F3FD90>, rect=PyQt6.QtCore.QRect(50, 4, 140, 1568), items=[_I...46EA2350>, rect=PyQt6.QtCore.QRect(0, 1538, 140, 26), kind='action')], height=1568, scroll=0, active=None, opener=None).rect
+E        +  and   4 = stagemenu.MARGIN
+
+tests\test_stagemenu.py:193: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stagemenu.py::test_a_menu_taller_than_the_screen_scrolls - ...
+1 failed in 0.85s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.89s
+
+=== drill M3-06-hover (M3-06) on chatmon/stagemenu.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stagemenu.py::test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.31s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes __
+
+menu = (<PyQt6.QtWidgets.QMenu object at 0x000002177A26FD90>, [], <PyQt6.QtGui.QAction object at 0x000002177A254550>)
+
+    def test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes(menu):
+        m, ran, _walk = menu
+        clock = Clock()
+        sm = opened(m, clock)
+        sm.move(centre(sm, 0, "Brain"))
+>       assert len(sm.panels) == 1 and sm.next_change() == pytest.approx(clock.t + stagemenu.SUBMENU_DELAY)
+E       AssertionError: assert (1 == 1 and 100.0 == 100.25 ± 1.0e-04
+E        +  where 1 = len([_Panel(menu=<PyQt6.QtWidgets.QMenu object at 0x000002177A26FD90>, rect=PyQt6.QtCore.QRect(100, 100, 182, 121), items=...002177A2545F0>, rect=PyQt6.QtCore.QRect(0, 91, 182, 26), kind='action')], height=121, scroll=0, active=1, opener=None)])
+E        +    where [_Panel(menu=<PyQt6.QtWidgets.QMenu object at 0x000002177A26FD90>, rect=PyQt6.QtCore.QRect(100, 100, 182, 121), items=...002177A2545F0>, rect=PyQt6.QtCore.QRect(0, 91, 182, 26), kind='action')], height=121, scroll=0, active=1, opener=None)] = <chatmon.stagemenu.StageMenu object at 0x000002177A1C8EC0>.panels
+E         
+E         comparison failed
+E         Obtained: 100.0
+E         Expected: 100.25 ± 1.0e-04)
+
+tests\test_stagemenu.py:82: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stagemenu.py::test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes
+1 failed in 1.19s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.59s
+
+=== drill M3-07-contrast (M3-07) on chatmon/stagemenu.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stagemenu.py::test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.63s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001F3BC99BCF0>
+
+    def test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid(qapp):
+        from chatmon import bubble
+    
+        for fill, text in ((QColor("#ffffff"), QColor("#1a1a1a")), (QColor("#202024"), QColor("#f0f0f0")), (QColor("#fdf6e3"), QColor("#586e75"))):
+            quiet = stagemenu.muted(text, fill)
+>           assert contrast(quiet, fill) >= stagemenu.CONTRAST, (fill.name(), text.name())
+E           AssertionError: ('#ffffff', '#1a1a1a')
+E           assert 3.340688518271535 >= 4.5
+E            +  where 3.340688518271535 = contrast(<PyQt6.QtGui.QColor object at 0x000001F3BCA390D0>, <PyQt6.QtGui.QColor object at 0x000001F3BCA3B450>)
+E            +  and   4.5 = stagemenu.CONTRAST
+
+tests\test_stagemenu.py:222: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stagemenu.py::test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid
+1 failed in 0.78s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.60s
+
+=== drill M3-08-rows (M3-08) on chatmon/stagemenu.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stagemenu.py::test_rows_grow_with_the_font
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________________ test_rows_grow_with_the_font _________________________
+
+menu = (<PyQt6.QtWidgets.QMenu object at 0x000002E41C893D90>, [], <PyQt6.QtGui.QAction object at 0x000002E41C8E4550>)
+
+    def test_rows_grow_with_the_font(menu):
+        m, _ran, _walk = menu
+        app = QApplication.instance()
+        default = app.font()
+        try:
+            for points in (default.pointSizeF(), 24.0):
+                font = QFont(default)
+                font.setPointSizeF(points)
+                app.setFont(font)
+                sm = opened(m)
+                row = next(i.rect.height() for i in sm.panels[0].items if i.kind == "action")
+>               assert row == max(stagemenu.ROW, QFontMetrics(font).height() + stagemenu.ROW_PAD)
+E               assert 26 == 40
+E                +  where 40 = max(26, (32 + 8))
+E                +    where 26 = stagemenu.ROW
+E                +    and   32 = <built-in method height of QFontMetrics object at 0x000002E41C865950>()
+E                +      where <built-in method height of QFontMetrics object at 0x000002E41C865950> = <PyQt6.QtGui.QFontMetrics object at 0x000002E41C865950>.height
+E                +        where <PyQt6.QtGui.QFontMetrics object at 0x000002E41C865950> = QFontMetrics(<PyQt6.QtGui.QFont object at 0x000002E41C8658D0>)
+E                +    and   8 = stagemenu.ROW_PAD
+
+tests\test_stagemenu.py:269: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stagemenu.py::test_rows_grow_with_the_font - assert 26 == 40
+1 failed in 0.77s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.65s
+
+=== drill M3-10-shape (M3-10) on chatmon/clickthrough.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_clickthrough.py::test_the_x_input_shape_is_in_device_pixels_rounded_outward
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_the_x_input_shape_is_in_device_pixels_rounded_outward __________
+
+    def test_the_x_input_shape_is_in_device_pixels_rounded_outward():
+        logical = ((10, 20, 30, 4), (0, 0, 1, 1), (7, 3, 5, 9))
+        assert clickthrough.device_rects(logical, 1.0) == logical
+        assert clickthrough.device_rects(logical, 2.0) == ((20, 40, 60, 8), (0, 0, 2, 2), (14, 6, 10, 18))
+        # 1.5: 7 * 1.5 = 10.5 and 12 * 1.5 = 18 (the right edge): the shape starts at 10 and covers both half pixels.
+        assert clickthrough.device_rects(((7, 3, 5, 9),), 1.5) == ((10, 4, 8, 14),)
+        for x, y, w, h in logical:
+            (dx, dy, dw, dh), = clickthrough.device_rects(((x, y, w, h),), 1.25)
+>           assert dx <= x * 1.25 and dy <= y * 1.25 and dx + dw >= (x + w) * 1.25 and dy + dh >= (y + h) * 1.25
+E           assert (0 <= (0 * 1.25) and 0 <= (0 * 1.25) and (0 + 1) >= ((0 + 1) * 1.25))
+
+tests\test_clickthrough.py:124: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_clickthrough.py::test_the_x_input_shape_is_in_device_pixels_rounded_outward
+1 failed in 0.58s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.39s
+
+=== drill M3-11-still (M3-11) on chatmon/behavior.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_behavior.py::test_reduced_motion_holds_each_looping_mood_still
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.52s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_reduced_motion_holds_each_looping_mood_still ______________
+
+    def test_reduced_motion_holds_each_looping_mood_still():
+        b = make(walk=False)
+        run(b, 0, 3)
+        b.set_reduced_motion(True, 3)
+        t = 3.0
+        for flag in ("alert", "talking", "thinking", "attending"):
+            getattr(b, "set_" + flag)(True, t)
+            frames, t = run(b, t, t + 4)
+>           assert len({(f.anim, f.index) for f in frames}) == 1, flag  # one pose, from the first frame
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: alert
+E           assert 6 == 1
+E            +  where 6 = len({('alert', 0), ('alert', 1), ('alert', 2), ('alert', 3), ('alert', 4), ('alert', 5)})
+
+tests\test_behavior.py:333: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_behavior.py::test_reduced_motion_holds_each_looping_mood_still
+1 failed in 0.47s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+
+=== drill M3-11-zs (M3-11) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_features.py::test_reduced_motion_stills_the_creature_and_its_zs
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.00s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_reduced_motion_stills_the_creature_and_its_zs ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002F79E5DE710>
+
+    def test_reduced_motion_stills_the_creature_and_its_zs(qapp):
+        s, clock = make_stage(sleep_after=5)
+        follow_the_clock(s, clock, 30, check=False)
+        assert s._frame.anim == "sleep"
+        s.set_reduced_motion(True)
+        assert s.behavior.reduced_motion
+        seen = set()
+        for _ in range(20):
+            s._tick()
+            seen.add((s._frame.anim, s._frame.index, s._z_phase))
+            clock.t += s.next_tick_in
+>       assert seen == {("sleep", 3, 2)}  # asleep, one pose, all three z's, still
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert {('sleep', 3,...sleep', 3, 2)} == {('sleep', 3, 2)}
+E         
+E         Extra items in the left set:
+E         ('sleep', 3, 0)
+E         ('sleep', 3, 1)
+E         Use -v to get more diff
+
+tests\test_stage_features.py:105: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_features.py::test_reduced_motion_stills_the_creature_and_its_zs
+1 failed in 1.27s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.75s
+
+=== drill M3-12-hold (M3-12) on chatmon/behavior.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_behavior.py::test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.40s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after _____
+
+    def test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after():
+        b = make(seed=3, sleep_after=0)
+        f, t = _until(b, 0, lambda f, b: f.anim == "walk" and f.index == 3)
+        target = b._target
+        b.hovered = True
+        frames, t = run(b, t, t + 5)
+        # It stops mid-step: the walk frame it was on, facing the way it walked (no swap to the front-facing idle).
+>       assert {(f.anim, f.index, f.mirror) for f in frames} == {("walk", 3, f.mirror)} and len({f.x for f in frames}) == 1
+E       AssertionError: assert ({('idle', 0, False)} == {('walk', 3, False)}
+E         
+E         Extra items in the left set:
+E         ('idle', 0, False)
+E         Extra items in the right set:
+E         ('walk', 3, False)
+E         Use -v to get more diff)
+
+tests\test_behavior.py:227: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_behavior.py::test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after
+1 failed in 0.52s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.70s
+
+=== drill M3-13-badge (M3-13) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_features.py::test_the_badge_counts_agents_by_state_with_a_shape_for_each
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.93s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_the_badge_counts_agents_by_state_with_a_shape_for_each _________
+
+stage = (<chatmon.penguin.Stage object at 0x00000294C3E8E7B0>, <test_stage_timer.Clock object at 0x00000294C3E9ABA0>)
+
+    def test_the_badge_counts_agents_by_state_with_a_shape_for_each(stage):
+        s, clock = stage
+        assert s._badges == () and s.badge_description() == ""
+        s.set_badge(working=2, needs_you=1)
+        assert s._timer.remainingTime() <= 17  # drawn within a frame
+        s._tick()
+        (waiting, rw, figure_w), (working, rk, figure_k) = s._badges
+        assert (waiting, figure_w, working, figure_k) == ("needs-you", "1", "working", "2")
+        assert s.badge_description() == "1 agent needs you, 2 agents working"
+        sprite = s.sprites.frame(s._frame.anim, s._frame.index, s._frame.mirror)
+        right = max(x + w for x, y, w, h in sprite.rects) + s._penguin.x()
+        top = min(y for x, y, w, h in sprite.rects) + s._penguin.y()
+        assert abs(rw.center().x() - right) <= penguin.BADGE and abs(rw.center().y() - top) <= penguin.BADGE  # at its top right
+        assert rk.right() < rw.left()  # working beside it, never on top of it
+        img = picture(s)
+        for state, r in (("needs-you", rw), ("working", rk)):
+            fill, _ink = penguin.BADGE_COLOURS[state]
+            beside = QPointF(r.left() + r.width() * 0.15, r.center().y()).toPoint()  # inside, left of the figure
+            assert close_to(img.pixelColor(beside), fill), state
+            # The shape says which, not the colour alone: a fifth in from the corner is in a circle, not a diamond.
+            corner = QPointF(r.left() + r.width() * 0.2, r.top() + r.height() * 0.2)
+>           assert penguin.Stage._badge_path(state, r).contains(corner) == (state == "working"), state
+E           AssertionError: needs-you
+E           assert True == ('needs-you' == 'working'
+E            +  where True = <built-in method contains of QPainterPath object at 0x00000294C5031ED0>(PyQt6.QtCore.QPointF(442.6, 676.6))
+E            +    where <built-in method contains of QPainterPath object at 0x00000294C5031ED0> = <PyQt6.QtGui.QPainterPath object at 0x00000294C5031ED0>.contains
+E            +      where <PyQt6.QtGui.QPainterPath object at 0x00000294C5031ED0> = <function Stage._badge_path at 0x00000294C4F84040>('needs-you', PyQt6.QtCore.QRectF(437.0, 671.0, 28.0, 28.0))
+E            +        where <function Stage._badge_path at 0x00000294C4F84040> = <class 'chatmon.penguin.Stage'>._badge_path
+E            +          where <class 'chatmon.penguin.Stage'> = penguin.Stage
+E             
+E             - working
+E             + needs-you)
+
+tests\test_stage_features.py:62: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_features.py::test_the_badge_counts_agents_by_state_with_a_shape_for_each
+1 failed in 0.82s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.75s
+
+=== drill M3-14-unhosted (M3-14) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.32s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus __
+
+stage = (<chatmon.penguin.Stage object at 0x000001B14D5AA990>, <chatmon.bubble.AskBox object at 0x000001B14D5AB430>)
+
+    def test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus(stage):
+        s, box = stage
+        box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+        spin(0.1)
+        s.keyboard_focus(True)
+        geo = box.geometry()
+        assert box.graphicsProxyWidget() is not None and s.hosts_windows() and s.draws_menus()
+        s.set_hosting(False)
+        spin(0.1)
+        assert box.graphicsProxyWidget() is None and box.isWindow() and box.isVisible()  # a window of its own, still open
+        assert box.windowHandle() is not None and box.windowHandle().isVisible() and box.geometry() == geo
+>       assert not s.hosts_windows() and not s.draws_menus()  # the app's menus go to Qt again
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (not True)
+E        +  where True = hosts_windows()
+E        +    where hosts_windows = <chatmon.penguin.Stage object at 0x000001B14D5AA990>.hosts_windows
+
+tests\test_overlay_stage.py:320: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_overlay_stage.py::test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus
+1 failed in 0.97s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.28s
+
+=== drill M3-15-follow (M3-15) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_features.py::test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.86s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second _
+
+two_screens = (<chatmon.penguin.Stage object at 0x000001C3FAA12A30>, <test_stage_timer.Clock object at 0x000001C3FAA1ACF0>, <test_stage_features.Screen object at 0x000001C3FA5C4980>, <test_stage_features.Screen object at 0x000001C3FBA4A990>)
+
+    def test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second(two_screens):
+        s, clock, left, right = two_screens
+        s._cursor_pos = lambda: QPoint(2500, 300)  # on the right-hand screen
+        tick_for(s, clock, 3)
+        assert s.screen() is left  # off by default
+        assert s.follow_pointer_screen(True)
+        tick_for(s, clock, 0.75)
+>       assert s.screen() is left  # not for a pointer passing through
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert <test_stage_features.Screen object at 0x000001C3FBA4A990> is <test_stage_features.Screen object at 0x000001C3FA5C4980>
+E        +  where <test_stage_features.Screen object at 0x000001C3FBA4A990> = screen()
+E        +    where screen = <chatmon.penguin.Stage object at 0x000001C3FAA12A30>.screen
+
+tests\test_stage_features.py:163: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage_features.py::test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second
+1 failed in 0.76s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.18s
+
+=== drill M3-M2-hover (M3-M2) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_a_bubble_waits_while_the_pointer_is_on_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 11.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_a_bubble_waits_while_the_pointer_is_on_it ________________
+
+stage = (<chatmon.penguin.Stage object at 0x000001C7575627B0>, <chatmon.bubble.AskBox object at 0x000001C757563390>)
+
+    def test_a_bubble_waits_while_the_pointer_is_on_it(stage):
+        s, box = stage
+        clock = Clock()
+        s._clock = clock
+        s.show_message("Reminder", "Stretch your legs, it has been an hour.", timeout_s=3)
+        s._tick()
+        stay = s.bubble.expires() - clock.t
+        on = bubble_point(s, "body")
+        clock.t += 1
+        s.move(on, on + QPointF(s.origin()))
+        clock.t += stay + 5  # long past when it would have gone
+        s._tick()
+>       assert s.message_visible()
+E       assert False
+E        +  where False = message_visible()
+E        +    where message_visible = <chatmon.penguin.Stage object at 0x000001C7575627B0>.message_visible
+
+tests\test_overlay_stage.py:256: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_overlay_stage.py::test_a_bubble_waits_while_the_pointer_is_on_it
+1 failed in 1.16s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.95s
+
+=== drill M3-M2-link (M3-M2) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.29s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click __________
+
+stage = (<chatmon.penguin.Stage object at 0x0000013577C967B0>, <chatmon.bubble.AskBox object at 0x0000013577C97390>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000013577C75BA0>
+
+    def test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click(stage, monkeypatch):
+        from chatmon import bubble
+    
+        opened = []
+        monkeypatch.setattr(bubble, "open_link", lambda url: opened.append(url.toString()))
+        s, box = stage
+        s.show_message("Answer", "See [the docs](https://example.com/docs) for more.", timeout_s=None)
+        spin(0.3)
+        link = bubble_point(s, "link")
+        gpos = link + QPointF(s.origin())
+        s.move(link, gpos)
+        assert s.surface.cursor == "pointer"
+        assert s.press(link, gpos, Qt.MouseButton.LeftButton)
+        s.release(link, gpos, Qt.MouseButton.LeftButton)
+>       assert opened == ["https://example.com/docs"] and s.message_visible()  # opened, and the bubble stays
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ([] == ['https://example.com/docs']
+E         
+E         Right contains one more item: 'https://example.com/docs'
+E         Use -v to get more diff)
+
+tests\test_overlay_stage.py:280: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_overlay_stage.py::test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click
+1 failed in 1.31s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.23s
+
+=== drill M3-M2-ring (M3-M2) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.86s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves ________
+
+stage = (<chatmon.penguin.Stage object at 0x000001BC063C27B0>, <chatmon.bubble.AskBox object at 0x000001BC063C3390>)
+
+    def test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves(stage):
+        s, box = stage
+        box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+        spin(0.1)
+        ring = s.hosted.ring()
+        geo = box.geometry()
+        assert ring.contains(geo.topLeft() + QPoint(3, geo.height() // 2)) and not ring.contains(geo.center())
+        frames = iter(range(1000, 2000))
+        s.hosted.anim_key = lambda now: next(frames)  # a new frame of its art at every tick
+        s._tick()
+        s.surface.damaged = QRegion()
+        s._tick()
+        local = geo.translated(-s.origin())
+        assert s.surface.damaged.contains(local.topLeft() + QPoint(3, local.height() // 2))
+>       assert not s.surface.damaged.contains(local.center())  # the words inside aren't drawn again
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert not True
+E        +  where True = <built-in method contains of QRegion object at 0x000001BC06002C50>(PyQt6.QtCore.QPoint(399, 523))
+E        +    where <built-in method contains of QRegion object at 0x000001BC06002C50> = <PyQt6.QtGui.QRegion object at 0x000001BC06002C50>.contains
+E        +      where <PyQt6.QtGui.QRegion object at 0x000001BC06002C50> = <test_overlay_stage.Overlay object at 0x000001BC05F2D7F0>.damaged
+E        +        where <test_overlay_stage.Overlay object at 0x000001BC05F2D7F0> = <chatmon.penguin.Stage object at 0x000001BC063C27B0>.surface
+E        +    and   PyQt6.QtCore.QPoint(399, 523) = <built-in method center of QRect object at 0x000001BC06002150>()
+E        +      where <built-in method center of QRect object at 0x000001BC06002150> = PyQt6.QtCore.QRect(210, 447, 380, 153).center
+
+tests\test_overlay_stage.py:306: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_overlay_stage.py::test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves
+1 failed in 1.12s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.94s
+
+=== summary
+PASS M3-01-idle
+PASS M3-01-missed
+PASS M3-01-quiet
+PASS M3-01-pointer
+PASS M3-02-refresh
+PASS M3-02-pixels
+PASS M3-02-drag
+PASS M3-03-once
+PASS M3-03-cache
+PASS M3-05-keys
+PASS M3-05-route
+PASS M3-05-focus
+PASS M3-05-outline
+PASS M3-06-scroll
+PASS M3-06-hover
+PASS M3-07-contrast
+PASS M3-08-rows
+PASS M3-10-shape
+PASS M3-11-still
+PASS M3-11-zs
+PASS M3-12-hold
+PASS M3-13-badge
+PASS M3-14-unhosted
+PASS M3-15-follow
+PASS M3-M2-hover
+PASS M3-M2-link
+PASS M3-M2-ring

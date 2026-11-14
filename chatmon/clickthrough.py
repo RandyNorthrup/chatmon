@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import ctypes
 import ctypes.util
+import math
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor, QGuiApplication, QRegion
@@ -24,6 +25,20 @@ from PyQt6.QtWidgets import QWidget
 def _key(rects) -> tuple:
     """Rectangles as (x, y, w, h) tuples: the stage sends them so; QRects are taken too."""
     return tuple(rects) if not rects or isinstance(rects[0], tuple) else tuple((r.x(), r.y(), r.width(), r.height()) for r in rects)
+
+
+def device_rects(rects: tuple, ratio: float) -> tuple:
+    """(x, y, w, h) rectangles in Qt's logical pixels as the device pixels an X input shape takes, rounded
+    outward: at a scale of 1.5 or 2 the clickable area keeps its place and size, and no edge of the chatmon is
+    left letting clicks through."""
+    if ratio == 1:
+        return rects
+    out = []
+    for x, y, w, h in rects:
+        left, top = math.floor(x * ratio), math.floor(y * ratio)
+        out.append((left, top, math.ceil((x + w) * ratio) - left, math.ceil((y + h) * ratio) - top))
+    return tuple(out)
+
 
 class _XRectangle(ctypes.Structure):
     _fields_ = [("x", ctypes.c_short), ("y", ctypes.c_short), ("width", ctypes.c_ushort), ("height", ctypes.c_ushort)]
@@ -50,17 +65,21 @@ class XShapeInput:
         event, error = ctypes.c_int(), ctypes.c_int()
         if not self._display or not xext.XShapeQueryExtension(self._display, ctypes.byref(event), ctypes.byref(error)):
             raise OSError("no X SHAPE extension")
+        self._widget = widget
         self._window = int(widget.winId())
         self._last: tuple | None = None
         self.update([])
 
     def update(self, rects) -> None:
-        key = _key(rects)
+        # The X server counts in device pixels; the stage, like Qt, in logical ones.
+        ratio = self._widget.devicePixelRatioF()
+        key = (_key(rects), ratio)
         if key == self._last:
             return
         self._last = key
-        array = (_XRectangle * max(1, len(key)))(*[_XRectangle(*r) for r in key])
-        self._xext.XShapeCombineRectangles(self._display, self._window, self.SHAPE_INPUT, 0, 0, array, len(key), self.SHAPE_SET, 0)
+        shape = device_rects(key[0], ratio)
+        array = (_XRectangle * max(1, len(shape)))(*[_XRectangle(*r) for r in shape])
+        self._xext.XShapeCombineRectangles(self._display, self._window, self.SHAPE_INPUT, 0, 0, array, len(shape), self.SHAPE_SET, 0)
         self._x11.XFlush(self._display)
 
     def follow_pointer(self, hit) -> None:
