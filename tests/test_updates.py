@@ -2,14 +2,13 @@
 checks a download must pass, and what's new after an update. No network: GitHub's replies are made here."""
 
 import hashlib
-import os
 import sys
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
-from chatmon import __version__, changelog, report, updates
+from chatmon import __version__, changelog, releasecheck, report, updates
 
 TAG = "v9.0.0"
 BASE = updates.DOWNLOADS + TAG + "/"
@@ -69,12 +68,6 @@ def test_anything_else_from_github_is_not_a_release():
         assert updates.parse_release(data) is None
 
 
-def test_checksums_are_read_in_sha256sums_own_format():
-    a, b = "a" * 64, "B" * 64
-    text = f"{a}  Chatmon-9.0.0-windows-x64-setup.exe\n{b} *chatmon_9.0.0-1_all.deb\nnot a line\n{'c' * 63}  short\n"
-    assert updates.parse_sums(text) == {"Chatmon-9.0.0-windows-x64-setup.exe": a, "chatmon_9.0.0-1_all.deb": b.lower()}
-
-
 @pytest.mark.parametrize(
     "kind, machine, name",
     [
@@ -127,10 +120,31 @@ def test_on_windows_the_installer_must_be_signed_by_randy_northrup(tmp_path, mon
 
 def test_the_installer_is_never_handed_the_path_as_part_of_a_script(tmp_path):
     pkg = tmp_path / 'it"s $(rm -rf ~) & a.pkg'
-    program, args, env = updates.installer_command("macos", pkg, "ab" * 32)
-    assert program == "/usr/bin/osascript" and str(pkg) not in " ".join(args) and env == {"CHATMON_UPDATE": str(pkg), "CHATMON_SHA256": "ab" * 32}
+    program, args, env = updates.installer_command("macos", pkg)
+    sums, signature = updates.sums_for(pkg)
+    assert program == "/usr/bin/osascript" and str(pkg) not in " ".join(args)
+    assert env == {"CHATMON_ROOT": updates._MACOS_ROOT, "CHATMON_UPDATE": str(pkg), "CHATMON_SUMS": str(sums), "CHATMON_SIG": str(signature)}
     program, args, env = updates.installer_command("windows", tmp_path / "setup.exe")
     assert program == str(tmp_path / "setup.exe") and "/VERYSILENT" in args and "/relaunch=1" in args
+
+
+def test_root_is_handed_the_signed_list_never_a_checksum(tmp_path, monkeypatch):
+    """Linux: pkexec runs the package's own install-update on the download, the release's signed list and its
+    signature, which root checks itself; nothing in the call is a checksum it would take on trust."""
+    for name in ("pkexec", "install-update"):
+        (tmp_path / name).write_text("#!/bin/sh\n")
+        (tmp_path / name).chmod(0o755)
+    monkeypatch.setattr(updates, "PKEXEC", str(tmp_path / "pkexec"))
+    monkeypatch.setattr(updates, "HELPER", str(tmp_path / "install-update"))
+    deb = tmp_path / "updates" / "chatmon_9.0.0-1_all.deb"
+    for kind in ("deb", "rpm"):
+        program, args, env = updates.installer_command(kind, deb)
+        sums, signature = updates.sums_for(deb)
+        assert (program, args, env) == (str(tmp_path / "pkexec"), [str(tmp_path / "install-update"), str(deb), str(sums), str(signature)], {})
+        assert sums.name == "chatmon_9.0.0-1_all.deb.SHA256SUMS.txt" and signature.name == "chatmon_9.0.0-1_all.deb.SHA256SUMS.txt.sig"
+        assert not any(len(a) == 64 and all(c in "0123456789abcdef" for c in a) for a in args)
+    monkeypatch.setattr(updates, "HELPER", str(tmp_path / "no-such-helper"))  # an older package's, or none
+    assert updates.installer_command("deb", deb) is None
 
 
 def test_a_chatmon_it_cant_update_says_how_instead(monkeypatch):
@@ -228,8 +242,7 @@ def github(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(tmp_path))  # macOS: ~/Library/Caches
     # A program that exists nowhere (macOS has a real "installer"): what runs is never a real installer.
     monkeypatch.setattr(updates, "installer_command", lambda kind, path, expected="": ("chatmon-test-no-such-installer", [str(path)], {}))
-    monkeypatch.setattr(updates, "RELEASE_KEYS", (TEST_KEY,))
-    monkeypatch.setattr(updates.signed_sums, "__defaults__", ((TEST_KEY,),))
+    monkeypatch.setattr(releasecheck, "RELEASE_KEYS", (TEST_KEY,))
 
     def publish(installer: bytes, sums_for: bytes | None = None, sign: bool = True):
         name = "chatmon_9.0.0-1_all.deb"
@@ -266,6 +279,9 @@ def test_a_newer_release_is_downloaded_checked_and_offered(qapp, github):
     assert [name for name, _ in seen] == ["available"], seen
     assert seen[0][1][0].version == "9.0.0" and seen[0][1][0].notes == "## New\n- Nine"
     assert updater.ready.read_bytes() == b"the real installer" and not list(updater.ready.parent.glob("*.part"))
+    # The signed list that vouched for it waits beside it, for root to check again itself.
+    sums, signature = updates.sums_for(updater.ready)
+    assert sums.read_bytes() == TEST_SUMS and signature.read_bytes() == TEST_SIGNATURE
 
 
 def test_a_tampered_download_is_thrown_away_never_offered(qapp, github):
@@ -339,7 +355,8 @@ def test_checksums_not_signed_with_the_release_key_are_never_trusted(qapp, githu
 def test_signed_checksums_are_read_only_with_a_good_signature():
     assert updates.signed_sums(TEST_SUMS, TEST_SIGNATURE, (TEST_KEY,)) == {"chatmon_9.0.0-1_all.deb": TEST_SUMS[:64].decode()}
     assert updates.signed_sums(TEST_SUMS + b"x", TEST_SIGNATURE, (TEST_KEY,)) is None
-    assert updates.signed_sums(TEST_SUMS, TEST_SIGNATURE, updates.RELEASE_KEYS) is None  # the real key didn't sign it
+    assert updates.signed_sums(TEST_SUMS, TEST_SIGNATURE) is None  # the real key didn't sign it
+    assert updates.signed_sums(TEST_SUMS, TEST_SIGNATURE, updates.RELEASE_KEYS) is None
     assert updates.signed_sums(TEST_SUMS, b"\0" * 64, (TEST_KEY,)) is None
 
 
@@ -363,22 +380,6 @@ def test_ed25519_against_rfc_8032_and_openssl():
     big_s = h(signature)[:32] + (int.from_bytes(h(signature)[32:], "little") + ed25519._Q).to_bytes(32, "little")
     assert not ed25519.verify(h(key), h(message), big_s)  # s past the group's order: malleable, refused
     assert not ed25519.verify(h(key)[:31], h(message), h(signature)) and not ed25519.verify(h(key), h(message), h(signature)[:63])
-
-
-@pytest.mark.skipif(sys.platform != "darwin", reason="macOS only")
-def test_the_macos_install_script_checks_its_own_copy(tmp_path):
-    """The script as the updater runs it, but without asking for a password and with echo for installer:
-    its quoting holds, and it installs only a copy matching the checksum."""
-    import subprocess
-
-    pkg = tmp_path / "it's a \"pkg\" $(touch pwned).pkg"
-    pkg.write_bytes(b"the package")
-    script = updates._MACOS_SCRIPT.replace(" with administrator privileges", "").replace("/usr/sbin/installer -pkg", "/bin/echo installing")
-    for checksum, ok in ((hashlib.sha256(b"the package").hexdigest(), True), ("0" * 64, False)):
-        env = {**os.environ, "CHATMON_UPDATE": str(pkg), "CHATMON_SHA256": checksum}
-        out = subprocess.run(["/usr/bin/osascript", "-e", script], env=env, capture_output=True, text=True, cwd=tmp_path)
-        assert (out.returncode == 0 and "installing" in out.stdout) is ok, out
-    assert not (tmp_path / "pwned").exists()
 
 
 def test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit(qapp, github, monkeypatch):

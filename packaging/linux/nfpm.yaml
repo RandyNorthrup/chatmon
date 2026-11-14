@@ -50,6 +50,10 @@ contents:
     dst: /usr/lib/chatmon/install-update
     file_info:
       mode: 0755
+  - src: ./packaging/linux/verify-update  # root's check of an update: signed by the release key, and newer
+    dst: /usr/lib/chatmon/verify-update
+    file_info:
+      mode: 0755
   - src: ./packaging/linux/io.github.RandyNorthrup.chatmon.policy  # what the password prompt says for it
     dst: /usr/share/polkit-1/actions/io.github.RandyNorthrup.chatmon.policy
     file_info:

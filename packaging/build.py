@@ -166,6 +166,11 @@ def macos() -> list[Path]:
     v = version()
     arch = {"x86_64": "intel", "arm64": "arm64"}.get(platform.machine(), platform.machine())
     app = pyinstaller() / "Chatmon.app"
+    # Root's side of installing an update, inside the app (and so sealed by its signature): updates.py runs it
+    # from a copy of the app it has checked is root's alone, as the .pkg installs it.
+    helper = app / "Contents" / "Resources" / "install-update"
+    helper.write_bytes((PACKAGING / "macos" / "install-update").read_bytes().replace(b"\r\n", b"\n"))
+    helper.chmod(0o755)
     run("codesign", "--force", "--deep", "--sign", "-", app)  # ad hoc: Apple silicon runs nothing unsigned
     work = BUILD / "macos"
     shutil.rmtree(work, ignore_errors=True)
@@ -180,8 +185,10 @@ def macos() -> list[Path]:
     run("plutil", "-replace", "0.BundleIsRelocatable", "-bool", "NO", work / "component.plist")
     # And it replaces an older version's bundle whole: nothing of that one is left in it to run.
     run("plutil", "-replace", "0.BundleOverwriteAction", "-string", "upgrade", work / "component.plist")
+    # Installed as root's (--ownership recommended, pkgbuild's default, said outright): updating checks the
+    # update with the app's own code, which must be root's alone to be trusted (chatmon/updates.py).
     run("pkgbuild", "--root", work / "root", "--component-plist", work / "component.plist", "--identifier", BUNDLE_ID, "--version", v,
-        "--install-location", "/", "--scripts", scripts, work / "Chatmon.pkg")
+        "--ownership", "recommended", "--install-location", "/", "--scripts", scripts, work / "Chatmon.pkg")
     run("productbuild", "--synthesize", "--package", work / "Chatmon.pkg", work / "distribution.xml")
     distribution = (work / "distribution.xml").read_text(encoding="utf-8")  # the installer's window says "Chatmon"
     (work / "distribution.xml").write_text(distribution.replace("<options ", "<title>Chatmon</title>\n    <options ", 1), encoding="utf-8")

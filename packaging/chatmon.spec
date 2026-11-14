@@ -19,11 +19,12 @@ ICONS = ROOT / "packaging" / "icons"
 BUNDLE_ID = "io.github.randynorthrup.chatmon"
 
 a = Analysis(  # noqa: F821
-    [str(ROOT / "packaging" / "entry.py")],
+    # macOS's own entry: the chatmon command, and `Chatmon verify-update`, root's check of an update (see there).
+    [str(ROOT / "packaging" / "macos" / "entry.py")],
     pathex=[str(ROOT)],
     datas=collect_data_files("chatmon", excludes=["**/__pycache__"]),  # the sprites, bubbles and the Claude Code plugin
     # Imported where they're used, not at the top: named so they're surely in.
-    hiddenimports=["chatmon.app", "chatmon.agents", "chatmon.autostart"],
+    hiddenimports=["chatmon.app", "chatmon.agents", "chatmon.autostart", "chatmon.releasecheck"],
     excludes=["tkinter", "unittest", "pydoc_data", "test"],
 )
 pyz = PYZ(a.pure)  # noqa: F821
