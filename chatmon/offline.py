@@ -4,18 +4,29 @@ keeps notes, the stopwatch and reminders, and these parse what's asked of them.
 
 Each is recognized only from a clear way of asking for it, so a question that merely mentions a timer or a
 note still goes to the AI. Nothing here is ever sent anywhere, or kept in a chat.
+
+The fixed phrases ("time", "notes", "breaks off"…) and the help that lists them are data, one file per language in
+`phrases/`: English always, and the person's own language beside it when there's a file for it. Sums, units, dice,
+"days until …" and reminders' times are still read in English.
 """
 
 from __future__ import annotations
 
 import ast
+import functools
+import json
 import math
 import operator
 import re
 import secrets
 import string
+import warnings
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import date, datetime
+from pathlib import Path
+
+from . import localefmt
 
 # -- the calculator: arithmetic only, from a parsed tree (never eval)
 
@@ -23,6 +34,7 @@ _MAX_EXPRESSION = 200  # characters
 _MAX_NODES = 80
 _MAX_EXPONENT = 10_000
 _MAX_DIGITS = 400  # of a whole-number result
+_TOO_MANY_DIGITS = 10**_MAX_DIGITS  # the first whole number with more
 _BINARY = {
     ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv,
     ast.FloorDiv: operator.floordiv, ast.Mod: operator.mod, ast.Pow: operator.pow,
@@ -78,12 +90,15 @@ def calculate(expression: str) -> float | int | None:
     m = re.fullmatch(r"(.+?)\s*%\s*of\s+(.+)", text, re.I)
     if m:
         part, whole = calculate(m.group(1)), calculate(m.group(2))
-        return None if part is None or whole is None else part * whole / 100
+        return None if part is None or whole is None else _checked(part * whole / 100)
     text = re.sub(r"(?<=\d),(?=\d{3}\b)", "", text)  # 1,000,000
     text = text.replace("^", "**").replace("×", "*").replace("÷", "/").replace("π", "pi")
     text = re.sub(r"(\d+(?:\.\d+)?)\s*%", r"(\1/100)", text)  # 20% on its own: a fifth
     try:
-        tree = ast.parse(text, mode="eval")
+        # What's typed isn't Python: Python's own warnings about it ("invalid decimal literal" for "1or 2") mean
+        # nothing to anyone, so they're not printed.
+        with warnings.catch_warnings(action="ignore", category=SyntaxWarning):
+            tree = ast.parse(text, mode="eval")
     except (SyntaxError, ValueError, RecursionError, MemoryError):
         return None
     if not any(isinstance(n, (ast.BinOp, ast.Call, ast.UnaryOp)) for n in ast.walk(tree.body)) and not isinstance(tree.body, ast.Constant):
@@ -98,11 +113,16 @@ def calculate(expression: str) -> float | int | None:
         raise ValueError("can't divide by zero") from None
     except (ValueError, TypeError):
         raise ValueError("that can't be worked out") from None
+    return _checked(value)
+
+
+def _checked(value: float | int | complex) -> float | int:
+    """A result fit to show: real, finite, and a whole number of at most _MAX_DIGITS digits."""
     if isinstance(value, complex):  # (-8) ** 0.5
         raise ValueError("that has no real answer")
     if isinstance(value, float) and (math.isinf(value) or math.isnan(value)):
         raise OverflowError
-    if isinstance(value, int) and value.bit_length() > _MAX_DIGITS * 3.33:  # products of big numbers, too
+    if isinstance(value, int) and abs(value) >= _TOO_MANY_DIGITS:  # 10**400, and products of big numbers too
         raise OverflowError
     return value
 
@@ -220,18 +240,13 @@ def convert(text: str) -> str | None:
 
 _HOLIDAYS = {"christmas": (12, 25), "christmas eve": (12, 24), "new year": (1, 1), "new year's": (1, 1), "new years": (1, 1),
              "halloween": (10, 31), "valentine's day": (2, 14), "valentines day": (2, 14), "new year's eve": (12, 31)}
-_MONTHS = {m.lower(): i for i, m in enumerate(["January", "February", "March", "April", "May", "June", "July", "August",
-                                               "September", "October", "November", "December"], 1)}
+_MONTHS = {m.lower(): i for i, m in enumerate(localefmt.MONTHS, 1)}
 _MONTHS.update({name[:3]: i for name, i in list(_MONTHS.items())})
 _MONTHS["sept"] = 9
 
 
-def _clock(when: datetime) -> str:
-    return f"{(when.hour % 12) or 12}:{when.minute:02d} {'AM' if when.hour < 12 else 'PM'}"
-
-
 def _day(d: date) -> str:
-    return f"{d:%A, %B} {d.day}, {d.year}"
+    return localefmt.long_date(d)
 
 
 def _parse_date(text: str, today: date) -> tuple[date, str] | None:
@@ -265,12 +280,12 @@ def _parse_date(text: str, today: date) -> tuple[date, str] | None:
 def when(text: str, now: datetime) -> str | None:
     """The time, the date, the week, or days until a day."""
     t = " ".join(text.lower().strip().rstrip("?.!").split())
-    if t in ("time", "the time", "what time is it", "what's the time", "whats the time", "what is the time", "current time"):
-        return f"It's **{_clock(now)}**."
-    if t in ("date", "the date", "today", "what's the date", "whats the date", "what is the date", "what day is it",
-             "what's today", "what is today", "today's date", "todays date"):
+    asked = phrases().command(t)
+    if asked == "time":
+        return f"It's **{localefmt.time_of_day(now)}**."
+    if asked == "date":
         return f"Today is **{_day(now.date())}**."
-    if t in ("week", "what week is it", "week number", "which week is it"):
+    if asked == "week":
         return f"It's week **{now.isocalendar().week}** of {now.isocalendar().year}."
     m = re.fullmatch(r"(?:how many )?days (?:until|till|til|to|before) (.+)", t)
     if m:
@@ -281,7 +296,7 @@ def when(text: str, now: datetime) -> str | None:
         days = (d - now.date()).days
         if days == 0:
             return f"{name} is **today**!"
-        return f"**{days} day{'s' if days != 1 else ''}** until {name}" + (f" ({d:%a %b} {d.day})." if name != _day(d) else ".")
+        return f"**{days} day{'s' if days != 1 else ''}** until {name}" + (f" ({localefmt.short_day(d)})." if name != _day(d) else ".")
     return None
 
 
@@ -293,7 +308,7 @@ _RANDOM = secrets.SystemRandom()
 def chance(text: str, rng=_RANDOM) -> str | None:
     """Coins, dice, a number, or one of several: fair (the system's own randomness)."""
     t = " ".join(text.lower().strip().rstrip("?.!").split())
-    if t in ("flip a coin", "flip coin", "coin flip", "toss a coin", "heads or tails"):
+    if phrases().command(t) == "coin":
         return f"🪙 **{rng.choice(['Heads', 'Tails'])}**"
     m = re.fullmatch(r"roll(?: an?| the)?(?: (\d{1,3}))?\s*(?:dice|die|d(\d{1,4}))?(?:\s*([+-])\s*(\d{1,4}))?", t)
     if m and (t.startswith("roll ") or t == "roll"):
@@ -314,14 +329,11 @@ def chance(text: str, rng=_RANDOM) -> str | None:
         return f"**{rng.randint(low, high)}**  (from {low} to {high})"
     # "pick one: pizza, tacos or sushi": short options, asked plainly (a question about choosing is the AI's).
     m = re.fullmatch(r"(?:pick|choose) (?:one(?: of| from)?|between|from|one for me|for me)\s*:?\s+(.+)", text.strip(), re.I)
-    if m and "?" not in text and not _QUESTION_START.match(m.group(1)):
+    if m and "?" not in text and not phrases().asks(m.group(1)):
         options = [o.strip(" .!") for o in re.split(r",|\bor\b|\band\b", m.group(1)) if o.strip(" .!")]
         if 2 <= len(options) <= 20 and all(len(o) <= 40 and len(o.split()) <= 5 for o in options):
             return f"**{rng.choice(options)}**"
     return None
-
-
-_QUESTION_START = re.compile(r"(?:should|which|what|how|why|is|are|do|does|can|could|would|will)\b", re.I)
 
 
 # -- passwords
@@ -346,14 +358,181 @@ def password(text: str) -> str | None:
     return f"`{made}`\n\nMade here, from your system's own randomness. I don't keep it anywhere: copy it now."
 
 
-# -- telling what's for the AI
+# -- the phrases, one file per language
 
-_QUESTION_WORDS = re.compile(r"^(?:how|what|why|who|whom|whose|where|which|when|whether|if|that|of|about)\b", re.I)
+PHRASES = Path(__file__).resolve().parent / "phrases"
+_LANGUAGE_NAME = re.compile(r"[A-Za-z]{2,3}(?:_[A-Za-z0-9]{2,4})?")  # "en", "pt_BR": a file name, never a path
+
+
+def normal(text: str) -> str:
+    """A phrase as commands are matched: lower case, single spaces, straight apostrophes, and no full stop,
+    question mark or exclamation mark around it."""
+    return " ".join(text.casefold().replace("’", "'").split()).strip(" ?!.")
+
+
+def _template(template: str) -> tuple[re.Pattern, bool] | None:
+    """A pattern for a template with one {n} (a number) or one {text} (the rest of what's typed), and whether
+    it's {text}: "delete note {n}" matches "delete note 2", "note: {text}" matches "note: buy milk" and
+    "note:buy milk". None for a template without exactly one."""
+    pieces = re.split(r"(\{n\}|\{text\})", " ".join(template.split()))
+    holes = [p for p in pieces if p in ("{n}", "{text}")]
+    if len(holes) != 1 or not "".join(p for p in pieces if p not in holes).strip():
+        return None
+    out = []
+    for piece in pieces:
+        if piece == "{n}":
+            out.append(r"(\d{1,9})")
+        elif piece == "{text}":
+            out[-1:] = [out[-1].rstrip()] if out else []
+            out.append(r"\s*(.+)")
+        else:
+            out.append(re.escape(piece).replace("\\ ", " "))
+    return re.compile("".join(out), re.I | re.S), holes[0] == "{text}"
+
+
+def _read(path: Path) -> dict:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"{path}: not a phrase file")
+    return data
+
+
+def _strings(value: object) -> list[str]:
+    return [v for v in value if isinstance(v, str) and v.strip()] if isinstance(value, list) else []
+
+
+def _table(data: dict, key: str) -> dict[str, list[str]]:
+    table = data.get(key)
+    return {k: _strings(v) for k, v in table.items() if isinstance(k, str)} if isinstance(table, dict) else {}
+
+
+@dataclass(frozen=True)
+class HelpSection:
+    id: str
+    name: str
+    examples: tuple[str, ...]
+    after: str = ""  # said right after the examples
+
+
+@dataclass(frozen=True)
+class Phrases:
+    """The phrases understood and the help shown, for one language (`language`, "en" when there's no file for
+    the one asked for). English phrases are always understood besides that language's."""
+
+    language: str
+    commands: Mapping[str, str]  # a phrase, as normal() gives it: its command
+    templates: tuple[tuple[str, re.Pattern, bool], ...]  # (command, pattern, whether what it takes is text)
+    question_words: frozenset[str]  # a sentence starting with one asks something
+    remind_me_questions: frozenset[str]  # "remind me" and then one of these asks the AI something
+    title: str
+    sections: tuple[HelpSection, ...]
+    footer: str
+
+    def command(self, text: str) -> str | None:
+        """The command a whole phrase asks for ("what time is it?" is "time"), or None."""
+        return self.commands.get(normal(text))
+
+    def template(self, text: str) -> tuple[str, str] | None:
+        """(command, what it takes) for a phrase that fits a template: ("delete note", "2"), ("note", "buy milk")."""
+        t = " ".join(text.split())
+        for command, pattern, takes_text in self.templates:
+            m = pattern.fullmatch(t if takes_text else t.rstrip(" ?!."))
+            if m:
+                return command, m.group(1).strip()
+        return None
+
+    def asks(self, text: str) -> bool:
+        """Whether a sentence starts by asking something: "should I use …", "how do …"."""
+        first = re.match(r"\w+", text.strip().casefold())
+        return bool(first) and first.group(0) in self.question_words
+
+    def help(self) -> str:
+        """What Chatmon does without any AI, as Markdown, in this language."""
+        lines = [f"- **{s.name}:** " + " · ".join(f"*{e}*" for e in s.examples) + s.after for s in self.sections]
+        return f"{self.title}\n\n" + "\n".join(lines) + f"\n\n{self.footer}\n"
+
+
+def _candidates(language: str) -> list[str]:
+    """The files that may hold a language, most particular first: "pt_BR" is pt_BR.json, then pt.json."""
+    code = language.replace("-", "_").split(".")[0]
+    names = [code, code.split("_")[0]]
+    return [n for n in dict.fromkeys(names) if _LANGUAGE_NAME.fullmatch(n) and n.lower() != "en"]
+
+
+def load_phrases(language: str = "en", folder: Path = PHRASES) -> Phrases:
+    """The phrases for `language`: its own file's, with English's always understood too, and English help where
+    the language's leaves something out. A language file that's missing or broken counts as not there; the
+    English one is part of Chatmon, so its absence raises (OSError, ValueError)."""
+    english = _read(folder / "en.json")
+    own: dict = {}
+    found = "en"
+    for name in _candidates(language):
+        try:
+            own = _read(folder / f"{name}.json")
+        except (OSError, ValueError):
+            continue
+        found = name
+        break
+    known = _table(english, "commands")
+    commands: dict[str, str] = {}
+    for source in (_table(own, "commands"), known):  # English last: its phrases always mean what they mean in English
+        for command, said in source.items():
+            if command in known:
+                commands.update({normal(s): command for s in said})
+    templates = []
+    english_templates = _table(english, "templates")
+    for source in (english_templates, _table(own, "templates")):
+        for command, said in source.items():
+            for s in said:
+                compiled = _template(s) if command in english_templates else None
+                if compiled:
+                    templates.append((command, *compiled))
+    words = {key: frozenset(w.casefold() for w in _strings(english.get(key)) + _strings(own.get(key))) for key in ("question_words", "remind_me_questions")}
+    help_en = english.get("help") if isinstance(english.get("help"), dict) else {}
+    help_own = own.get("help") if isinstance(own.get("help"), dict) else {}
+    translated = {s["id"]: s for s in help_own.get("sections", []) if isinstance(s, dict) and isinstance(s.get("id"), str)}
+    sections = []
+    for section in help_en.get("sections", []):
+        mine = translated.get(section["id"], {})
+        name = mine.get("name") if isinstance(mine.get("name"), str) else section["name"]
+        examples = tuple(_strings(mine.get("examples")) or _strings(section.get("examples")))
+        after = mine.get("after") if isinstance(mine.get("after"), str) else section.get("after", "")
+        sections.append(HelpSection(section["id"], name, examples, after))
+
+    def said(key: str) -> str:
+        return help_own[key] if isinstance(help_own.get(key), str) else str(help_en.get(key, ""))
+
+    return Phrases(found, commands, tuple(templates), words["question_words"], words["remind_me_questions"], said("title"), tuple(sections), said("footer"))
+
+
+@functools.lru_cache(maxsize=8)
+def _phrases(language: str) -> Phrases:
+    return load_phrases(language)
+
+
+def phrases(language: str | None = None) -> Phrases:
+    """The phrases for `language`, or for the person's own (localefmt.language()) when None. Read once each."""
+    return _phrases(language or localefmt.language())
+
+
+def command(text: str, language: str | None = None) -> str | None:
+    """Which fixed command a phrase asks for ("help", "status", "agents", "breaks off"…), or None."""
+    return phrases(language).command(text)
+
+
+def help_text(language: str | None = None) -> str:
+    """Everything Chatmon does without any AI, as Markdown, in the person's language (English where there's no
+    translation)."""
+    return phrases(language).help()
+
+
+# -- telling what's for the AI
 
 
 def reminder_or_question(rest: str) -> bool:
     """"remind me how decorators work" is a question for the AI, not a reminder without a time."""
-    return "?" in rest or bool(_QUESTION_WORDS.match(rest.strip()))
+    first = re.match(r"\w+", rest.strip().casefold())
+    return "?" in rest or (bool(first) and first.group(0) in phrases().remind_me_questions)
 
 
 @dataclass
@@ -364,33 +543,58 @@ class Asked:
     arg: str = ""
 
 
+_KEPT = ("notes", "clear notes", "stopwatch", "stop stopwatch", "reminders", "clear reminders")
+
+
 def parse_kept(text: str) -> Asked | None:
     """Notes, the stopwatch and reminders, which the app keeps."""
-    t = " ".join(text.strip().split())
-    low = t.lower().rstrip("?.!")
+    book = phrases()
+    found = book.template(text)
     # Only "note: ..." (or "add a note: ..."), and never something asked: "Note: I use Python 3.12. Why does
     # asyncio fail?" is a question for the AI, and mustn't be kept in a file instead.
-    m = re.fullmatch(r"(?:note|add (?:a )?note|take (?:a )?note):\s*(.+)", t, re.I | re.S)
-    if m and "?" not in m.group(1) and not _QUESTION_START.match(m.group(1)) and not reminder_or_question(m.group(1)):
-        return Asked("note", m.group(1).strip())
-    if low in ("notes", "my notes", "show notes", "show my notes", "list notes", "list my notes", "what are my notes"):
-        return Asked("notes")
-    if m := re.fullmatch(r"(?:delete|remove|forget) note (\d+)", low):
-        return Asked("delete note", m.group(1))
-    if low in ("clear notes", "clear my notes", "delete all notes", "delete my notes", "forget my notes"):
-        return Asked("clear notes")
-    if low in ("stopwatch", "start stopwatch", "start a stopwatch", "start the stopwatch"):
-        return Asked("stopwatch")
-    if low in ("stop stopwatch", "stop the stopwatch", "stopwatch stop", "stop watch"):
-        return Asked("stop stopwatch")
-    if low in ("reminders", "my reminders", "list reminders", "list my reminders", "show reminders", "show my reminders",
-               "what are my reminders", "timers", "my timers"):
-        return Asked("reminders")
-    if m := re.fullmatch(r"(?:cancel|delete|remove) (?:reminder|timer) (\d+)", low):
-        return Asked("cancel reminder", m.group(1))
-    if low in ("cancel all reminders", "clear reminders", "clear my reminders", "delete all reminders", "cancel all timers"):
-        return Asked("clear reminders")
-    return None
+    if found and not (found[0] == "note" and ("?" in found[1] or book.asks(found[1]) or reminder_or_question(found[1]))):
+        return Asked(*found)
+    kind = book.command(text)
+    return Asked(kind) if kind in _KEPT else None
+
+
+# -- AI agents at a glance
+
+_STATE_ORDER = {"needs-you": 0, "working": 1}
+
+
+def span(seconds: float) -> str:
+    """How long something has gone on: "under a minute", "5 min", "1 h 5 min", "3 days"."""
+    s = int(max(0, seconds))
+    if s < 60:
+        return "under a minute"
+    if s < 3600:
+        return f"{s // 60} min"
+    if s < 86400:
+        hours, minutes = divmod(s // 60, 60)
+        return f"{hours} h {minutes} min" if minutes else f"{hours} h"
+    days = s // 86400
+    return f"{days} day{'s' if days != 1 else ''}"
+
+
+def agents_report(agents: Mapping[str, tuple[str, float]], now: float, label: Callable[[str], str] | None = None, markdown: bool = True) -> str:
+    """How the AI agents stand, for the *agents* command (Markdown) and `chatmon status` (plain): `agents` maps
+    each agent's name to (state, since), as the app keeps them, `since` on the same clock as `now`. The ones
+    that need you come first, longest waiting first; then the ones working."""
+    label = label or (lambda name: name[:1].upper() + name[1:])
+    if not agents:
+        return "No AI agent is working or waiting for you."
+    lines = []
+    for name, (state, since) in sorted(agents.items(), key=lambda item: (_STATE_ORDER.get(item[1][0], 2), item[1][1], item[0])):
+        who = f"**{label(name)}**" if markdown else label(name)
+        if state == "needs-you":
+            line = f"{who} needs you (waiting {span(now - since)})"
+        elif state == "working":
+            line = f"{who} is working ({span(now - since)} so far)"
+        else:
+            line = f"{who}: {state}"
+        lines.append(f"- {line}" if markdown else line)
+    return "\n".join(lines)
 
 
 def answer(text: str, now: datetime) -> str | None:

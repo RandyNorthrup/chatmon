@@ -1,0 +1,6 @@
+friday at 3pm -> 2026-10-28 15:00:00 'friday to call Sam' (lands on today: the Wednesday)
+at 3, said at 2 PM -> 2026-10-29 03:00:00 (3 AM)
+in 2 hours at 01:30 on the spring-forward day -> 2026-03-08 03:30:00-04:00 real hours: 1.0
+pop_due(200) -> ['call Sam'] book afterwards: [] (removed before it was seen)
+old book has no due/acknowledge/snooze/update: []
+every monday at 9 -> reminder 2026-10-29 09:00:00 'every monday to take out the bins' (no repeat: once, today or tomorrow 9 AM)

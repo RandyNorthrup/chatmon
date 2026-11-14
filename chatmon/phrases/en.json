@@ -1,0 +1,60 @@
+{
+  "language": "en",
+  "about": "The phrases Chatmon answers without any AI, in English, and its help. Another language's file (de.json, pt_BR.json) has the same shape, with only what it translates: English is always understood too, and its help fills in what a translation leaves out. Commands match whole phrases, ignoring case, spaces and a final ?, ! or full stop. In templates, {n} stands for a number and {text} for the rest of what's typed. Help examples must be phrases Chatmon understands.",
+  "commands": {
+    "help": ["help", "what can you do", "commands"],
+    "status": ["status", "battery", "system status", "how's my computer"],
+    "agents": ["agents", "my agents", "ai agents", "agent status", "what are my agents doing", "what are the agents doing"],
+    "stop focus": ["stop focus", "end focus", "cancel focus"],
+    "hide": ["hide", "go hide", "go away"],
+    "new chat": ["new chat", "/new", "reset"],
+    "rename chat": ["rename chat", "rename this chat", "name this chat"],
+    "breaks off": ["breaks off", "no breaks", "stop break reminders", "break reminders off"],
+    "breaks on": ["breaks on", "break reminders on"],
+    "focus alerts off": ["focus alerts off", "focus notifications off"],
+    "focus alerts on": ["focus alerts on", "focus notifications on"],
+    "settings": ["settings", "preferences", "options", "open settings"],
+    "history": ["history", "chats", "my chats", "chat history"],
+    "what's new": ["what's new", "whats new", "what is new", "changes", "changelog", "release notes"],
+    "check for updates": ["check for updates", "update", "updates", "update yourself", "install update"],
+    "report a problem": ["report a problem", "report a bug", "report bug", "bug", "report"],
+    "suggest an idea": ["suggest an idea", "feature request", "suggest a feature", "idea"],
+    "version": ["version", "what version", "which version"],
+    "time": ["time", "the time", "what time is it", "what's the time", "whats the time", "what is the time", "current time"],
+    "date": ["date", "the date", "today", "what's the date", "whats the date", "what is the date", "what day is it", "what's today", "what is today", "today's date", "todays date"],
+    "week": ["week", "what week is it", "week number", "which week is it"],
+    "coin": ["flip a coin", "flip coin", "coin flip", "toss a coin", "heads or tails"],
+    "notes": ["notes", "my notes", "show notes", "show my notes", "list notes", "list my notes", "what are my notes"],
+    "clear notes": ["clear notes", "clear my notes", "delete all notes", "delete my notes", "forget my notes"],
+    "stopwatch": ["stopwatch", "start stopwatch", "start a stopwatch", "start the stopwatch"],
+    "stop stopwatch": ["stop stopwatch", "stop the stopwatch", "stopwatch stop", "stop watch"],
+    "reminders": ["reminders", "my reminders", "list reminders", "list my reminders", "show reminders", "show my reminders", "what are my reminders", "timers", "my timers"],
+    "clear reminders": ["cancel all reminders", "clear reminders", "clear my reminders", "delete all reminders", "cancel all timers"]
+  },
+  "templates": {
+    "note": ["note: {text}", "add a note: {text}", "add note: {text}", "take a note: {text}", "take note: {text}"],
+    "delete note": ["delete note {n}", "remove note {n}", "forget note {n}"],
+    "cancel reminder": ["cancel reminder {n}", "delete reminder {n}", "remove reminder {n}", "cancel timer {n}", "delete timer {n}", "remove timer {n}"]
+  },
+  "question_words": ["should", "which", "what", "how", "why", "is", "are", "do", "does", "can", "could", "would", "will"],
+  "remind_me_questions": ["how", "what", "why", "who", "whom", "whose", "where", "which", "when", "whether", "if", "that", "of", "about"],
+  "help": {
+    "title": "**Without any AI** (nothing leaves your computer, and none of it goes in a chat):",
+    "sections": [
+      {"id": "reminders", "name": "Reminders and timers", "examples": ["remind me in 20m to stretch", "remind me friday at 3pm to call Sam", "remind me every weekday at 9 to stand up", "timer 10 min for the pasta", "reminders", "cancel reminder 2", "clear reminders"]},
+      {"id": "focus", "name": "Focus and breaks", "examples": ["focus 50", "stop focus", "breaks off", "breaks on", "focus alerts off", "focus alerts on"]},
+      {"id": "notes", "name": "Notes", "examples": ["note: buy milk", "notes", "delete note 2", "clear notes"]},
+      {"id": "stopwatch", "name": "Stopwatch", "examples": ["stopwatch", "stop stopwatch"]},
+      {"id": "sums", "name": "Sums", "examples": ["2 + 2 * 3", "15% of 80", "sqrt(2)", "calc 2^10"]},
+      {"id": "units", "name": "Units", "examples": ["5 km in miles", "70 f to c", "3 cups to ml", "2 GB in MiB"]},
+      {"id": "time", "name": "Time and days", "examples": ["time", "date", "what week is it", "days until Christmas", "days until 2027-01-01"]},
+      {"id": "chance", "name": "Chance", "examples": ["flip a coin", "roll 2d6", "random number between 1 and 10", "pick one: tacos, sushi or pizza"]},
+      {"id": "passwords", "name": "Passwords", "examples": ["password", "password 32"]},
+      {"id": "computer", "name": "Your computer", "examples": ["status"], "after": " (battery, disks, reminders, the brain in use)"},
+      {"id": "agents", "name": "AI agents", "examples": ["agents"], "after": " (which are working, and which need you)"},
+      {"id": "me", "name": "Me", "examples": ["settings", "hide", "new chat", "rename chat", "history", "what's new", "check for updates", "report a problem", "version"]},
+      {"id": "memory", "name": "Memory", "examples": ["remember that I use Arch", "what do you remember", "forget that I use Arch", "forget everything"], "after": ". What you ask me to remember goes with every question, to whichever AI you ask: that's what it's for."}
+    ],
+    "footer": "Anything else goes to the AI you picked, under **Brain** in my menu."
+  }
+}

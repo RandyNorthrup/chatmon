@@ -1,0 +1,368 @@
+{
+  "drills": [
+    {
+      "id": "M5-01-removed-when-due",
+      "requirement": "M5-01",
+      "file": "chatmon/reminders.py",
+      "find": "        for r in due:\n            r.fired = True\n        return due",
+      "replace": "        self.items = [r for r in self.items if r.due > now]\n        return due",
+      "test": [
+        "tests/test_reminders.py::test_a_fired_reminder_stays_until_done_or_snoozed"
+      ],
+      "expect": [
+        "test_a_fired_reminder_stays_until_done_or_snoozed"
+      ]
+    },
+    {
+      "id": "M5-01-fired-not-saved",
+      "requirement": "M5-01",
+      "file": "chatmon/reminders.py",
+      "find": "reminder.fired = entry.get(\"fired\") is True",
+      "replace": "reminder.fired = False",
+      "test": [
+        "tests/test_reminders.py::test_unacknowledged_reminders_come_back_at_start"
+      ],
+      "expect": [
+        "test_unacknowledged_reminders_come_back_at_start"
+      ]
+    },
+    {
+      "id": "M5-01-old-saves-change",
+      "requirement": "M5-01",
+      "file": "chatmon/reminders.py",
+      "find": "if k not in _LATER_FIELDS or v != _LATER_FIELDS[k]",
+      "replace": "if k",
+      "test": [
+        "tests/test_reminders.py::test_reminders_saved_before_repeats_read_back_unchanged"
+      ],
+      "expect": [
+        "test_reminders_saved_before_repeats_read_back_unchanged"
+      ]
+    },
+    {
+      "id": "M5-02-weekday-ignored",
+      "requirement": "M5-02",
+      "file": "chatmon/reminders.py",
+      "find": "return \"weekday\", _DAYS[m.group(\"day\").lower()], (m.group(\"which\") or \"\").lower() == \"next\"",
+      "replace": "return \"day\", now.date(), False",
+      "test": [
+        "tests/test_reminders.py::test_days_and_dates"
+      ],
+      "expect": [
+        "test_days_and_dates"
+      ]
+    },
+    {
+      "id": "M5-02-bare-hour-am",
+      "requirement": "M5-02",
+      "file": "chatmon/reminders.py",
+      "find": "hours = (h, (h + 12) % 24) if",
+      "replace": "hours = (h,) if",
+      "test": [
+        "tests/test_reminders.py::test_a_bare_hour_is_whichever_of_am_and_pm_comes_next"
+      ],
+      "expect": [
+        "test_a_bare_hour_is_whichever_of_am_and_pm_comes_next"
+      ]
+    },
+    {
+      "id": "M5-02-leftovers-guessed",
+      "requirement": "M5-02",
+      "file": "chatmon/reminders.py",
+      "find": "if bad or leftovers or (seconds and timed)",
+      "replace": "if bad or (seconds and timed)",
+      "test": [
+        "tests/test_reminders.py::test_time_words_that_cant_all_be_placed_are_ambiguous"
+      ],
+      "expect": [
+        "test_time_words_that_cant_all_be_placed_are_ambiguous"
+      ]
+    },
+    {
+      "id": "M5-02-in-by-wall-clock",
+      "requirement": "M5-02",
+      "file": "chatmon/reminders.py",
+      "find": "return _at(start + seconds, now), None",
+      "replace": "return now + timedelta(seconds=seconds), None",
+      "test": [
+        "tests/test_reminders.py::test_in_is_real_time_across_daylight_saving"
+      ],
+      "expect": [
+        "test_in_is_real_time_across_daylight_saving"
+      ]
+    },
+    {
+      "id": "M5-03-every-not-read",
+      "requirement": "M5-03",
+      "file": "chatmon/reminders.py",
+      "find": "every = words.take(_EVERY_RE)",
+      "replace": "every = None",
+      "test": [
+        "tests/test_reminders.py::test_repeating_reminders"
+      ],
+      "expect": [
+        "test_repeating_reminders"
+      ]
+    },
+    {
+      "id": "M5-03-done-repeat-removed",
+      "requirement": "M5-03",
+      "file": "chatmon/reminders.py",
+      "find": "        if r.repeat:\n            r.due = next_time(r.repeat, max(",
+      "replace": "        if False:\n            r.due = next_time(r.repeat, max(",
+      "test": [
+        "tests/test_reminders.py::test_a_repeating_reminder_moves_on_when_done"
+      ],
+      "expect": [
+        "test_a_repeating_reminder_moves_on_when_done"
+      ]
+    },
+    {
+      "id": "M5-03-repeat-by-real-days",
+      "requirement": "M5-03",
+      "file": "chatmon/reminders.py",
+      "find": "moment = _on_wall(day, hour, minute, start).timestamp()",
+      "replace": "moment = start.replace(hour=hour, minute=minute, second=0, microsecond=0).timestamp() + k * DAY",
+      "test": [
+        "tests/test_reminders.py::test_a_daily_reminder_keeps_its_hour_across_daylight_saving"
+      ],
+      "expect": [
+        "test_a_daily_reminder_keeps_its_hour_across_daylight_saving"
+      ]
+    },
+    {
+      "id": "M5-04-no-hour-snooze",
+      "requirement": "M5-04",
+      "file": "chatmon/reminders.py",
+      "find": "_SNOOZES = (5, 15, 60)",
+      "replace": "_SNOOZES = (5, 15)",
+      "test": [
+        "tests/test_reminders.py::test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning"
+      ],
+      "expect": [
+        "test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning"
+      ]
+    },
+    {
+      "id": "M5-04-tomorrow-by-real-day",
+      "requirement": "M5-04",
+      "file": "chatmon/reminders.py",
+      "find": "tomorrow = _on_wall(today.date() + timedelta(days=1), DEFAULT_HOUR, 0, today)",
+      "replace": "tomorrow = _at(_on_wall(today.date(), DEFAULT_HOUR, 0, today).timestamp() + DAY, today)",
+      "test": [
+        "tests/test_reminders.py::test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving"
+      ],
+      "expect": [
+        "test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving"
+      ]
+    },
+    {
+      "id": "M5-04-snooze-stays-fired",
+      "requirement": "M5-04",
+      "file": "chatmon/reminders.py",
+      "find": "r.due, r.fired = until, False",
+      "replace": "r.due = until",
+      "test": [
+        "tests/test_reminders.py::test_a_fired_reminder_stays_until_done_or_snoozed"
+      ],
+      "expect": [
+        "test_a_fired_reminder_stays_until_done_or_snoozed"
+      ]
+    },
+    {
+      "id": "M5-04-blank-edit-accepted",
+      "requirement": "M5-04",
+      "file": "chatmon/reminders.py",
+      "find": "if text is not None and not text.strip():",
+      "replace": "if False:",
+      "test": [
+        "tests/test_reminders.py::test_a_reminder_can_be_edited"
+      ],
+      "expect": [
+        "test_a_reminder_can_be_edited"
+      ]
+    },
+    {
+      "id": "M5-05-qlocale-unused",
+      "requirement": "M5-05",
+      "file": "chatmon/localefmt.py",
+      "find": "    locale = _locale()\n    if locale is None:\n        return f\"{(when.hour % 12)",
+      "replace": "    locale = _locale()\n    if True:\n        return f\"{(when.hour % 12)",
+      "test": [
+        "tests/test_localefmt.py::test_british_english_writes_24_hour_times_and_day_first_dates"
+      ],
+      "expect": [
+        "test_british_english_writes_24_hour_times_and_day_first_dates"
+      ]
+    },
+    {
+      "id": "M5-05-loads-qt",
+      "requirement": "M5-05",
+      "file": "chatmon/localefmt.py",
+      "find": "        if qtcore is None:\n            return None\n",
+      "replace": "        if qtcore is None:\n            from PyQt6 import QtCore as qtcore\n",
+      "test": [
+        "tests/test_localefmt.py::test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment"
+      ],
+      "expect": [
+        "test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment"
+      ]
+    },
+    {
+      "id": "M5-05-c-locale-shown",
+      "requirement": "M5-05",
+      "file": "chatmon/localefmt.py",
+      "find": "if qtcore is not None and locale.language() == qtcore.QLocale.Language.C:",
+      "replace": "if False:",
+      "test": [
+        "tests/test_localefmt.py::test_no_locale_at_all_is_plain_english_not_qts_c_look"
+      ],
+      "expect": [
+        "test_no_locale_at_all_is_plain_english_not_qts_c_look"
+      ]
+    },
+    {
+      "id": "M5-05-offline-12-hour",
+      "requirement": "M5-05",
+      "file": "chatmon/offline.py",
+      "find": "return f\"It's **{localefmt.time_of_day(now)}**.\"",
+      "replace": "return f\"It's **{(now.hour % 12) or 12}:{now.minute:02d} {'AM' if now.hour < 12 else 'PM'}**.\"",
+      "test": [
+        "tests/test_localefmt.py::test_reminders_and_offline_answers_write_times_the_locales_way"
+      ],
+      "expect": [
+        "test_reminders_and_offline_answers_write_times_the_locales_way"
+      ]
+    },
+    {
+      "id": "M5-06-english-dropped",
+      "requirement": "M5-06",
+      "file": "chatmon/offline.py",
+      "find": "for source in (_table(own, \"commands\"), known):",
+      "replace": "for source in (_table(own, \"commands\") or known,):",
+      "test": [
+        "tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood"
+      ],
+      "expect": [
+        "test_another_languages_phrases_and_help_with_english_always_understood"
+      ]
+    },
+    {
+      "id": "M5-06-help-not-translated",
+      "requirement": "M5-06",
+      "file": "chatmon/offline.py",
+      "find": "name = mine.get(\"name\") if isinstance(mine.get(\"name\"), str) else section[\"name\"]",
+      "replace": "name = section[\"name\"]",
+      "test": [
+        "tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood"
+      ],
+      "expect": [
+        "test_another_languages_phrases_and_help_with_english_always_understood"
+      ]
+    },
+    {
+      "id": "M5-06-broken-file-raises",
+      "requirement": "M5-06",
+      "file": "chatmon/offline.py",
+      "find": "        except (OSError, ValueError):\n            continue",
+      "replace": "        except OSError:\n            continue",
+      "test": [
+        "tests/test_offline.py::test_a_missing_or_broken_translation_leaves_english"
+      ],
+      "expect": [
+        "test_a_missing_or_broken_translation_leaves_english"
+      ]
+    },
+    {
+      "id": "M5-06-phrases-not-normalized",
+      "requirement": "M5-06",
+      "file": "chatmon/offline.py",
+      "find": "return self.commands.get(normal(text))",
+      "replace": "return self.commands.get(text)",
+      "test": [
+        "tests/test_offline.py::test_fixed_commands_are_read_from_the_phrase_data"
+      ],
+      "expect": [
+        "test_fixed_commands_are_read_from_the_phrase_data"
+      ]
+    },
+    {
+      "id": "M5-07-401-digits",
+      "requirement": "M5-07",
+      "file": "chatmon/offline.py",
+      "find": "abs(value) >= _TOO_MANY_DIGITS",
+      "replace": "abs(value) >= _TOO_MANY_DIGITS * 10",
+      "test": [
+        "tests/test_parser_properties.py::test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+      ],
+      "expect": [
+        "test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+      ]
+    },
+    {
+      "id": "M5-07-type-error-escapes",
+      "requirement": "M5-07",
+      "file": "chatmon/offline.py",
+      "find": "    except (ValueError, TypeError):\n        raise ValueError(\"that can't be worked out\")",
+      "replace": "    except ValueError:\n        raise ValueError(\"that can't be worked out\")",
+      "test": [
+        "tests/test_parser_properties.py::test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+      ],
+      "expect": [
+        "test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+      ]
+    },
+    {
+      "id": "M5-07-past-longest",
+      "requirement": "M5-07",
+      "file": "chatmon/reminders.py",
+      "find": "if due is None or not 0 < due.timestamp() - now.timestamp() <= LONGEST:",
+      "replace": "if due is None:",
+      "test": [
+        "tests/test_parser_properties.py::test_a_reminders_time_is_always_ahead_and_never_too_far"
+      ],
+      "expect": [
+        "test_a_reminders_time_is_always_ahead_and_never_too_far"
+      ]
+    },
+    {
+      "id": "M5-07-in-by-wall-clock",
+      "requirement": "M5-07",
+      "file": "chatmon/reminders.py",
+      "find": "return _at(start + seconds, now), None",
+      "replace": "return now + timedelta(seconds=seconds), None",
+      "test": [
+        "tests/test_parser_properties.py::test_in_is_that_many_seconds_of_real_time"
+      ],
+      "expect": [
+        "test_in_is_that_many_seconds_of_real_time"
+      ]
+    },
+    {
+      "id": "M5-08-working-first",
+      "requirement": "M5-08",
+      "file": "chatmon/offline.py",
+      "find": "_STATE_ORDER = {\"needs-you\": 0, \"working\": 1}",
+      "replace": "_STATE_ORDER = {\"needs-you\": 1, \"working\": 0}",
+      "test": [
+        "tests/test_offline.py::test_agents_at_a_glance"
+      ],
+      "expect": [
+        "test_agents_at_a_glance"
+      ]
+    },
+    {
+      "id": "M5-08-span-off-by-one",
+      "requirement": "M5-08",
+      "file": "chatmon/offline.py",
+      "find": "    if s < 3600:\n        return f\"{s // 60} min\"",
+      "replace": "    if s <= 3600:\n        return f\"{s // 60} min\"",
+      "test": [
+        "tests/test_offline.py::test_spans"
+      ],
+      "expect": [
+        "test_spans"
+      ]
+    }
+  ]
+}
