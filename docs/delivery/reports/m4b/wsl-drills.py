@@ -32,6 +32,6 @@ log.append("\n=== summary")
 for r in results:
     log.append(f"{r['status'].upper():4} {r['id']}" + (f": {r['reason']}" if r["reason"] else ""))
 log_path.write_text("\n".join(log) + "\n", encoding="utf-8")
-log_path.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
+log_path.with_name(log_path.stem + "-results.json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
 print("\n".join(log[-len(results) - 1:]))
 sys.exit(1 if any(r["status"] != "pass" for r in results) else 0)

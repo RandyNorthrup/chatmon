@@ -303,13 +303,39 @@
       "id": "D-03B-setting",
       "requirement": "AC-03B",
       "file": "chatmon/wintoast.py",
-      "find": "        if setting != ENABLED:\n",
+      "find": "        if setting in WHY_NOT:\n",
+      "replace": "        if setting != ENABLED:\n",
+      "test": [
+        "tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried"
+      ],
+      "expect": [
+        "test_only_a_real_no_keeps_a_toast_from_being_tried"
+      ]
+    },
+    {
+      "id": "D-03B-real-no",
+      "requirement": "AC-03B",
+      "file": "chatmon/wintoast.py",
+      "find": "        if setting in WHY_NOT:\n",
       "replace": "        if setting == OFF_BY_POLICY:\n",
       "test": [
         "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
       ],
       "expect": [
         "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ]
+    },
+    {
+      "id": "D-03C-settled",
+      "requirement": "AC-03C",
+      "file": "chatmon/wintoast.py",
+      "find": "        if shown is None:\n            # Settled already",
+      "replace": "        if False:\n            # Settled already",
+      "test": [
+        "tests/test_wintoast.py::test_what_windows_says_after_a_toast_is_settled_is_not_news"
+      ],
+      "expect": [
+        "test_what_windows_says_after_a_toast_is_settled_is_not_news"
       ]
     },
     {

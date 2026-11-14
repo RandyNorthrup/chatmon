@@ -43,11 +43,14 @@ NOT_XML = re.compile("[\x00-\x08\x0b\x0c\x0e-\x1f￾￿]")
 
 # NotificationSetting: whether Windows will show this app's toasts.
 ENABLED, OFF_FOR_APP, OFF_FOR_USER, OFF_BY_POLICY, OFF_BY_MANIFEST = 0, 1, 2, 3, 4
+# The answers that mean someone turned notifications off: then there's no toast, and the caller uses the balloon.
+# Any other answer isn't a no. OFF_BY_MANIFEST is about packaged apps' manifests, which Chatmon hasn't; and an app
+# with no Start menu shortcut may get no answer at all (Windows' own runners do), yet its toasts show. Those are
+# tried, and a refusal comes back as `failed`.
 WHY_NOT = {
     OFF_FOR_APP: "Notifications from Chatmon are turned off in Windows' settings.",
     OFF_FOR_USER: "Notifications are turned off in Windows' settings.",
     OFF_BY_POLICY: "Notifications are turned off by your organization.",
-    OFF_BY_MANIFEST: "Windows doesn't allow Chatmon's notifications.",
 }
 # ToastDismissalReason
 DISMISSED_BY_YOU, HIDDEN_BY_CHATMON, TIMED_OUT = 0, 1, 2
@@ -283,7 +286,8 @@ class Toaster(QObject):
     def show(self, title: str, text: str = "", buttons: Sequence[Button] = (), scenario: str | None = None,
              silent: bool = False) -> str | None:
         """Show a toast; its tag, or None (with `why_not` saying why) where none could be shown, for the caller to
-        use the tray balloon. `buttons` are labels, or (label, action) pairs whose action runs when it's pressed.
+        use the tray balloon. Windows can still refuse a toast it was handed: `failed` says so, and the caller can
+        use the balloon then. `buttons` are labels, or (label, action) pairs whose action runs when it's pressed.
         A bad scenario or too many buttons is a ValueError."""
         tag = uuid.uuid4().hex[:16]
         xml = toast_xml(title, text, buttons, scenario, tag, silent)
@@ -295,8 +299,8 @@ class Toaster(QObject):
             self.why_not = "Chatmon has no app ID for Windows to show its notifications under."
             return None
         setting = self.setting()
-        if setting != ENABLED:
-            self.why_not = WHY_NOT.get(setting, "Windows wouldn't say whether it shows notifications.")
+        if setting in WHY_NOT:
+            self.why_not = WHY_NOT[setting]
             return None
         if not self._post(xml, tag):
             return None
@@ -387,8 +391,12 @@ class Toaster(QObject):
 
     def _hear(self, event: str, tag: str, value: int) -> None:
         shown = self._shown.get(tag)
+        if shown is None:
+            # Settled already: Windows can say more than once what became of a toast (hidden, then timed out too),
+            # and a toast Chatmon has let go of has no one to tell.
+            return
         if event == "activated":
-            action = shown.actions[value] if shown and 0 <= value < len(shown.actions) else None
+            action = shown.actions[value] if 0 <= value < len(shown.actions) else None
             self._forget(tag)
             self.activated.emit(tag, value)
             if action is not None:
