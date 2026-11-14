@@ -413,6 +413,55 @@ def test_layer_surface_draws_and_takes_clicks_only_on_the_penguin(qapp):
 
 
 @linux_only
+def test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still(qapp):
+    conn, server, stage, surf, ids = _configured(qapp)
+    shm = surf.globals["wl_shm"][0]
+    created, callbacks = list(ids["buffers"]), list(ids["frames"])
+    assert len(created) == 1 and len(callbacks) == 1  # the configure's full paint, waiting for its frame
+
+    def present():
+        surf.damage(QRegion(10, 10, 50, 50))
+        surf._present()
+        reqs = server.requests()
+        created.extend(new_buffers(reqs, shm))
+        callbacks.extend(wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME))
+        return reqs
+
+    def frame_done():
+        server.send(callbacks[-1], 0, "u", 0)
+        conn.read()
+
+    frame_done()
+    reqs = present()  # the first buffer is still the compositor's: a second one
+    assert len(surf._buffers) == 2 and named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+    frame_done()
+    reqs = present()  # both held: no third, the frame waits
+    assert len(surf._buffers) == 2 and not named(reqs, shm, layer.SHM_CREATE_POOL) and not named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+    server.send(created[0], layer.EV_BUFFER_RELEASE)
+    conn.read()
+    surf._present()
+    reqs = server.requests()
+    assert named(reqs, ids["surface"], layer.SURFACE_ATTACH) and not named(reqs, shm, layer.SHM_CREATE_POOL)  # the first, back
+    callbacks.extend(wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME))
+    frame_done()
+    server.send(created[1], layer.EV_BUFFER_RELEASE)
+    conn.read()
+    assert surf._trim_timer.isActive() and surf._trim_timer.interval() == layer.TRIM_AFTER_MS
+    surf._trim()  # still for a while
+    reqs = server.requests()
+    assert len(surf._buffers) == 1 and surf._buffers[0] is surf._shown
+    assert [o for o, op, _ in reqs if op == layer.BUFFER_DESTROY] == [created[1]]  # the spare, not the one on screen
+    frame_done()
+    server.send(created[0], layer.EV_BUFFER_RELEASE)  # as wlroots does once it has the pixels
+    conn.read()
+    reqs = present()
+    assert len(surf._buffers) == 1 and named(reqs, ids["surface"], layer.SURFACE_ATTACH)  # carried on with the one it kept
+    assert not named(reqs, shm, layer.SHM_CREATE_POOL)
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
 def test_a_protocol_error_closes_the_connection():
     client, server_sock = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
     conn = wayland.Connection(client)
@@ -515,8 +564,16 @@ def _configured(qapp, layer_version=4):
     server.send(ids["layer"], layer.EV_LAYER_SURFACE_CONFIGURE, "uuu", 1, 1280, 800)
     conn.read()
     surf._present()
-    server.requests()
+    reqs = server.requests()
+    ids["frames"] = [wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME)]  # the first paint's
+    ids["buffers"] = new_buffers(reqs, surf.globals["wl_shm"][0])
     return conn, server, stage, surf, ids
+
+
+def new_buffers(reqs, shm):
+    """The buffers made in these requests: each from a pool just made from wl_shm."""
+    pools = {wayland.decode("ni", p)[0] for p in named(reqs, shm, layer.SHM_CREATE_POOL)}
+    return [wayland.decode("niiiiu", p)[0] for o, op, p in reqs if o in pools and op == layer.SHM_POOL_CREATE_BUFFER]
 
 
 def interactivity(reqs, ids):
