@@ -259,6 +259,7 @@ class SpeechBubble:
         self._shown_at = 0.0
         self._now = 0.0  # the clock as last told (show, tick)
         self._expires: float | None = None
+        self.timed_out = False  # the last one went because its time was up (not closed, nor pressed)
         self._closing_at: float | None = None
         self._hovered = False
         self._paused_at: float | None = None
@@ -322,7 +323,7 @@ class SpeechBubble:
         self._button_specs = list(buttons or [])
         self._shown_at, self._closing_at, self._now = now, None, now
         self._hovered, self._paused_at = False, None
-        self._visible = True
+        self._visible, self.timed_out = True, False
         self._effects.start(now)  # new words: the effects play again (the bubble itself fades in)
         self._layout()
         stay = self.timeout_policy.seconds(timeout_s, self.words())
@@ -483,6 +484,7 @@ class SpeechBubble:
     def tick(self, now: float) -> None:
         self._now = now
         if self._expires is not None and not self._hovered and now >= self._expires:
+            self.timed_out = True  # went by itself, not closed by anyone (on_close can tell)
             self.dismiss(now)
         if self._closing_at is not None and now - self._closing_at >= FADE:
             self._visible, self._closing_at = False, None

@@ -20,6 +20,7 @@
     "report a problem": ["report a problem", "report a bug", "report bug", "bug", "report"],
     "suggest an idea": ["suggest an idea", "feature request", "suggest a feature", "idea"],
     "version": ["version", "what version", "which version"],
+    "carry on": ["carry on", "carry on with the last one", "carry on with the last chat", "back to the last chat", "last chat"],
     "time": ["time", "the time", "what time is it", "what's the time", "whats the time", "what is the time", "current time"],
     "date": ["date", "the date", "today", "what's the date", "whats the date", "what is the date", "what day is it", "what's today", "what is today", "today's date", "todays date"],
     "week": ["week", "what week is it", "week number", "which week is it"],

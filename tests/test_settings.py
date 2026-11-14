@@ -76,7 +76,8 @@ def test_every_setting_the_app_reads_as_a_number_is_one_after_loading():
 
     nonsense = {"size": "big", "sleep_after_minutes": [], "ai": {"timeout_seconds": {}}, "chats": {"context_tokens": None},
                 "breaks": {"every_minutes": "", "snooze_minutes": float("nan")}, "focus": {"minutes": True},
-                "heads_up": {"battery_low": "x", "battery_critical": -5, "disk_full_percent": 10**12, "updates_every_hours": float("inf")}}
+                "heads_up": {"battery_low": "x", "battery_critical": -5, "disk_full_percent": 10**12, "updates_every_hours": float("inf")},
+                "reminders": {"snooze_minutes": "soon"}, "accessibility": {"text_scale": None}, "sound": {"volume": "loud"}}
     config, problems = coerce(merge(DEFAULTS, nonsense))
     assert len(problems) == len(RANGES)
     for dotted, (low, high) in RANGES.items():

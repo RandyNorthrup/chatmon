@@ -3,7 +3,7 @@
     {
       "id": "CI-01-host-desk-read",
       "requirement": "M7-CI",
-      "file": "tests/test_app_smoke.py",
+      "file": "tests/app_harness.py",
       "find": "    c.desk = PretendDesk()",
       "replace": "    pass  # the computer's own desk, as before",
       "test": [

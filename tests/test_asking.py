@@ -58,8 +58,24 @@ def test_the_transcript_tail_shows_what_is_on_its_way_then_what_waits():
     qs.ask(Question("chat", "", [Attached("log.txt")]))
     assert asking.tail(qs, "Pretend API is thinking…") == [
         "**You:** cat?\n\n*Attached: notes.txt, photo.png*\n\n*Pretend API is thinking…*",
-        "**You:**\n\n*Attached: log.txt*\n\n*Still answering, Esc to stop. This one is next.*",
+        "**You:**\n\n*Attached: log.txt*\n\n*Waiting for the answer on its way: this one goes next (Stop ends that one).*",
     ]
+    qs.current.partial = "A cat"  # its answer has started to come: drawn after the transcript, so no "thinking" any more
+    assert asking.tail(qs, "Pretend API is thinking…")[0] == "**You:** cat?\n\n*Attached: notes.txt, photo.png*"
+
+
+def test_a_question_keeps_its_lines_as_typed():
+    """A question's line breaks used to be lost: Markdown runs lines of one paragraph together."""
+    assert asking.typed("first line\nsecond line") == "first line\\\nsecond line"  # a backslash ends each line: a hard break
+    assert asking.typed("one line") == "one line"
+    qs = Questions()
+    qs.ask(Question("chat", "a\nb", [], Brain()))
+    assert asking.tail(qs, "thinking").pop().startswith("**You:** a\\\nb")
+
+
+def test_a_question_carries_its_answer_so_far_when_it_started_and_what_goes_with_it():
+    q = Question("chat", "hi")
+    assert (q.partial, q.started, q.before) == ("", 0.0, None)  # nothing yet; the whole chat goes with it
 
 
 def test_what_a_question_asks_and_what_asking_it_again_needs():

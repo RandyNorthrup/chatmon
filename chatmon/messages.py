@@ -34,7 +34,8 @@ class Message:
     """A bubble to show. `buttons` are (label, action or None). `key` names what it's about, so newer news of the
     same thing replaces it. `alert`: shown as one (waving, above full-screen windows, until answered). `yours`:
     it came while you were using Chatmon. `background`: it came on its own (an agent, a script, a heads-up), not
-    from something you did. `priority`, left out, is PROMPT for a bubble with buttons or no timeout, else PLAIN."""
+    from something you did. `priority`, left out, is PROMPT for a bubble with buttons or no timeout, else PLAIN.
+    `cue`: the sound it may make as it shows (the app decides whether it does)."""
 
     title: str
     text: str = ""
@@ -45,6 +46,7 @@ class Message:
     alert: bool = False
     yours: bool = False
     background: bool = False
+    cue: str | None = None
     seq: int = field(default_factory=lambda: next(_order))
 
     def __post_init__(self) -> None:
@@ -91,14 +93,24 @@ class MessageQueue:
 
     # -- in and out
 
-    def add(self, message: Message) -> None:
-        """Queue it. Waiting news of the same thing is replaced by it; past the limit, the oldest plain bubble goes."""
+    def add(self, message: Message) -> list[Message]:
+        """Queue it. Waiting news of the same thing is replaced by it; past the limit, the oldest plain bubble goes.
+        Returns the plain bubbles that went that way, never shown (the app can still offer them)."""
         if message.key is not None:
             self.waiting = [m for m in self.waiting if m.key != message.key]
         self.waiting.append(message)
         plain = [m for m in self.waiting if m.priority == PLAIN]
-        for gone in plain[: max(0, len(plain) - PLAIN_LIMIT)]:
+        dropped = plain[: max(0, len(plain) - PLAIN_LIMIT)]
+        for gone in dropped:
             self.waiting.remove(gone)
+        return dropped
+
+    def take(self, which: Callable[[Message], bool]) -> list[Message]:
+        """Take out of the queue every waiting message `which` says yes to, in the order they came: the app says
+        them some other way (a focus session's summary)."""
+        taken = sorted((m for m in self.waiting if which(m)), key=lambda m: m.seq)
+        self.waiting = [m for m in self.waiting if m not in taken]
+        return taken
 
     def withdraw(self, key: str) -> None:
         """What's waiting about `key` no longer stands (the agent got going again): it never shows."""

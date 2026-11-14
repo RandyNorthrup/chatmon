@@ -27,8 +27,9 @@ usage: chatmon [command]
       left out, it's worked out from the payload
   say TEXT                   make it say something
   ask [TEXT]                 open the ask box, TEXT typed in, ready for more
-  remind WHEN [to] TEXT      set a reminder: remind in 20m to stretch (exits 2 if it can't tell when)
-  status                     the brain that answers, your reminders, and your agents
+  remind WHEN [to] TEXT      set a reminder: remind in 20m to stretch, remind every weekday at 9 to stand up
+                             (exits 2 if it can't tell when, and says why)
+  status                     the brain that answers, your reminders, and what your agents are doing
   quit                       close the chatmon that's running
   autostart on|off           start it when you log in
   --version
@@ -36,7 +37,7 @@ usage: chatmon [command]
 
 STDIN_LIMIT = 256 * 1024  # bytes of hook payload to read at most
 STDIN_WAIT = 0.5  # seconds to wait for it
-ASFW_ANY = 0xFFFFFFFF  # AllowSetForegroundWindow's "any process": the running Chatmon's id isn't known here
+ASFW_ANY = 0xFFFFFFFF  # AllowSetForegroundWindow's "any process": only when the running Chatmon's id can't be learnt
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -91,7 +92,9 @@ def remind(args: list[str]) -> int:
     text = " ".join(args)
     command = reminders.parse_command("remind me " + text, datetime.now())
     if command is None or command.kind != "reminder":
-        print(f"Couldn't tell when to remind you{f' ({text!r})' if text else ''}. Try: chatmon remind in 20m to stretch", file=sys.stderr)
+        why = reminders.explain(command, markdown=False) if command is not None and command.kind == "unclear" else ""
+        print(f"Couldn't tell when to remind you{f' ({text!r})' if text else ''}. {why}".rstrip(), file=sys.stderr)
+        print("Try: chatmon remind in 20m to stretch", file=sys.stderr)
         return 2
     return _send({"type": "remind", "text": text})
 
@@ -104,28 +107,34 @@ def ask(args: list[str]) -> int:
 
 def _let_chatmon_come_forward() -> bool:
     """Windows lets only the program you're using bring a window to the front, and you're using this one: it
-    passes that on, so the running Chatmon's ask box comes up in front, with the keyboard. Elsewhere there's
-    nothing to pass on. True if Windows took it."""
+    passes that on to the running Chatmon alone (its process id, from its answer to `status`), so its ask box
+    comes up in front, with the keyboard; to any process only when a Chatmon too old to answer is running.
+    Elsewhere there's nothing to pass on. True if Windows took it."""
     if sys.platform != "win32":
         return False
     import ctypes
 
+    reply = events.request({"type": "status"}, timeout=1.0)
+    pid = reply.get("pid") if reply else None
+    target = pid if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0 else ASFW_ANY
     try:
-        return bool(ctypes.windll.user32.AllowSetForegroundWindow(ctypes.c_ulong(ASFW_ANY)))
+        return bool(ctypes.windll.user32.AllowSetForegroundWindow(ctypes.c_ulong(target)))
     except (AttributeError, OSError):
         return False
 
 
 def status() -> int:
     """Whether Chatmon runs, the brain a question would go to, the battery, disks and reminders (as the *status*
-    command says them), and each coding agent: connected, or found and not connected. Worked out here, from
-    the settings and state the running Chatmon keeps, so it says as much when Chatmon isn't running."""
-    from . import agents, brains, commands, heads_up, reminders
+    command says them), what each coding agent is doing (only the running Chatmon knows: its answer to `status`),
+    and each agent's hooks: connected, or found and not connected. The rest is worked out here, from the settings
+    and state the running Chatmon keeps, so it says as much when Chatmon isn't running."""
+    from . import agents, brains, commands, heads_up, offline, reminders
     from .settings import State, load_config, merge
 
     paths.windows_environment()  # the agents' command lines, found on PATH as you have it now
-    running = events.deliver({"type": "ping"})
-    print("Chatmon is running." if running == events.SENT else "Chatmon isn't running. Start it with: chatmon")
+    live = events.request({"type": "status"})
+    running = live is not None or events.deliver({"type": "ping"}) == events.SENT  # a Chatmon too old to answer still runs
+    print("Chatmon is running." if running else "Chatmon isn't running. Start it with: chatmon")
     state = State.load()
     config, problem = load_config()
     if problem:
@@ -137,6 +146,10 @@ def status() -> int:
     lines = commands.status_lines(heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders()), book.upcoming(), time.time(),
                                   brain.label if brain else None, brains.describe(brain) if brain else "")
     print("\n".join(lines))
+    if live is not None:
+        print("- Agents now:")
+        for line in (str(live.get("agents") or "") or offline.agents_report({}, 0, markdown=False)).splitlines():
+            print(f"  {line}")
     print("- Agents:")
     for agent in agents.AGENTS:
         print(f"  {agent.label:<20} {agent.status()}")

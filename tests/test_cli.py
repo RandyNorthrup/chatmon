@@ -45,6 +45,7 @@ def sent(monkeypatch):
         return out.running
 
     monkeypatch.setattr(events, "send", send)
+    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: None)  # a Chatmon too old to answer, if any
     return out
 
 
@@ -74,8 +75,12 @@ def test_a_reminder_it_cant_read_says_so_and_exits_2(sent, capsys):
         assert cli.main(["remind", *words]) == 2
         err = capsys.readouterr().err
         assert "Couldn't tell when to remind you" in err and "chatmon remind in 20m to stretch" in err
+    assert cli.main(["remind", "on", "3/4", "to", "call", "Sam"]) == 2  # M5's explanation, as plain text (M7-04)
+    err = capsys.readouterr().err
+    assert "day and month come in either order" in err and "*" not in err
     assert cli.main(["remind", "at", "3pm", "to", "call", "Sam"]) == 0
-    assert sent == [{"type": "remind", "text": "at 3pm to call Sam"}]  # only the one it could read
+    assert cli.main(["remind", "every", "weekday", "at", "9", "to", "stand", "up"]) == 0  # a repeat is read too
+    assert sent == [{"type": "remind", "text": "at 3pm to call Sam"}, {"type": "remind", "text": "every weekday at 9 to stand up"}]
 
 
 def test_ask_opens_the_box_with_the_text_typed_in(sent, capsys):
@@ -87,12 +92,18 @@ def test_ask_opens_the_box_with_the_text_typed_in(sent, capsys):
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="only Windows keeps a program you're not using from coming to the front")
-def test_on_windows_ask_lets_chatmon_come_forward_before_sending(sent, monkeypatch):
+def test_on_windows_ask_lets_only_chatmon_come_forward_before_sending(sent, monkeypatch):
+    """It used to let any process come forward: now only the running Chatmon, by the process id it answers with."""
     import ctypes
 
     order = []
     monkeypatch.setattr(ctypes.windll.user32, "AllowSetForegroundWindow", lambda pid: order.append(("allow", pid.value)) or 1)
     monkeypatch.setattr(events, "send", lambda message, timeout=0.5: order.append(("send", message["type"])) or True)
+    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: order.append(("ask", message["type"])) or {"type": "status", "pid": 4242})
+    assert cli.main(["ask", "hello"]) == 0
+    assert order == [("ask", "status"), ("allow", 4242), ("send", "ask")]
+    order.clear()
+    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: None)  # a Chatmon too old to say its id
     assert cli.main(["ask", "hello"]) == 0
     assert order == [("allow", cli.ASFW_ANY), ("send", "ask")]
 
@@ -115,22 +126,33 @@ def test_status_says_whether_its_running_the_brain_reminders_and_agents(monkeypa
     (home / ".gemini").mkdir()  # Gemini CLI's settings folder: found, not connected
     pinged = []
     monkeypatch.setattr(events, "deliver", lambda message, timeout=0.5: pinged.append(message) or events.ABSENT)
+    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: pinged.append(message) and None)
     assert cli.main(["status"]) == 0
     out = capsys.readouterr().out
-    assert pinged == [{"type": "ping"}] and out.startswith("Chatmon isn't running.")
+    assert pinged == [{"type": "status"}, {"type": "ping"}] and out.startswith("Chatmon isn't running.") and "Agents now" not in out
     assert "- Timer in 10 min: pasta" in out and "- Reminder in 30 min: stretch" in out
     assert out.index("pasta") < out.index("stretch")  # soonest first
     assert "- Brain: Anthropic API (claude-sonnet-5-5, effort low)" in out
     gemini = next(line for line in out.splitlines() if "Gemini CLI" in line)
     assert gemini.split() == ["Gemini", "CLI", "found"]
     assert next(line for line in out.splitlines() if "Codex" in line).endswith("not found")
-    monkeypatch.setattr(events, "deliver", lambda message, timeout=0.5: events.SENT)
+    monkeypatch.setattr(events, "deliver", lambda message, timeout=0.5: events.SENT)  # running, too old to answer status
     assert cli.main(["status"]) == 0
-    assert capsys.readouterr().out.startswith("Chatmon is running.")
+    out = capsys.readouterr().out
+    assert out.startswith("Chatmon is running.") and "Agents now" not in out
+    live = {"type": "status", "pid": 1, "agents": "Claude needs you (waiting 2 min)\nCodex is working (5 min so far)"}
+    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: live)  # M7-07: what only the running Chatmon knows
+    assert cli.main(["status"]) == 0
+    out = capsys.readouterr().out
+    assert out.startswith("Chatmon is running.") and "- Agents now:\n  Claude needs you (waiting 2 min)\n  Codex is working (5 min so far)\n" in out
+    live["agents"] = ""
+    assert cli.main(["status"]) == 0
+    assert "- Agents now:\n  No AI agent is working or waiting for you.\n" in capsys.readouterr().out
 
 
 def test_status_with_nothing_set_up(monkeypatch, capsys):
     monkeypatch.setattr(events, "deliver", lambda message, timeout=0.5: events.ABSENT)
+    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: None)
     monkeypatch.setattr("chatmon.brains.reachable", lambda url, wait=True: False)  # no model server on this computer
     assert cli.main(["status"]) == 0
     out = capsys.readouterr().out

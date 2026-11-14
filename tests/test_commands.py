@@ -1,30 +1,34 @@
 """The offline command table on its own: phrases to commands, and what the pure parts say. No Qt."""
 
+import json
+import shutil
 import time
 
-from chatmon import commands, memory, reminders
+from chatmon import commands, memory, offline, reminders
 from chatmon.commands import Table
 
-# What the inline chain in app.py answered before the table (0.9.2): each phrase, and what it did.
+# What the inline chain in app.py answered before the table (0.9.2): each phrase, and what it did, by the phrase
+# data's command ids (M5's chatmon/phrases/en.json, which the table now reads).
 BEFORE = {
     "help": ("help", "what can you do", "commands"),
     "status": ("status", "battery", "system status", "how's my computer"),
-    "stop-focus": ("stop focus", "end focus", "cancel focus"),
+    "stop focus": ("stop focus", "end focus", "cancel focus"),
     "hide": ("hide", "go hide", "go away"),
-    "new-chat": ("new chat", "/new", "reset"),
-    "rename-chat": ("rename chat", "rename this chat", "name this chat"),
-    "breaks-off": ("breaks off", "no breaks", "stop break reminders", "break reminders off"),
-    "breaks-on": ("breaks on", "break reminders on"),
-    "focus-alerts-off": ("focus alerts off", "focus notifications off"),
-    "focus-alerts-on": ("focus alerts on", "focus notifications on"),
+    "new chat": ("new chat", "/new", "reset"),
+    "rename chat": ("rename chat", "rename this chat", "name this chat"),
+    "breaks off": ("breaks off", "no breaks", "stop break reminders", "break reminders off"),
+    "breaks on": ("breaks on", "break reminders on"),
+    "focus alerts off": ("focus alerts off", "focus notifications off"),
+    "focus alerts on": ("focus alerts on", "focus notifications on"),
     "settings": ("settings", "preferences", "options", "open settings"),
     "history": ("history", "chats", "my chats", "chat history"),
-    "whats-new": ("what's new", "whats new", "what is new", "changes", "changelog", "release notes"),
-    "update": ("check for updates", "update", "updates", "update yourself", "install update"),
-    "report": ("report a problem", "report a bug", "report bug", "bug", "report"),
-    "idea": ("suggest an idea", "feature request", "suggest a feature", "idea"),
+    "what's new": ("what's new", "whats new", "what is new", "changes", "changelog", "release notes"),
+    "check for updates": ("check for updates", "update", "updates", "update yourself", "install update"),
+    "report a problem": ("report a problem", "report a bug", "report bug", "bug", "report"),
+    "suggest an idea": ("suggest an idea", "feature request", "suggest a feature", "idea"),
     "version": ("version", "what version", "which version"),
 }
+ADDED = {"agents", "carry on"}  # commands since: M5's *agents* (M7-07), and *carry on* (M7-12)
 
 
 def test_the_same_phrases_run_the_same_commands():
@@ -32,19 +36,26 @@ def test_the_same_phrases_run_the_same_commands():
     found = {phrase: table.find(phrase) for phrases in BEFORE.values() for phrase in phrases}
     assert len(found) == 60  # every phrase, none twice
     assert found == {phrase: cid for cid, phrases in BEFORE.items() for phrase in phrases}
-    assert set(commands.COMMANDS) == set(commands.PHRASES) == set(BEFORE)  # every command has a phrase and a doer
+    assert set(commands.COMMANDS) == set(BEFORE) | ADDED
+    data = json.loads((offline.PHRASES / "en.json").read_text(encoding="utf-8"))["commands"]
+    assert all(data.get(cid) for cid in commands.COMMANDS)  # every command has phrases to run it
 
 
 def test_a_phrase_is_found_as_typed_give_or_take_case_and_punctuation():
     table = Table()
-    assert table.find("Help?") == "help" and table.find("  STATUS.  ") == "status" and table.find("What's new!") == "whats-new"
+    assert table.find("Help?") == "help" and table.find("  STATUS.  ") == "status" and table.find("What's new!") == "what's new"
     assert table.find("what  version") == "version"  # spaces inside count once
+    assert table.find("What are my agents doing?") == "agents" and table.find("carry on") == "carry on"
     for question in ("help me write a poem", "is there an update for numpy", "status of my order", "", "?"):
         assert table.find(question) is None
+    assert table.find("what time is it") is None and table.find("notes") is None  # answered and kept elsewhere
 
 
-def test_another_languages_phrases_join_english_which_stays():
-    table = Table({"help": ["aide", "Qu'est-ce que tu sais faire ?"], "hide": ["help"], "no-such-command": ["bonjour"]})
+def test_another_languages_phrases_join_english_which_stays(tmp_path):
+    shutil.copy(offline.PHRASES / "en.json", tmp_path / "en.json")
+    (tmp_path / "fr.json").write_text(json.dumps({"commands": {"help": ["aide", "Qu'est-ce que tu sais faire ?"], "hide": ["help"], "no such command": ["bonjour"]}}),
+                                      encoding="utf-8")
+    table = Table(offline.load_phrases("fr", tmp_path))
     assert table.find("aide") == "help" and table.find("qu'est-ce que tu sais faire") == "help"
     assert table.find("help") == "help"  # English wins where they share a phrase
     assert table.find("hide") == "hide" and table.find("bonjour") is None  # an id it doesn't know is left out
