@@ -1,0 +1,280 @@
+red drills from docs\delivery\reports\m3\drill-spec-linux.json
+python: C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-8u53155i
+copied 257 files
+
+=== drill M3-04-buffers (M3-04) on chatmon/layer.py
+command: C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.22s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still ______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x70c6e18be530>
+
+    @linux_only
+    def test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still(qapp):
+        conn, server, stage, surf, ids = _configured(qapp)
+        shm = surf.globals["wl_shm"][0]
+        created, callbacks = list(ids["buffers"]), list(ids["frames"])
+        assert len(created) == 1 and len(callbacks) == 1  # the configure's full paint, waiting for its frame
+    
+        def present():
+            surf.damage(QRegion(10, 10, 50, 50))
+            surf._present()
+            reqs = server.requests()
+            created.extend(new_buffers(reqs, shm))
+            callbacks.extend(wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME))
+            return reqs
+    
+        def frame_done():
+            server.send(callbacks[-1], 0, "u", 0)
+            conn.read()
+    
+        frame_done()
+        reqs = present()  # the first buffer is still the compositor's: a second one
+        assert len(surf._buffers) == 2 and named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+        frame_done()
+        reqs = present()  # both held: no third, the frame waits
+>       assert len(surf._buffers) == 2 and not named(reqs, shm, layer.SHM_CREATE_POOL) and not named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+E       assert (3 == 2)
+E        +  where 3 = len([<chatmon.layer.Buffer object at 0x70c6e19497f0>, <chatmon.layer.Buffer object at 0x70c6e17c8e10>, <chatmon.layer.Buffer object at 0x70c6e17c8f50>])
+E        +    where [<chatmon.layer.Buffer object at 0x70c6e19497f0>, <chatmon.layer.Buffer object at 0x70c6e17c8e10>, <chatmon.layer.Buffer object at 0x70c6e17c8f50>] = <chatmon.layer.LayerSurface object at 0x70c6e17b4730>._buffers
+
+tests/test_wayland.py:439: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still
+1 failed in 1.20s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.97s
+
+=== drill M3-04-trim (M3-04) on chatmon/layer.py
+command: C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.06s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still ______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7225222aa5d0>
+
+    @linux_only
+    def test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still(qapp):
+        conn, server, stage, surf, ids = _configured(qapp)
+        shm = surf.globals["wl_shm"][0]
+        created, callbacks = list(ids["buffers"]), list(ids["frames"])
+        assert len(created) == 1 and len(callbacks) == 1  # the configure's full paint, waiting for its frame
+    
+        def present():
+            surf.damage(QRegion(10, 10, 50, 50))
+            surf._present()
+            reqs = server.requests()
+            created.extend(new_buffers(reqs, shm))
+            callbacks.extend(wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME))
+            return reqs
+    
+        def frame_done():
+            server.send(callbacks[-1], 0, "u", 0)
+            conn.read()
+    
+        frame_done()
+        reqs = present()  # the first buffer is still the compositor's: a second one
+        assert len(surf._buffers) == 2 and named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+        frame_done()
+        reqs = present()  # both held: no third, the frame waits
+        assert len(surf._buffers) == 2 and not named(reqs, shm, layer.SHM_CREATE_POOL) and not named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+        server.send(created[0], layer.EV_BUFFER_RELEASE)
+        conn.read()
+        surf._present()
+        reqs = server.requests()
+        assert named(reqs, ids["surface"], layer.SURFACE_ATTACH) and not named(reqs, shm, layer.SHM_CREATE_POOL)  # the first, back
+        callbacks.extend(wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME))
+        frame_done()
+        server.send(created[1], layer.EV_BUFFER_RELEASE)
+        conn.read()
+        assert surf._trim_timer.isActive() and surf._trim_timer.interval() == layer.TRIM_AFTER_MS
+        surf._trim()  # still for a while
+        reqs = server.requests()
+>       assert len(surf._buffers) == 1 and surf._buffers[0] is surf._shown
+E       assert (2 == 1)
+E        +  where 2 = len([<chatmon.layer.Buffer object at 0x722521d217f0>, <chatmon.layer.Buffer object at 0x722521b9ce10>])
+E        +    where [<chatmon.layer.Buffer object at 0x722521d217f0>, <chatmon.layer.Buffer object at 0x722521b9ce10>] = <chatmon.layer.LayerSurface object at 0x722521b8c7d0>._buffers
+
+tests/test_wayland.py:452: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still
+1 failed in 0.98s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.35s
+
+=== drill M3-09-latin (M3-09) on chatmon/xkb.py
+command: C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat -m pytest -q -p no:cacheprovider tests/test_xkb.py::test_shortcuts_on_a_russian_layout_are_the_latin_keys tests/test_xkb.py::test_the_latin_symbol_comes_from_the_first_layout_that_has_one
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.03s
+-- red: exit 1
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_shortcuts_on_a_russian_layout_are_the_latin_keys _____________
+
+    def test_shortcuts_on_a_russian_layout_are_the_latin_keys():
+        kb = board("us,ru")
+        kb.set_modifiers(0, 0, 0, RUSSIAN)
+        assert kb.press(V).text == "м"  # typing is Russian
+        for code, qt in ((V, Qt.Key.Key_V), (C, Qt.Key.Key_C), (X, Qt.Key.Key_X), (A, Qt.Key.Key_A), (Z, Qt.Key.Key_Z)):
+            kb.set_modifiers(CTRL, 0, 0, RUSSIAN)
+            key = kb.press(code)
+>           assert (key.key, key.modifiers) == (qt.value, Qt.KeyboardModifier.ControlModifier), qt
+E           AssertionError: <Key.Key_V: 86>
+E           assert (1052, <Keybo...er: 67108864>) == (86, <Keyboar...er: 67108864>)
+E             
+E             At index 0 diff: 1052 != 86
+E             Use -v to get more diff
+
+tests/test_xkb.py:82: AssertionError
+________ test_the_latin_symbol_comes_from_the_first_layout_that_has_one ________
+
+    def test_the_latin_symbol_comes_from_the_first_layout_that_has_one():
+        """With Dvorak first, Ctrl and the key that is Dvorak's Q is Ctrl+Q, whatever the US layout after it says."""
+        kb = board("us,ru,us", "dvorak,,")
+        kb.set_modifiers(CTRL, 0, 0, RUSSIAN)
+>       assert kb.press(X).key == Qt.Key.Key_Q.value  # Dvorak has Q where the US has X
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 1063 == 81
+E        +  where 1063 = Key(key=1063, text='\x11', modifiers=<KeyboardModifier.ControlModifier: 67108864>).key
+E        +    where Key(key=1063, text='\x11', modifiers=<KeyboardModifier.ControlModifier: 67108864>) = press(45)
+E        +      where press = <chatmon.xkb.Keyboard object at 0x7699c4bda5d0>.press
+E        +  and   81 = <Key.Key_Q: 81>.value
+E        +    where <Key.Key_Q: 81> = <enum 'Key'>.Key_Q
+E        +      where <enum 'Key'> = Qt.Key
+
+tests/test_xkb.py:115: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_xkb.py::test_shortcuts_on_a_russian_layout_are_the_latin_keys
+FAILED tests/test_xkb.py::test_the_latin_symbol_comes_from_the_first_layout_that_has_one
+2 failed in 1.19s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.19s
+
+=== drill M3-09-overlay (M3-09) on chatmon/xkb.py
+command: C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout tests/test_overlay_stage.py::test_ctrl_v_pastes_under_a_russian_layout
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 2.78s
+-- red: exit 1
+_______ test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7fad2f0e3250>
+
+    @linux_only
+    def test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout(qapp):
+        xkb, lib = _xkb()
+        conn, server, stage, surf, ids = _configured(qapp)
+        _send_keymap(server, ids, xkb, lib, "us,ru")
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 1, ids["surface"], b"")
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_MODIFIERS, "uuuuu", 2, 0, 0, 0, 1)  # Russian
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 3, 0, 47, 1)  # the key that's V in the US
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 4, 0, 47, 0)
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_MODIFIERS, "uuuuu", 5, 4, 0, 0, 1)  # Ctrl held, still Russian
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 6, 0, 47, 1)
+        conn.read()
+        typed, _released, shortcut = stage.keys
+        assert typed.text == "м" and typed.key == ord("М")
+>       assert shortcut.key == Qt.Key.Key_V.value and shortcut.modifiers == Qt.KeyboardModifier.ControlModifier  # paste
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert (1052 == 86)
+E        +  where 1052 = Key(key=1052, text='\x16', modifiers=<KeyboardModifier.ControlModifier: 67108864>).key
+E        +  and   86 = <Key.Key_V: 86>.value
+E        +    where <Key.Key_V: 86> = <enum 'Key'>.Key_V
+E        +      where <enum 'Key'> = Qt.Key
+
+tests/test_wayland.py:627: AssertionError
+__________________ test_ctrl_v_pastes_under_a_russian_layout ___________________
+
+stage = (<chatmon.penguin.Stage object at 0x7fad2ef3dc70>, <chatmon.bubble.AskBox object at 0x7fad2ef3e990>)
+
+    def test_ctrl_v_pastes_under_a_russian_layout(stage):
+        """The keys the overlay's keyboard makes from a us,ru keymap with Russian active, as the stage gets them."""
+        lib = xkb.library()
+        if lib is None:
+            pytest.skip("libxkbcommon isn't installed (the overlay is Linux only)")
+        s, box = stage
+        board = xkb.Keyboard(lib, xkb.keymap_from_names(lib, "us,ru"))
+        box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+        spin(0.1)
+        s.keyboard_focus(True)
+        board.set_modifiers(0, 0, 0, 1)
+        s.key(board.press(47), True, False)  # the key that is V in the US: a Russian letter
+        assert box.entry.text() == "м"
+        board.set_modifiers(4, 0, 0, 1)  # Ctrl
+        s.key(board.press(47), True, False)
+>       assert box.entry.text() == "мfrom another app"
+E       AssertionError: assert 'м' == 'мfrom another app'
+E         
+E         - мfrom another app
+E         + м
+
+tests/test_overlay_stage.py:432: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+=========================== short test summary info ============================
+FAILED tests/test_wayland.py::test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout
+FAILED tests/test_overlay_stage.py::test_ctrl_v_pastes_under_a_russian_layout
+2 failed in 3.54s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 2.97s
+
+=== drill M3-10-xserver (M3-10) on chatmon/clickthrough.py
+command: C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat -m pytest -q -p no:cacheprovider tests/test_clickthrough.py::test_the_x_server_gets_the_shape_in_device_pixels
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.21s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_the_x_server_gets_the_shape_in_device_pixels _______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7a6de13daad0>
+
+    def test_the_x_server_gets_the_shape_in_device_pixels(qapp):
+        win = _XlibWindow()
+        try:
+            widget = _ScaledWidget(win.window, 2.0)
+            shape = clickthrough.XShapeInput(widget)
+            shape.update([(10, 20, 30, 4), (100, 120, 7, 9)])
+>           assert win.input_shape() == {(20, 40, 60, 8), (200, 240, 14, 18)}  # twice the logical rectangles, where they are
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert {(10, 20, 30,...0, 120, 7, 9)} == {(20, 40, 60,... 240, 14, 18)}
+E             
+E             Extra items in the left set:
+E             (10, 20, 30, 4)
+E             (100, 120, 7, 9)
+E             Extra items in the right set:
+E             (20, 40, 60, 8)
+E             (200, 240, 14, 18)
+E             Use -v to get more diff
+
+tests/test_clickthrough.py:189: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_clickthrough.py::test_the_x_server_gets_the_shape_in_device_pixels
+1 failed in 1.04s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.86s
+
+=== summary
+PASS M3-04-buffers
+PASS M3-04-trim
+PASS M3-09-latin
+PASS M3-09-overlay
+PASS M3-10-xserver

@@ -1,0 +1,12 @@
+command: python -m pytest -q -p no:cacheprovider -rs tests/test_stage_timer.py tests/test_stage_features.py tests/test_stagemenu.py tests/test_overlay_stage.py tests/test_behavior.py tests/test_sprites.py tests/test_clickthrough.py tests/test_stage_screens.py tests/test_xkb.py tests/test_wayland.py
+host: Linux 6.18.58.1-microsoft-standard-WSL2; Python 3.14.9 PyQt6 6.12.1; DISPLAY=:0
+source: a3447706f7636ef052ee91e74c98aa574d1bbd79
+........................................................................ [ 59%]
+......ssss.......................................                        [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_clickthrough.py:81: Windows only
+SKIPPED [1] tests/test_clickthrough.py:87: Windows only
+SKIPPED [1] tests/test_clickthrough.py:96: Windows only
+SKIPPED [1] tests/test_clickthrough.py:105: Windows only
+117 passed, 4 skipped in 10.91s
+exit 0

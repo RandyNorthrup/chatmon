@@ -71,3 +71,32 @@ stage timer after the behaviour (it needs `next_change`); the menu and stage fea
 due times and wake-ups to it).
 
 Verdict: ready, with the M3-04 partial deferral recorded.
+
+## Addendum: scope revision 2
+
+After M2 merged (`improve/assessment-fixes` at `4827b0c`, merged into `wave1/m3` at `1fd1342`, no conflicts), the
+coordinator handed M3 five stage-side calls M2 asked for. Reviewed against M2's merged `chatmon/bubble.py`:
+
+- **Clarity.** Each call names its M2 interface, all public: `SpeechBubble.set_hovered(on, now)`,
+  `hit() == "link"` with `open_link_at(pos)`, `max_height` with `SCREEN_SHARE` (0.4), the `Entry` field that now
+  keeps or joins lines itself (`Entry.lines`), and the window-mode `AskBox._ring()` whose overlay equivalent is
+  the layout's contents margins (public Qt), not M2's private method.
+- **Conflicts.** `SpeechBubble.expires()` replaces the `getattr(_expires)` reading first planned; a bubble paused
+  while pointed at keeps a past expiry, so the stage counts only expiries still to come (else it would tick every
+  frame while you read).
+- **Failure behaviour.** A link that isn't http, https or mailto: `open_link_at` returns False and nothing
+  happens (M2's rule). A click on a link doesn't dismiss the bubble.
+- **Scope and rules.** All five live in `penguin.py`, which M3 owns; the tests go in `tests/test_overlay_stage.py`.
+  New requirement M3-M2 with AC-M3-M2-stage, task T-M3-m2.
+- **Test files.** The sprite tests went to a new `tests/test_sprites.py` and the stage features' to a new
+  `tests/test_stage_features.py`, instead of `tests/test_anim_strips.py` and `tests/test_stage_timer.py`.
+- **A cross-owner test.** M0's `tests/test_app_smoke.py::test_in_power_saver_mode_the_stage_draws_less_often`
+  asserts the fixed intervals M3-01 removes. M3 can't edit it; the replacement is in the plan's Integration notes
+  and the same promise is covered by `tests/test_stage_timer.py`.
+
+- **Integration notes, reviewed at closing.** `set_hosting(False)` hands the ask box and menus to Qt, which on the
+  overlay's desktops runs on Wayland itself: the box is placed by the compositor, and the penguin's own menu has
+  no Qt window for a popup to belong to. Neither can be tried here; both are in the Integration notes for M7 and
+  a pending operation (M3-14-on-wayland). The requirement (the stage *can* run unhosted) is unchanged.
+
+Verdict: ready for scope revision 2.
