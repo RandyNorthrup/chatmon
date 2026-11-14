@@ -31,6 +31,7 @@ from PyQt6.QtGui import (
     QPalette,
     QPen,
     QPixmap,
+    QRegion,
     QTextCursor,
     QTextLayout,
     QTextOption,
@@ -49,6 +50,9 @@ ANIM_FPS = 30  # how often an animated bubble is redrawn (its frames crossfade i
 BODY_POINTS = 10.5  # the bubbles' text, at the desktop's usual font size
 SAFE_SCHEMES = ("http", "https", "mailto")  # what a link in a bubble may open: nothing on this computer
 WORD = re.compile(r"\w+")
+EFFECTS_RISE = 0.4  # seconds a bubble's effects take to come back (pointed at, new words)
+EFFECTS_SETTLE = 1.2  # seconds they take to fade onto the still picture
+EFFECTS_LEAST = 4.0  # an animation loop shorter than this plays twice before settling
 
 
 def open_link(url: QUrl) -> None:
@@ -137,6 +141,46 @@ class _Button:
     rect: QRectF
 
 
+def _smooth(x: float) -> float:
+    x = max(0.0, min(1.0, x))
+    return x * x * (3 - 2 * x)
+
+
+class Effects:
+    """When a painted bubble's moving edges play: for one loop of their animation after it appears (two, if a
+    loop is short), then they fade onto the still picture; pointing at it or new words in it start them again.
+    A bubble left up drew thirty frames a second for nothing, at up to 5 ms each."""
+
+    def __init__(self) -> None:
+        self.since: float | None = None
+        self.rise_from = 1.0  # their strength when they last started (1: at full strength straight away)
+
+    def start(self, now: float, rise_from: float = 1.0) -> None:
+        self.since, self.rise_from = now, rise_from
+
+    def wake(self, now: float, period: float) -> None:
+        """Start again, rising from however strong they are now, unless they're at full strength already."""
+        current = self.strength(now, period)
+        if current < 1.0:
+            self.start(now, current)
+
+    @staticmethod
+    def run(period: float) -> float:
+        """Seconds at full strength: whole loops, so they settle where a loop ends."""
+        return period if period >= EFFECTS_LEAST else 2 * period
+
+    def strength(self, now: float, period: float) -> float:
+        """0 (the still picture) to 1 (full strength)."""
+        if self.since is None or period <= 0:
+            return 0.0
+        age = now - self.since
+        rise = self.rise_from + (1 - self.rise_from) * _smooth(age / EFFECTS_RISE)
+        run = self.run(period)
+        if age <= run:
+            return rise
+        return min(rise, 1 - _smooth((age - run) / EFFECTS_SETTLE))
+
+
 @dataclass(frozen=True)
 class TimeoutPolicy:
     """How long a speech bubble stays: long enough to read. At least `least` seconds plus `per_word` for each of
@@ -201,6 +245,9 @@ class SpeechBubble:
         self.timeout_policy = TimeoutPolicy()
         self.max_height: float | None = None  # px; None: SCREEN_SHARE of the primary screen
         self.text_scale = 1.0
+        self.power_saving = False  # the system's power saver: the still picture only
+        self._effects = Effects()
+        self._period = 0.0  # seconds after which its animation repeats (0: it has none)
         self._text = ""
         self._button_specs: list = []
         self._shown_at = 0.0
@@ -244,9 +291,21 @@ class SpeechBubble:
         """Still on screen, perhaps fading out."""
         return self._visible
 
+    def set_power_saving(self, on: bool) -> None:
+        """The system's power saver: the still picture, with no effects moving."""
+        self.power_saving = on
+        self._frame = None
+
+    def effects(self, now: float) -> float:
+        """How strongly its moving effects show now: 0 is the still picture."""
+        if not (self._visible and self.animate and self.art is not None and self.art.layers) or self.power_saving:
+            return 0.0
+        return self._effects.strength(now, self._period)
+
     def anim_key(self, now: float) -> int:
-        """Changes as often as an animated bubble needs redrawing; -1 when it doesn't."""
-        if self._visible and self.animate and self.art is not None:
+        """Changes as often as an animated bubble needs redrawing; -1 when it doesn't (no effects, or they've
+        settled)."""
+        if self.effects(now) > 0.0:
             return int((now - self._shown_at) * ANIM_FPS)
         return -1
 
@@ -258,6 +317,7 @@ class SpeechBubble:
         self._shown_at, self._closing_at, self._now = now, None, now
         self._hovered, self._paused_at = False, None
         self._visible = True
+        self._effects.start(now)  # new words: the effects play again (the bubble itself fades in)
         self._layout()
         stay = self.timeout_policy.seconds(timeout_s, self.words())
         self._expires = now + stay if stay is not None else None
@@ -278,6 +338,7 @@ class SpeechBubble:
         self._hovered = on
         if on:
             self._paused_at = now
+            self._effects.wake(now, self._period)
         elif self._paused_at is not None:
             if self._expires is not None:
                 self._expires += max(0.0, now - self._paused_at)
@@ -358,6 +419,7 @@ class SpeechBubble:
         line_h = title_metrics.lineSpacing()
         self._close_rect = QRectF(origin.x() + inner - self.CLOSE_W + 4, origin.y() - 3, self.CLOSE_W, line_h + 6)
         self._has_text = has_text
+        self._period = self.art.loop_period(self._content.size()) if self.art is not None and self.art.layers else 0.0
 
     def _buttons(self, specs) -> list[_Button]:
         metrics = QFontMetricsF(self._button_font)
@@ -479,7 +541,8 @@ class SpeechBubble:
             q.setRenderHint(QPainter.RenderHint.Antialiasing)
             q.translate(SPILL, SPILL)
             if self.art:
-                self.art.paint(q, 0, 0, self._content.size(), tail_x, now - self._shown_at, self.animate)
+                strength = self.effects(now)
+                self.art.paint(q, 0, 0, self._content.size(), tail_x, now - self._shown_at, strength > 0.0, strength)
             else:
                 box = QRectF(1, 1, self.size.width() - 2, self.size.height() - TAIL - 2)
                 path = bubble_path(box, tail_x)
@@ -853,10 +916,13 @@ class AskBox(QWidget):
         self._margins = (16, 12, 16, 14 + TAIL)
         self._opened_at = time.monotonic()
         self.stage_draws_art = False  # on the overlay: the stage draws the bubble, this only what's in it
-        self._frames = QTimer(self)  # redraws an animated bubble while it's open
+        self._frames = QTimer(self)  # redraws an animated bubble's border while its effects play
         self._frames.setInterval(1000 // ANIM_FPS)
-        self._frames.timeout.connect(self.update)
+        self._frames.timeout.connect(self._next_frame)
         self.seen = True  # off while nothing on screen can be seen (set_seen): no frames
+        self.power_saving = False  # the system's power saver: the still picture only
+        self._effects = Effects()
+        self._period_for: tuple[tuple, float] = ((), 0.0)
         self._busy: tuple[str, float | None] | None = None  # (who is answering, since when)
         self._busy_clock = QTimer(self)  # the seconds counting up while an answer is coming
         self._busy_clock.setInterval(1000)
@@ -991,9 +1057,29 @@ class AskBox(QWidget):
     def _content_width(self) -> int:
         return self.width() - self._margins[0] - self._margins[2]
 
+    def _content(self) -> QSizeF:
+        left, top, right, bottom = self._margins
+        return QSizeF(self.width() - left - right, self.height() - top - bottom)
+
+    def _period(self) -> float:
+        """Seconds after which its animation repeats, for its size now (0: it has none)."""
+        if self.art is None or not self.art.layers:
+            return 0.0
+        key = (self.art.name, self.width(), self.height())
+        if self._period_for[0] != key:
+            self._period_for = (key, self.art.loop_period(self._content()))
+        return self._period_for[1]
+
+    def effects(self, now: float) -> float:
+        """How strongly its moving effects show now: 0 is the still picture."""
+        if not (self.isVisible() and self.animate and self.art is not None) or self.power_saving:
+            return 0.0
+        return self._effects.strength(now, self._period())
+
     def anim_key(self, now: float) -> int:
-        """Changes as often as its animated bubble needs drawing again; -1 when it doesn't."""
-        if self.isVisible() and self.animate and self.art is not None:
+        """Changes as often as its animated bubble needs drawing again; -1 when it doesn't (no effects, or
+        they've settled)."""
+        if self.effects(now) > 0.0:
             return int((now - self._opened_at) * ANIM_FPS)
         return -1
 
@@ -1002,21 +1088,45 @@ class AskBox(QWidget):
         draws itself."""
         if not self.art:
             return False
-        left, top, right, bottom = self._margins
-        content = QSizeF(self.width() - left - right, self.height() - top - bottom)
-        self.art.paint(p, x, y, content, self._tail_x, time.monotonic() - self._opened_at, self.animate)
+        now = time.monotonic()
+        strength = self.effects(now)
+        self.art.paint(p, x, y, self._content(), self._tail_x, now - self._opened_at, strength > 0.0, strength)
         return True
 
     def _run_frames(self) -> None:
-        if self.isVisible() and self.seen and self.animate and self.art is not None and not self.stage_draws_art:
+        drawn_here = self.isVisible() and self.seen and not self.stage_draws_art
+        if drawn_here and self.effects(time.monotonic()) > 0.0:
             self._frames.start()
         else:
             self._frames.stop()
+
+    def _next_frame(self) -> None:
+        """Draw the border again (only the border: nothing inside it moves), until the effects settle."""
+        self.update(self._ring())
+        if self.effects(time.monotonic()) <= 0.0:
+            self._frames.stop()  # that was the still picture: nothing more to draw
+
+    def _ring(self) -> QRegion:
+        """Where the painted border is: the box without its text area, which no effect reaches."""
+        left, top, right, bottom = self._margins
+        whole = self.rect()
+        return QRegion(whole).subtracted(QRegion(whole.adjusted(left, top, -right, -bottom)))
+
+    def _wake(self) -> None:
+        """Something to look at (the pointer, new words): the effects play again."""
+        self._effects.wake(time.monotonic(), self._period())
+        self._run_frames()
 
     def set_seen(self, on: bool) -> None:
         """Whether anything on screen can be seen (Windows: not while locked, or with the display off)."""
         self.seen = on
         self._run_frames()
+
+    def set_power_saving(self, on: bool) -> None:
+        """The system's power saver: the still picture, with no effects moving."""
+        self.power_saving = on
+        self._run_frames()
+        self.update()
 
     def _fades(self) -> bool:
         """Whether it fades in and out: not with reduced motion, nor where windows can't be faded (Wayland) or
@@ -1042,6 +1152,7 @@ class AskBox(QWidget):
         opening = not self.isVisible()
         if opening:
             self._opened_at = time.monotonic()
+            self._effects.start(self._opened_at)
             if self._fades():
                 self.setWindowOpacity(0.0)
         self.show()
@@ -1135,9 +1246,12 @@ class AskBox(QWidget):
     def set_answer(self, markdown: str, at_end: bool = False) -> None:
         """What the bubble shows above the field: an answer, or the whole chat (`at_end`: opened at the start
         of its newest exchange, as a chat is read). Streamed text so far is dropped: this is the answer."""
+        new_words = markdown != self._markdown
         self._markdown, self._at_end, self._partial = markdown, at_end, ""
         self._partial_later.stop()
         self._render()
+        if new_words and self.isVisible():
+            self._wake()
 
     def _render(self, keep_place: bool = False) -> None:
         """Draw the answer area from what it was given; `keep_place` leaves the reader where they were."""
@@ -1434,6 +1548,10 @@ class AskBox(QWidget):
         p.fillPath(path, fill)
         p.setPen(QPen(c.accent, 2))
         p.drawPath(path)
+
+    def enterEvent(self, event) -> None:
+        self._wake()
+        super().enterEvent(event)
 
     def keyPressEvent(self, event) -> None:
         if event.key() == Qt.Key.Key_Escape:

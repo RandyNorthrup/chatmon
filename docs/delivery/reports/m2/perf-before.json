@@ -2,58 +2,58 @@
   "M2-13 bubble lifetime": [
     {
       "style": "electric",
-      "seconds": 30.0,
-      "frames_drawn": 892,
-      "ms_total": 3803.0,
-      "ms_per_frame": 4.26
+      "seconds": 60.0,
+      "frames_drawn": 1780,
+      "ms_total": 5290.9,
+      "ms_per_frame": 2.97
     },
     {
       "style": "fire",
-      "seconds": 30.0,
-      "frames_drawn": 892,
-      "ms_total": 2029.0,
-      "ms_per_frame": 2.27
+      "seconds": 60.0,
+      "frames_drawn": 1780,
+      "ms_total": 2563.3,
+      "ms_per_frame": 1.44
     },
     {
       "style": "ghost",
-      "seconds": 30.0,
-      "frames_drawn": 892,
-      "ms_total": 4311.8,
-      "ms_per_frame": 4.83
+      "seconds": 60.0,
+      "frames_drawn": 1780,
+      "ms_total": 17073.7,
+      "ms_per_frame": 9.59
     },
     {
       "style": "fairy",
-      "seconds": 30.0,
-      "frames_drawn": 892,
-      "ms_total": 624.6,
-      "ms_per_frame": 0.7
+      "seconds": 60.0,
+      "frames_drawn": 1780,
+      "ms_total": 8780.7,
+      "ms_per_frame": 4.93
     },
     {
       "style": "leaf",
-      "seconds": 30.0,
-      "frames_drawn": 892,
-      "ms_total": 357.5,
-      "ms_per_frame": 0.4
+      "seconds": 60.0,
+      "frames_drawn": 1780,
+      "ms_total": 841.4,
+      "ms_per_frame": 0.47
     }
   ],
   "M2-14 ask box, one second": [
     {
       "style": "electric",
       "seconds": 1.0,
-      "box_paints": 23,
-      "child_paints": 170
-    },
-    {
-      "style": "fire",
-      "seconds": 1.0,
       "box_paints": 22,
       "child_paints": 169
     },
     {
+      "style": "fire",
+      "seconds": 1.0,
+      "box_paints": 23,
+      "child_paints": 170
+    },
+    {
       "style": "ghost",
-      "seconds": 1.01,
-      "box_paints": 24,
-      "child_paints": 178
+      "seconds": 1.0,
+      "box_paints": 22,
+      "child_paints": 169
     },
     {
       "style": "fairy",
@@ -63,71 +63,91 @@
     },
     {
       "style": "leaf",
-      "seconds": 1.15,
-      "box_paints": 22,
-      "child_paints": 169
+      "seconds": 1.0,
+      "box_paints": 23,
+      "child_paints": 170
     }
   ],
   "M2-15 notch moving": [
     {
       "style": "electric",
       "animate": false,
-      "still_notch_ms_per_draw": 0.635,
-      "moving_notch_ms_per_draw": 7.343
+      "still_notch_ms_per_draw": 0.178,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 2.826,
+      "moving_notch_kpx_composed_per_draw": 239.7
     },
     {
       "style": "electric",
       "animate": true,
-      "still_notch_ms_per_draw": 3.317,
-      "moving_notch_ms_per_draw": 21.485
+      "still_notch_ms_per_draw": 3.39,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 10.597,
+      "moving_notch_kpx_composed_per_draw": 239.7
     },
     {
       "style": "fire",
       "animate": false,
-      "still_notch_ms_per_draw": 0.196,
-      "moving_notch_ms_per_draw": 2.224
+      "still_notch_ms_per_draw": 0.214,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 2.329,
+      "moving_notch_kpx_composed_per_draw": 230.5
     },
     {
       "style": "fire",
       "animate": true,
-      "still_notch_ms_per_draw": 1.907,
-      "moving_notch_ms_per_draw": 4.593
+      "still_notch_ms_per_draw": 1.409,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 4.946,
+      "moving_notch_kpx_composed_per_draw": 230.5
     },
     {
       "style": "ghost",
       "animate": false,
-      "still_notch_ms_per_draw": 0.204,
-      "moving_notch_ms_per_draw": 2.835
+      "still_notch_ms_per_draw": 0.206,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 3.363,
+      "moving_notch_kpx_composed_per_draw": 233.5
     },
     {
       "style": "ghost",
       "animate": true,
-      "still_notch_ms_per_draw": 4.375,
-      "moving_notch_ms_per_draw": 10.066
+      "still_notch_ms_per_draw": 4.094,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 11.986,
+      "moving_notch_kpx_composed_per_draw": 233.5
     },
     {
       "style": "fairy",
       "animate": false,
-      "still_notch_ms_per_draw": 0.241,
-      "moving_notch_ms_per_draw": 2.106
+      "still_notch_ms_per_draw": 0.219,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 2.098,
+      "moving_notch_kpx_composed_per_draw": 215.0
     },
     {
       "style": "fairy",
       "animate": true,
-      "still_notch_ms_per_draw": 0.886,
-      "moving_notch_ms_per_draw": 9.428
+      "still_notch_ms_per_draw": 0.811,
+      "still_notch_kpx_composed_per_draw": 1.8,
+      "moving_notch_ms_per_draw": 9.357,
+      "moving_notch_kpx_composed_per_draw": 482.5
     },
     {
       "style": "leaf",
       "animate": false,
-      "still_notch_ms_per_draw": 0.203,
-      "moving_notch_ms_per_draw": 2.408
+      "still_notch_ms_per_draw": 0.233,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 2.789,
+      "moving_notch_kpx_composed_per_draw": 266.4
     },
     {
       "style": "leaf",
       "animate": true,
-      "still_notch_ms_per_draw": 0.373,
-      "moving_notch_ms_per_draw": 2.728
+      "still_notch_ms_per_draw": 0.322,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 2.496,
+      "moving_notch_kpx_composed_per_draw": 266.4
     }
   ]
 }

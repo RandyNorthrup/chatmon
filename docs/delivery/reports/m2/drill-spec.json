@@ -547,6 +547,111 @@
       "expect": [
         "test_with_reduced_motion_it_comes_and_goes_at_once"
       ]
+    },
+    {
+      "id": "M2-13-never-settles",
+      "requirement": "M2-13",
+      "file": "chatmon/bubble.py",
+      "find": "        return min(rise, 1 - _smooth((age - run) / EFFECTS_SETTLE))",
+      "replace": "        return rise",
+      "test": [
+        "tests/test_bubble_styles.py"
+      ],
+      "expect": [
+        "test_a_speech_bubbles_effects_settle_and_come_back",
+        "test_a_bubble_left_up_stops_drawing"
+      ]
+    },
+    {
+      "id": "M2-13-power-saving",
+      "requirement": "M2-13",
+      "file": "chatmon/bubble.py",
+      "find": "        if not (self._visible and self.animate and self.art is not None and self.art.layers) or self.power_saving:",
+      "replace": "        if not (self._visible and self.animate and self.art is not None and self.art.layers):",
+      "test": [
+        "tests/test_bubble_styles.py"
+      ],
+      "expect": [
+        "power saving: the still picture"
+      ]
+    },
+    {
+      "id": "M2-13-hover-wake",
+      "requirement": "M2-13",
+      "file": "chatmon/bubble.py",
+      "find": "            self._effects.wake(now, self._period)",
+      "replace": "            pass",
+      "test": [
+        "tests/test_bubble_styles.py"
+      ],
+      "expect": [
+        "pointed at, it moves again"
+      ]
+    },
+    {
+      "id": "M2-13-box-keeps-drawing",
+      "requirement": "M2-13",
+      "file": "chatmon/bubble.py",
+      "find": "            self._frames.stop()  # that was the still picture: nothing more to draw",
+      "replace": "            pass",
+      "test": [
+        "tests/test_bubble_styles.py"
+      ],
+      "expect": [
+        "test_the_ask_box_settles_and_wakes"
+      ]
+    },
+    {
+      "id": "M2-14-whole-box",
+      "requirement": "M2-14",
+      "file": "chatmon/bubble.py",
+      "find": "        self.update(self._ring())",
+      "replace": "        self.update()",
+      "test": [
+        "tests/test_bubble_styles.py"
+      ],
+      "expect": [
+        "nothing inside it is drawn again"
+      ]
+    },
+    {
+      "id": "M2-15-upper-every-time",
+      "requirement": "M2-15",
+      "file": "chatmon/bubbleart.py",
+      "find": "        upper = self._cache.get((tag, tw, th, ratio))",
+      "replace": "        upper = None",
+      "test": [
+        "tests/test_bubble_styles.py"
+      ],
+      "expect": [
+        "is composed once per size"
+      ]
+    },
+    {
+      "id": "M2-15-border-per-notch",
+      "requirement": "M2-15",
+      "file": "chatmon/bubbleart.py",
+      "find": "        if key not in self._rims:",
+      "replace": "        if True:",
+      "test": [
+        "tests/test_bubble_styles.py"
+      ],
+      "expect": [
+        "one border for the size"
+      ]
+    },
+    {
+      "id": "M2-15-band-off-by-one",
+      "requirement": "M2-15",
+      "file": "chatmon/bubbleart.py",
+      "find": "        p.translate(0, -first / ratio)",
+      "replace": "        p.translate(0, -first / ratio + 1)",
+      "test": [
+        "tests/test_bubble_styles.py"
+      ],
+      "expect": [
+        "test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is"
+      ]
     }
   ]
 }

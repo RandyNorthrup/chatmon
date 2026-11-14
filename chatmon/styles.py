@@ -12,6 +12,7 @@ the palette leaves short of that is darkened or lightened until it reads (`reada
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import cache
 
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QApplication
@@ -89,27 +90,30 @@ class Style:
     def colours(self, palette: QPalette | None = None) -> Colours:
         """This style's colours. The plain style reads them from `palette` (the app's, by default)."""
         if self.title:
-            return self._painted()
+            return _painted(self)
         return _plain(palette if palette is not None else QApplication.palette())
 
-    def _painted(self) -> Colours:
-        fill, body = QColor(self.fill), QColor(self.body)
-        return Colours(
-            fill=fill,
-            title=QColor(self.title),
-            body=body,
-            dim=readable(blend(body, fill, DIM_ALPHA), fill, TEXT_CONTRAST + ART_MARGIN),
-            link=QColor(self.link),
-            accent=QColor(self.accent),
-            selection=QColor(self.selection),
-            selection_text=QColor(self.selection_text),
-            entry=QColor(self.entry),
-            entry_text=body,
-            placeholder=readable(blend(body, QColor(self.entry), DIM_ALPHA), QColor(self.entry)),
-            code_fill=mix(fill, body, CODE_TINT),
-            primary=_button(self.primary, body),
-            other=_button(self.other, body),
-        )
+@cache
+def _painted(style: Style) -> Colours:
+    """A painted style's colours: fixed, so worked out once (a bubble asks every frame). Callers copy before
+    changing one."""
+    fill, body = QColor(style.fill), QColor(style.body)
+    return Colours(
+        fill=fill,
+        title=QColor(style.title),
+        body=body,
+        dim=readable(blend(body, fill, DIM_ALPHA), fill, TEXT_CONTRAST + ART_MARGIN),
+        link=QColor(style.link),
+        accent=QColor(style.accent),
+        selection=QColor(style.selection),
+        selection_text=QColor(style.selection_text),
+        entry=QColor(style.entry),
+        entry_text=body,
+        placeholder=readable(blend(body, QColor(style.entry), DIM_ALPHA), QColor(style.entry)),
+        code_fill=mix(fill, body, CODE_TINT),
+        primary=_button(style.primary, body),
+        other=_button(style.other, body),
+    )
 
 
 def _button(b: Button, body: QColor) -> ButtonLook:

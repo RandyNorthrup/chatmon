@@ -10,7 +10,11 @@ absolute budgets.
   how many frames needed drawing (its anim_key changed), and the time spent drawing them.
 - M2-14: the animated ask box, open for one second of real time: paint events on the box and on its child widgets.
 - M2-15: one painted bubble drawn 120 times with its notch moving one pixel each time, against 120 times with the
-  notch still: milliseconds per draw.
+  notch still: milliseconds per draw (the best of three runs), and the art composed per draw, in thousands of
+  device pixels (BubbleArt._compose's output; the same on any machine).
+
+Wall-clock numbers swing widely while other test suites run on the same machine: frames drawn, paint events and
+pixels composed are the figures to compare.
 """
 
 from __future__ import annotations
@@ -90,24 +94,43 @@ def ask_box_second(name: str) -> dict:
 
 
 def notch_moving(name: str, animate: bool) -> dict:
-    art = bubbleart.art(name, "perf")
     text = QSizeF(300, 92)
-    lo, hi = art.tail_range(text.width())
-    frame = art.frame_for(text)
-    img = QImage(round(frame.size.width()) * 2, round(frame.size.height()) * 2, QImage.Format.Format_ARGB32_Premultiplied)
-    img.setDevicePixelRatio(2.0)
     result = {"style": name, "animate": animate}
-    for label, tips in (("still_notch", [lo + 20] * 120), ("moving_notch", [lo + (i % int(hi - lo)) for i in range(120)])):
-        warm = QPainter(img)
-        art.paint(warm, 0, 0, text, tips[0], 0.0, animate)  # warm the caches for the first place
-        warm.end()
-        start = time.perf_counter()
-        for i, tip in enumerate(tips):
-            img.fill(QColor(0, 0, 0, 0))
-            p = QPainter(img)
-            art.paint(p, 0, 0, text, tip, i / FPS, animate)
-            p.end()
-        result[f"{label}_ms_per_draw"] = round((time.perf_counter() - start) * 1000 / len(tips), 3)
+    composed = [0]
+    real = bubbleart.BubbleArt._compose
+
+    def counting(self, *args, **kwargs):
+        out = real(self, *args, **kwargs)
+        composed[0] += out.width() * out.height()
+        return out
+
+    bubbleart.BubbleArt._compose = counting
+    try:
+        for label in ("still_notch", "moving_notch"):
+            best = None
+            for _ in range(3):
+                art = bubbleart.BubbleArt(name, bubbleart._manifest()[name])  # fresh: nothing kept from the run before
+                lo, hi = art.tail_range(text.width())
+                tips = [lo + 20] * 120 if label == "still_notch" else [lo + (i % int(hi - lo)) for i in range(120)]
+                frame = art.frame_for(text)
+                img = QImage(round(frame.size.width()) * 2, round(frame.size.height()) * 2, QImage.Format.Format_ARGB32_Premultiplied)
+                img.setDevicePixelRatio(2.0)
+                warm = QPainter(img)
+                art.paint(warm, 0, 0, text, tips[0], 0.0, animate)  # warm the caches for the first place
+                warm.end()
+                composed[0] = 0
+                start = time.perf_counter()
+                for i, tip in enumerate(tips):
+                    img.fill(QColor(0, 0, 0, 0))
+                    p = QPainter(img)
+                    art.paint(p, 0, 0, text, tip, i / FPS, animate)
+                    p.end()
+                ms = (time.perf_counter() - start) * 1000 / len(tips)
+                best = ms if best is None else min(best, ms)
+            result[f"{label}_ms_per_draw"] = round(best, 3)
+            result[f"{label}_kpx_composed_per_draw"] = round(composed[0] / len(tips) / 1000, 1)
+    finally:
+        bubbleart.BubbleArt._compose = real
     return result
 
 
@@ -119,7 +142,7 @@ def spin(seconds: float) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--seconds", type=float, default=30.0, help="how long each speech bubble stays (its own clock)")
+    parser.add_argument("--seconds", type=float, default=60.0, help="how long each speech bubble stays (its own clock)")
     parser.add_argument("--json", help="also write the results here")
     args = parser.parse_args()
     app = QApplication.instance() or QApplication([])

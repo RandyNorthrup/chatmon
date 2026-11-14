@@ -583,7 +583,7 @@ class Glow(Layer):
         p.save()
         p.setCompositionMode(QPainter.CompositionMode.CompositionMode_Plus)
         p.setOpacity(p.opacity() * self.amount * level)
-        p.drawPixmap(QPointF(0, 0), art.rim_only(rim))
+        art.draw(p, art.rim_only(rim))
         p.restore()
 
 
@@ -604,7 +604,7 @@ class Swap(Layer):
             return
         p.save()
         p.setOpacity(p.opacity() * weight)
-        p.drawPixmap(QPointF(0, 0), art.composed(self.pix, "swap", rim))
+        art.draw(p, art.composed(self.pix, "swap", rim))
         p.restore()
 
 
@@ -649,7 +649,7 @@ class Sheen(Layer):
             ox, oy = math.floor(x - r), math.floor(y - r)  # the layer sits on whole pixels; the spot moves inside it
             layer.fill(Qt.GlobalColor.transparent)
             q = QPainter(layer)
-            q.drawPixmap(QPointF(-ox, -oy), art.rim_line(rim))
+            art.draw(q, art.rim_line(rim), -ox, -oy)
             q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
             spot = QRadialGradient(QPointF(x - ox, y - oy), r)
             spot.setColorAt(0, QColor(0, 0, 0, 255))
@@ -801,7 +801,7 @@ class Wake(Sprites):
         self._places: tuple[tuple, list[float]] | None = None
 
     def places(self, rim: Rim) -> list[float]:
-        key = rim.key  # type: ignore[attr-defined]
+        key = (rim.key, rim.notch)  # type: ignore[attr-defined]
         if self._places is None or self._places[0] != key:
             n = max(3, round(0.62 * rim.length / self.spacing))  # about what the straight edges hold
             spots = [rim.on_straight((j + 0.2 + 0.6 * _h(self.seed, j, 1)) / n) for j in range(n)]
@@ -957,10 +957,10 @@ class BubbleArt:
         self.pad = float(PAD.get(name, 12))  # display px between the fill's edge and the text
         self.layers: list[Layer] = [LAYERS[e["type"]](folder, e, self.k) for e in entry.get("fx", [])]
         self.ratio = 1.0
-        self._cache: dict[tuple, QPixmap] = {}
+        self._cache: dict[tuple, QPixmap] = {}  # pictures above the notch's band, one per size
+        self._bands: dict[tuple, QPixmap] = {}  # the notch's band, one per size and notch place
         self._rims: dict[tuple, Rim] = {}
         self._overlay: QPixmap | None = None
-        self._mask: tuple[tuple, QPixmap] | None = None
 
     # -- geometry
 
@@ -993,18 +993,23 @@ class BubbleArt:
         return Frame(size, QRectF(left, top, text.width(), text.height()), (0.0, tip_y), (left, top, right, bottom))
 
     def rim(self, tw: int, th: int, tip_x: float) -> Rim:
-        """The border line for a bubble with this text size and notch place."""
-        key = (tw, th, round(tip_x))
+        """The border line for a bubble with this text size, its notch at `tip_x`. The line is worked out once per
+        size (what follows it caches by `rim.key`); only where the notch is changes as the bubble follows the
+        penguin, and what depends on that keys by `rim.notch` too."""
+        key = (tw, th)
+        k = self.k
         if key not in self._rims:
             if len(self._rims) > 8:
                 self._rims.clear()
-            k = self.k
             width, height = self._size(tw, th)
             l, t, r, b = (v * k for v in self.rim_inset)
-            n0 = tip_x - (self.tip[0] - self.notch[0]) * k
-            self._rims[key] = Rim(l, t, width - r, height - b, self.rim_radius * k, (n0, n0 + (self.notch[1] - self.notch[0]) * k))
+            self._rims[key] = Rim(l, t, width - r, height - b, self.rim_radius * k, (0.0, 0.0))
             self._rims[key].key = key  # type: ignore[attr-defined]
-        return self._rims[key]
+        rim = self._rims[key]
+        n0 = tip_x - (self.tip[0] - self.notch[0]) * k
+        rim.notch = (n0, n0 + (self.notch[1] - self.notch[0]) * k)
+        rim.tip = round(tip_x)  # type: ignore[attr-defined]
+        return rim
 
     def loop_period(self, text: QSizeF, tip_x: float | None = None) -> float:
         """Seconds after which the animated bubble repeats exactly, for this text size."""
@@ -1019,8 +1024,10 @@ class BubbleArt:
 
     # -- drawing
 
-    def _compose(self, pix: QPixmap, text_w: float, text_h: float, tip_x: float, ratio: float) -> QPixmap:
-        """The painted bubble stretched round a text area, its notch's tip at `tip_x` (display px from the frame's left)."""
+    def _compose(self, pix: QPixmap, text_w: float, text_h: float, tip_x: float, ratio: float, rows: tuple[int, int] | None = None) -> QPixmap:
+        """The painted bubble stretched round a text area, its notch's tip at `tip_x` (display px from the frame's
+        left). With `rows`, only those rows of device pixels, [first, last): the same pixels the whole picture has
+        there."""
         k = self.k
         x0, y0, x1, y1 = self.text
         c = self.corner
@@ -1034,13 +1041,17 @@ class BubbleArt:
         dL, dR, dT, dB = L * k, R * k, T * k, B * k
         nx0 = tip_x - (self.tip[0] - n0) * k  # the notch strip's left edge, display
         nx1 = nx0 + (n1 - n0) * k
-        out = QPixmap(max(1, round(W * ratio)), max(1, round(H * ratio)))
+        first, last = rows if rows is not None else (0, max(1, round(H * ratio)))
+        out = QPixmap(max(1, round(W * ratio)), max(1, last - first))
         out.setDevicePixelRatio(ratio)
         out.fill(Qt.GlobalColor.transparent)
         p = QPainter(out)
         p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        p.translate(0, -first / ratio)
 
         def put(sx0, sy0, sx1, sy1, dx0, dy0, dx1, dy1):
+            if dy1 * ratio <= first or dy0 * ratio >= last:  # none of it in these rows
+                return
             if dx1 - dx0 > 0.01 and dy1 - dy0 > 0.01 and sx1 > sx0 and sy1 > sy0:
                 p.drawPixmap(QRectF(dx0, dy0, dx1 - dx0, dy1 - dy0), pix, QRectF(sx0, sy0, sx1 - sx0, sy1 - sy0))
 
@@ -1058,91 +1069,142 @@ class BubbleArt:
         p.end()
         return out
 
-    def composed(self, pix: QPixmap, tag: str, rim: Rim) -> QPixmap:
-        tw, th, tip_x = rim.key  # type: ignore[attr-defined]
-        return self._get(pix, tag, tw, th, tip_x, self.ratio)
+    # -- the still picture, in two parts: above the notch's band, kept per size; and the band, per notch place.
+    # A bubble that follows the penguin moves its notch nearly every frame: only the band is made again.
 
-    def rim_only(self, rim: Rim) -> QPixmap:
+    def band_top(self, th: int, ratio: float) -> int:
+        """The first row of device pixels of the notch's band (the art's bottom edge, notch and corners)."""
+        _, top, _, bottom = self.margins()
+        rows = self.h - self.text[3] + self.corner  # art px: the bottom band
+        return max(0, math.floor((top + th + bottom - rows * self.k) * ratio))
+
+    def parts(self, pix: QPixmap, tag: str, rim: Rim) -> tuple[QPixmap, QPixmap, float]:
+        """`pix` (the still, or art like it) composed round this rim's size and notch: (the picture above the notch's
+        band, the band, the band's top in display px)."""
+        tw, th = rim.key  # type: ignore[attr-defined]
+        tip, ratio = rim.tip, self.ratio  # type: ignore[attr-defined]
+        first = self.band_top(th, ratio)
+        upper = self._cache.get((tag, tw, th, ratio))
+        if upper is None:
+            if len(self._cache) > 24:
+                self._cache.clear()
+            upper = self._cache[(tag, tw, th, ratio)] = self._compose(pix, tw, th, tip, ratio, (0, max(1, first)))
+        lower = self._bands.get((tag, tw, th, tip, ratio))
+        if lower is None:
+            if len(self._bands) > 48:
+                self._bands.clear()
+            whole = round(self._size(tw, th)[1] * ratio)
+            lower = self._bands[(tag, tw, th, tip, ratio)] = self._compose(pix, tw, th, tip, ratio, (first, max(first + 1, whole)))
+        return upper, lower, first / ratio
+
+    def _derived(self, tag: str, rim: Rim, make, source: tuple[QPixmap, QPixmap, float] | None = None) -> tuple[QPixmap, QPixmap, float]:
+        """`source`'s parts (the still's, by default), each copied and changed by `make(pixmap, rows_top)`, and
+        kept like the still's own: above the band once per size, the band once per notch place."""
+        tw, th = rim.key  # type: ignore[attr-defined]
+        tip, ratio = rim.tip, self.ratio  # type: ignore[attr-defined]
+        upper, lower, top = source if source is not None else self.parts(self.still, "still", rim)
+        up = self._cache.get((tag, tw, th, ratio))
+        if up is None:
+            up = self._cache[(tag, tw, th, ratio)] = make(QPixmap(upper), 0.0)
+        down = self._bands.get((tag, tw, th, tip, ratio))
+        if down is None:
+            down = self._bands[(tag, tw, th, tip, ratio)] = make(QPixmap(lower), top)
+        return up, down, top
+
+    @staticmethod
+    def draw(p: QPainter, parts: tuple[QPixmap, QPixmap, float], x: float = 0.0, y: float = 0.0) -> None:
+        upper, lower, top = parts
+        p.drawPixmap(QPointF(x, y), upper)
+        p.drawPixmap(QPointF(x, y + top), lower)
+
+    def composed(self, pix: QPixmap, tag: str, rim: Rim) -> tuple[QPixmap, QPixmap, float]:
+        return self.parts(pix, tag, rim)
+
+    def rim_only(self, rim: Rim) -> tuple[QPixmap, QPixmap, float]:
         """The composed still with its fill cut out: just the border and its glow."""
-        tw, th, tip_x = rim.key  # type: ignore[attr-defined]
-        key = ("rim", tw, th, tip_x, self.ratio)
-        if key not in self._cache:
-            pix = QPixmap(self._get(self.still, "still", tw, th, tip_x, self.ratio))
+
+        def cut(pix: QPixmap, top: float) -> QPixmap:
             q = QPainter(pix)
             q.setRenderHint(QPainter.RenderHint.Antialiasing)
+            q.translate(0, -top)
             q.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear)
             q.fillPath(rim.path(self.rim_half * self.k + 1.5), QColor(0, 0, 0))
             n0, n1 = rim.notch  # and the notch's fill, which hangs below the border line
-            q.fillRect(QRectF(n0 - 2, rim.y1 - self.rim_half * self.k - 3, n1 - n0 + 4, pix.height()), QColor(0, 0, 0))
+            q.fillRect(QRectF(n0 - 2, rim.y1 - self.rim_half * self.k - 3, n1 - n0 + 4, top + pix.height()), QColor(0, 0, 0))
             q.end()
-            self._cache[key] = pix
-        return self._cache[key]
+            return pix
 
-    def rim_line(self, rim: Rim) -> QPixmap:
+        return self._derived("rim", rim, cut)
+
+    def rim_line(self, rim: Rim) -> tuple[QPixmap, QPixmap, float]:
         """Just the border line itself: the rim without the glow outside it. The soft glow is see-through,
         and adding it to itself would make it more solid (a white smear on a light desktop), so the line
         is cut to a narrow band and what is see-through in it is faded further."""
-        tw, th, tip_x = rim.key  # type: ignore[attr-defined]
-        key = ("line", tw, th, tip_x, self.ratio)
+        rim_parts = self.rim_only(rim)
+        mask = self._line_mask(rim)
+
+        def line(pix: QPixmap, top: float) -> QPixmap:
+            whole = QPixmap(pix)
+            q = QPainter(pix)
+            q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
+            q.drawPixmap(QPointF(0, -top), mask)
+            q.drawPixmap(QPointF(0, 0), whole)  # twice through its own alpha: only what is nearly solid stays
+            q.drawPixmap(QPointF(0, 0), whole)
+            q.end()
+            return pix
+
+        return self._derived("line", rim, line, rim_parts)
+
+    def _line_mask(self, rim: Rim) -> QPixmap:
+        """A band along the border line, strongest on it and fading to nothing either side: the same wherever
+        the notch is, so it is stroked once per size (six wide strokes round the border cost more than all the
+        rest of a notch's move)."""
+        tw, th = rim.key  # type: ignore[attr-defined]
+        key = ("line mask", tw, th, self.ratio)
         if key not in self._cache:
-            whole = self.rim_only(rim)
-            pix = QPixmap(whole)
+            width, height = self._size(tw, th)
+            mask = QPixmap(max(1, round(width * self.ratio)), max(1, round(height * self.ratio)))
+            mask.setDevicePixelRatio(self.ratio)
+            mask.fill(Qt.GlobalColor.transparent)
             reach = self.rim_half * self.k + 1.5  # as far in as the rim goes
-            band = QPixmap(pix.size())
-            band.setDevicePixelRatio(self.ratio)
-            band.fill(Qt.GlobalColor.transparent)
-            q = QPainter(band)
+            q = QPainter(mask)
             q.setRenderHint(QPainter.RenderHint.Antialiasing)
             for i, strength in enumerate((10, 18, 26, 36, 46, 62)):  # strongest on the line, fading to nothing either side
                 q.setPen(QPen(QColor(0, 0, 0, strength), 2 * reach * (1 - i / 6)))
                 q.drawPath(rim.path())
             q.end()
-            q = QPainter(pix)
-            q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
-            q.drawPixmap(QPointF(0, 0), band)
-            q.drawPixmap(QPointF(0, 0), whole)  # twice through its own alpha: only what is nearly solid stays
-            q.drawPixmap(QPointF(0, 0), whole)
-            q.end()
-            self._cache[key] = pix
+            self._cache[key] = mask
         return self._cache[key]
 
-    def notch_mask(self, rim: Rim, width: float, height: float) -> QPixmap:
-        """Opaque everywhere except over the notch's mouth on the bottom edge, where the fill runs into
-        the notch: nothing that follows the border may draw a line across it."""
-        key = (rim.key, self.ratio)  # type: ignore[attr-defined]
-        if self._mask is None or self._mask[0] != key:
-            pix = QPixmap(max(1, round(width * self.ratio)), max(1, round(height * self.ratio)))
-            pix.setDevicePixelRatio(self.ratio)
-            pix.fill(QColor(0, 0, 0, 255))
-            n0, n1 = rim.notch
-            soft = 12.0
-            q = QPainter(pix)
-            q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
-            band = QRectF(n0 - soft, rim.y1 - 14, (n1 - n0) + 2 * soft, height - (rim.y1 - 14))
-            fade = QLinearGradient(band.left(), 0, band.right(), 0)
-            edge = soft / band.width()
-            fade.setColorAt(0, QColor(0, 0, 0, 255))
-            fade.setColorAt(min(0.49, 1.6 * edge), QColor(0, 0, 0, 0))
-            fade.setColorAt(max(0.51, 1 - 1.6 * edge), QColor(0, 0, 0, 0))
-            fade.setColorAt(1, QColor(0, 0, 0, 255))
-            q.fillRect(band, fade)
-            q.end()
-            self._mask = (key, pix)
-        return self._mask[1]
+    def mask_notch(self, q: QPainter, rim: Rim, height: float) -> None:
+        """Clear what `q` drew over the notch's mouth on the bottom edge, where the fill runs into the notch:
+        nothing that follows the border may draw a line across it."""
+        n0, n1 = rim.notch
+        soft = 12.0
+        band = QRectF(n0 - soft, rim.y1 - 14, (n1 - n0) + 2 * soft, height - (rim.y1 - 14))
+        fade = QLinearGradient(band.left(), 0, band.right(), 0)
+        edge = soft / band.width()
+        fade.setColorAt(0, QColor(0, 0, 0, 255))
+        fade.setColorAt(min(0.49, 1.6 * edge), QColor(0, 0, 0, 0))
+        fade.setColorAt(max(0.51, 1 - 1.6 * edge), QColor(0, 0, 0, 0))
+        fade.setColorAt(1, QColor(0, 0, 0, 255))
+        q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
+        q.fillRect(band, fade)
 
-    def paint(self, p: QPainter, origin_x: float, origin_y: float, text: QSizeF, tip_x: float, age: float, animate: bool) -> None:
+    def paint(self, p: QPainter, origin_x: float, origin_y: float, text: QSizeF, tip_x: float, age: float, animate: bool, effects: float = 1.0) -> None:
         """Draw the bubble with its frame's top-left at (origin_x, origin_y) and its notch's tip at `tip_x`
-        (display px from the frame's left edge, clamped to where the notch can go)."""
+        (display px from the frame's left edge, clamped to where the notch can go). `effects`: how strongly the
+        moving layers show (they fade out onto the still picture); none without `animate`."""
         lo, hi = self.tail_range(text.width())
         tip_x = round(min(max(tip_x, lo), hi))
         self.ratio = ratio = device_ratio(p)
         tw, th = round(text.width()), round(text.height())
         width, height = self._size(tw, th)
-        still = self._get(self.still, "still", tw, th, tip_x, ratio)
-        if not animate or not self.layers:
-            p.drawPixmap(QPointF(origin_x, origin_y), still)
-            return
         rim = self.rim(tw, th, tip_x)
+        still = self.parts(self.still, "still", rim)
+        if not animate or not self.layers or effects <= 0.0:
+            self.draw(p, still, origin_x, origin_y)
+            return
         t = age % self.loop_period(text, tip_x)
         strips = [layer for layer in self.layers if layer.strip()]
         under = [layer for layer in self.layers if isinstance(layer, Flames)]
@@ -1150,9 +1212,13 @@ class BubbleArt:
         p.save()
         p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
         p.translate(origin_x, origin_y)
+        base = p.opacity()
+        p.setOpacity(base * min(1.0, effects))
         for layer in under:  # flames stand behind the bubble's edge
             layer.paint(p, rim, t, self)
-        p.drawPixmap(QPointF(0, 0), still)
+        p.setOpacity(base)
+        self.draw(p, still)
+        p.setOpacity(base * min(1.0, effects))
         if strips:
             size = (max(1, round(width * ratio)), max(1, round(height * ratio)))
             if self._overlay is None or (self._overlay.width(), self._overlay.height()) != size or self._overlay.devicePixelRatioF() != ratio:
@@ -1171,8 +1237,7 @@ class BubbleArt:
                 else:
                     run[0].paint(q, rim, t, self)
                 i += len(run)
-            q.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
-            q.drawPixmap(QPointF(0, 0), self.notch_mask(rim, width, height))
+            self.mask_notch(q, rim, height)
             q.end()
             p.drawPixmap(QPointF(0, 0), self._overlay)
         for layer in over:
@@ -1182,14 +1247,6 @@ class BubbleArt:
     def _size(self, tw: int, th: int) -> tuple[float, float]:
         left, top, right, bottom = self.margins()
         return left + tw + right, top + th + bottom
-
-    def _get(self, pix: QPixmap, tag: str, tw: int, th: int, tip_x: int, ratio: float) -> QPixmap:
-        key = (tag, tw, th, tip_x, ratio)
-        if key not in self._cache:
-            if len(self._cache) > 12:
-                self._cache.clear()
-            self._cache[key] = self._compose(pix, tw, th, tip_x, ratio)
-        return self._cache[key]
 
 
 PAD = {"leaf": 20}  # the ivy reaches into the leaf bubble's fill
