@@ -1,0 +1,46 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/m4a/docs/delivery/reports/m4a/drill-spec-linux.json
+python: /var/tmp/m4a-venv/bin/python
+copy: /tmp/chatmon-drill-8vp7w4ku
+copied 213 files
+
+=== drill L-AC-04a-listener-outlives-desk (M4A-04) on chatmon/presence.py
+command: /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_portal_bus.py::test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.90s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing _______
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-35/test_an_answer_that_comes_afte0')
+
+    @needs_a_bus
+    def test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing(tmp_path):
+        pytest.importorskip("PyQt6.QtDBus")
+        log, ready, fake = tmp_path / "asked.jsonl", tmp_path / "ready", HERE / "fake_portal.py"
+        script = (
+            f'"{sys.executable}" "{fake}" "{log}" > "{ready}" 2>&1 & fake=$!; '
+            f'for i in $(seq 100); do grep -q ready "{ready}" 2>/dev/null && break; sleep 0.1; done; '
+            f'"{sys.executable}" -c "$CLIENT" "{HERE.parent}"; echo "exit $?"; kill $fake'
+        )
+        env = dict(os.environ, CLIENT=GONE_CLIENT, QT_QPA_PLATFORM="offscreen", CHATMON_PORTAL_BUS="1", XDG_CURRENT_DESKTOP="",
+                   FAKE_CONTRAST="1", FAKE_MOTION="0")
+        env.pop("DBUS_SESSION_BUS_ADDRESS", None)
+        out = subprocess.run(["dbus-run-session", "--", "sh", "-c", script], capture_output=True, text=True, timeout=60, env=env)
+>       assert "still running" in out.stdout and "exit 0" in out.stdout, out.stdout + out.stderr
+E       AssertionError: exit 139
+E         
+E       assert ('still running' in 'exit 139\n')
+E        +  where 'exit 139\n' = CompletedProcess(args=['dbus-run-session', '--', 'sh', '-c', '"/var/tmp/m4a-venv/bin/python" "/tmp/chatmon-drill-8vp7w...-c "$CLIENT" "/tmp/chatmon-drill-8vp7w4ku"; echo "exit $?"; kill $fake'], returncode=0, stdout='exit 139\n', stderr='').stdout
+
+tests/test_portal_bus.py:132: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_portal_bus.py::test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing
+1 failed in 0.62s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.76s
+
+=== summary
+PASS L-AC-04a-listener-outlives-desk

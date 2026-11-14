@@ -1,0 +1,32 @@
+[
+  {
+    "id": "L-AC-04a-listener-outlives-desk",
+    "requirement": "M4A-04",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "made = linuxsession.PortalSettings(self)\n                    made.changed.connect(self.settings_changed)\n",
+      "replace": "made = linuxsession.PortalSettings()\n                    made.changed.connect(self.settings_changed.emit)\n"
+    },
+    "command": [
+      "/var/tmp/m4a-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_portal_bus.py::test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing"
+    ],
+    "expected": [
+      "test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2b1073598fa3ededc80cb408bff1a43e7b384d4d356973bcc022b5c5860320c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "02b3d05d6a5748c4a6fe1d531d928abd1c64c8534a178206981ced4c25ab1841",
+    "mutated_exit": 1,
+    "observed": "______ test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing _______",
+    "after_sha256": "2b1073598fa3ededc80cb408bff1a43e7b384d4d356973bcc022b5c5860320c1",
+    "restored_exit": 0
+  }
+]

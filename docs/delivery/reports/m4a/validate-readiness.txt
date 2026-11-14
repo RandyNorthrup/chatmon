@@ -1,0 +1,17 @@
+FAIL: readiness record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts
+evidence-environment | EV-linux-suite | Receipt environment differs from the current profile
+evidence-environment | EV-linux-tests | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-01a-read-fallback | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-02-x11-place | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-04a-asked-each-time | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-04a-listener-outlives-desk | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-04b-qt-signal | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-05-dunst-question | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-05-starts-services | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-06a-upower-not-followed | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-07a-not-replaced | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-07b-action-unheard | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-10-not-one-call | Receipt environment differs from the current profile
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

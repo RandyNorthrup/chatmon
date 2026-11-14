@@ -1,8 +1,15 @@
-"""A pretend xdg-desktop-portal FileChooser, for tests/test_portal_bus.py: run on a private session bus.
-It answers OpenFile and SaveFile as the portal does (a Request path, then its Response signal), and writes
-what it was sent, with each option's D-Bus type, to the file named on its command line."""
+"""A pretend xdg-desktop-portal, for tests/test_portal_bus.py: run on a private session bus.
+
+Its FileChooser answers OpenFile and SaveFile as the portal does (a Request path, then its Response signal), and
+writes what it was sent, with each option's D-Bus type, to the file named on its command line.
+
+Its Settings answer org.freedesktop.appearance's contrast and reduced-motion, from FAKE_CONTRAST and FAKE_MOTION
+(unset: the portal has no such setting), with ReadOne and Read (FAKE_SETTINGS_VERSION 2, the default) or Read
+alone (1, as portals before 1.15). Each read is written to the same file. With FAKE_FLIP_CONTRAST, once both have
+been read, contrast changes to that value, told by SettingChanged."""
 
 import json
+import os
 import sys
 
 from PyQt6.QtCore import QCoreApplication, QTimer, pyqtClassInfo, pyqtSlot
@@ -39,6 +46,48 @@ class Chooser(QDBusAbstractAdaptor):
         return self._answer("SaveFile", parent, title, options, message)
 
 
+SETTINGS = {"contrast": os.environ.get("FAKE_CONTRAST"), "reduced-motion": os.environ.get("FAKE_MOTION")}
+read = set()
+
+
+def _setting(method, namespace, key, message, wrap):
+    with open(LOG, "a") as log:
+        log.write(json.dumps({"settings": method, "key": key}) + "\n")
+    value = SETTINGS.get(key) if namespace == "org.freedesktop.appearance" else None
+    message.setDelayedReply(True)
+    bus = QDBusConnection.sessionBus()
+    if value is None:
+        bus.send(message.createErrorReply("org.freedesktop.portal.Error.NotFound", "Requested setting not found"))
+        return
+    answer = QDBusVariant(_uint(int(value)))
+    bus.send(message.createReply([QDBusVariant(answer) if wrap else answer]))
+    read.add(key)
+    flip = os.environ.get("FAKE_FLIP_CONTRAST")
+    if flip is not None and read == set(SETTINGS) and SETTINGS["contrast"] != flip:
+        SETTINGS["contrast"] = flip
+
+        def changed():
+            signal = QDBusMessage.createSignal("/org/freedesktop/portal/desktop", "org.freedesktop.portal.Settings", "SettingChanged")
+            signal.setArguments(["org.freedesktop.appearance", "contrast", QDBusVariant(_uint(int(flip)))])
+            bus.send(signal)
+
+        QTimer.singleShot(300, changed)
+
+
+@pyqtClassInfo("D-Bus Interface", "org.freedesktop.portal.Settings")
+class SettingsBefore115(QDBusAbstractAdaptor):
+    @pyqtSlot(str, str, QDBusMessage)
+    def Read(self, namespace, key, message):
+        _setting("Read", namespace, key, message, wrap=True)  # one variant more: Read's old way
+
+
+@pyqtClassInfo("D-Bus Interface", "org.freedesktop.portal.Settings")
+class Settings(SettingsBefore115):
+    @pyqtSlot(str, str, QDBusMessage)
+    def ReadOne(self, namespace, key, message):
+        _setting("ReadOne", namespace, key, message, wrap=False)
+
+
 @pyqtClassInfo("D-Bus Interface", "org.freedesktop.DBus.Properties")
 class Props(QDBusAbstractAdaptor):
     @pyqtSlot(str, str, result=QDBusVariant)
@@ -58,6 +107,7 @@ app = QCoreApplication([])
 root = QObject()
 Chooser(root)
 Props(root)
+(SettingsBefore115 if os.environ.get("FAKE_SETTINGS_VERSION") == "1" else Settings)(root)
 bus = QDBusConnection.sessionBus()
 assert bus.registerObject("/org/freedesktop/portal/desktop", root, QDBusConnection.RegisterOption.ExportAdaptors)
 assert bus.registerService("org.freedesktop.portal.Desktop")

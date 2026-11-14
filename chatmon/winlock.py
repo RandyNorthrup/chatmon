@@ -1,15 +1,18 @@
 """Windows: hear when you step away and come back, so time away counts as a break: the screen locking and
 unlocking, a Remote Desktop or console session disconnecting (which doesn't lock), and sleep and resume. And
 whether anything on screen can be seen at all (the session unlocked, its display on), which Microsoft asks
-apps to stop drawing without, and Energy Saver (battery saver), which asks them to draw less.
+apps to stop drawing without, Energy Saver (battery saver), which asks them to draw less, and a system setting
+changing (high contrast, animations, a screen reader starting), so it's followed at once, not asked again and
+again.
 
 Windows tells a window that asked (WTSRegisterSessionNotification) with WM_WTSSESSION_CHANGE, every
-top-level window WM_POWERBROADCAST, and a window that registered for a power setting
+top-level window WM_POWERBROADCAST and WM_SETTINGCHANGE, and a window that registered for a power setting
 (RegisterPowerSettingNotification) PBT_POWERSETTINGCHANGE, first with the setting as it stands, then as it
 changes. A native event filter hears them. Imported on Windows alone.
 https://learn.microsoft.com/en-us/windows/win32/termserv/wm-wtssession-change
 https://learn.microsoft.com/en-us/windows/win32/power/wm-powerbroadcast
-https://learn.microsoft.com/en-us/windows/win32/power/power-setting-guids"""
+https://learn.microsoft.com/en-us/windows/win32/power/power-setting-guids
+https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-settingchange"""
 
 from __future__ import annotations
 
@@ -26,6 +29,7 @@ WTS_CONSOLE_CONNECT, WTS_CONSOLE_DISCONNECT, WTS_REMOTE_CONNECT, WTS_REMOTE_DISC
 WTS_SESSION_LOCK = 0x7
 WTS_SESSION_UNLOCK = 0x8
 WM_POWERBROADCAST = 0x0218
+WM_SETTINGCHANGE = 0x001A  # wParam: the SystemParametersInfo action that changed (SPI_SET...), or 0
 PBT_APMSUSPEND, PBT_APMRESUMESUSPEND, PBT_APMRESUMEAUTOMATIC = 0x4, 0x7, 0x12
 PBT_POWERSETTINGCHANGE = 0x8013
 NOTIFY_FOR_THIS_SESSION = 0
@@ -73,14 +77,17 @@ class LockWatcher(QAbstractNativeEventFilter):
     """Calls `changed(True)` when you step away (the screen locks, the session disconnects) and
     `changed(False)` when you're back; `slept(True)` as the computer goes to sleep, `slept(False)` on waking;
     `seen(False)` when nothing on screen can be seen (locked, disconnected, or the display off) and
-    `seen(True)` when it can again; `saving(True)` while Energy Saver is on."""
+    `seen(True)` when it can again; `saving(True)` while Energy Saver is on; `settings(action)` when a system
+    setting changes, with WM_SETTINGCHANGE's action (presence.Desk.windows_setting_changed takes it)."""
 
     RETRIES = 12  # registering can fail early in a login, before Remote Desktop Services is ready: try again
 
     def __init__(self, changed: Callable[[bool], None], slept: Callable[[bool], None] | None = None,
-                 seen: Callable[[bool], None] | None = None, saving: Callable[[bool], None] | None = None):
+                 seen: Callable[[bool], None] | None = None, saving: Callable[[bool], None] | None = None,
+                 settings: Callable[[int], None] | None = None):
         super().__init__()
         self._changed, self._slept, self._seen, self._saving = changed, slept, seen, saving
+        self._setting_changed = settings
         self.locked = False
         self.asleep = False
         self.display_on = True
@@ -121,6 +128,9 @@ class LockWatcher(QAbstractNativeEventFilter):
                 setting = power_setting(msg.lParam or 0)
                 if setting is not None:
                     self._setting(*setting)
+            elif msg.hWnd == self.hwnd and msg.message == WM_SETTINGCHANGE and self._setting_changed is not None:
+                # Sent to every top-level window (each of Chatmon's): this one's is the one told on.
+                self._setting_changed(int(msg.wParam))
         return False, 0
 
     def _setting(self, guid: uuid.UUID, value: int) -> None:

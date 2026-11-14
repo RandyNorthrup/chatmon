@@ -1,0 +1,16 @@
+M4A readiness review, third pass (plan scope_revision 2, amended design and integration notes), 2026-11-14
+
+What changed: the whole suite on Linux (WSL, real session and system buses) aborted in test_app_smoke, where a test
+replaces the app's Desk: an answer from the portal, still on its way, called the old Desk's settings_changed after
+its C++ object had been deleted, and PyQt ends the process on an exception in a slot. The plan now records the fix
+in its design (the Linux listeners belong to the Desk and signal changes through Qt) and the new optional `parent`
+parameters of SessionWatcher and PowerProfile in its integration notes, with M7's matching change to
+test_app_smoke's stand-in.
+
+Review: no criterion changes. The fix belongs to T-01 (presence.py, linuxsession.py, their tests) and serves
+AC-04a (changes arrive as events) without new behavior for users; its checks are a Windows-runnable ownership test
+and a Linux test on a private bus with an answer arriving after the Desk has gone, both with red drills. Ownership,
+coverage, conflicts and failure behavior from the earlier reviews hold. The base commit's whole Linux suite passed
+(517 passed, 56 skipped) and the amended branch's passes (556 passed, 65 skipped), both in WSL.
+
+Result: ready.
