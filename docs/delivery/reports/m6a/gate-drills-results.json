@@ -1,0 +1,252 @@
+[
+  {
+    "id": "G-zizmor-unpinned",
+    "requirement": "M6A-01",
+    "file": ".github/workflows/ci.yml",
+    "mutation": "the lint job's checkout pinned to the tag v7 instead of its commit",
+    "expected": [
+      "unpinned-uses"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1a9dead72fb6efc0a8868222f110f4c866fae867e2253699e80cc5d89f1d373c",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\zizmor.exe",
+      "--no-online-audits",
+      ".github"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "89a1cfa59b16a30181570647ee0d97aa8b768eb9fde5c686477a0426f32e7a4d",
+    "mutated_exit": 14,
+    "observed": "error[unpinned-uses]: unpinned action reference",
+    "after_sha256": "1a9dead72fb6efc0a8868222f110f4c866fae867e2253699e80cc5d89f1d373c",
+    "restored_exit": 0
+  },
+  {
+    "id": "G-actionlint-expression",
+    "requirement": "M6A-12",
+    "file": ".github/workflows/ci.yml",
+    "mutation": "the types job reads matrix.platfrom, a property its matrix doesn't have",
+    "expected": [
+      "property \"platfrom\" is not defined"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1a9dead72fb6efc0a8868222f110f4c866fae867e2253699e80cc5d89f1d373c",
+    "command": [
+      "actionlint",
+      ".github/workflows/ci.yml"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "83c192fe1fbc771535d18c78138273fb51eb53391e516d8102c9e8beabb05e3c",
+    "mutated_exit": 1,
+    "observed": ".github/workflows/ci.yml:75:25: property \"platfrom\" is not defined in object type {platform: string} [expression]",
+    "after_sha256": "1a9dead72fb6efc0a8868222f110f4c866fae867e2253699e80cc5d89f1d373c",
+    "restored_exit": 0
+  },
+  {
+    "id": "G-mypy-gated",
+    "requirement": "M6A-13",
+    "file": "chatmon/changelog.py",
+    "mutation": "a str assigned to an int in changelog.py, a gated module",
+    "expected": [
+      "chatmon\\changelog.py",
+      "Incompatible types in assignment"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "81df1532f5ccab3d0a6a87cb33450760752774e6701ff5d6a4a82233984a599a",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "mypy",
+      "--platform",
+      "linux",
+      "--no-incremental",
+      "--cache-dir",
+      "<copy>/.mypy"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "8c25d7794410e6867a5e9b7745d5f80e0e0b5d76a421ed65b43195431629d8af",
+    "mutated_exit": 1,
+    "observed": "chatmon\\changelog.py:84: error: Incompatible types in assignment (expression has type \"str\", variable has type \"int\")  [assignment]",
+    "after_sha256": "81df1532f5ccab3d0a6a87cb33450760752774e6701ff5d6a4a82233984a599a",
+    "restored_exit": 0
+  },
+  {
+    "id": "G-pytest-strict-markers",
+    "requirement": "M6A-01",
+    "file": "tests/test_cli.py",
+    "mutation": "an unregistered mark on test_cli.py's first test",
+    "expected": [
+      "'drillmark' not found in `markers` configuration option"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "4b1c29237f7c8024a68ab5404bc6a5b305e4a6951e92da0d9dc215143e5909df",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_cli.py"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "176ef7540e4b1637b7972b5936daf90c48a51f15b9884bb73e02ff7316583a59",
+    "mutated_exit": 2,
+    "observed": "'drillmark' not found in `markers` configuration option",
+    "after_sha256": "4b1c29237f7c8024a68ab5404bc6a5b305e4a6951e92da0d9dc215143e5909df",
+    "restored_exit": 0
+  },
+  {
+    "id": "G-pip-hashes",
+    "requirement": "M6A-06",
+    "file": "packaging/requirements-build.txt",
+    "mutation": "every hash of wheel 0.48.0 in requirements-build.txt changed",
+    "expected": [
+      "THESE PACKAGES DO NOT MATCH THE HASHES FROM THE REQUIREMENTS FILE"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pip",
+      "install",
+      "--dry-run",
+      "--ignore-installed",
+      "--no-cache-dir",
+      "--require-hashes",
+      "-r",
+      "packaging/requirements-build.txt"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "e381417403dec7ee8fc699cb26bcfd605b52c70fd9ae8f44d63aef5a53570367",
+    "mutated_exit": 1,
+    "observed": "ERROR: THESE PACKAGES DO NOT MATCH THE HASHES FROM THE REQUIREMENTS FILE. If you have updated the package versions, please update the hashes. Otherwise, examine the package contents carefully; someone may have tampered with them.",
+    "after_sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878",
+    "restored_exit": 0
+  },
+  {
+    "id": "G-checksums-key",
+    "requirement": "M6A-I1",
+    "file": ".github/workflows/packages.yml",
+    "mutation": "the checksums job looks for the key in chatmon/updates.py again, where it was before M1A moved it",
+    "expected": [
+      "RELEASE_SIGNING_KEY isn't a key in RELEASE_KEYS"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "79530800d34ee2a4bebbfbf404ef287417678d3e8112a054c3ff14c2674be632",
+    "command": [
+      "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+      "<copy>/run-step.sh"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "e6a4f987d816082c21b059dff5c7e29f58e67e9d952fbae0dadf25ccd09429d2",
+    "mutated_exit": 1,
+    "observed": "RELEASE_SIGNING_KEY isn't a key in RELEASE_KEYS",
+    "after_sha256": "79530800d34ee2a4bebbfbf404ef287417678d3e8112a054c3ff14c2674be632",
+    "restored_exit": 0
+  },
+  {
+    "id": "G-coverage-floor",
+    "requirement": "M6A-04",
+    "file": "pyproject.toml",
+    "mutation": "fail_under raised to 99, above the measured total",
+    "expected": [
+      "Coverage failure: total of",
+      "is less than fail-under=99"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f6b599e65ffb1d8dc901a38fb3da130cb9f25b51c8a0db78a960572b082e7fa5",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "coverage",
+      "report",
+      "--data-file",
+      "build/m6a-coverage/.coverage.combined"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "20b11c04e39c81dca6b08caa3b0589a86fa5425c54e41d4fe1c8af1b233d20e8",
+    "mutated_exit": 2,
+    "observed": "Coverage failure: total of 82.7 is less than fail-under=99.0",
+    "after_sha256": "f6b599e65ffb1d8dc901a38fb3da130cb9f25b51c8a0db78a960572b082e7fa5",
+    "restored_exit": 0
+  },
+  {
+    "id": "W-wheel-sounds",
+    "requirement": "M6A-08",
+    "file": "pyproject.toml",
+    "mutation": "the sounds/*.wav package-data glob removed, so the wheel is built without the sounds",
+    "expected": [
+      "AssertionError: left out of the wheel",
+      "first extra item: 'sounds/done.wav'"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f6b599e65ffb1d8dc901a38fb3da130cb9f25b51c8a0db78a960572b082e7fa5",
+    "command": [
+      "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+      "-ec",
+      "'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m build --no-isolation --outdir dist . >build.log 2>&1 || { tail -20 build.log; exit 1; }; 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m twine check --strict dist/*; CHATMON_DIST=dist 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m pytest -q -p no:cacheprovider tests/test_package_data.py -k 'wheel_holds'"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "600043d308e7d75671c95311f70f5d137fa0b8f303bd68766e5ba5dc10a4092a",
+    "mutated_exit": 1,
+    "observed": "E       AssertionError: left out of the wheel",
+    "after_sha256": "f6b599e65ffb1d8dc901a38fb3da130cb9f25b51c8a0db78a960572b082e7fa5",
+    "restored_exit": 0
+  },
+  {
+    "id": "W-entry-points",
+    "requirement": "M6A-09",
+    "file": "pyproject.toml",
+    "mutation": "the penguin-companion console script put back",
+    "expected": [
+      "'penguin-companion': ('console_scripts', 'chatmon.cli:main')"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f6b599e65ffb1d8dc901a38fb3da130cb9f25b51c8a0db78a960572b082e7fa5",
+    "command": [
+      "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+      "-ec",
+      "'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m build --no-isolation --outdir dist . >build.log 2>&1 || { tail -20 build.log; exit 1; }; 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m twine check --strict dist/*; CHATMON_DIST=dist 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m pytest -q -p no:cacheprovider tests/test_package_data.py -k 'commands'"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "c97bad7df06c672a817f971559ab7f9dae334b18a677ab3667c5c38b5caa05b7",
+    "mutated_exit": 1,
+    "observed": "E         {'penguin-companion': ('console_scripts', 'chatmon.cli:main')}",
+    "after_sha256": "f6b599e65ffb1d8dc901a38fb3da130cb9f25b51c8a0db78a960572b082e7fa5",
+    "restored_exit": 0
+  },
+  {
+    "id": "W-twine-markup",
+    "requirement": "M6A-08",
+    "file": "pyproject.toml",
+    "mutation": "the README declared as reStructuredText, which its Markdown isn't",
+    "expected": [
+      "`long_description` has syntax errors in markup"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f6b599e65ffb1d8dc901a38fb3da130cb9f25b51c8a0db78a960572b082e7fa5",
+    "command": [
+      "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+      "-ec",
+      "'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m build --no-isolation --outdir dist . >build.log 2>&1 || { tail -20 build.log; exit 1; }; 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m twine check --strict dist/*; CHATMON_DIST=dist 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/venv-win-build2/Scripts/python.exe' -m pytest -q -p no:cacheprovider tests/test_package_data.py -k 'wheel_holds'"
+    ],
+    "baseline_exit": 0,
+    "mutated_sha256": "69c8acbe2058f5d5854dcd733d6ce33e08fb729f5aa1f75981ee062dfc3830c7",
+    "mutated_exit": 1,
+    "observed": "ERROR    `long_description` has syntax errors in markup and would not be",
+    "after_sha256": "f6b599e65ffb1d8dc901a38fb3da130cb9f25b51c8a0db78a960572b082e7fa5",
+    "restored_exit": 0
+  }
+]

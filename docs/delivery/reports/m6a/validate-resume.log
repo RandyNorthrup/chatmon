@@ -1,0 +1,11 @@
+$ python verify-delivery.py --root . --plan docs/delivery/m6a-ci-tooling.md --stage resume --context docs/delivery/reports/m6a/context.json
+FAIL: resume record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, checkpoint-freshness
+outcome-unresolved | P-CI-FIRST | After merging wave1/m6a, the coordinator runs `gh workflow run ci.yml --ref improve/assessment-fixes` (or opens the PR as a draft) and sends any failing job back to M6A; M7 owns the Windows app-smoke and bubble failures already known.
+outcome-unresolved | P-COVERAGE-FLOOR | Read the coverage job's summary on the first CI run; if well above 72, raise fail_under to about two points under it.
+outcome-unresolved | P-DEPENDABOT | After the change reaches main, read Dependabot's first pull requests; if it can't relock the uv-made files, lock them by hand on its proposals (CONTRIBUTING.md has the command).
+outcome-unresolved | P-MYPY-MERGES | At each later merge, run mypy --platform linux, win32 and darwin and move modules on or off the exemption list (integration note 5).
+outcome-unresolved | P-PACKAGES-PR | The final PR touches packaging/ and pyproject.toml, so packages.yml runs on it (or `gh workflow run packages.yml --ref improve/assessment-fixes`); read the python, windows, macos and linux jobs.
+outcome-unresolved | P-RELEASE | At the 0.10.0 release, push the tag, watch attest and publish, then `gh attestation verify <file> --repo RandyNorthrup/chatmon` on one file.
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

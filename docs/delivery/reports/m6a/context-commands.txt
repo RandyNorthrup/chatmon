@@ -1,0 +1,31 @@
+# Observed 2026-11-14T21:05:52Z on the Windows 11 workstation (and its WSL Arch for Linux checks)
+$ python --version
+Python 3.14.10
+$ python -m pytest --version
+pytest 9.2.0
+$ python -c 'PyQt6 version'
+PyQt6 6.11.0 Qt 6.11.0
+$ python -m pip show pytest-timeout coverage mypy hypothesis tzdata zizmor (versions)
+coverage          7.17.0
+hypothesis        6.170.15
+mypy              2.4.1
+pytest-timeout    2.4.0
+ruff              0.17.4
+tzdata            2026.6
+zizmor            1.31.1
+$ ruff --version
+ruff 0.17.4
+$ actionlint -version
+1.7.12
+$ uv --version
+uv 0.12.7 (61291a8ca 2026-08-27 x86_64-pc-windows-msvc)
+$ wsl: shellcheck --version, podman --version
+version: 0.11.0
+podman version 6.2.0
+$ verify-delivery.py --observe-context
+{
+  "platform": "windows",
+  "tools": {
+    "python": "3.14.10"
+  }
+}

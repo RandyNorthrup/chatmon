@@ -1,0 +1,6 @@
+# Two copies of the same tree (a snapshot of the worktree), their files' times set to 2026-11-01 (a) and 2026-11-14 (b),
+# each built with python -m build --no-isolation --wheel and packaging/requirements-build.txt's tools: build 1.6.1 setuptools 84.2.1 wheel 0.48.0 
+no SOURCE_DATE_EPOCH, copy a: 55e52b1d98ffa481923c8096d3a7dd1631edaa4cb582b68390cb2d0a2cecbd6a
+no SOURCE_DATE_EPOCH, copy b: aa989a0f9ce56d9daaec71d13498d8281976e58993dca11ee83d24ded69016cc
+SOURCE_DATE_EPOCH=1794693053 (the commit's time), copy a: 7458e7e022cdd2204859f01a38836fc305e4e844ed74d78fb72d658788ccb3e2
+SOURCE_DATE_EPOCH=1794693053 (the commit's time), copy b: 7458e7e022cdd2204859f01a38836fc305e4e844ed74d78fb72d658788ccb3e2

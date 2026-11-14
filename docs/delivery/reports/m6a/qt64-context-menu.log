@@ -1,0 +1,4 @@
+# Ubuntu 24.04's python3-pyqt6 (PyQt6 6.6.1 on Qt 6.4.2): a QLineEdit's standard context menu, its actions' (objectName, text, shortcut)
+# podman run docker.io/library/ubuntu:24.04, apt-get install python3-pyqt6, QT_QPA_PLATFORM=offscreen python3 qt64-menu.py
+Qt 6.4.2 [('', '&Undo\tCtrl+Z', ''), ('', '&Redo\tCtrl+Y', ''), ('', '', ''), ('', 'Cu&t\tCtrl+X', ''), ('', '&Copy\tCtrl+C', ''), ('', '&Paste\tCtrl+V', ''), ('', 'Delete', ''), ('', '', ''), ('', 'Select All\tCtrl+A', '')]
+# Every objectName is empty, so penguin.py's _context_menu and bubble.py's contextMenuEvent, which look for 'edit-copy', 'edit-cut' and 'edit-paste', find nothing on this Qt.
