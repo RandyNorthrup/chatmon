@@ -1,7 +1,9 @@
 """The platform's own readings, called for real on each CI runner: they answer, or say they can't (None),
 and never raise."""
 
+import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -311,3 +313,41 @@ def test_the_linux_listeners_go_with_their_desk(linux_desk):
     assert portal.parent() is desk and dnd.parent() is desk and gnome.parent() is desk
     sip.delete(desk)
     assert sip.isdeleted(portal) and sip.isdeleted(dnd) and sip.isdeleted(gnome)
+
+
+X11_CLIENT = r"""
+import sys, time
+sys.path.insert(0, sys.argv[1])
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication, QWidget
+app = QApplication([])
+from chatmon import presence
+window = QWidget(None, Qt.WindowType.FramelessWindowHint)
+window.setGeometry(120, 80, 320, 200)
+window.show()
+end = time.monotonic() + 1.5
+while time.monotonic() < end:
+    app.processEvents()
+    time.sleep(0.02)
+x = presence._X11()
+g = window.geometry()
+print("qt", g.x(), g.y(), g.width(), g.height())
+print("x11", *(x.rect(int(window.winId())) or ("none",)))
+print("root", *(x.rect(x.root) or ("none",))[2:])
+"""
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux") or not os.environ.get("DISPLAY"), reason="Linux with an X display")
+def test_x11_says_where_a_window_is():
+    """The X server's own answer (XGetGeometry, XTranslateCoordinates), which covered() compares: a window's place on
+    the whole X screen, as Qt put it there."""
+    import subprocess
+
+    env = dict(os.environ, QT_QPA_PLATFORM="xcb", QT_ENABLE_HIGHDPI_SCALING="0", QT_SCALE_FACTOR="1")
+    env.pop("WAYLAND_DISPLAY", None)
+    out = subprocess.run([sys.executable, "-c", X11_CLIENT, str(Path(__file__).resolve().parent.parent)], capture_output=True, text=True,
+                         timeout=60, env=env)
+    lines = dict(line.split(" ", 1) for line in out.stdout.splitlines() if " " in line)
+    assert "qt" in lines and lines.get("x11") == lines["qt"], out.stdout + out.stderr
+    width, height = map(int, lines["root"].split())
+    assert width >= 440 and height >= 280  # the root window spans the screen the window is on
