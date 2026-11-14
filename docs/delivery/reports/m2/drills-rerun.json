@@ -1,0 +1,32 @@
+[
+  {
+    "id": "M2-01-images-left",
+    "requirement": "M2-01",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "    without_images(doc)",
+      "replace": "    pass  # the images left in"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_safety.py"
+    ],
+    "expected": [
+      "an image was left in"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "825a938644e940aa0ac3eebcc151f066cec179d537fb281a0986c87035a487e0",
+    "mutated_exit": 1,
+    "observed": ">       assert images(doc) == 0, \"an image was left in, for the screen to look for its @2x file\"",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  }
+]

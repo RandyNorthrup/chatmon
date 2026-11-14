@@ -76,3 +76,20 @@ which code and focus need), T-M2-03, T-M2-04, T-M2-05, T-M2-06, T-M2-07, T-M2-08
 ## Result
 
 Ready: no unresolved conflict; the seven decisions above are recorded in the plan's rationale or here.
+
+## Closure re-review, 2026-11-14
+
+The plan's narrative changed at closure, so it was reviewed again against the same brief and rules:
+
+- **Performance budgets** were restated on counts (frames drawn, paint events, pixels composed) instead of
+  wall-clock ratios. The first statement ("within 1.5x of a still notch") was a guess made before measuring; on this
+  shared machine wall-clock times swing several-fold between runs (see `perf-after.log` against the earlier runs in
+  the commit history), while the counts are the same on every run. No requirement or acceptance criterion changed.
+- **Findings** made while building (the importer's link colour, fairy's button label, Qt 6.11's selection query,
+  the exit crash shared with the base commit) are recorded in the plan; the first two are inside M2-05 and M2-20,
+  the third is a fix inside M2's files that M3 should know about, the fourth is not M2's.
+- **Integration, changelog and README notes** were filled in from what was built: every API named exists in the
+  code at the closure commit, and the one contract deviation (`on_more` for `more_requested`) is stated.
+- **Coverage** is unchanged: R-M2-01..20, AC-M2-01..20, T-M2-01..08.
+
+Result: still ready; no requirement was rewritten to fit the implementation.

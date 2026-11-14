@@ -43,8 +43,8 @@
       "id": "M2-01-images-left",
       "requirement": "M2-01",
       "file": "chatmon/richtext.py",
-      "find": "    doc.setMarkdown(markdown, MARKDOWN)\n    without_images(doc)",
-      "replace": "    doc.setMarkdown(markdown, MARKDOWN)",
+      "find": "    without_images(doc)",
+      "replace": "    pass  # the images left in",
       "test": [
         "tests/test_bubble_safety.py"
       ],
