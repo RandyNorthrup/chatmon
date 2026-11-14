@@ -1,0 +1,32 @@
+[
+  {
+    "id": "D-01F-trigger",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "[KEYS[combo.key].x11]",
+      "replace": "[combo.key]"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format"
+    ],
+    "expected": [
+      "CTRL+ALT+Space"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "baseline_exit": 0,
+    "mutated_sha256": "944d60a4caa89d5d96dff12321e8dee0b571deae16551906404c8a262522299f",
+    "mutated_exit": 1,
+    "observed": "E       AssertionError: assert 'CTRL+ALT+Space' == 'CTRL+ALT+space'",
+    "after_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "restored_exit": 0
+  }
+]
