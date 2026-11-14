@@ -29,6 +29,7 @@ from .sprites import Sprites, silhouette
 PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
 MATCH = "match"  # the bubble style that follows the companion
+UPDATE_CHECK_TIMEOUT_S = 60  # a system update check still running after this long is stopped, and counts as none
 APP_USER_MODEL_ID = "RandyNorthrup.Chatmon"  # Windows: the app's identity (packaging/windows/chatmon.iss gives its shortcuts it too)
 
 HELP = """\
@@ -115,8 +116,15 @@ class Companion(QObject):
         self._last_wall = time.time()
         self._last_ask = 0.0
         self._update_counts: dict[str, int] = {}
+        self._reading_system = False  # the battery and disks, being read off the screen's thread
+        self._offline_shown = 0  # answers of Chatmon's own shown so far: a late one doesn't cover a newer one
         self._restart_needed = False
-        self._update_procs: list = []  # the system's update checks, while they run: QProcesses, and PackageKit's count
+        self._update_procs: dict = {}  # the system's update checks while they run (QProcesses, PackageKit's count): their names
+        self._update_round = 0  # which look at the system's updates this is: a late answer from an earlier one is ignored
+        self._update_expected = 0
+        self._update_deadline = QTimer(self)
+        self._update_deadline.setSingleShot(True)
+        self._update_deadline.timeout.connect(self._update_checks_timed_out)
 
         screen = QGuiApplication.primaryScreen().availableGeometry()
         x = float(self.state.get("x", screen.x() + screen.width() * 0.8))
@@ -226,7 +234,7 @@ class Companion(QObject):
 
     @property
     def name(self) -> str:
-        return self.config["name"] or self.state.get("name") or self._companion().nickname
+        return self.state.get("name") or self.config["name"] or self._companion().nickname
 
     def _every(self, ms: int, fn) -> None:
         timer = QTimer(self)
@@ -528,7 +536,7 @@ class Companion(QObject):
             )
             self.ask_box.chatting(False)
         else:
-            brain = self._brain()
+            brain = self._brain(wait=False)  # only for the hint: as far as can be told without holding up the screen
             via = f"answers from {brain.label}" if brain else "no AI set up yet; reminders and timers still work"
             self.ask_box.open(
                 anchor, f"Ask {self.name}", f"Enter to ask · Esc to close · {via}", "Ask anything, or: remind me in 20m to stretch",
@@ -1078,6 +1086,7 @@ class Companion(QObject):
     def _offline(self, question: str, reply: str) -> None:
         """An answer of Chatmon's own: shown under the chat, marked as such, and never part of it (no brain
         sees it, and it isn't kept)."""
+        self._offline_shown += 1
         self.ask_box.set_answer(self._transcript(f"**You:** {question}\n\n{reply}\n\n*{NO_AI}*"), at_end=True)
         self._read_aloud(reply)
 
@@ -1092,11 +1101,23 @@ class Companion(QObject):
         else:
             QGuiApplication.clipboard().setText(text)
 
-    def _status(self) -> str:
-        brain = self._brain()
-        battery, disks = heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders())
-        detail = brains.describe(brain) if brain else ""
-        return "\n".join(commands.status_lines(battery, disks, self.reminders.upcoming(), time.time(), brain.label if brain else None, detail))
+    def _show_status(self, question: str) -> None:
+        """The *status* command: battery, disks and which brain would answer are found out off the screen's thread,
+        then shown, unless something else has been answered meanwhile."""
+        self._offline(question, "*Looking…*")
+        shown, upcoming = self._offline_shown, self.reminders.upcoming()
+
+        def look() -> str:
+            brain = self._brain()
+            battery, disks = heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders())
+            detail = brains.describe(brain) if brain else ""
+            return "\n".join(commands.status_lines(battery, disks, upcoming, time.time(), brain.label if brain else None, detail))
+
+        def looked(status) -> None:
+            if self._offline_shown == shown and not self._quitting:
+                self._offline(question, status if isinstance(status, str) else f"I couldn't look: {status}")
+
+        self.background.run(look, looked)
 
     # -- hiding
 
@@ -1236,11 +1257,23 @@ class Companion(QObject):
     # -- heads-ups
 
     def _check_system(self) -> None:
+        """The battery and the disks, read off the screen's thread (UPower over D-Bus, psutil and each disk can
+        take a moment), one reading at a time."""
+        if self._reading_system:
+            return
+        self._reading_system = True
+        self.background.run(_read_system, self._system_read)
+
+    def _system_read(self, reading) -> None:
+        self._reading_system = False
+        if isinstance(reading, Exception) or self._quitting:
+            return
+        battery, disks = reading
         notices = []
-        battery = self.watcher.battery(heads_up.read_battery())
-        if battery:
-            notices.append(battery)
-        notices += self.watcher.disks(heads_up.read_disks(heads_up.disk_folders()), date.today())
+        low = self.watcher.battery(battery)
+        if low:
+            notices.append(low)
+        notices += self.watcher.disks(disks, date.today())
         for notice in notices:
             self.alert(notice.key, notice.title, notice.text)
 
@@ -1249,6 +1282,8 @@ class Companion(QObject):
             return
         # Each reads what the system already knows (no network): the desktop's own updater keeps it fresh.
         checks = heads_up.update_checks()
+        self._update_round += 1
+        tag, self._update_expected = self._update_round, len(checks)
         self._update_counts = {}
         self._restart_needed = False
         for check in checks:
@@ -1256,36 +1291,45 @@ class Companion(QObject):
                 from . import packagekit
 
                 counter = packagekit.UpdateCount(self)
-                self._update_procs.append(counter)
-                counter.counted.connect(partial(self._packagekit_counted, counter, len(checks)))
+                self._update_procs[counter] = check.name
+                counter.counted.connect(partial(self._packagekit_counted, tag, counter))
                 counter.start()
                 continue
             proc = QProcess(self)
-            self._update_procs.append(proc)
-            proc.finished.connect(partial(self._updates_counted, proc, check, len(checks)))
-            proc.errorOccurred.connect(partial(self._update_check_failed, proc, check, len(checks)))
+            self._update_procs[proc] = check.name
+            proc.finished.connect(partial(self._updates_counted, tag, proc, check))
+            proc.errorOccurred.connect(partial(self._update_check_failed, tag, proc, check))
             proc.start(check.argv[0], check.argv[1:])
+        if checks:
+            self._update_deadline.start(int(UPDATE_CHECK_TIMEOUT_S * 1000))
 
-    def _update_check_failed(self, proc: QProcess, check: heads_up.UpdateCheck, expected: int, error) -> None:
+    def _update_check_failed(self, tag: int, proc: QProcess, check: heads_up.UpdateCheck, error) -> None:
         if sip.isdeleted(proc):
             return
         if error == QProcess.ProcessError.FailedToStart:
             self._forget_update_proc(proc)
             proc.deleteLater()
-            self._tally_updates(check.name, 0, expected)
+            self._tally_updates(tag, check.name, 0)
 
-    def _packagekit_counted(self, counter, expected: int, count: int | None) -> None:
+    def _packagekit_counted(self, tag: int, counter, count: int | None) -> None:
         self._forget_update_proc(counter)
         counter.deleteLater()
-        self._tally_updates("packagekit", count or 0, expected)
+        self._tally_updates(tag, "packagekit", count or 0)
 
-    def _forget_update_proc(self, proc: QProcess) -> None:
-        if proc in self._update_procs:
-            self._update_procs.remove(proc)
+    def _forget_update_proc(self, proc) -> None:
+        self._update_procs.pop(proc, None)
+
+    def _update_checks_timed_out(self) -> None:
+        """A check still running a minute on (a tool waiting on the network or a lock, say) is stopped, and counts as
+        none, so the others are still heard."""
+        late = list(self._update_procs.values())
+        self._stop_update_checks()
+        for name in late:
+            self._tally_updates(self._update_round, name, 0)
 
     def _stop_update_checks(self) -> None:
-        """Quitting: the checks still running stop here, never to be heard from again (a QProcess destroyed
-        while it runs says it finished, as it goes)."""
+        """The checks still running stop here, never to be heard from again (a QProcess destroyed while it runs says
+        it finished, as it goes): at quitting, or when they took too long."""
         for proc in self._update_procs:
             if not isinstance(proc, QProcess):  # PackageKit's count: a D-Bus transaction, not a process
                 if not sip.isdeleted(proc):
@@ -1298,19 +1342,22 @@ class Companion(QObject):
                 proc.waitForFinished(1000)
         self._update_procs.clear()
 
-    def _updates_counted(self, proc: QProcess, check: heads_up.UpdateCheck, expected: int, code: int, _status) -> None:
+    def _updates_counted(self, tag: int, proc: QProcess, check: heads_up.UpdateCheck, code: int, _status) -> None:
         if sip.isdeleted(proc):
             return
         self._forget_update_proc(proc)
         output = bytes(proc.readAllStandardOutput()).decode("utf-8", errors="replace")
         proc.deleteLater()
-        if check.name == "windows":
+        if check.name == "windows" and tag == self._update_round:
             self._restart_needed = heads_up.windows_restart_needed(output)
-        self._tally_updates(check.name, check.count(output, code) or 0, expected)
+        self._tally_updates(tag, check.name, check.count(output, code) or 0)
 
-    def _tally_updates(self, name: str, count: int, expected: int) -> None:
+    def _tally_updates(self, tag: int, name: str, count: int) -> None:
+        if tag != self._update_round:
+            return  # from an earlier look, answering late: this one's counts are its own
         self._update_counts[name] = count
-        if len(self._update_counts) == expected:
+        if len(self._update_counts) == self._update_expected:
+            self._update_deadline.stop()
             notice = self.watcher.updates(sum(self._update_counts.values()), date.today(), self._restart_needed)
             if notice and not self.stage.message_visible():
                 self.behavior.react("wave", self._now())
@@ -2055,6 +2102,11 @@ class Companion(QObject):
 
 
 _problem = None  # the running Companion's offer to report what went wrong
+
+
+def _read_system() -> tuple:
+    """The battery and the disks, as they are now: slow, so never on the screen's thread."""
+    return heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders())
 
 
 def _log_exception(kind, value, tb) -> None:

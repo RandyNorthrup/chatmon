@@ -285,7 +285,7 @@ def _help(c, text: str) -> None:
 
 
 def _status(c, text: str) -> None:
-    c._offline(text, c._status())
+    c._show_status(text)
 
 
 def _stop_focus(c, text: str) -> None:

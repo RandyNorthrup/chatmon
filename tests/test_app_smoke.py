@@ -98,7 +98,7 @@ def test_local_commands_and_reminders(companion):
     c.submit("remind me in 1 second to stretch")
     assert "stretch" in c.ask_box.answer.toPlainText()
     c.submit("status")
-    assert "Brain:" in c.ask_box.answer.toPlainText()
+    assert until(lambda: "Brain:" in c.ask_box.answer.toPlainText())  # looked up off the screen's thread
     c.ask_box.dismiss()
     spin(5.5)
     assert c.behavior.alert and c.stage.bubble.title == "Reminder"
@@ -376,7 +376,7 @@ def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
     click("Thinking", "Off")  # Sonnet 5.5 can, at medium
     assert c._brain().thinking == "off" and c.state.get("brain_options")["anthropic-api"]["thinking"] == "off"
     c.submit("status")
-    assert "claude-sonnet-5-5, effort medium, thinking off" in c.ask_box.answer.toPlainText()
+    assert until(lambda: "claude-sonnet-5-5, effort medium, thinking off" in c.ask_box.answer.toPlainText())
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="a Unix socket, as hooks use on Linux and macOS")
@@ -1066,7 +1066,7 @@ def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
     assert not c.stage.message_visible() and len(c.messages.held("quiet")) == 1
     c.open_ask()  # you're using Chatmon: what you ask for isn't held back
     c.submit("status")
-    assert "Brain:" in c.ask_box.answer.toPlainText()
+    assert until(lambda: "Brain:" in c.ask_box.answer.toPlainText())
     c.ask_box.dismiss()
     desk.why_quiet = None
     c._check_quiet()
@@ -1196,7 +1196,114 @@ def test_quitting_while_a_system_update_check_runs_is_quiet(companion, monkeypat
     assert len(c._update_procs) == 1
     c._stop_update_checks()
     spin(0.3)
-    assert c._update_procs == []
+    assert c._update_procs == {}
+
+
+def test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none(companion, monkeypatch):
+    from chatmon import app as appmod, heads_up
+
+    c = companion
+    slow = [sys.executable, "-c", "import time; time.sleep(30)"]
+    fast = [sys.executable, "-c", "print('3 waiting')"]
+    monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("stuck", slow, lambda out, code: 9),
+                                                            heads_up.UpdateCheck("apt", fast, lambda out, code: 3 if "3" in out else None)])
+    monkeypatch.setattr(appmod, "UPDATE_CHECK_TIMEOUT_S", 1.5)
+    c.config["heads_up"]["updates"] = True
+    spin(1.8)
+    c.stage.dismiss_message()
+    c._check_updates()
+    assert until(lambda: c._update_counts == {"apt": 3}, 5)
+    assert len(c._update_procs) == 1  # the stuck one, still running
+    assert until(lambda: not c._update_procs, 5) and c._update_counts == {"apt": 3, "stuck": 0}  # killed: none from it
+    assert until(lambda: c.stage.bubble.title == "Updates waiting") and "3 system updates" in c.stage.bubble.doc.toPlainText()
+
+
+def test_a_late_answer_from_an_earlier_look_at_updates_is_ignored(companion, monkeypatch):
+    from chatmon import heads_up
+
+    c = companion
+    slow = [sys.executable, "-c", "import time; time.sleep(1.5); print('late')"]
+    fast = [sys.executable, "-c", "print('now')"]
+    c.config["heads_up"]["updates"] = True
+    monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("apt", slow, lambda out, code: 40)])
+    c._check_updates()  # the first look, slow to answer
+    monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("apt", fast, lambda out, code: 0)])
+    c._check_updates()  # the next look, which answers first
+    assert until(lambda: c._update_counts == {"apt": 0}, 5)
+    assert until(lambda: not c._update_procs, 5)  # the first has answered too, by now
+    spin(0.2)
+    assert c._update_counts == {"apt": 0} and c.watcher._updates_told is None  # its 40 went nowhere: no heads-up
+
+
+def test_the_ask_box_never_waits_to_find_the_brain(companion, monkeypatch):
+    """Opening the ask box only says which brain answers: finding out mustn't hold up the screen (a model
+    server on this computer is looked for with a wait of up to a second)."""
+    from chatmon import app as appmod
+
+    c = companion
+    waits = []
+    real = appmod.brains.choose
+    monkeypatch.setattr(appmod.brains, "choose", lambda *a, **k: (waits.append(a[3] if len(a) > 3 else k.get("wait", True)), real(*a, **k))[1])
+    c.open_ask()
+    assert waits and not any(waits)
+    c.ask_box.dismiss()
+    c.open_ask(focus=False)
+    assert not any(waits)
+
+
+def test_battery_disks_and_status_are_read_off_the_screens_thread(companion, monkeypatch):
+    import threading
+
+    from chatmon import heads_up
+
+    c = companion
+    spin(1.8)
+    c.stage.dismiss_message()
+    threads = []
+
+    def battery():
+        threads.append(threading.current_thread() is threading.main_thread())
+        return (4.0, False)
+
+    def disks(folders):
+        threads.append(threading.current_thread() is threading.main_thread())
+        return [("/", 99.0)]
+
+    monkeypatch.setattr(heads_up, "read_battery", battery)
+    monkeypatch.setattr(heads_up, "read_disks", disks)
+    c._check_system()
+    assert until(lambda: c.stage.bubble.title == "Battery almost empty") and c.behavior.alert
+    assert threads == [False, False]  # neither read on the screen's thread
+    c.stage.dismiss_message()
+    assert until(lambda: c.stage.bubble.title == "Disk almost full")
+    c.open_ask()
+    c.submit("status")
+    assert "Looking…" in c.ask_box.answer.toPlainText()
+    assert until(lambda: "Battery: 4%" in c.ask_box.answer.toPlainText()) and "Disk for /: 99% full" in c.ask_box.answer.toPlainText()
+    assert threads == [False] * 4
+    c.submit("status")
+    c.submit("5 km in miles")  # answered while status is still being looked up: the late status doesn't cover it
+    spin(0.5)
+    assert "3.107 miles" in c.ask_box.answer.toPlainText() and "Battery" not in c.ask_box.answer.toPlainText()
+
+
+def test_the_name_you_gave_wins_over_the_settings_file(companion, monkeypatch):
+    from chatmon import autostart, paths
+
+    c = companion
+    monkeypatch.setattr(autostart, "set_enabled", lambda on: None)
+    paths.config_file().parent.mkdir(parents=True, exist_ok=True)
+    paths.config_file().write_text('name = "FromTheFile"\n', encoding="utf-8")
+    c.reload(quietly=True)
+    assert c.config["name"] == "FromTheFile" and c.name == "Sparky"  # what you named it
+    c.open_settings()
+    c._settings_window.name.setText("Pebble")
+    c._settings_window._save()
+    assert c.name == "Pebble" and c.state.get("name") == "Pebble"
+    c.menus.fill()
+    assert c.menu.actions()[0].text() == "Ask Pebble…"
+    c.state.set("name", None)
+    assert c.name == "FromTheFile"  # never named: the file's
 
 
 def test_with_no_tray_it_says_once_where_its_menu_is(companion, monkeypatch):
