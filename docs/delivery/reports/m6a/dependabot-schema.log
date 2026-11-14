@@ -1,0 +1,12 @@
+$ check-jsonschema --builtin-schema vendor.dependabot .github/dependabot.yml
+ok -- validation done
+exit 0
+$ ... with the first cooldown's default-days: fourteen
+Schema validation errors were encountered.
+  <tmp>/dependabot.yml::$.updates[0].cooldown['default-days']: 'fourteen' is not of type 'integer'
+exit 1
+$ ... with the first interval: fortnightly
+Schema validation errors were encountered.
+  <tmp>/dependabot2.yml::$.updates[0].schedule.interval: 'fortnightly' is not one of ['daily', 'weekly', 'monthly', 'quarterly', 'semiannually', 'yearly', 'cron']
+  <tmp>/dependabot2.yml::$.updates[0].schedule.interval: 'fortnightly' is not one of ['daily', 'weekly', 'monthly', 'quarterly', 'semiannually', 'yearly', 'cron']
+exit 1

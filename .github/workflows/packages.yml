@@ -2,21 +2,34 @@ name: Packages
 
 # Chatmon's installers and packages, each installed on a fresh machine and run before it's kept:
 # Windows (Inno Setup), macOS (.pkg and .dmg, Apple silicon and Intel), Linux (.deb and .rpm), and the
-# wheel and sdist. Publishing a release signs the Windows installer and adds them all to it; a pull
-# request that touches packaging, or running this by hand, only builds and checks them, unsigned
-# (they're kept with the run). Actions are pinned to commits: what runs here can't change under a tag.
+# wheel and sdist. Pushing a v* tag releases them: the Windows installer is signed, every file's checksum is
+# signed, each file gets a build provenance attestation, and they're all attached to a draft release, which is
+# published only once every file is on it. A pull request that touches packaging, or running this by hand,
+# only builds and checks them, unsigned (they're kept with the run); run by hand from a v* tag, it signs too,
+# without releasing. Actions are pinned to commits and Python tools hash-locked (packaging/requirements*.txt):
+# what runs here can't change under a tag. Each build is dated by its commit (SOURCE_DATE_EPOCH), so building
+# the same commit again makes the same wheel.
 on:
-  release:
-    types: [published]
+  push:
+    tags: ["v*"]
   pull_request:
     paths:
       - "packaging/**"
       - "pyproject.toml"
+      - "tests/test_package_data.py"
       - ".github/workflows/packages.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  # A newer push to a pull request stops the run it replaces; a release's run always finishes.
+  group: packages-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
 
 jobs:
   python:
@@ -29,16 +42,25 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.14"
-      - name: The release is the version the code says
-        if: github.event_name == 'release'
+      - name: The tag is the version the code says
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ github.ref_name }}
         run: |
           version=$(python packaging/build.py version)
-          [ "$TAG" = "v$version" ] || { echo "Release $TAG, but chatmon/__init__.py says $version"; exit 1; }
+          [ "$TAG" = "v$version" ] || { echo "Tag $TAG, but chatmon/__init__.py says $version"; exit 1; }
           python packaging/build.py notes "$version" > /dev/null  # what's new in it, which Chatmon shows after updating
-      - run: python -m pip install build==1.6.1
-      - run: python -m build
+      - &source-date
+        name: Date the build by its commit
+        shell: bash
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+      - run: python -m pip install --require-hashes -r packaging/requirements-build.txt
+      - run: python -m build --no-isolation  # with the hash-locked setuptools just installed
+      - run: python -m twine check --strict dist/*
+      - name: The wheel and sdist hold every file of chatmon the repository tracks
+        env:
+          CHATMON_DIST: dist
+        run: python -m pytest -p no:cacheprovider tests/test_package_data.py
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: package-python
@@ -57,7 +79,14 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.14"
-      - run: python -m pip install -r packaging/requirements.txt
+      - *source-date
+      - &build-tools
+        name: What the installers are built with, hash-locked
+        # Nuitka comes as source, built here with the hash-locked setuptools and wheel installed first: pip's own
+        # build isolation would fetch them unchecked.
+        run: |
+          python -m pip install --require-hashes -r packaging/requirements-build.txt
+          python -m pip install --require-hashes --no-build-isolation -r packaging/requirements.txt
       - &inno-setup
         name: Inno Setup 6.7.3, checked to be signed by its maker
         shell: pwsh
@@ -78,7 +107,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select(any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')
+          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select((.draft | not) and any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')
           gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-windows-x64-setup.exe" --dir "$RUNNER_TEMP/last"
       - name: Install the last release, update it to this one, run it, uninstall it
         shell: pwsh
@@ -106,14 +135,14 @@ jobs:
           Remove-Item Env:QT_QPA_PLATFORM
           ./packaging/windows/test-install.ps1 $setup $env:VERSION -Unsigned
       - name: Keep the unsigned installer with the run
-        if: github.event_name != 'release' && !startsWith(github.ref, 'refs/tags/v')
+        if: "!startsWith(github.ref, 'refs/tags/v')"
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: windows-unsigned
           path: dist/*.exe
           if-no-files-found: error
       - name: Hand on Chatmon, for its installer to be built signed
-        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: windows-app
@@ -131,7 +160,7 @@ jobs:
   # sign-in only from the `release` environment, which only v* tags can use. Running this by hand from a
   # v* tag signs and checks without publishing, to try it. What signing covers: packaging/README.md.
   sign-windows:
-    if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v')
     needs: [python, windows]  # python: a release's tag is the version
     runs-on: windows-latest
     timeout-minutes: 45
@@ -259,7 +288,7 @@ jobs:
       - name: Chatmon's own updater would install it
         shell: pwsh
         run: |
-          python -m pip install PyQt6==6.11.0 PyQt6-Qt6==6.11.2
+          python -m pip install --require-hashes -r packaging/requirements-test.txt  # the Qt that ships, hash-locked
           $setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName
           python -c "import sys; from pathlib import Path; from chatmon import updates; f = Path(sys.argv[1]); print(updates.windows_signer(f)); why = updates.verify(f, updates.sha256(f), updates.WINDOWS); sys.exit(why)" $setup
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -282,14 +311,15 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.14"
-      - run: python -m pip install -r packaging/requirements.txt
+      - *source-date
+      - *build-tools
       - run: python packaging/build.py macos
       - name: The last release's .pkg, for this one to upgrade
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           arch=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo intel)
-          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq "[.[] | select(any(.assets[]; .name | endswith(\"-macos-$arch.pkg\")))][0].tag_name")
+          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq "[.[] | select((.draft | not) and any(.assets[]; .name | endswith(\"-macos-$arch.pkg\")))][0].tag_name")
           gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-macos-$arch.pkg" --dir "$RUNNER_TEMP/last"
           sudo installer -pkg "$RUNNER_TEMP"/last/*.pkg -target /
       - name: Install this .pkg over it, run it
@@ -297,6 +327,14 @@ jobs:
           sudo installer -pkg dist/Chatmon-*.pkg -target /
           test -x /usr/local/bin/chatmon
           python packaging/build.py smoke /usr/local/bin/chatmon /Applications/Chatmon.app/Contents/MacOS/Chatmon --version "$(python packaging/build.py version)"
+      - name: Root's side of updating is in the app, the app is root's, and its check refuses what it can't read
+        run: |
+          app=/Applications/Chatmon.app
+          test -x "$app/Contents/Resources/install-update"
+          [ "$(stat -f %u "$app")" = 0 ] || { echo "Chatmon.app belongs to uid $(stat -f %u "$app"), not root"; exit 1; }
+          status=0
+          "$app/Contents/MacOS/Chatmon" verify-update macos missing.pkg missing.txt missing.sig || status=$?
+          [ "$status" = 3 ] || { echo "verify-update exited $status on files that aren't there, not 3 (refused)"; exit 1; }
       - name: The .dmg holds the app
         run: |
           mount=$(mktemp -d)
@@ -318,6 +356,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - *source-date
       - run: sudo sh packaging/linux/get-nfpm.sh
       - run: python3 packaging/build.py linux
       - name: Install each on a fresh system, run it, remove it
@@ -330,9 +369,8 @@ jobs:
               apt-get update -qq --error-on=any || { sed -i -E 's#http://(archive|security)\.ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources 2>/dev/null; apt-get update -qq; }
               DEBIAN_FRONTEND=noninteractive apt-get install -y -qq /src/dist/chatmon_*_all.deb >/dev/null
               python3 /src/packaging/build.py smoke chatmon chatmon --version $version
-              sum=\$(sha256sum /src/dist/chatmon_*_all.deb | cut -d' ' -f1)
-              /usr/lib/chatmon/install-update /src/dist/chatmon_*_all.deb \$sum >/dev/null
-              if /usr/lib/chatmon/install-update /src/dist/chatmon_*_all.deb $(printf '0%.0s' $(seq 64)) 2>/dev/null; then echo 'installed despite a wrong checksum'; exit 1; fi
+              # Root's side of updating, for real: a signed newer package installs, and nothing else does.
+              sh /src/packaging/linux/test-install-update.sh /src/dist/chatmon_*_all.deb
               apt-get remove -y -qq chatmon >/dev/null
               test ! -e /usr/lib/chatmon"
             echo "::endgroup::"
@@ -341,9 +379,7 @@ jobs:
           docker run --rm -v "$PWD:/src:ro" fedora:44 sh -ec "
             dnf install -y -q /src/dist/chatmon-*.noarch.rpm >/dev/null
             python3 /src/packaging/build.py smoke chatmon chatmon --version $version
-            sum=\$(sha256sum /src/dist/chatmon-*.noarch.rpm | cut -d' ' -f1)
-            /usr/lib/chatmon/install-update /src/dist/chatmon-*.noarch.rpm \$sum >/dev/null
-            if /usr/lib/chatmon/install-update /src/dist/chatmon-*.noarch.rpm $(printf '0%.0s' $(seq 64)) 2>/dev/null; then echo 'installed despite a wrong checksum'; exit 1; fi
+            sh /src/packaging/linux/test-install-update.sh /src/dist/chatmon-*.noarch.rpm
             dnf remove -y -q chatmon >/dev/null
             test ! -e /usr/lib/chatmon"
           echo "::endgroup::"
@@ -351,14 +387,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select(any(.assets[]; .name | endswith("_all.deb")))][0].tag_name')
+          tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select((.draft | not) and any(.assets[]; .name | endswith("_all.deb")))][0].tag_name')
           gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*_all.deb" --pattern "*.noarch.rpm" --dir "$RUNNER_TEMP/last"
           echo "Updating from $tag"
       - name: Install the last release, update it to this one with its own updater, run it
         run: |
           version=$(python3 packaging/build.py version)
           # As Chatmon's updater does: the install-update of the Chatmon already installed (pkexec runs it as
-          # root) installs the new package, checked by its checksum from the signed list.
+          # root) installs the new package, checked by its checksum from the signed list. That's the last
+          # release's helper, which takes FILE SHA256; once a release with the helper that checks the signed list
+          # itself (FILE SHA256SUMS.txt SHA256SUMS.txt.sig) is the last one, this step needs a signed list too,
+          # as packaging/linux/test-install-update.sh makes one.
           echo "::group::ubuntu:24.04"
           docker run --rm -v "$PWD:/src:ro" -v "$RUNNER_TEMP/last:/last:ro" ubuntu:24.04 sh -ec "
             apt-get update -qq --error-on=any || { sed -i -E 's#http://(archive|security)\.ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources 2>/dev/null; apt-get update -qq; }
@@ -387,7 +426,7 @@ jobs:
   # The list of every file's checksum, signed with Chatmon's release key (a secret of the `release`
   # environment, v* tags only): Chatmon installs an update only if this signature and its checksum hold.
   checksums:
-    if: github.event_name == 'release'
+    if: github.event_name == 'push'
     needs: [python, test-signed-windows, macos, linux]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -398,7 +437,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          sparse-checkout: chatmon/updates.py
+          sparse-checkout: chatmon/releasecheck.py
           sparse-checkout-cone-mode: false
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
@@ -420,7 +459,7 @@ jobs:
           openssl pkeyutl -sign -inkey "$key" -rawin -in SHA256SUMS.txt -out SHA256SUMS.txt.sig
           # The key that signed is the one Chatmon trusts, and the signature checks out with it.
           public=$(openssl pkey -in "$key" -pubout -outform DER | tail -c 32 | od -An -tx1 | tr -d ' \n')
-          grep -q "\"$public\"" "$GITHUB_WORKSPACE/chatmon/updates.py" || { echo "RELEASE_SIGNING_KEY isn't a key in RELEASE_KEYS"; exit 1; }
+          grep -q "\"$public\"" "$GITHUB_WORKSPACE/chatmon/releasecheck.py" || { echo "RELEASE_SIGNING_KEY isn't a key in RELEASE_KEYS"; exit 1; }
           openssl pkey -in "$key" -pubout -out "$RUNNER_TEMP/release.pub"
           openssl pkeyutl -verify -pubin -inkey "$RUNNER_TEMP/release.pub" -rawin -in SHA256SUMS.txt -sigfile SHA256SUMS.txt.sig
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -431,24 +470,69 @@ jobs:
             ${{ runner.temp }}/dist/SHA256SUMS.txt.sig
           if-no-files-found: error
 
-  publish:
-    if: github.event_name == 'release'
-    needs: [python, test-signed-windows, macos, linux, checksums]
+  # Every file gets a signed statement of where and how it was built, made with a short-lived Sigstore
+  # certificate for this run: `gh attestation verify FILE --repo RandyNorthrup/chatmon` checks one.
+  attest:
+    if: github.event_name == 'push'
+    needs: [checksums]
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 10
     permissions:
-      contents: write
+      contents: read
+      id-token: write  # the certificate is issued to this run
+      attestations: write  # the statements are kept with the repository
     steps:
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           pattern: package-*
           path: dist
           merge-multiple: true
-      - name: Add them to the release
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/*
+
+  # The release is made as a draft, with its notes (chatmon/changelog.md) and every file, and published only
+  # then: nobody, and no Chatmon looking for an update, ever sees it without its files.
+  publish:
+    if: github.event_name == 'push'
+    needs: [checksums, attest]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /packaging/build.py
+            /chatmon/__init__.py
+            /chatmon/changelog.py
+            /chatmon/changelog.md
+          sparse-checkout-cone-mode: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: package-*
+          path: dist
+          merge-multiple: true
+      - name: Draft the release with every file, then publish it
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ github.ref_name }}
         run: |
+          version=$(python3 packaging/build.py version)
+          [ "$TAG" = "v$version" ] || { echo "Tag $TAG, but chatmon/__init__.py says $version"; exit 1; }
+          python3 packaging/build.py notes "$version" > "$RUNNER_TEMP/notes.md"
           ls -l dist
           test -s dist/SHA256SUMS.txt && test -s dist/SHA256SUMS.txt.sig
-          gh release upload "$TAG" dist/* --clobber --repo "$GITHUB_REPOSITORY"
+          if draft=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft 2>/dev/null); then
+            # An earlier run stopped part way: finish its draft. A published release is never changed.
+            [ "$draft" = true ] || { echo "$TAG is already published"; exit 1; }
+            gh release upload "$TAG" dist/* --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" dist/* --draft --verify-tag --title "Chatmon $version" --notes-file "$RUNNER_TEMP/notes.md" --repo "$GITHUB_REPOSITORY"
+          fi
+          attached=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '[.assets[].name] | sort | join(" ")')
+          expected=$(find dist -maxdepth 1 -type f -printf '%f\n' | LC_ALL=C sort | paste -sd ' ' -)
+          [ "$attached" = "$expected" ] || { echo "The draft holds: $attached"; echo "It should hold: $expected"; exit 1; }
+          gh release edit "$TAG" --draft=false --repo "$GITHUB_REPOSITORY"

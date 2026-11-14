@@ -1,0 +1,16 @@
+# Red drill on .github/scripts/distro-tests.sh: does a failing test fail the script (and so the job)?
+# green: final-distro-debian-trixie.log (the untouched tree), exit 0
+# mutation: in a copy, tests/test_cli.py's '    assert cli.main(["--help"]) == 0' (found 1 time) made '== 1'
+# tests/test_cli.py sha256 before 0ee924a3018933c3cc1217315e89aef5a7675bd25ad3d266c3436fdd71df5e9f, mutated faa2c56764fab8aa0201b3eaef694c285427510e83dde5231b40705f0800c88c
+red: exit 1
+restored: exit 0, tests/test_cli.py sha256 0ee924a3018933c3cc1217315e89aef5a7675bd25ad3d266c3436fdd71df5e9f
+exit 0 2026-11-14T22:15:08Z
+
+# the red run's result (final-distro-drill-red.log):
+__________________ test_help_version_and_what_it_doesnt_know ___________________
+E       AssertionError: assert 0 == 1
+1 failed, 1077 passed, 112 skipped, 23 warnings in 145.29s (0:02:25)
+exit 1 2026-11-14T22:11:55Z
+
+# The containers ran a snapshot of the worktree with LF line ends (as git stores it); the Windows worktree's tests/test_cli.py is the same text with CRLF ends, sha256 4b1c29237f7c8024a68ab5404bc6a5b305e4a6951e92da0d9dc215143e5909df.
+# restored run: 1078 passed, 112 skipped, 23 warnings in 151.47s (0:02:31)

@@ -1,66 +1,229 @@
 name: CI
 
+# Lint, type checks and the tests, for each pull request and each push to main, or by hand (Actions → CI → Run
+# workflow, on any branch). The tests run on Linux (x64 and Arm), Windows and macOS with pip's Qt pinned to the
+# one the installers ship, and in Ubuntu, Debian and Fedora on each one's own PyQt6; coverage from each OS (its
+# Python 3.14 leg) is combined into one report. Actions are pinned to commits and every Python tool to a hash-locked
+# version (packaging/requirements-*.txt): what runs here can't change under a tag.
 on:
   push:
+    branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  # A newer push to a pull request stops the run it replaces; main's runs all finish.
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
 jobs:
   lint:
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          python-version: "3.15"
-      - run: python -m pip install ruff
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-dev.txt
       - run: ruff check .
+      - name: actionlint, on the workflows (and shellcheck, the runner's, on their scripts)
+        if: ${{ !cancelled() }}
+        run: |
+          version=1.7.12
+          sum=8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  # actionlint_1.7.12_linux_amd64.tar.gz
+          tarball="actionlint_${version}_linux_amd64.tar.gz"
+          curl -fsSL -o "$RUNNER_TEMP/$tarball" "https://github.com/rhysd/actionlint/releases/download/v${version}/$tarball"
+          echo "$sum  $RUNNER_TEMP/$tarball" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$tarball" -C "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" -color
+      - name: zizmor, the workflows' security audit
+        if: ${{ !cancelled() }}
+        run: zizmor --no-online-audits --format github .github
+
+  types:
+    name: types (${{ matrix.platform }})
+    # mypy reads code for one platform at a time (sys.platform), so each is checked on its own.
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [linux, win32, darwin]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-dev.txt
+      - env:
+          PLATFORM: ${{ matrix.platform }}
+        run: mypy --platform "$PLATFORM"
 
   test:
+    name: test (${{ matrix.os }}, ${{ matrix.python }})
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, windows-latest, macos-latest]
-        python: ["3.11", "3.15"]
+        python: ["3.11", "3.15"]  # the oldest Python Chatmon runs on, and the newest
+        include:
+          # What the Windows and macOS installers ship: Python 3.14 (packages.yml) with this Qt. Every leg installs
+          # packaging/requirements-test.txt, which locks the Qt packaging/requirements.txt ships.
+          - { os: windows-latest, python: "3.14" }
+          - { os: macos-latest, python: "3.14" }
+          - { os: ubuntu-24.04-arm, python: "3.14" }
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
     env:
       QT_QPA_PLATFORM: offscreen
       CHATMON_TEST_CLIPBOARD: "1"  # a runner's clipboard is nobody's: Windows' paste tests put things on it
+      # Coverage is measured on the 3.14 legs, one per OS, where it costs least (sys.monitoring): a few tests time
+      # what they wait for, and a slower tracer on every leg would only add noise to them.
+      COVER: ${{ matrix.python == '3.14' }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Without the art's sources and the docs: no test reads them, and they're most of the download.
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python }}
-      - name: Qt's system libraries
+      - name: Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against
         if: runner.os == 'Linux'
         # When the runner can't resolve Ubuntu's own archive hosts (their DNS has failed for hours at a time),
         # kernel.org's mirror of it: apt checks Ubuntu's signatures on whatever it's served, from any mirror.
         run: |
-          packages=(libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3)
+          packages=(libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3 dbus dbus-x11 xvfb libxtst6 wayland-protocols libwayland-dev)
           if ! { sudo apt-get update && sudo apt-get install -y "${packages[@]}"; }; then
             echo "::warning::Ubuntu's archive is out of reach; trying kernel.org's mirror of it"
-            sudo sed -i -E 's#^URIs:.*#URIs: http://mirrors.edge.kernel.org/ubuntu/#' /etc/apt/sources.list.d/ubuntu.sources
+            mirror=http://mirrors.edge.kernel.org/ubuntu/
+            [ "$(dpkg --print-architecture)" = amd64 ] || mirror=http://mirrors.edge.kernel.org/ubuntu-ports/
+            sudo sed -i -E "s#^URIs:.*#URIs: $mirror#" /etc/apt/sources.list.d/ubuntu.sources
             sudo apt-get update && sudo apt-get install -y "${packages[@]}"
           fi
-      - run: python -m pip install PyQt6 psutil pytest
-      - run: python -m pytest -q
+      - run: python -m pip install --require-hashes -r packaging/requirements-test.txt
+      - name: Every test
+        # pyproject.toml has the rest: every skip's reason, strict marks, warnings as errors, and a time limit per test.
+        # On Linux, under a virtual X server: Qt stays offscreen, and the click-through tests talk to X themselves.
+        run: |
+          run=(python -m pytest)
+          if [ "$COVER" = true ]; then run=(python -m coverage run --parallel-mode -m pytest); fi
+          if [ "$RUNNER_OS" = Linux ]; then run=(xvfb-run -a "${run[@]}"); fi
+          "${run[@]}"
       - name: What Windows tells Chatmon's own windows, on its real windowing
         if: runner.os == 'Windows'
         env:
           QT_QPA_PLATFORM: windows
-        run: python -m pytest -q tests/test_windows.py -k "tells_the_display or drop_target or zip or paste"
+        run: |
+          tests=(tests/test_windows.py -k "tells_the_display or drop_target or zip or paste")
+          if [ "$COVER" = true ]; then python -m coverage run --parallel-mode -m pytest "${tests[@]}"; else python -m pytest "${tests[@]}"; fi
       - name: What Chatmon tells AppKit itself, on macOS's real window server
         if: runner.os == 'macOS'
         env:
           QT_QPA_PLATFORM: cocoa
-        run: python -m pytest -q tests/test_macnative.py
+        run: |
+          if [ "$COVER" = true ]; then python -m coverage run --parallel-mode -m pytest tests/test_macnative.py; else python -m pytest tests/test_macnative.py; fi
+      - if: env.COVER == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage-${{ matrix.os }}-${{ matrix.python }}
+          path: .coverage.*
+          include-hidden-files: true
+          retention-days: 3
+          if-no-files-found: error
+
+  coverage:
+    # Every OS's coverage in one report, in the run's summary, held to pyproject.toml's floor (fail_under).
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /chatmon/
+            /packaging/
+            /pyproject.toml
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-test.txt
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: coverage-*
+          path: ${{ runner.temp }}/coverage
+          merge-multiple: true
+      - name: Combine, report, and hold the floor
+        env:
+          DATA: ${{ runner.temp }}/coverage
+        run: |
+          python -m coverage combine "$DATA"
+          status=0
+          python -m coverage report --format=markdown > "$RUNNER_TEMP/coverage.md" || status=$?
+          { echo "## Coverage, every OS combined"; echo; cat "$RUNNER_TEMP/coverage.md"; } >> "$GITHUB_STEP_SUMMARY"
+          tail -n 1 "$RUNNER_TEMP/coverage.md"
+          exit "$status"
+
+  distro:
+    name: distro (${{ matrix.image }})
+    # The .deb and .rpm run on the distribution's own Python and PyQt6 (Ubuntu 24.04's is 6.6), so the whole suite
+    # runs on those too, in a fresh container of each.
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["ubuntu:24.04", "debian:trixie", "fedora:44"]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - env:
+          IMAGE: ${{ matrix.image }}
+        run: docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh
 
   gnome:
     # GNOME's own answers, from a real Mutter running headless: time away from the keyboard is read there.
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
       - run: docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh

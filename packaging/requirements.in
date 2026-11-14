@@ -1,0 +1,9 @@
+# What the Windows and macOS installers are built with (packaging/build.py), pinned so that each release is
+# made the same way. requirements.txt is this list locked, with every dependency's hashes: after changing a
+# pin here, lock it again as CONTRIBUTING.md says. When moving a pin, pick a release at least two weeks old.
+nuitka==4.3.1; sys_platform == 'win32'  # Windows: compiles Chatmon and the standard library it uses into its programs
+pyinstaller==6.22.3; sys_platform == 'darwin'  # macOS (Nuitka doesn't support PyQt6 there)
+pyinstaller-hooks-contrib==2026.9; sys_platform == 'darwin'
+PyQt6==6.11.0  # the Qt that ships: CI's tests run on it too (requirements-test.in)
+PyQt6-Qt6==6.11.2
+psutil==7.2.2  # battery levels, on Windows and macOS

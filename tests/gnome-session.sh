@@ -4,7 +4,7 @@
 set -e
 # Ubuntu's archive hosts' DNS has failed for hours at a time: kernel.org's mirror (apt checks the signatures).
 apt-get update -qq --error-on=any || { sed -i -E 's#http://(archive|security)\.ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources; apt-get update -qq; }
-DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends mutter dbus dbus-x11 libglib2.0-bin python3-pyqt6 python3-pytest >/dev/null
+DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends mutter dbus dbus-x11 libglib2.0-bin python3-pyqt6 python3-pytest python3-pytest-timeout >/dev/null
 mutter --version | head -1
 export XDG_RUNTIME_DIR=/tmp/run
 mkdir -p -m 700 "$XDG_RUNTIME_DIR"
