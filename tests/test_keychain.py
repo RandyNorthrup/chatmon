@@ -17,11 +17,17 @@ from chatmon import brains, keychain
 HERE = Path(__file__).resolve().parent
 
 
+NO_LOGON_SESSION = "(error 1312)"  # Windows: a session with no Credential Manager (a service's, some CI runners')
+
+
 def _round_trip(name: str) -> None:
     keychain.use(None)  # the system's own
     try:
         assert keychain.get(name) is None and not keychain.has(name)
-        assert keychain.set(name, "sk-test-é-" + "x" * 40) is None
+        saved = keychain.set(name, "sk-test-é-" + "x" * 40)
+        if saved and NO_LOGON_SESSION in saved:
+            pytest.skip(f"this session has no Credential Manager: {saved}")
+        assert saved is None
         keychain._cache.clear()
         keychain._present.clear()
         assert keychain.has(name) and keychain.get(name) == "sk-test-é-" + "x" * 40
@@ -58,7 +64,10 @@ def test_windows_keeps_a_key_on_this_computer_and_files_it_under_chatmon():
     keychain.use(None)
     store = keychain._the_store()
     try:
-        assert keychain.set(name, "sk-local") is None
+        saved = keychain.set(name, "sk-local")
+        if saved and NO_LOGON_SESSION in saved:
+            pytest.skip(f"this session has no Credential Manager: {saved}")
+        assert saved is None
         found = ctypes.POINTER(store.Credential)()
         assert store.read(f"chatmon:{name}", store.TYPE_GENERIC, 0, ctypes.byref(found))
         try:

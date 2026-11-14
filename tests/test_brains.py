@@ -433,7 +433,7 @@ def test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed(qapp)
 # -- what a command-line brain is given (M1B-01, M1B-02, M1B-05)
 
 
-def _answer(asker, brain, wait_s: float = 20) -> dict:
+def _answer(asker, brain, wait_s: float = 40) -> dict:
     from replay_server import ask
 
     return ask(asker, brain, wait_s=wait_s)

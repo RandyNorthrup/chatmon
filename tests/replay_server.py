@@ -92,8 +92,9 @@ def json_reply(status: int, body: dict | list | str) -> Reply:
     return Reply(status, {"content-type": kind, "content-length": str(len(raw))}, [raw])
 
 
-def ask(asker, brain, question: str = "q", timeout_s: float = 10, wait_s: float = 10) -> dict:
-    """Ask, and spin Qt's loop until it answers or fails: what came, in order."""
+def ask(asker, brain, question: str = "q", timeout_s: float = 30, wait_s: float = 40) -> dict:
+    """Ask, and spin Qt's loop until it answers or fails: what came, in order. Time isn't what these tests check:
+    the limits leave room for a process to start on a machine busy with other work (the app's own default is 180 s)."""
     from PyQt6.QtCore import QEventLoop, QTimer
 
     got: dict = {"partial": [], "answered": None, "failed": None}
