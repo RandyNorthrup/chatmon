@@ -267,6 +267,16 @@ _KEPT: dict[str, Callable[..., str]] = {
 # -- your computer
 
 
+def brain_in_use(loaded: dict, config: dict, state, wait: bool = True):
+    """The brain a question goes to (the one picked from the menu, else the settings', else the first found), with
+    the model, effort and thinking picked for it. `wait` off: as far as can be told without waiting."""
+    from . import brains
+
+    brain = brains.choose(loaded, config["ai"]["brain"], state.get("brain"), wait)
+    return brain.with_options(dict((state.get("brain_options") or {}).get(brain.name) or {})) if brain else None
+
+
+
 def status_lines(battery: tuple[float, bool] | None, disks: list[tuple[str, float]], upcoming: list[reminders.Reminder], now: float,
                  brain: str | None, brain_detail: str = "") -> list[str]:
     """The *status* command's lines (and `chatmon status`'s): battery, disks, the next few reminders, and the brain

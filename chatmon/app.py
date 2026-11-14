@@ -249,8 +249,7 @@ class Companion(QObject):
     def _brain(self, wait: bool = True) -> brains.Brain | None:
         """The brain to ask, with the model, effort and thinking picked for it from the menu. `wait` off:
         as far as can be told without holding up the screen (for the menu)."""
-        brain = brains.choose(self.brains, self.config["ai"]["brain"], self.state.get("brain"), wait)
-        return brain.with_options(self._brain_options(brain.name)) if brain else None
+        return commands.brain_in_use(self.brains, self.config, self.state, wait)
 
     def _look_again(self) -> None:
         """Find out, off the screen's thread, what the menu couldn't wait to (whether model servers on this
@@ -265,9 +264,6 @@ class Companion(QObject):
                 self._menu_changed()
 
         self.background.run(brains.look_again, looked)
-
-    def _brain_options(self, name: str) -> dict:
-        return dict((self.state.get("brain_options") or {}).get(name) or {})
 
     def _now(self) -> float:
         return time.monotonic()
@@ -1576,6 +1572,8 @@ class Companion(QObject):
                 r = self.reminders.add(command.due.timestamp(), command.text)
                 self.save()
                 self.say("Reminder set", f"{reminders.describe(r.due, time.time())}: {r.text}", timeout_s=6)
+        elif kind == "ask":  # `chatmon ask [TEXT]`: a hotkey, a launcher, a script
+            self.open_ask(str(message.get("text") or ""))
         elif kind == "show":
             self.set_hidden(False)
             self.behavior.poke(now)

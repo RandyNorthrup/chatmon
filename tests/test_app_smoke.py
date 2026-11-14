@@ -74,6 +74,31 @@ def test_greets_and_reacts_to_agents(companion):
     assert c.stage.message_visible()
 
 
+def test_chatmon_ask_opens_the_box_with_the_text_typed_in_and_the_keyboard(companion):
+    c = companion
+    c.set_hidden(True)
+    c.handle({"type": "ask", "text": "how do I rebase onto main?"})
+    assert c.ask_box.isVisible() and not c.behavior.hidden
+    assert c.ask_box.entry.text() == "how do I rebase onto main?" and c.ask_box.wants_keyboard
+    assert c.ask_box.title.text() == "Ask Sparky"  # a chat, not a rename
+    c.ask_box.dismiss()
+    c.handle({"type": "ask"})
+    assert c.ask_box.isVisible() and c.ask_box.entry.text() == ""
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="on Windows every Chatmon in a session shares the hooks' pipe name, a test's too")
+def test_chatmon_ask_from_a_terminal_reaches_it(companion):
+    """`chatmon ask`, run as you would, in a process of its own."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env = dict(os.environ, PYTHONPATH=root)
+    proc = subprocess.Popen([sys.executable, "-m", "chatmon", "ask", "what's", "a", "rebase?"], env=env)
+    deadline = time.monotonic() + 20
+    while proc.poll() is None and time.monotonic() < deadline:
+        spin(0.05)
+    assert proc.returncode == 0
+    assert until(lambda: companion.ask_box.isVisible()) and companion.ask_box.entry.text() == "what's a rebase?"
+
+
 def test_a_hook_reaches_it(companion):
     """A separate process, as a hook would be, says something and hears back."""
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -100,8 +125,7 @@ def test_local_commands_and_reminders(companion):
     c.submit("status")
     assert until(lambda: "Brain:" in c.ask_box.answer.toPlainText())  # looked up off the screen's thread
     c.ask_box.dismiss()
-    spin(5.5)
-    assert c.behavior.alert and c.stage.bubble.title == "Reminder"
+    assert until(lambda: c.behavior.alert and c.stage.bubble.title == "Reminder", 12)  # the next look at reminders: every 5 s
     c.stage.dismiss_message()
     assert not c.behavior.alert
 
