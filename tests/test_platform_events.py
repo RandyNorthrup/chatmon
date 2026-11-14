@@ -200,10 +200,10 @@ def test_a_ui_automation_client_hears_the_announcement(tmp_path):
             time.sleep(0.1)
         heard = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()] if log.exists() else []
     finally:
-        client.kill()
-        client.wait(10)
-        if announcer is not None:
-            announcer.kill()
+        for process in (client, announcer):
+            if process is not None:
+                process.kill()
+                process.communicate(timeout=10)  # waited for, and its pipes closed
     assert name.stdout.strip() == "Chatmon announcements", name.stderr
     assert heard and all(h == {"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"} for h in heard), heard  # Other, ImportantAll
 
