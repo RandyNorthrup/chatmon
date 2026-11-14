@@ -232,6 +232,16 @@ class CommandPlayer:
             return False
         return True
 
+    def close(self) -> None:
+        """Let the players still sounding finish (a sound lasts a second or two), then reap them; as Chatmon quits."""
+        for process in self._running:
+            try:
+                process.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait()
+        self._running = []
+
 
 def linux_players(runtime_dir: str | None = None) -> list[CommandPlayer]:
     """The Linux players there are, best first: each sound server's own player only where that server is running

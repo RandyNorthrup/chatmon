@@ -273,6 +273,7 @@ def xvfb(monkeypatch):
     finally:
         server.terminate()
         server.wait(10)
+        server.stdout.close()
 
 
 class Keyboard:

@@ -15,18 +15,18 @@ evidence-coverage | AC-02F | No passing behavior receipt covers this acceptance 
 evidence-coverage | AC-02F | No passing red receipt covers this acceptance criterion
 evidence-coverage | AC-03E | No passing behavior receipt covers this acceptance criterion
 evidence-coverage | AC-03E | No passing red receipt covers this acceptance criterion
-outcome-unresolved | CI-LINUX | Read the Linux job's tests/test_hotkey_portal.py, tests/test_sound.py, tests/test_m4b_imports.py; M6A adds Xvfb for tests/test_hotkey.py's X11 test
-outcome-unresolved | CI-MACOS | Coordinator pushes the merged branch; read the macOS job's tests/test_hotkey.py, tests/test_sound.py, tests/test_m4b_imports.py; failures back to M4B
-outcome-unresolved | CI-WINDOWS-TOASTS | Read the Windows job's tests/test_wintoast.py; it takes the notifications-on branch there
-evidence-environment | EV-RED-L-00B-eager-objc | Receipt environment differs from the current profile
-evidence-environment | EV-RED-L-01E-conflict | Receipt environment differs from the current profile
-evidence-environment | EV-RED-L-01E-numlock | Receipt environment differs from the current profile
-evidence-environment | EV-RED-L-01F-carries-on | Receipt environment differs from the current profile
-evidence-environment | EV-RED-L-01F-its-own-session | Receipt environment differs from the current profile
-evidence-environment | EV-RED-L-01F-no-portal | Receipt environment differs from the current profile
-evidence-environment | EV-RED-L-01F-response | Receipt environment differs from the current profile
-evidence-environment | EV-RED-L-02D-linux-player | Receipt environment differs from the current profile
-evidence-environment | EV-WSL-TESTS | Receipt environment differs from the current profile
+outcome-unresolved | CI-LINUX | Read the Linux leg's tests/test_hotkey.py, tests/test_hotkey_portal.py, tests/test_sound.py in the next run; no ResourceWarning from them
+outcome-unresolved | CI-MACOS | Read the macOS leg's tests/test_hotkey.py, tests/test_sound.py, tests/test_m4b_imports.py in the next run
+outcome-unresolved | CI-WINDOWS-TOASTS | Coordinator merges and dispatches CI; read the Windows legs' tests/test_wintoast.py, which now prints the setting if it declines
+evidence-environment | EV-RED-L-00B-eager-objc-r2 | Receipt environment differs from the current profile
+evidence-environment | EV-RED-L-01E-conflict-r2 | Receipt environment differs from the current profile
+evidence-environment | EV-RED-L-01E-numlock-r2 | Receipt environment differs from the current profile
+evidence-environment | EV-RED-L-01F-carries-on-r2 | Receipt environment differs from the current profile
+evidence-environment | EV-RED-L-01F-its-own-session-r2 | Receipt environment differs from the current profile
+evidence-environment | EV-RED-L-01F-no-portal-r2 | Receipt environment differs from the current profile
+evidence-environment | EV-RED-L-01F-response-r2 | Receipt environment differs from the current profile
+evidence-environment | EV-RED-L-02D-linux-player-r2 | Receipt environment differs from the current profile
+evidence-environment | EV-WSL-TESTS-r2 | Receipt environment differs from the current profile
 task-unverified | T-HOTKEY-MAC | Task is implemented, not verified
 task-unverified | T-HOTKEY-X11 | Task is implemented, not verified
 task-unverified | T-IMPORTS-POSIX | Task is implemented, not verified
@@ -40,9 +40,9 @@ exit 1
 $ python verify-delivery.py --root . --plan docs/delivery/m4b-hotkey-sound-toasts.md --stage resume --context docs/delivery/reports/m4b/context.json
 FAIL: resume record/evidence checks
 Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, checkpoint-freshness
-outcome-unresolved | CI-LINUX | Read the Linux job's tests/test_hotkey_portal.py, tests/test_sound.py, tests/test_m4b_imports.py; M6A adds Xvfb for tests/test_hotkey.py's X11 test
-outcome-unresolved | CI-MACOS | Coordinator pushes the merged branch; read the macOS job's tests/test_hotkey.py, tests/test_sound.py, tests/test_m4b_imports.py; failures back to M4B
-outcome-unresolved | CI-WINDOWS-TOASTS | Read the Windows job's tests/test_wintoast.py; it takes the notifications-on branch there
+outcome-unresolved | CI-LINUX | Read the Linux leg's tests/test_hotkey.py, tests/test_hotkey_portal.py, tests/test_sound.py in the next run; no ResourceWarning from them
+outcome-unresolved | CI-MACOS | Read the macOS leg's tests/test_hotkey.py, tests/test_sound.py, tests/test_m4b_imports.py in the next run
+outcome-unresolved | CI-WINDOWS-TOASTS | Coordinator merges and dispatches CI; read the Windows legs' tests/test_wintoast.py, which now prints the setting if it declines
 Structural and recorded-evidence checks; semantic review remains required.
 exit 1
 
