@@ -192,8 +192,9 @@ def _time(value: object) -> float:
     return t if 0 <= t <= _LATEST else 0.0
 
 
-def _from_json(data: object) -> Chat | None:
-    """A chat read back, or None if the file isn't one; anything odd in it is left out, never fatal."""
+def from_json(data: object) -> Chat | None:
+    """A chat read back (a file of ours, or a backup's), or None if it isn't one; anything odd in it is left out,
+    never fatal."""
     try:
         if not isinstance(data, dict) or not _ID.fullmatch(str(data.get("id", ""))):
             return None
@@ -224,6 +225,18 @@ def _from_json(data: object) -> Chat | None:
         return None
 
 
+def to_json(chat: Chat) -> dict:
+    """A chat as its file keeps it (and a backup): from_json reads it back."""
+    data = asdict(chat)
+    data.pop("keep", None)
+    for m in data["messages"]:
+        if not m.get("sent") or m["sent"] == m["text"]:
+            m.pop("sent", None)  # nothing attached: the question is its text
+        if not m.get("by"):
+            m.pop("by", None)
+    return data
+
+
 class ChatBook:
     """The chats kept on this computer."""
 
@@ -243,15 +256,7 @@ class ChatBook:
         """Keep `chat` on this computer; a chat begun while history was off (`keep` off) is never written."""
         if not chat.messages or not chat.keep:
             return
-        path = self._file(chat.id)
-        data = asdict(chat)
-        data.pop("keep", None)
-        for m in data["messages"]:
-            if not m.get("sent") or m["sent"] == m["text"]:
-                m.pop("sent", None)  # nothing attached: the question is its text
-            if not m.get("by"):
-                m.pop("by", None)
-        write_private(path, json.dumps(data, ensure_ascii=False))
+        write_private(self._file(chat.id), json.dumps(to_json(chat), ensure_ascii=False))
 
     def load(self, chat_id: str) -> Chat | None:
         try:
@@ -260,7 +265,7 @@ class ChatBook:
             seen = self._read.get(chat_id)
             if seen and seen[:2] == (info.st_mtime_ns, info.st_size):
                 return copy.deepcopy(seen[2])
-            chat = None if info.st_size > MAX_FILE else _from_json(json.loads(path.read_text(encoding="utf-8")))
+            chat = None if info.st_size > MAX_FILE else from_json(json.loads(path.read_text(encoding="utf-8")))
             self._read[chat_id] = (info.st_mtime_ns, info.st_size, chat)
             return copy.deepcopy(chat)
         except (OSError, ValueError, RecursionError):
