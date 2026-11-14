@@ -1,3 +1,5 @@
+import copy
+import math
 import random
 
 from chatmon.behavior import Behavior
@@ -217,15 +219,154 @@ def test_turning_walking_off_cancels_a_walk_still_queued_behind_its_turn():
 
 def test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after():
     b = make(seed=3, sleep_after=0)
-    f, t = _until(b, 0, lambda f, b: f.anim == "walk")
+    f, t = _until(b, 0, lambda f, b: f.anim == "walk" and f.index == 3)
     target = b._target
     b.hovered = True
     frames, t = run(b, t, t + 5)
-    assert all(f.anim == "idle" for f in frames) and len({f.x for f in frames}) == 1  # standing, where it was
+    # It stops mid-step: the walk frame it was on, facing the way it walked (no swap to the front-facing idle).
+    assert {(f.anim, f.index, f.mirror) for f in frames} == {("walk", 3, f.mirror)} and len({f.x for f in frames}) == 1
     b.hovered = False
     frames, t = run(b, t, t + 1)
-    assert frames[0].anim == "walk" and frames[-1].x != frames[0].x  # the same walk, on its way again
+    assert (frames[0].anim, frames[0].index) == ("walk", 3) and frames[0].x == f.x  # on from the same step and place
+    assert frames[-1].x != frames[0].x  # the same walk, on its way again
     assert b._target in (target, None)
+
+
+def test_a_walk_waiting_under_the_pointer_holds_its_step_however_rarely_it_is_ticked():
+    b = make(seed=3, sleep_after=0)
+    f, t = _until(b, 0, lambda f, b: f.anim == "walk")
+    b.hovered = True
+    for _ in range(5):  # a stage that sleeps a second at a time while nothing changes
+        t += 1.0
+        held = b.tick(t)
+        assert (held.anim, held.index, held.x) == ("walk", f.index, f.x)
+    b.hovered = False
+    t += 0.4  # the pointer left a while before the next tick
+    resumed = b.tick(t)
+    assert (resumed.index, resumed.x) == (f.index, f.x)  # no jump for the time it waited
+
+
+def sparse(b, start, end, shortest=1 / 60, longest=1.0):
+    """Tick as the stage does: each tick at the next change the behaviour names, between `shortest` and
+    `longest` from the last. Return the (time, frame) of every tick."""
+    ticks, t = [], start
+    while t < end:
+        f = b.tick(t)
+        ticks.append((t, f))
+        t += min(max(b.next_change(t) - t, shortest), longest)
+    return ticks
+
+
+def shown(f):
+    return (f.anim, f.index, f.mirror, round(f.x), round(f.lift))
+
+
+def assert_nothing_missed(b, start, end):
+    """Between two of the stage's ticks, a copy of the behaviour ticked 1000 times a second shows nothing
+    different (until the moment the next tick is due): sleeping that long missed no change on screen."""
+    ticks, t = [], start
+    while t < end:
+        twin = copy.deepcopy(b)
+        f = b.tick(t)
+        ticks.append(t)
+        wait = min(max(b.next_change(t) - t, 1 / 60), 1.0)
+        twin.tick(t)
+        u = t + 0.001
+        while u < t + wait - 0.0015:
+            assert shown(twin.tick(u)) == shown(f), f"at {u:.3f} it showed {shown(twin.tick(u))}, the stage slept until {t + wait:.3f}"
+            u += 0.001
+        t += wait
+    return ticks
+
+
+def test_standing_still_it_names_the_next_change_seconds_ahead():
+    b = make(walk=False, sleep_after=0)
+    run(b, 0, 3)
+    b.set_attending(True, 3)  # idle: holds still, blinking every 3-5 s
+    later = copy.deepcopy(b)
+    ticks = assert_nothing_missed(b, 3, 63)
+    assert len(ticks) < 60 + 16 * 4  # once a second at most while still, plus the frames of each blink
+    frames = [f for _, f in sparse(later, 3, 63)]
+    blinks = sum(1 for a, c in zip(frames, frames[1:], strict=False) if (a.index, c.index) == (0, 2))
+    assert blinks >= 11  # and it still blinks on time: 60 s at one every 3-5 s
+
+
+def test_asleep_or_walking_it_ticks_as_often_as_the_frames_change():
+    b = make(seed=3, sleep_after=20, walk=False)
+    ticks = assert_nothing_missed(b, 0, 60)  # waves, idles, nodding off, asleep (the z's are the stage's)
+    assert len(ticks) < 60 * 10  # well under the old 30 a second
+    b = make(seed=3, sleep_after=0)
+    _, t = _until(b, 0, lambda f, b: f.anim == "walk")
+    assert b.next_change(t) == t  # walking: every frame
+    b.hold(900, 300, t)
+    assert b.next_change(t) == math.inf  # held: nothing changes but by the pointer
+    b.release(t)
+    b.tick(t + 0.01)
+    assert b.next_change(t + 0.01) == t + 0.01  # falling: every frame
+
+
+def test_it_says_when_its_told_something_that_could_change_the_frame():
+    b = make()
+    told = []
+    b.on_change = lambda: told.append(1)
+    b.set_floor(0, 1000)  # what the stage tells it every frame: no
+    assert told == []
+    b.set_alert(True, 1)
+    b.hovered = True
+    b.hovered = True  # no change: no word
+    b.react("hop", 2)
+    b.hold(10, 10, 3)
+    b.release(4)
+    b.set_walk(False, 5)
+    b.set_reduced_motion(True, 6)
+    assert len(told) >= 7
+
+
+def test_reduced_motion_holds_each_looping_mood_still():
+    b = make(walk=False)
+    run(b, 0, 3)
+    b.set_reduced_motion(True, 3)
+    t = 3.0
+    for flag in ("alert", "talking", "thinking", "attending"):
+        getattr(b, "set_" + flag)(True, t)
+        frames, t = run(b, t, t + 4)
+        assert len({(f.anim, f.index) for f in frames}) == 1, flag  # one pose, from the first frame
+        assert b.next_change(t) > t + 1  # nothing to draw until something changes
+        getattr(b, "set_" + flag)(False, t)
+    alert = make(walk=False)
+    alert.set_reduced_motion(True, 0)
+    alert.set_alert(True, 0)
+    assert {(f.anim, f.index) for f in run(alert, 0, 3)[0]} == {("alert", 0)}  # needs you: still
+    b = make(walk=False, sleep_after=10)
+    b.set_reduced_motion(True, 0)
+    frames, _ = run(b, 0, 30)
+    assert frames[-1].anim == "sleep" and {f.index for f in frames if f.anim == "sleep"} == {3}  # asleep, without nodding off
+    b.set_reduced_motion(False, 30)
+    b.set_alert(True, 30)
+    frames, _ = run(b, 30, 33)
+    assert len({f.index for f in frames if f.anim == "alert"}) > 1  # and it moves again when allowed
+
+
+def test_reduced_motion_skips_waves_hops_and_peeks_and_lands_a_drop_at_once():
+    b = make(walk=False, sleep_after=0)
+    b.set_reduced_motion(True, 0)
+    frames, t = run(b, 0, 3)
+    assert "wave" not in {f.anim for f in frames}  # not even the greeting
+    b.react("wave", t)
+    b.react("hop", t)
+    b.poke(t)
+    frames, t = run(b, t, t + 3)
+    assert not {"wave", "hop", "turn"} & {f.anim for f in frames}
+    b.set_hidden(True, t)
+    frames, t = run(b, t, t + 130)
+    assert {f.anim for f in frames} == {None}  # gone at once, and no peeking out
+    b.set_hidden(False, t)
+    frames, t = run(b, t, t + 3)
+    assert "peek" not in {f.anim for f in frames} and frames[0].anim is not None
+    b.hold(900, 300, t)
+    b.release(t)
+    landed = b.tick(t + 1 / 30)
+    assert landed.lift == 0 and landed.anim != "hop" and not b.falling
 
 
 def test_turning_walking_off_while_a_walk_waits_under_the_pointer_ends_it():

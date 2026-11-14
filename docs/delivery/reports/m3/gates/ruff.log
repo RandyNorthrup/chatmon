@@ -1,0 +1,5 @@
+command: ruff check .
+source: a3447706f7636ef052ee91e74c98aa574d1bbd79
+ruff 0.17.4
+All checks passed!
+exit 0
