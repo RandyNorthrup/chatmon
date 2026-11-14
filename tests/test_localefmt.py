@@ -10,7 +10,7 @@ from pathlib import Path
 
 from PyQt6.QtCore import QLocale
 
-from chatmon import localefmt, reminders
+from chatmon import localefmt, offline, reminders
 
 ROOT = Path(__file__).resolve().parent.parent
 XMAS = date(2026, 12, 25)  # a Friday
@@ -95,10 +95,13 @@ def test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_envi
     assert out.stdout.splitlines() == ["3:04 PM", "Friday, December 25, 2026", "Fri Dec 25", "pt_BR", "False"]
 
 
-def test_reminders_write_times_the_locales_way():
+def test_reminders_and_offline_answers_write_times_the_locales_way():
     now = datetime(2026, 12, 23, 9, 0)
     with pinned(GB):
         assert reminders.describe(datetime(2026, 12, 23, 16, 30).timestamp(), now.timestamp()) == "at 16:30"
         assert reminders.describe(TEA.timestamp(), now.timestamp()) == "on Fri, 25 Dec at 15:04"
+        assert offline.answer("what time is it?", TEA) == "It's **15:04**."
+        assert offline.answer("what day is it", TEA) == "Today is **Friday, 25 December 2026**."
+        assert offline.answer("days until christmas", now) == "**2 days** until Christmas (Fri, 25 Dec)."
     with pinned(DE):
         assert reminders.describe_repeat("mon@09:00") == "every Monday at 09:00"
