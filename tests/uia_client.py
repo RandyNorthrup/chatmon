@@ -34,7 +34,14 @@ class Heard(comtypes.COMObject):
 
 
 if sys.argv[1] == "name":
-    print(automation.ElementFromHandle(int(sys.argv[2])).CurrentName, flush=True)
+    for attempt in range(10):  # a busy machine can keep the window's answer from coming in time: ask again
+        try:
+            print(automation.ElementFromHandle(int(sys.argv[2])).CurrentName, flush=True)
+            break
+        except comtypes.COMError:
+            if attempt == 9:
+                raise
+            time.sleep(0.5)
 else:
     log, seconds = sys.argv[2], float(sys.argv[3])
     handler = Heard(log)
