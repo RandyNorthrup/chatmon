@@ -21,7 +21,7 @@ art/ and docs/), never in the working tree:
 
 The working tree's copy of each drilled file must match the copy's original bytes, so the hashes recorded in the
 log match the source a receipt names. The log has every command, exit code, hash and the tail of each run's
-output; a JSON summary is written next to it. Exit 0 only when every selected drill went green, red, green.
+output; a JSON summary is written next to it as <log name>-results.json, so it never lands on the spec. Exit 0 only when every selected drill went green, red, green.
 """
 
 from __future__ import annotations
@@ -223,7 +223,7 @@ def main(argv: list[str] | None = None) -> int:
         log.append(f"{r['status'].upper():4} {r['id']}" + (f": {r['reason']}" if r["reason"] else ""))
     log_path.parent.mkdir(parents=True, exist_ok=True)
     log_path.write_text("\n".join(log) + "\n", encoding="utf-8")
-    log_path.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
+    log_path.with_name(log_path.stem + "-results.json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
     print("\n".join(log[-len(results) - 1:]))
     return 1 if failed else 0
 

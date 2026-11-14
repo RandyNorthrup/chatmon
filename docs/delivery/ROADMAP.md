@@ -83,7 +83,7 @@ Each worker writes the APIs it actually delivered into its plan's **Integration 
 3. Write tests in the project's existing style: real Qt objects under `QT_QPA_PLATFORM=offscreen`, the `qapp`
    fixture, and no mocks that bypass the behavior under test. Platform-specific code gets tests that run on its
    platform in CI, and skip with a reason elsewhere.
-4. Red drills go through `python tests/drills/run.py docs/delivery/reports/<id>/drills.json --log
+4. Red drills go through `python tests/drills/run.py docs/delivery/reports/<id>/drill-spec.json --log
    docs/delivery/reports/<id>/drills.log`. The drills run in a temporary copy, so the tree is never mutated.
 5. Gates before every commit:
    - `python -m pytest -q -p no:cacheprovider` (the whole suite) and `ruff check .` must pass.
