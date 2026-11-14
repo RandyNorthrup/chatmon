@@ -13,6 +13,15 @@ from chatmon import attachments, brains, chats
 from chatmon.attachments import AttachError
 
 
+@pytest.fixture(autouse=True)
+def no_saved_keys():
+    """Keys from a keychain of the test's own, never the computer's."""
+    from chatmon import keychain
+
+    before = keychain.use(keychain.InMemory())
+    yield
+    keychain.use(before)
+
 
 # -- attachments
 
@@ -317,6 +326,13 @@ def test_a_chat_remembers_its_brain_and_the_question_to_ask_another(tmp_path):
     assert back.history("Gemini CLI", name="gemini", before=index) == back.history("Gemini CLI", name="gemini")[:1]
     assert chats.Chat().last_question() is None
 
+
+def test_choosing_carries_a_chat_on_with_its_own_brain(monkeypatch):
+    monkeypatch.setattr(brains.shutil, "which", lambda name: f"/bin/{name}" if name in ("codex", "gemini") else None)
+    found = brains.load_brains({})
+    assert brains.choose(found, "auto", None).name == "codex"
+    assert brains.choose(found, "auto", "codex", prefer="gemini").name == "gemini"  # the chat's brain first
+    assert brains.choose(found, "auto", "gemini", prefer="claude").name == "gemini"  # not here: as before
 
 
 def test_with_keep_chat_history_off_nothing_is_written(tmp_path):
