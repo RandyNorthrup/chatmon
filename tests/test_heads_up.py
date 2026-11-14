@@ -171,3 +171,72 @@ def test_packagekit_counts_where_chatmon_knows_no_package_manager(monkeypatch):
     assert [c.name for c in heads_up.update_checks()] == ["flatpak", "packagekit"]
     monkeypatch.setattr(heads_up.shutil, "which", lambda name: f"/usr/bin/{name}" if name == "apt" else None)
     assert [c.name for c in heads_up.update_checks()] == ["apt"]  # apt's own answer, not PackageKit's too
+
+
+# -- off the screen's thread (M4A-10)
+
+
+def test_upowers_display_device_in_one_answer():
+    """GetAll's properties: plugged in unless the batteries are discharging (or about to)."""
+    from chatmon import heads_up
+
+    def device(present=True, percent=64.0, state=1):
+        return {"IsPresent": present, "Percentage": percent, "State": state, "Model": "", "Type": 2}
+
+    assert heads_up.battery_from_upower(device(state=1)) == (64.0, True)  # charging
+    assert heads_up.battery_from_upower(device(state=4, percent=100)) == (100.0, True)  # fully charged, on the charger
+    assert heads_up.battery_from_upower(device(state=2)) == (64.0, False)  # discharging
+    assert heads_up.battery_from_upower(device(state=6)) == (64.0, False)  # pending discharge
+    assert heads_up.battery_from_upower(device(state=5)) == (64.0, True)  # pending charge: held below full, plugged in
+    assert heads_up.battery_from_upower(device(present=False)) is None  # a desktop: no battery
+    assert heads_up.battery_from_upower(device(percent=True)) is None and heads_up.battery_from_upower(device(state="2")) is None
+    assert heads_up.battery_from_upower(None) is None and heads_up.battery_from_upower({}) is None
+
+
+def test_the_readings_can_be_taken_on_a_worker_thread(qapp, tmp_path):
+    """As the app's Background takes them: the same answers on a thread of their own as on the screen's."""
+    import threading
+
+    from chatmon import heads_up
+
+    here = (heads_up.read_battery(), heads_up.read_disks([tmp_path]))
+    there, failed = [], []
+
+    def take():
+        try:
+            there.append((heads_up.read_battery(), heads_up.read_disks([tmp_path])))
+        except Exception as exc:  # reported below, with the thread's own error
+            failed.append(exc)
+
+    worker = threading.Thread(target=take)
+    worker.start()
+    worker.join(30)
+    assert not worker.is_alive() and failed == []
+    (battery, disks), = there
+    assert (battery is None) == (here[0] is None) and (battery is None or battery[1] == here[0][1])
+    assert [folder for folder, _ in disks] == [folder for folder, _ in here[1]] == [str(tmp_path)]
+
+
+UPOWER_CLIENT = r"""
+import sys, threading
+sys.path.insert(0, sys.argv[1])
+from PyQt6.QtCore import QCoreApplication
+app = QCoreApplication([])
+from chatmon import heads_up
+got = []
+worker = threading.Thread(target=lambda: got.append(heads_up.read_battery()))
+worker.start()
+worker.join(30)
+print("read", got, flush=True)
+"""
+
+
+def test_upower_is_asked_once_from_a_worker_thread(tmp_path):
+    """QtDBus from a thread like the app's Background's, against a pretend UPower: one GetAll call, and the
+    battery's reading."""
+    import private_bus
+
+    private_bus.needs_dbus_run_session()
+    out, asked = private_bus.as_system_bus(tmp_path, "fake_upower.py", ["42.5", "2", "true"], UPOWER_CLIENT)
+    assert "read [(42.5, False)]" in out, out
+    assert asked == [{"path": "DisplayDevice", "method": "GetAll", "interface": "org.freedesktop.UPower.Device"}]
