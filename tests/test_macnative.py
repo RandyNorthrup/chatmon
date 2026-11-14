@@ -165,3 +165,39 @@ def test_menu_text_is_as_macos_shows_it():
     assert macnative.menu_text("&Paste") == "Paste"
     assert macnative.menu_text("Save && quit") == "Save & quit"
     assert macnative.menu_text("Cu&t\tCtrl+X") == "Cut"
+
+
+def test_sleep_wake_displays_accessibility_and_low_power_are_heard(qapp):
+    """The notifications macOS posts, posted here as macOS would: each reaches its signal, and none once closed.
+    Needs no cocoa platform: NSWorkspace's notification center works without a window."""
+    import ctypes
+
+    from chatmon import macnative
+
+    rt = macnative._rt()
+    watcher = macnative.WorkspaceWatcher()
+    assert watcher.listening
+    heard = []
+    watcher.slept.connect(lambda on: heard.append(("slept", on)))
+    watcher.screens_slept.connect(lambda on: heard.append(("screens", on)))
+    watcher.accessibility_changed.connect(lambda: heard.append(("accessibility",)))
+    watcher.low_power_changed.connect(lambda on: heard.append(("low power", on)))
+    appkit = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
+    foundation = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/Foundation.framework/Foundation")
+    post = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(
+        ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value)  # postNotificationName:object:
+    workspace = rt.obj(rt.cls("NSWorkspace"), rt.sel("sharedWorkspace"))
+    centers = {True: rt.obj(workspace, rt.sel("notificationCenter")), False: rt.obj(rt.cls("NSNotificationCenter"), rt.sel("defaultCenter"))}
+
+    def post_all():
+        for _, name, on_workspace in macnative.WORKSPACE_EVENTS:
+            note = ctypes.c_void_p.in_dll(appkit if on_workspace else foundation, name).value
+            post(centers[on_workspace], rt.sel("postNotificationName:object:"), note, workspace if on_workspace else None)
+
+    post_all()
+    low_power = macnative.low_power_mode()
+    assert low_power in (True, False)  # macOS 12 and later, as every runner is
+    assert heard == [("slept", True), ("slept", False), ("screens", True), ("screens", False), ("accessibility",), ("low power", low_power)]
+    watcher.close()
+    post_all()
+    assert len(heard) == 6 and not watcher.listening

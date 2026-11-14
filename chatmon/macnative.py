@@ -12,6 +12,8 @@
 - Starting at login as a login item of its own (SMAppService), not an unattributed LaunchAgent.
 - Pasting that macOS counts as yours: Cmd+V through an Edit menu of its own, and the ask box's menus as native
   ones, so its pasteboard privacy doesn't ask whether Chatmon may paste what you just asked it to.
+- Hearing the computer sleep and wake, the displays sleep and wake, the accessibility display options change, and
+  Low Power Mode come and go (WorkspaceWatcher), as the other platforms hear theirs.
 """
 
 from __future__ import annotations
@@ -21,6 +23,8 @@ import ctypes.util
 import os
 import re
 from typing import Callable, NamedTuple
+
+from PyQt6.QtCore import QObject, pyqtSignal
 
 # NSWindowCollectionBehavior
 CAN_JOIN_ALL_SPACES = 1 << 0
@@ -454,3 +458,141 @@ def popup(menu, pos, opener) -> bool:
         if view and rt.responds(view, rt.sel("respondsToSelector:"), rt.sel("resetMouseButtons")):
             rt.obj(view, rt.sel("resetMouseButtons"))
     return True
+
+
+# -- What macOS says as it happens: the computer and its displays sleeping and waking (NSWorkspace's own
+#    notification center), the accessibility display options changing (reduce motion, increase contrast), and Low
+#    Power Mode (NSProcessInfo, on the default center), heard by an Objective-C class of Chatmon's own.
+#    https://developer.apple.com/documentation/appkit/nsworkspace/willsleepnotification
+#    https://developer.apple.com/documentation/foundation/processinfo/powerstatedidchangenotification
+
+# (the observer's selector, the notification, whether it's on NSWorkspace's center rather than the default one)
+WORKSPACE_EVENTS = (
+    ("willSleep:", "NSWorkspaceWillSleepNotification", True),
+    ("didWake:", "NSWorkspaceDidWakeNotification", True),
+    ("screensDidSleep:", "NSWorkspaceScreensDidSleepNotification", True),
+    ("screensDidWake:", "NSWorkspaceScreensDidWakeNotification", True),
+    ("displayOptionsDidChange:", "NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification", True),
+    ("powerStateDidChange:", "NSProcessInfoPowerStateDidChangeNotification", False),
+)
+_Notified = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)  # -(void)name:(NSNotification *)n
+
+
+def low_power_mode() -> bool | None:
+    """Whether Low Power Mode is on (macOS 12 and later); None where it can't be asked."""
+    rt = _rt()
+    if rt is None:
+        return None
+    info = rt.obj(rt.cls("NSProcessInfo"), rt.sel("processInfo"))
+    if not info or not rt.responds(info, rt.sel("respondsToSelector:"), rt.sel("isLowPowerModeEnabled")):
+        return None
+    flag = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value)
+    return bool(flag(info, rt.sel("isLowPowerModeEnabled")))
+
+
+class _Observers:
+    """The class ChatmonWorkspaceObserver, made once: a method for each notification, which tells the
+    WorkspaceWatcher whose observer it is."""
+
+    def __init__(self, rt: _ObjC):
+        lib = rt.lib
+        lib.objc_allocateClassPair.restype = ctypes.c_void_p
+        lib.objc_allocateClassPair.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_size_t]
+        lib.class_addMethod.restype = ctypes.c_bool
+        lib.class_addMethod.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p]
+        lib.objc_registerClassPair.argtypes = [ctypes.c_void_p]
+        self.watchers: dict[int, WorkspaceWatcher] = {}  # observer: whose
+        # kept: the class calls them
+        self._methods = {selector: _Notified(self._heard(selector)) for selector, _, _ in WORKSPACE_EVENTS}
+        cls = lib.objc_allocateClassPair(rt.cls("NSObject"), b"ChatmonWorkspaceObserver", 0)
+        if not cls:
+            raise OSError("ChatmonWorkspaceObserver exists already")
+        for selector, method in self._methods.items():
+            lib.class_addMethod(cls, rt.sel(selector), ctypes.cast(method, ctypes.c_void_p), b"v@:@")
+        lib.objc_registerClassPair(cls)
+        self.cls = cls
+
+    def _heard(self, selector: str):
+        def heard(me, cmd, notification) -> None:
+            watcher = self.watchers.get(me)
+            if watcher is not None:
+                watcher.deliver(selector)
+
+        return heard
+
+
+_observers_made: _Observers | None = None
+
+
+def _observers() -> _Observers | None:
+    global _observers_made
+    if _observers_made is None:
+        rt = _rt()
+        try:
+            _observers_made = _Observers(rt) if rt else None
+        except (AttributeError, OSError):
+            return None
+    return _observers_made
+
+
+class WorkspaceWatcher(QObject):
+    """macOS's word on the computer sleeping (`slept(True)`) and waking (`slept(False)`), the displays sleeping
+    and waking (`screens_slept`), the accessibility display options changing (`accessibility_changed`: read
+    reduced motion and high contrast again) and Low Power Mode (`low_power_changed`). Some come on other threads
+    (the power state does); a signal reaches its receiver on the receiver's own. `listening` is False where
+    there's no AppKit to ask."""
+
+    slept = pyqtSignal(bool)
+    screens_slept = pyqtSignal(bool)
+    accessibility_changed = pyqtSignal()
+    low_power_changed = pyqtSignal(bool)
+
+    def __init__(self):
+        super().__init__()
+        self.listening = False
+        self._observer = 0
+        self._centers: list[int] = []
+        rt, observers = _rt(), _observers()
+        if rt is None or observers is None:
+            return
+        try:
+            foundation = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/Foundation.framework/Foundation")
+            appkit = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
+            names = {name: ctypes.c_void_p.in_dll(appkit if on_workspace else foundation, name).value for _, name, on_workspace in WORKSPACE_EVENTS}
+        except (OSError, ValueError):
+            return
+        workspace = rt.obj(rt.cls("NSWorkspace"), rt.sel("sharedWorkspace"))
+        mine, default = rt.obj(workspace, rt.sel("notificationCenter")) if workspace else 0, rt.obj(rt.cls("NSNotificationCenter"), rt.sel("defaultCenter"))
+        if not mine or not default:
+            return
+        send = ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value
+        # addObserver:selector:name:object:
+        add = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)
+        self._observer = rt.obj(rt.obj(observers.cls, rt.sel("alloc")), rt.sel("init"))
+        observers.watchers[self._observer] = self
+        for selector, name, on_workspace in WORKSPACE_EVENTS:
+            add(mine if on_workspace else default, rt.sel("addObserver:selector:name:object:"), self._observer, rt.sel(selector), names[name], None)
+        self._centers = [mine, default]
+        self.listening = True
+
+    def deliver(self, selector: str) -> None:
+        """One of the notifications came, to this method of the observer."""
+        if selector in ("willSleep:", "didWake:"):
+            self.slept.emit(selector == "willSleep:")
+        elif selector in ("screensDidSleep:", "screensDidWake:"):
+            self.screens_slept.emit(selector == "screensDidSleep:")
+        elif selector == "displayOptionsDidChange:":
+            self.accessibility_changed.emit()
+        elif selector == "powerStateDidChange:":
+            self.low_power_changed.emit(bool(low_power_mode()))
+
+    def close(self) -> None:
+        rt, observers = _rt(), _observers()
+        if not self._observer or rt is None or observers is None:
+            return
+        remove = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value)
+        for center in self._centers:
+            remove(center, rt.sel("removeObserver:"), self._observer)
+        observers.watchers.pop(self._observer, None)
+        rt.obj(self._observer, rt.sel("release"))
+        self._observer, self._centers, self.listening = 0, [], False

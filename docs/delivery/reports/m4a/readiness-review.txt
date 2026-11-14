@@ -1,0 +1,55 @@
+M4A readiness review (requirements, not code), 2026-11-14
+Plan: docs/delivery/m4a-platform-awareness.md, scope_revision 1. Brief: docs/delivery/ASSESSMENT.md section M4A.
+Rules: docs/delivery/ROADMAP.md, pyproject.toml at 5346385.
+
+Method: each finding was traced in the source at 5346385 (presence.py, a11y.py, macnative.py, linuxsession.py,
+sysnotify.py, heads_up.py, portal.py, winlock.py, and their callers in app.py); the plan's criteria were then read
+against the brief's "Done when" lines, the roadmap's ownership table and rules, and each other.
+
+1. Coverage. Every item M4A-01..M4A-11 is a requirement with at least one criterion, and every criterion has one
+   owning task. Each brief "Done when" bullet maps to a criterion:
+   M4A-01 portal / GNOME / macOS -> AC-01a, AC-01b, AC-01c; M4A-02 -> AC-02; M4A-03 four notifications -> AC-03;
+   M4A-04 portal / Qt / WM_SETTINGCHANGE -> AC-04a, AC-04b, AC-04c; M4A-05 four servers -> AC-05;
+   M4A-06 macOS / UPower -> AC-06b, AC-06a; M4A-07 transient+replace, urgency 2, actions -> AC-07a, AC-07b;
+   M4A-08 held or spoken -> AC-08; M4A-09 UIA with notification fallback -> AC-09a, AC-09b; M4A-10 -> AC-10;
+   M4A-11 -> AC-11.
+
+2. Findings that differ from the brief (recorded in the plan, not "fixed"):
+   - M4A-09: QAccessibleAnnouncementEvent is not in PyQt6 (6.11.0 Windows, 6.12.1 Linux checked with dir() over
+     every PyQt6 module: only QAccessibilityHints exists). The brief's preferred path can't be taken; no code is
+     written for it. UiaRaiseNotificationEvent is the Windows path. Its delivery conditions were probed with a
+     comtypes UIA client in this session (scratchpad probes, not product code): delivered only from a provider the
+     window hands out for WM_GETOBJECT, ServerSideProvider without UseComThreading, IsControlElement true, from a
+     shown window; dropped silently otherwise. The client itself was validated against Calculator's
+     "Display is 7" notifications.
+   - M4A-02: quiet() stays system-wide on Linux, matching Windows (SHQueryUserNotificationState is system-wide);
+     covered() becomes per screen, matching _win_covered. The brief names covered() only.
+   - M4A-10: already thread-safe in principle (QtDBus connections are usable from any thread); the deliverable is
+     one GetAll call and a test on a worker thread, which M0-06's Background then uses.
+
+3. Conflicts and cross-milestone contracts.
+   - M0-06 moves the battery and disk reads into Background (app.py). AC-10 makes that safe; no overlap in files.
+   - M7-11 wires these APIs into app.py; every new API goes in the plan's Integration notes.
+   - Urgency 2 (critical) shows through GNOME's Do Not Disturb. The brief asks for it on held alerts; the
+     notifier takes urgency as a parameter, defaulting to critical for alert(), and M7 decides per reason.
+     Recorded as an integration note.
+   - Power saving while on battery (M4A-06) is the brief's choice; the stage only draws fewer frames then.
+
+4. Failure behavior is specified for each source: no session or system bus, a service that isn't running (never
+   started: NoAutoStart), an older portal without ReadOne (Read instead), a server without the actions capability
+   (it ignores them, per the notification spec), Windows before 1709 or the offscreen platform (no UIA: the
+   fallback), no AppKit (watchers not listening, readings None). Readings say None or False, never raise.
+
+5. Testability. Criteria for Linux- and macOS-only behavior have Windows-runnable checks on the platform-neutral
+   part (D-Bus messages built and parsed with real QtDBus objects, the dispatch tables, the decision functions),
+   which the red drills use; the end-to-end parts run in WSL (Linux) and CI (Linux, macOS). macOS end-to-end
+   verification is a pending CI operation.
+
+6. Ownership. Every change path is a file M4A owns (ROADMAP "File ownership in wave 1") or a new test file.
+   test_windows.py is M6A's, so winlock tests go in a new tests/test_winlock.py.
+
+7. Terminology. "Read-aloud notification" = the fallback that a screen reader reads; "held alert" = the
+   notification sent while an alert waits under a full-screen app; "in front" = the foreground window belongs to
+   Chatmon's process (Windows) or the app is active (macOS).
+
+Result: ready. No material owner decision is open; the urgency-through-DND question is M7's per-reason call.

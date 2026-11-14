@@ -2,6 +2,9 @@
 
 Each check tells you once, not every minute: a battery warning once per level
 until you plug in, a full disk once a day, waiting updates once a day.
+
+The battery and disk readings may take a moment (a D-Bus call, a disk that's slow to answer), and are safe to
+take on any thread: nothing in them belongs to the screen's.
 """
 
 from __future__ import annotations
@@ -47,8 +50,11 @@ def read_battery() -> tuple[float, bool] | None:
     return None
 
 
+DISCHARGING_STATES = (2, 6)  # UPower.Device State: discharging, pending discharge
+
+
 def upower_battery() -> tuple[float, bool] | None:
-    """UPower's DisplayDevice: its batteries combined, weighted by what each holds.
+    """UPower's DisplayDevice: its batteries combined, weighted by what each holds, in one call (GetAll).
     https://upower.freedesktop.org/docs/UPower.html#UPower.GetDisplayDevice"""
     try:
         from PyQt6.QtDBus import QDBusConnection
@@ -56,20 +62,27 @@ def upower_battery() -> tuple[float, bool] | None:
         from .presence import _dbus_call
     except ImportError:
         return None
-    bus = QDBusConnection.systemBus()
+    bus = QDBusConnection.systemBus()  # a connection QtDBus shares between threads
     if not bus.isConnected():
         return None
+    return battery_from_upower(_dbus_call(bus, UPOWER, DISPLAY_DEVICE, "org.freedesktop.DBus.Properties", "GetAll", "org.freedesktop.UPower.Device"))
 
-    def get(path: str, interface: str, name: str):
-        return _dbus_call(bus, UPOWER, path, "org.freedesktop.DBus.Properties", "Get", interface, name)
 
-    if not get(DISPLAY_DEVICE, "org.freedesktop.UPower.Device", "IsPresent"):  # no battery, or no UPower
+def battery_from_upower(properties) -> tuple[float, bool] | None:
+    """(percent, plugged in) from the DisplayDevice's properties; None without a battery (or UPower). Plugged in
+    unless the batteries are discharging: plugged into a charger too weak to keep up counts as running down."""
+    if not isinstance(properties, dict):
         return None
-    percent = get(DISPLAY_DEVICE, "org.freedesktop.UPower.Device", "Percentage")
-    on_battery = get("/org/freedesktop/UPower", UPOWER, "OnBattery")
-    if not isinstance(percent, (int, float)) or on_battery is None:
+    present, percent, state = (_unwrapped(properties.get(name)) for name in ("IsPresent", "Percentage", "State"))
+    if present is not True or isinstance(percent, bool) or not isinstance(percent, (int, float)) or not isinstance(state, int):
         return None
-    return float(percent), not bool(on_battery)
+    return float(percent), state not in DISCHARGING_STATES
+
+
+def _unwrapped(value):
+    while hasattr(value, "variant"):
+        value = value.variant()
+    return value
 
 
 def sysfs_battery(base: Path = POWER_SUPPLY) -> tuple[float, bool] | None:

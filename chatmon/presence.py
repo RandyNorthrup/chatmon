@@ -6,11 +6,15 @@
 - Whether to hold bubbles back: a full-screen app or a presentation (Windows SHQueryUserNotificationState,
   and a full-screen window in front on the chatmon's monitor; on macOS, a full-screen app over the chatmon's
   screen, from CoreGraphics' window list in macnative.py), quiet hours, Windows 11's Focus (winfocus.py), or
-  Do Not Disturb (KDE's notification server, GNOME's show-banners). On the Wayland overlay and on macOS the
-  system itself keeps the chatmon out of a full-screen app's way.
-- Reduced motion and high contrast, which the chatmon follows unless you chose otherwise.
+  Do Not Disturb (the notification server's own: KDE's, dunst's, mako's, SwayNotificationCenter's,
+  xfce4-notifyd's; GNOME's show-banners). On the Wayland overlay and on macOS the system itself keeps the chatmon
+  out of a full-screen app's way.
+- Reduced motion and high contrast, which the chatmon follows unless you chose otherwise. On Linux: the desktop
+  portal's settings, then GNOME's, then Qt's (6.10 and later); on macOS, AppKit's; on Windows, its own.
 
-Every reading is best effort: one that can't be had says None (don't know), never raises.
+Every reading is best effort: one that can't be had says None (don't know), never raises. None of them waits on
+the screen's thread: on Linux they're kept up to date by listeners (linuxsession.py), and Desk says when the
+accessibility settings may have changed (settings_changed), so they needn't be asked again and again.
 """
 
 from __future__ import annotations
@@ -22,7 +26,7 @@ import shutil
 import sys
 import time
 
-from PyQt6.QtCore import QObject, QProcess
+from PyQt6.QtCore import QObject, QProcess, pyqtSignal, pyqtSlot
 
 AWAY_AFTER = 300  # seconds without input: away from the desk
 
@@ -96,6 +100,10 @@ def _win_covered(stage_window: int) -> bool:
 
 
 _SPI_GETHIGHCONTRAST, _SPI_GETCLIENTAREAANIMATION, _SPI_GETMESSAGEDURATION = 0x42, 0x1042, 0x2016
+# What WM_SETTINGCHANGE says changed (its wParam): the settings above, and the screen reader flag, which NVDA,
+# JAWS and others set as they start and clear as they stop.
+SPI_SETHIGHCONTRAST, SPI_SETCLIENTAREAANIMATION, SPI_SETMESSAGEDURATION, SPI_SETSCREENREADER = 0x43, 0x1043, 0x2017, 0x47
+ACCESSIBILITY_SETTINGS = (SPI_SETHIGHCONTRAST, SPI_SETCLIENTAREAANIMATION, SPI_SETMESSAGEDURATION)
 
 
 def _win_setting(action: int) -> int | None:
@@ -135,7 +143,16 @@ def _mac_idle() -> float | None:
 
 
 def _mac_reduce_motion() -> bool | None:
-    """NSWorkspace.sharedWorkspace.accessibilityDisplayShouldReduceMotion."""
+    return _mac_workspace_flag(b"accessibilityDisplayShouldReduceMotion")
+
+
+def _mac_increase_contrast() -> bool | None:
+    return _mac_workspace_flag(b"accessibilityDisplayShouldIncreaseContrast")
+
+
+def _mac_workspace_flag(name: bytes) -> bool | None:
+    """One of NSWorkspace.sharedWorkspace's accessibility display options (System Settings › Accessibility ›
+    Display), or None where it can't be read."""
     try:
         objc = ctypes.cdll.LoadLibrary(ctypes.util.find_library("objc") or "/usr/lib/libobjc.dylib")
         ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
@@ -149,7 +166,7 @@ def _mac_reduce_motion() -> bool | None:
         workspace = obj(objc.objc_getClass(b"NSWorkspace"), objc.sel_registerName(b"sharedWorkspace"))
         if not workspace:
             return None
-        return bool(flag(workspace, objc.sel_registerName(b"accessibilityDisplayShouldReduceMotion")))
+        return bool(flag(workspace, objc.sel_registerName(name)))
     except (AttributeError, OSError, ValueError):
         return None
 
@@ -212,6 +229,10 @@ class _X11:
                 ctypes.POINTER(ctypes.c_ulong), ctypes.POINTER(ctypes.c_void_p),
             ]
             self.x11.XFree.argtypes = [ctypes.c_void_p]
+            uint, i = ctypes.POINTER(ctypes.c_uint), ctypes.POINTER(ctypes.c_int)
+            self.x11.XGetGeometry.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(ctypes.c_ulong), i, i, uint, uint, uint, uint]
+            self.x11.XTranslateCoordinates.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.c_ulong, ctypes.c_int, ctypes.c_int, i, i,
+                                                       ctypes.POINTER(ctypes.c_ulong)]
             self.display = self.x11.XOpenDisplay(None)
             if not self.display:
                 return
@@ -246,63 +267,165 @@ class _X11:
             return None
         return self.info.contents.idle / 1000.0
 
-    def fullscreen_in_front(self) -> bool:
+    def fullscreen_window(self) -> int:
+        """The window in front, if it's full screen; else 0."""
         if not self.ok:
-            return False
+            return 0
         active = self._longs(self.root, "_NET_ACTIVE_WINDOW")
-        return bool(active and active[0]) and self.atoms["_NET_WM_STATE_FULLSCREEN"] in self._longs(active[0], "_NET_WM_STATE")
+        if active and active[0] and self.atoms["_NET_WM_STATE_FULLSCREEN"] in self._longs(active[0], "_NET_WM_STATE"):
+            return active[0]
+        return 0
+
+    def rect(self, window: int) -> tuple[int, int, int, int] | None:
+        """Where a window is on the whole X screen: (x, y, width, height), or None if it can't be told."""
+        root, x, y = ctypes.c_ulong(), ctypes.c_int(), ctypes.c_int()
+        width, height, border, depth = ctypes.c_uint(), ctypes.c_uint(), ctypes.c_uint(), ctypes.c_uint()
+        if not self.x11.XGetGeometry(self.display, window, ctypes.byref(root), ctypes.byref(x), ctypes.byref(y), ctypes.byref(width),
+                                     ctypes.byref(height), ctypes.byref(border), ctypes.byref(depth)):
+            return None
+        child = ctypes.c_ulong()
+        if not self.x11.XTranslateCoordinates(self.display, window, self.root, 0, 0, ctypes.byref(x), ctypes.byref(y), ctypes.byref(child)):
+            return None
+        return x.value, y.value, width.value, height.value
+
+
+def covers(full: tuple[int, int, int, int], stage: tuple[int, int, int, int]) -> bool:
+    """Whether a full-screen window (x, y, width, height) is on the stage's screen. The stage spans its whole
+    screen, so its middle is that screen's: the full-screen window covers it there, or is on another monitor."""
+    fx, fy, fw, fh = full
+    sx, sy, sw, sh = stage
+    mx, my = sx + sw / 2, sy + sh / 2
+    return fx <= mx < fx + fw and fy <= my < fy + fh
 
 
 class _GSetting(QObject):
     """A GNOME setting, kept up to date by `gsettings monitor` (which says each change as it happens), read at
-    once from here: never a wait on the screen's thread."""
+    once from here: never a wait on the screen's thread. `changed` is emitted when it's first known and whenever it
+    changes."""
 
-    def __init__(self, schema: str, key: str):
-        super().__init__()
+    changed = pyqtSignal()
+
+    def __init__(self, schema: str, key: str, parent: QObject | None = None):
+        super().__init__(parent)
         self.value: str | None = None
         self._key = key
+        self._first: QProcess | None = None
+        self._monitor: QProcess | None = None
         if not shutil.which("gsettings"):
             return
-        first = QProcess(self)
-        first.finished.connect(lambda *_: self._set(bytes(first.readAllStandardOutput()).decode(errors="replace")))
-        first.start("gsettings", ["get", schema, key])
+        self._first = QProcess(self)
+        self._first.finished.connect(self._read_first)
+        self._first.start("gsettings", ["get", schema, key])
         self._monitor = QProcess(self)
-        self._monitor.readyReadStandardOutput.connect(self._changed)
+        self._monitor.readyReadStandardOutput.connect(self._heard)
         self._monitor.start("gsettings", ["monitor", schema, key])
+
+    @pyqtSlot()
+    def _read_first(self) -> None:
+        self._set(bytes(self._first.readAllStandardOutput()).decode(errors="replace"))
 
     def _set(self, text: str) -> None:
         text = text.strip()
-        if text:
+        if text and text != self.value:
             self.value = text
+            self.changed.emit()
 
-    def _changed(self) -> None:
+    @pyqtSlot()
+    def _heard(self) -> None:
         for line in bytes(self._monitor.readAllStandardOutput()).decode(errors="replace").splitlines():
             name, _, value = line.partition(":")
             if name.strip() == self._key:
                 self._set(value)
 
     def close(self) -> None:
-        if getattr(self, "_monitor", None) is not None:
-            self._monitor.kill()
-            self._monitor.waitForFinished(500)
+        """Stop both commands, and hear nothing more from them: a command still running is ended as it's
+        deleted, and what it said then must not reach a setting that's going."""
+        for process in (self._first, self._monitor):
+            if process is None:
+                continue
+            for signal in (process.finished, process.readyReadStandardOutput):
+                try:
+                    signal.disconnect()
+                except TypeError:  # nothing connected to it
+                    pass
+            process.kill()
+            process.waitForFinished(500)
 
 
-class Desk:
-    """Readings of the person at the computer and their desktop's settings. One per app."""
+class Desk(QObject):
+    """Readings of the person at the computer and their desktop's settings. One per app.
+
+    `settings_changed` says reduced motion or high contrast may have changed (read them again): from the portal's
+    SettingChanged and GNOME's settings on Linux, Qt's contrastPreferenceChanged (Qt 6.10 and later), and Windows'
+    WM_SETTINGCHANGE, which winlock.LockWatcher hears and passes to `windows_setting_changed`.
+    `screen_reader_changed` says a screen reader started or stopped (Windows says so for NVDA, JAWS and others)."""
+
+    settings_changed = pyqtSignal()
+    screen_reader_changed = pyqtSignal()
 
     def __init__(self, platform: str = ""):
+        super().__init__()
         self.platform = platform  # Qt's platform name: "xcb", "wayland", "windows", "cocoa"...
         self.overlay_idle_since: float | None = None  # told by the Wayland overlay (ext-idle-notify-v1)
         self._x11: _X11 | None = None
         self._desktop = (os.environ.get("XDG_CURRENT_DESKTOP") or "").lower()
         self._gnome: dict[str, _GSetting] = {}
         self._focus = None  # Windows 11's Focus, asked on a thread of its own (winfocus.Focus)
+        # The listeners belong to the Desk (they go with it) and say changes with Qt signals: nothing they hear later
+        # reaches a Desk that's gone.
+        self._portal = None  # linuxsession.PortalSettings, from the first reading on; False: no D-Bus here
+        self._dnd = None  # linuxsession.NotificationDnd, likewise
+        self._watch_qt_contrast()
+
+    def _watch_qt_contrast(self) -> None:
+        """Qt 6.10 and later say when the system's contrast preference changes, on every platform. PyQt6 6.11
+        wraps that signal as a method, so there the platforms' own signals alone say so (6.12 has it right)."""
+        try:
+            from PyQt6.QtGui import QGuiApplication
+
+            if QGuiApplication.instance() is None:
+                return
+            QGuiApplication.styleHints().accessibility().contrastPreferenceChanged.connect(self.settings_changed)
+        except (AttributeError, ImportError, RuntimeError, TypeError):
+            pass
+
+    def windows_setting_changed(self, action: int) -> None:
+        """Windows changed a system setting (WM_SETTINGCHANGE's wParam, from winlock.LockWatcher)."""
+        if action == SPI_SETSCREENREADER:
+            self.screen_reader_changed.emit()
+        elif action in ACCESSIBILITY_SETTINGS:
+            self.settings_changed.emit()
+
+    def _linux(self, kind: str):
+        """The D-Bus listener of that kind ("portal", "dnd"), started on first use; None without D-Bus."""
+        if sys.platform in ("win32", "darwin"):
+            return None
+        attr = "_" + kind
+        made = getattr(self, attr)
+        if made is None:
+            try:
+                from . import linuxsession
+            except ImportError:  # no QtDBus
+                made = False
+            else:
+                if kind == "portal":
+                    made = linuxsession.PortalSettings(self)
+                    made.changed.connect(self.settings_changed)
+                else:
+                    made = linuxsession.NotificationDnd(self)
+            setattr(self, attr, made)
+        return made or None
+
+    def _portal_flag(self, key: str) -> bool | None:
+        portal = self._linux("portal")
+        return portal.values.get(key) if portal is not None else None
 
     def _gsetting(self, schema: str, key: str) -> str | None:
         if "gnome" not in self._desktop or sys.platform in ("win32", "darwin"):
             return None
         if (schema, key) not in self._gnome:
-            self._gnome[(schema, key)] = _GSetting(schema, key)
+            setting = self._gnome[(schema, key)] = _GSetting(schema, key, self)
+            setting.changed.connect(self.settings_changed)
         return self._gnome[(schema, key)].value
 
     def close(self) -> None:
@@ -310,6 +433,8 @@ class Desk:
             setting.close()
         if self._focus is not None:
             self._focus.close()
+        if self._portal:
+            self._portal.close()
 
     def _win_focus(self) -> bool:
         """Windows 11's Focus is on, as of the last time its thread asked (a moment ago)."""
@@ -347,26 +472,28 @@ class Desk:
 
     def quiet(self, stage_window: int = 0) -> str | None:
         """Why bubbles should wait (a full-screen app, a presentation, Do Not Disturb), or None. `stage_window`
-        is the stage's native window, which macOS needs: its full-screen apps are on one screen at a time."""
+        is the stage's native window, which macOS needs: its full-screen apps are on one screen at a time. A
+        full-screen app on any monitor holds bubbles, as Windows' own notification state does."""
         if sys.platform == "win32":
             return _win_quiet() or ("Focus" if self._win_focus() else None)
         if sys.platform == "darwin":
             # A full-screen app has a Space of its own, which the chatmon stays out of: bubbles there go unseen.
             return "a full-screen app" if self.covered(stage_window) else None
-        if "kde" in self._desktop:
-            bus = _session_bus()
-            if bus and _dbus_call(bus, "org.freedesktop.Notifications", "/org/freedesktop/Notifications",
-                                  "org.freedesktop.DBus.Properties", "Get", "org.freedesktop.Notifications", "Inhibited") is True:
+        dnd = self._linux("dnd")
+        if dnd is not None:
+            dnd.refresh()  # the answer comes back in a moment, for next time
+            if dnd.state:
                 return "Do Not Disturb"
         if self._gsetting("org.gnome.desktop.notifications", "show-banners") == "false":
             return "Do Not Disturb"
         x = self._x()
-        if x and x.fullscreen_in_front():
+        if x and x.fullscreen_window():
             return "a full-screen app"
         return None
 
     def covered(self, stage_window: int) -> bool:
-        """Is a full-screen window in front, over the chatmon's own screen? Then it stays out of the way."""
+        """Is a full-screen window in front, over the chatmon's own screen? Then it stays out of the way. One on
+        another monitor doesn't count."""
         if sys.platform == "win32":
             return _win_covered(stage_window)
         if sys.platform == "darwin":
@@ -376,31 +503,34 @@ class Desk:
 
             return macnative.full_screen_over(stage_window)
         x = self._x()
-        return bool(x and x.fullscreen_in_front())
+        full = x.fullscreen_window() if x else 0
+        if not full:
+            return False
+        area, stage = x.rect(full), (x.rect(stage_window) if stage_window else None)
+        return covers(area, stage) if area and stage else True  # where the stage is can't be told: as before
 
     def reduce_motion(self) -> bool:
         if sys.platform == "win32":
             return _win_setting(_SPI_GETCLIENTAREAANIMATION) == 0
         if sys.platform == "darwin":
             return bool(_mac_reduce_motion())
-        bus = _session_bus()
-        portal = _dbus_call(bus, "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop", "org.freedesktop.portal.Settings",
-                            "ReadOne", "org.freedesktop.appearance", "reduced-motion") if bus else None
-        if isinstance(portal, int):
-            return portal == 1
+        portal = self._portal_flag("reduced-motion")
+        if portal is not None:
+            return portal
         return self._gsetting("org.gnome.desktop.interface", "enable-animations") == "false"
 
     def high_contrast(self) -> bool:
         if sys.platform == "win32":
             return bool(_win_high_contrast())
-        try:
-            from PyQt6.QtCore import Qt
-            from PyQt6.QtGui import QGuiApplication
-
-            hints = QGuiApplication.styleHints().accessibility()  # Qt 6.10 and later
-            return hints.contrastPreference() == Qt.ContrastPreference.HighContrast
-        except (AttributeError, ImportError, RuntimeError):
-            return False
+        if sys.platform == "darwin":
+            return bool(_mac_increase_contrast())
+        portal = self._portal_flag("contrast")
+        if portal is not None:
+            return portal
+        gnome = self._gsetting("org.gnome.desktop.a11y.interface", "high-contrast")
+        if gnome is not None:
+            return gnome == "true"
+        return _qt_high_contrast()
 
     def notice_seconds(self) -> float | None:
         """How long you've asked notifications to stay up (Windows' Accessibility setting); None if not set."""
@@ -408,3 +538,14 @@ class Desk:
             seconds = _win_setting(_SPI_GETMESSAGEDURATION)
             return float(seconds) if seconds else None
         return None
+
+
+def _qt_high_contrast() -> bool:
+    """Qt's own word (6.10 and later), from the platform's theme."""
+    try:
+        from PyQt6.QtCore import Qt
+        from PyQt6.QtGui import QGuiApplication
+
+        return QGuiApplication.styleHints().accessibility().contrastPreference() == Qt.ContrastPreference.HighContrast
+    except (AttributeError, ImportError, RuntimeError):
+        return False

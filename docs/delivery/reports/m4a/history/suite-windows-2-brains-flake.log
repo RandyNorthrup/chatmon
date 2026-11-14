@@ -1,0 +1,71 @@
+..s.s...............................s................................... [ 11%]
+...ssss.......................................................s......... [ 23%]
+........................................F............................... [ 34%]
+........................................................................ [ 46%]
+sss....ss.ssss...........s.....s......sssssssss......................... [ 57%]
+.....................................................................sss [ 69%]
+sssssssssss...s....s...ss.........................................ss.... [ 81%]
+............................................s.ss...sssssssssss.ssssssss. [ 92%]
+.................s..............s.......sssss                            [100%]
+================================== FAILURES ===================================
+________________ test_a_redirect_never_takes_the_key_anywhere _________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002CF39A77570>
+
+    def test_a_redirect_never_takes_the_key_anywhere(qapp):
+        """Plain HTTP is allowed to this computer only; a redirect from there must not carry the key on."""
+        import http.server
+        import threading
+    
+        from PyQt6.QtCore import QEventLoop, QTimer
+    
+        seen = []
+    
+        class Elsewhere(http.server.BaseHTTPRequestHandler):
+            def do_POST(self):
+                seen.append(self.headers.get("authorization"))
+                self.send_response(200)
+                self.end_headers()
+    
+            def log_message(self, *args):
+                pass
+    
+        elsewhere = http.server.HTTPServer(("127.0.0.1", 0), Elsewhere)
+    
+        class Redirect(http.server.BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.send_response(307)
+                self.send_header("Location", f"http://127.0.0.1:{elsewhere.server_port}/steal")
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+    
+            def log_message(self, *args):
+                pass
+    
+        local = http.server.HTTPServer(("127.0.0.1", 0), Redirect)
+        for server in (local, elsewhere):
+            threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            brain = Brain("local", "openai", url=f"http://127.0.0.1:{local.server_port}/v1", model="m", api_key="secret-key")
+            asker = brains.Asker()
+            result = []
+            loop = QEventLoop()
+            asker.answered.connect(lambda text: (result.append(("answer", text)), loop.quit()))
+            asker.failed.connect(lambda text: (result.append(("failed", text)), loop.quit()))
+            QTimer.singleShot(5000, loop.quit)
+            asker.ask(brain, "S", [], "q", 5.0)
+            loop.exec()
+>           assert result and result[0][0] == "failed" and "redirect" in result[0][1], result
+E           AssertionError: [('failed', ' took too long to answer.')]
+E           assert ([('failed', ' took too long to answer.')] and 'failed' == 'failed'
+E             
+E               failed and 'redirect' in ' took too long to answer.')
+
+tests\test_brains.py:315: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_brains.py::test_a_redirect_never_takes_the_key_anywhere - A...
+1 failed, 543 passed, 77 skipped in 120.21s (0:02:00)
+exit 1
+== re-run alone: the failure above timed out its 5-second local request while other workers' suites loaded this machine (test_brains is M1B's; nothing in it is M4A's)
+1 passed in 1.33s
+exit 0
