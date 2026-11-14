@@ -1,11 +1,13 @@
 """Your chats with your chatmon, kept on this computer so you can come back to one and carry on.
 
-Each chat is a JSON file of its own in Chatmon's state folder, readable by you alone. What's kept is the
-conversation: your questions (with the text of what you attached, so a brain can be asked about it later;
-pictures and PDFs by name only), the answers, the chat's own instructions, and a summary of its earlier part
-once it's longer than a brain is sent at once. Attached text goes again only to the brain it was first sent
-to. Nothing leaves your computer but what you ask a brain. "Keep chat history" off (the menu, or
-`[chats] keep = false`) keeps chats in memory only, and "Clear chat history" deletes them all.
+Each chat is a JSON file of its own, readable by you alone, in a folder that stays on this computer (on Windows,
+the local app-data folder, never the roaming one a domain copies to its server). What's kept is the conversation:
+your questions (with the text of what you attached, so a brain can be asked about it later; pictures and PDFs by
+name only), the answers and which brain gave them, the chat's own instructions, and a summary of its earlier part
+once it's longer than a brain is sent at once. Attached text goes again only to the brain it was first sent to,
+and a brain that can read your files is never handed another brain's answers. Nothing leaves your computer but
+what you ask a brain. "Keep chat history" off (the menu, or `[chats] keep = false`) keeps chats in memory only,
+and "Clear chat history" deletes them all.
 """
 
 from __future__ import annotations
@@ -14,13 +16,15 @@ import copy
 import json
 import os
 import re
+import shutil
+import sys
 import time
 import uuid
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from . import paths
-from .settings import private
+from .settings import private_dir, write_private
 
 MAX_FILE = 64 * 2**20  # bytes: a chat file bigger than this isn't read (it isn't one of ours)
 MAX_INSTRUCTIONS = 4000  # characters of a chat's own instructions
@@ -35,7 +39,8 @@ class Message:
     at: float = field(default_factory=time.time)
     sent: str = ""  # a question as the brain got it, with the text attached to it: only ever sent to that brain
     attached: list[str] = field(default_factory=list)  # names of what was attached
-    brain: str = ""  # who answered (an answer), or who was asked (a question)
+    brain: str = ""  # who answered (an answer), or who was asked (a question): the brain's label, as shown
+    by: str = ""  # the same brain's name (its key in [ai.brains]), which two brains never share; "" in older chats
 
 
 @dataclass
@@ -51,6 +56,8 @@ class Chat:
     instructions: str = ""  # yours, for this chat: sent with each question in it, before the ones for every chat
     summary: str = ""  # the conversation's earlier part, in short: what a brain gets in place of it (context.py)
     summarized: int = 0  # how many of the first (question, answer) pairs the summary stands for
+    summary_by: str = ""  # made for one brain that reads files, from its own answers alone (its name); "": from all
+    brain: str = ""  # the name of the brain that answered last: carrying the chat on asks it again
 
     def rename(self, title: str) -> None:
         self.title, self.named = title_for(title), True
@@ -74,22 +81,58 @@ class Chat:
         self.updated = message.at
         if not self.title and message.role == "user":
             self.title = title_for(message.text or ", ".join(message.attached))
+        if message.role == "assistant" and message.by:
+            self.brain = message.by
 
-    def history(self, brain: str = "") -> list[tuple[str, str]]:
-        """(question, answer) pairs, as `brain` is reminded of them: with the text attached to a question only
-        if that's the brain it went to, this run (nothing goes to a brain you didn't give it to); otherwise
-        what was attached, by name."""
+    def history(self, brain: str = "", *, name: str = "", own_only: bool = False, before: int | None = None) -> list[tuple[str, str]]:
+        """(question, answer) pairs, as the brain labelled `brain` (named `name`) is reminded of them: with the text
+        attached to a question only if that's the brain it went to (nothing goes to a brain you didn't give it to);
+        otherwise what was attached, by name.
+
+        `own_only`, for a brain that can read files on this computer: another brain's answer is left out (one could
+        carry an attached file's instructions to it), with a word in its place so the turns still count the same.
+        `before`: only the turns before that message (asking another brain the same question)."""
         out, question = [], None
-        for m in self.messages:
+        for m in self.messages[:before]:
             if m.role == "user":
-                if m.sent and brain and m.brain == brain:
+                if m.sent and _same(m, brain, name):
                     question = m.sent
                 else:
                     question = m.text + (f"\n\n(Attached then: {', '.join(m.attached)})" if m.attached else "")
             elif m.role == "assistant" and question is not None:
-                out.append((question, m.text))
+                out.append((question, m.text if not own_only or _same(m, brain, name) else OTHER_ANSWER))
                 question = None
         return out
+
+    def summary_for(self, name: str, own_only: bool = False) -> tuple[str, int]:
+        """(summary, pairs it stands for) to give the brain named `name`: none for a brain that reads files unless
+        it was made from that brain's own answers (history's `own_only`), as a summary of every brain's answers
+        could carry what one of them was told."""
+        if own_only and self.summary_by != name:
+            return "", 0
+        return self.summary, self.summarized
+
+    def set_summary(self, summary: str, covers: int, by: str = "") -> None:
+        """A new summary of the first `covers` pairs; `by`: the brain it was made for from its own answers alone."""
+        self.summary, self.summarized, self.summary_by = summary, covers, by
+
+    def last_question(self) -> tuple[int, Message] | None:
+        """The latest question in this chat and where it is, to ask another brain the same: send it (its `sent`
+        text only if you choose to give that brain what was attached) after `history(..., before=index)`."""
+        for i in range(len(self.messages) - 1, -1, -1):
+            if self.messages[i].role == "user":
+                return i, self.messages[i]
+        return None
+
+
+OTHER_ANSWER = "(Another AI answered this; its answer isn't passed on here.)"
+
+
+def _same(m: Message, label: str, name: str) -> bool:
+    """Is `m` from (or for) this brain? By name where the chat recorded one, else by label (older chats)."""
+    if m.by and name:
+        return m.by == name
+    return bool(label) and m.brain == label
 
 
 def title_for(text: str) -> str:
@@ -98,11 +141,44 @@ def title_for(text: str) -> str:
 
 
 def folder() -> Path:
-    path = paths.state_dir() / "chats"
-    path.mkdir(parents=True, exist_ok=True, mode=0o700)
-    if os.name == "posix":
-        os.chmod(path, 0o700)
-    return path
+    """Where chats are kept: made readable by you alone, with chats from where an older Chatmon kept them moved in."""
+    path = _home()
+    old = _roaming()
+    if old is not None and old.is_dir() and not path.exists():
+        _move(old, path)
+    return private_dir(path)
+
+
+def _home() -> Path:
+    if sys.platform != "win32":
+        return paths.state_dir() / "chats"  # Linux's XDG state folder and macOS's Application Support stay here
+    # Windows: the local app-data folder, which a roaming profile never copies to a server. It's always inside your
+    # profile; if it isn't (a profile moved for a test, say), the profile's own AppData\Local, not somebody else's.
+    profile = Path(os.environ.get("USERPROFILE") or Path.home())
+    local = Path(os.environ.get("LOCALAPPDATA") or profile / "AppData" / "Local")
+    if not local.is_relative_to(profile):
+        local = profile / "AppData" / "Local"
+    return local / paths.APP / "chats"
+
+
+def _roaming() -> Path | None:
+    """Where chats were kept before 0.10 on Windows: the roaming app-data folder."""
+    return paths.state_dir() / "chats" if sys.platform == "win32" else None
+
+
+def _move(old: Path, new: Path) -> None:
+    private_dir(new.parent)
+    try:
+        os.replace(old, new)  # the same disk: a rename
+        return
+    except OSError:
+        pass
+    private_dir(new)
+    for item in old.glob("*.json"):  # another disk (a redirected profile): one at a time
+        try:
+            shutil.move(str(item), str(new / item.name))
+        except OSError:
+            continue
 
 
 _LATEST = 4102444800.0  # 2100-01-01: any time past this in a file is nonsense
@@ -131,6 +207,7 @@ def _from_json(data: object) -> Chat | None:
                     Message(
                         m["role"], m["text"], _time(m.get("at")), sent if isinstance(sent, str) and m["role"] == "user" else "",
                         [n for n in names if isinstance(n, str)] if isinstance(names, list) else [], str(m.get("brain") or ""),
+                        str(m.get("by") or "")[:200],
                     )
                 )
         summarized = data.get("summarized")
@@ -140,6 +217,8 @@ def _from_json(data: object) -> Chat | None:
             instructions=str(data.get("instructions") or "")[:MAX_INSTRUCTIONS],
             summary=str(data.get("summary") or ""),
             summarized=summarized if isinstance(summarized, int) and not isinstance(summarized, bool) and summarized > 0 else 0,
+            summary_by=str(data.get("summary_by") or "")[:200],
+            brain=str(data.get("brain") or "")[:200],
         )
     except (TypeError, ValueError, OverflowError, AttributeError):
         return None
@@ -161,18 +240,18 @@ class ChatBook:
         return self.root() / f"{chat_id}.json"
 
     def save(self, chat: Chat) -> None:
-        if not chat.messages:
+        """Keep `chat` on this computer; a chat begun while history was off (`keep` off) is never written."""
+        if not chat.messages or not chat.keep:
             return
         path = self._file(chat.id)
-        tmp = path.with_suffix(".tmp")
         data = asdict(chat)
         data.pop("keep", None)
         for m in data["messages"]:
             if not m.get("sent") or m["sent"] == m["text"]:
                 m.pop("sent", None)  # nothing attached: the question is its text
-        tmp.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
-        private(tmp)
-        os.replace(tmp, path)
+            if not m.get("by"):
+                m.pop("by", None)
+        write_private(path, json.dumps(data, ensure_ascii=False))
 
     def load(self, chat_id: str) -> Chat | None:
         try:
@@ -210,17 +289,19 @@ class ChatBook:
             pass
 
     def clear(self) -> int:
-        """Delete every chat; how many went."""
+        """Delete every chat (where an older Chatmon kept them too); how many went."""
         gone = 0
-        try:
-            for path in self.root().glob("*.json"):
-                if _ID.fullmatch(path.stem):
+        old = _roaming() if self._root is None else None
+        for root in [self.root()] + ([old] if old is not None and old.is_dir() else []):
+            try:
+                for path in root.glob("*.json"):
+                    if _ID.fullmatch(path.stem):
+                        path.unlink(missing_ok=True)
+                        gone += 1
+                for path in root.glob("*.tmp"):
                     path.unlink(missing_ok=True)
-                    gone += 1
-            for path in self.root().glob("*.tmp"):
-                path.unlink(missing_ok=True)
-        except OSError:
-            pass
+            except OSError:
+                pass
         return gone
 
 
