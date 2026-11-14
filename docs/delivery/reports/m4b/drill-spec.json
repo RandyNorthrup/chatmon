@@ -1,0 +1,446 @@
+{
+  "drills": [
+    {
+      "id": "D-01A-alone",
+      "requirement": "AC-01A",
+      "file": "chatmon/hotkey.py",
+      "find": "and key not in ALONE:",
+      "replace": "and key in ALONE:",
+      "test": [
+        "tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why"
+      ],
+      "expect": [
+        "test_what_isnt_a_shortcut_says_why"
+      ]
+    },
+    {
+      "id": "D-01A-order",
+      "requirement": "AC-01A",
+      "file": "chatmon/hotkey.py",
+      "find": "[MODIFIER_NAMES[m] for m in MODIFIERS if m in self.modifiers]",
+      "replace": "[MODIFIER_NAMES[m] for m in sorted(self.modifiers)]",
+      "test": [
+        "tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it"
+      ],
+      "expect": [
+        "test_a_shortcut_is_read_as_qt_writes_it"
+      ]
+    },
+    {
+      "id": "D-01B-message-only",
+      "requirement": "AC-01B",
+      "file": "chatmon/hotkey.py",
+      "find": "HWND_MESSAGE = -3",
+      "replace": "HWND_MESSAGE = 0",
+      "test": [
+        "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ],
+      "expect": [
+        "test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ]
+    },
+    {
+      "id": "D-01B-filter",
+      "requirement": "AC-01B",
+      "file": "chatmon/hotkey.py",
+      "find": "msg.message == self.WM_HOTKEY",
+      "replace": "msg.message == self.WM_HOTKEY + 1",
+      "test": [
+        "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ],
+      "expect": [
+        "test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ]
+    },
+    {
+      "id": "D-01B-its-own-id",
+      "requirement": "AC-01B",
+      "file": "chatmon/hotkey.py",
+      "find": "msg.wParam == self.id",
+      "replace": "msg.wParam >= self.id",
+      "test": [
+        "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ],
+      "expect": [
+        "assert [True, True] == [True]"
+      ]
+    },
+    {
+      "id": "D-01B-given-back",
+      "requirement": "AC-01B",
+      "file": "chatmon/hotkey.py",
+      "find": "            self._user32.UnregisterHotKey(self.hwnd, self.id)\n",
+      "replace": "            pass\n",
+      "test": [
+        "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ],
+      "expect": [
+        "test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ]
+    },
+    {
+      "id": "D-01C-conflict",
+      "requirement": "AC-01C",
+      "file": "chatmon/hotkey.py",
+      "find": "if error == self.ERROR_HOTKEY_ALREADY_REGISTERED:",
+      "replace": "if error != self.ERROR_HOTKEY_ALREADY_REGISTERED:",
+      "test": [
+        "tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had"
+      ],
+      "expect": [
+        "wouldn't set up Ctrl+Alt+Shift+F23"
+      ]
+    },
+    {
+      "id": "D-01C-keeps-old",
+      "requirement": "AC-01C",
+      "file": "chatmon/hotkey.py",
+      "find": "        new_id = 2 if self.id == 1 else 1  # the old one stays until the new one is in\n",
+      "replace": "        self.release()\n        new_id = 2 if self.id == 1 else 1\n",
+      "test": [
+        "tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had"
+      ],
+      "expect": [
+        "test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had"
+      ]
+    },
+    {
+      "id": "D-01F-trigger",
+      "requirement": "AC-01F",
+      "file": "chatmon/shortcutportal.py",
+      "find": "[KEYS[combo.key].x11]",
+      "replace": "[combo.key]",
+      "test": [
+        "tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format"
+      ],
+      "expect": [
+        "CTRL+ALT+Space"
+      ]
+    },
+    {
+      "id": "D-02A-volume",
+      "requirement": "AC-02A",
+      "file": "chatmon/sound.py",
+      "find": "        effect.setVolume(volume)\n",
+      "replace": "        effect.setVolume(1.0)\n",
+      "test": [
+        "tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting"
+      ],
+      "expect": [
+        "test_qsoundeffect_plays_it_without_waiting"
+      ]
+    },
+    {
+      "id": "D-02A-plays",
+      "requirement": "AC-02A",
+      "file": "chatmon/sound.py",
+      "find": "        effect.play()\n",
+      "replace": "        effect.stop()\n",
+      "test": [
+        "tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting"
+      ],
+      "expect": [
+        "never played"
+      ]
+    },
+    {
+      "id": "D-02B-quiet",
+      "requirement": "AC-02B",
+      "file": "chatmon/sound.py",
+      "find": "if self._quiet is not None and self._quiet():",
+      "replace": "if self._quiet is not None and not self._quiet():",
+      "test": [
+        "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+      ],
+      "expect": [
+        "test_nothing_sounds_when_it_shouldnt"
+      ]
+    },
+    {
+      "id": "D-02B-one-switch",
+      "requirement": "AC-02B",
+      "file": "chatmon/sound.py",
+      "find": "if not (self.enabled and self.cues[cue] and self.volume > 0):",
+      "replace": "if not (self.cues[cue] and self.volume > 0):",
+      "test": [
+        "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+      ],
+      "expect": [
+        "test_nothing_sounds_when_it_shouldnt"
+      ]
+    },
+    {
+      "id": "D-02B-cue-off",
+      "requirement": "AC-02B",
+      "file": "chatmon/sound.py",
+      "find": "if not (self.enabled and self.cues[cue] and self.volume > 0):",
+      "replace": "if not (self.enabled and self.volume > 0):",
+      "test": [
+        "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+      ],
+      "expect": [
+        "test_nothing_sounds_when_it_shouldnt"
+      ]
+    },
+    {
+      "id": "D-02C-defaults",
+      "requirement": "AC-02C",
+      "file": "chatmon/sound.py",
+      "find": "ON_BY_DEFAULT = frozenset({\"needs-you\", \"reminder\", \"focus-done\"})",
+      "replace": "ON_BY_DEFAULT = frozenset({\"needs-you\", \"reminder\", \"focus-done\", \"pop\"})",
+      "test": [
+        "tests/test_sound.py::test_only_the_alerts_sound_until_you_turn_the_others_on"
+      ],
+      "expect": [
+        "test_only_the_alerts_sound_until_you_turn_the_others_on"
+      ]
+    },
+    {
+      "id": "D-02D-own-thread",
+      "requirement": "AC-02D",
+      "file": "chatmon/sound.py",
+      "find": "        self._queue.put(data)\n        return True\n",
+      "replace": "        import winsound\n        winsound.PlaySound(data, winsound.SND_MEMORY | winsound.SND_NODEFAULT)\n        return True\n",
+      "test": [
+        "tests/test_sound.py::test_playsound_plays_on_its_own_thread"
+      ],
+      "expect": [
+        "test_playsound_plays_on_its_own_thread"
+      ]
+    },
+    {
+      "id": "D-02A-stopped-at-exit",
+      "requirement": "AC-02A",
+      "file": "chatmon/sound.py",
+      "find": "        atexit.register(self.close)\n",
+      "replace": "",
+      "test": [
+        "tests/test_sound.py::test_quitting_while_a_sound_plays_ends_cleanly"
+      ],
+      "expect": [
+        "test_quitting_while_a_sound_plays_ends_cleanly"
+      ]
+    },
+    {
+      "id": "D-02D-scaled",
+      "requirement": "AC-02D",
+      "file": "chatmon/sound.py",
+      "find": "(round(v * volume) for v in values)",
+      "replace": "(round(v) for v in values)",
+      "test": [
+        "tests/test_sound.py::test_samples_are_scaled_for_the_volume"
+      ],
+      "expect": [
+        "test_samples_are_scaled_for_the_volume"
+      ]
+    },
+    {
+      "id": "D-02D-without-qt",
+      "requirement": "AC-02D",
+      "file": "chatmon/sound.py",
+      "find": "except ImportError:  # QtMultimedia not installed (a distribution's PyQt6 without it)\n            return False",
+      "replace": "except ImportError:  # QtMultimedia not installed (a distribution's PyQt6 without it)\n            return True",
+      "test": [
+        "tests/test_sound.py::test_without_qtmultimedia_the_systems_own_player_is_used"
+      ],
+      "expect": [
+        "test_without_qtmultimedia_the_systems_own_player_is_used"
+      ]
+    },
+    {
+      "id": "D-03A-escaped",
+      "requirement": "AC-03A",
+      "file": "chatmon/wintoast.py",
+      "find": "return ET.tostring(toast, encoding=\"unicode\")",
+      "replace": "return ET.tostring(toast, encoding=\"unicode\").replace(\"&lt;\", \"<\").replace(\"&gt;\", \">\")",
+      "test": [
+        "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+      ],
+      "expect": [
+        "test_text_from_an_agent_is_text_never_markup"
+      ]
+    },
+    {
+      "id": "D-03A-control-chars",
+      "requirement": "AC-03A",
+      "file": "chatmon/wintoast.py",
+      "find": "return NOT_XML.sub(\"\", str(text))",
+      "replace": "return str(text)",
+      "test": [
+        "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+      ],
+      "expect": [
+        "test_text_from_an_agent_is_text_never_markup"
+      ]
+    },
+    {
+      "id": "D-03A-reminder-button",
+      "requirement": "AC-03A",
+      "file": "chatmon/wintoast.py",
+      "find": "        if not buttons:  # Windows' own Dismiss, so the scenario holds",
+      "replace": "        if False:",
+      "test": [
+        "tests/test_wintoast.py::test_a_reminder_stays_until_answered"
+      ],
+      "expect": [
+        "test_a_reminder_stays_until_answered"
+      ]
+    },
+    {
+      "id": "D-03A-five-buttons",
+      "requirement": "AC-03A",
+      "file": "chatmon/wintoast.py",
+      "find": "if len(buttons) > MAX_BUTTONS:",
+      "replace": "if len(buttons) >= MAX_BUTTONS:",
+      "test": [
+        "tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused"
+      ],
+      "expect": [
+        "test_too_many_buttons_or_an_unknown_scenario_is_refused"
+      ]
+    },
+    {
+      "id": "D-03B-setting",
+      "requirement": "AC-03B",
+      "file": "chatmon/wintoast.py",
+      "find": "        if setting != ENABLED:\n",
+      "replace": "        if setting == OFF_BY_POLICY:\n",
+      "test": [
+        "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ],
+      "expect": [
+        "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ]
+    },
+    {
+      "id": "D-03C-qt-thread",
+      "requirement": "AC-03C",
+      "file": "chatmon/wintoast.py",
+      "find": "self._heard.emit(\"failed\", tag, code.value)",
+      "replace": "self.failed.emit(tag, code.value)",
+      "test": [
+        "tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+      ],
+      "expect": [
+        "test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+      ]
+    },
+    {
+      "id": "D-03C-button",
+      "requirement": "AC-03C",
+      "file": "chatmon/wintoast.py",
+      "find": "                    index = parsed[1]\n",
+      "replace": "                    index = BODY\n",
+      "test": [
+        "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+      ],
+      "expect": [
+        "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+      ]
+    },
+    {
+      "id": "D-03C-action",
+      "requirement": "AC-03C",
+      "file": "chatmon/wintoast.py",
+      "find": "                action()\n",
+      "replace": "                pass\n",
+      "test": [
+        "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+      ],
+      "expect": [
+        "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+      ]
+    },
+    {
+      "id": "D-03D-icon",
+      "requirement": "AC-03D",
+      "file": "chatmon/wintoast.py",
+      "find": "        if icon:\n",
+      "replace": "        if not icon:\n",
+      "test": [
+        "tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon"
+      ],
+      "expect": [
+        "test_a_pip_install_tells_windows_its_name_and_icon"
+      ]
+    },
+    {
+      "id": "D-04A-position",
+      "requirement": "AC-04A",
+      "file": "chatmon/wincaret.py",
+      "find": "user32.SetCaretPos(int(x), int(y))",
+      "replace": "user32.SetCaretPos(int(y), int(x))",
+      "test": [
+        "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ],
+      "expect": [
+        "test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ]
+    },
+    {
+      "id": "D-04A-bubble-size",
+      "requirement": "AC-04A",
+      "file": "chatmon/wincaret.py",
+      "find": "max(1, int(width)), max(1, int(height))",
+      "replace": "max(1, int(width) // 2), max(1, int(height))",
+      "test": [
+        "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ],
+      "expect": [
+        "test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ]
+    },
+    {
+      "id": "D-04A-cleared",
+      "requirement": "AC-04A",
+      "file": "chatmon/wincaret.py",
+      "find": "            _api().DestroyCaret()\n",
+      "replace": "            pass\n",
+      "test": [
+        "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ],
+      "expect": [
+        "test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ]
+    },
+    {
+      "id": "D-04B-magnifier",
+      "requirement": "AC-04B",
+      "file": "chatmon/wincaret.py",
+      "find": "return bool(_api().FindWindowW(MAGNIFIER_CLASS, None))",
+      "replace": "return not _api().FindWindowW(MAGNIFIER_CLASS, None)",
+      "test": [
+        "tests/test_wincaret.py::test_the_caret_is_only_for_when_magnifier_runs"
+      ],
+      "expect": [
+        "test_the_caret_is_only_for_when_magnifier_runs"
+      ]
+    },
+    {
+      "id": "D-00A-lazy-library",
+      "requirement": "AC-00A",
+      "file": "chatmon/libdbus.py",
+      "find": "def _text(raw: bytes | None) -> str:",
+      "replace": "lib()\n\n\ndef _text(raw: bytes | None) -> str:",
+      "test": [
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "expect": [
+        "test_it_imports_here[libdbus]"
+      ]
+    },
+    {
+      "id": "D-00A-eager-objc",
+      "requirement": "AC-00A",
+      "file": "chatmon/sound.py",
+      "find": "_sounds = Sounds()\n",
+      "replace": "_sounds = Sounds()\nMacPlayer()\n",
+      "test": [
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "expect": [
+        "test_it_imports_here[sound]"
+      ]
+    }
+  ]
+}

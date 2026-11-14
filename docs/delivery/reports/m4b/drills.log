@@ -1,0 +1,1358 @@
+red drills from docs\delivery\reports\m4b\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-6n6zav4h
+copied 220 files
+
+=== drill D-01A-alone (AC-01A) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why
+-- green: exit 0, 10 passed
+..........                                                               [100%]
+10 passed in 0.49s
+-- red: exit 1
+        ("Shift+A", "would take that key"),
+        ("F12", "would take that key"),  # F1-F12 are every app's own
+        ("Shift+Space", "would take that key"),
+    ])
+    def test_what_isnt_a_shortcut_says_why(written, says):
+>       with pytest.raises(ValueError, match=says):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests\test_hotkey.py:55: Failed
+_________ test_what_isnt_a_shortcut_says_why[F12-would take that key] _________
+
+written = 'F12', says = 'would take that key'
+
+    @pytest.mark.parametrize("written, says", [
+        ("", "needs a key"),
+        ("   ", "needs a key"),
+        ("Ctrl+", "isn't a shortcut"),
+        ("Ctrl+Alt", "needs a key as well"),
+        ("Ctrl+A+B", "one key, not A and B"),
+        ("Ctrl+Hyper", 'doesn\'t know the key "Hyper"'),
+        ("A", "would take that key"),
+        ("Shift+A", "would take that key"),
+        ("F12", "would take that key"),  # F1-F12 are every app's own
+        ("Shift+Space", "would take that key"),
+    ])
+    def test_what_isnt_a_shortcut_says_why(written, says):
+>       with pytest.raises(ValueError, match=says):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests\test_hotkey.py:55: Failed
+_____ test_what_isnt_a_shortcut_says_why[Shift+Space-would take that key] _____
+
+written = 'Shift+Space', says = 'would take that key'
+
+    @pytest.mark.parametrize("written, says", [
+        ("", "needs a key"),
+        ("   ", "needs a key"),
+        ("Ctrl+", "isn't a shortcut"),
+        ("Ctrl+Alt", "needs a key as well"),
+        ("Ctrl+A+B", "one key, not A and B"),
+        ("Ctrl+Hyper", 'doesn\'t know the key "Hyper"'),
+        ("A", "would take that key"),
+        ("Shift+A", "would take that key"),
+        ("F12", "would take that key"),  # F1-F12 are every app's own
+        ("Shift+Space", "would take that key"),
+    ])
+    def test_what_isnt_a_shortcut_says_why(written, says):
+>       with pytest.raises(ValueError, match=says):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests\test_hotkey.py:55: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[A-would take that key]
+FAILED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Shift+A-would take that key]
+FAILED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[F12-would take that key]
+FAILED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Shift+Space-would take that key]
+4 failed, 6 passed in 0.60s
+-- restored green: exit 0, 10 passed
+..........                                                               [100%]
+10 passed in 0.45s
+
+=== drill D-01A-order (AC-01A) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it
+-- green: exit 0, 11 passed
+...........                                                              [100%]
+11 passed in 0.44s
+-- red: exit 1
+
+tests\test_hotkey.py:34: AssertionError
+_______ test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+/-Ctrl+Alt+/] ________
+
+written = 'Ctrl+Alt+/', canonical = 'Ctrl+Alt+/'
+
+    @pytest.mark.parametrize("written, canonical", [
+        ("Ctrl+Alt+Space", "Ctrl+Alt+Space"),
+        ("alt+ctrl+space", "Ctrl+Alt+Space"),
+        (" Control + Option + k ", "Ctrl+Alt+K"),
+        ("meta+shift+f5", "Shift+Meta+F5"),
+        ("Win+Escape", "Meta+Esc"),
+        ("Super+PageDown", "Meta+PgDown"),
+        ("Ctrl+Alt+/", "Ctrl+Alt+/"),
+        ("Ctrl+Shift+Return", "Ctrl+Shift+Return"),
+        ("Ctrl+Alt+Enter", "Ctrl+Alt+Return"),
+        ("F13", "F13"),
+        ("Shift+F24", "Shift+F24"),
+    ])
+    def test_a_shortcut_is_read_as_qt_writes_it(written, canonical):
+>       assert hotkey.parse(written, "linux").text() == canonical
+E       AssertionError: assert 'Alt+Ctrl+/' == 'Ctrl+Alt+/'
+E         
+E         - Ctrl+Alt+/
+E         + Alt+Ctrl+/
+
+tests\test_hotkey.py:34: AssertionError
+___ test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Enter-Ctrl+Alt+Return] ___
+
+written = 'Ctrl+Alt+Enter', canonical = 'Ctrl+Alt+Return'
+
+    @pytest.mark.parametrize("written, canonical", [
+        ("Ctrl+Alt+Space", "Ctrl+Alt+Space"),
+        ("alt+ctrl+space", "Ctrl+Alt+Space"),
+        (" Control + Option + k ", "Ctrl+Alt+K"),
+        ("meta+shift+f5", "Shift+Meta+F5"),
+        ("Win+Escape", "Meta+Esc"),
+        ("Super+PageDown", "Meta+PgDown"),
+        ("Ctrl+Alt+/", "Ctrl+Alt+/"),
+        ("Ctrl+Shift+Return", "Ctrl+Shift+Return"),
+        ("Ctrl+Alt+Enter", "Ctrl+Alt+Return"),
+        ("F13", "F13"),
+        ("Shift+F24", "Shift+F24"),
+    ])
+    def test_a_shortcut_is_read_as_qt_writes_it(written, canonical):
+>       assert hotkey.parse(written, "linux").text() == canonical
+E       AssertionError: assert 'Alt+Ctrl+Return' == 'Ctrl+Alt+Return'
+E         
+E         - Ctrl+Alt+Return
+E         + Alt+Ctrl+Return
+
+tests\test_hotkey.py:34: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Space-Ctrl+Alt+Space]
+FAILED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[alt+ctrl+space-Ctrl+Alt+Space]
+FAILED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[ Control + Option + k -Ctrl+Alt+K]
+FAILED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[meta+shift+f5-Shift+Meta+F5]
+FAILED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+/-Ctrl+Alt+/]
+FAILED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Enter-Ctrl+Alt+Return]
+6 failed, 5 passed in 0.62s
+-- restored green: exit 0, 11 passed
+...........                                                              [100%]
+11 passed in 0.49s
+
+=== drill D-01B-message-only (AC-01B) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.49s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000024E99424410>
+
+    @windows
+    def test_windows_registers_it_on_a_message_only_window_and_hears_it(qapp):
+        from ctypes import wintypes
+    
+        u = user32()
+        hk = hotkey.Hotkey()
+        pressed = []
+        hk.pressed.connect(lambda: pressed.append(True))
+        try:
+            assert not held_by_someone(VK_F24)
+            assert hk.register("Ctrl+Alt+Shift+F24") is None and hk.combo.text() == "Ctrl+Alt+Shift+F24"
+            assert held_by_someone(VK_F24)  # really claimed
+            window = hk._backend.hwnd
+>           assert u.FindWindowExW(wintypes.HWND(-3), None, "STATIC", "Chatmon shortcut") == window  # among message-only windows
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: assert None == 11147042
+E            +  where None = <_FuncPtr object at 0x0000024E99065270>(c_void_p(18446744073709551613), None, 'STATIC', 'Chatmon shortcut')
+E            +    where <_FuncPtr object at 0x0000024E99065270> = <WinDLL 'user32', handle 7fff6c820000 at 0x24e99056fd0>.FindWindowExW
+E            +    and   c_void_p(18446744073709551613) = <class 'ctypes.c_void_p'>(-3)
+E            +      where <class 'ctypes.c_void_p'> = <module 'ctypes.wintypes' from 'C:\\Python314\\Lib\\ctypes\\wintypes.py'>.HWND
+
+tests\test_hotkey.py:137: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it
+1 failed in 0.59s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.56s
+
+=== drill D-01B-filter (AC-01B) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.18s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000025D26578410>
+
+    @windows
+    def test_windows_registers_it_on_a_message_only_window_and_hears_it(qapp):
+        from ctypes import wintypes
+    
+        u = user32()
+        hk = hotkey.Hotkey()
+        pressed = []
+        hk.pressed.connect(lambda: pressed.append(True))
+        try:
+            assert not held_by_someone(VK_F24)
+            assert hk.register("Ctrl+Alt+Shift+F24") is None and hk.combo.text() == "Ctrl+Alt+Shift+F24"
+            assert held_by_someone(VK_F24)  # really claimed
+            window = hk._backend.hwnd
+            assert u.FindWindowExW(wintypes.HWND(-3), None, "STATIC", "Chatmon shortcut") == window  # among message-only windows
+            u.PostMessageW(window, WM_HOTKEY, hk._backend.id + 1, 0)  # not its registration: ignored
+            u.PostMessageW(window, WM_HOTKEY, hk._backend.id, (VK_F24 << 16) | MOD_CONTROL | MOD_ALT | MOD_SHIFT)
+>           assert wait_for(qapp, lambda: pressed)
+E           assert False
+E            +  where False = wait_for(<PyQt6.QtWidgets.QApplication object at 0x0000025D26578410>, <function test_windows_registers_it_on_a_message_only_window_and_hears_it.<locals>.<lambda> at 0x0000025D26545850>)
+
+tests\test_hotkey.py:140: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it
+1 failed in 46.73s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.98s
+
+=== drill D-01B-its-own-id (AC-01B) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.81s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000023D96484410>
+
+    @windows
+    def test_windows_registers_it_on_a_message_only_window_and_hears_it(qapp):
+        from ctypes import wintypes
+    
+        u = user32()
+        hk = hotkey.Hotkey()
+        pressed = []
+        hk.pressed.connect(lambda: pressed.append(True))
+        try:
+            assert not held_by_someone(VK_F24)
+            assert hk.register("Ctrl+Alt+Shift+F24") is None and hk.combo.text() == "Ctrl+Alt+Shift+F24"
+            assert held_by_someone(VK_F24)  # really claimed
+            window = hk._backend.hwnd
+            assert u.FindWindowExW(wintypes.HWND(-3), None, "STATIC", "Chatmon shortcut") == window  # among message-only windows
+            u.PostMessageW(window, WM_HOTKEY, hk._backend.id + 1, 0)  # not its registration: ignored
+            u.PostMessageW(window, WM_HOTKEY, hk._backend.id, (VK_F24 << 16) | MOD_CONTROL | MOD_ALT | MOD_SHIFT)
+            assert wait_for(qapp, lambda: pressed)
+            qapp.processEvents()
+>           assert pressed == [True]  # once
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert [True, True] == [True]
+E             
+E             Left contains one more item: True
+E             Use -v to get more diff
+
+tests\test_hotkey.py:142: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it
+1 failed in 0.70s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.58s
+
+=== drill D-01B-given-back (AC-01B) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.48s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001E737270410>
+
+    @windows
+    def test_windows_registers_it_on_a_message_only_window_and_hears_it(qapp):
+        from ctypes import wintypes
+    
+        u = user32()
+        hk = hotkey.Hotkey()
+        pressed = []
+        hk.pressed.connect(lambda: pressed.append(True))
+        try:
+            assert not held_by_someone(VK_F24)
+            assert hk.register("Ctrl+Alt+Shift+F24") is None and hk.combo.text() == "Ctrl+Alt+Shift+F24"
+            assert held_by_someone(VK_F24)  # really claimed
+            window = hk._backend.hwnd
+            assert u.FindWindowExW(wintypes.HWND(-3), None, "STATIC", "Chatmon shortcut") == window  # among message-only windows
+            u.PostMessageW(window, WM_HOTKEY, hk._backend.id + 1, 0)  # not its registration: ignored
+            u.PostMessageW(window, WM_HOTKEY, hk._backend.id, (VK_F24 << 16) | MOD_CONTROL | MOD_ALT | MOD_SHIFT)
+            assert wait_for(qapp, lambda: pressed)
+            qapp.processEvents()
+            assert pressed == [True]  # once
+            hk.unregister()
+>           assert hk.combo is None and not held_by_someone(VK_F24)  # given back
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert (None is None and not True)
+E            +  where None = <chatmon.hotkey.Hotkey object at 0x000001E7372704B0>.combo
+E            +  and   True = held_by_someone(135)
+
+tests\test_hotkey.py:144: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it
+1 failed in 0.68s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.76s
+
+=== drill D-01C-conflict (AC-01C) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.57s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001BCB4328410>
+
+    @windows
+    def test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had(qapp):
+        u = user32()
+        assert u.RegisterHotKey(None, SOMEONE_ELSE, MOD_CONTROL | MOD_ALT | MOD_SHIFT | MOD_NOREPEAT, VK_F23)  # another app's
+        hk = hotkey.Hotkey()
+        try:
+>           assert hk.register("Ctrl+Alt+Shift+F23") == "Ctrl+Alt+Shift+F23 is already used by another app. Pick another shortcut."
+E           AssertionError: assert 'Windows woul...(error 1409).' == 'Ctrl+Alt+Shi...her shortcut.'
+E             
+E             - Ctrl+Alt+Shift+F23 is already used by another app. Pick another shortcut.
+E             + Windows wouldn't set up Ctrl+Alt+Shift+F23 (error 1409).
+
+tests\test_hotkey.py:156: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had
+1 failed in 0.70s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.62s
+
+=== drill D-01C-keeps-old (AC-01C) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.57s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000019B10148410>
+
+    @windows
+    def test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had(qapp):
+        u = user32()
+        assert u.RegisterHotKey(None, SOMEONE_ELSE, MOD_CONTROL | MOD_ALT | MOD_SHIFT | MOD_NOREPEAT, VK_F23)  # another app's
+        hk = hotkey.Hotkey()
+        try:
+            assert hk.register("Ctrl+Alt+Shift+F23") == "Ctrl+Alt+Shift+F23 is already used by another app. Pick another shortcut."
+            assert hk.combo is None
+            assert hk.register("Ctrl+Alt+Shift+F24") is None
+            assert hk.register("Shift+Alt+Ctrl+F23") == hotkey.CONFLICT.format(combo="Ctrl+Alt+Shift+F23")
+>           assert hk.combo.text() == "Ctrl+Alt+Shift+F24" and held_by_someone(VK_F24)  # still set
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: assert ('Ctrl+Alt+Shift+F24' == 'Ctrl+Alt+Shift+F24'
+E             
+E               Ctrl+Alt+Shift+F24 and False)
+E            +  where False = held_by_someone(135)
+
+tests\test_hotkey.py:160: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had
+1 failed in 0.59s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.55s
+
+=== drill D-01F-trigger (AC-01F) on chatmon/shortcutportal.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.47s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_the_keys_are_asked_for_in_the_xdg_shortcuts_format ___________
+
+    def test_the_keys_are_asked_for_in_the_xdg_shortcuts_format():
+        trigger = shortcutportal.xdg_trigger
+>       assert trigger(hotkey.parse("Ctrl+Alt+Space")) == "CTRL+ALT+space"
+E       AssertionError: assert 'CTRL+ALT+Space' == 'CTRL+ALT+space'
+E         
+E         - CTRL+ALT+space
+E         ?          ^
+E         + CTRL+ALT+Space
+E         ?          ^
+
+tests\test_hotkey_portal.py:25: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.45s
+
+=== drill D-02A-volume (AC-02A) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.55s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_qsoundeffect_plays_it_without_waiting __________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001BE982B07D0>
+cues = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1225/test_qsoundeffect_plays_it_wit0')
+
+    def test_qsoundeffect_plays_it_without_waiting(qapp, cues):
+        if not sound.QtPlayer.usable():
+            pytest.skip("no QtMultimedia, or no audio device to play to")
+        path = silent_wav(cues / "reminder.wav", seconds=1.0)
+        player = sound.QtPlayer()
+        s = sound.Sounds(cues, players=[player])
+        s.configure(volume=40)
+        started = time.monotonic()
+        assert s.play("reminder") and time.monotonic() - started < 0.2 and s.player == "qt"
+        effect = player.effects[path]
+        playing = []
+        effect.playingChanged.connect(lambda: playing.append(effect.isPlaying()))
+        deadline = time.monotonic() + 5
+        while True not in playing and not effect.isPlaying() and time.monotonic() < deadline:
+            qapp.processEvents()
+            time.sleep(0.01)
+        assert True in playing or effect.isPlaying(), f"never played (status {effect.status()})"
+>       assert effect.source().toLocalFile() == path.as_posix() and effect.volume() == pytest.approx(0.4, abs=0.01)
+E       AssertionError: assert ('C:/Users/Ran.../reminder.wav' == 'C:/Users/Ran.../reminder.wav'
+E         
+E         Skipping 95 identical leading characters in diff, use -v to show
+E           eminder.wav and 1.0 == 0.4 ± 0.01
+E         
+E         comparison failed
+E         Obtained: 1.0
+E         Expected: 0.4 ± 0.01)
+
+tests\test_sound.py:171: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting - Asse...
+1 failed in 0.76s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.64s
+
+=== drill D-02A-plays (AC-02A) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.56s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_qsoundeffect_plays_it_without_waiting __________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000025F4530C7D0>
+cues = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1228/test_qsoundeffect_plays_it_wit0')
+
+    def test_qsoundeffect_plays_it_without_waiting(qapp, cues):
+        if not sound.QtPlayer.usable():
+            pytest.skip("no QtMultimedia, or no audio device to play to")
+        path = silent_wav(cues / "reminder.wav", seconds=1.0)
+        player = sound.QtPlayer()
+        s = sound.Sounds(cues, players=[player])
+        s.configure(volume=40)
+        started = time.monotonic()
+        assert s.play("reminder") and time.monotonic() - started < 0.2 and s.player == "qt"
+        effect = player.effects[path]
+        playing = []
+        effect.playingChanged.connect(lambda: playing.append(effect.isPlaying()))
+        deadline = time.monotonic() + 5
+        while True not in playing and not effect.isPlaying() and time.monotonic() < deadline:
+            qapp.processEvents()
+            time.sleep(0.01)
+>       assert True in playing or effect.isPlaying(), f"never played (status {effect.status()})"
+E       AssertionError: never played (status Status.Ready)
+E       assert (True in [] or False)
+E        +  where False = <built-in method isPlaying of QSoundEffect object at 0x0000025F4530D630>()
+E        +    where <built-in method isPlaying of QSoundEffect object at 0x0000025F4530D630> = <PyQt6.QtMultimedia.QSoundEffect object at 0x0000025F4530D630>.isPlaying
+
+tests\test_sound.py:170: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting - Asse...
+1 failed in 5.66s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.65s
+
+=== drill D-02B-quiet (AC-02B) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_nothing_sounds_when_it_shouldnt
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.47s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_nothing_sounds_when_it_shouldnt _____________________
+
+cues = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1232/test_nothing_sounds_when_it_sh0')
+
+    def test_nothing_sounds_when_it_shouldnt(cues):
+        ears = Recorder()
+        s = sound.Sounds(cues, players=[ears])
+        s.configure(enabled=True)
+        assert not s.play("pop")  # off unless turned on
+        s.configure(enabled=False)
+        assert not s.play("needs-you")  # the one switch
+        s.configure(volume=0)
+        assert not s.play("needs-you")
+        s.configure(quiet=lambda: "Do Not Disturb")
+>       assert not s.play("reminder")  # a quiet time
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert not True
+E        +  where True = play('reminder')
+E        +    where play = <chatmon.sound.Sounds object at 0x000002A819DFB610>.play
+
+tests\test_sound.py:85: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_nothing_sounds_when_it_shouldnt - AssertionE...
+1 failed in 0.59s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+
+=== drill D-02B-one-switch (AC-02B) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_nothing_sounds_when_it_shouldnt
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.46s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_nothing_sounds_when_it_shouldnt _____________________
+
+cues = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1235/test_nothing_sounds_when_it_sh0')
+
+    def test_nothing_sounds_when_it_shouldnt(cues):
+        ears = Recorder()
+        s = sound.Sounds(cues, players=[ears])
+        s.configure(enabled=True)
+        assert not s.play("pop")  # off unless turned on
+        s.configure(enabled=False)
+>       assert not s.play("needs-you")  # the one switch
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert not True
+E        +  where True = play('needs-you')
+E        +    where play = <chatmon.sound.Sounds object at 0x0000024317F7B610>.play
+
+tests\test_sound.py:81: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_nothing_sounds_when_it_shouldnt - AssertionE...
+1 failed in 0.63s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.39s
+
+=== drill D-02B-cue-off (AC-02B) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_nothing_sounds_when_it_shouldnt
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.61s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_nothing_sounds_when_it_shouldnt _____________________
+
+cues = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1238/test_nothing_sounds_when_it_sh0')
+
+    def test_nothing_sounds_when_it_shouldnt(cues):
+        ears = Recorder()
+        s = sound.Sounds(cues, players=[ears])
+        s.configure(enabled=True)
+>       assert not s.play("pop")  # off unless turned on
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert not True
+E        +  where True = play('pop')
+E        +    where play = <chatmon.sound.Sounds object at 0x0000015C1CC6B610>.play
+
+tests\test_sound.py:79: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_nothing_sounds_when_it_shouldnt - AssertionE...
+1 failed in 0.56s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== drill D-02C-defaults (AC-02C) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_only_the_alerts_sound_until_you_turn_the_others_on
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_only_the_alerts_sound_until_you_turn_the_others_on ___________
+
+    def test_only_the_alerts_sound_until_you_turn_the_others_on():
+        expected = {"needs-you": True, "reminder": True, "focus-done": True, "done": False, "success": False, "error": False, "pop": False}
+>       assert sound.Sounds().cues == expected
+E       AssertionError: assert {'needs-you':...': False, ...} == {'needs-you':...': False, ...}
+E         
+E         Omitting 6 identical items, use -vv to show
+E         Differing items:
+E         {'pop': True} != {'pop': False}
+E         Use -v to get more diff
+
+tests\test_sound.py:57: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_only_the_alerts_sound_until_you_turn_the_others_on
+1 failed in 0.52s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.49s
+
+=== drill D-02D-own-thread (AC-02D) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_playsound_plays_on_its_own_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.44s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________________ test_playsound_plays_on_its_own_thread ____________________
+
+cues = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1241/test_playsound_plays_on_its_ow0')
+
+    @pytest.mark.skipif(sys.platform != "win32", reason="Windows only")
+    def test_playsound_plays_on_its_own_thread(cues):
+        if not audio_devices_on_windows():
+            pytest.skip("no audio device")
+        path = silent_wav(cues / "needs-you.wav", seconds=0.5)
+        player = sound.WindowsPlayer()
+        try:
+            started = time.monotonic()
+            assert player.play(path, 0.5)
+>           assert time.monotonic() - started < 0.1  # handed over, not played here
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert (291677.1302182 - 291676.5686347) < 0.1
+E            +  where 291677.1302182 = <built-in function monotonic>()
+E            +    where <built-in function monotonic> = time.monotonic
+
+tests\test_sound.py:190: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_playsound_plays_on_its_own_thread - assert (...
+1 failed in 1.35s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.52s
+
+=== drill D-02A-stopped-at-exit (AC-02A) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_quitting_while_a_sound_plays_ends_cleanly
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.13s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_quitting_while_a_sound_plays_ends_cleanly ________________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1244/test_quitting_while_a_sound_pl0')
+
+    def test_quitting_while_a_sound_plays_ends_cleanly(tmp_path):
+        """A QSoundEffect still playing as Python shuts down used to end the process with a fail-fast (0xC0000409 on
+        Windows): every effect is stopped first."""
+        import subprocess
+    
+        if not sound.QtPlayer.usable():
+            pytest.skip("no QtMultimedia, or no audio device to play to")
+        root = Path(__file__).resolve().parent.parent
+        env = dict(os.environ, PYTHONPATH=str(root), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", QUIT_WHILE_PLAYING, str(tmp_path)], cwd=root, env=env, capture_output=True, text=True, timeout=60)
+        assert out.stdout.strip() == "playing", out.stderr  # it was still playing at the end
+>       assert out.returncode == 0, f"exit {out.returncode:#x}: {out.stderr}"
+E       AssertionError: exit 0xc0000409: 
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe', '-c', '\nimport sys, time, wav...\pytest-of-Randy\\pytest-1244\\test_quitting_while_a_sound_pl0'], returncode=3221226505, stdout='playing\n', stderr='').returncode
+
+tests\test_sound.py:308: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_quitting_while_a_sound_plays_ends_cleanly - ...
+1 failed in 1.41s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.05s
+
+=== drill D-02D-scaled (AC-02D) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_samples_are_scaled_for_the_volume
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.50s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________________ test_samples_are_scaled_for_the_volume ____________________
+
+    def test_samples_are_scaled_for_the_volume():
+>       assert samples_of(sound.scaled_wav(wav_bytes([1000, -1000, 32767, -32768, 0], 2), 0.5)) == [500, -500, 16384, -16384, 0]
+E       assert [1000, -1000,...67, -32768, 0] == [500, -500, 16384, -16384, 0]
+E         
+E         At index 0 diff: 1000 != 500
+E         Use -v to get more diff
+
+tests\test_sound.py:135: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_samples_are_scaled_for_the_volume - assert [...
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.56s
+
+=== drill D-02D-without-qt (AC-02D) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_without_qtmultimedia_the_systems_own_player_is_used
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.82s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_without_qtmultimedia_the_systems_own_player_is_used ___________
+
+    def test_without_qtmultimedia_the_systems_own_player_is_used():
+        """A distribution's PyQt6 without QtMultimedia (Debian and Fedora package it apart): the system's player."""
+        import subprocess
+    
+        code = ("import sys; sys.modules['PyQt6.QtMultimedia'] = None\n"  # as if it weren't installed
+                "from chatmon import sound\n"
+                "players = sound.default_players()\n"
+                "print(sound.QtPlayer.usable(), [p.name for p in players])\n"
+                "[getattr(p, 'close', lambda: None)() for p in players]")
+        root = Path(__file__).resolve().parent.parent
+        env = dict(os.environ, PYTHONPATH=str(root), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", code], cwd=root, env=env, capture_output=True, text=True, timeout=60)
+        assert out.returncode == 0, out.stderr
+        usable, names = out.stdout.strip().split(" ", 1)
+>       assert usable == "False" and "qt" not in names
+E       AssertionError: assert ('True' == 'False'
+E         
+E         - False
+E         + True)
+
+tests\test_sound.py:268: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_sound.py::test_without_qtmultimedia_the_systems_own_player_is_used
+1 failed in 0.66s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.65s
+
+=== drill D-03A-escaped (AC-03A) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.49s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_text_from_an_agent_is_text_never_markup _________________
+
+    def test_text_from_an_agent_is_text_never_markup():
+        xml = wintoast.toast_xml('<b>Fish & "chips"</b>', "a\x01b <script>x</script>", tag="abc")
+        texts = [t.text for t in ET.fromstring(xml).iter("text")]
+>       assert texts == ['<b>Fish & "chips"</b>', "ab <script>x</script>"]  # escaped, and the control character dropped
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert [None, 'ab '] == ['<b>Fish & "...t>x</script>']
+E         
+E         At index 0 diff: None != '<b>Fish & "chips"</b>'
+E         Use -v to get more diff
+
+tests\test_wintoast.py:28: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.45s
+
+=== drill D-03A-control-chars (AC-03A) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.35s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_text_from_an_agent_is_text_never_markup _________________
+
+    def test_text_from_an_agent_is_text_never_markup():
+        xml = wintoast.toast_xml('<b>Fish & "chips"</b>', "a\x01b <script>x</script>", tag="abc")
+>       texts = [t.text for t in ET.fromstring(xml).iter("text")]
+                                 ^^^^^^^^^^^^^^^^^^
+
+tests\test_wintoast.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = '<toast launch="chatmon:abc:-1" activationType="foreground"><visual><binding template="ToastGeneric"><text>&lt;b&gt;Fish &amp; "chips"&lt;/b&gt;</text><text>a\x01b &lt;script&gt;x&lt;/script&gt;</text></binding></visual></toast>'
+parser = <xml.etree.ElementTree.XMLParser object at 0x000001A37457D6C0>
+
+    def XML(text, parser=None):
+        """Parse XML document from string constant.
+    
+        This function can be used to embed "XML Literals" in Python code.
+    
+        *text* is a string containing XML data, *parser* is an
+        optional parser instance, defaulting to the standard XMLParser.
+    
+        Returns an Element instance.
+    
+        """
+        if not parser:
+            parser = XMLParser(target=TreeBuilder())
+>       parser.feed(text)
+E       xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 157
+
+C:\Python314\Lib\xml\etree\ElementTree.py:1362: ParseError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup
+1 failed in 0.56s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== drill D-03A-reminder-button (AC-03A) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_reminder_stays_until_answered
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.45s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_a_reminder_stays_until_answered _____________________
+
+    def test_a_reminder_stays_until_answered():
+        with_buttons = wintoast.toast_xml("Reminder", "Stretch", ["Snooze 10 min", "Done"], "reminder", tag="9")
+        assert ET.fromstring(with_buttons).get("scenario") == "reminder" and len(actions(with_buttons)) == 2
+        # Windows holds a reminder on screen only when it has a button: without one, its own Dismiss.
+        bare = wintoast.toast_xml("Reminder", "Stretch", (), "reminder", tag="9")
+>       assert actions(bare) == [{"content": "", "arguments": "dismiss", "activationType": "system"}]
+E       AssertionError: assert [] == [{'content': ...e': 'system'}]
+E         
+E         Right contains one more item: {'content': '', 'arguments': 'dismiss', 'activationType': 'system'}
+E         Use -v to get more diff
+
+tests\test_wintoast.py:47: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_a_reminder_stays_until_answered - Asserti...
+1 failed in 0.50s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.52s
+
+=== drill D-03A-five-buttons (AC-03A) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.47s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_too_many_buttons_or_an_unknown_scenario_is_refused ___________
+
+    def test_too_many_buttons_or_an_unknown_scenario_is_refused():
+>       assert len(actions(wintoast.toast_xml("t", buttons=[str(i) for i in range(5)]))) == 5
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_wintoast.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+title = 't', text = '', buttons = ['0', '1', '2', '3', '4'], scenario = None
+tag = '0', silent = False
+
+    def toast_xml(title: str, text: str = "", buttons: Sequence[Button] = (), scenario: str | None = None, tag: str = "0",
+                  silent: bool = False) -> str:
+        """The toast's XML. ElementTree escapes the text, which may come from an agent: it's never markup. A button's
+        arguments say which toast and which button; `launch` says the toast itself was clicked."""
+        if scenario not in SCENARIOS:
+            raise ValueError(f"A toast's scenario is one of {', '.join(str(s) for s in SCENARIOS)}, not {scenario!r}.")
+        if len(buttons) >= MAX_BUTTONS:
+>           raise ValueError(f"A toast has at most {MAX_BUTTONS} buttons, not {len(buttons)}.")
+E           ValueError: A toast has at most 5 buttons, not 5.
+
+chatmon\wintoast.py:117: ValueError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused
+1 failed in 0.53s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.60s
+
+=== drill D-03B-setting (AC-03B) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________
+
+toaster = <chatmon.wintoast.Toaster object at 0x000001375FD9FE30>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001375FD9FD90>
+
+    @windows
+    def test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon(toaster, qapp):
+        tag = toaster.show("Chatmon test", "A toast from Chatmon's tests, removed at once.", ["OK"], silent=True)
+        if notifications_on():
+            assert tag is not None and toaster.why_not is None
+            assert wait_for(qapp, lambda: tag in toaster.in_action_center()), "Windows never had the toast"
+            assert toaster.hide(tag)
+        else:
+>           assert tag is None and toaster.why_not == wintoast.WHY_NOT[wintoast.OFF_FOR_USER]
+E           AssertionError: assert ('fb72ad69f9494f2d' is None)
+
+tests\test_wintoast.py:118: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon
+1 failed in 0.60s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== drill D-03C-qt-thread (AC-03C) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.46s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________
+
+toaster = <chatmon.wintoast.Toaster object at 0x000001AB555C7E30>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001AB555C7D90>
+
+    @windows
+    def test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread(toaster, qapp):
+        """Posted straight to Action Center. Where notifications are off Windows refuses it (Failed); where they're on
+        it's there until Chatmon hides it (Dismissed). Either way Windows calls back on a thread of its own."""
+        heard = []
+        main = threading.get_ident()
+        toaster.failed.connect(lambda tag, code: heard.append(("failed", tag, code, threading.get_ident() == main)))
+        toaster.dismissed.connect(lambda tag, why: heard.append(("dismissed", tag, why, threading.get_ident() == main)))
+        tag = "a1b2c3"
+        assert toaster._post(wintoast.toast_xml("Chatmon test", "Removed at once.", ["OK"], "reminder", tag, silent=True), tag, suppress_popup=True)
+        assert toaster.listening == [tag]
+        if notifications_on():
+            assert wait_for(qapp, lambda: tag in toaster.in_action_center())
+            assert toaster.hide(tag)
+            assert wait_for(qapp, lambda: heard)
+            assert heard == [("dismissed", tag, wintoast.HIDDEN_BY_CHATMON, True)]
+        else:
+            assert wait_for(qapp, lambda: heard)
+            WPN_E_NOTIFICATION_TYPE_DISABLED = -0x7FC1FEEC  # 0x803E0114
+            assert heard == [("failed", tag, WPN_E_NOTIFICATION_TYPE_DISABLED, True)]
+>       assert toaster.listening == []  # its handlers removed, the toast let go of
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ['a1b2c3'] == []
+E         
+E         Left contains one more item: 'a1b2c3'
+E         Use -v to get more diff
+
+tests\test_wintoast.py:142: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread
+1 failed in 0.59s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== drill D-03C-button (AC-03C) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002033F9DFD90>
+
+    @windows
+    def test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread(qapp):
+        toaster = wintoast.Toaster("RandyNorthrup.Chatmon.Test")
+        main = threading.get_ident()
+        pressed, ran = [], []
+        toaster.activated.connect(lambda tag, button: pressed.append((tag, button, threading.get_ident() == main)))
+        tag = "00ff"
+        toaster._shown[tag] = wintoast._Shown(toast=0, actions=[None, lambda: ran.append(threading.get_ident() == main)])
+        clicks = [_FakeActivation("chatmon:00ff:1"), _FakeActivation("chatmon:00ff:-1")]
+        worker = threading.Thread(target=lambda: toaster._on_activated(tag, clicks[0].pointer))  # as Windows would: another thread
+        worker.start()
+        worker.join()
+        assert wait_for(qapp, lambda: pressed)
+>       assert pressed == [(tag, 1, True)] and ran == [True] and toaster.listening == []
+E       AssertionError: assert ([('00ff', -1, True)] == [('00ff', 1, True)]
+E         
+E         At index 0 diff: ('00ff', -1, True) != ('00ff', 1, True)
+E         Use -v to get more diff)
+
+tests\test_wintoast.py:188: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread
+1 failed in 0.46s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.47s
+
+=== drill D-03C-action (AC-03C) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001C62C14FD90>
+
+    @windows
+    def test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread(qapp):
+        toaster = wintoast.Toaster("RandyNorthrup.Chatmon.Test")
+        main = threading.get_ident()
+        pressed, ran = [], []
+        toaster.activated.connect(lambda tag, button: pressed.append((tag, button, threading.get_ident() == main)))
+        tag = "00ff"
+        toaster._shown[tag] = wintoast._Shown(toast=0, actions=[None, lambda: ran.append(threading.get_ident() == main)])
+        clicks = [_FakeActivation("chatmon:00ff:1"), _FakeActivation("chatmon:00ff:-1")]
+        worker = threading.Thread(target=lambda: toaster._on_activated(tag, clicks[0].pointer))  # as Windows would: another thread
+        worker.start()
+        worker.join()
+        assert wait_for(qapp, lambda: pressed)
+>       assert pressed == [(tag, 1, True)] and ran == [True] and toaster.listening == []
+E       AssertionError: assert ([('00ff', 1, True)] == [('00ff', 1, True)]
+E         
+E         Use -v to get more diff and [] == [True]
+E         
+E         Right contains one more item: True
+E         Use -v to get more diff)
+
+tests\test_wintoast.py:188: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread
+1 failed in 0.48s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.41s
+
+=== drill D-03D-icon (AC-03D) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.37s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_pip_install_tells_windows_its_name_and_icon ______________
+
+    @windows
+    def test_a_pip_install_tells_windows_its_name_and_icon():
+        import winreg
+    
+        app_id = f"RandyNorthrup.Chatmon.Test{uuid.uuid4().hex[:8]}"
+        key = rf"Software\Classes\AppUserModelId\{app_id}"
+        wintoast.register_app_id(app_id, "Chatmon", r"C:\icons\chatmon.png")
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key) as k:
+                assert winreg.QueryValueEx(k, "DisplayName")[0] == "Chatmon"
+>               assert winreg.QueryValueEx(k, "IconUri")[0] == r"C:\icons\chatmon.png"
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+tests\test_wintoast.py:204: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon
+1 failed in 0.47s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.37s
+
+=== drill D-04A-position (AC-04A) on chatmon/wincaret.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000221312BBA70>
+
+    @windows
+    def test_a_new_bubble_gets_the_caret_magnifier_follows(qapp):
+        from ctypes import wintypes
+    
+        user32 = _user32()
+        hwnd = user32.CreateWindowExW(0, "STATIC", "chatmon caret test", WS_POPUP, 100, 100, 400, 300, None, None, None, None)  # never shown
+        assert hwnd
+        heard = []
+        WINEVENTPROC = ctypes.WINFUNCTYPE(None, wintypes.HANDLE, wintypes.DWORD, wintypes.HWND, wintypes.LONG, wintypes.LONG, wintypes.DWORD, wintypes.DWORD)
+        proc = WINEVENTPROC(lambda hook, event, window, obj, child, thread, when: heard.append((window, obj)))
+        hook = user32.SetWinEventHook(EVENT_OBJECT_LOCATIONCHANGE, EVENT_OBJECT_LOCATIONCHANGE, None, proc, os.getpid(), 0, WINEVENT_OUTOFCONTEXT)
+        caret = wincaret.Caret()
+        try:
+            assert caret.place(hwnd, 30, 40, 200, 60) and caret.window == hwnd
+>           assert caret_of_this_thread() == (hwnd, (30, 40, 230, 100))
+E           assert (61674032, (40, 30, 240, 90)) == (61674032, (30, 40, 230, 100))
+E             
+E             At index 1 diff: (40, 30, 240, 90) != (30, 40, 230, 100)
+E             Use -v to get more diff
+
+tests\test_wincaret.py:66: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows
+1 failed in 0.56s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.56s
+
+=== drill D-04A-bubble-size (AC-04A) on chatmon/wincaret.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.05s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001A4F251BA70>
+
+    @windows
+    def test_a_new_bubble_gets_the_caret_magnifier_follows(qapp):
+        from ctypes import wintypes
+    
+        user32 = _user32()
+        hwnd = user32.CreateWindowExW(0, "STATIC", "chatmon caret test", WS_POPUP, 100, 100, 400, 300, None, None, None, None)  # never shown
+        assert hwnd
+        heard = []
+        WINEVENTPROC = ctypes.WINFUNCTYPE(None, wintypes.HANDLE, wintypes.DWORD, wintypes.HWND, wintypes.LONG, wintypes.LONG, wintypes.DWORD, wintypes.DWORD)
+        proc = WINEVENTPROC(lambda hook, event, window, obj, child, thread, when: heard.append((window, obj)))
+        hook = user32.SetWinEventHook(EVENT_OBJECT_LOCATIONCHANGE, EVENT_OBJECT_LOCATIONCHANGE, None, proc, os.getpid(), 0, WINEVENT_OUTOFCONTEXT)
+        caret = wincaret.Caret()
+        try:
+            assert caret.place(hwnd, 30, 40, 200, 60) and caret.window == hwnd
+>           assert caret_of_this_thread() == (hwnd, (30, 40, 230, 100))
+E           assert (22616162, (30, 40, 130, 100)) == (22616162, (30, 40, 230, 100))
+E             
+E             At index 1 diff: (30, 40, 130, 100) != (30, 40, 230, 100)
+E             Use -v to get more diff
+
+tests\test_wincaret.py:66: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows
+1 failed in 1.01s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.91s
+
+=== drill D-04A-cleared (AC-04A) on chatmon/wincaret.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.74s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000224E7F6BA70>
+
+    @windows
+    def test_a_new_bubble_gets_the_caret_magnifier_follows(qapp):
+        from ctypes import wintypes
+    
+        user32 = _user32()
+        hwnd = user32.CreateWindowExW(0, "STATIC", "chatmon caret test", WS_POPUP, 100, 100, 400, 300, None, None, None, None)  # never shown
+        assert hwnd
+        heard = []
+        WINEVENTPROC = ctypes.WINFUNCTYPE(None, wintypes.HANDLE, wintypes.DWORD, wintypes.HWND, wintypes.LONG, wintypes.LONG, wintypes.DWORD, wintypes.DWORD)
+        proc = WINEVENTPROC(lambda hook, event, window, obj, child, thread, when: heard.append((window, obj)))
+        hook = user32.SetWinEventHook(EVENT_OBJECT_LOCATIONCHANGE, EVENT_OBJECT_LOCATIONCHANGE, None, proc, os.getpid(), 0, WINEVENT_OUTOFCONTEXT)
+        caret = wincaret.Caret()
+        try:
+            assert caret.place(hwnd, 30, 40, 200, 60) and caret.window == hwnd
+            assert caret_of_this_thread() == (hwnd, (30, 40, 230, 100))
+            deadline = time.monotonic() + 3
+            while (hwnd, OBJID_CARET) not in heard and time.monotonic() < deadline:
+                qapp.processEvents()  # an out-of-context hook hears through this thread's messages
+                time.sleep(0.01)
+            assert (hwnd, OBJID_CARET) in heard  # what Magnifier listens for
+            assert caret.place(hwnd, 5, 6, 0, 0)  # a degenerate bubble still gets a caret, one pixel square
+            assert caret_of_this_thread() == (hwnd, (5, 6, 6, 7))
+        finally:
+            caret.clear()
+            user32.UnhookWinEvent(hook)
+>       assert caret.window is None and caret_of_this_thread()[0] is None
+E       assert (None is None and 23206004 is None)
+E        +  where None = <chatmon.wincaret.Caret object at 0x00000224E7F64F50>.window
+
+tests\test_wincaret.py:77: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows
+1 failed in 0.47s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.45s
+
+=== drill D-04B-magnifier (AC-04B) on chatmon/wincaret.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wincaret.py::test_the_caret_is_only_for_when_magnifier_runs
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.42s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_the_caret_is_only_for_when_magnifier_runs ________________
+
+    @windows
+    def test_the_caret_is_only_for_when_magnifier_runs():
+        from ctypes import wintypes
+    
+>       assert wincaret.magnifier_running() == magnify_exe_running()
+E       assert True == False
+E        +  where True = <function magnifier_running at 0x000002157298D010>()
+E        +    where <function magnifier_running at 0x000002157298D010> = wincaret.magnifier_running
+E        +  and   False = magnify_exe_running()
+
+tests\test_wincaret.py:91: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_wincaret.py::test_the_caret_is_only_for_when_magnifier_runs
+1 failed in 0.88s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.36s
+
+=== drill D-00A-lazy-library (AC-00A) on chatmon/libdbus.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_m4b_imports.py::test_it_imports_here
+-- green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.47s
+-- red: exit 1
+>       assert out.returncode == 0, out.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             import chatmon.libdbus
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-6n6zav4h\chatmon\libdbus.py", line 162, in <module>
+E             lib()
+E             ~~~^^
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-6n6zav4h\chatmon\libdbus.py", line 117, in lib
+E             dbus = ctypes.cdll.LoadLibrary(ctypes.util.find_library("dbus-1") or "libdbus-1.so.3")
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 554, in LoadLibrary
+E             return self._dlltype(name)
+E                    ~~~~~~~~~~~~~^^^^^^
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 433, in __init__
+E             self._handle = self._load_library(name, mode, handle, winmode)
+E                            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 451, in _load_library
+E             return _LoadLibrary(self._name, winmode)
+E         FileNotFoundError: Could not find module 'libdbus-1.so.3' (or one of its dependencies). Try using the full path with constructor syntax.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe', '-c', 'import chatmon.libdbus'...d not find module \'libdbus-1.so.3\' (or one of its dependencies). Try using the full path with constructor syntax.\n').returncode
+
+tests\test_m4b_imports.py:19: AssertionError
+____________________ test_it_imports_here[shortcutportal] _____________________
+
+module = 'shortcutportal'
+
+    @pytest.mark.parametrize("module", MODULES)
+    def test_it_imports_here(module):
+        env = dict(os.environ, PYTHONPATH=str(ROOT), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", f"import chatmon.{module}"], cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+>       assert out.returncode == 0, out.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             import chatmon.shortcutportal
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-6n6zav4h\chatmon\shortcutportal.py", line 20, in <module>
+E             from . import libdbus
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-6n6zav4h\chatmon\libdbus.py", line 162, in <module>
+E             lib()
+E             ~~~^^
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-6n6zav4h\chatmon\libdbus.py", line 117, in lib
+E             dbus = ctypes.cdll.LoadLibrary(ctypes.util.find_library("dbus-1") or "libdbus-1.so.3")
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 554, in LoadLibrary
+E             return self._dlltype(name)
+E                    ~~~~~~~~~~~~~^^^^^^
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 433, in __init__
+E             self._handle = self._load_library(name, mode, handle, winmode)
+E                            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 451, in _load_library
+E             return _LoadLibrary(self._name, winmode)
+E         FileNotFoundError: Could not find module 'libdbus-1.so.3' (or one of its dependencies). Try using the full path with constructor syntax.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe', '-c', 'import chatmon.shortcut...d not find module \'libdbus-1.so.3\' (or one of its dependencies). Try using the full path with constructor syntax.\n').returncode
+
+tests\test_m4b_imports.py:19: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_m4b_imports.py::test_it_imports_here[libdbus] - AssertionEr...
+FAILED tests/test_m4b_imports.py::test_it_imports_here[shortcutportal] - Asse...
+2 failed, 6 passed in 1.83s
+-- restored green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.36s
+
+=== summary
+PASS D-01A-alone
+PASS D-01A-order
+PASS D-01B-message-only
+PASS D-01B-filter
+PASS D-01B-its-own-id
+PASS D-01B-given-back
+PASS D-01C-conflict
+PASS D-01C-keeps-old
+PASS D-01F-trigger
+PASS D-02A-volume
+PASS D-02A-plays
+PASS D-02B-quiet
+PASS D-02B-one-switch
+PASS D-02B-cue-off
+PASS D-02C-defaults
+PASS D-02D-own-thread
+PASS D-02A-stopped-at-exit
+PASS D-02D-scaled
+PASS D-02D-without-qt
+PASS D-03A-escaped
+PASS D-03A-control-chars
+PASS D-03A-reminder-button
+PASS D-03A-five-buttons
+PASS D-03B-setting
+PASS D-03C-qt-thread
+PASS D-03C-button
+PASS D-03C-action
+PASS D-03D-icon
+PASS D-04A-position
+PASS D-04A-bubble-size
+PASS D-04A-cleared
+PASS D-04B-magnifier
+PASS D-00A-lazy-library

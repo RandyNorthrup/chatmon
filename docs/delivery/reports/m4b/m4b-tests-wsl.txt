@@ -1,0 +1,23 @@
+$ uname -sr; python --version
+Linux 6.18.58.1-microsoft-standard-WSL2
+3.14.9 6.12.1
+$ env -u WAYLAND_DISPLAY QT_QPA_PLATFORM=offscreen python -m pytest -q -p no:cacheprovider -rs tests/test_hotkey.py tests/test_hotkey_portal.py tests/test_sound.py tests/test_wintoast.py tests/test_wincaret.py tests/test_m4b_imports.py
+.........................sssss..................s.s.........sssssss..... [ 94%]
+....                                                                     [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_hotkey.py:124: Windows only
+SKIPPED [1] tests/test_hotkey.py:150: Windows only
+SKIPPED [1] tests/test_hotkey.py:167: Windows only
+SKIPPED [1] tests/test_hotkey.py:221: macOS only
+SKIPPED [1] tests/test_hotkey.py:238: macOS only
+SKIPPED [1] tests/test_sound.py:181: Windows only
+SKIPPED [1] tests/test_sound.py:230: macOS only
+SKIPPED [1] tests/test_wintoast.py:110: Windows only
+SKIPPED [1] tests/test_wintoast.py:122: Windows only
+SKIPPED [1] tests/test_wintoast.py:175: Windows only
+SKIPPED [1] tests/test_wintoast.py:194: Windows only
+SKIPPED [1] tests/test_wintoast.py:214: Windows only
+SKIPPED [1] tests/test_wincaret.py:52: Windows only
+SKIPPED [1] tests/test_wincaret.py:87: Windows only
+62 passed, 14 skipped in 18.51s
+exit 0

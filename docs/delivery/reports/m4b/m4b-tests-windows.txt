@@ -1,0 +1,22 @@
+$ git rev-parse HEAD
+ea3474f7181ef8113d667bff177c3e5b5a45f42f
+$ python -m pytest -q -p no:cacheprovider -rs tests/test_hotkey.py tests/test_hotkey_portal.py tests/test_sound.py tests/test_wintoast.py tests/test_wincaret.py tests/test_m4b_imports.py tests/test_presence.py
+............................ssss..sssss..........ss........s.......s.... [ 84%]
+.......s....s                                                            [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_hotkey.py:221: macOS only
+SKIPPED [1] tests\test_hotkey.py:238: macOS only
+SKIPPED [1] tests\test_hotkey.py:318: Linux with Xvfb
+SKIPPED [1] tests\test_hotkey.py:356: Linux with libX11
+SKIPPED [1] tests\test_hotkey_portal.py:95: Linux with dbus-run-session and dbus-monitor
+SKIPPED [1] tests\test_hotkey_portal.py:111: Linux with dbus-run-session and dbus-monitor
+SKIPPED [1] tests\test_hotkey_portal.py:119: Linux with dbus-run-session and dbus-monitor
+SKIPPED [2] tests\test_hotkey_portal.py:127: Linux with dbus-run-session and dbus-monitor
+SKIPPED [1] tests\test_sound.py:201: Linux only
+SKIPPED [1] tests\test_sound.py:230: macOS only
+SKIPPED [1] tests\test_wintoast.py:65: elsewhere than Windows
+SKIPPED [1] tests\test_wincaret.py:123: elsewhere than Windows
+SKIPPED [1] tests\test_presence.py:70: macOS only
+SKIPPED [1] tests\test_presence.py:139: no GNOME session here
+70 passed, 15 skipped in 4.13s
+exit 0
