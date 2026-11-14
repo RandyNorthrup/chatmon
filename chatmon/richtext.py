@@ -104,9 +104,10 @@ class Rendered:
     copy_token: str = ""  # the token in this text's Copy links (none: no Copy links)
 
 
-def render(doc: QTextDocument, markdown: str, look: Look, copy_token: str = "") -> Rendered:
+def render(doc: QTextDocument, markdown: str, look: Look, copy_token: str = "", copy_last: bool = True) -> Rendered:
     """Set `doc` to `markdown`, safely, and dress it for a bubble. With `copy_token`, each code block and each
-    turn's answer gets a Copy link (`COPY_SCHEME`:token/n, n counting code blocks then answers)."""
+    turn's answer gets a Copy link (`COPY_SCHEME`:token/n, n counting code blocks then answers); the last
+    turn's only with `copy_last` (not while its answer is still coming)."""
     set_markdown(doc, markdown)
     _cap_headings(doc)
     _colour_links(doc, look.link)
@@ -131,14 +132,14 @@ def render(doc: QTextDocument, markdown: str, look: Look, copy_token: str = "") 
         for n, group in enumerate(groups):
             inserts.append((group[-1].position() + group[-1].length() - 1, "copy code", n))
         for n, ((_, end), text) in enumerate(zip(answers, out.answers, strict=True)):
-            if text.strip():
+            if text.strip() and (copy_last or n < len(answers) - 1):
                 inserts.append((end, "copy answer", len(groups) + n))
     for start in starts[1:]:
         inserts.append((start - 1, "rule", None))
     # Last first; where several go after the same block: the code's Copy, then the answer's, then the rule.
     rank = {"copy code": 0, "copy answer": 1, "rule": 2}
     for position, kind, n in sorted(inserts, key=lambda i: (i[0], rank[i[1]]), reverse=True):
-        _insert_after(doc, position, kind, n, copy_token)
+        _insert_after(doc, position, kind, n, copy_token, look.link)
     for c in framing:
         _frame_code(c, look)
     out.turns = _turn_starts(doc)
@@ -259,7 +260,7 @@ def _plain(doc: QTextDocument, start: int, end: int) -> str:
     return c.selection().toPlainText().strip()
 
 
-def _insert_after(doc: QTextDocument, position: int, kind: str, n: int | None, token: str) -> None:
+def _insert_after(doc: QTextDocument, position: int, kind: str, n: int | None, token: str, colour: QColor) -> None:
     """A block of our own after the one that ends at `position`: a rule between turns, or a Copy link."""
     c = QTextCursor(doc)
     c.setPosition(position)
@@ -277,6 +278,7 @@ def _insert_after(doc: QTextDocument, position: int, kind: str, n: int | None, t
     link = QTextCharFormat()
     link.setAnchor(True)
     link.setAnchorHref(copy_url(token, n or 0))
+    link.setForeground(colour)
     link.setFontUnderline(True)
     link.setProperty(QTextFormat.Property.FontSizeAdjustment, -1)
     link.setToolTip("Copy this code" if kind == "copy code" else "Copy this answer")

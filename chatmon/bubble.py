@@ -9,12 +9,13 @@ from __future__ import annotations
 import html
 import os
 import re
+import secrets
 import sys
 import time
 from dataclasses import dataclass
 from typing import Callable
 
-from PyQt6.QtCore import QMimeData, QPoint, QPointF, QRect, QRectF, QSizeF, Qt, QTimer, QUrl, pyqtSignal
+from PyQt6.QtCore import QMimeData, QPoint, QPointF, QPropertyAnimation, QRect, QRectF, QSizeF, Qt, QTimer, QUrl, pyqtSignal
 from PyQt6.QtGui import (
     QAbstractTextDocumentLayout,
     QColor,
@@ -23,16 +24,18 @@ from PyQt6.QtGui import (
     QFontMetricsF,
     QGuiApplication,
     QImage,
+    QInputMethodEvent,
     QKeySequence,
     QPainter,
     QPainterPath,
     QPalette,
     QPen,
     QPixmap,
+    QTextCursor,
     QTextLayout,
     QTextOption,
 )
-from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QMenu, QTextBrowser, QToolButton, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QMenu, QTextBrowser, QTextEdit, QToolButton, QVBoxLayout, QWidget
 
 from . import bubbleart, highlight, richtext, styles
 
@@ -543,17 +546,144 @@ class SpeechBubble:
             p.drawText(b.rect, Qt.AlignmentFlag.AlignCenter, metrics.elidedText(b.label, Qt.TextElideMode.ElideRight, b.rect.width() - 16))
 
 
-class Entry(QLineEdit):
-    """The field you type a question in. Pasting files, a picture or a long text attaches it (`pasted`)
-    rather than squeezing it onto one line; a short text pastes as usual."""
+def selection_text(cursor: QTextCursor) -> str:
+    """A cursor's selection as plain text, its paragraph and line separators as line breaks."""
+    return cursor.selectedText().replace("\u2029", "\n").replace("\u2028", "\n")
+
+
+class PlainSelection:
+    """For Qt's text edits: the selection, asked for through the input-method interface, comes back as plain
+    text. Qt 6.11 answers with a type of its own that PyQt can't hand to Python, and the Wayland overlay asks
+    each frame (penguin.Hosted.selected_text, to make it the primary selection): the error in its timer stopped
+    the app."""
+
+    def inputMethodQuery(self, query, argument=None):
+        if query == Qt.InputMethodQuery.ImCurrentSelection:
+            return selection_text(self.textCursor())
+        return super().inputMethodQuery(query) if argument is None else super().inputMethodQuery(query, argument)
+
+
+class Entry(PlainSelection, QTextEdit):
+    """The field you type a question in. Asking, it takes several lines (Shift+Enter starts one, Enter sends) and
+    keeps a paste's line breaks; naming something, it's one line (`set_multiline`). Pasting files, a picture or a
+    long text attaches it (`paste_requested`) rather than squeezing it into the field.
+
+    It keeps the calls of the one-line field it replaced, which the app and the overlay use: text, setText,
+    insert, end, setSelection, returnPressed, hasSelectedText and selectedText."""
 
     paste_requested = pyqtSignal()
+    returnPressed = pyqtSignal()  # Enter (not Shift+Enter): send
+    resized = pyqtSignal()  # it grew or shrank to fit its text
+    MAX_LINES = 6  # past this it scrolls
+
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("entry")
+        self.setDocument(richtext.SafeDocument(self))
+        self.setAcceptRichText(False)
+        self.setTabChangesFocus(True)  # Tab goes on to the next control, as everywhere else in the box
+        self.setAcceptDrops(False)  # a drop goes to the box, which attaches files and long text
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.setWordWrapMode(QTextOption.WrapMode.WrapAtWordBoundaryOrAnywhere)
+        self.document().setDocumentMargin(2)
+        self.multiline = False
+        self.document().contentsChanged.connect(self._fit)
+
+    # -- the one-line field's calls
+
+    def text(self) -> str:
+        return self.toPlainText()
+
+    def setText(self, text: str) -> None:
+        self.setPlainText(self.lines(text))
+        self.end(False)
+
+    def insert(self, text: str) -> None:
+        """Typed or pasted text, at the cursor (replacing what's selected)."""
+        self.insertPlainText(self.lines(text))
+
+    def end(self, mark: bool) -> None:
+        cursor = self.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.End, QTextCursor.MoveMode.KeepAnchor if mark else QTextCursor.MoveMode.MoveAnchor)
+        self.setTextCursor(cursor)
+
+    def setSelection(self, start: int, length: int) -> None:
+        cursor = self.textCursor()
+        cursor.setPosition(start)
+        cursor.setPosition(start + length, QTextCursor.MoveMode.KeepAnchor)
+        self.setTextCursor(cursor)
+
+    def hasSelectedText(self) -> bool:
+        return self.textCursor().hasSelection()
+
+    def selectedText(self) -> str:
+        return selection_text(self.textCursor())
+
+    def del_(self) -> None:
+        self.textCursor().removeSelectedText()
+
+    def isUndoAvailable(self) -> bool:
+        return self.document().isUndoAvailable()
+
+    def isRedoAvailable(self) -> bool:
+        return self.document().isRedoAvailable()
+
+    # -- lines
+
+    def set_multiline(self, on: bool) -> None:
+        """Several lines (asking a question), or one (a name)."""
+        self.multiline = on
+        if not on and "\n" in self.text():
+            self.setText(self.text())
+
+    def lines(self, text: str) -> str:
+        """`text` as the field takes it: its line breaks kept while asking, joined into one line otherwise."""
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        return text if self.multiline else " ".join(text.splitlines())
 
     def keyPressEvent(self, event) -> None:
         if event.matches(QKeySequence.StandardKey.Paste):
             self.paste_requested.emit()
+        elif event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            if self.multiline and event.modifiers() & Qt.KeyboardModifier.ShiftModifier:
+                self.insertPlainText("\n")
+            else:
+                self.returnPressed.emit()
         else:
             super().keyPressEvent(event)
+
+    def inputMethodEvent(self, event) -> None:
+        commit = event.commitString()
+        if commit and not self.multiline and ("\n" in commit or "\r" in commit):  # the overlay types a paste in this way
+            joined = QInputMethodEvent(event.preeditString(), event.attributes())
+            joined.setCommitString(self.lines(commit), event.replacementStart(), event.replacementLength())
+            event = joined
+        super().inputMethodEvent(event)
+
+    def canInsertFromMimeData(self, source) -> bool:
+        return source is not None and source.hasText()
+
+    def insertFromMimeData(self, source) -> None:
+        """Text Qt pastes itself (Linux's middle click): as plain text, by the field's rule for lines."""
+        if source is not None and source.hasText():
+            self.insert(source.text())
+
+    def _fit(self) -> None:
+        """One line high, growing with its text to MAX_LINES, then scrolling."""
+        line = QFontMetricsF(self.font()).lineSpacing()
+        margin = 2 * self.document().documentMargin()
+        text_h = min(max(self.document().size().height(), line + margin), line * self.MAX_LINES + margin)
+        edges = self.contentsMargins()  # its border and padding (the same width focused or not: see AskBox._style)
+        height = round(text_h + edges.top() + edges.bottom())
+        if height != self.height() or self.minimumHeight() != height:
+            self.setFixedHeight(height)
+            self.resized.emit()
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        if event.size().width() != event.oldSize().width():  # wraps differently
+            self._fit()
 
     def edit_menu(self) -> QMenu:
         """Undo to Select All, as Qt's own menu for a field has them, without reading the clipboard to open: Qt's
@@ -589,7 +719,7 @@ class Entry(QLineEdit):
                 menu.exec(event.globalPos())
             menu.deleteLater()
             return
-        menu = self.createStandardContextMenu()
+        menu = self.createStandardContextMenu(event.pos())
         for action in menu.actions():
             if action.objectName() == "edit-paste":
                 action.triggered.disconnect()
@@ -635,7 +765,7 @@ def plain_tip(text: str) -> str:
     return "<qt>" + html.escape(text) + "</qt>"
 
 
-class Answer(QTextBrowser):
+class Answer(PlainSelection, QTextBrowser):
     """The conversation above the field, in a document that loads nothing (a text browser's own would read
     any file an answer names)."""
 
@@ -643,6 +773,43 @@ class Answer(QTextBrowser):
         super().__init__(openLinks=False)
         self.setOpenExternalLinks(False)
         self.setDocument(richtext.SafeDocument(self))
+
+
+class _Ghost(QWidget):
+    """A picture of the ask box as it closed, fading out where it was: the box itself is gone at once (the app
+    and its callers count on that), and this is only something to look at, which takes no clicks or keys."""
+
+    def __init__(self, picture: QPixmap, geometry: QRect, opacity: float, ms: int):
+        flags = (
+            Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool
+            | Qt.WindowType.WindowTransparentForInput | Qt.WindowType.WindowDoesNotAcceptFocus
+        )
+        super().__init__(None, flags)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.picture = picture
+        self.setGeometry(geometry)
+        self.setWindowOpacity(opacity)
+        self.fade = QPropertyAnimation(self, b"windowOpacity", self)
+        self.fade.setDuration(ms)
+        self.fade.setStartValue(opacity)
+        self.fade.setEndValue(0.0)
+        self.fade.finished.connect(self._done)
+        _GHOSTS.add(self)  # held until it has faded: nothing else refers to it
+        self.show()
+        self.fade.start()
+
+    def _done(self) -> None:
+        self.hide()
+        _GHOSTS.discard(self)
+        self.deleteLater()
+
+    def paintEvent(self, _event) -> None:
+        QPainter(self).drawPixmap(0, 0, self.picture)
+
+
+_GHOSTS: set[_Ghost] = set()
 
 
 class AskBox(QWidget):
@@ -657,17 +824,28 @@ class AskBox(QWidget):
     attach_requested = pyqtSignal(QPoint)  # where to show what can be attached
     pasted = pyqtSignal(str, object)  # what clipboard_contents found: to attach
     attachment_removed = pyqtSignal(int)
+    stop_requested = pyqtSignal()  # Stop, while an answer is coming
+    copy_requested = pyqtSignal(str)  # an answer's or a code block's text, for the clipboard (the app's to put there: Qt's, or the overlay's)
+    expand_changed = pyqtSignal(bool)  # made bigger (True) or back (False), by its toggle
 
-    WIDTH = 380
-    MAX_ANSWER = 320
+    WIDTH = 380  # px with text at its usual size; it grows with the text
+    MAX_ANSWER = 320  # px: the most the answer area takes before it scrolls, unless expanded
+    SCREEN_SHARE = 0.55  # of the screen's height: the most the box takes
+    COLLAPSED = 0.8  # of the room expanding would give the answer, at most, so there is more to expand into
+    EXPANDED_WIDTH = 1.5  # times as wide, expanded (within most of the screen)
+    FADE_MS = 140
+    PARTIAL_MS = 80  # streamed text is drawn at most this often
 
     def __init__(self):
         super().__init__(None, Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setAttribute(Qt.WidgetAttribute.WA_MacAlwaysShowToolWindow)
-        self.setFixedWidth(self.WIDTH)
+        self.text_scale = 1.0
+        self.expanded = False
+        self.reduced_motion = False  # no fades
+        self.setFixedWidth(self._width())
         self._anchor = QPoint(0, 0)
-        self._tail_x = self.WIDTH / 2
+        self._tail_x = self.width() / 2
         self.wants_keyboard = True
         self.style = styles.get(None)
         self.animate = True
@@ -679,11 +857,25 @@ class AskBox(QWidget):
         self._frames.setInterval(1000 // ANIM_FPS)
         self._frames.timeout.connect(self.update)
         self.seen = True  # off while nothing on screen can be seen (set_seen): no frames
+        self._busy: tuple[str, float | None] | None = None  # (who is answering, since when)
+        self._busy_clock = QTimer(self)  # the seconds counting up while an answer is coming
+        self._busy_clock.setInterval(1000)
+        self._busy_clock.timeout.connect(self._show_busy)
+        self._partial = ""  # streamed text so far, shown under the chat
+        self._partial_later = QTimer(self)
+        self._partial_later.setSingleShot(True)
+        self._partial_later.setInterval(self.PARTIAL_MS)
+        self._partial_later.timeout.connect(lambda: self._render(keep_place=True))
+        self._fade_in = QPropertyAnimation(self, b"windowOpacity", self)
+        self._fade_in.setDuration(self.FADE_MS)
+        self._fade_in.setStartValue(0.0)
+        self._fade_in.setEndValue(1.0)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(*self._margins)
         layout.setSpacing(8)
         top = QHBoxLayout()
+        top.setSpacing(2)
         self.title = QLabel()
         self.title.setObjectName("title")
         self.title.setTextFormat(Qt.TextFormat.PlainText)  # a name or a chat's title, never markup that could load a file
@@ -695,6 +887,10 @@ class AskBox(QWidget):
         self.reset_button = QToolButton(text="New chat", autoRaise=True)
         self.reset_button.clicked.connect(self.reset_requested.emit)
         top.addWidget(self.reset_button)
+        self.expand_button = QToolButton(text="⤢", autoRaise=True, checkable=True)
+        self.expand_button.setObjectName("expand")
+        self.expand_button.toggled.connect(self.set_expanded)
+        top.addWidget(self.expand_button)
         close = QToolButton(text="✕", autoRaise=True)
         close.setToolTip("Close (Esc)")
         close.setAccessibleName("Close")
@@ -702,15 +898,32 @@ class AskBox(QWidget):
         top.addWidget(close)
         layout.addLayout(top)
         self.answer = Answer()
-        self.answer.anchorClicked.connect(open_link)
+        self.answer.anchorClicked.connect(self._link)
         self.answer.setFrameShape(QTextBrowser.Shape.NoFrame)
         self.answer.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.answer.document().setDocumentMargin(2)
         wrap_anywhere(self.answer.document())
         self.answer.setAccessibleName("Conversation")
-        self._markdown = ""  # what the answer area shows, as given: it's drawn again from this when the style changes
+        self._markdown = ""  # what the answer area shows, as given: drawn again from this when the style changes
+        self._at_end = False
+        self._rendered = richtext.Rendered()
         self.highlighter = highlight.CodeHighlighter(self.answer.document(), highlight.code_colours(self.style.colours()))
         layout.addWidget(self.answer)
+        self.busy = QWidget()  # who is answering and for how long, with Stop
+        busy_row = QHBoxLayout(self.busy)
+        busy_row.setContentsMargins(0, 0, 0, 0)
+        self.busy_label = QLabel()
+        self.busy_label.setObjectName("hint")
+        self.busy_label.setTextFormat(Qt.TextFormat.PlainText)
+        busy_row.addWidget(self.busy_label, 1)
+        self.stop_button = QToolButton(text="Stop", autoRaise=True)
+        self.stop_button.setObjectName("stop")
+        self.stop_button.setToolTip("Stop this answer")
+        self.stop_button.setAccessibleName("Stop the answer")
+        self.stop_button.clicked.connect(self.stop_requested.emit)
+        busy_row.addWidget(self.stop_button)
+        self.busy.hide()
+        layout.addWidget(self.busy)
         self.chips = QWidget()  # what's attached to the next question, each with its ✕
         self.chips_layout = QHBoxLayout(self.chips)
         self.chips_layout.setContentsMargins(0, 0, 0, 0)
@@ -725,10 +938,11 @@ class AskBox(QWidget):
         self.attach_button.setAccessibleName("Attach")
         self.attach_button.setAccessibleDescription("Files, a picture or text; or paste them in")
         self.attach_button.clicked.connect(lambda: self.attach_requested.emit(self._below(self.attach_button)))
-        row.addWidget(self.attach_button)
+        row.addWidget(self.attach_button, 0, Qt.AlignmentFlag.AlignBottom)
         self.entry = Entry()
         self.entry.returnPressed.connect(self._submit)
         self.entry.paste_requested.connect(self.paste_clipboard)
+        self.entry.resized.connect(self._refit)
         row.addWidget(self.entry, 1)
         layout.addLayout(row)
         self._attached = 0
@@ -738,6 +952,7 @@ class AskBox(QWidget):
         self.hint.setObjectName("hint")
         self.hint.setTextFormat(Qt.TextFormat.PlainText)
         layout.addWidget(self.hint)
+        self._label_expand()
         self.set_style(self.style, self.animate)
 
     def set_style(self, style: styles.Style, animate: bool) -> None:
@@ -751,11 +966,30 @@ class AskBox(QWidget):
         self.layout().setContentsMargins(*self._margins)
         self._style()
         if self.isVisible():
-            self.set_answer(self._markdown)
+            self._render()
             self._run_frames()
 
+    def set_text_scale(self, scale: float) -> None:
+        """The text-size setting: 1 is the usual size (or the desktop's, if larger); widths grow with it."""
+        self.text_scale = min(3.0, max(0.75, scale))
+        self._style()
+        self._render(keep_place=True)
+
+    def set_reduced_motion(self, on: bool) -> None:
+        """No fades when the box opens and closes."""
+        self.reduced_motion = on
+
+    def _body_font(self) -> QFont:
+        return _font(BODY_POINTS, scale=self.text_scale)
+
+    def _width(self) -> int:
+        screen = QGuiApplication.screenAt(getattr(self, "_anchor", QPoint())) or QGuiApplication.primaryScreen()
+        room = screen.availableGeometry().width() * 0.9 if screen is not None else 2000
+        width = width_for(self.WIDTH, self._body_font()) * (self.EXPANDED_WIDTH if self.expanded else 1.0)
+        return round(min(room, width))
+
     def _content_width(self) -> int:
-        return self.WIDTH - self._margins[0] - self._margins[2]
+        return self.width() - self._margins[0] - self._margins[2]
 
     def anim_key(self, now: float) -> int:
         """Changes as often as its animated bubble needs drawing again; -1 when it doesn't."""
@@ -784,10 +1018,16 @@ class AskBox(QWidget):
         self.seen = on
         self._run_frames()
 
+    def _fades(self) -> bool:
+        """Whether it fades in and out: not with reduced motion, nor where windows can't be faded (Wayland) or
+        it isn't a window at all (on the overlay)."""
+        return not self.reduced_motion and not self.stage_draws_art and not QGuiApplication.platformName().startswith("wayland")
+
     def open(self, anchor: QPoint, title: str, hint: str, placeholder: str, text: str = "", prefill: str = "", activate: bool = True) -> None:
         """Show it above `anchor`; `activate` gives it the keyboard (you asked for it)."""
+        self._anchor = QPoint(anchor)
         self.title.setText(title)
-        self.hint.setText(QFontMetricsF(self.hint.font()).elidedText(hint, Qt.TextElideMode.ElideRight, self._content_width() - 2))
+        self._hint = hint
         self.setAccessibleName(title)  # a screen reader says what the box is for as you come to it
         self.entry.setAccessibleName(title)
         self.entry.setAccessibleDescription(hint)
@@ -797,12 +1037,16 @@ class AskBox(QWidget):
         self.attach_button.show()
         self.history_button.show()
         self.reset_button.hide()
-        self._anchor = QPoint(anchor)
         self.set_answer(text)
         self.wants_keyboard = activate
-        if not self.isVisible():
+        opening = not self.isVisible()
+        if opening:
             self._opened_at = time.monotonic()
+            if self._fades():
+                self.setWindowOpacity(0.0)
         self.show()
+        if opening and self._fades():
+            self._fade_in.start()
         self.raise_()
         if activate:
             if QGuiApplication.platformName() == "cocoa":  # the keyboard comes to an app that's active
@@ -813,6 +1057,8 @@ class AskBox(QWidget):
         self.entry.setFocus()
         self.entry.end(False)
         self._run_frames()
+        if self._busy is not None:
+            self._busy_clock.start()
 
     def show_notes(self, anchor: QPoint, title: str, markdown: str, hint: str = "Esc to close") -> None:
         """Something to read, not to answer (what's new in an update): the same bubble, scrolling, with
@@ -826,10 +1072,136 @@ class AskBox(QWidget):
         self._fit()
 
     def chatting(self, on: bool) -> None:
-        """Asking questions (on), or something else (naming the chatmon): only questions take attachments
-        and have a history."""
+        """Asking questions (on), or something else (naming the chatmon): only questions take attachments,
+        have a history and take several lines."""
         self.attach_button.setVisible(on)
         self.history_button.setVisible(on)
+        self.entry.set_multiline(on)
+
+    def set_expanded(self, on: bool) -> None:
+        """Bigger: up to SCREEN_SHARE of the screen's height and EXPANDED_WIDTH as wide; or back."""
+        if on == self.expanded:
+            return
+        self.expanded = on
+        if self.expand_button.isChecked() != on:
+            self.expand_button.setChecked(on)
+        self._label_expand()
+        self.setFixedWidth(self._width())
+        self._render(keep_place=True)
+        self.expand_changed.emit(on)
+
+    def _label_expand(self) -> None:
+        name = "Make the box smaller" if self.expanded else "Make the box bigger"
+        self.expand_button.setToolTip(name)
+        self.expand_button.setAccessibleName(name)
+
+    # -- an answer on its way
+
+    def set_busy(self, label: str | None, started_at: float | None = None) -> None:
+        """An answer is coming from `label` (a brain's name), asked at `started_at` (time.monotonic()): the box
+        shows who, how many seconds so far, and Stop. None: it has come (or stopped)."""
+        self._busy = (label, started_at) if label else None
+        if self._busy is None:
+            self._busy_clock.stop()
+            self.busy.hide()
+        else:
+            self._show_busy()
+            self.busy.show()
+            if self.isVisible():
+                self._busy_clock.start()
+        self._render(keep_place=True)
+
+    def _show_busy(self) -> None:
+        if self._busy is None:
+            return
+        label, since = self._busy
+        if since is None:
+            self.busy_label.setText(f"{label} is answering…")
+        else:
+            self.busy_label.setText(f"{label} is answering… {max(0, int(time.monotonic() - since))} s")
+
+    def append_partial(self, text: str) -> None:
+        """Part of an answer as it streams in, after what came before: shown under the chat."""
+        self._partial += text
+        self._partial_later.start()
+
+    def set_partial(self, text: str) -> None:
+        """The answer so far, all of it (for a brain that reports the whole text each time)."""
+        self._partial = text
+        self._partial_later.start()
+
+    # -- what it shows
+
+    def set_answer(self, markdown: str, at_end: bool = False) -> None:
+        """What the bubble shows above the field: an answer, or the whole chat (`at_end`: opened at the start
+        of its newest exchange, as a chat is read). Streamed text so far is dropped: this is the answer."""
+        self._markdown, self._at_end, self._partial = markdown, at_end, ""
+        self._partial_later.stop()
+        self._render()
+
+    def _render(self, keep_place: bool = False) -> None:
+        """Draw the answer area from what it was given; `keep_place` leaves the reader where they were."""
+        bar = self.answer.verticalScrollBar()
+        place = bar.value()
+        markdown = self._markdown + (("\n\n" if self._markdown else "") + self._partial if self._partial else "")
+        if markdown:
+            c = self.style.colours()
+            body = self._body_font()
+            self.answer.document().setDefaultFont(body)
+            self.highlighter.set_colours(highlight.code_colours(c))
+            self._rendered = richtext.render(self.answer.document(), markdown, look(c, body.pointSizeF()), secrets.token_hex(6), copy_last=self._busy is None)
+            self.answer.show()
+        else:
+            self._rendered = richtext.Rendered()
+            self.answer.clear()
+            self.answer.hide()
+        self._size_answer()
+        self._fit()
+        if keep_place:
+            bar.setValue(place)
+        else:
+            self._scroll()
+            QTimer.singleShot(0, self._scroll)  # again once the window has its new size, where that comes later
+
+    def _size_answer(self) -> None:
+        if self.answer.isHidden():
+            return
+        doc = self.answer.document()
+        doc.setTextWidth(self._content_width() - 10)
+        self.answer.setFixedHeight(max(1, min(int(doc.size().height()) + 4, self._answer_room())))
+
+    def _answer_room(self) -> int:
+        """The most the answer area may take: expanded, what's left of SCREEN_SHARE of the screen; otherwise
+        MAX_ANSWER (grown with the text), or less on a short screen, so expanding always gives it more."""
+        screen = QGuiApplication.screenAt(self._anchor) or QGuiApplication.primaryScreen()
+        share = self.SCREEN_SHARE * (screen.availableGeometry().height() if screen is not None else 1000)
+        layout = self.layout()
+        layout.activate()
+        rest = layout.totalSizeHint().height() - (self.answer.height() if not self.answer.isHidden() else 0)
+        room = max(80, int(share - rest))
+        return room if self.expanded else min(round(room * self.COLLAPSED), round(width_for(self.MAX_ANSWER, self._body_font())))
+
+    def _scroll(self) -> None:
+        """Where a newly shown text opens: at the top, or, for a chat, at the start of its newest exchange."""
+        bar = self.answer.verticalScrollBar()
+        if not self._at_end:
+            bar.setValue(0)
+        elif self._rendered.turns:
+            doc = self.answer.document()
+            top = doc.documentLayout().blockBoundingRect(doc.findBlock(self._rendered.turns[-1])).top()
+            bar.setValue(min(bar.maximum(), int(top)))
+        else:
+            bar.setValue(bar.maximum())
+
+    def _link(self, url: QUrl) -> None:
+        """A link in the answer area: one of its own Copy links, or a link to open in the browser."""
+        n = richtext.copy_index(url, self._rendered.copy_token)
+        if n is None:
+            open_link(url)
+            return
+        texts = self._rendered.code + self._rendered.answers
+        if 0 <= n < len(texts):
+            self.copy_requested.emit(texts[n])
 
     def set_attachments(self, labels: list[str]) -> None:
         """Show what's attached to the next question, each with a ✕ that takes it off."""
@@ -838,7 +1210,7 @@ class AskBox(QWidget):
             if item.widget():
                 item.widget().deleteLater()
         self._attached = len(labels)
-        metrics = QFontMetricsF(_font(9))
+        metrics = QFontMetricsF(_font(9, scale=self.text_scale))
         room, used, shown = self._content_width(), 0.0, 0
         for i, label in enumerate(labels):
             name = label.rpartition(" (")[0] or label  # "notes.md (2 KB)": the name on the chip, the size in its tip
@@ -887,7 +1259,7 @@ class AskBox(QWidget):
         from .attachments import long_paste
 
         if kind == "text" and not long_paste(payload):
-            self.entry.insert(" ".join(payload.splitlines()))
+            self.entry.insert(payload)  # its line breaks kept, when the field takes several lines
         else:
             self.pasted.emit(kind, payload)
 
@@ -930,25 +1302,6 @@ class AskBox(QWidget):
         self.entry.setFocus()
         self._run_frames()
 
-    def set_answer(self, markdown: str, at_end: bool = False) -> None:
-        """What the bubble shows above the field: an answer, or the whole chat (`at_end`: scrolled to its
-        latest, as a chat is read)."""
-        self._markdown = markdown
-        if markdown:
-            c = self.style.colours()
-            self.highlighter.set_colours(highlight.code_colours(c))
-            richtext.render(self.answer.document(), markdown, look(c, BODY_POINTS))
-            doc = self.answer.document()
-            doc.setTextWidth(self._content_width() - 10)
-            self.answer.setFixedHeight(min(int(doc.size().height()) + 4, self.MAX_ANSWER))
-            self.answer.show()
-        else:
-            self.answer.clear()
-            self.answer.hide()
-        self._fit()
-        bar = self.answer.verticalScrollBar()
-        bar.setValue(bar.maximum() if at_end else 0)
-
     def set_resettable(self, on: bool) -> None:
         self.reset_button.setVisible(on)
 
@@ -971,23 +1324,31 @@ class AskBox(QWidget):
 
     def dismiss(self) -> None:
         if self.isVisible():
+            if self._fades():
+                _Ghost(self.grab(), self.geometry(), self.windowOpacity(), self.FADE_MS)
             self.hide()
             self.closed.emit()
 
+    def _refit(self) -> None:
+        self._size_answer()
+        self._fit()
+
     def _fit(self) -> None:
+        width = self.width()
+        self.hint.setText(QFontMetricsF(self.hint.font()).elidedText(getattr(self, "_hint", ""), Qt.TextElideMode.ElideRight, self._content_width() - 2))
         layout = self.layout()
         layout.activate()
         height = layout.totalSizeHint().height()
         screen = QGuiApplication.screenAt(self._anchor) or QGuiApplication.primaryScreen()
         geo = screen.availableGeometry()
-        x = min(max(self._anchor.x() - self.WIDTH // 2, geo.left() + 4), geo.right() - self.WIDTH - 4)
+        x = min(max(self._anchor.x() - width // 2, geo.left() + 4), geo.right() - width - 4)
         y = max(self._anchor.y() - height, geo.top() + 4)
         if self.art:
             lo, hi = self.art.tail_range(self._content_width())
         else:
-            lo, hi = RADIUS + TAIL, self.WIDTH - RADIUS - TAIL
+            lo, hi = RADIUS + TAIL, width - RADIUS - TAIL
         self._tail_x = min(max(self._anchor.x() - x, lo), hi)
-        self.setGeometry(x, y, self.WIDTH, height)
+        self.setGeometry(x, y, width, height)
         self.update()
 
     def _submit(self) -> None:
@@ -998,24 +1359,37 @@ class AskBox(QWidget):
 
     def _style(self) -> None:
         c = self.style.colours()
-        text, title, dim, base, accent = c.body.name(), c.title.name(), c.dim.name(), c.entry.name(), c.accent.name()
+        s = self.text_scale
+        text, title, dim, base, accent, focus = c.body.name(), c.title.name(), c.dim.name(), c.entry.name(), c.accent.name(), c.title.name()
         selection = f"selection-background-color: {c.selection.name()}; selection-color: {c.selection_text.name()};"
+
+        def pt(base_points: float) -> str:
+            return f"{text_points(base_points, s):.1f}pt"
+
+        attach = round(width_for(24, self._body_font()))
         self.setStyleSheet(
             f"""
-            QLabel, QTextBrowser {{ color: {text}; background: transparent; font-size: 10.5pt; {selection} }}
+            QLabel, QTextBrowser {{ color: {text}; background: transparent; font-size: {pt(BODY_POINTS)}; {selection} }}
+            QTextBrowser {{ border: 2px solid transparent; border-radius: 4px; }}
+            QTextBrowser:focus {{ border: 2px solid {focus}; }}
             QLabel#title {{ font-weight: 600; color: {title}; }}
-            QLabel#hint {{ color: {dim}; font-size: 9pt; }}
-            QLineEdit {{ border: 1px solid {accent}; border-radius: 8px; padding: 6px 8px;
-                         background: {base}; color: {c.entry_text.name()}; font-size: 10.5pt; {selection} }}
-            QToolButton {{ color: {title}; border: none; padding: 2px 6px; }}
+            QLabel#hint {{ color: {dim}; font-size: {pt(9)}; }}
+            QTextEdit#entry {{ border: 1px solid {accent}; border-radius: 8px; padding: 4px 6px;
+                               background: {base}; color: {c.entry_text.name()}; font-size: {pt(BODY_POINTS)}; {selection} }}
+            QTextEdit#entry:focus {{ border: 2px solid {focus}; padding: 3px 5px; }}
+            QToolButton {{ color: {title}; border: 2px solid transparent; border-radius: 6px; padding: 0px 4px; font-size: {pt(BODY_POINTS)}; }}
             QToolButton:hover {{ color: {c.link.name()}; }}
-            QToolButton#attach {{ color: {accent}; border: 1.5px solid {accent}; border-radius: 13px;
-                                  min-width: 24px; max-width: 24px; min-height: 24px; max-height: 24px;
-                                  padding: 0 0 2px 0; font-size: 14pt; font-weight: 700; background: {base}; }}
+            QToolButton:focus {{ border: 2px solid {focus}; }}
+            QToolButton#expand:checked {{ color: {c.link.name()}; }}
+            QToolButton#attach {{ color: {accent}; border: 1.5px solid {accent}; border-radius: {attach // 2 + 1}px;
+                                  min-width: {attach}px; max-width: {attach}px; min-height: {attach}px; max-height: {attach}px;
+                                  padding: 0 0 2px 0; font-size: {pt(14)}; font-weight: 700; background: {base}; }}
             QToolButton#attach:hover {{ color: {base}; background: {accent}; }}
+            QToolButton#attach:focus {{ border: 2px solid {focus}; }}
             QToolButton#chip {{ color: {c.entry_text.name()}; border: 1px solid {accent}; border-radius: 9px;
-                                padding: 1px 8px; font-size: 9pt; background: {base}; }}
+                                padding: 1px 8px; font-size: {pt(9)}; background: {base}; }}
             QToolButton#chip:hover {{ color: {c.link.name()}; }}
+            QToolButton#chip:focus {{ border: 2px solid {focus}; padding: 0px 7px; }}
             QScrollBar:vertical {{ width: 6px; background: transparent; margin: 0; }}
             QScrollBar::handle:vertical {{ background: {accent}; border-radius: 3px; min-height: 24px; }}
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height: 0; }}
@@ -1027,9 +1401,15 @@ class AskBox(QWidget):
         hint = self.entry.palette()
         hint.setColor(QPalette.ColorRole.PlaceholderText, c.placeholder)
         self.entry.setPalette(hint)
+        self.setFixedWidth(self._width())
+        self.entry._fit()
 
     def hideEvent(self, event) -> None:
         self._frames.stop()
+        self._busy_clock.stop()
+        self._partial_later.stop()
+        self._fade_in.stop()
+        self.setWindowOpacity(1.0)
         super().hideEvent(event)
 
     def showEvent(self, event) -> None:

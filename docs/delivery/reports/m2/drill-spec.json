@@ -326,6 +326,227 @@
       "expect": [
         "test_the_text_size_setting_scales_text_and_widths"
       ]
+    },
+    {
+      "id": "M2-06-buttons",
+      "requirement": "M2-06",
+      "file": "chatmon/bubble.py",
+      "find": "            QToolButton:focus {{ border: 2px solid {focus}; }}",
+      "replace": "",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "shows its focus"
+      ]
+    },
+    {
+      "id": "M2-06-field",
+      "requirement": "M2-06",
+      "file": "chatmon/bubble.py",
+      "find": "QTextEdit#entry:focus {{ border: 2px solid {focus}; padding: 3px 5px; }}",
+      "replace": "QTextEdit#entry:focus {{ border: 1px solid {focus}; padding: 4px 6px; }}",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "field shows its focus"
+      ]
+    },
+    {
+      "id": "M2-07-box-width",
+      "requirement": "M2-07",
+      "file": "chatmon/bubble.py",
+      "find": "        width = width_for(self.WIDTH, self._body_font()) * (self.EXPANDED_WIDTH if self.expanded else 1.0)",
+      "replace": "        width = self.WIDTH * (self.EXPANDED_WIDTH if self.expanded else 1.0)",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_the_text_size_setting_grows_the_box_and_its_text"
+      ]
+    },
+    {
+      "id": "M2-10-at-the-end",
+      "requirement": "M2-10",
+      "file": "chatmon/bubble.py",
+      "find": "            bar.setValue(min(bar.maximum(), int(top)))",
+      "replace": "            bar.setValue(bar.maximum())",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_a_long_answer_opens_at_the_start_of_the_newest_exchange"
+      ]
+    },
+    {
+      "id": "M2-11-no-room",
+      "requirement": "M2-11",
+      "file": "chatmon/bubble.py",
+      "find": "        return room if self.expanded else min(",
+      "replace": "        return min(",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_the_box_can_be_made_bigger_and_back"
+      ]
+    },
+    {
+      "id": "M2-11-no-rules",
+      "requirement": "M2-11",
+      "file": "chatmon/richtext.py",
+      "find": "        inserts.append((start - 1, \"rule\", None))",
+      "replace": "        pass",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_turns_are_ruled_apart"
+      ]
+    },
+    {
+      "id": "M2-12-no-new-line",
+      "requirement": "M2-12",
+      "file": "chatmon/bubble.py",
+      "find": "            if self.multiline and event.modifiers() & Qt.KeyboardModifier.ShiftModifier:",
+      "replace": "            if False:",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_shift_enter_adds_a_line_and_enter_sends_it_all"
+      ]
+    },
+    {
+      "id": "M2-12-paste-joined",
+      "requirement": "M2-12",
+      "file": "chatmon/bubble.py",
+      "find": "        return text if self.multiline else \" \".join(text.splitlines())",
+      "replace": "        return \" \".join(text.splitlines())",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_a_short_paste_keeps_its_line_breaks"
+      ]
+    },
+    {
+      "id": "M2-12-qt-selection",
+      "requirement": "M2-12",
+      "file": "chatmon/bubble.py",
+      "find": "        if query == Qt.InputMethodQuery.ImCurrentSelection:",
+      "replace": "        if False:",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_the_field_keeps_the_calls_the_app_and_overlay_use"
+      ]
+    },
+    {
+      "id": "M2-16-no-copy",
+      "requirement": "M2-16",
+      "file": "chatmon/bubble.py",
+      "find": "            self.copy_requested.emit(texts[n])",
+      "replace": "            pass",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_each_answer_and_code_block_can_be_copied"
+      ]
+    },
+    {
+      "id": "M2-16-forged",
+      "requirement": "M2-16",
+      "file": "chatmon/richtext.py",
+      "find": "    return int(n) if given == token and n.isdigit() else None",
+      "replace": "    return int(n) if n.isdigit() else None",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_a_copy_link_written_by_an_answer_copies_nothing"
+      ]
+    },
+    {
+      "id": "M2-18-no-clock",
+      "requirement": "M2-18",
+      "file": "chatmon/bubble.py",
+      "find": "                self._busy_clock.start()",
+      "replace": "                pass",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "it counts each second"
+      ]
+    },
+    {
+      "id": "M2-18-no-stop",
+      "requirement": "M2-18",
+      "file": "chatmon/bubble.py",
+      "find": "        self.stop_button.clicked.connect(self.stop_requested.emit)",
+      "replace": "        pass",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped"
+      ]
+    },
+    {
+      "id": "M2-18-no-partial",
+      "requirement": "M2-18",
+      "file": "chatmon/bubble.py",
+      "find": "        self._partial += text",
+      "replace": "        pass",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_streamed_text_shows_as_it_comes_and_the_answer_replaces_it"
+      ]
+    },
+    {
+      "id": "M2-19-no-fade-in",
+      "requirement": "M2-19",
+      "file": "chatmon/bubble.py",
+      "find": "            self._fade_in.start()",
+      "replace": "            pass",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_it_fades_in_and_out"
+      ]
+    },
+    {
+      "id": "M2-19-no-ghost",
+      "requirement": "M2-19",
+      "file": "chatmon/bubble.py",
+      "find": "                _Ghost(self.grab(), self.geometry(), self.windowOpacity(), self.FADE_MS)",
+      "replace": "                pass",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_it_fades_in_and_out"
+      ]
+    },
+    {
+      "id": "M2-19-motion-ignored",
+      "requirement": "M2-19",
+      "file": "chatmon/bubble.py",
+      "find": "        return not self.reduced_motion and not self.stage_draws_art",
+      "replace": "        return not self.stage_draws_art",
+      "test": [
+        "tests/test_ask_box.py"
+      ],
+      "expect": [
+        "test_with_reduced_motion_it_comes_and_goes_at_once"
+      ]
     }
   ]
 }

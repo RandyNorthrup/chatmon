@@ -1,0 +1,40 @@
+..s.s...............................s.......................F........... [ 10%]
+...ssss................................................................. [ 21%]
+....................s................................................... [ 31%]
+........................................................................ [ 42%]
+....................................................................sss. [ 53%]
+...ss.ssss...........s......sssssss..................................... [ 63%]
+...............................................s...s....s............... [ 74%]
+.................ss..................................................... [ 84%]
+................................s.ss...sssssssssss.ssssssss............. [ 95%]
+.....s..............s....sssss                                           [100%]
+================================== FAILURES ===================================
+___________________________ test_a_hook_reaches_it ____________________________
+
+companion = <chatmon.app.Companion object at 0x0000019BACF8EAD0>
+
+    def test_a_hook_reaches_it(companion):
+        """A separate process, as a hook would be, says something and hears back."""
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        code = (
+            "import sys; sys.path.insert(0, sys.argv[1]);"
+            "from chatmon import events;"
+            "sys.exit(0 if events.send({'type': 'say', 'text': 'hello from a hook'}, timeout=5) else 1)"
+        )
+        proc = subprocess.Popen([sys.executable, "-c", code, root])
+        deadline = time.monotonic() + 20
+        while proc.poll() is None and time.monotonic() < deadline:
+            spin(0.05)
+        assert proc.returncode == 0
+        spin(0.2)
+>       assert companion.stage.bubble.title == "Sparky" and "hello from a hook" in companion.stage.bubble.doc.toPlainText()
+E       AssertionError: assert ('' == 'Sparky'
+E         
+E         - Sparky)
+
+tests\test_app_smoke.py:89: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_hook_reaches_it - AssertionError: asse...
+1 failed, 618 passed, 59 skipped in 90.65s (0:01:30)
+..............sss....ss.ssss                                             [100%]
+19 passed, 9 skipped in 1.85s
