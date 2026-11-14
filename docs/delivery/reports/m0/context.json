@@ -1,0 +1,4 @@
+{
+  "platform": "windows",
+  "tools": {"python": "3.14.10", "ruff": "0.17.4", "pytest": "9.2.0", "pyqt6": "6.11.0"}
+}

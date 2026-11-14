@@ -6,6 +6,8 @@ import json
 import os
 import sys
 import threading
+import time
+from datetime import datetime
 
 from . import __version__, events, paths
 
@@ -24,7 +26,9 @@ usage: chatmon [command]
       EVENT is one of: working, needs-you, done, success, error, idle;
       left out, it's worked out from the payload
   say TEXT                   make it say something
-  remind WHEN [to] TEXT      set a reminder: remind in 20m to stretch
+  ask [TEXT]                 open the ask box, TEXT typed in, ready for more
+  remind WHEN [to] TEXT      set a reminder: remind in 20m to stretch (exits 2 if it can't tell when)
+  status                     the brain that answers, your reminders, and your agents
   quit                       close the chatmon that's running
   autostart on|off           start it when you log in
   --version
@@ -32,6 +36,7 @@ usage: chatmon [command]
 
 STDIN_LIMIT = 256 * 1024  # bytes of hook payload to read at most
 STDIN_WAIT = 0.5  # seconds to wait for it
+ASFW_ANY = 0xFFFFFFFF  # AllowSetForegroundWindow's "any process": the running Chatmon's id isn't known here
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -52,8 +57,12 @@ def main(argv: list[str] | None = None) -> int:
         return notify(rest)
     if command == "say":
         return _send({"type": "say", "text": " ".join(rest)})
+    if command == "ask":
+        return ask(rest)
     if command == "remind":
-        return _send({"type": "remind", "text": " ".join(rest)})
+        return remind(rest)
+    if command == "status":
+        return status()
     if command == "quit":
         return _send({"type": "quit"})
     if command == "hooks":
@@ -73,6 +82,65 @@ def _send(message: dict) -> int:
         return 0
     print("Chatmon isn't running. Start it with: chatmon", file=sys.stderr)
     return 1
+
+
+def remind(args: list[str]) -> int:
+    """A reminder, sent only once it's clear when: one Chatmon couldn't read used to vanish without a word."""
+    from . import reminders
+
+    text = " ".join(args)
+    command = reminders.parse_command("remind me " + text, datetime.now())
+    if command is None or command.kind != "reminder":
+        print(f"Couldn't tell when to remind you{f' ({text!r})' if text else ''}. Try: chatmon remind in 20m to stretch", file=sys.stderr)
+        return 2
+    return _send({"type": "remind", "text": text})
+
+
+def ask(args: list[str]) -> int:
+    """Open the running chatmon's ask box with `args` typed in, ready to type more (a hotkey, a launcher)."""
+    _let_chatmon_come_forward()
+    return _send({"type": "ask", "text": " ".join(args)})
+
+
+def _let_chatmon_come_forward() -> bool:
+    """Windows lets only the program you're using bring a window to the front, and you're using this one: it
+    passes that on, so the running Chatmon's ask box comes up in front, with the keyboard. Elsewhere there's
+    nothing to pass on. True if Windows took it."""
+    if sys.platform != "win32":
+        return False
+    import ctypes
+
+    try:
+        return bool(ctypes.windll.user32.AllowSetForegroundWindow(ctypes.c_ulong(ASFW_ANY)))
+    except (AttributeError, OSError):
+        return False
+
+
+def status() -> int:
+    """Whether Chatmon runs, the brain a question would go to, the battery, disks and reminders (as the *status*
+    command says them), and each coding agent: connected, or found and not connected. Worked out here, from
+    the settings and state the running Chatmon keeps, so it says as much when Chatmon isn't running."""
+    from . import agents, brains, commands, heads_up, reminders
+    from .settings import State, load_config, merge
+
+    paths.windows_environment()  # the agents' command lines, found on PATH as you have it now
+    running = events.deliver({"type": "ping"})
+    print("Chatmon is running." if running == events.SENT else "Chatmon isn't running. Start it with: chatmon")
+    state = State.load()
+    config, problem = load_config()
+    if problem:
+        print(f"Couldn't read the settings file ({problem}); using the defaults.", file=sys.stderr)
+    if isinstance(state.get("settings"), dict):
+        config = merge(config, state.get("settings"))  # what you set in Settings wins, as it does in Chatmon
+    brain = commands.brain_in_use(brains.load_brains(config["ai"]), config, state)
+    book = reminders.ReminderBook.from_list(state.get("reminders", []))
+    lines = commands.status_lines(heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders()), book.upcoming(), time.time(),
+                                  brain.label if brain else None, brains.describe(brain) if brain else "")
+    print("\n".join(lines))
+    print("- Agents:")
+    for agent in agents.AGENTS:
+        print(f"  {agent.label:<20} {agent.status()}")
+    return 0
 
 
 def _json(text: str) -> dict:
