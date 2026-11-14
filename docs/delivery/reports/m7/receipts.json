@@ -1,0 +1,102 @@
+{
+ "status": {
+  "TASK-CI": "implemented"
+ },
+ "receipts": [
+  {
+   "id": "RDY-1",
+   "acceptance": [
+    "AC-CI-1",
+    "AC-CI-2",
+    "AC-CI-3",
+    "AC-01-1",
+    "AC-01-2",
+    "AC-01-3",
+    "AC-02-1",
+    "AC-02-2",
+    "AC-02-3",
+    "AC-02-4",
+    "AC-03-1",
+    "AC-03-2",
+    "AC-03-3",
+    "AC-03-4",
+    "AC-03-5",
+    "AC-04-1",
+    "AC-04-2",
+    "AC-04-3",
+    "AC-04-4",
+    "AC-05-1",
+    "AC-06-1",
+    "AC-06-2",
+    "AC-07-1",
+    "AC-07-2",
+    "AC-07-3",
+    "AC-08-1",
+    "AC-09-1",
+    "AC-09-2",
+    "AC-09-3",
+    "AC-09-4",
+    "AC-10-1",
+    "AC-10-2",
+    "AC-10-3",
+    "AC-11-1",
+    "AC-11-2",
+    "AC-11-3",
+    "AC-12-1",
+    "AC-13-1",
+    "AC-M0-6",
+    "AC-M0-7",
+    "AC-M0-8",
+    "AC-M0-10",
+    "AC-M1B-7",
+    "AC-M1B-9",
+    "AC-M1B-10",
+    "AC-M2-1",
+    "AC-M5-1"
+   ],
+   "kind": "readiness",
+   "status": "pass",
+   "command": [],
+   "method": "Requirements review of M7-01..M7-13, the CI finding and every integration note addressed to M7, against the assessment, the roadmap's owner decisions, ownership, contracts and rules, and pyproject.toml: clarity, conflicts and decisions, missing failure behavior, scope, terminology, coverage and order (readiness.md).",
+   "environment": {
+    "platform": "windows",
+    "tools": {
+     "PyQt6": "6.11.0",
+     "pytest": "9.2.0",
+     "python": "3.14.10",
+     "ruff": "0.17.4"
+    }
+   },
+   "exit_code": null,
+   "artifact": {
+    "path": "docs/delivery/reports/m7/readiness.md",
+    "sha256": "6f13b69f5528bc3675080db55211c70346c4c8f860c4efc7725bad721a6c5436"
+   },
+   "inputs": [
+    {
+     "path": "docs/delivery/ASSESSMENT.md",
+     "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+    },
+    {
+     "path": "docs/delivery/ROADMAP.md",
+     "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+    },
+    {
+     "path": "pyproject.toml",
+     "sha256": "207b2af2544392fa97665d64816729a78e6840c6f6c290a5682b14785b0cf297"
+    },
+    {
+     "path": "tests/conftest.py",
+     "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+    },
+    {
+     "path": "tests/drills/run.py",
+     "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+    }
+   ],
+   "scope_sha256": "82c0af6633dd7bdbeb48a10a4a7e8ca1c3699b61980268eab0218d2a76ee0c12",
+   "red": null,
+   "reason": null
+  }
+ ]
+}
