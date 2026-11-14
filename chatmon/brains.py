@@ -20,15 +20,17 @@ import os
 import re
 import shutil
 import socket
-import subprocess
+import stat
 import sys
 import tempfile
+import threading
 import time
 import urllib.request
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from PyQt6 import sip
 from PyQt6.QtCore import QByteArray, QObject, QProcess, QProcessEnvironment, QTimer, QUrl, pyqtSignal
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
@@ -43,7 +45,13 @@ PRESETS: dict[str, dict] = {
     "claude": {
         "type": "command",
         "label": "Claude Code",
-        "command": ["claude", "-p", "--tools", "", "--no-session-persistence"],
+        # --tools "": none of its own tools; --strict-mcp-config: no MCP servers from anywhere but --mcp-config (none);
+        # --permission-mode dontAsk: whatever your settings say, nothing not already approved runs and nobody is asked.
+        # Each is in `claude --help` (2.1.288); stream-json writes the answer as it comes (needs --verbose with -p).
+        "command": ["claude", "-p", "--tools", "", "--strict-mcp-config", "--permission-mode", "dontAsk", "--no-session-persistence",
+                    "--output-format", "stream-json", "--verbose", "--include-partial-messages"],
+        "output": "stream-json",
+        "env": ["ANTHROPIC_*", "CLAUDE_*", "AWS_*", "CLOUD_ML_REGION", "VERTEX_*", "GOOGLE_APPLICATION_CREDENTIALS", "GOOGLE_CLOUD_PROJECT"],
         "tools_off": True,  # --tools "": it can't read or run anything
         "models": ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5-2"],
         "model_args": ["--model", "{model}"],
@@ -58,6 +66,7 @@ PRESETS: dict[str, dict] = {
         "model_args": ["-m", "{model}"],
         "efforts": ["low", "medium", "high", "xhigh"],
         "effort_args": ["-c", 'model_reasoning_effort="{effort}"'],
+        "env": ["OPENAI_*", "CODEX_*", "AZURE_OPENAI_*"],
     },
     # Gemini reads the question from stdin and appends -p; tools needing approval are refused headless.
     "gemini": {
@@ -66,6 +75,7 @@ PRESETS: dict[str, dict] = {
         "command": ["gemini", "-o", "text", "-p", "Answer the question above."],
         "models": ["gemini-3.8-flash", "gemini-4-carbon", "gemini-4-argon"],
         "model_args": ["-m", "{model}"],
+        "env": ["GEMINI_*", "GOOGLE_*"],
     },
     "muse": {
         "type": "command",
@@ -77,6 +87,7 @@ PRESETS: dict[str, dict] = {
         "model_args": ["--model", "{model}"],
         "efforts": ["minimal", "low", "medium", "high", "xhigh", "max"],
         "effort_args": ["--reasoning-effort", "{effort}"],
+        "env": ["MUSE_*", "META_*", "MODEL_API_KEY"],
     },
     "grok": {
         "type": "command",
@@ -84,6 +95,7 @@ PRESETS: dict[str, dict] = {
         "command": ["grok", "--prompt-file", "{prompt_file}", "--tools", "read_file,grep,list_dir", "--disable-web-search",
                     "--permission-mode", "dontAsk", "--output-format", "plain"],
         "model_args": ["-m", "{model}"],
+        "env": ["GROK_*", "XAI_*"],
     },
     "copilot": {
         "type": "command",
@@ -92,6 +104,7 @@ PRESETS: dict[str, dict] = {
         "model_args": ["--model", "{model}"],
         "efforts": ["low", "medium", "high", "xhigh", "max"],
         "effort_args": ["--effort", "{effort}"],
+        "env": ["COPILOT_*", "GH_*", "GITHUB_TOKEN", "GITHUB_ENTERPRISE_TOKEN"],
     },
     # Model servers on this computer: used when they're running, with whatever model they have loaded.
     "ollama": {"type": "openai", "label": "Ollama", "url": "http://localhost:11434/v1", "model": "auto", "local": True},
@@ -298,22 +311,30 @@ def reachable(url: str, timeout: float = 0.15, wait: bool = True) -> bool:
 
 
 def look_again(timeout: float = 0.15) -> bool:
-    """Look at each URL `reachable` answered without waiting for; True if any answer changed. Slow: run it
-    off the screen's thread."""
+    """Look at each URL `reachable` (or `trusted`) answered without waiting for; True if any answer changed. Slow:
+    run it off the screen's thread."""
     changed = False
     while True:
         try:
             url = _unsure.pop()
         except KeyError:
-            return changed
+            break
         before = _reachable.get(url)
         now = _look(url, timeout)
+        changed |= before is None or before[1] != now
+    while True:  # whose servers they are
+        try:
+            url = _unsure_owner.pop()
+        except KeyError:
+            return changed
+        before = _owned.get(url)
+        now = _look_owner(url)
         changed |= before is None or before[1] != now
 
 
 def unsure() -> bool:
-    """Has `reachable` answered anything without waiting since `look_again` last ran?"""
-    return bool(_unsure)
+    """Has `reachable` or `trusted` answered anything without waiting since `look_again` last ran?"""
+    return bool(_unsure or _unsure_owner)
 
 
 def _look(url: str, timeout: float) -> bool:
@@ -328,6 +349,57 @@ def _look(url: str, timeout: float) -> bool:
     return ok
 
 
+# -- whose model server it is: Automatic uses only your own (or one you've said is fine)
+
+_owned: dict[str, tuple[float, bool]] = {}
+_unsure_owner: set[str] = set()
+_confirmed: set[str] = set()  # "host:port" of servers you've said Automatic may use
+
+
+def server_key(url: str) -> str:
+    parts = urlsplit(url)
+    return f"{(parts.hostname or 'localhost').lower()}:{parts.port or (443 if parts.scheme == 'https' else 80)}"
+
+
+def confirm_server(url: str) -> None:
+    """You've said Automatic may use the server at `url`, whoever runs it (keep `confirmed_servers()` in state and
+    hand it back with `confirm_server` at start)."""
+    _confirmed.add(server_key(url))
+
+
+def confirmed_servers() -> list[str]:
+    return sorted(_confirmed)
+
+
+def trusted(url: str, wait: bool = True) -> bool:
+    """May Automatic send your questions to the server at `url`? Only if it's one you confirmed, or it listens on
+    this computer from a process of yours: on a shared computer anyone can open port 11434, and Automatic would
+    otherwise hand them your chats. (Remembered for 10 s; `wait` off as in `reachable`.)"""
+    if server_key(url) in _confirmed:
+        return True
+    seen = _owned.get(url)
+    if seen and time.monotonic() - seen[0] < FRESH_FOR:
+        return seen[1]
+    if not wait:
+        _unsure_owner.add(url)
+        return seen[1] if seen else False
+    return _look_owner(url)
+
+
+def _look_owner(url: str) -> bool:
+    from . import portowner
+
+    parts = urlsplit(url)
+    host = (parts.hostname or "localhost").lower()
+    try:
+        loopback = host == "localhost" or ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        loopback = False
+    mine = loopback and portowner.mine(parts.port or (443 if parts.scheme == "https" else 80)) is True
+    _owned[url] = (time.monotonic(), mine)
+    return mine
+
+
 @dataclass
 class Brain:
     name: str
@@ -337,7 +409,7 @@ class Brain:
     url: str = ""
     model: str = ""
     api_key_env: str = ""
-    api_key: str = ""
+    api_key: str = field(default="", repr=False)  # never in a log, a traceback or an error message
     effort: str = ""  # how hard it thinks, one of `efforts`; "": the model's own default
     thinking: str = "auto"  # "auto" (the model's own default), "on" or "off"
     models: list[str] = field(default_factory=list)  # models to offer in the menu, the usual one first
@@ -358,9 +430,38 @@ class Brain:
     requires: list[str] = field(default_factory=list)  # other environment variables it needs
     auto: bool | None = None  # may "auto" pick it? (default: command tools and local servers)
     tools_off: bool = False  # a command-line tool that can't read files or run anything, as it's started here
+    env: list[str] = field(default_factory=list)  # a command tool's own sign-in variables ("NAME_*": any ending)
+    output: str = ""  # a command tool's output: "" plain text, or "stream-json" (Claude Code's, as it's written)
+    stream: bool = True  # an API: ask for the answer as an event stream, shown as it's written
 
     def key(self) -> str:
-        return self.api_key or (os.environ.get(self.api_key_env, "") if self.api_key_env else "")
+        """Its API key: from the settings file, else its environment variable, else the one saved in your system's
+        keychain under its name (keychain.py)."""
+        if self.api_key:
+            return self.api_key
+        if self.api_key_env and os.environ.get(self.api_key_env):
+            return os.environ[self.api_key_env]
+        from . import keychain
+
+        return keychain.get(self.name) or ""
+
+    def test(self, parent: QObject | None = None, timeout_s: float = 60) -> BrainTest:
+        """Ask it "Say OK", started at once: the result comes as the returned BrainTest's `finished(ok, text,
+        seconds)`, with the time it took or the same clear error a question would get."""
+        tester = BrainTest(self, parent, timeout_s)
+        tester.start()
+        return tester
+
+    def has_key(self) -> bool:
+        """Has it a key, found without reading one from the keychain (see keychain.has)?"""
+        from . import keychain
+
+        return bool(self.api_key or (self.api_key_env and os.environ.get(self.api_key_env))) or keychain.has(self.name)
+
+    def reads_files(self) -> bool:
+        """Can it read files on this computer (a command tool started with tools)? Such a brain is never handed
+        another brain's answers or attachments: either could tell it what to read."""
+        return self.type == "command" and not self.tools_off
 
     # -- model, effort and thinking, as the menu offers them
 
@@ -425,7 +526,7 @@ class Brain:
             return False
         if self.local:
             return reachable(expand(self.url), wait=wait)
-        return bool(self.key()) or not self.api_key_env
+        return not self.api_key_env or self.has_key()
 
     def automatic(self) -> bool:
         return self.auto if self.auto is not None else (self.type == "command" or self.local)
@@ -435,7 +536,9 @@ class Brain:
             return f"{self.command[0] if self.command else 'command'} not found"
         if self.local:
             return "not running"
-        missing = [v for v in [self.api_key_env, *self.requires] if v and not os.environ.get(v)]
+        missing = [v for v in self.requires if not os.environ.get(v)]
+        if self.api_key_env and not self.has_key():
+            missing.insert(0, self.api_key_env)
         return f"{', '.join(missing)} not set" if missing else "not set up"
 
 
@@ -478,12 +581,38 @@ def _set(body: dict, dotted: str, value) -> None:
     body[last] = value
 
 
-def load_brains(ai_config: dict) -> dict[str, Brain]:
-    """The built-in brains with your overrides, then your own, in auto order."""
-    user = ai_config.get("brains") or {}
+_SCALAR = (str, int, float)
+# What each setting of a brain must be, to be read at all: a value of another kind is left out (the built-in one
+# stays) and said, never a crash at start or a command line made of a string's letters.
+_KINDS: dict[str, tuple[str, object]] = {
+    **{k: ("text", lambda v: isinstance(v, str)) for k in ("type", "label", "url", "model", "api_key_env", "api_key", "effort", "thinking",
+                                                           "effort_field", "path", "output")},
+    **{k: ("a list of text", lambda v: isinstance(v, list) and all(isinstance(a, _SCALAR) for a in v))
+       for k in ("command", "models", "efforts", "model_args", "effort_args", "requires", "env")},
+    **{k: ("a table of lists", lambda v: isinstance(v, dict) and all(isinstance(a, list) and all(isinstance(x, _SCALAR) for x in a) for a in v.values()))
+       for k in ("thinking_args", "model_efforts", "thinking_models")},
+    "thinking_fields": ("a table of tables", lambda v: isinstance(v, dict) and all(isinstance(a, dict) for a in v.values())),
+    "headers": ("a table of text", lambda v: isinstance(v, dict) and all(isinstance(a, _SCALAR) for a in v.values())),
+    "extra": ("a table", lambda v: isinstance(v, dict)),
+    **{k: ("true or false", lambda v: isinstance(v, bool)) for k in ("local", "tools_off", "stream")},
+    "auto": ("true or false", lambda v: v is None or isinstance(v, bool)),
+}
+
+
+def load_brains(ai_config: dict, problems: list[str] | None = None) -> dict[str, Brain]:
+    """The built-in brains with your overrides, then your own, in auto order. A setting of the wrong kind is left
+    out and said in `problems`."""
+    problems = [] if problems is None else problems
+    user = ai_config.get("brains") if isinstance(ai_config.get("brains"), dict) else {}
     out: dict[str, Brain] = {}
     for name in list(PRESETS) + [n for n in user if n not in PRESETS]:
-        spec = {**PRESETS.get(name, {}), **(user.get(name) or {})}
+        spec = dict(PRESETS.get(name, {}))
+        for key, value in (user.get(name) if isinstance(user.get(name), dict) else {}).items():
+            kind = _KINDS.get(key)
+            if kind is not None and not kind[1](value):
+                problems.append(f"ai.brains.{name}.{key} should be {kind[0]}, so it's left out")
+                continue
+            spec[key] = value
         if spec.get("type") not in TYPES:
             continue
         out[name] = Brain(
@@ -513,17 +642,24 @@ def load_brains(ai_config: dict) -> dict[str, Brain]:
             requires=[str(v) for v in spec.get("requires", [])],
             auto=spec.get("auto"),
             tools_off=spec.get("tools_off") is True,
+            env=[str(v) for v in spec.get("env", [])],
+            output=str(spec.get("output", "")),
+            stream=spec.get("stream", True) is not False,
         )
     return out
 
 
-def choose(brains: dict[str, Brain], configured: str, picked: str | None, wait: bool = True) -> Brain | None:
-    """The brain to ask: the one picked from the menu, else the configured one,
-    else the first available that "auto" may use."""
-    for name in (picked, configured):
+def choose(brains: dict[str, Brain], configured: str, picked: str | None, wait: bool = True, prefer: str | None = None) -> Brain | None:
+    """The brain to ask: the chat's own (`prefer`: carrying a chat on asks the brain it was having), else the one
+    picked from the menu, else the configured one, else the first available that "auto" may use: a model server
+    only if it's yours (`trusted`)."""
+    for name in (prefer, picked, configured):
         if name and name != "auto" and name in brains and brains[name].available(wait):
             return brains[name]
-    return next((b for b in brains.values() if b.automatic() and b.available(wait)), None)
+    for b in brains.values():
+        if b.automatic() and b.available(wait) and (not b.local or trusted(expand(b.url), wait)):
+            return b
+    return None
 
 
 _VAR = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}")
@@ -681,7 +817,7 @@ def _from_lmstudio(data, model: str) -> int | None:
 def cant_take(brain: Brain, attached: list[Attachment]) -> str | None:
     """Why this brain can't be given these attachments (None: it can)."""
     kinds = {a.kind for a in attached}
-    if brain.type == "command" and attached and not brain.tools_off:
+    if attached and brain.reads_files():
         # It can read files here: an attached file could tell it to read others (your chats, your keys).
         return (
             f"{brain.label} can read files on this computer, so I don't give it attachments: one could tell it to "
@@ -920,37 +1056,446 @@ def clean_output(text: str) -> str:
     return _ANSI.sub("", text).strip()
 
 
-def _kill_tree(proc: QProcess) -> None:
-    """Stop a command-line brain, and whatever it started. On Windows an npm-installed tool is a .cmd file:
-    killing that stops cmd.exe alone, and the real program (node) would go on answering nobody."""
-    pid = proc.processId()
-    if sys.platform == "win32" and pid:
-        taskkill = Path(os.environ.get("SystemRoot") or r"C:\Windows") / "System32" / "taskkill.exe"
+# -- what went wrong, in words you can act on
+
+_HINTS = {
+    401: "Check its key{where}.",
+    403: "Check its key{where}, and that it may use this model.",
+    404: "Check the model's name and the brain's URL in the settings.",
+    429: "It's rate limited: wait a little, or check your plan's limits.",
+}
+
+
+def http_error(brain: Brain, status: int, raw: bytes) -> str:
+    """A reply of 400 or more, as a sentence: the provider's own error (its error, message or detail), the status,
+    and what to do about it. Never the key itself, should a provider repeat it."""
+    message = _said(raw)
+    hint = _HINTS.get(status, "")
+    if status >= 500:
+        hint = "The provider is having trouble: try again in a while."
+    where = f" in {brain.api_key_env} or the one saved in Settings" if brain.api_key_env else " in Settings"
+    text = f"{message.rstrip('.') if message else 'it refused the question'} (HTTP {status}). {hint.format(where=where)}"
+    return _scrub(text.strip(), brain)
+
+
+def _said(raw: bytes) -> str:
+    """What a provider's error reply says: {"error": {"message"}}, {"error": "..."}, {"message"}, {"detail"} (a
+    string, or FastAPI's list of {"msg"}), the same inside a list (Gemini's), or the first line of plain text."""
+    try:
+        data = json.loads(raw) if raw else None
+    except (ValueError, RecursionError):
+        data = None
+    if isinstance(data, list) and data and isinstance(data[0], dict):
+        data = data[0]
+    if isinstance(data, dict):
+        said = _error_message(data)
+        if not said and isinstance(data.get("message"), str):
+            said = data["message"]
+        detail = data.get("detail")
+        if not said and isinstance(detail, str):
+            said = detail
+        if not said and isinstance(detail, list):
+            said = "; ".join(str(d.get("msg")) for d in detail if isinstance(d, dict) and d.get("msg"))
+        return " ".join(str(said or "").split())[:400]
+    text = raw.decode("utf-8", "replace").strip() if raw else ""
+    if not text or text.startswith("<"):  # a web page (a proxy's, a load balancer's): nothing to quote
+        return ""
+    return " ".join(text.splitlines()[0].split())[:400]
+
+
+def _scrub(text: str, brain: Brain) -> str:
+    key = brain.key()
+    return text.replace(key, "…") if len(key) >= 8 else text
+
+
+def network_error(brain: Brain, url: str, error: QNetworkReply.NetworkError, detail: str) -> str:
+    """No HTTP answer at all, as a sentence."""
+    E = QNetworkReply.NetworkError
+    host = urlsplit(url).hostname or url
+    if error == E.HostNotFoundError:
+        return f"couldn't find {host}: are you offline?"
+    if error == E.ConnectionRefusedError:
+        return f"nothing is answering at {host}: is it running?" if brain.local else f"{host} refused the connection"
+    if error in (E.TimeoutError, E.TemporaryNetworkFailureError, E.NetworkSessionFailedError, E.UnknownNetworkError, E.RemoteHostClosedError):
+        return f"the connection to {host} failed ({detail}): are you offline?"
+    if error == E.SslHandshakeFailedError:
+        return f"the secure connection to {host} failed ({detail})"
+    return detail
+
+
+# -- answers as they're written: Server-Sent Events from the APIs, stream-json lines from Claude Code
+
+MAX_REPLY = 32 * 2**20  # bytes of one answer, at most: past this it isn't an answer
+
+
+class Stream:
+    """One answer, read as it arrives. `kind`: "anthropic", "responses" or "openai" (an API's event stream), or
+    "stream-json" (Claude Code's lines). feed() returns the new pieces of text; once it's all in, answer() is the
+    whole answer, or raises BrainError with the reason there's none."""
+
+    def __init__(self, kind: str):
+        self.kind = kind
+        self.pieces: list[str] = []
+        self.error: str | None = None
+        self.final: str | None = None  # the whole answer, where the stream says it at the end (Claude Code)
+        self.events = 0  # how many events or lines were understood: none means it wasn't this kind of stream at all
+        self.plain: list[str] = []  # lines that weren't JSON (a Claude Code started without stream-json)
+        self._buffer = b""
+        self._data: list[str] = []
+        self._refusal: list[str] = []
+
+    def feed(self, chunk: bytes) -> list[str]:
+        self._buffer += chunk
+        *lines, self._buffer = self._buffer.split(b"\n")
+        new: list[str] = []
+        for raw in lines:
+            line = raw.decode("utf-8", "replace").rstrip("\r")
+            if self.kind == "stream-json":
+                self._json_line(line, new)
+            elif line == "":
+                self._dispatch(new)
+            elif line.startswith("data:"):
+                self._data.append(line[5:].removeprefix(" "))
+            # "event:" names, "id:", "retry:" and ":" comments: the data says all that's needed
+        return new
+
+    def end(self) -> list[str]:
+        """The stream closed: whatever was left in it."""
+        new: list[str] = []
+        if self._buffer:
+            new += self.feed(b"\n")
+        if self.kind != "stream-json" and self._data:
+            self._dispatch(new)
+        return new
+
+    def answer(self) -> str:
+        if self.error:
+            raise BrainError(self.error)
+        text = (self.final if self.final is not None else "".join(self.pieces)).strip()
+        if not text and self._refusal:
+            raise BrainError(f"it declined to answer that one ({''.join(self._refusal).strip()[:200]})")
+        if not text:
+            raise BrainError("the answer came back empty")
+        return text
+
+    def _json_line(self, line: str, new: list[str]) -> None:
+        if not line.strip():
+            return
         try:
-            subprocess.run([str(taskkill), "/T", "/F", "/PID", str(pid)], capture_output=True, timeout=5, creationflags=subprocess.CREATE_NO_WINDOW)
-        except (OSError, subprocess.SubprocessError):
+            event = json.loads(line)
+        except (ValueError, RecursionError):
+            self.plain.append(line)
+            return
+        if not isinstance(event, dict):
+            return
+        self.events += 1
+        kind = event.get("type")
+        if kind == "stream_event":
+            inner = event.get("event") if isinstance(event.get("event"), dict) else {}
+            delta = inner.get("delta") if isinstance(inner.get("delta"), dict) else {}
+            if inner.get("type") == "content_block_delta" and delta.get("type") == "text_delta" and isinstance(delta.get("text"), str):
+                self._piece(delta["text"], new)
+        elif kind == "result":
+            result = event.get("result") if isinstance(event.get("result"), str) else ""
+            if event.get("is_error") or (event.get("subtype") not in (None, "success")):
+                self.error = result.strip() or str(event.get("subtype") or "it stopped with an error")
+            else:
+                self.final = result
+
+    def _dispatch(self, new: list[str]) -> None:
+        data, self._data = "\n".join(self._data), []
+        if not data:
+            return
+        if data == "[DONE]":
+            self.events += 1
+            return
+        try:
+            event = json.loads(data)
+        except (ValueError, RecursionError):
+            return
+        if not isinstance(event, dict):
+            return
+        self.events += 1
+        if self.kind == "anthropic":
+            self._anthropic(event, new)
+        elif self.kind == "responses":
+            self._responses(event, new)
+        else:
+            self._chat(event, new)
+
+    def _anthropic(self, event: dict, new: list[str]) -> None:
+        kind, delta = event.get("type"), event.get("delta") if isinstance(event.get("delta"), dict) else {}
+        if kind == "content_block_delta" and delta.get("type") == "text_delta" and isinstance(delta.get("text"), str):
+            self._piece(delta["text"], new)
+        elif kind == "message_delta" and delta.get("stop_reason") == "refusal":
+            self.error = "it declined to answer that one"
+        elif kind == "error":
+            self.error = _error_message(event) or "the API returned an error"
+
+    def _responses(self, event: dict, new: list[str]) -> None:
+        kind = event.get("type")
+        if kind == "response.output_text.delta" and isinstance(event.get("delta"), str):
+            self._piece(event["delta"], new)
+        elif kind == "response.refusal.delta" and isinstance(event.get("delta"), str):
+            self._refusal.append(event["delta"])
+        elif kind == "response.failed":
+            response = event.get("response") if isinstance(event.get("response"), dict) else {}
+            self.error = _error_message(response) or "the API returned an error"
+        elif kind == "error":
+            self.error = (event.get("message") if isinstance(event.get("message"), str) else None) or _error_message(event) or "the API returned an error"
+
+    def _chat(self, event: dict, new: list[str]) -> None:
+        if "error" in event:
+            self.error = _error_message(event) or "the API returned an error"
+            return
+        choices = event.get("choices")
+        first = choices[0] if isinstance(choices, list) and choices and isinstance(choices[0], dict) else {}
+        delta = first.get("delta") if isinstance(first.get("delta"), dict) else {}
+        content = delta.get("content")
+        if isinstance(content, list):
+            content = "".join(p.get("text", "") for p in content if isinstance(p, dict) and isinstance(p.get("text"), str))
+        if isinstance(content, str):
+            self._piece(content, new)
+
+    def _piece(self, text: str, new: list[str]) -> None:
+        if text:
+            self.pieces.append(text)
+            new.append(text)
+
+
+# -- command-line brains: what they're given of your environment, and the folders they leave behind
+
+# What any program needs to run and find its own files and settings, and the proxy and certificates the network
+# here needs: nothing else of Chatmon's environment reaches a command-line brain (other providers' keys, tokens for
+# other services, anything set for something else). Each brain adds its own sign-in variables (`env`).
+BASE_ENV = (
+    "PATH", "PATHEXT", "HOME", "USER", "USERNAME", "LOGNAME", "SHELL", "USERPROFILE", "HOMEDRIVE", "HOMEPATH",
+    "APPDATA", "LOCALAPPDATA", "PROGRAMDATA", "ALLUSERSPROFILE", "PROGRAMFILES", "PROGRAMFILES(X86)", "PROGRAMW6432",
+    "COMMONPROGRAMFILES", "COMMONPROGRAMFILES(X86)", "COMMONPROGRAMW6432",
+    "XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_STATE_HOME", "XDG_CACHE_HOME", "XDG_RUNTIME_DIR", "XDG_CONFIG_DIRS", "XDG_DATA_DIRS",
+    "DBUS_SESSION_BUS_ADDRESS",  # where a tool keeps its sign-in on Linux: the Secret Service, over your session bus
+    "TEMP", "TMP", "TMPDIR",
+    "SYSTEMROOT", "SYSTEMDRIVE", "WINDIR", "COMSPEC", "OS", "PROCESSOR_ARCHITECTURE", "NUMBER_OF_PROCESSORS",
+    "LANG", "LANGUAGE", "LC_*", "TZ",
+    "HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY", "ALL_PROXY",
+    "SSL_CERT_FILE", "SSL_CERT_DIR", "NODE_EXTRA_CA_CERTS", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE",
+)
+
+
+def command_environment(brain: Brain, environ: dict[str, str]) -> dict[str, str]:
+    """The environment `brain` runs with: from `environ`, only what BASE_ENV, the brain's own `env`, its key
+    variable and its other required variables name (any case: Windows' names have none), plus Chatmon's own marks."""
+    allowed = [*BASE_ENV, *brain.env, *[v for v in (brain.api_key_env, *brain.requires) if v]]
+    exact = {n.upper() for n in allowed if not n.endswith("*")}
+    starts = tuple(n[:-1].upper() for n in allowed if n.endswith("*"))
+    out = {k: v for k, v in environ.items() if k.upper() in exact or (starts and k.upper().startswith(starts))}
+    out[INTERNAL_ENV] = "1"  # its own hooks (Claude Code's plugin) know it's Chatmon asking, not you
+    out["NO_COLOR"] = "1"
+    return out
+
+
+ASK_PREFIX = "chatmon-ask-"  # each question's own empty folder: chatmon-ask-<Chatmon's process id>-<random>
+STALE_AFTER_S = 2 * 24 * 3600  # a folder this old is left over whoever's it was (process ids come round again)
+_tidied = False
+
+
+def remove_stale_folders(root: Path | None = None) -> int:
+    """Remove the folders a Chatmon stopped mid-question left in the temp folder (with the question in them,
+    attached text and all); a running Chatmon's are kept. How many went."""
+    root = Path(root or tempfile.gettempdir())
+    gone = 0
+    try:
+        found = list(root.glob(ASK_PREFIX + "*"))
+    except OSError:
+        return 0
+    for path in found:
+        try:
+            info = path.lstat()
+            if not stat.S_ISDIR(info.st_mode) or (os.name == "posix" and info.st_uid != os.getuid()):
+                continue
+        except OSError:
+            continue
+        match = re.match(re.escape(ASK_PREFIX) + r"(\d+)-", path.name)
+        pid = int(match.group(1)) if match else None
+        age = time.time() - info.st_mtime
+        if pid == os.getpid():
+            continue
+        if age < STALE_AFTER_S and (_alive(pid) if pid is not None else age < 3600):
+            continue  # a running Chatmon's, or one made before 0.10 (no process id in its name) that may be in use
+        shutil.rmtree(path, ignore_errors=True)
+        gone += not path.exists()
+    return gone
+
+
+def _alive(pid: int) -> bool:
+    if sys.platform == "win32":
+        import ctypes
+        from ctypes import wintypes
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.OpenProcess.restype = wintypes.HANDLE
+        kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        kernel32.GetExitCodeProcess.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
+        kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+        handle = kernel32.OpenProcess(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
+        if not handle:
+            return ctypes.get_last_error() == 5  # ERROR_ACCESS_DENIED: it's there, just not ours to look at
+        try:
+            code = wintypes.DWORD()
+            return bool(kernel32.GetExitCodeProcess(handle, ctypes.byref(code))) and code.value == 259  # STILL_ACTIVE
+        finally:
+            kernel32.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except OSError:
+        return True  # someone else's: it's there
+    return True
+
+
+KILL_GRACE_MS = 5000  # Windows: how long ending a brain's process tree may take before Qt's own kill of the brain
+
+
+def _stop(proc: QProcess, leftovers: list[Path]) -> None:
+    """Stop a command-line brain, and whatever it started, without waiting for any of it, and remove its folder
+    once it has ended. On Windows an npm-installed tool is a .cmd file: killing that stops cmd.exe alone, and the real
+    program (node) would go on answering nobody, so the whole tree is ended (on a thread of its own, which removes the
+    folder after: Windows can't remove a file a process still has open)."""
+    pid = proc.processId()
+    if sys.platform != "win32" or not pid:
+        proc.kill()
+        _remove(leftovers)  # POSIX removes a file still open: it goes once the last process lets go of it
+        return
+
+    def end() -> None:
+        _end_tree(pid)
+        _remove(leftovers)
+
+    threading.Thread(target=end, daemon=True).start()
+
+    def last_resort() -> None:
+        try:
+            if proc.state() != QProcess.ProcessState.NotRunning:
+                proc.kill()
+        except RuntimeError:  # it ended, and Qt let it go
             pass
-    proc.kill()
+
+    QTimer.singleShot(KILL_GRACE_MS, last_resort)
+
+
+def _end_tree(root: int) -> int:
+    """Windows: end process `root` and everything it started, deepest first; how many were ended.
+
+    Not taskkill /T: that follows the parent each process was started by, and Windows hands a finished process's
+    number to the next one, so a program whose long-gone parent had the number the brain has now would be ended too
+    (on a busy computer it ended Chatmon's own tests). Here a process counts as started by another only if it was
+    made after it, and each is ended through a handle opened on it, never by a number that may have moved on."""
+    import ctypes
+    from ctypes import wintypes
+
+    class Entry(ctypes.Structure):  # PROCESSENTRY32W
+        _fields_ = [("dwSize", wintypes.DWORD), ("cntUsage", wintypes.DWORD), ("th32ProcessID", wintypes.DWORD),
+                    ("th32DefaultHeapID", ctypes.c_size_t), ("th32ModuleID", wintypes.DWORD), ("cntThreads", wintypes.DWORD),
+                    ("th32ParentProcessID", wintypes.DWORD), ("pcPriClassBase", ctypes.c_long), ("dwFlags", wintypes.DWORD),
+                    ("szExeFile", ctypes.c_wchar * 260)]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+    kernel32.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
+    kernel32.Process32FirstW.argtypes = kernel32.Process32NextW.argtypes = [wintypes.HANDLE, ctypes.POINTER(Entry)]
+    kernel32.OpenProcess.restype = wintypes.HANDLE
+    kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    kernel32.GetProcessTimes.argtypes = [wintypes.HANDLE, *[ctypes.POINTER(ctypes.c_ulonglong)] * 4]
+    kernel32.TerminateProcess.argtypes = [wintypes.HANDLE, wintypes.UINT]
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    terminate_and_query = 0x0001 | 0x1000 | 0x00100000  # PROCESS_TERMINATE | PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE
+    kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+
+    def opened(pid: int) -> tuple[int, int] | None:
+        handle = kernel32.OpenProcess(terminate_and_query, False, pid)
+        if not handle:
+            return None
+        made, ended, kernel, user = (ctypes.c_ulonglong() for _ in range(4))
+        if not kernel32.GetProcessTimes(handle, ctypes.byref(made), ctypes.byref(ended), ctypes.byref(kernel), ctypes.byref(user)):
+            kernel32.CloseHandle(handle)
+            return None
+        return handle, made.value
+
+    snapshot = kernel32.CreateToolhelp32Snapshot(0x2, 0)  # TH32CS_SNAPPROCESS
+    if not snapshot or snapshot == wintypes.HANDLE(-1).value:
+        return 0
+    parents: dict[int, list[int]] = {}
+    try:
+        entry = Entry()
+        entry.dwSize = ctypes.sizeof(Entry)
+        more = kernel32.Process32FirstW(snapshot, ctypes.byref(entry))
+        while more:
+            parents.setdefault(entry.th32ParentProcessID, []).append(entry.th32ProcessID)
+            more = kernel32.Process32NextW(snapshot, ctypes.byref(entry))
+    finally:
+        kernel32.CloseHandle(snapshot)
+    tree = _tree(root, parents, opened, kernel32.CloseHandle)
+    ended = 0
+    for handle, _made in reversed(tree):
+        ended += bool(kernel32.TerminateProcess(handle, 1))
+    for handle, _made in tree:
+        kernel32.WaitForSingleObject(handle, 2000)  # gone, files and all, before its folder is removed
+        kernel32.CloseHandle(handle)
+    return ended
+
+
+def _tree(root: int, children: dict[int, list[int]], opened, close) -> list[tuple[int, int]]:
+    """`root` and what it started, parents first, as (handle, time made) from `opened(pid)`: a process counts as
+    started by another only if it was made after it (`close` lets go of each that doesn't)."""
+    top = opened(root)
+    if top is None:
+        return []
+    tree = [top]
+    queue = [(root, top[1])]
+    while queue:
+        pid, made = queue.pop()
+        for child in children.get(pid, []):
+            if child == pid or child == os.getpid():
+                continue
+            found = opened(child)
+            if found is None:
+                continue
+            if found[1] < made:  # older than its "parent": that number was someone else's when it was made
+                close(found[0])
+                continue
+            tree.append(found)
+            queue.append((child, found[1]))
+    return tree
 
 
 class Asker(QObject):
-    """Asks one brain one question at a time, without blocking the penguin."""
+    """Asks one brain one question at a time, without blocking the penguin. `partial` gives each new piece of an
+    answer as it's written (APIs and Claude Code); `answered` gives the whole of it, `failed` why there's none."""
 
     answered = pyqtSignal(str)
     failed = pyqtSignal(str)
+    partial = pyqtSignal(str)
 
     def __init__(self, parent: QObject | None = None):
         super().__init__(parent)
+        global _tidied
+        if not _tidied:  # once, as Chatmon starts: what a Chatmon that was stopped mid-question left behind
+            _tidied = True
+            remove_stale_folders()
         self._nam = QNetworkAccessManager(self)
         self._proc: QProcess | None = None
         self._reply: QNetworkReply | None = None
+        self._stream: Stream | None = None
+        self._raw = bytearray()  # a reply that isn't an event stream (an error, or a server that doesn't stream)
+        self._url = ""
         self._output_file: Path | None = None
         self._prompt_file: Path | None = None
         self._dir: Path | None = None  # the empty folder a command-line tool answers in, made for each question
         self._brain: Brain | None = None
         self._parse = parse_openai
         self._then = None
-        self._timer = QTimer(self)
+        self._timer = QTimer(self)  # how long it may go without a word: restarted by each piece that comes
         self._timer.setSingleShot(True)
         self._timer.timeout.connect(self._timed_out)
 
@@ -960,7 +1505,7 @@ class Asker(QObject):
     def ask(self, brain: Brain, system: str, history: list[tuple[str, str]], question: str, timeout_s: float, attached=()) -> None:
         """Ask `question`, after the conversation so far. `attached`: files, pictures and text you added
         to this question (text is quoted in it, for every brain; pictures and PDFs go only to those that
-        can take them: see cant_take)."""
+        can take them: see cant_take). `timeout_s`: how long it may go without sending anything."""
         self.cancel()
         self._brain = brain
         attached = list(attached or ())
@@ -969,7 +1514,8 @@ class Asker(QObject):
             QTimer.singleShot(0, lambda: self.failed.emit(refused))
             return
         question = attachments.in_question(question, attached)
-        self._timer.start(int(timeout_s * 1000))
+        self._timer.setInterval(int(timeout_s * 1000))
+        self._timer.start()
         if brain.type == "command":
             self._run(brain, text_prompt(system, history, question))
             return
@@ -988,19 +1534,39 @@ class Asker(QObject):
         self._post(url, *request(brain, system, history, question, attached))
 
     def cancel(self) -> None:
+        """Stop the question on its way, at once: nothing is emitted for it after this, and nothing here waits for
+        a brain to end (a command-line one is stopped in the background, and its folder removed once it has)."""
         self._timer.stop()
         if self._proc is not None:
             proc, self._proc = self._proc, None
-            proc.finished.disconnect()
-            proc.errorOccurred.disconnect()
-            _kill_tree(proc)
-            proc.waitForFinished(1000)
-            proc.deleteLater()
+            for signal in (proc.finished, proc.errorOccurred, proc.readyReadStandardOutput):
+                try:
+                    signal.disconnect()
+                except TypeError:
+                    pass
+            leftovers = [p for p in (self._output_file, self._prompt_file, self._dir) if p is not None]
+            self._output_file = self._prompt_file = self._dir = None
+            if proc.state() == QProcess.ProcessState.NotRunning:
+                _remove(leftovers)
+                proc.deleteLater()
+            else:
+                # No longer this Asker's: Qt deletes it once it has ended, whatever becomes of the Asker. Deleted with
+                # the Asker while Qt still thought it was running, Qt would kill and wait for it inside the delete,
+                # which on Windows takes the whole app down.
+                proc.setParent(None)
+                sip.transferto(proc, None)
+                proc.finished.connect(proc.deleteLater)
+                _stop(proc, leftovers)
         if self._reply is not None:
             reply, self._reply = self._reply, None
-            reply.finished.disconnect()
+            for signal in (reply.finished, reply.readyRead):
+                try:
+                    signal.disconnect()
+                except TypeError:
+                    pass
             reply.abort()
             reply.deleteLater()
+        self._stream = None
         self._drop_output_file()
 
     # -- command-line brains
@@ -1015,7 +1581,9 @@ class Asker(QObject):
             QTimer.singleShot(0, lambda: self.failed.emit(error))
             return
         args, use_stdin = [], True
-        self._dir = Path(tempfile.mkdtemp(prefix="chatmon-ask-"))  # yours alone, and nothing in it: not Chatmon's own folder
+        # Yours alone, and nothing in it: not Chatmon's own folder. Named for this Chatmon, so that the next one
+        # to start can tell it was left behind (remove_stale_folders).
+        self._dir = Path(tempfile.mkdtemp(prefix=f"{ASK_PREFIX}{os.getpid()}-"))
         for arg in command_args(brain):
             if "{output_file}" in arg:
                 self._output_file = self._temp("answer-")
@@ -1030,34 +1598,61 @@ class Asker(QObject):
                 arg = arg.replace("{prompt}", prompt)
             args.append(arg)
         proc = QProcess(self)
-        env = QProcessEnvironment.systemEnvironment()
-        env.insert(INTERNAL_ENV, "1")
-        env.insert("NO_COLOR", "1")
+        system = QProcessEnvironment.systemEnvironment()
+        env = QProcessEnvironment()
+        for name, value in command_environment(brain, {k: system.value(k) for k in system.keys()}).items():
+            env.insert(name, value)
         proc.setProcessEnvironment(env)
         proc.setWorkingDirectory(str(self._dir))
         proc.finished.connect(self._process_finished)
         proc.errorOccurred.connect(self._process_error)
+        if brain.output == "stream-json":
+            self._stream = Stream("stream-json")
+            proc.readyReadStandardOutput.connect(self._process_output)
         self._proc = proc
         proc.start(program, args)
         if use_stdin:
             proc.write(prompt.encode("utf-8"))
         proc.closeWriteChannel()
 
+    def _process_output(self) -> None:
+        if self._proc is None or self._stream is None:
+            return
+        self._timer.start()
+        for piece in self._stream.feed(bytes(self._proc.readAllStandardOutput())):
+            self.partial.emit(piece)
+
     def _process_finished(self, code: int, _status) -> None:
         proc, self._proc = self._proc, None
         self._timer.stop()
         if proc is None:
             return
-        out = bytes(proc.readAllStandardOutput()).decode("utf-8", errors="replace")
+        stream, self._stream = self._stream, None
+        out = bytes(proc.readAllStandardOutput())
         err = clean_output(bytes(proc.readAllStandardError()).decode("utf-8", errors="replace"))
         proc.deleteLater()
+        if stream is not None:
+            for piece in stream.feed(out) + stream.end():
+                self.partial.emit(piece)
+            out = b"" if stream.events else "\n".join(stream.plain).encode("utf-8")  # not stream-json after all: plain text
+        text = out.decode("utf-8", errors="replace")
         if self._output_file is not None:
             try:
-                out = self._output_file.read_text(encoding="utf-8") or out
+                text = self._output_file.read_text(encoding="utf-8") or text
             except OSError:
                 pass
         self._drop_output_file()
-        answer = clean_output(out)
+        if stream is not None and stream.events:
+            try:
+                answer = stream.answer()
+            except BrainError as exc:
+                self.failed.emit(f"{self._brain.label} didn't answer ({exc}).")
+                return
+            if code == 0 or stream.final is not None:
+                self.answered.emit(answer)
+                return
+            text = ""
+        answer = clean_output(text)
         if code == 0 and answer:
             self.answered.emit(answer)
             return
@@ -1075,13 +1670,8 @@ class Asker(QObject):
         return Path(name)
 
     def _drop_output_file(self) -> None:
-        for path in (self._output_file, self._prompt_file):
-            if path is not None:
-                path.unlink(missing_ok=True)
-        self._output_file = self._prompt_file = None
-        if self._dir is not None:
-            shutil.rmtree(self._dir, ignore_errors=True)
-            self._dir = None
+        _remove([p for p in (self._output_file, self._prompt_file, self._dir) if p is not None])
+        self._output_file = self._prompt_file = self._dir = None
 
     # -- HTTP brains
 
@@ -1094,9 +1684,16 @@ class Asker(QObject):
 
     def _post(self, url: str, headers: dict, body: dict) -> None:
         req = self._request(url)
+        streams = self._brain is not None and self._brain.stream
+        if streams:
+            body = {**body, "stream": True}
+            headers = {**headers, "accept": "text/event-stream"}
         for name, value in headers.items():
             req.setRawHeader(name.encode(), value.encode())
+        self._url, self._raw = url, bytearray()
+        self._stream = Stream(self._brain.type if self._brain.type in ("anthropic", "responses") else "openai") if streams else None
         reply = self._nam.post(req, QByteArray(json.dumps(body).encode("utf-8")))
+        reply.readyRead.connect(self._reply_read)
         reply.finished.connect(self._reply_finished)
         self._reply = reply
 
@@ -1113,41 +1710,172 @@ class Asker(QObject):
         if reply is None:
             return
         raw = bytes(reply.readAll())
+        status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         redirected = _redirected(reply)
+        error = reply.error()
+        detail = reply.errorString()
         reply.deleteLater()
         try:
             if redirected:
                 raise BrainError(redirected)
+            if isinstance(status, int) and status >= 400:
+                raise BrainError(http_error(self._brain, status, raw))
+            if not raw and error != QNetworkReply.NetworkError.NoError:
+                raise BrainError(network_error(self._brain, expand_url(self._brain.url), error, detail))
             model = first_model(_json_object(raw))
         except (ValueError, BrainError) as exc:
             self._timer.stop()
-            self.failed.emit(f"{self._brain.label}: {exc if isinstance(exc, BrainError) else 'no model list'}.")
+            self.failed.emit(f"{self._brain.label}: {_sentence(str(exc)) if isinstance(exc, BrainError) else 'no model list.'}")
             return
         self._then(model)
+
+    def _streaming(self, reply: QNetworkReply) -> bool:
+        """Is this reply the answer's event stream (not an error, a redirect, or a whole JSON answer)?"""
+        status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
+        kind = str(reply.header(QNetworkRequest.KnownHeaders.ContentTypeHeader) or "").lower()
+        return self._stream is not None and isinstance(status, int) and status < 300 and kind.startswith("text/event-stream")
+
+    def _reply_read(self) -> None:
+        reply = self._reply
+        if reply is None:
+            return
+        self._timer.start()
+        chunk = bytes(reply.readAll())
+        if self._streaming(reply):
+            for piece in self._stream.feed(chunk):
+                self.partial.emit(piece)
+            return
+        self._raw += chunk
+        if len(self._raw) > MAX_REPLY:
+            self.cancel()
+            self.failed.emit(f"{self._brain.label}: the answer was too long to read.")
 
     def _reply_finished(self) -> None:
         reply, self._reply = self._reply, None
         self._timer.stop()
         if reply is None:
             return
-        raw = bytes(reply.readAll())
-        network_error = reply.errorString() if reply.error() != QNetworkReply.NetworkError.NoError else None
+        streaming = self._streaming(reply)
+        stream, self._stream = self._stream, None
+        rest = bytes(reply.readAll())
+        status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
+        error = reply.error()
+        detail = reply.errorString()
         redirected = _redirected(reply)
         reply.deleteLater()
         try:
-            data = _json_object(raw)
-        except ValueError:
-            data = {}
-        try:
             if redirected:
                 raise BrainError(redirected)
-            if not data and network_error:
-                raise BrainError(network_error)
+            if streaming:
+                for piece in stream.feed(rest) + stream.end():
+                    self.partial.emit(piece)
+                if error != QNetworkReply.NetworkError.NoError and not stream.error and not stream.pieces:
+                    raise BrainError(network_error(self._brain, self._url, error, detail))
+                self.answered.emit(stream.answer())
+                return
+            raw = bytes(self._raw) + rest
+            if isinstance(status, int) and status >= 400:
+                raise BrainError(http_error(self._brain, status, raw))
+            if not raw and error != QNetworkReply.NetworkError.NoError:
+                raise BrainError(network_error(self._brain, self._url, error, detail))
+            try:
+                data = _json_object(raw)
+            except ValueError:
+                data = {}
             self.answered.emit(_parsed(self._parse, data))
         except BrainError as exc:
-            self.failed.emit(f"{self._brain.label}: {exc}.")
+            self.failed.emit(f"{self._brain.label}: {_sentence(_scrub(str(exc), self._brain))}")
 
     def _timed_out(self) -> None:
         label = self._brain.label if self._brain else "The brain"
         self.cancel()
         self.failed.emit(f"{label} took too long to answer.")
+
+
+def _sentence(text: str) -> str:
+    text = text.strip()
+    return text if text.endswith((".", "?", "!")) else text + "."
+
+
+def _remove(leftovers: list[Path]) -> None:
+    for path in leftovers:
+        if path.is_dir():
+            shutil.rmtree(path, ignore_errors=True)
+        else:
+            path.unlink(missing_ok=True)
+
+
+# -- finding the brain without holding up the screen
+
+
+LOOKS = 3  # rounds of looking a find takes at most: running, then whose, then once more for good measure
+
+
+class Finder(QObject):
+    """Finds the brain to ask without ever probing on the screen's thread. find() answers at once with what's
+    known (programs are looked up and remembered for 30 s; servers are remembered for 10 s), and hands the
+    settled answer to `then` on the screen's thread: at once if nothing was unsure, else once a thread has looked."""
+
+    _looked = pyqtSignal(object, object)
+
+    def __init__(self, parent: QObject | None = None):
+        super().__init__(parent)
+        self._looked.connect(self._hand_back)
+        self.last: Brain | None = None  # the latest settled answer
+
+    def find(self, brains: dict[str, Brain], configured: str, picked: str | None, then, prefer: str | None = None) -> Brain | None:
+        quick = choose(brains, configured, picked, wait=False, prefer=prefer)
+        if not unsure():
+            QTimer.singleShot(0, lambda: self._hand_back(then, quick))
+            return quick
+
+        def look() -> None:
+            found = quick
+            try:
+                for _ in range(LOOKS):  # a server found running is then asked whose it is: a second look
+                    look_again()
+                    found = choose(brains, configured, picked, wait=False, prefer=prefer)
+                    if not unsure():
+                        break
+            except Exception:  # reported as what was known: finding never breaks asking
+                found = quick
+            self._looked.emit(then, found)
+
+        threading.Thread(target=look, daemon=True).start()
+        return quick
+
+    def _hand_back(self, then, brain) -> None:
+        self.last = brain
+        then(brain)
+
+
+# -- testing a brain
+
+TEST_QUESTION = "Say OK"
+TEST_SYSTEM = "You are being tested. Answer with the single word OK."
+TEST_TIMEOUT_S = 60
+
+
+class BrainTest(QObject):
+    """One test of one brain: it's asked "Say OK", and `finished(ok, text, seconds)` says how long the answer took
+    (`text`: the answer), or what went wrong (`text`: the same clear error a question would get)."""
+
+    finished = pyqtSignal(bool, str, float)
+
+    def __init__(self, brain: Brain, parent: QObject | None = None, timeout_s: float = TEST_TIMEOUT_S):
+        super().__init__(parent)
+        self.brain, self._timeout = brain, timeout_s
+        self._asker = Asker(self)
+        self._asker.answered.connect(lambda text: self._done(True, text))
+        self._asker.failed.connect(lambda error: self._done(False, error))
+        self._started = 0.0
+
+    def start(self) -> None:
+        self._started = time.monotonic()
+        self._asker.ask(self.brain, TEST_SYSTEM, [], TEST_QUESTION, self._timeout)
+
+    def cancel(self) -> None:
+        self._asker.cancel()
+
+    def _done(self, ok: bool, text: str) -> None:
+        self.finished.emit(ok, text, round(time.monotonic() - self._started, 2))
