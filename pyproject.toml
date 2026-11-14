@@ -140,6 +140,6 @@ module = [
     "chatmon.portowner", "chatmon.presence", "chatmon.reminders", "chatmon.richtext", "chatmon.settings",
     "chatmon.settingswin", "chatmon.sound", "chatmon.sprites", "chatmon.stagemenu", "chatmon.updates",
     "chatmon.wayland", "chatmon.windrop", "chatmon.winfocus", "chatmon.winlock", "chatmon.winpipe", "chatmon.winrt",
-    "chatmon.wintoast", "chatmon.wintrust", "chatmon.xkb",
+    "chatmon.wintoast", "chatmon.wintrust", "chatmon.winuia", "chatmon.xkb",
 ]
 ignore_errors = true
