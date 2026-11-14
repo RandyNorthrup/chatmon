@@ -109,6 +109,8 @@ class Companion(QObject):
         self.desk = presence.Desk(QGuiApplication.platformName())
         self._watch_desk(self.desk)  # before its first reading, whose answers come a moment later on Linux
         self._notifier = sysnotify.Notifier(self) if sys.platform.startswith("linux") else None  # Linux's notifications, one for the app
+        self._toasts: dict[str, tuple[str, str, int]] = {}  # Windows: toasts not yet settled (tag: what the balloon would say)
+        self._toasts_heard = False  # their failures and ends listened to
         self._quiet: str | None = None  # why bubbles from the background wait, if they do
         self.messages = messages.MessageQueue()  # what's to be said, in order (messages.py)
         self._message_timer = QTimer(self)  # looks at the queue again when something waiting may show
@@ -384,10 +386,34 @@ class Companion(QObject):
         elif sys.platform == "win32":
             from . import wintoast
 
-            if wintoast.show(title, text, list(buttons), scenario) is not None:
+            tag = wintoast.show(title, text, list(buttons), scenario)
+            if tag is None:  # no toast here (wintoast.toaster().why_not says why): the balloon
+                self._balloon(title, text, seconds)
                 return
-            if QSystemTrayIcon.supportsMessages():  # no toast here (wintoast.toaster().why_not says why): the balloon
-                self.tray.showMessage(title, text, QSystemTrayIcon.MessageIcon.Information, seconds * 1000)
+            if not self._toasts_heard:  # Windows can still refuse it after it took it: the balloon then
+                toaster = wintoast.toaster()
+                toaster.failed.connect(self._toast_failed)
+                toaster.dismissed.connect(self._toast_dismissed)
+                self._toasts_heard = True
+            self._toasts[tag] = (title, text, seconds)
+
+    def _balloon(self, title: str, text: str, seconds: int) -> None:
+        if QSystemTrayIcon.supportsMessages():
+            self.tray.showMessage(title, text, QSystemTrayIcon.MessageIcon.Information, seconds * 1000)
+
+    def _toast_failed(self, tag: str, _hresult: int) -> None:
+        """Windows refused a toast after all (this app's notifications turned off, say): the balloon in its place."""
+        notice = self._toasts.pop(tag, None)
+        if notice is not None and not self._quitting:
+            self._balloon(*notice)
+
+    def _toast_dismissed(self, tag: str, reason: int) -> None:
+        """A toast's end: timed out first (it's in Action Center, still there to click), then its final reason, after
+        which nothing more comes for it."""
+        from . import wintoast
+
+        if reason != wintoast.TIMED_OUT:
+            self._toasts.pop(tag, None)
 
     def _post(self, message: messages.Message) -> bool:
         """Queue it and show whatever's due; False if a hold (quiet, focus) keeps it back."""

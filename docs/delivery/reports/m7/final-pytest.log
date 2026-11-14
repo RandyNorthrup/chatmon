@@ -16,16 +16,16 @@ ss..ssss........ss...............sssssss................................ [ 54%]
 .......ss............................................................... [ 87%]
 ......................................................ss.......sssssssss [ 93%]
 ssss.ssssssss..s..................s..........s...s.................s.... [ 98%]
-.........sssssssss                                                       [100%]
+...........sssssssss                                                     [100%]
 ============================== warnings summary ===============================
 tests/test_brains.py::test_a_redirect_never_takes_the_key_anywhere
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed <socket.socket fd=2152, family=2, type=1, proto=0, laddr=('127.0.0.1', 51119)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed <socket.socket fd=4488, family=2, type=1, proto=0, laddr=('127.0.0.1', 61570)>
     result = testfunction(**testargs)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_brains.py::test_a_redirect_never_takes_the_key_anywhere
-  <frozen importlib._bootstrap>:491: ResourceWarning: unclosed <socket.socket fd=5372, family=2, type=1, proto=0, laddr=('127.0.0.1', 51118)>
+  <frozen importlib._bootstrap_external>:511: ResourceWarning: unclosed <socket.socket fd=4708, family=2, type=1, proto=0, laddr=('127.0.0.1', 61569)>
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
@@ -34,7 +34,7 @@ tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_ne
     _warnings.warn(self.warn_message, ResourceWarning)
 
 tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed <socket.socket fd=3628, family=2, type=1, proto=0, laddr=('127.0.0.1', 51121)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed <socket.socket fd=4504, family=2, type=1, proto=0, laddr=('127.0.0.1', 61572)>
     result = testfunction(**testargs)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
@@ -47,7 +47,7 @@ tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcemen
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_brains.py::test_ending_a_tree_on_windows_ends_the_brain_and_what_it_started_and_nothing_else
-  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 2540 is still running
+  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 41508 is still running
     _warn("subprocess %s is still running" % self.pid,
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
@@ -59,91 +59,91 @@ tests/test_events.py::test_notify_never_waits_on_an_open_stdin
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
-  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 30188 is still running
+  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 34604 is still running
     _warn("subprocess %s is still running" % self.pid,
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[installed]
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5028, family=2, type=1, proto=0, laddr=('127.0.0.1', 60388)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5656, family=2, type=1, proto=0, laddr=('127.0.0.1', 58218)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[refused]
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5552, family=2, type=1, proto=0, laddr=('127.0.0.1', 55165)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5584, family=2, type=1, proto=0, laddr=('127.0.0.1', 58223)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_a_newer_release_is_downloaded_checked_and_offered
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5016, family=2, type=1, proto=0, laddr=('127.0.0.1', 55170)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=3680, family=2, type=1, proto=0, laddr=('127.0.0.1', 58228)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_a_tampered_download_is_thrown_away_never_offered
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=6728, family=2, type=1, proto=0, laddr=('127.0.0.1', 55175)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5792, family=2, type=1, proto=0, laddr=('127.0.0.1', 58234)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_a_download_past_the_limit_is_stopped
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=3804, family=2, type=1, proto=0, laddr=('127.0.0.1', 55180)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5788, family=2, type=1, proto=0, laddr=('127.0.0.1', 58240)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_nothing_newer_says_so
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5404, family=2, type=1, proto=0, laddr=('127.0.0.1', 55184)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=4744, family=2, type=1, proto=0, laddr=('127.0.0.1', 58246)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_a_chatmon_that_cant_install_it_is_only_told
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=4708, family=2, type=1, proto=0, laddr=('127.0.0.1', 55186)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5816, family=2, type=1, proto=0, laddr=('127.0.0.1', 58249)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_an_update_is_checked_again_just_before_its_installed
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5648, family=2, type=1, proto=0, laddr=('127.0.0.1', 55188)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5596, family=2, type=1, proto=0, laddr=('127.0.0.1', 58253)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_an_installer_that_wont_start_says_so_and_frees_the_updater
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=4924, family=2, type=1, proto=0, laddr=('127.0.0.1', 55195)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5828, family=2, type=1, proto=0, laddr=('127.0.0.1', 58260)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_checksums_not_signed_with_the_release_key_are_never_trusted
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=3808, family=2, type=1, proto=0, laddr=('127.0.0.1', 55202)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5788, family=2, type=1, proto=0, laddr=('127.0.0.1', 58268)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2672, family=2, type=1, proto=0, laddr=('127.0.0.1', 55207)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5812, family=2, type=1, proto=0, laddr=('127.0.0.1', 58272)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_a_download_that_cant_be_checked_yet_is_looked_at_again_within_the_hour
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5544, family=2, type=1, proto=0, laddr=('127.0.0.1', 55212)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5812, family=2, type=1, proto=0, laddr=('127.0.0.1', 58278)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_an_update_that_cant_be_checked_at_install_time_is_kept_for_later
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2316, family=2, type=1, proto=0, laddr=('127.0.0.1', 55217)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5924, family=2, type=1, proto=0, laddr=('127.0.0.1', 58285)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change
-  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=6860, family=2, type=1, proto=0, laddr=('127.0.0.1', 55222)>
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=5816, family=2, type=1, proto=0, laddr=('127.0.0.1', 58290)>
     next(it)
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
@@ -180,8 +180,8 @@ SKIPPED [1] tests\test_heads_up.py:135: macOS only
 SKIPPED [2] tests\private_bus.py:19: Linux with dbus-run-session
 SKIPPED [1] tests\test_hotkey.py:221: macOS only
 SKIPPED [1] tests\test_hotkey.py:238: macOS only
-SKIPPED [1] tests\test_hotkey.py:318: Linux with Xvfb
-SKIPPED [1] tests\test_hotkey.py:356: Linux with libX11
+SKIPPED [1] tests\test_hotkey.py:319: Linux with Xvfb
+SKIPPED [1] tests\test_hotkey.py:357: Linux with libX11
 SKIPPED [1] tests\test_hotkey_portal.py:95: Linux with dbus-run-session and dbus-monitor
 SKIPPED [1] tests\test_hotkey_portal.py:111: Linux with dbus-run-session and dbus-monitor
 SKIPPED [1] tests\test_hotkey_portal.py:119: Linux with dbus-run-session and dbus-monitor
@@ -238,7 +238,7 @@ SKIPPED [1] tests\test_rename.py:74: Windows keeps it in the registry
 SKIPPED [1] tests\test_settings.py:155: file modes are POSIX's; on Windows these folders are the user's by their ACLs
 SKIPPED [1] tests\test_settings.py:191: file modes are POSIX's; on Windows these folders are the user's by their ACLs
 SKIPPED [1] tests\test_sound.py:201: Linux only
-SKIPPED [1] tests\test_sound.py:230: macOS only
+SKIPPED [1] tests\test_sound.py:232: macOS only
 SKIPPED [2] tests\test_updates.py:524: pkexec: Linux
 SKIPPED [1] tests\test_wayland.py:46: Wayland sockets are Unix paths
 SKIPPED [1] tests\test_wayland.py:203: no Wayland protocol files installed
@@ -275,4 +275,4 @@ SKIPPED [1] tests\test_xkb.py:75: libxkbcommon isn't installed
 SKIPPED [1] tests\test_xkb.py:93: libxkbcommon isn't installed
 SKIPPED [1] tests\test_xkb.py:100: libxkbcommon isn't installed
 SKIPPED [1] tests\test_xkb.py:111: libxkbcommon isn't installed
-1169 passed, 145 skipped, 23 warnings in 316.23s (0:05:16)
+1171 passed, 145 skipped, 23 warnings in 223.13s (0:03:43)

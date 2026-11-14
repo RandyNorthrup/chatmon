@@ -373,6 +373,8 @@ def test_the_hotkeys_default_isnt_finders_search_on_macos():
 
 @pytest.mark.skipif(sys.platform != "win32", reason="Windows' toasts")
 def test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons(companion, monkeypatch):
+    import types
+
     from app_harness import NoToasts
 
     from chatmon import wintoast
@@ -380,10 +382,15 @@ def test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminde
     c = companion
     shown, balloons = [], []
 
+    listeners: dict[str, list] = {}
+
     class Toasts(NoToasts):
+        failed = types.SimpleNamespace(connect=lambda handler: listeners.setdefault("failed", []).append(handler))
+        dismissed = types.SimpleNamespace(connect=lambda handler: listeners.setdefault("dismissed", []).append(handler))
+
         def show(self, title, text="", buttons=(), scenario=None):
             shown.append((title, text, [label for label, _ in buttons], scenario))
-            return "tag-1"
+            return f"tag-{len(shown)}"
 
     monkeypatch.setattr(wintoast, "toaster", lambda: Toasts())
     monkeypatch.setattr(c.tray, "showMessage", lambda *a: balloons.append(a))
@@ -395,6 +402,14 @@ def test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminde
     r = c.reminders.add(time.time() - 1, "stretch")
     c._check_reminders()
     assert shown == [("Reminder", "Chatmon has something for you.", ["Done", "Snooze 10 min"], "reminder")] and balloons == []  # never its words
+    listeners["failed"][0]("tag-1", -0x7FC1FEEC)  # Windows refused it after all (M4B): the balloon in its place
+    assert balloons[-1][:2] == ("Reminder", "Chatmon has something for you.")
+    balloons.clear()
+    c.alert("agent:codex", "Codex needs you", "Approve?")
+    listeners["dismissed"][0]("tag-2", wintoast.TIMED_OUT)  # in Action Center, still to be clicked
+    listeners["dismissed"][0]("tag-2", wintoast.DISMISSED_BY_YOU)  # its final word
+    listeners["failed"][0]("tag-2", -1)  # nothing after that is news
+    assert balloons == [] and c._toasts == {}
     monkeypatch.setattr(wintoast, "toaster", lambda: NoToasts())  # no toast to be had: the balloon
     c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
     assert balloons and balloons[-1][:2] == ("Claude needs you", "Chatmon has something for you.")
