@@ -56,7 +56,11 @@ def test_notify_ignores_the_companions_own_questions(monkeypatch):
 
 
 def test_send_without_a_running_companion(monkeypatch, tmp_path):
+    """An address of the test's own: on Windows the real pipe's name is yours whatever the folders, and a
+    Chatmon you have running would be told to show itself."""
     monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path))
+    if sys.platform == "win32":
+        monkeypatch.setattr(events.paths, "server_name", lambda: f"chatmon-test-{tmp_path.name}-absent")
     assert events.send({"type": "show"}) is False
 
 

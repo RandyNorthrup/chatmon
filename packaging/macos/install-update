@@ -1,0 +1,23 @@
+#!/bin/sh
+# Root's side of installing a Chatmon update on macOS, run from a checked copy of Chatmon.app:
+#   install-update DIR PACKAGE SHA256SUMS.txt SHA256SUMS.txt.sig
+# DIR is the folder only root can write that holds that copy (see _MACOS_ROOT in chatmon/updates.py, which made
+# it and checked every file of the copy before running this). The package and the release's signed list are
+# copied in beside it, the copied app's own Python checks them (chatmon/releasecheck.py: signed by Chatmon's
+# release key, and newer than this Chatmon), with nothing from the environment it was started in, and only then
+# is that copy of the package installed.
+set -eu
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+export PATH
+umask 077
+[ "$(id -u)" = 0 ] || { echo "install-update: run as root" >&2; exit 1; }
+[ $# -eq 4 ] || { echo "usage: install-update DIR PACKAGE SHA256SUMS.txt SHA256SUMS.txt.sig" >&2; exit 2; }
+d=$1
+for f in "$2" "$3" "$4"; do
+    [ -f "$f" ] || { echo "install-update: no such file: $f" >&2; exit 2; }
+done
+cp -- "$2" "$d/update.pkg"
+cp -- "$3" "$d/SHA256SUMS.txt"
+cp -- "$4" "$d/SHA256SUMS.txt.sig"
+env -i PATH="$PATH" "$d/Chatmon.app/Contents/MacOS/Chatmon" verify-update macos "$d/update.pkg" "$d/SHA256SUMS.txt" "$d/SHA256SUMS.txt.sig" >/dev/null
+installer -pkg "$d/update.pkg" -target /

@@ -1,10 +1,18 @@
+import itertools
 import json
+import os
+import random
+import shutil
 import sys
+import time
 import tomllib
 
 import pytest
 
 from chatmon import agents
+
+# As they are, before the fixture below stands in for them: for the tests that run a stand-in agent for real.
+REAL_RUN_JSON, REAL_WHICH, REAL_ELEVATED = agents._run_json, shutil.which, agents.elevated
 
 
 @pytest.fixture(autouse=True)
@@ -15,6 +23,7 @@ def homes(tmp_path, monkeypatch):
     monkeypatch.setenv("APPDATA", str(tmp_path / "AppData"))
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / ".config"))
     monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / ".state"))
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "AppData" / "Local"))
     for var in ("CLAUDE_CONFIG_DIR", "CODEX_HOME", "GEMINI_CLI_HOME", "GROK_HOME", "COPILOT_HOME"):
         monkeypatch.delenv(var, raising=False)
 
@@ -23,6 +32,8 @@ def homes(tmp_path, monkeypatch):
 
     monkeypatch.setattr(agents, "_run_json", no_real_tools)
     monkeypatch.setattr(agents.shutil, "which", lambda name: f"/usr/bin/{name}")
+    # As you, whatever runs the tests (CI's Windows runners are elevated); the tests of elevation say otherwise.
+    monkeypatch.setattr(agents, "elevated", lambda: False)
     return tmp_path
 
 
@@ -537,3 +548,213 @@ def test_our_command_is_known_in_every_form_we_write_it():
         assert agents.is_ours(text), text
     for text in ("~/bin/chatmonitor notify", "& 'C:\\x\\chatmonitor.exe' 'notify'", 'notify-send "chatmon"', "my-chatmon notify"):
         assert not agents.is_ours(text), text
+
+
+# -- elevated: files only, never an agent's own command line
+
+
+def stand_in_agent(tmp_path, monkeypatch, name):
+    """An agent's command line on PATH, standing in for the real one: it leaves a mark when it runs (as whatever
+    a user had put in their folders would) and lists no plugins. The real runner and `which` are put back."""
+    folder = tmp_path / "bin"
+    folder.mkdir(exist_ok=True)
+    marker = tmp_path / f"{name}-ran"
+    if sys.platform == "win32":
+        (folder / f"{name}.cmd").write_text(f'@echo off\r\necho ran>"{marker}"\r\necho []\r\n', encoding="utf-8")
+    else:
+        script = folder / name
+        script.write_text(f'#!/bin/sh\necho ran > "{marker}"\necho "[]"\n', encoding="utf-8")
+        script.chmod(0o755)
+    if str(folder) not in os.environ["PATH"]:
+        monkeypatch.setenv("PATH", str(folder) + os.pathsep + os.environ["PATH"])
+    monkeypatch.setattr(agents, "_run_json", REAL_RUN_JSON)
+    monkeypatch.setattr(agents.shutil, "which", REAL_WHICH)
+    return marker
+
+
+def test_as_you_an_agents_command_line_does_run(monkeypatch, tmp_path):
+    """The control for the tests below: the stand-in is found, run, and seen to have run."""
+    marker = stand_in_agent(tmp_path, monkeypatch, "claude")
+    assert agents.ClaudeCode().status() == "found" and marker.exists()
+
+
+def test_elevated_no_agents_command_line_ever_starts(monkeypatch, tmp_path):
+    claude_ran = stand_in_agent(tmp_path, monkeypatch, "claude")
+    muse_ran = stand_in_agent(tmp_path, monkeypatch, "muse")
+    stand_in_agent(tmp_path, monkeypatch, "chatmon")  # on PATH, as connecting Claude Code needs
+    monkeypatch.setattr(agents, "elevated", lambda: True)
+    claude, muse = agents.ClaudeCode(), agents.Muse()
+    assert claude.status() == "found" and not claude.connected() and not claude.legacy()
+    assert not muse.connected() and not muse.legacy()
+    for agent in (claude, muse):
+        with pytest.raises(agents.AgentError, match="administrator"):
+            agent.connect()
+    with pytest.raises(agents.AgentError, match="administrator"):
+        muse.disconnect()
+    assert not claude_ran.exists() and not muse_ran.exists()
+
+
+def test_elevated_disconnecting_everything_edits_files_only(monkeypatch, tmp_path, capsys):
+    """What an uninstall for everyone runs, as an administrator: file-based agents are disconnected, Claude Code
+    by removing the marketplace Chatmon gave it, Muse Code is left with a word on what to do, and no agent's
+    program runs."""
+    from chatmon import cli
+
+    claude_ran = stand_in_agent(tmp_path, monkeypatch, "claude")
+    muse_ran = stand_in_agent(tmp_path, monkeypatch, "muse")
+    monkeypatch.setattr(cli.paths, "windows_environment", lambda: False)
+    qwen, claude, muse = agents.Qwen(), agents.ClaudeCode(), agents.Muse()
+    qwen.connect()
+    claude._publish()  # what connecting Claude Code left in Chatmon's folder
+    muse.bundle_dir().mkdir(parents=True)
+    monkeypatch.setattr(agents, "elevated", lambda: True)
+    assert cli.hooks(["disconnect", "all"]) == 1  # Muse Code's couldn't be done
+    out = capsys.readouterr()
+    assert not qwen.connected() and not claude.marketplace_dir().exists()
+    assert "Disconnected Qwen Code" in out.out and "Disconnected Claude Code" in out.out and "Muse Code" in out.err
+    assert not claude_ran.exists() and not muse_ran.exists()
+
+
+def test_elevation_is_read_from_this_process():
+    if sys.platform == "win32":
+        import ctypes
+
+        assert REAL_ELEVATED() is bool(ctypes.windll.shell32.IsUserAnAdmin())  # Windows' own answer, asked another way
+    else:
+        assert REAL_ELEVATED() is (os.geteuid() == 0)
+
+
+# -- backups
+
+
+def test_backups_are_private_new_files_and_only_the_newest_five_are_kept(tmp_path, monkeypatch):
+    settings = tmp_path / "settings.json"
+    monkeypatch.setattr(agents.time, "strftime", lambda fmt: "20261114-120000")  # all in the same second
+    taken = settings.with_name("settings.json.chatmon-backup-20261114-120000")
+    taken.write_text("someone else's file")  # already at the first name: never written over, nor through
+    if sys.platform != "win32":
+        victim = tmp_path / "victim"
+        victim.write_text("precious")
+        settings.with_name(taken.name + "-2").symlink_to(victim)
+    for i in range(8):
+        settings.write_text(json.dumps({"n": i}))
+        if sys.platform != "win32":
+            settings.chmod(0o644)  # readable by others, as settings files often are
+        copy = agents.backup(settings)
+        assert copy.read_text() == json.dumps({"n": i})
+        if i == 0:  # the names already there were passed over, not written
+            assert copy.name == taken.name + ("-2" if sys.platform == "win32" else "-3")
+            assert taken.read_text() == "someone else's file"
+        if sys.platform != "win32":
+            assert copy.stat().st_mode & 0o777 == 0o600
+    if sys.platform != "win32":
+        assert victim.read_text() == "precious"
+    kept = [p for p in backups(settings) if not p.is_symlink()]
+    assert len(kept) == agents.BACKUPS_KEPT == 5
+    assert sorted(json.loads(p.read_text())["n"] for p in kept) == [3, 4, 5, 6, 7]  # the newest; the oldest went
+
+
+def test_every_change_keeps_a_backup_and_they_stop_piling_up():
+    gemini = agents.Gemini()
+    gemini.config_path().parent.mkdir(parents=True)
+    gemini.config_path().write_text("{}")
+    for _ in range(4):
+        gemini.connect()
+        gemini.disconnect()
+        time.sleep(0.01)
+    assert len(backups(gemini.config_path())) == 5
+
+
+# -- Codex: valid configs are taken, and only notify ever changes
+
+
+CODEX_NESTED = """model = "gpt-6"
+matrix = [
+  [1, 2],
+  [3, 4],
+]
+
+[tui]
+notifications = true
+"""
+
+
+def test_codex_takes_a_config_with_arrays_inside_arrays():
+    """A line like "  [1, 2]," inside an array isn't a table: it was taken for one, and the config refused."""
+    codex = agents.Codex()
+    path = codex.config_path()
+    path.parent.mkdir(parents=True)
+    path.write_text(CODEX_NESTED)
+    codex.connect()
+    assert tomllib.loads(path.read_text()) == {**tomllib.loads(CODEX_NESTED), "notify": codex._argv()}
+    codex.disconnect()
+    assert path.read_text() == CODEX_NESTED
+
+
+def test_codex_leaves_a_notify_line_in_a_table_alone():
+    codex = agents.Codex()
+    path = codex.config_path()
+    path.parent.mkdir(parents=True)
+    profile = '[profiles.quiet]\nnotify = ["/usr/bin/chatmon", "notify", "done"]\n'
+    path.write_text(profile)
+    codex.connect()
+    assert tomllib.loads(path.read_text())["profiles"] == tomllib.loads(profile)["profiles"]
+    codex.disconnect()
+    assert tomllib.loads(path.read_text()) == tomllib.loads(profile)
+
+
+def random_codex_config(rng: random.Random) -> str:
+    """A valid TOML file of the shapes Codex configs have, and the ones that trip up a reading by lines:
+    multi-line arrays whose items start like table headers, tables and arrays of tables, comments with
+    brackets, and multi-line strings holding lines like tables and like notify."""
+    names = (f"k{n}" for n in itertools.count())
+
+    def scalar():
+        return rng.choice([str(rng.randint(-99, 99)), json.dumps(rng.choice(["x", "[not] a table", "notify = 1", "a # b", "é"])), "true", "1.5"])
+
+    def value(depth=0):
+        kind = rng.randrange(7 if depth < 2 else 3)
+        if kind < 3:
+            return scalar()
+        if kind == 3:
+            return "[" + ", ".join(value(depth + 1) for _ in range(rng.randint(0, 3))) + "]"
+        if kind == 4:
+            items = ["[" + ", ".join(scalar() for _ in range(2)) + "]" if rng.random() < 0.6 else scalar() for _ in range(rng.randint(1, 4))]
+            return "[\n" + "".join(f"  {item},\n" for item in items) + "]"
+        if kind == 5:
+            return "{ " + ", ".join(f"{next(names)} = {scalar()}" for _ in range(rng.randint(0, 2))) + " }"
+        quote = rng.choice(['"""', "'''"])
+        return quote + "\n" + rng.choice(["[fake]\n", "[[fake]]\n", 'notify = ["chatmon", "notify"]\n', "  [x]\n"]) + "text" + quote
+
+    out = []
+    if rng.random() < 0.5:
+        out.append("# Codex [settings]\n")
+    if rng.random() < 0.3:
+        out.append("\n")
+    out += [f"{next(names)} = {value()}\n" for _ in range(rng.randint(0, 4))]
+    for _ in range(rng.randint(0, 3)):
+        name = next(names)
+        headers = [rng.choice([f"[{name}]", f"[{name}.sub]", f"[[{name}]]"])]
+        if headers[0].startswith("[[") and rng.random() < 0.5:
+            headers.append(headers[0])  # an array of tables, two of them
+        for header in headers:
+            out.append(f"\n{header}  # a table\n" if rng.random() < 0.3 else f"\n{header}\n")
+            out += [f"{next(names)} = {value()}\n" for _ in range(rng.randint(0, 3))]
+    return "".join(out)
+
+
+def test_codex_connect_then_disconnect_changes_nothing_but_notify():
+    codex = agents.Codex()
+    path = codex.config_path()
+    path.parent.mkdir(parents=True)
+    for seed in range(300):
+        doc = random_codex_config(random.Random(seed))
+        original = tomllib.loads(doc)  # a valid config, or the generator is wrong
+        path.write_text(doc, encoding="utf-8")
+        codex.connect()
+        assert tomllib.loads(path.read_text(encoding="utf-8")) == {**original, "notify": codex._argv()}, (seed, doc)
+        codex.connect()  # again: the same, one notify
+        assert tomllib.loads(path.read_text(encoding="utf-8")) == {**original, "notify": codex._argv()}, (seed, doc)
+        codex.disconnect()
+        assert tomllib.loads(path.read_text(encoding="utf-8")) == original, (seed, doc)
+        assert codex.disconnect() == "Codex wasn't connected."

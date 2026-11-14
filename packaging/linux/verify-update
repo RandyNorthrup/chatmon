@@ -1,0 +1,48 @@
+#!/usr/bin/python3 -I
+"""Root's check of a Chatmon update, as the deb and rpm install it. install-update runs it on its own copies:
+
+    /usr/bin/python3 -I -S /usr/lib/chatmon/verify-update KIND PACKAGE SHA256SUMS.txt SHA256SUMS.txt.sig
+
+The check is Chatmon's own (chatmon/releasecheck.py, with chatmon/ed25519.py: signed by the release key, and newer
+than the Chatmon installed), loaded from this package's folder and nowhere else, and only once it has seen that
+root owns every folder and file it would load, that none is a link, and that nobody else can write to any of
+them: code anyone else could change would let them decide what root installs."""
+
+import os
+import stat
+import sys
+
+HOME = "/usr/lib/chatmon"  # this package's folder
+OWNER = 0  # root
+MODULES = ("__init__", "releasecheck", "ed25519", "changelog")  # all that the check imports of Chatmon
+
+
+def _root_only(path: str) -> bool:
+    try:
+        info = os.lstat(path)
+    except OSError:
+        return False
+    return info.st_uid == OWNER and not stat.S_ISLNK(info.st_mode) and not info.st_mode & (stat.S_IWGRP | stat.S_IWOTH)
+
+
+def unsafe() -> list[str]:
+    """What the check would load that isn't root's alone: the folders, the modules, and any compiled copies of
+    them Python would load instead."""
+    package = os.path.join(HOME, "chatmon")
+    paths = [HOME, package] + [os.path.join(package, name + ".py") for name in MODULES]
+    compiled = os.path.join(package, "__pycache__")
+    if os.path.lexists(compiled):
+        paths.append(compiled)
+        paths += [os.path.join(compiled, f) for f in sorted(os.listdir(compiled)) if f.split(".")[0] in MODULES]
+    return [path for path in paths if not _root_only(path)]
+
+
+odd = unsafe()
+if odd:
+    print(f"The update wasn't installed: Chatmon's check isn't root's alone here ({', '.join(odd)}).", file=sys.stderr)
+    raise SystemExit(3)
+sys.path.append(HOME)  # after the standard library: nothing here can stand in for a module of it
+
+from chatmon import releasecheck  # noqa: E402
+
+raise SystemExit(releasecheck.main(sys.argv[1:]))

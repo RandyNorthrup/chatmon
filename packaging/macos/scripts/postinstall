@@ -1,25 +1,58 @@
 #!/bin/sh
 # After the .pkg has put Chatmon.app in /Applications: a `chatmon` command on PATH, which runs the app's
 # own program, for your coding agents' hooks and the command line. Left alone if it's something else
-# (a pip or pipx install of your own, say), and always left alone if it's a link: this runs as root, and
-# writing through a link someone left there would write wherever it points.
-set -e
-LINK=/usr/local/bin/chatmon
+# (a pip or pipx install of your own, say), and always left alone if it's a link.
+#
+# This runs as root, so it writes only into a folder that root owns, that nobody else can write to (nor
+# through an access list), and that isn't a link, and the same for the folder that holds it: in a folder
+# someone else could change, they could swap what root writes for a link to anywhere. Where /usr/local/bin
+# isn't like that (Homebrew on an Intel Mac makes it yours), nothing is written; you can make the command
+# yourself: ln -s /Applications/Chatmon.app/Contents/MacOS/Chatmon /usr/local/bin/chatmon
+# The file is made whole in a folder only root can use, then moved into place: mv renames, which replaces
+# the name itself and never follows a link.
+set -eu
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+export PATH
+umask 022
+OWNER=0
+BIN=/usr/local/bin
+LINK=$BIN/chatmon
 APP=/Applications/Chatmon.app/Contents/MacOS/Chatmon
+
+root_only() {  # $1: a real folder, root's, that no group or other may write to, with no access list
+    [ -d "$1" ] && [ ! -L "$1" ] || return 1
+    set -f
+    # shellcheck disable=SC2046  # the words of ls's line are what's wanted
+    set -- $(LC_ALL=C ls -ldn "$1")
+    set +f
+    case $1 in
+        *+*) return 1 ;;          # an access list: it could let anyone write
+        d????-??-*) ;;            # group and other can't write
+        *) return 1 ;;
+    esac
+    [ "$3" = "$OWNER" ]
+}
+
+[ -e "$BIN" ] || [ -L "$BIN" ] || mkdir -p "$BIN"
+for dir in "$(dirname "$BIN")" "$BIN"; do
+    if ! root_only "$dir"; then
+        echo "Chatmon: not adding the chatmon command, since $dir isn't root's alone." >&2
+        exit 0
+    fi
+done
 if [ -L "$LINK" ]; then
     exit 0
 fi
 if [ -e "$LINK" ] && ! grep -q "Chatmon.app" "$LINK" 2>/dev/null; then
     exit 0
 fi
-mkdir -p /usr/local/bin
-# Written beside it and moved into place: mv replaces the name itself, never following anything there.
-tmp=$(mktemp /usr/local/bin/.chatmon.XXXXXX)
-cat > "$tmp" <<SCRIPT
+work=$(mktemp -d)  # root's own, mode 700
+trap 'rm -rf "$work"' EXIT
+cat > "$work/chatmon" <<SCRIPT
 #!/bin/sh
 # Chatmon's command line, put here by its installer: the app's own program.
 exec "$APP" "\$@"
 SCRIPT
-chmod 755 "$tmp"
-mv -f "$tmp" "$LINK"
+chmod 755 "$work/chatmon"
+mv -f "$work/chatmon" "$LINK"
 exit 0
