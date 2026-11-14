@@ -97,7 +97,7 @@ for Magnifier's window, so the caret is only ever placed while it runs.
 - Linux: X11 runs against Xvfb with XTest key presses; the portal against a pretend GlobalShortcuts portal on a
   private bus (`dbus-run-session`), with `dbus-monitor` independently decoding what went over the wire. Run here
   in WSL (Arch); in CI the X11 test skips unless Xvfb is installed (an Integration note for M6A).
-- macOS: tests that run on macOS CI and skip elsewhere. They are pending CI.
+- macOS: tests that run on macOS CI and skip elsewhere. They passed in CI run 43648733348 (job 132612225608).
 - Each platform's behavior is its own acceptance criterion (scope revision 3), so what was verified on this PC is
   separate from what waits for CI. The ledger's profile is this PC (Windows); the WSL runs are recorded with their own
   Linux environment, and the tasks they cover stay implemented, not verified, until CI's Linux job runs them under
@@ -122,6 +122,24 @@ for Magnifier's window, so the caret is only ever placed while it runs.
 - **The portal thread could die on a bad answer.** A Response of the wrong shape, or a refused call, ended the
   portal's thread, so no later shortcut was ever asked for. It now fails that shortcut and carries on; the pretend
   portal's `garbled` mode and drill L-01F-carries-on cover it.
+- **CI's Windows runners, where notifications are on (run 43648733348, after the merge into
+  `improve/assessment-fixes`), showed two assumptions wrong.** Both toast tests failed on all three Windows legs:
+  - `show()` declined a toast Windows would have shown. It treated any NotificationSetting other than Enabled,
+    including no answer at all, as "off"; the same run posted a toast straight to Action Center without asking and
+    found it there. Windows gives no Enabled for an app ID without a Start menu shortcut (no answer, or
+    DisabledByManifest, a packaged app's matter). Now only a real no (off for the app, for the user, or by policy)
+    means the balloon; anything else is tried, and a refusal comes back as `failed`.
+    `test_only_a_real_no_keeps_a_toast_from_being_tried` and drill D-03B-setting, which puts the old condition back,
+    cover it; the CI test now prints the setting when it declines.
+  - Windows said twice what became of one toast: hidden (1), then timed out (2). A toast already settled was
+    reported again. Now nothing is reported for a toast Chatmon has let go of;
+    `test_what_windows_says_after_a_toast_is_settled_is_not_news` and drill D-03C-settled cover it. The CI test
+    accepts a timed-out report before the hidden one (a toast sent straight to Action Center may count as timed out)
+    and requires hidden to be the last word.
+  - The same run passed this milestone's macOS tests (Carbon hotkey, NSSound, imports) and its Linux tests (the X11
+    grab on Xvfb, now installed by M6A, the portal, the Linux players, imports). It also showed two ResourceWarnings
+    from these tests on Linux (the Xvfb fixture's pipe, a Linux player never reaped): the fixture closes it now, and
+    `CommandPlayer.close()` reaps them.
 - Red drills: [reports/m4b/drill-spec.json](reports/m4b/drill-spec.json) through `tests/drills/run.py` for everything
   that runs on Windows. The Linux-only drills ([reports/m4b/wsl-drill-spec.json](reports/m4b/wsl-drill-spec.json)) run
   in WSL with [reports/m4b/wsl-drills.py](reports/m4b/wsl-drills.py), which copies the tree itself (git in WSL can't
@@ -178,6 +196,10 @@ The APIs as delivered, and what each other milestone has to do with them. Nothin
   pressed. `scenario` is None, `"reminder"`, `"alarm"` or `"urgent"`.
 - `wintoast.toaster()` is the app's `Toaster`: signals `activated(tag, button)` (button `wintoast.BODY` for the toast
   itself), `dismissed(tag, reason)` and `failed(tag, hresult)`; `hide(tag)`, `clear()`, `in_action_center()`.
+  A toast can be refused after `show()` returned its tag (Windows doesn't always say beforehand whether this app's
+  notifications are on): on `failed`, show the balloon instead. `dismissed` may come with `TIMED_OUT` first (the toast
+  went to Action Center and can still be clicked) and then a final reason; after the final one, nothing more is
+  reported for that tag.
 - The app ID is read from the process (`app.py:2580` sets it from `APP_USER_MODEL_ID`), so it isn't repeated here.
 - M7: where `app.py` calls `self.tray.showMessage(...)` on Windows (`alert()` under a full-screen app, and the
   screen-reader fallback while M4A-09 keeps one), use `wintoast.show(...)` first and the balloon when it returns None.
@@ -240,7 +262,7 @@ For the 0.10.0 entry, once M7 has wired these in:
   "work": {
     "id": "M4B",
     "title": "Hotkey, sound and Windows notifications",
-    "scope_revision": 3,
+    "scope_revision": 4,
     "brief": "docs/delivery/ASSESSMENT.md",
     "brief_reason": null,
     "rules": [
@@ -541,7 +563,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       "requirement": "M4B-03",
       "given": "a posted toast",
       "when": "Windows raises Dismissed, Failed or Activated on its own thread",
-      "then": "dismissed(tag, reason), failed(tag, code) and activated(tag, button) are emitted on the Qt thread, and a button's action runs there",
+      "then": "dismissed(tag, reason), failed(tag, code) and activated(tag, button) are emitted on the Qt thread, a button's action runs there, and once a toast is settled nothing more Windows says of it is reported",
       "checks": [
         "behavior",
         "red"
@@ -565,7 +587,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       "requirement": "M4B-03",
       "given": "Windows with notifications on, and the process's AppUserModelID registered",
       "when": "Toaster.show is called, then hide",
-      "then": "the toast is in Windows' history under the app ID with its tag, hiding it brings Dismissed(HIDDEN_BY_CHATMON) on the Qt thread, and nothing is left in the history after",
+      "then": "the toast is in Windows' history under the app ID with its tag, hiding it brings Dismissed(HIDDEN_BY_CHATMON) on the Qt thread as the last word (possibly after TIMED_OUT), and nothing is left in the history after",
       "checks": [
         "behavior",
         "red"
@@ -620,7 +642,12 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-WIN-TESTS",
         "EV-RED-D-03C-qt-thread",
         "EV-RED-D-03C-button",
-        "EV-RED-D-03C-action"
+        "EV-RED-D-03C-action",
+        "EV-WIN-TESTS-r2",
+        "EV-RED-D-03C-settled-r2",
+        "EV-RED-D-03C-qt-thread-r2",
+        "EV-RED-D-03C-button-r2",
+        "EV-RED-D-03C-action-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -658,7 +685,19 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-03C-qt-thread",
         "EV-RED-D-03C-button",
         "EV-RED-D-03C-action",
-        "EV-RED-D-03D-icon"
+        "EV-RED-D-03D-icon",
+        "EV-WIN-TESTS-r2",
+        "EV-RED-D-03A-escaped-r2",
+        "EV-RED-D-03A-control-chars-r2",
+        "EV-RED-D-03A-reminder-button-r2",
+        "EV-RED-D-03A-five-buttons-r2",
+        "EV-RED-D-03B-setting-r2",
+        "EV-RED-D-03B-real-no-r2",
+        "EV-RED-D-03C-settled-r2",
+        "EV-RED-D-03C-qt-thread-r2",
+        "EV-RED-D-03C-button-r2",
+        "EV-RED-D-03C-action-r2",
+        "EV-RED-D-03D-icon-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -713,7 +752,12 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-04A-position",
         "EV-RED-D-04A-bubble-size",
         "EV-RED-D-04A-cleared",
-        "EV-RED-D-04B-magnifier"
+        "EV-RED-D-04B-magnifier",
+        "EV-WIN-TESTS-r2",
+        "EV-RED-D-04A-position-r2",
+        "EV-RED-D-04A-bubble-size-r2",
+        "EV-RED-D-04A-cleared-r2",
+        "EV-RED-D-04B-magnifier-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -750,7 +794,18 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-02D-own-thread",
         "EV-RED-D-02A-stopped-at-exit",
         "EV-RED-D-02D-scaled",
-        "EV-RED-D-02D-without-qt"
+        "EV-RED-D-02D-without-qt",
+        "EV-WIN-TESTS-r2",
+        "EV-RED-D-02A-volume-r2",
+        "EV-RED-D-02A-plays-r2",
+        "EV-RED-D-02B-quiet-r2",
+        "EV-RED-D-02B-one-switch-r2",
+        "EV-RED-D-02B-cue-off-r2",
+        "EV-RED-D-02C-defaults-r2",
+        "EV-RED-D-02D-own-thread-r2",
+        "EV-RED-D-02A-stopped-at-exit-r2",
+        "EV-RED-D-02D-scaled-r2",
+        "EV-RED-D-02D-without-qt-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -777,7 +832,9 @@ For the 0.10.0 entry, once M7 has wired these in:
       "status": "implemented",
       "evidence": [
         "EV-WSL-TESTS",
-        "EV-RED-L-02D-linux-player"
+        "EV-RED-L-02D-linux-player",
+        "EV-WSL-TESTS-r2",
+        "EV-RED-L-02D-linux-player-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -837,7 +894,16 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-01B-its-own-id",
         "EV-RED-D-01B-given-back",
         "EV-RED-D-01C-conflict",
-        "EV-RED-D-01C-keeps-old"
+        "EV-RED-D-01C-keeps-old",
+        "EV-WIN-TESTS-r2",
+        "EV-RED-D-01A-alone-r2",
+        "EV-RED-D-01A-order-r2",
+        "EV-RED-D-01B-message-only-r2",
+        "EV-RED-D-01B-filter-r2",
+        "EV-RED-D-01B-its-own-id-r2",
+        "EV-RED-D-01B-given-back-r2",
+        "EV-RED-D-01C-conflict-r2",
+        "EV-RED-D-01C-keeps-old-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -891,7 +957,10 @@ For the 0.10.0 entry, once M7 has wired these in:
       "evidence": [
         "EV-WSL-TESTS",
         "EV-RED-L-01E-numlock",
-        "EV-RED-L-01E-conflict"
+        "EV-RED-L-01E-conflict",
+        "EV-WSL-TESTS-r2",
+        "EV-RED-L-01E-numlock-r2",
+        "EV-RED-L-01E-conflict-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -930,7 +999,13 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-L-01F-its-own-session",
         "EV-RED-L-01F-response",
         "EV-RED-L-01F-carries-on",
-        "EV-RED-L-01F-no-portal"
+        "EV-RED-L-01F-no-portal",
+        "EV-WSL-TESTS-r2",
+        "EV-RED-D-01F-trigger-r2",
+        "EV-RED-L-01F-its-own-session-r2",
+        "EV-RED-L-01F-response-r2",
+        "EV-RED-L-01F-carries-on-r2",
+        "EV-RED-L-01F-no-portal-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -958,7 +1033,9 @@ For the 0.10.0 entry, once M7 has wired these in:
       "evidence": [
         "EV-WIN-TESTS",
         "EV-RED-D-00A-lazy-library",
-        "EV-RED-D-00A-eager-objc"
+        "EV-RED-D-00A-eager-objc",
+        "EV-WIN-TESTS-r2",
+        "EV-RED-D-00A-eager-objc-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -983,7 +1060,9 @@ For the 0.10.0 entry, once M7 has wired these in:
       "evidence": [
         "EV-WSL-TESTS",
         "EV-CI-MACOS",
-        "EV-RED-L-00B-eager-objc"
+        "EV-RED-L-00B-eager-objc",
+        "EV-WSL-TESTS-r2",
+        "EV-RED-L-00B-eager-objc-r2"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1056,6 +1135,106 @@ For the 0.10.0 entry, once M7 has wired these in:
       "reason": "Scope revisions 2 and 3 changed AC-01F and split the per-platform criteria; superseded by EV-READY-2, a re-review of the same report's revision sections"
     },
     {
+      "id": "EV-CI-MACOS",
+      "acceptance": [
+        "AC-00C",
+        "AC-01D",
+        "AC-02F"
+      ],
+      "kind": "behavior",
+      "status": "deferred",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_hotkey.py",
+        "tests/test_sound.py",
+        "tests/test_m4b_imports.py"
+      ],
+      "method": "To run on CI's macOS runner: the Carbon hotkey tests, NSSound, and the imports; macOS code can't run on this PC",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": null,
+      "inputs": [],
+      "scope_sha256": "9b51b25091167c5fcab2c0f53f41dc96d016e3adceade7e7bed6156fb61f1c79",
+      "red": null,
+      "reason": "No macOS here. Next: the coordinator pushes the merged branch; CI's macOS job runs these, and failures come back to M4B."
+    },
+    {
+      "id": "EV-CI-WINDOWS-TOASTS",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "kind": "behavior",
+      "status": "deferred",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_wintoast.py"
+      ],
+      "method": "To run on CI's Windows runner, where notifications are on: a toast lands in the history under its tag and is hidden and cleared",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": null,
+      "inputs": [],
+      "scope_sha256": "a9e37d85abb8b607cbf1c996131ad96bc3ecd0fc5bd62d47167c5f7e299a8a55",
+      "red": null,
+      "reason": "Notifications are turned off for this PC's user (ToastEnabled = 0), which isn't this milestone's to change. Next: CI's Windows job runs the notifications-on branch of the same tests."
+    },
+    {
+      "id": "EV-RED-D-00A-lazy-library",
+      "acceptance": [
+        "AC-00A"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of tests/test_m4b_imports.py with libdbus.py loading its library on import",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": null
+      },
+      "inputs": [],
+      "scope_sha256": "e3989a800e733c825082281850c9911080284c1636395142f44ace610ccd08e5",
+      "red": null,
+      "reason": "The drill passed, but libdbus.py is T-PORTAL's file, outside AC-00A's bound inputs, so the ledger can't hold it to the current source; EV-RED-D-00A-eager-objc drills the same defect in sound.py, which is bound. Kept as history."
+    },
+    {
       "id": "EV-READY-2",
       "acceptance": [
         "AC-00A",
@@ -1082,7 +1261,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04B"
       ],
       "kind": "readiness",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Re-review of the requirements after scope revisions 2 and 3 (AC-01F's later failures, the portal client's own file, the per-platform split of AC-00A, AC-02D and AC-03B), recorded in the readiness report's revision sections",
       "environment": {
@@ -1123,7 +1302,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "scope_sha256": "cefc23c4fa8b4a74942cbf31eecca9a99992b515384713eb574bd02ac2d51b18",
       "red": null,
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-WIN-TESTS",
@@ -1144,7 +1323,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04B"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "-m",
@@ -1244,7 +1423,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "scope_sha256": "e3989a800e733c825082281850c9911080284c1636395142f44ace610ccd08e5",
       "red": null,
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-WSL-TESTS",
@@ -1255,7 +1434,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02E"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "env",
         "-u",
@@ -1373,107 +1552,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "scope_sha256": "4848d3e1dd4288ea6f9ebcef5faa34e5b084f33d86074534f97671037bdbf5a6",
       "red": null,
-      "reason": null
-    },
-    {
-      "id": "EV-CI-MACOS",
-      "acceptance": [
-        "AC-00C",
-        "AC-01D",
-        "AC-02F"
-      ],
-      "kind": "behavior",
-      "status": "deferred",
-      "command": [
-        "python",
-        "-m",
-        "pytest",
-        "-q",
-        "tests/test_hotkey.py",
-        "tests/test_sound.py",
-        "tests/test_m4b_imports.py"
-      ],
-      "method": "To run on CI's macOS runner: the Carbon hotkey tests, NSSound, and the imports; macOS code can't run on this PC",
-      "environment": {
-        "platform": "windows",
-        "tools": {
-          "python": "3.14.10",
-          "pyqt6": "6.11.0",
-          "pytest": "9.2.0",
-          "ruff": "0.17.4"
-        }
-      },
-      "exit_code": null,
-      "artifact": null,
-      "inputs": [],
-      "scope_sha256": "9b51b25091167c5fcab2c0f53f41dc96d016e3adceade7e7bed6156fb61f1c79",
-      "red": null,
-      "reason": "No macOS here. Next: the coordinator pushes the merged branch; CI's macOS job runs these, and failures come back to M4B."
-    },
-    {
-      "id": "EV-CI-WINDOWS-TOASTS",
-      "acceptance": [
-        "AC-03E"
-      ],
-      "kind": "behavior",
-      "status": "deferred",
-      "command": [
-        "python",
-        "-m",
-        "pytest",
-        "-q",
-        "tests/test_wintoast.py"
-      ],
-      "method": "To run on CI's Windows runner, where notifications are on: a toast lands in the history under its tag and is hidden and cleared",
-      "environment": {
-        "platform": "windows",
-        "tools": {
-          "python": "3.14.10",
-          "pyqt6": "6.11.0",
-          "pytest": "9.2.0",
-          "ruff": "0.17.4"
-        }
-      },
-      "exit_code": null,
-      "artifact": null,
-      "inputs": [],
-      "scope_sha256": "a9e37d85abb8b607cbf1c996131ad96bc3ecd0fc5bd62d47167c5f7e299a8a55",
-      "red": null,
-      "reason": "Notifications are turned off for this PC's user (ToastEnabled = 0), which isn't this milestone's to change. Next: CI's Windows job runs the notifications-on branch of the same tests."
-    },
-    {
-      "id": "EV-RED-D-00A-lazy-library",
-      "acceptance": [
-        "AC-00A"
-      ],
-      "kind": "red",
-      "status": "stale",
-      "command": [
-        "python",
-        "tests/drills/run.py",
-        "docs/delivery/reports/m4b/drill-spec.json",
-        "--log",
-        "docs/delivery/reports/m4b/drills.log"
-      ],
-      "method": "Green, mutated red, restored green of tests/test_m4b_imports.py with libdbus.py loading its library on import",
-      "environment": {
-        "platform": "windows",
-        "tools": {
-          "python": "3.14.10",
-          "pyqt6": "6.11.0",
-          "pytest": "9.2.0",
-          "ruff": "0.17.4"
-        }
-      },
-      "exit_code": 0,
-      "artifact": {
-        "path": "docs/delivery/reports/m4b/drills.log",
-        "sha256": null
-      },
-      "inputs": [],
-      "scope_sha256": "e3989a800e733c825082281850c9911080284c1636395142f44ace610ccd08e5",
-      "red": null,
-      "reason": "The drill passed, but libdbus.py is T-PORTAL's file, outside AC-00A's bound inputs, so the ledger can't hold it to the current source; EV-RED-D-00A-eager-objc drills the same defect in sound.py, which is bound. Kept as history."
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01A-alone",
@@ -1481,7 +1560,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -1561,7 +1640,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01A-order",
@@ -1569,7 +1648,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -1649,7 +1728,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01B-message-only",
@@ -1657,7 +1736,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -1737,7 +1816,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01B-filter",
@@ -1745,7 +1824,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -1825,7 +1904,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01B-its-own-id",
@@ -1833,7 +1912,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -1913,7 +1992,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01B-given-back",
@@ -1921,7 +2000,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2001,7 +2080,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01C-conflict",
@@ -2009,7 +2088,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2089,7 +2168,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01C-keeps-old",
@@ -2097,7 +2176,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2177,7 +2256,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02A-volume",
@@ -2185,7 +2264,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2265,7 +2344,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02A-plays",
@@ -2273,7 +2352,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2353,7 +2432,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02B-quiet",
@@ -2361,7 +2440,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2441,7 +2520,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02B-one-switch",
@@ -2449,7 +2528,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2529,7 +2608,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02B-cue-off",
@@ -2537,7 +2616,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2617,7 +2696,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02C-defaults",
@@ -2625,7 +2704,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2705,7 +2784,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02D-own-thread",
@@ -2713,7 +2792,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2793,7 +2872,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02A-stopped-at-exit",
@@ -2801,7 +2880,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2881,7 +2960,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02D-scaled",
@@ -2889,7 +2968,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -2969,7 +3048,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-02D-without-qt",
@@ -2977,7 +3056,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3057,7 +3136,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03A-escaped",
@@ -3065,7 +3144,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3153,7 +3232,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03A-control-chars",
@@ -3161,7 +3240,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3249,7 +3328,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03A-reminder-button",
@@ -3257,7 +3336,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3345,7 +3424,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03A-five-buttons",
@@ -3353,7 +3432,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3441,7 +3520,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03B-setting",
@@ -3449,7 +3528,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3537,7 +3616,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03C-qt-thread",
@@ -3545,7 +3624,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3633,7 +3712,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03C-button",
@@ -3641,7 +3720,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3729,7 +3808,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03C-action",
@@ -3737,7 +3816,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3825,7 +3904,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-03D-icon",
@@ -3833,7 +3912,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -3921,7 +4000,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-04A-position",
@@ -3929,7 +4008,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -4009,7 +4088,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-04A-bubble-size",
@@ -4017,7 +4096,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -4097,7 +4176,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-04A-cleared",
@@ -4105,7 +4184,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -4185,7 +4264,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-04B-magnifier",
@@ -4193,7 +4272,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -4273,7 +4352,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-01F-trigger",
@@ -4281,7 +4360,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -4379,7 +4458,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-D-00A-eager-objc",
@@ -4387,7 +4466,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-00A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -4505,7 +4584,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-L-00B-eager-objc",
@@ -4513,7 +4592,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-00B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -4628,7 +4707,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-L-01E-numlock",
@@ -4636,7 +4715,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01E"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -4715,7 +4794,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-L-01E-conflict",
@@ -4723,7 +4802,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01E"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -4802,7 +4881,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-L-01F-its-own-session",
@@ -4810,7 +4889,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -4905,7 +4984,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-L-01F-response",
@@ -4913,7 +4992,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -5008,7 +5087,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-L-01F-carries-on",
@@ -5016,7 +5095,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -5111,7 +5190,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-L-01F-no-portal",
@@ -5119,7 +5198,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -5214,7 +5293,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
     },
     {
       "id": "EV-RED-L-02D-linux-player",
@@ -5222,7 +5301,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02E"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -5301,6 +5380,4342 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
+      "reason": "Bound to the files before the merge of improve/assessment-fixes, which changed pyproject.toml (strict pytest, pytest-timeout) and tests/conftest.py, and before the fix for CI run 43648733348; superseded by the -r2 receipts"
+    },
+    {
+      "id": "EV-READY-3",
+      "acceptance": [
+        "AC-00A",
+        "AC-00B",
+        "AC-00C",
+        "AC-01A",
+        "AC-01B",
+        "AC-01C",
+        "AC-01D",
+        "AC-01E",
+        "AC-01F",
+        "AC-02A",
+        "AC-02B",
+        "AC-02C",
+        "AC-02D",
+        "AC-02E",
+        "AC-02F",
+        "AC-03A",
+        "AC-03B",
+        "AC-03C",
+        "AC-03D",
+        "AC-03E",
+        "AC-04A",
+        "AC-04B"
+      ],
+      "kind": "readiness",
+      "status": "pass",
+      "command": [],
+      "method": "Re-review after the merge (rules changed) and the CI follow-up (AC-03C and AC-03E clarified), in the readiness report's revision 4",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/readiness.md",
+        "sha256": "22a70a8f7d1e9473ce7a8b4e531a8ba62040cd2bb0914a588ce4f543c98687c1"
+      },
+      "inputs": [
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        }
+      ],
+      "scope_sha256": "53896a37c189d4f0d76521fac65f30587d501f58e52668252e425d5412013fb4",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "EV-WIN-TESTS-r2",
+      "acceptance": [
+        "AC-00A",
+        "AC-01A",
+        "AC-01B",
+        "AC-01C",
+        "AC-02A",
+        "AC-02B",
+        "AC-02C",
+        "AC-02D",
+        "AC-03A",
+        "AC-03B",
+        "AC-03C",
+        "AC-03D",
+        "AC-04A",
+        "AC-04B"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py",
+        "tests/test_hotkey_portal.py",
+        "tests/test_sound.py",
+        "tests/test_wintoast.py",
+        "tests/test_wincaret.py",
+        "tests/test_m4b_imports.py",
+        "tests/test_presence.py"
+      ],
+      "method": "This milestone's tests and test_presence.py on Windows 11 under the offscreen platform, after the merge and the toast fix, with the project's strict pytest settings: 84 passed, 18 skipped (other platforms' tests)",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/m4b-tests-windows.txt",
+        "sha256": "fc58d66924b020d090462a27955be90cd15359783c45a48ba9a0536cf722d70c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "82b10892220e48ae333e0f84ad41ca407eca0394b6434d9f19c87996dc838671",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "EV-WSL-TESTS-r2",
+      "acceptance": [
+        "AC-00B",
+        "AC-01E",
+        "AC-01F",
+        "AC-02E"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "env",
+        "-u",
+        "WAYLAND_DISPLAY",
+        "QT_QPA_PLATFORM=offscreen",
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-W",
+        "error::ResourceWarning",
+        "tests/test_hotkey.py",
+        "tests/test_hotkey_portal.py",
+        "tests/test_sound.py",
+        "tests/test_wintoast.py",
+        "tests/test_wincaret.py",
+        "tests/test_m4b_imports.py"
+      ],
+      "method": "The same tests in WSL 2 (Arch Linux), with ResourceWarnings as errors: XGrabKey on Xvfb with XTest, the pretend portal on a private bus with dbus-monitor, the Linux players, QSoundEffect, imports; 62 passed, 16 skipped",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/m4b-tests-wsl.txt",
+        "sha256": "34c325e5c5ec68fb67840b210cca12cce20f796b5cd6932897564f1592bfed4f"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "d591a04ac51df633e667d23f9ee6fb8bc96318a7c38dab75b7e0dc6830501a43"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "1a13ed68d62f9a44dd3ad140da5e7a0e4cf84d13931c1516e3475a347512d6e7"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "a787d6e9ececc8a6e3b0c8daccddd7758c22a73160fe46a56800a0b307ee6633",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01A-alone-r2",
+      "acceptance": [
+        "AC-01A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "443264bc7665261924a98deb4e4c107a20d33e65173c2f81b50c5934576f4d4b",
+      "red": {
+        "mutation": "chatmon/hotkey.py: 'and key not in ALONE:' -> 'and key in ALONE:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_what_isnt_a_shortcut_says_why",
+        "observed_diagnostic": "__________ test_what_isnt_a_shortcut_says_why[A-would take that key] __________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "acc3fe6fe7e94758e26e06e07490a743e60842fb61fc70b8c1d9645d59434165"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01A-order-r2",
+      "acceptance": [
+        "AC-01A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "443264bc7665261924a98deb4e4c107a20d33e65173c2f81b50c5934576f4d4b",
+      "red": {
+        "mutation": "chatmon/hotkey.py: '[MODIFIER_NAMES[m] for m in MODIFIERS if m in self.modifiers]' -> '[MODIFIER_NAMES[m] for m in sorted(self.modifiers)]'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_shortcut_is_read_as_qt_writes_it",
+        "observed_diagnostic": "___ test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Space-Ctrl+Alt+Space] ____",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "bfb16a851dd659d00aafb94c35b7c3f8ddc8a2153ed57eb8edc90bc6d099fca2"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01B-message-only-r2",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "443264bc7665261924a98deb4e4c107a20d33e65173c2f81b50c5934576f4d4b",
+      "red": {
+        "mutation": "chatmon/hotkey.py: 'HWND_MESSAGE = -3' -> 'HWND_MESSAGE = 0'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_windows_registers_it_on_a_message_only_window_and_hears_it",
+        "observed_diagnostic": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2dee667e4b3b8b9cb358b918eee64065c88d5ce7f781cc303f3c37df59899a49"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01B-filter-r2",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "443264bc7665261924a98deb4e4c107a20d33e65173c2f81b50c5934576f4d4b",
+      "red": {
+        "mutation": "chatmon/hotkey.py: 'msg.message == self.WM_HOTKEY' -> 'msg.message == self.WM_HOTKEY + 1'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_windows_registers_it_on_a_message_only_window_and_hears_it",
+        "observed_diagnostic": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "081bca29c205039a0557d7df21e320a613834cbd6755bd3f6cf30bfb39aa5a83"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01B-its-own-id-r2",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "443264bc7665261924a98deb4e4c107a20d33e65173c2f81b50c5934576f4d4b",
+      "red": {
+        "mutation": "chatmon/hotkey.py: 'msg.wParam == self.id' -> 'msg.wParam >= self.id'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "assert [True, True] == [True]",
+        "observed_diagnostic": "E           assert [True, True] == [True]",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "b66d78a5eae14338c413a070a579ca74929495af187c19412e1fac4cc87fc3ac"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01B-given-back-r2",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "443264bc7665261924a98deb4e4c107a20d33e65173c2f81b50c5934576f4d4b",
+      "red": {
+        "mutation": "chatmon/hotkey.py: '            self._user32.UnregisterHotKey(self.hwnd, self.id)\\n' -> '            pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_windows_registers_it_on_a_message_only_window_and_hears_it",
+        "observed_diagnostic": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "4223bc2ea8c58c909a40ca7101635aaa9dcdc05c1e3dcf2340cd5a6e4322b554"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01C-conflict-r2",
+      "acceptance": [
+        "AC-01C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "443264bc7665261924a98deb4e4c107a20d33e65173c2f81b50c5934576f4d4b",
+      "red": {
+        "mutation": "chatmon/hotkey.py: 'if error == self.ERROR_HOTKEY_ALREADY_REGISTERED:' -> 'if error != self.ERROR_HOTKEY_ALREADY_REGISTERED:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "wouldn't set up Ctrl+Alt+Shift+F23",
+        "observed_diagnostic": "E             + Windows wouldn't set up Ctrl+Alt+Shift+F23 (error 1409).",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "86c1940f677fc3a439652056bc609f9905a5d0961961c7a89af6661e61d2fee8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01C-keeps-old-r2",
+      "acceptance": [
+        "AC-01C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "443264bc7665261924a98deb4e4c107a20d33e65173c2f81b50c5934576f4d4b",
+      "red": {
+        "mutation": "chatmon/hotkey.py: '        new_id = 2 if self.id == 1 else 1  # the old one stays until the new one is in\\n' -> '        self.release()\\n        new_id = 2 if self.id == 1 else 1\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had",
+        "observed_diagnostic": "________ test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had ________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "e7c1debe61b9083537fcf29561a92eae5ba6602c13f52cbd734c1c397c5f3bd1"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-01F-trigger-r2",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "d591a04ac51df633e667d23f9ee6fb8bc96318a7c38dab75b7e0dc6830501a43"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "1a13ed68d62f9a44dd3ad140da5e7a0e4cf84d13931c1516e3475a347512d6e7"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "58589cf420022264b5d8b405d7082d6276476fac4d9d4cb3706f01dbe9e15451",
+      "red": {
+        "mutation": "chatmon/shortcutportal.py: '[KEYS[combo.key].x11]' -> '[combo.key]'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "CTRL+ALT+Space",
+        "observed_diagnostic": "E       AssertionError: assert 'CTRL+ALT+Space' == 'CTRL+ALT+space'",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "944d60a4caa89d5d96dff12321e8dee0b571deae16551906404c8a262522299f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02A-volume-r2",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: '        effect.setVolume(volume)\\n' -> '        effect.setVolume(1.0)\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_qsoundeffect_plays_it_without_waiting",
+        "observed_diagnostic": "_________________ test_qsoundeffect_plays_it_without_waiting __________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "c76919b6612e3c6dc08d1f1e6b270876c1e9d3eeb99774fa105e9a252ab1f29e"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02A-plays-r2",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: '        effect.play()\\n' -> '        effect.stop()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "never played",
+        "observed_diagnostic": ">       assert True in playing or effect.isPlaying(), f\"never played (status {effect.status()})\"",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "d8fa60906da6160b92dbbae0229c3a4fa995c1155e677703df394aa8a51bb5f8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02B-quiet-r2",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_nothing_sounds_when_it_shouldnt with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: 'if self._quiet is not None and self._quiet():' -> 'if self._quiet is not None and not self._quiet():'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_nothing_sounds_when_it_shouldnt",
+        "observed_diagnostic": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "0c53c7d0a4daf32cfbcd5be70e3588e907a4301912ab9911909de0dcf4fd6072"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02B-one-switch-r2",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_nothing_sounds_when_it_shouldnt with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: 'if not (self.enabled and self.cues[cue] and self.volume > 0):' -> 'if not (self.cues[cue] and self.volume > 0):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_nothing_sounds_when_it_shouldnt",
+        "observed_diagnostic": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "292e36edc8c2c5c9ec96664137b861c9caf00efacad4bdf0a8e92fcb6e2e62d7"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02B-cue-off-r2",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_nothing_sounds_when_it_shouldnt with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: 'if not (self.enabled and self.cues[cue] and self.volume > 0):' -> 'if not (self.enabled and self.volume > 0):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_nothing_sounds_when_it_shouldnt",
+        "observed_diagnostic": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "ef462acf8a478858552324df061f00a0ed571ee43c73ab058a3ca335d3416402"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02C-defaults-r2",
+      "acceptance": [
+        "AC-02C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_only_the_alerts_sound_until_you_turn_the_others_on with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: 'ON_BY_DEFAULT = frozenset({\"needs-you\", \"reminder\", \"focus-done\"})' -> 'ON_BY_DEFAULT = frozenset({\"needs-you\", \"reminder\", \"focus-done\", \"pop\"})'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_only_the_alerts_sound_until_you_turn_the_others_on",
+        "observed_diagnostic": "___________ test_only_the_alerts_sound_until_you_turn_the_others_on ___________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "f5c612a6ad17a99c48bd235824fb6c3eadb5bcf5664e31796d8355f59132dbf7"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02D-own-thread-r2",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_playsound_plays_on_its_own_thread with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: '        self._queue.put(data)\\n        return True\\n' -> '        import winsound\\n        winsound.PlaySound(data, winsound.SND_MEMORY | winsound.SND_NODEFAULT)\\n        return True\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_playsound_plays_on_its_own_thread",
+        "observed_diagnostic": "___________________ test_playsound_plays_on_its_own_thread ____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "70d2943b072b88df094f36eaebcbe31bd8c5bce248c27021420ae324d15e2c4e"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02A-stopped-at-exit-r2",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_quitting_while_a_sound_plays_ends_cleanly with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: '        atexit.register(self.close)\\n' -> ''",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_quitting_while_a_sound_plays_ends_cleanly",
+        "observed_diagnostic": "_______________ test_quitting_while_a_sound_plays_ends_cleanly ________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "d09e4551491083d6f0943881b94d2b64e6be3f3888b2c5bdc28d8963b7b1e520"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02D-scaled-r2",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_samples_are_scaled_for_the_volume with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: '(round(v * volume) for v in values)' -> '(round(v) for v in values)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_samples_are_scaled_for_the_volume",
+        "observed_diagnostic": "___________________ test_samples_are_scaled_for_the_volume ____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "3fac6b9c8638460c7363743a6240615357ab3d24096edbfd47d86e7eb2aba70b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-02D-without-qt-r2",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_without_qtmultimedia_the_systems_own_player_is_used with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "89c9889b4e5a0d71afb1a12f02fa4e417fc02a1215d8ad23cabb12536636b607",
+      "red": {
+        "mutation": "chatmon/sound.py: \"except ImportError:  # QtMultimedia not installed (a distribution's PyQt6 without it)\\n            return False\" -> \"except ImportError:  # QtMultimedia not installed (a distribution's PyQt6 without it)\\n            return True\"",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_without_qtmultimedia_the_systems_own_player_is_used",
+        "observed_diagnostic": "__________ test_without_qtmultimedia_the_systems_own_player_is_used ___________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "b0ce9c69d101f114db88f03f2f36317ef20fa56f2ba34bdd8e72c0c16b51ab48"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03A-escaped-r2",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: 'return ET.tostring(toast, encoding=\"unicode\")' -> 'return ET.tostring(toast, encoding=\"unicode\").replace(\"&lt;\", \"<\").replace(\"&gt;\", \">\")'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_text_from_an_agent_is_text_never_markup",
+        "observed_diagnostic": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "387828447ec34a45598e95c8f0aa5cfe584d1362b5fc7b2fee30349cbf39471b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03A-control-chars-r2",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: 'return NOT_XML.sub(\"\", str(text))' -> 'return str(text)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_text_from_an_agent_is_text_never_markup",
+        "observed_diagnostic": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "8bb5199eca86e61537873296729b6bac0b45bf0b7aeb8b6528ef38d380f83dfb"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03A-reminder-button-r2",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_a_reminder_stays_until_answered with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: \"        if not buttons:  # Windows' own Dismiss, so the scenario holds\" -> '        if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_reminder_stays_until_answered",
+        "observed_diagnostic": "____________________ test_a_reminder_stays_until_answered _____________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "f951c6a36eb60bd32d67644a19ef478f2d959cb373fb90df3ff83616ff7eeced"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03A-five-buttons-r2",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: 'if len(buttons) > MAX_BUTTONS:' -> 'if len(buttons) >= MAX_BUTTONS:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_too_many_buttons_or_an_unknown_scenario_is_refused",
+        "observed_diagnostic": "___________ test_too_many_buttons_or_an_unknown_scenario_is_refused ___________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "ecfb4795e6278cf1225c11a048b282e0c08020e736f29c39c6bbae9677c1f4f8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03B-setting-r2",
+      "acceptance": [
+        "AC-03B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: '        if setting in WHY_NOT:\\n' -> '        if setting != ENABLED:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_only_a_real_no_keeps_a_toast_from_being_tried",
+        "observed_diagnostic": "_____________ test_only_a_real_no_keeps_a_toast_from_being_tried ______________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "923224e182ac25c874f2e40ed4e6576a138e3899500ca05fb45fc4deb061c4a6"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03B-real-no-r2",
+      "acceptance": [
+        "AC-03B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: '        if setting in WHY_NOT:\\n' -> '        if setting == OFF_BY_POLICY:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+        "observed_diagnostic": "_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "51cd95b05e0bfc28992fa2bf0a7d6b9ddfbbfdff4d34068fa7585000e0a33189"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03C-settled-r2",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_what_windows_says_after_a_toast_is_settled_is_not_news with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: '        if shown is None:\\n            # Settled already' -> '        if False:\\n            # Settled already'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_what_windows_says_after_a_toast_is_settled_is_not_news",
+        "observed_diagnostic": "_________ test_what_windows_says_after_a_toast_is_settled_is_not_news _________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "99468fb95b02e63f30ae9583d0de0fe2bbe65006fdcc8fbdee2115b0dbfd6fa6"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03C-qt-thread-r2",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: 'self._heard.emit(\"failed\", tag, code.value)' -> 'self.failed.emit(tag, code.value)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread",
+        "observed_diagnostic": "________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "64ee4551e4c5fa29f5adeb4e814106189368c97b87ddc7f388303bb6ab6ae844"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03C-button-r2",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: '                    index = parsed[1]\\n' -> '                    index = BODY\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread",
+        "observed_diagnostic": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e604cf56d54f28fc7aee711f81ff7675610b92891d35608fdb690ec48974c26e"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03C-action-r2",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: '                action()\\n' -> '                pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread",
+        "observed_diagnostic": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "7c1137fd9093050a5242cceff48db4a6654ef47a74b7179a5ead5b29fc15c682"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-03D-icon-r2",
+      "acceptance": [
+        "AC-03D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "daaadd126448d5680bec6eeba43f89efcad3dab0a502b8d5659b837ef988eee7",
+      "red": {
+        "mutation": "chatmon/wintoast.py: '        if icon:\\n' -> '        if not icon:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pip_install_tells_windows_its_name_and_icon",
+        "observed_diagnostic": "_____________ test_a_pip_install_tells_windows_its_name_and_icon ______________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "076f76b9f4efdb9037c55bf51268c7c89519aece386d8d8df4925495193437ee"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-04A-position-r2",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        }
+      ],
+      "scope_sha256": "e83291139bdbcd8151ba36998143184b62b39a7b2fa87d099879350d40e19127",
+      "red": {
+        "mutation": "chatmon/wincaret.py: 'user32.SetCaretPos(int(x), int(y))' -> 'user32.SetCaretPos(int(y), int(x))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_new_bubble_gets_the_caret_magnifier_follows",
+        "observed_diagnostic": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+        "before": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "32eee77554f44a4ff52a64d6cebab3bab350b22e578df02b550d574995543538"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-04A-bubble-size-r2",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        }
+      ],
+      "scope_sha256": "e83291139bdbcd8151ba36998143184b62b39a7b2fa87d099879350d40e19127",
+      "red": {
+        "mutation": "chatmon/wincaret.py: 'max(1, int(width)), max(1, int(height))' -> 'max(1, int(width) // 2), max(1, int(height))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_new_bubble_gets_the_caret_magnifier_follows",
+        "observed_diagnostic": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+        "before": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "3adae2ad467b3d6ebae22b73dbb5468e0d9c69088112668e5cbe7c8bc1aeaed0"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-04A-cleared-r2",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        }
+      ],
+      "scope_sha256": "e83291139bdbcd8151ba36998143184b62b39a7b2fa87d099879350d40e19127",
+      "red": {
+        "mutation": "chatmon/wincaret.py: '            _api().DestroyCaret()\\n' -> '            pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_new_bubble_gets_the_caret_magnifier_follows",
+        "observed_diagnostic": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+        "before": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "6f86036db1a76712f39e5dccbd1c62b22f9a66e824b18e1034a9615bb767d3c1"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-04B-magnifier-r2",
+      "acceptance": [
+        "AC-04B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_wincaret.py::test_the_caret_is_only_for_when_magnifier_runs with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        }
+      ],
+      "scope_sha256": "e83291139bdbcd8151ba36998143184b62b39a7b2fa87d099879350d40e19127",
+      "red": {
+        "mutation": "chatmon/wincaret.py: 'return bool(_api().FindWindowW(MAGNIFIER_CLASS, None))' -> 'return not _api().FindWindowW(MAGNIFIER_CLASS, None)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_caret_is_only_for_when_magnifier_runs",
+        "observed_diagnostic": "_______________ test_the_caret_is_only_for_when_magnifier_runs ________________",
+        "before": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a5036ba7d38261236bc69e93fc9dfa87468c4fad0166ea399cf2698369cf1c66"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-D-00A-eager-objc-r2",
+      "acceptance": [
+        "AC-00A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "tests/drills/run.py",
+        "docs/delivery/reports/m4b/drill-spec.json",
+        "--log",
+        "docs/delivery/reports/m4b/drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_m4b_imports.py::test_it_imports_here with the project's drill harness, on a temporary copy",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/drills.log",
+        "sha256": "51b0058765aa214d2ca3f5349c21eb53ec24e732dbdc94c0dad8b8318afe37b8"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "82b10892220e48ae333e0f84ad41ca407eca0394b6434d9f19c87996dc838671",
+      "red": {
+        "mutation": "chatmon/sound.py: '_sounds = Sounds()\\n' -> '_sounds = Sounds()\\nMacPlayer()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_it_imports_here[sound]",
+        "observed_diagnostic": "_________________________ test_it_imports_here[sound] _________________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "82dad26097a9a63c43d3c8690b6ea20e6d3e3e8480a4937fdea607d731f25954"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-L-00B-eager-objc-r2",
+      "acceptance": [
+        "AC-00B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "docs/delivery/reports/m4b/wsl-drills.py",
+        "/mnt/c/Users/Randy/Coding/chatmon-wt/m4b",
+        "docs/delivery/reports/m4b/wsl-drill-spec.json",
+        "docs/delivery/reports/m4b/wsl-drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_m4b_imports.py::test_it_imports_here with run.py's drill() in WSL, on a copy under /var/tmp",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wsl-drills.log",
+        "sha256": "0bb23940aac3561cfde2bb2721ce1622079612a97409a9e605e0d51b4120baa2"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "e8758224c6da066da81e43fb93ad055108fd6dbc3b11ea2146e553de3b77b3a3",
+      "red": {
+        "mutation": "chatmon/sound.py: '_sounds = Sounds()\\n' -> '_sounds = Sounds()\\nMacPlayer()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_it_imports_here[sound]",
+        "observed_diagnostic": "_________________________ test_it_imports_here[sound] __________________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "82dad26097a9a63c43d3c8690b6ea20e6d3e3e8480a4937fdea607d731f25954"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-L-01E-numlock-r2",
+      "acceptance": [
+        "AC-01E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "docs/delivery/reports/m4b/wsl-drills.py",
+        "/mnt/c/Users/Randy/Coding/chatmon-wt/m4b",
+        "docs/delivery/reports/m4b/wsl-drill-spec.json",
+        "docs/delivery/reports/m4b/wsl-drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict with run.py's drill() in WSL, on a copy under /var/tmp",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wsl-drills.log",
+        "sha256": "0bb23940aac3561cfde2bb2721ce1622079612a97409a9e605e0d51b4120baa2"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "f6f30af14c45f2b4165912e6e32a49e393487a50822a0d28f89531ec49d9af50",
+      "red": {
+        "mutation": "chatmon/hotkey.py: '(key.keycode, key.state & ~(self.LOCK | self.NUM_LOCK))' -> '(key.keycode, key.state)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict",
+        "observed_diagnostic": "________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "53eb1f27f9c443602322f22eb95f3dc302217c0563d9782689591ab9ba01d775"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-L-01E-conflict-r2",
+      "acceptance": [
+        "AC-01E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "docs/delivery/reports/m4b/wsl-drills.py",
+        "/mnt/c/Users/Randy/Coding/chatmon-wt/m4b",
+        "docs/delivery/reports/m4b/wsl-drill-spec.json",
+        "docs/delivery/reports/m4b/wsl-drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict with run.py's drill() in WSL, on a copy under /var/tmp",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wsl-drills.log",
+        "sha256": "0bb23940aac3561cfde2bb2721ce1622079612a97409a9e605e0d51b4120baa2"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        }
+      ],
+      "scope_sha256": "f6f30af14c45f2b4165912e6e32a49e393487a50822a0d28f89531ec49d9af50",
+      "red": {
+        "mutation": "chatmon/hotkey.py: '            if display == self.display:\\n' -> '            if False:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict",
+        "observed_diagnostic": "________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "d122dc18a16cf8641c7ccc010e6a2835bddbefbe5c43f4e74a14495a57808f47"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-L-01F-its-own-session-r2",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "docs/delivery/reports/m4b/wsl-drills.py",
+        "/mnt/c/Users/Randy/Coding/chatmon-wt/m4b",
+        "docs/delivery/reports/m4b/wsl-drill-spec.json",
+        "docs/delivery/reports/m4b/wsl-drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon with run.py's drill() in WSL, on a copy under /var/tmp",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wsl-drills.log",
+        "sha256": "0bb23940aac3561cfde2bb2721ce1622079612a97409a9e605e0d51b4120baa2"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "d591a04ac51df633e667d23f9ee6fb8bc96318a7c38dab75b7e0dc6830501a43"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "1a13ed68d62f9a44dd3ad140da5e7a0e4cf84d13931c1516e3475a347512d6e7"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "58589cf420022264b5d8b405d7082d6276476fac4d9d4cb3706f01dbe9e15451",
+      "red": {
+        "mutation": "chatmon/shortcutportal.py: 'if self._session and str(message.args[0]) == self._session and message.args[1] == SHORTCUT_ID:' -> 'if self._session and message.args[1] == SHORTCUT_ID:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_portal_binds_it_and_its_presses_reach_chatmon",
+        "observed_diagnostic": "____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "344447db7c58ec63e65b39dd486871ceea3960dd929d377f5bc06b3bb5551721"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-L-01F-response-r2",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "docs/delivery/reports/m4b/wsl-drills.py",
+        "/mnt/c/Users/Randy/Coding/chatmon-wt/m4b",
+        "docs/delivery/reports/m4b/wsl-drill-spec.json",
+        "docs/delivery/reports/m4b/wsl-drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon with run.py's drill() in WSL, on a copy under /var/tmp",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wsl-drills.log",
+        "sha256": "0bb23940aac3561cfde2bb2721ce1622079612a97409a9e605e0d51b4120baa2"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "d591a04ac51df633e667d23f9ee6fb8bc96318a7c38dab75b7e0dc6830501a43"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "1a13ed68d62f9a44dd3ad140da5e7a0e4cf84d13931c1516e3475a347512d6e7"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "58589cf420022264b5d8b405d7082d6276476fac4d9d4cb3706f01dbe9e15451",
+      "red": {
+        "mutation": "chatmon/shortcutportal.py: '            then(code, results)\\n' -> '            then(1, results)\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_portal_binds_it_and_its_presses_reach_chatmon",
+        "observed_diagnostic": "____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "517e5b396f448328dc65fe1ce7e3d8fef5f5c150926b043f7d86a3e66c3bc298"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-L-01F-carries-on-r2",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "docs/delivery/reports/m4b/wsl-drills.py",
+        "/mnt/c/Users/Randy/Coding/chatmon-wt/m4b",
+        "docs/delivery/reports/m4b/wsl-drill-spec.json",
+        "docs/delivery/reports/m4b/wsl-drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey_portal.py::test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked with run.py's drill() in WSL, on a copy under /var/tmp",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wsl-drills.log",
+        "sha256": "0bb23940aac3561cfde2bb2721ce1622079612a97409a9e605e0d51b4120baa2"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "d591a04ac51df633e667d23f9ee6fb8bc96318a7c38dab75b7e0dc6830501a43"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "1a13ed68d62f9a44dd3ad140da5e7a0e4cf84d13931c1516e3475a347512d6e7"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "58589cf420022264b5d8b405d7082d6276476fac4d9d4cb3706f01dbe9e15451",
+      "red": {
+        "mutation": "chatmon/shortcutportal.py: 'except (libdbus.Failure, TypeError, ValueError, KeyError, IndexError, AttributeError):' -> 'except libdbus.Failure:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked",
+        "observed_diagnostic": "_ test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked _",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "8c970690b282622adf51c02dde6b0ba1488b10c9d6d8edb27be782233ab52794"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-L-01F-no-portal-r2",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "docs/delivery/reports/m4b/wsl-drills.py",
+        "/mnt/c/Users/Randy/Coding/chatmon-wt/m4b",
+        "docs/delivery/reports/m4b/wsl-drill-spec.json",
+        "docs/delivery/reports/m4b/wsl-drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_hotkey_portal.py::test_a_desktop_without_the_portal_says_how_to_do_it_instead with run.py's drill() in WSL, on a copy under /var/tmp",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wsl-drills.log",
+        "sha256": "0bb23940aac3561cfde2bb2721ce1622079612a97409a9e605e0d51b4120baa2"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "d591a04ac51df633e667d23f9ee6fb8bc96318a7c38dab75b7e0dc6830501a43"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "1a13ed68d62f9a44dd3ad140da5e7a0e4cf84d13931c1516e3475a347512d6e7"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "58589cf420022264b5d8b405d7082d6276476fac4d9d4cb3706f01dbe9e15451",
+      "red": {
+        "mutation": "chatmon/shortcutportal.py: '            self._tell(\"failed\", NO_PORTAL)\\n            return\\n        if not version:' -> '            return\\n        if not version:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_desktop_without_the_portal_says_how_to_do_it_instead",
+        "observed_diagnostic": "______ test_a_desktop_without_the_portal_says_how_to_do_it_instead[None] _______",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "00a2039120fbfd4fc4e49abfcebf71d7c251e829d96c5a0383764a6a0dfaa939"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "EV-RED-L-02D-linux-player-r2",
+      "acceptance": [
+        "AC-02E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "python",
+        "docs/delivery/reports/m4b/wsl-drills.py",
+        "/mnt/c/Users/Randy/Coding/chatmon-wt/m4b",
+        "docs/delivery/reports/m4b/wsl-drill-spec.json",
+        "docs/delivery/reports/m4b/wsl-drills.log"
+      ],
+      "method": "Green, mutated red, restored green of no:cacheprovider tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait with run.py's drill() in WSL, on a copy under /var/tmp",
+      "environment": {
+        "platform": "linux",
+        "tools": {
+          "python": "3.14.9",
+          "pyqt6": "6.12.1",
+          "pytest": "9.2.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wsl-drills.log",
+        "sha256": "0bb23940aac3561cfde2bb2721ce1622079612a97409a9e605e0d51b4120baa2"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        }
+      ],
+      "scope_sha256": "016ec1293a10bd025bf46fdf6dcf8435c5e8bb2c8576154629796568c12e8e0e",
+      "red": {
+        "mutation": "chatmon/sound.py: 'servers = {\"pw-play\": runtime / \"pipewire-0\", \"paplay\": runtime / \"pulse\" / \"native\", \"canberra-gtk-play\": None}' -> 'servers = {\"pw-play\": None, \"paplay\": runtime / \"pulse\" / \"native\", \"canberra-gtk-play\": None}'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_linux_players_follow_the_sound_server_and_never_make_you_wait",
+        "observed_diagnostic": "______ test_linux_players_follow_the_sound_server_and_never_make_you_wait ______",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "4a518231225e44769eb2c64232e3d7967a361a91fae024836787417ad4d6fe39"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+          }
+        ]
+      },
       "reason": null
     }
   ],
@@ -5316,24 +9731,24 @@ For the 0.10.0 entry, once M7 has wired these in:
     },
     "pending_operations": [
       {
-        "id": "CI-MACOS",
-        "description": "macOS: the Carbon hotkey (AC-01D), NSSound (AC-02F) and the imports (AC-00C) haven't run anywhere yet: macOS code can't run on this PC",
-        "next_action": "Coordinator pushes the merged branch; read the macOS job's tests/test_hotkey.py, tests/test_sound.py, tests/test_m4b_imports.py; failures back to M4B"
+        "id": "CI-WINDOWS-TOASTS",
+        "description": "Windows with notifications on (AC-03E): run 43648733348 failed both toast tests on all three Windows legs; fixed here (a real no only; settled toasts not reported again)",
+        "next_action": "Coordinator merges and dispatches CI; read the Windows legs' tests/test_wintoast.py, which now prints the setting if it declines"
       },
       {
-        "id": "CI-WINDOWS-TOASTS",
-        "description": "Windows with notifications on: a toast in Action Center under its tag, hidden, cleared (AC-03E)",
-        "next_action": "Read the Windows job's tests/test_wintoast.py; it takes the notifications-on branch there"
+        "id": "CI-MACOS",
+        "description": "macOS (AC-00C, AC-01D, AC-02F): passed in run 43648733348, job 132612225608, on 8b4c9fc; sound.py has changed since (CommandPlayer.close), so the next run confirms it on this source",
+        "next_action": "Read the macOS leg's tests/test_hotkey.py, tests/test_sound.py, tests/test_m4b_imports.py in the next run"
       },
       {
         "id": "CI-LINUX",
-        "description": "Linux under the project's profile: the portal (AC-01F), the Linux players (AC-02E) and the imports (AC-00B), verified so far only in WSL; the X11 test (AC-01E) skips in CI until M6A installs xvfb and libxtst6",
-        "next_action": "Read the Linux job's tests/test_hotkey_portal.py, tests/test_sound.py, tests/test_m4b_imports.py; M6A adds Xvfb for tests/test_hotkey.py's X11 test"
+        "description": "Linux under the project's profile (AC-00B, AC-01E, AC-01F, AC-02E): passed in run 43648733348, job 132612225501, on 8b4c9fc, the X11 test included now that Xvfb is installed; two ResourceWarnings it showed are fixed here",
+        "next_action": "Read the Linux leg's tests/test_hotkey.py, tests/test_hotkey_portal.py, tests/test_sound.py in the next run; no ResourceWarning from them"
       }
     ],
-    "next_action": "After CI: mark T-TOAST-SHOWN, T-SOUND-LINUX, T-SOUND-MAC, T-HOTKEY-MAC, T-HOTKEY-X11, T-PORTAL and T-IMPORTS-POSIX verified from its runs, or reopen them with its failures",
-    "source_revision": "ea3474f7181ef8113d667bff177c3e5b5a45f42f",
-    "scope_sha256": "cefc23c4fa8b4a74942cbf31eecca9a99992b515384713eb574bd02ac2d51b18",
+    "next_action": "After the next CI run: mark T-TOAST-SHOWN, T-SOUND-LINUX, T-SOUND-MAC, T-HOTKEY-MAC, T-HOTKEY-X11, T-PORTAL and T-IMPORTS-POSIX verified from its runs, or reopen them with its failures",
+    "source_revision": "cac004798b3bfaab7c813d4cefda94abb654a94f",
+    "scope_sha256": "53896a37c189d4f0d76521fac65f30587d501f58e52668252e425d5412013fb4",
     "inputs": [
       {
         "path": "chatmon/hotkey.py",
@@ -5349,7 +9764,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       },
       {
         "path": "chatmon/sound.py",
-        "sha256": "9865952ab178e37db8f710bb06dce4ba17e746fb53999392636e210415df3da6"
+        "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
       },
       {
         "path": "chatmon/wincaret.py",
@@ -5365,7 +9780,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       },
       {
         "path": "chatmon/wintoast.py",
-        "sha256": "9150e1a9e5a0df7862af09018fde59edc2640b591cbbb0cae0c2f3d0d52efdb2"
+        "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
       },
       {
         "path": "docs/delivery/ASSESSMENT.md",
@@ -5373,19 +9788,19 @@ For the 0.10.0 entry, once M7 has wired these in:
       },
       {
         "path": "docs/delivery/ROADMAP.md",
-        "sha256": "0124fee38622d8b1ec37924591db63326fb776de87b58dde6a09dbeb1f4b704f"
+        "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
       },
       {
         "path": "pyproject.toml",
-        "sha256": "207b2af2544392fa97665d64816729a78e6840c6f6c290a5682b14785b0cf297"
+        "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
       },
       {
         "path": "tests/conftest.py",
-        "sha256": "d0ae7f3f3cfaf55d605832df85b4863a8fe93a746e52d8d27621f2f9892da222"
+        "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
       },
       {
         "path": "tests/drills/run.py",
-        "sha256": "33a9c9cbbbb675d33bac9603122b65cc2e31ffb942d9be57fe2d65bf7ef3e43c"
+        "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
       },
       {
         "path": "tests/fake_shortcuts_portal.py",
@@ -5393,7 +9808,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       },
       {
         "path": "tests/test_hotkey.py",
-        "sha256": "eabc59fb1a0fa48201237e6b1f83c32f91f75f221d7f97e4cebafb401aff40f6"
+        "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
       },
       {
         "path": "tests/test_hotkey_portal.py",
@@ -5405,7 +9820,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       },
       {
         "path": "tests/test_sound.py",
-        "sha256": "99013b3e64dee7b2eec0cf180e6013a72caf169844ebadefbcb6bcea06139788"
+        "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
       },
       {
         "path": "tests/test_wincaret.py",
@@ -5413,7 +9828,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       },
       {
         "path": "tests/test_wintoast.py",
-        "sha256": "0c02f2a01dd40ac45f305e04578df6effa1b049d9b1f7f20b208bc61227152d2"
+        "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
       }
     ],
     "verified_tasks": [

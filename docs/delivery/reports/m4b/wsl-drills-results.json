@@ -1,0 +1,242 @@
+[
+  {
+    "id": "L-00B-eager-objc",
+    "requirement": "AC-00B",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "_sounds = Sounds()\n",
+      "replace": "_sounds = Sounds()\nMacPlayer()\n"
+    },
+    "command": [
+      "/var/tmp/chatmon-m4b-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_m4b_imports.py::test_it_imports_here"
+    ],
+    "expected": [
+      "test_it_imports_here[sound]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e",
+    "baseline_exit": 0,
+    "mutated_sha256": "82dad26097a9a63c43d3c8690b6ea20e6d3e3e8480a4937fdea607d731f25954",
+    "mutated_exit": 1,
+    "observed": "_________________________ test_it_imports_here[sound] __________________________",
+    "after_sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01E-numlock",
+    "requirement": "AC-01E",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "(key.keycode, key.state & ~(self.LOCK | self.NUM_LOCK))",
+      "replace": "(key.keycode, key.state)"
+    },
+    "command": [
+      "/var/tmp/chatmon-m4b-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+    ],
+    "expected": [
+      "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "53eb1f27f9c443602322f22eb95f3dc302217c0563d9782689591ab9ba01d775",
+    "mutated_exit": 1,
+    "observed": "________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________",
+    "after_sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01E-conflict",
+    "requirement": "AC-01E",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "            if display == self.display:\n",
+      "replace": "            if False:\n"
+    },
+    "command": [
+      "/var/tmp/chatmon-m4b-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+    ],
+    "expected": [
+      "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "d122dc18a16cf8641c7ccc010e6a2835bddbefbe5c43f4e74a14495a57808f47",
+    "mutated_exit": 1,
+    "observed": "________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________",
+    "after_sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01F-its-own-session",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "if self._session and str(message.args[0]) == self._session and message.args[1] == SHORTCUT_ID:",
+      "replace": "if self._session and message.args[1] == SHORTCUT_ID:"
+    },
+    "command": [
+      "/var/tmp/chatmon-m4b-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon"
+    ],
+    "expected": [
+      "test_the_portal_binds_it_and_its_presses_reach_chatmon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "baseline_exit": 0,
+    "mutated_sha256": "344447db7c58ec63e65b39dd486871ceea3960dd929d377f5bc06b3bb5551721",
+    "mutated_exit": 1,
+    "observed": "____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________",
+    "after_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01F-response",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "            then(code, results)\n",
+      "replace": "            then(1, results)\n"
+    },
+    "command": [
+      "/var/tmp/chatmon-m4b-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon"
+    ],
+    "expected": [
+      "test_the_portal_binds_it_and_its_presses_reach_chatmon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "baseline_exit": 0,
+    "mutated_sha256": "517e5b396f448328dc65fe1ce7e3d8fef5f5c150926b043f7d86a3e66c3bc298",
+    "mutated_exit": 1,
+    "observed": "____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________",
+    "after_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01F-carries-on",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "except (libdbus.Failure, TypeError, ValueError, KeyError, IndexError, AttributeError):",
+      "replace": "except libdbus.Failure:"
+    },
+    "command": [
+      "/var/tmp/chatmon-m4b-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked"
+    ],
+    "expected": [
+      "test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "baseline_exit": 0,
+    "mutated_sha256": "8c970690b282622adf51c02dde6b0ba1488b10c9d6d8edb27be782233ab52794",
+    "mutated_exit": 1,
+    "observed": "_ test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked _",
+    "after_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01F-no-portal",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "            self._tell(\"failed\", NO_PORTAL)\n            return\n        if not version:",
+      "replace": "            return\n        if not version:"
+    },
+    "command": [
+      "/var/tmp/chatmon-m4b-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_a_desktop_without_the_portal_says_how_to_do_it_instead"
+    ],
+    "expected": [
+      "test_a_desktop_without_the_portal_says_how_to_do_it_instead"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "baseline_exit": 0,
+    "mutated_sha256": "00a2039120fbfd4fc4e49abfcebf71d7c251e829d96c5a0383764a6a0dfaa939",
+    "mutated_exit": 1,
+    "observed": "______ test_a_desktop_without_the_portal_says_how_to_do_it_instead[None] _______",
+    "after_sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-02D-linux-player",
+    "requirement": "AC-02D",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "servers = {\"pw-play\": runtime / \"pipewire-0\", \"paplay\": runtime / \"pulse\" / \"native\", \"canberra-gtk-play\": None}",
+      "replace": "servers = {\"pw-play\": None, \"paplay\": runtime / \"pulse\" / \"native\", \"canberra-gtk-play\": None}"
+    },
+    "command": [
+      "/var/tmp/chatmon-m4b-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+    ],
+    "expected": [
+      "test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e",
+    "baseline_exit": 0,
+    "mutated_sha256": "4a518231225e44769eb2c64232e3d7967a361a91fae024836787417ad4d6fe39",
+    "mutated_exit": 1,
+    "observed": "______ test_linux_players_follow_the_sound_server_and_never_make_you_wait ______",
+    "after_sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e",
+    "restored_exit": 0
+  }
+]

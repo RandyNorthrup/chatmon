@@ -98,3 +98,19 @@ the rest stay visibly pending rather than being half-verified:
 The tasks follow the split (T-TOAST-SHOWN, T-SOUND-LINUX, T-SOUND-MAC, T-HOTKEY-MAC, T-HOTKEY-X11,
 T-IMPORTS-POSIX), each depending on the task whose code it extends. No requirement changed: M4B-00 to M4B-04 have
 the same obligations, stated per platform. Result: ready.
+
+## Revision 4 (scope revision 4), 2026-11-14
+
+After the merge into `improve/assessment-fixes` and CI run 43648733348:
+
+- **Rules changed.** `pyproject.toml` now has strict pytest settings (warnings are errors, `--strict-markers`,
+  pytest-timeout at 120 s) and `tests/conftest.py` gives each run a Chatmon address of its own. Every earlier receipt
+  was bound to the old files, so all of them are stale, and every test and drill is run again.
+- **AC-03C** adds that nothing more is reported for a toast already settled: Windows reported one toast hidden and
+  then timed out. **AC-03E** says a toast sent straight to Action Center may be reported timed out before hidden,
+  and hidden is the last word. **AC-03B** is unchanged in words ("turned off" is a real no from Windows); what
+  changed is the code, which treated Windows' silence as a no.
+- CI's macOS and Linux jobs ran this milestone's tests and passed; they are recorded as receipts with their own
+  environments, which the plan's single Windows profile can't count as verification.
+
+No requirement changed. Result: ready.
