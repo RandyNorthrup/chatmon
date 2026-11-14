@@ -24,11 +24,12 @@ import shutil
 import stat
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QUrl, pyqtSignal
+from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QTimer, QUrl, pyqtSignal
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
 from . import __version__, changelog, paths, releasecheck
@@ -56,6 +57,8 @@ SYSTEM_PACKAGE = Path("/usr/lib/chatmon")  # where the .deb and .rpm put Chatmon
 # Asking the system's package manager whether it installed Chatmon: the first that says yes is how.
 PACKAGE_QUERIES = ((DEB, ["/usr/bin/dpkg-query", "-W", "chatmon"]), (RPM, ["/usr/bin/rpm", "-q", "chatmon"]))
 MAC_APP = Path("/Applications/Chatmon.app")  # where the .pkg installs it
+INSTALLING = "install-"  # the start of each fresh folder a Windows installer is run from (prepare)
+RETRY_AFTER = 3600  # seconds until a download that couldn't be checked yet (TryLater) is looked at again
 
 
 def newer(version: str, than: str = __version__) -> bool:
@@ -175,16 +178,66 @@ def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
         return "Unknown", str(exc)[:200], "", []
 
 
+class TryLater(str):
+    """Why a download can't be installed yet, for a reason that may pass: Windows couldn't look up whether its
+    certificate has been revoked (no connection to the certificate's servers). Never installed meanwhile; the
+    updater looks again later."""
+
+
 def verify(path: Path, expected: str, kind: str) -> str | None:
     """Why this download mustn't be installed, or None: it's the one the release's signed list gives (and,
-    on Windows, signed by Randy Northrup). Slow: off the screen's thread."""
+    on Windows, signed by Randy Northrup, with a certificate that hasn't been revoked). A TryLater says why not
+    yet. Slow: off the screen's thread."""
     if sha256(path) != expected:
         return "the download doesn't match the release's checksum"
     if kind == WINDOWS:
         status, signer, issuer, usages = windows_signer(path)
+        if status == "Revoked":
+            return f"its signing certificate has been revoked{' (' + signer + ')' if signer else ''}"
+        if status == "RevocationUnknown":
+            return TryLater("Windows couldn't check that its signing certificate hasn't been revoked (are you offline?)")
         if status != "Valid" or not SIGNER.fullmatch(signer) or not ISSUER.fullmatch(issuer) or IDENTITY not in usages:
             return f"its signature isn't Randy Northrup's ({status}{', ' + signer if signer else ''})"
     return None
+
+
+@dataclass
+class Prepared:
+    """A download checked again just before it's installed, and the file to install it from."""
+
+    path: Path
+    hold: int | None = None  # Windows: wintrust.hold's handle, which keeps `path` as it is until Chatmon quits
+
+
+def prepare(download: Path, expected: str, kind: str) -> Prepared | str:
+    """Checked again just before it's installed (it may have waited days for you to say yes): the file to
+    install, or why not (a TryLater: not yet). On Windows that's a copy in a fresh folder, held so that nobody
+    can write, rename or delete it, nor rename its folder, from before the check until Chatmon quits (the
+    installer, started from it, reads itself as it goes): what's checked is what runs. Slow: off the screen's
+    thread."""
+    if kind != WINDOWS:
+        why = verify(download, expected, kind)
+        return why if why is not None else Prepared(download)
+    place = Path(tempfile.mkdtemp(prefix=INSTALLING, dir=download.parent))
+    copy = place / download.name
+    hold = None
+    try:
+        shutil.copyfile(download, copy)
+        if sys.platform == "win32":
+            from . import wintrust
+
+            hold = wintrust.hold(copy)
+        why = verify(copy, expected, kind)
+    except OSError as exc:
+        why = f"it couldn't be copied to be installed ({exc.strerror or exc})"
+    if why is None:
+        return Prepared(copy, hold)
+    if hold is not None:
+        from . import wintrust
+
+        wintrust.release(hold)
+    shutil.rmtree(place, ignore_errors=True)
+    return why
 
 
 def folder() -> Path:
@@ -304,7 +357,12 @@ class Updater(QObject):
         self.ready: Path | None = None  # the verified download, for self.release
         self._expected = ""  # its checksum, from the signed list: checked again just before it's installed
         self._signed: tuple[bytes, bytes] = (b"", b"")  # that list and its signature, for root to check again
+        self._held: Prepared | None = None  # Windows: the installer's held copy, kept as it is until Chatmon quits
         self.busy = False
+        self.retry = QTimer(self)  # a check that couldn't finish for now (TryLater), tried again
+        self.retry.setSingleShot(True)
+        self.retry.setInterval(RETRY_AFTER * 1000)
+        self.retry.timeout.connect(lambda: self.check(self.kind))
 
     # -- checking
 
@@ -314,6 +372,7 @@ class Updater(QObject):
         if self.busy:
             return
         self.busy = True
+        self.retry.stop()
         self._by_hand = by_hand
         if kind is None and self.kind is None:
             self._background.run(install_kind, self._kind_known)
@@ -392,6 +451,8 @@ class Updater(QObject):
             for old in folder().iterdir():  # last time's, of whatever version (this one's are all named after it)
                 if not old.name.startswith(name) and old.is_file():
                     old.unlink()
+                elif old.name.startswith(INSTALLING) and old.is_dir():  # an installer's copy, no longer held
+                    shutil.rmtree(old, ignore_errors=True)
             self._file = open(part, "wb")
         except OSError as exc:
             return self._fail(f"couldn't save the download ({exc.strerror or exc})")
@@ -428,6 +489,11 @@ class Updater(QObject):
         self._background.run(lambda: verify(part, expected, kind), lambda why: self._verified(why, part, folder() / name, expected))
 
     def _verified(self, why, part: Path, done: Path, expected: str) -> None:
+        if isinstance(why, TryLater):
+            part.unlink(missing_ok=True)
+            self._fail(f"{why}; I'll look again in an hour")
+            self.retry.start()
+            return
         if why is not None:
             part.unlink(missing_ok=True)
             return self._fail(str(why) if not isinstance(why, Exception) else f"couldn't check the download ({why})")
@@ -454,20 +520,29 @@ class Updater(QObject):
         self.busy = True
         # Checked again, just before: it may have waited days for you to say yes.
         ready, expected, kind = self.ready, self._expected, self.kind
-        self._background.run(lambda: verify(ready, expected, kind), self._install_checked)
+        self._background.run(lambda: prepare(ready, expected, kind), self._install_checked)
 
-    def _install_checked(self, why) -> None:
-        if why is not None:
+    def _install_checked(self, prepared) -> None:
+        if isinstance(prepared, TryLater):  # not known bad: kept, to try again
+            self.busy = False
+            return self.failed.emit(f"The update wasn't installed yet: {prepared}. Try again once you're online.")
+        if not isinstance(prepared, Prepared):
             self.busy = False
             self.ready.unlink(missing_ok=True)
             self.ready = None
-            return self.failed.emit(f"The update wasn't installed: {why if not isinstance(why, Exception) else 'it could not be checked'}.")
-        program, args, env = installer_command(self.kind, self.ready)
+            return self.failed.emit(f"The update wasn't installed: {prepared if not isinstance(prepared, Exception) else 'it could not be checked'}.")
+        program, args, env = installer_command(self.kind, prepared.path)
         if self.kind == WINDOWS:
             # Chatmon stays: the installer asks it to quit (`chatmon quit`) once it's going ahead, and starts it
-            # again after. Turned down (Windows asking to install for everyone, say), Chatmon is still here.
+            # again after. Turned down (Windows asking to install for everyone, say), Chatmon is still here. Its
+            # copy stays held until Chatmon quits (the installer reads itself as it goes).
             self.busy = False
-            if not QProcess.startDetached(program, args, str(self.ready.parent))[0]:
+            if self._held is not None and self._held.hold is not None:
+                from . import wintrust
+
+                wintrust.release(self._held.hold)  # a copy from an install that was turned down
+            self._held = prepared
+            if not QProcess.startDetached(program, args, str(prepared.path.parent))[0]:
                 return self.failed.emit("The update wasn't installed: its installer couldn't start.")
             self.handed_over.emit()
             return
@@ -503,6 +578,8 @@ class Updater(QObject):
                     f"In a terminal: `sudo {shlex.join([HELPER, str(self.ready), *map(str, sums_for(self.ready))])}`"
                 )
             detail = err.splitlines()[-1] if err else f"exit code {code}"
+            if detail.startswith("The update wasn't installed"):  # root's own check said why, in a sentence
+                return self.failed.emit(detail)
             return self.failed.emit(f"The update wasn't installed ({detail}).")
         relaunch = relaunch_command(self.kind)
         if relaunch is not None:

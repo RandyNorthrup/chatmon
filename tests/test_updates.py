@@ -12,6 +12,9 @@ from chatmon import __version__, changelog, releasecheck, report, updates
 
 TAG = "v9.0.0"
 BASE = updates.DOWNLOADS + TAG + "/"
+REAL_INSTALLER_COMMAND = updates.installer_command  # before the github fixture stands in for it
+OURS = "CN=Randy Northrup, O=Randy Northrup, L=Ventura, S=California, C=US"
+MICROSOFT = "CN=Microsoft ID Verified CS AOC CA 04, O=Microsoft Corporation, C=US"
 
 
 def release_json(**over):
@@ -157,6 +160,122 @@ def test_a_source_checkout_is_never_updated_by_itself(monkeypatch):
     monkeypatch.setattr(updates.paths, "frozen", lambda: False)
     monkeypatch.setattr(updates, "_editable", lambda: True)
     assert updates.install_kind() == "manual"
+
+
+# -- how this Chatmon was installed (M1A-12)
+
+
+def frozen_at(monkeypatch, platform_name: str, executable: Path) -> None:
+    monkeypatch.setattr(updates.paths, "frozen", lambda: True)
+    monkeypatch.setattr(updates.sys, "platform", platform_name)
+    monkeypatch.setattr(updates.sys, "executable", str(executable))
+
+
+def test_the_windows_installers_chatmon_is_told_by_its_uninstaller(monkeypatch, tmp_path):
+    frozen_at(monkeypatch, "win32", tmp_path / "chatmon.exe")
+    assert updates.install_kind() == updates.MANUAL  # a copy run from anywhere
+    (tmp_path / "unins000.exe").write_bytes(b"MZ")
+    assert updates.install_kind() == updates.WINDOWS
+
+
+def test_the_mac_apps_chatmon_updates_itself_only_from_applications_as_the_pkg_left_it(monkeypatch, tmp_path):
+    app = tmp_path / "Applications" / "Chatmon.app"
+    monkeypatch.setattr(updates, "MAC_APP", app)
+    frozen_at(monkeypatch, "darwin", app / "Contents" / "MacOS" / "Chatmon")
+    for folder in ("MacOS", "Resources"):
+        (app / "Contents" / folder).mkdir(parents=True)
+    assert not updates.root_owned(app) and updates.install_kind() == updates.MANUAL  # this test's, not root's
+    monkeypatch.setattr(updates, "root_owned", lambda path: path == app)
+    assert updates.install_kind() == updates.MACOS
+    frozen_at(monkeypatch, "darwin", tmp_path / "Downloads" / "Chatmon.app" / "Contents" / "MacOS" / "Chatmon")
+    assert updates.install_kind() == updates.MANUAL  # a copy elsewhere would only make a second one
+
+
+def test_a_chatmon_installed_by_the_system_says_which_package_manager(monkeypatch):
+    monkeypatch.setattr(updates.paths, "frozen", lambda: False)
+    monkeypatch.setattr(updates.sys, "platform", "linux")
+    monkeypatch.setattr(updates, "SYSTEM_PACKAGE", Path(updates.__file__).resolve().parent.parent)  # this one, as if there
+
+    def says(code):
+        return [sys.executable, "-c", f"raise SystemExit({code})"]  # a real program that answers yes (0) or no
+
+    monkeypatch.setattr(updates, "PACKAGE_QUERIES", ((updates.DEB, says(1)), (updates.RPM, says(0))))
+    assert updates.install_kind() == updates.RPM
+    monkeypatch.setattr(updates, "PACKAGE_QUERIES", ((updates.DEB, says(0)), (updates.RPM, says(0))))
+    assert updates.install_kind() == updates.DEB
+    monkeypatch.setattr(updates, "PACKAGE_QUERIES", ((updates.DEB, ["/no/such/dpkg-query"]), (updates.RPM, says(1))))
+    assert updates.install_kind() == updates.MANUAL
+    monkeypatch.setattr(updates, "SYSTEM_PACKAGE", Path("/usr/lib/chatmon-elsewhere"))
+    monkeypatch.setattr(updates, "_editable", lambda: False)
+    monkeypatch.setattr(updates.sys, "prefix", str(Path("/home/me/.local/share/pipx/venvs/chatmon")))
+    assert updates.install_kind() == updates.PIPX
+    monkeypatch.setattr(updates.sys, "platform", "win32")  # where pipx can't replace chatmon.exe while it runs
+    assert updates.install_kind() == updates.MANUAL
+
+
+def test_each_kind_has_its_installer_and_its_way_back(monkeypatch, tmp_path):
+    whl = tmp_path / "chatmon-9.0.0-py3-none-any.whl"
+    monkeypatch.setattr(updates.shutil, "which", {"pipx": "/home/me/.local/bin/pipx", "chatmon": "/home/me/.local/bin/chatmon"}.get)
+    assert updates.installer_command(updates.PIPX, whl) == ("/home/me/.local/bin/pipx", ["install", "--force", str(whl)], {})
+    assert updates.installer_command(updates.MANUAL, whl) is None
+    assert updates.relaunch_command(updates.MACOS) == ("/bin/sh", ["-c", "sleep 2; exec /usr/bin/open /Applications/Chatmon.app"])
+    for kind in (updates.DEB, updates.RPM):
+        assert updates.relaunch_command(kind) == ("/bin/sh", ["-c", "sleep 2; exec /usr/bin/chatmon"])
+    assert updates.relaunch_command(updates.PIPX) == ("/bin/sh", ["-c", 'sleep 2; exec "$0"', "/home/me/.local/bin/chatmon"])
+    assert updates.relaunch_command(updates.WINDOWS) is None and updates.relaunch_command(updates.MANUAL) is None  # its installer does
+    monkeypatch.setattr(updates.shutil, "which", lambda name: None)
+    assert updates.installer_command(updates.PIPX, whl) is None and updates.relaunch_command(updates.PIPX) is None
+
+
+ROOT_SIDE = """import sys
+from pathlib import Path
+Path(sys.argv[1]).write_text("\\n".join(sys.argv[2:]))
+if sys.argv[2:3] == ["fail"]:
+    print("The update wasn't installed: its list of checksums isn't signed with Chatmon's release key.", file=sys.stderr)
+    raise SystemExit(3)
+"""
+
+
+@pytest.mark.parametrize("outcome", ["installed", "refused"])
+def test_an_install_runs_root_side_then_relaunches_or_says_why(qapp, github, monkeypatch, tmp_path, outcome):
+    """The whole way after you say yes, with a real child process standing in for pkexec and the root side: it
+    gets the download and its signed list, and Chatmon relaunches and quits, or stays and says why."""
+    github(b"the real installer")
+    updater, seen = run_updater(qapp)
+    assert seen[0][0] == "available"
+    record = tmp_path / "root-side-args"
+    helper = tmp_path / "root_side.py"
+    helper.write_text(ROOT_SIDE)
+    helper.chmod(0o755)  # as the package installs install-update
+    monkeypatch.setattr(updates, "installer_command", REAL_INSTALLER_COMMAND)
+    monkeypatch.setattr(updates, "PKEXEC", sys.executable)  # "pkexec HELPER ..." becomes "python root_side.py ..."
+    monkeypatch.setattr(updates, "HELPER", str(helper))
+    real_command = updates.installer_command
+
+    def with_record(kind, path):
+        program, args, env = real_command(kind, path)
+        return program, [args[0], str(record), *(["fail"] if outcome == "refused" else []), *args[1:]], env
+
+    monkeypatch.setattr(updates, "installer_command", with_record)
+    relaunched, events = [], []
+    monkeypatch.setattr(updates.QProcess, "startDetached", lambda *a: relaunched.append(a) or (True, 0))
+    updater.installing.connect(lambda: events.append("quit"))
+    updater.failed.connect(events.append)
+    ready = updater.ready
+    updater.install()
+    for _ in range(100):
+        if events:
+            break
+        spin(50)
+    given = record.read_text().split("\n")
+    sums, signature = updates.sums_for(ready)
+    assert given[-3:] == [str(ready), str(sums), str(signature)]
+    if outcome == "installed":
+        assert events == ["quit"] and relaunched == [("/bin/sh", ["-c", "sleep 2; exec /usr/bin/chatmon"])]
+        assert not ready.exists()
+    else:
+        assert events == ["The update wasn't installed: its list of checksums isn't signed with Chatmon's release key."]
+        assert not relaunched and ready.exists() and not updater.busy
 
 
 def test_the_changelog_has_this_version_and_reads_back():
@@ -418,3 +537,105 @@ def test_what_pkexec_said_is_told_plainly(qapp, github, monkeypatch, code, says)
     updater.failed.connect(lambda _m: loop.quit())
     loop.exec()
     assert failed and says in failed[0]
+
+
+def spin(ms: int) -> None:
+    from PyQt6.QtCore import QEventLoop, QTimer
+
+    loop = QEventLoop()
+    QTimer.singleShot(ms, loop.quit)
+    loop.exec()
+
+
+# -- revocation (M1A-05)
+
+
+def test_a_revoked_certificate_is_never_installed_and_an_unknown_one_not_yet(tmp_path, monkeypatch):
+    f = tmp_path / "setup.exe"
+    f.write_bytes(b"setup")
+    good = hashlib.sha256(b"setup").hexdigest()
+    usages = ["1.3.6.1.5.5.7.3.3", updates.IDENTITY]
+    monkeypatch.setattr(updates, "windows_signer", lambda path: ("Revoked", OURS, MICROSOFT, usages))
+    why = updates.verify(f, good, updates.WINDOWS)
+    assert "revoked" in why and not isinstance(why, updates.TryLater)  # even Randy Northrup's own: never
+    monkeypatch.setattr(updates, "windows_signer", lambda path: ("RevocationUnknown", OURS, MICROSOFT, usages))
+    why = updates.verify(f, good, updates.WINDOWS)
+    assert isinstance(why, updates.TryLater) and "revoked" in why  # never passed: not yet
+    monkeypatch.setattr(updates, "windows_signer", lambda path: ("Valid", OURS, MICROSOFT, usages))
+    assert updates.verify(f, good, updates.WINDOWS) is None
+
+
+def test_a_download_that_cant_be_checked_yet_is_looked_at_again_within_the_hour(qapp, github, monkeypatch):
+    github(b"the real installer")
+    monkeypatch.setattr(updates, "verify", lambda path, expected, kind: updates.TryLater("Windows couldn't check"))
+    updater, seen = run_updater(qapp)
+    assert [name for name, _ in seen] == ["failed"] and "look again in an hour" in seen[0][1][0]
+    assert updater.retry.isActive() and updater.retry.interval() == updates.RETRY_AFTER * 1000 <= 3600 * 1000
+    assert updater.ready is None and not any(updates.folder().iterdir()) and not updater.busy
+    checks = []
+    monkeypatch.setattr(updater, "check", lambda kind=None, by_hand=False: checks.append(kind))
+    updater.retry.timeout.emit()  # the hour's up
+    assert checks == ["deb"]
+
+
+def test_an_update_that_cant_be_checked_at_install_time_is_kept_for_later(qapp, github, monkeypatch):
+    github(b"the real installer")
+    updater, seen = run_updater(qapp)
+    assert seen[0][0] == "available"
+    monkeypatch.setattr(updates, "verify", lambda path, expected, kind: updates.TryLater("Windows couldn't check"))
+    started = []
+    monkeypatch.setattr(updates.QProcess, "startDetached", lambda *a: started.append(a) or (True, 0))
+    failed = []
+    updater.failed.connect(failed.append)
+    updater.install()
+    spin(100)
+    assert failed and "wasn't installed yet" in failed[0] and not started and not updater.busy
+    assert updater.ready is not None and updater.ready.exists()  # not known bad: still there for next time
+
+
+# -- the Windows installer runs from a held copy (M1A-06)
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="holding a file open against changes: Windows")
+def test_the_windows_installer_runs_from_a_copy_nobody_can_change(qapp, github, monkeypatch, tmp_path):
+    """From before its check until after it's started: the copy can't be written, renamed or deleted, nor its
+    folder renamed, while the download it came from can still be swapped, to no effect."""
+    import os
+
+    github(b"the real installer")
+    updater, _ = run_updater(qapp)
+    updater.kind = updates.WINDOWS
+    monkeypatch.setattr(updates, "installer_command", REAL_INSTALLER_COMMAND)
+
+    def unchangeable(path):
+        refused = []
+        for change in (lambda: open(path, "r+b").close(), lambda: os.replace(path, tmp_path / "moved"),
+                       lambda: os.remove(path), lambda: os.replace(path.parent, tmp_path / "moved-folder")):
+            try:
+                change()
+            except PermissionError:
+                refused.append(True)
+        return len(refused) == 4
+
+    checked = []
+
+    def signer(path):
+        checked.append((path, unchangeable(path)))
+        return "Valid", OURS, MICROSOFT, ["1.3.6.1.5.5.7.3.3", updates.IDENTITY]
+
+    started = []
+    monkeypatch.setattr(updates, "windows_signer", signer)
+    monkeypatch.setattr(updates.QProcess, "startDetached", lambda program, args, cwd: started.append((program, cwd, unchangeable(Path(program)))) or (True, 0))
+    updater.install()
+    spin(300)
+    try:
+        ((path, held_at_check),) = checked
+        assert path != updater.ready and path.parent.parent == updater.ready.parent and path.parent.name.startswith(updates.INSTALLING)
+        assert held_at_check and started == [(str(path), str(path.parent), True)]
+        updater.ready.write_bytes(b"swapped afterwards")  # the download itself: no longer what runs
+        assert path.read_bytes() == b"the real installer" and unchangeable(path)
+    finally:
+        from chatmon import wintrust
+
+        if updater._held is not None:
+            wintrust.release(updater._held.hold)
