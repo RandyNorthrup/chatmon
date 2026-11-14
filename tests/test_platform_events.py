@@ -174,7 +174,7 @@ for attempt in range(4):  # a client just started may take a moment to listen to
     if os.path.exists(sys.argv[3]) and os.path.getsize(sys.argv[3]):
         break
 print("routes", sorted(routes), notified, flush=True)
-pump(2)  # still answering UI Automation while the test asks the window's name
+pump(15)  # still answering UI Automation while the test asks the window's name (the test ends it sooner)
 """
 
 
@@ -195,7 +195,6 @@ def test_a_ui_automation_client_hears_the_announcement(tmp_path):
         assert said[0] == "prepared True" and said[1].startswith("window ") and said[2:] == ["too soon False", "routes ['uia'] []"], said
         # The window's element is the announcer's own provider (it names itself), not Qt's or the bare window's.
         name = subprocess.run([sys.executable, str(HERE / "uia_client.py"), "name", said[1].split()[1]], capture_output=True, text=True, timeout=30)
-        announcer.wait(30)
         deadline = time.monotonic() + 10
         while time.monotonic() < deadline and not (log.exists() and log.read_text(encoding="utf-8").strip()):
             time.sleep(0.1)

@@ -167,13 +167,16 @@ def linux_desk(qapp, monkeypatch):
     changes = []
     desk.settings_changed.connect(lambda: changes.append(True))
     yield desk, changes
-    desk.close()
+    from PyQt6 import sip
+
+    if not sip.isdeleted(desk):
+        desk.close()
 
 
 def test_the_portals_contrast_decides_and_says_when_it_changes(linux_desk):
     desk, changes = linux_desk
-    gnome = desk._gnome.setdefault(("org.gnome.desktop.a11y.interface", "high-contrast"),
-                                   presence._GSetting("org.gnome.desktop.a11y.interface", "high-contrast", desk.settings_changed.emit))
+    desk._gsetting("org.gnome.desktop.a11y.interface", "high-contrast")  # asked, as high_contrast() does
+    gnome = desk._gnome[("org.gnome.desktop.a11y.interface", "high-contrast")]
     gnome._set("true")  # GNOME says high contrast...
     changes.clear()
     desk.high_contrast()  # the first reading starts the portal's listener
@@ -295,3 +298,16 @@ def test_each_notification_servers_do_not_disturb_holds_bubbles(linux_desk, serv
     dnd.heard("an answer of the wrong kind")
     assert dnd.state is None and desk.quiet() is None
     assert server in linuxsession.DND_QUESTIONS
+
+
+def test_the_linux_listeners_go_with_their_desk(linux_desk):
+    """What they hear after the Desk has gone (an answer still on its way) must reach nothing: they belong to it."""
+    from PyQt6 import sip
+
+    desk, _ = linux_desk
+    portal, dnd = desk._linux("portal"), desk._linux("dnd")
+    desk._gsetting("org.gnome.desktop.interface", "enable-animations")
+    gnome = desk._gnome[("org.gnome.desktop.interface", "enable-animations")]
+    assert portal.parent() is desk and dnd.parent() is desk and gnome.parent() is desk
+    sip.delete(desk)
+    assert sip.isdeleted(portal) and sip.isdeleted(dnd) and sip.isdeleted(gnome)

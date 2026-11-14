@@ -14,7 +14,9 @@
 
 Nothing here waits on the screen's thread but the session lookup at start: every other question is asked without
 waiting, and its answer comes back as a signal. A service that isn't running is never started by a question
-(NoAutoStart). Imported where there's D-Bus alone; each part is tried, and one that isn't there is left out.
+(NoAutoStart). Each listener can belong to the object that uses it (`parent`): an answer still on its way when that
+object goes is never delivered. Imported where there's D-Bus alone; each part is tried, and one that isn't there is
+left out.
 """
 
 from __future__ import annotations
@@ -23,7 +25,7 @@ import os
 import time
 from typing import Callable
 
-from PyQt6.QtCore import QMetaType, QObject, pyqtSlot
+from PyQt6.QtCore import QMetaType, QObject, pyqtSignal, pyqtSlot
 from PyQt6.QtDBus import QDBus, QDBusArgument, QDBusConnection, QDBusMessage, QDBusPendingCallWatcher, QDBusPendingReply
 
 LOGIN1 = "org.freedesktop.login1"
@@ -47,7 +49,8 @@ def _call(service: str, path: str, interface: str, method: str, *args) -> QDBusM
 
 
 def _ask(owner: QObject, bus: QDBusConnection, message: QDBusMessage, then: Callable[[QDBusMessage], None]) -> None:
-    """Send `message` without waiting; `then(reply)` gets the answer (an error message, if it failed)."""
+    """Send `message` without waiting; `then(reply)` gets the answer (an error message, if it failed), unless `owner`
+    has gone by then (the answer's watcher goes with it)."""
     watcher = QDBusPendingCallWatcher(bus.asyncCall(message, ASK_FOR_MS), owner)
 
     def answered(w: QDBusPendingCallWatcher) -> None:
@@ -71,8 +74,9 @@ class SessionWatcher(QObject):
     it's unlocked. Each source can say the same thing (logind and the screen saver both tell of a lock): each
     change is told once."""
 
-    def __init__(self, locked: Callable[[bool], None], slept: Callable[[bool], None], seen: Callable[[bool], None] | None = None):
-        super().__init__()
+    def __init__(self, locked: Callable[[bool], None], slept: Callable[[bool], None], seen: Callable[[bool], None] | None = None,
+                 parent: QObject | None = None):
+        super().__init__(parent)
         self._locked, self._slept, self._seen = locked, slept, seen
         self.locked = False  # as last told
         self.heard: list[str] = []  # which sources it listens to, for the log and the tests
@@ -143,8 +147,8 @@ class PowerProfile(QObject):
     power-profiles-daemon's power-saver profile is on, or while the computer runs on its battery (UPower's
     OnBattery), and each change is told once."""
 
-    def __init__(self, saving: Callable[[bool], None]):
-        super().__init__()
+    def __init__(self, saving: Callable[[bool], None], parent: QObject | None = None):
+        super().__init__(parent)
         self._saving = saving
         self.heard: list[str] = []  # the services it listens to
         self.profile_saver = False
@@ -219,13 +223,14 @@ def portal_flag(value) -> bool | None:
 
 class PortalSettings(QObject):
     """The portal's high-contrast and reduced-motion settings: read once without waiting, then kept up to date by
-    its SettingChanged signal, so they're read from `values` at once. `changed()` is called when one is first known
+    its SettingChanged signal, so they're read from `values` at once. `changed` is emitted when one is first known
     and whenever it changes."""
 
-    def __init__(self, changed: Callable[[], None]):
-        super().__init__()
+    changed = pyqtSignal()
+
+    def __init__(self, parent: QObject | None = None):
+        super().__init__(parent)
         self.values: dict[str, bool | None] = {}
-        self._changed = changed
         self._bus = QDBusConnection.sessionBus()
         if not self._bus.isConnected():
             return
@@ -247,7 +252,7 @@ class PortalSettings(QObject):
         if key in self.values and self.values[key] == flag:
             return
         self.values[key] = flag
-        self._changed()
+        self.changed.emit()
 
     @pyqtSlot(QDBusMessage)
     def _setting_changed(self, message: QDBusMessage) -> None:
@@ -291,8 +296,8 @@ class NotificationDnd(QObject):
 
     IDENTIFY_AGAIN_AFTER = 60.0  # seconds
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent: QObject | None = None):
+        super().__init__(parent)
         self.server: str | None = None
         self.state: bool | None = None
         self._asking = False

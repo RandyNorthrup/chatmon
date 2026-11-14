@@ -86,7 +86,8 @@ def test_portal_settings_are_yes_no_or_unknown(qapp):
     assert linuxsession.portal_flag(QDBusVariant(QDBusVariant(1))) is True  # Read (version 1) wraps it twice
     assert linuxsession.portal_flag(2) is None and linuxsession.portal_flag("1") is None and linuxsession.portal_flag(None) is None
     told = []
-    settings = linuxsession.PortalSettings(lambda: told.append(dict(settings.values)))
+    settings = linuxsession.PortalSettings()
+    settings.changed.connect(lambda: told.append(dict(settings.values)))
     settings.set("contrast", 1)
     settings.set("contrast", 1)
     settings.set("reduced-motion", 0)

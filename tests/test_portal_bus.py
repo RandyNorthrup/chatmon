@@ -98,3 +98,36 @@ def test_the_portals_appearance_settings_are_read_once_then_followed(tmp_path, v
     assert got == {"first": [False, False], "seen": [[True, False], [True, True], [False, True]]}, out.stderr
     asked = [json.loads(line) for line in log.read_text().splitlines() if "settings" in line]
     assert asked == [{"settings": method, "key": "contrast"}, {"settings": method, "key": "reduced-motion"}]
+
+
+GONE_CLIENT = r"""
+import sys
+sys.path.insert(0, sys.argv[1])
+from PyQt6 import sip
+from PyQt6.QtCore import QCoreApplication, QTimer
+app = QCoreApplication([])
+from chatmon import presence
+desk = presence.Desk("offscreen")
+desk.high_contrast()  # asks the portal; its answers are on their way
+sip.delete(desk)  # and the Desk goes first (a test replacing it, the app quitting)
+QTimer.singleShot(1500, app.quit)
+app.exec()
+print("still running", flush=True)
+"""
+
+
+@needs_a_bus
+def test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing(tmp_path):
+    pytest.importorskip("PyQt6.QtDBus")
+    log, ready, fake = tmp_path / "asked.jsonl", tmp_path / "ready", HERE / "fake_portal.py"
+    script = (
+        f'"{sys.executable}" "{fake}" "{log}" > "{ready}" 2>&1 & fake=$!; '
+        f'for i in $(seq 100); do grep -q ready "{ready}" 2>/dev/null && break; sleep 0.1; done; '
+        f'"{sys.executable}" -c "$CLIENT" "{HERE.parent}"; echo "exit $?"; kill $fake'
+    )
+    env = dict(os.environ, CLIENT=GONE_CLIENT, QT_QPA_PLATFORM="offscreen", CHATMON_PORTAL_BUS="1", XDG_CURRENT_DESKTOP="",
+               FAKE_CONTRAST="1", FAKE_MOTION="0")
+    env.pop("DBUS_SESSION_BUS_ADDRESS", None)
+    out = subprocess.run(["dbus-run-session", "--", "sh", "-c", script], capture_output=True, text=True, timeout=60, env=env)
+    assert "still running" in out.stdout and "exit 0" in out.stdout, out.stdout + out.stderr
+    assert "ReadOne" in log.read_text()  # the questions did go out

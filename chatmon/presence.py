@@ -25,9 +25,8 @@ import os
 import shutil
 import sys
 import time
-from typing import Callable
 
-from PyQt6.QtCore import QObject, QProcess, pyqtSignal
+from PyQt6.QtCore import QObject, QProcess, pyqtSignal, pyqtSlot
 
 AWAY_AFTER = 300  # seconds without input: away from the desk
 
@@ -301,13 +300,15 @@ def covers(full: tuple[int, int, int, int], stage: tuple[int, int, int, int]) ->
 
 class _GSetting(QObject):
     """A GNOME setting, kept up to date by `gsettings monitor` (which says each change as it happens), read at
-    once from here: never a wait on the screen's thread."""
+    once from here: never a wait on the screen's thread. `changed` is emitted when it's first known and whenever it
+    changes."""
 
-    def __init__(self, schema: str, key: str, changed: Callable[[], None] | None = None):
-        super().__init__()
+    changed = pyqtSignal()
+
+    def __init__(self, schema: str, key: str, parent: QObject | None = None):
+        super().__init__(parent)
         self.value: str | None = None
         self._key = key
-        self._changed_callback = changed
         self._first: QProcess | None = None
         self._monitor: QProcess | None = None
         if not shutil.which("gsettings"):
@@ -316,9 +317,10 @@ class _GSetting(QObject):
         self._first.finished.connect(self._read_first)
         self._first.start("gsettings", ["get", schema, key])
         self._monitor = QProcess(self)
-        self._monitor.readyReadStandardOutput.connect(self._changed)
+        self._monitor.readyReadStandardOutput.connect(self._heard)
         self._monitor.start("gsettings", ["monitor", schema, key])
 
+    @pyqtSlot()
     def _read_first(self) -> None:
         self._set(bytes(self._first.readAllStandardOutput()).decode(errors="replace"))
 
@@ -326,10 +328,10 @@ class _GSetting(QObject):
         text = text.strip()
         if text and text != self.value:
             self.value = text
-            if self._changed_callback is not None:
-                self._changed_callback()
+            self.changed.emit()
 
-    def _changed(self) -> None:
+    @pyqtSlot()
+    def _heard(self) -> None:
         for line in bytes(self._monitor.readAllStandardOutput()).decode(errors="replace").splitlines():
             name, _, value = line.partition(":")
             if name.strip() == self._key:
@@ -369,6 +371,8 @@ class Desk(QObject):
         self._desktop = (os.environ.get("XDG_CURRENT_DESKTOP") or "").lower()
         self._gnome: dict[str, _GSetting] = {}
         self._focus = None  # Windows 11's Focus, asked on a thread of its own (winfocus.Focus)
+        # The listeners belong to the Desk (they go with it) and say changes with Qt signals: nothing they hear later
+        # reaches a Desk that's gone.
         self._portal = None  # linuxsession.PortalSettings, from the first reading on; False: no D-Bus here
         self._dnd = None  # linuxsession.NotificationDnd, likewise
         self._watch_qt_contrast()
@@ -404,7 +408,11 @@ class Desk(QObject):
             except ImportError:  # no QtDBus
                 made = False
             else:
-                made = linuxsession.PortalSettings(self.settings_changed.emit) if kind == "portal" else linuxsession.NotificationDnd()
+                if kind == "portal":
+                    made = linuxsession.PortalSettings(self)
+                    made.changed.connect(self.settings_changed)
+                else:
+                    made = linuxsession.NotificationDnd(self)
             setattr(self, attr, made)
         return made or None
 
@@ -416,7 +424,8 @@ class Desk(QObject):
         if "gnome" not in self._desktop or sys.platform in ("win32", "darwin"):
             return None
         if (schema, key) not in self._gnome:
-            self._gnome[(schema, key)] = _GSetting(schema, key, self.settings_changed.emit)
+            setting = self._gnome[(schema, key)] = _GSetting(schema, key, self)
+            setting.changed.connect(self.settings_changed)
         return self._gnome[(schema, key)].value
 
     def close(self) -> None:
