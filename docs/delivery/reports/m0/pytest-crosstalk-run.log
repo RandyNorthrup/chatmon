@@ -1,0 +1,98 @@
+..s.s...............................s........................s.......... [ 11%]
+......ssss..s...........................F............................... [ 22%]
+..............s......................................................... [ 34%]
+........................................................................ [ 45%]
+........................................sss....ss.ssss...........s...... [ 57%]
+sssssss................................................................. [ 68%]
+.....................................s...s....s......................... [ 79%]
+.......ss................................................s.ss...ssssssss [ 91%]
+sss.ssssssss..................s..............s....sssss                  [100%]
+================================== FAILURES ===================================
+_________ test_quiet_holds_bubbles_from_the_background_until_its_over _________
+
+companion = <chatmon.app.Companion object at 0x0000019B901CD090>
+
+    def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
+        c = companion
+        c.desk = desk = PretendDesk()
+        spin(1.8)
+        c.stage.dismiss_message()
+        spin(0.3)
+        desk.why_quiet = "a presentation"
+        c._check_quiet()
+        c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+        spin(0.2)
+>       assert not c.stage.message_visible() and len(c.messages.held("quiet")) == 1
+E       AssertionError: assert (not False and 2 == 1)
+E        +  where False = message_visible()
+E        +    where message_visible = <chatmon.penguin.Stage object at 0x0000019B901CD3B0>.message_visible
+E        +      where <chatmon.penguin.Stage object at 0x0000019B901CD3B0> = <chatmon.app.Companion object at 0x0000019B901CD090>.stage
+E        +  and   2 = len([Message(title='Claude finished', text='', buttons=[], timeout_s=8, key='agent:claude', priority=3, alert=False, yours...hello from a hook', buttons=[], timeout_s=15, key=None, priority=3, alert=False, yours=False, background=True, seq=74)])
+E        +    where [Message(title='Claude finished', text='', buttons=[], timeout_s=8, key='agent:claude', priority=3, alert=False, yours...hello from a hook', buttons=[], timeout_s=15, key=None, priority=3, alert=False, yours=False, background=True, seq=74)] = held('quiet')
+E        +      where held = <chatmon.messages.MessageQueue object at 0x0000019B8D6886E0>.held
+E        +        where <chatmon.messages.MessageQueue object at 0x0000019B8D6886E0> = <chatmon.app.Companion object at 0x0000019B901CD090>.messages
+
+tests\test_app_smoke.py:1189: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_a11y.py:46: Linux with dbus-run-session
+SKIPPED [1] tests\test_a11y.py:70: macOS
+SKIPPED [1] tests\test_agents.py:494: POSIX permissions
+SKIPPED [1] tests\test_app_smoke.py:89: on Windows every Chatmon in a session shares the hooks' pipe name, a test's too
+SKIPPED [1] tests\test_app_smoke.py:406: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:430: a Windows pipe takes a sender's bytes only once Chatmon reads that connection, so a message can't wait unread for it this way
+SKIPPED [1] tests\test_app_smoke.py:462: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:482: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:574: file modes are POSIX's; on Windows the log is in your own profile folder
+SKIPPED [1] tests\test_autostart.py:23: the XDG autostart entry
+SKIPPED [1] tests\test_events.py:102: a named pipe there
+SKIPPED [1] tests\test_events.py:113: macOS's temporary folder of your own
+SKIPPED [1] tests\test_events.py:126: a named pipe there
+SKIPPED [1] tests\test_events.py:176: a named pipe there
+SKIPPED [1] tests\test_events.py:239: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:281: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_events.py:304: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:332: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:349: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_heads_up.py:135: macOS only
+SKIPPED [1] tests\test_linuxsession.py:28: no PackageKit here
+SKIPPED [1] tests\test_macnative.py:20: macOS only
+SKIPPED [1] tests\test_macnative.py:54: macOS only
+SKIPPED [1] tests\test_macnative.py:88: macOS only
+SKIPPED [1] tests\test_macnative.py:116: macOS only
+SKIPPED [1] tests\test_macnative.py:134: macOS only
+SKIPPED [1] tests\test_macnative.py:162: macOS only
+SKIPPED [1] tests\test_portal_bus.py:41: Linux with dbus-run-session
+SKIPPED [1] tests\test_presence.py:70: macOS only
+SKIPPED [1] tests\test_presence.py:139: no GNOME session here
+SKIPPED [1] tests\test_rename.py:57: Windows keeps it in the registry
+SKIPPED [1] tests\test_rename.py:69: Windows keeps it in the registry
+SKIPPED [1] tests\test_updates.py:368: macOS only
+SKIPPED [2] tests\test_updates.py:404: pkexec: Linux
+SKIPPED [1] tests\test_wayland.py:46: Wayland sockets are Unix paths
+SKIPPED [1] tests\test_wayland.py:203: no Wayland protocol files installed
+SKIPPED [1] tests\test_wayland.py:311: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:413: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:424: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:438: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:524: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:546: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:570: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:579: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:590: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:643: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:694: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:724: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:758: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:771: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:784: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:797: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:866: Wayland is Linux only
+SKIPPED [1] tests\test_windows.py:416: needs QT_QPA_PLATFORM=windows
+SKIPPED [1] tests\test_windows.py:788: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+SKIPPED [1] tests\test_xkb.py:25: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:33: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:44: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:54: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:61: libxkbcommon isn't installed
+1 failed, 569 passed, 61 skipped in 101.79s (0:01:41)
+exit 1
