@@ -263,9 +263,13 @@ def smoke(cli: str, app: str, expected: str | None = None) -> None:
     cli, app = (shutil.which(p) or str(Path(p).resolve()) for p in (cli, app))  # a command's name, or a path to it
     home =Path(tempfile.mkdtemp(prefix="cm-", dir=None if sys.platform == "win32" else "/tmp"))  # a short path: macOS caps socket paths
     env = dict(os.environ, QT_QPA_PLATFORM="offscreen", HOME=str(home), USERPROFILE=str(home), APPDATA=str(home / "AppData"),
-               XDG_CONFIG_HOME=str(home / ".config"), XDG_STATE_HOME=str(home / ".state"), XDG_RUNTIME_DIR=str(home))
+               LOCALAPPDATA=str(home / "AppData" / "Local"), XDG_CONFIG_HOME=str(home / ".config"), XDG_STATE_HOME=str(home / ".state"),
+               XDG_RUNTIME_DIR=str(home))
+    # An address of its own (paths.INSTANCE_ENV), whatever Chatmon you have running: on Windows the pipe is named
+    # after your account, whatever the folders. (USERNAME did that for Chatmons before 0.6.)
+    env["CHATMON_INSTANCE"] = f"smoke-{os.getpid()}"
     if sys.platform == "win32":
-        env["USERNAME"] = f"chatmon-smoke-{os.getpid()}"  # a pipe of its own, whatever Chatmon you have running
+        env["USERNAME"] = f"chatmon-smoke-{os.getpid()}"
     env.pop("CHATMON_INTERNAL", None)
 
     def say(*args: str, timeout: float = 30) -> subprocess.CompletedProcess:
