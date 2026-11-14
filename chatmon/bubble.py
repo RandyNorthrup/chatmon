@@ -6,6 +6,7 @@ its notch pointing at the penguin, or the plain one in the desktop's own colours
 
 from __future__ import annotations
 
+import html
 import os
 import sys
 import time
@@ -27,12 +28,10 @@ from PyQt6.QtGui import (
     QPalette,
     QPen,
     QPixmap,
-    QTextCursor,
-    QTextDocument,
 )
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QMenu, QTextBrowser, QToolButton, QVBoxLayout, QWidget
 
-from . import bubbleart, styles
+from . import bubbleart, richtext, styles
 
 ACCENT = QColor(styles.PLAIN_ACCENT)  # the penguin's glowing cyan nodes
 PAD = 14
@@ -47,28 +46,6 @@ def open_link(url: QUrl) -> None:
     """Links in answers open in the browser; nothing else (no files, no apps)."""
     if url.scheme() in ("http", "https", "mailto"):
         QDesktopServices.openUrl(url)
-
-
-def without_images(doc: QTextDocument) -> None:
-    """Take every image out of a document just made from markdown, before anything lays it out. To show
-    one, Qt reads the file it names: any path at all, so an answer (or a web page an answer quotes) with
-    ![](/dev/zero) could fill the memory, and one naming a pipe would freeze the app. An image becomes
-    "[image]"."""
-    spans = []
-    block = doc.begin()
-    while block.isValid():
-        it = block.begin()
-        while not it.atEnd():
-            fragment = it.fragment()
-            if fragment.isValid() and fragment.charFormat().isImageFormat():
-                spans.append((fragment.position(), fragment.length()))
-            it += 1
-        block = block.next()
-    cursor = QTextCursor(doc)
-    for position, length in reversed(spans):
-        cursor.setPosition(position)
-        cursor.setPosition(position + length, QTextCursor.MoveMode.KeepAnchor)
-        cursor.insertText("[image]")
 
 
 def colours() -> tuple[QColor, QColor]:
@@ -113,7 +90,7 @@ class SpeechBubble:
 
     def __init__(self):
         self.title = ""
-        self.doc = QTextDocument()
+        self.doc = richtext.SafeDocument()
         self.doc.setDocumentMargin(0)
         self.buttons: list[_Button] = []
         self.size = QSizeF()
@@ -170,8 +147,7 @@ class SpeechBubble:
         self._frame = None
         title_font, body_font = _font(10.5, bold=True), _font(10.5)
         self.doc.setDefaultFont(body_font)
-        self.doc.setMarkdown(self._text)
-        without_images(self.doc)
+        richtext.set_markdown(self.doc, self._text)
         has_text = bool(self._text)
         metrics = QFontMetricsF(body_font)
         self.buttons = [_Button(label, action, QRectF(0, 0, metrics.horizontalAdvance(label) + 28, metrics.height() + 10)) for label, action in self._button_specs]
@@ -418,6 +394,22 @@ def overlay_contents(mime: str, data: bytes) -> tuple[str, object] | None:
     return ("text", text) if text else None
 
 
+def plain_tip(text: str) -> str:
+    """A tooltip that shows `text` as it is: Qt reads a tooltip that looks like HTML as HTML, and a file's
+    name can look like an <img> tag."""
+    return "<qt>" + html.escape(text) + "</qt>"
+
+
+class Answer(QTextBrowser):
+    """The conversation above the field, in a document that loads nothing (a text browser's own would read
+    any file an answer names)."""
+
+    def __init__(self):
+        super().__init__(openLinks=False)
+        self.setOpenExternalLinks(False)
+        self.setDocument(richtext.SafeDocument(self))
+
+
 class AskBox(QWidget):
     """The bubble you type questions into, with real Qt widgets since it needs
     the keyboard. A window of its own, or drawn on the Wayland overlay by the
@@ -459,6 +451,7 @@ class AskBox(QWidget):
         top = QHBoxLayout()
         self.title = QLabel()
         self.title.setObjectName("title")
+        self.title.setTextFormat(Qt.TextFormat.PlainText)  # a name or a chat's title, never markup that could load a file
         top.addWidget(self.title, 1)
         self.history_button = QToolButton(text="History", autoRaise=True)
         self.history_button.setToolTip("Your earlier chats: pick one to carry on")
@@ -473,7 +466,7 @@ class AskBox(QWidget):
         close.clicked.connect(self.dismiss)
         top.addWidget(close)
         layout.addLayout(top)
-        self.answer = QTextBrowser(openLinks=False)
+        self.answer = Answer()
         self.answer.anchorClicked.connect(open_link)
         self.answer.setFrameShape(QTextBrowser.Shape.NoFrame)
         self.answer.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -505,6 +498,7 @@ class AskBox(QWidget):
         self._drop_target = None  # Windows: Chatmon's own (windrop.DropTarget), in place of Qt's
         self.hint = QLabel()
         self.hint.setObjectName("hint")
+        self.hint.setTextFormat(Qt.TextFormat.PlainText)
         layout.addWidget(self.hint)
         self.set_style(self.style, self.animate)
 
@@ -618,7 +612,7 @@ class AskBox(QWidget):
             width = metrics.horizontalAdvance(text) + 22
             chip = QToolButton(text=text)
             chip.setObjectName("chip")
-            chip.setToolTip(f"{label}: click to take it off")
+            chip.setToolTip(plain_tip(f"{label}: click to take it off"))
             chip.setAccessibleName(f"Remove {label}")
             chip.clicked.connect(lambda _=False, i=i: self.attachment_removed.emit(i))
             self.chips_layout.addWidget(chip)
@@ -702,8 +696,7 @@ class AskBox(QWidget):
         """What the bubble shows above the field: an answer, or the whole chat (`at_end`: scrolled to its
         latest, as a chat is read)."""
         if markdown:
-            self.answer.setMarkdown(markdown)
-            without_images(self.answer.document())
+            richtext.set_markdown(self.answer.document(), markdown)
             doc = self.answer.document()
             doc.setTextWidth(self._content_width() - 10)
             self.answer.setFixedHeight(min(int(doc.size().height()) + 4, self.MAX_ANSWER))

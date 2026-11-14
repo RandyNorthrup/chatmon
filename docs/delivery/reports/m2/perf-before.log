@@ -1,0 +1,23 @@
+M2-13 bubble lifetime
+  style=electric, seconds=30.0, frames_drawn=892, ms_total=3803.0, ms_per_frame=4.26
+  style=fire, seconds=30.0, frames_drawn=892, ms_total=2029.0, ms_per_frame=2.27
+  style=ghost, seconds=30.0, frames_drawn=892, ms_total=4311.8, ms_per_frame=4.83
+  style=fairy, seconds=30.0, frames_drawn=892, ms_total=624.6, ms_per_frame=0.7
+  style=leaf, seconds=30.0, frames_drawn=892, ms_total=357.5, ms_per_frame=0.4
+M2-14 ask box, one second
+  style=electric, seconds=1.0, box_paints=23, child_paints=170
+  style=fire, seconds=1.0, box_paints=22, child_paints=169
+  style=ghost, seconds=1.01, box_paints=24, child_paints=178
+  style=fairy, seconds=1.0, box_paints=23, child_paints=170
+  style=leaf, seconds=1.15, box_paints=22, child_paints=169
+M2-15 notch moving
+  style=electric, animate=False, still_notch_ms_per_draw=0.635, moving_notch_ms_per_draw=7.343
+  style=electric, animate=True, still_notch_ms_per_draw=3.317, moving_notch_ms_per_draw=21.485
+  style=fire, animate=False, still_notch_ms_per_draw=0.196, moving_notch_ms_per_draw=2.224
+  style=fire, animate=True, still_notch_ms_per_draw=1.907, moving_notch_ms_per_draw=4.593
+  style=ghost, animate=False, still_notch_ms_per_draw=0.204, moving_notch_ms_per_draw=2.835
+  style=ghost, animate=True, still_notch_ms_per_draw=4.375, moving_notch_ms_per_draw=10.066
+  style=fairy, animate=False, still_notch_ms_per_draw=0.241, moving_notch_ms_per_draw=2.106
+  style=fairy, animate=True, still_notch_ms_per_draw=0.886, moving_notch_ms_per_draw=9.428
+  style=leaf, animate=False, still_notch_ms_per_draw=0.203, moving_notch_ms_per_draw=2.408
+  style=leaf, animate=True, still_notch_ms_per_draw=0.373, moving_notch_ms_per_draw=2.728

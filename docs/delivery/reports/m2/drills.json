@@ -1,0 +1,49 @@
+{
+  "drills": [
+    {
+      "id": "M2-01-loads",
+      "requirement": "M2-01",
+      "file": "chatmon/richtext.py",
+      "find": "        return nothing(kind)",
+      "replace": "        return super().loadResource(kind, url)",
+      "test": ["tests/test_bubble_safety.py"],
+      "expect": ["a picture's bytes were read"]
+    },
+    {
+      "id": "M2-01-empty-image",
+      "requirement": "M2-01",
+      "file": "chatmon/richtext.py",
+      "find": "        return blank",
+      "replace": "        return b\"\"",
+      "test": ["tests/test_bubble_safety.py"],
+      "expect": ["itself"]
+    },
+    {
+      "id": "M2-01-html",
+      "requirement": "M2-01",
+      "file": "chatmon/richtext.py",
+      "find": "MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub | QTextDocument.MarkdownFeature.MarkdownNoHTML",
+      "replace": "MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub",
+      "test": ["tests/test_bubble_safety.py"],
+      "expect": ["HTML was read"]
+    },
+    {
+      "id": "M2-01-images-left",
+      "requirement": "M2-01",
+      "file": "chatmon/richtext.py",
+      "find": "    doc.setMarkdown(markdown, MARKDOWN)\n    without_images(doc)",
+      "replace": "    doc.setMarkdown(markdown, MARKDOWN)",
+      "test": ["tests/test_bubble_safety.py"],
+      "expect": ["an image was left in"]
+    },
+    {
+      "id": "M2-01-title-markup",
+      "requirement": "M2-01",
+      "file": "chatmon/bubble.py",
+      "find": "self.title.setTextFormat(Qt.TextFormat.PlainText)",
+      "replace": "self.title.setTextFormat(Qt.TextFormat.AutoText)",
+      "test": ["tests/test_bubble_safety.py::test_a_title_hint_or_attachment_name_is_shown_as_text"],
+      "expect": ["magenta_pixels"]
+    }
+  ]
+}
