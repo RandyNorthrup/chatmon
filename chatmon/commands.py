@@ -80,6 +80,9 @@ class Table:
 
 ENGLISH = Table()
 
+# What a screen reader hears of a password made: never the password, which a system notification would keep.
+PASSWORD_MADE = "Password made; it's in the box."
+
 
 def run(c, text: str, table: Table = ENGLISH) -> bool:
     """Do what `text` asks, if it's something Chatmon does by itself: True if it was. Anything else is the AI's."""
@@ -99,6 +102,10 @@ def run(c, text: str, table: Table = ENGLISH) -> bool:
     kept_asked = offline.parse_kept(text)
     if kept_asked is not None:
         c._offline(text, kept(c, kept_asked))
+        return True
+    made = offline.password(text)
+    if made is not None:  # shown in the box once; a screen reader is told only that it's there
+        c._offline(text, made, spoken=PASSWORD_MADE if "`" in made else None)
         return True
     reply = offline.answer(text, datetime.now())
     if reply is not None:

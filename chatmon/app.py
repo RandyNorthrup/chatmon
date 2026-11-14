@@ -29,6 +29,7 @@ from .sprites import Sprites, silhouette
 PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
 MATCH = "match"  # the bubble style that follows the companion
+MAX_CONNECTIONS = 64  # hook connections open at once (each is a moment's); past that a new one is turned away
 UPDATE_CHECK_TIMEOUT_S = 60  # a system update check still running after this long is stopped, and counts as none
 APP_USER_MODEL_ID = "RandyNorthrup.Chatmon"  # Windows: the app's identity (packaging/windows/chatmon.iss gives its shortcuts it too)
 
@@ -1083,12 +1084,13 @@ class Companion(QObject):
         self.questions.failure = (q.text, error)
         self.ask_box.set_answer(self._transcript(), at_end=True)
 
-    def _offline(self, question: str, reply: str) -> None:
+    def _offline(self, question: str, reply: str, spoken: str | None = None) -> None:
         """An answer of Chatmon's own: shown under the chat, marked as such, and never part of it (no brain
-        sees it, and it isn't kept)."""
+        sees it, and it isn't kept). `spoken`: what a screen reader is told instead, when the answer itself
+        mustn't leave the box (it may be read out through a system notification, which keeps a history)."""
         self._offline_shown += 1
         self.ask_box.set_answer(self._transcript(f"**You:** {question}\n\n{reply}\n\n*{NO_AI}*"), at_end=True)
-        self._read_aloud(reply)
+        self._read_aloud(spoken or reply)
 
     def _local(self, text: str) -> bool:
         """What Chatmon does by itself, without any AI: True if it was that. Anything else is the AI's."""
@@ -1497,6 +1499,11 @@ class Companion(QObject):
         queued = Qt.ConnectionType.QueuedConnection
         while self.server.hasPendingConnections():
             sock = self.server.nextPendingConnection()
+            if len(self._connections) >= MAX_CONNECTIONS:  # a flood (only you can connect, but a script can loop)
+                sock.abort()
+                sock.deleteLater()
+                continue
+            sock.setReadBufferSize(events.MAX_MESSAGE + 1)  # Qt holds no more than a message for it, and a byte to tell
             self._connections[sock] = bytearray()
             sock.readyRead.connect(self._read_connections, type=queued)
             sock.disconnected.connect(self._read_connections, type=queued)
@@ -1517,20 +1524,25 @@ class Companion(QObject):
                 continue
             if sock.state() == connected:
                 sock.waitForReadyRead(0)
-            if sock.bytesAvailable():  # (reading a socket Qt has closed only gets a warning)
-                buffer.extend(bytes(sock.readAll()))
-            if len(buffer) > events.MAX_MESSAGE:
-                buffer.clear()
-                sock.abort()
-            closed = sock.state() != connected  # the sender hung up, and all it sent is in
-            while b"\n" in buffer or (closed and buffer):
-                line, _, rest = bytes(buffer).partition(b"\n")
-                buffer[:] = rest
-                for message in events.parse_lines(line):
-                    self.handle(message)
-                if not closed and sock.state() == connected:
-                    sock.write(events.ACK)
-                    sock.flush()
+            while True:
+                if sock.bytesAvailable():  # (reading a socket Qt has closed only gets a warning)
+                    # Never more than a message held for one connection: one longer is never going to be heard.
+                    buffer.extend(bytes(sock.read(events.MAX_MESSAGE + 1 - len(buffer))))
+                if len(buffer) > events.MAX_MESSAGE:
+                    buffer.clear()
+                    sock.abort()
+                more = sock.bytesAvailable() > 0
+                closed = sock.state() != connected and not more  # the sender hung up, and all it sent is in
+                while b"\n" in buffer or (closed and buffer):
+                    line, _, rest = bytes(buffer).partition(b"\n")
+                    buffer[:] = rest
+                    for message in events.parse_lines(line):
+                        self.handle(message)
+                    if not closed and sock.state() == connected:
+                        sock.write(events.ACK)
+                        sock.flush()
+                if not more:
+                    break
             if closed:
                 self._connections.pop(sock, None)
                 sock.deleteLater()
@@ -2140,11 +2152,24 @@ def _log_without_a_console() -> None:
         log.parent.mkdir(parents=True, exist_ok=True)
         if log.exists() and log.stat().st_size > LOG_LIMIT:
             os.replace(log, log.with_name(log.name + ".old"))
-        stream = open(log, "a", encoding="utf-8", errors="replace", buffering=1)
+        stream = _open_private(log)
     except OSError:
         return
     sys.stdout = sys.stderr = stream
     print(f"--- Chatmon started {datetime.now():%Y-%m-%d %H:%M:%S}")
+
+
+def _open_private(path: Path):
+    """`path`, opened to add to, readable and writable only by you on Linux and macOS (a log says what went wrong,
+    and where): made that way, and made so if an older Chatmon made it at the umask."""
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND | getattr(os, "O_CLOEXEC", 0) | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    try:
+        if hasattr(os, "fchmod"):
+            os.fchmod(fd, 0o600)
+        return os.fdopen(fd, "a", encoding="utf-8", errors="replace", buffering=1)
+    except BaseException:
+        os.close(fd)
+        raise
 
 
 _instance_lock: int | None = None  # the lock this Chatmon holds while it runs (Linux, macOS)

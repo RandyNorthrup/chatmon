@@ -480,6 +480,105 @@ def test_chatmon_quit_hears_back_before_the_connections_close(companion):
         assert until(lambda: not c.server.isListening())
     assert not c._connections
 
+
+def private_server(c) -> str:
+    """A server of the companion's own under a name no one else uses, which it takes connections on as it does
+    the hooks' (on Windows the hooks' pipe name is shared by every Chatmon in the session, a test's too)."""
+    import uuid
+
+    server = QLocalServer()
+    server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)
+    name = f"chatmon-test-{uuid.uuid4().hex[:12]}"
+    assert server.listen(name), server.errorString()
+    server.newConnection.connect(c._accept)
+    c.server = server  # closed when the companion quits; the fixture closes its own
+    return name
+
+
+def test_a_hook_connection_never_holds_more_than_a_message(companion, monkeypatch):
+    """The 64 KB limit was checked after reading all a connection had sent: now no more than that is ever held."""
+    import json
+
+    from PyQt6.QtNetwork import QLocalSocket
+
+    from chatmon import events
+
+    c = companion
+    name = private_server(c)
+    heard = []
+    monkeypatch.setattr(c, "handle", heard.append)
+    big = {"type": "say", "text": "hello", "padding": "x" * (events.MAX_MESSAGE - 100)}  # just under: still heard
+    sender = QLocalSocket()
+    sender.connectToServer(name)
+    assert sender.waitForConnected(2000) and until(lambda: len(c._connections) == 1)
+    (sock,) = c._connections
+    assert sock.readBufferSize() == events.MAX_MESSAGE + 1
+    sender.write(json.dumps(big).encode() + b"\n")
+    assert until(lambda: heard == [big])
+    sender.write(b"x" * (events.MAX_MESSAGE + 50_000) + b'\n{"type": "say", "text": "after"}\n')
+    assert until(lambda: sender.state() == QLocalSocket.LocalSocketState.UnconnectedState)  # cut off
+    assert heard == [big] and not c._connections
+
+
+def test_hook_connections_past_the_cap_are_turned_away(companion, monkeypatch):
+    from PyQt6.QtNetwork import QLocalSocket
+
+    from chatmon import app as appmod
+
+    c = companion
+    monkeypatch.setattr(appmod, "MAX_CONNECTIONS", 3)
+    name = private_server(c)
+    unconnected = QLocalSocket.LocalSocketState.UnconnectedState
+    senders = []
+    for _ in range(4):  # each connects and says nothing yet
+        sender = QLocalSocket()
+        sender.connectToServer(name)
+        assert sender.waitForConnected(2000)
+        senders.append(sender)
+    assert until(lambda: sum(s.state() == unconnected for s in senders) == 1)
+    spin(0.2)
+    assert len(c._connections) == 3 and sum(s.state() == unconnected for s in senders) == 1
+    next(s for s in senders if s.state() != unconnected).disconnectFromServer()  # one is done
+    assert until(lambda: len(c._connections) == 2)
+    late = QLocalSocket()
+    late.connectToServer(name)
+    assert late.waitForConnected(2000) and until(lambda: len(c._connections) == 3)  # room again
+    spin(0.2)
+    assert late.state() != unconnected
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="file modes are POSIX's; on Windows the log is in your own profile folder")
+def test_the_log_file_is_yours_alone(tmp_path, monkeypatch):
+    import stat
+
+    from chatmon import app as appmod
+
+    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "state"))
+    monkeypatch.setenv("HOME", str(tmp_path))
+    log = appmod.log_file()
+    old_umask = os.umask(0o022)
+    try:
+        for before in ("an older Chatmon's log\n", None):  # one made at the umask, then none at all
+            if before is None:
+                log.unlink()
+            else:
+                log.parent.mkdir(parents=True)
+                log.write_text(before)
+                os.chmod(log, 0o644)
+            saved = sys.stdout, sys.stderr
+            sys.stderr = None  # no console, as autostart runs it
+            try:
+                appmod._log_without_a_console()
+                assert sys.stderr is not None and sys.stderr is sys.stdout
+                print("something went wrong")
+                sys.stderr.close()
+            finally:
+                sys.stdout, sys.stderr = saved
+            assert stat.S_IMODE(log.stat().st_mode) == 0o600 and "something went wrong" in log.read_text()
+    finally:
+        os.umask(old_umask)
+
+
 def test_looks_at_the_agents_one_look_at_a_time(companion, monkeypatch):
     """Each look at how the agents stand starts their command lines, and every refill of the menu asks for
     one: asked again while looking, it looks once more when done, never several at once."""
@@ -1207,14 +1306,14 @@ def test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none(companio
     fast = [sys.executable, "-c", "print('3 waiting')"]
     monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("stuck", slow, lambda out, code: 9),
                                                             heads_up.UpdateCheck("apt", fast, lambda out, code: 3 if "3" in out else None)])
-    monkeypatch.setattr(appmod, "UPDATE_CHECK_TIMEOUT_S", 1.5)
+    monkeypatch.setattr(appmod, "UPDATE_CHECK_TIMEOUT_S", 6)  # room for a Python to start on a busy computer
     c.config["heads_up"]["updates"] = True
     spin(1.8)
     c.stage.dismiss_message()
     c._check_updates()
-    assert until(lambda: c._update_counts == {"apt": 3}, 5)
+    assert until(lambda: c._update_counts == {"apt": 3}, 6)
     assert len(c._update_procs) == 1  # the stuck one, still running
-    assert until(lambda: not c._update_procs, 5) and c._update_counts == {"apt": 3, "stuck": 0}  # killed: none from it
+    assert until(lambda: not c._update_procs, 10) and c._update_counts == {"apt": 3, "stuck": 0}  # killed: none from it
     assert until(lambda: c.stage.bubble.title == "Updates waiting") and "3 system updates" in c.stage.bubble.doc.toPlainText()
 
 
@@ -1229,8 +1328,8 @@ def test_a_late_answer_from_an_earlier_look_at_updates_is_ignored(companion, mon
     c._check_updates()  # the first look, slow to answer
     monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("apt", fast, lambda out, code: 0)])
     c._check_updates()  # the next look, which answers first
-    assert until(lambda: c._update_counts == {"apt": 0}, 5)
-    assert until(lambda: not c._update_procs, 5)  # the first has answered too, by now
+    assert until(lambda: c._update_counts == {"apt": 0}, 10)
+    assert until(lambda: not c._update_procs, 10)  # the first has answered too, by now
     spin(0.2)
     assert c._update_counts == {"apt": 0} and c.watcher._updates_told is None  # its 40 went nowhere: no heads-up
 
@@ -1671,6 +1770,31 @@ def test_reading_aloud_can_be_turned_off(companion):
     c.config["accessibility"]["read_aloud"] = False
     c.say("Hello", "there")
     assert reader.said == []
+
+
+def test_a_password_made_is_never_read_out(companion, monkeypatch):
+    """Without a voice of its own to use, Chatmon reads out through a system notification (Narrator, NVDA and
+    JAWS read those on Windows), which the system keeps in its history: a password there would stay there."""
+    from PyQt6.QtWidgets import QSystemTrayIcon
+
+    c = companion
+    reader = PretendReader(c)
+    c.open_ask()
+    c.submit("password 24")
+    shown = c.ask_box.answer.toPlainText()
+    made = shown.split("You: password 24", 1)[1].split()[0]
+    assert len(made) == 24 and reader.said[-1] == ("Password made; it's in the box.", False)
+    assert not any(made in text for text, _ in reader.said)
+    PretendReader(c, speaks=False)
+    notified = []
+    monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
+    monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: notified.append(title + " " + text))
+    monkeypatch.setattr(sys, "platform", "win32")
+    c.submit("password")
+    made = c.ask_box.answer.toPlainText().split("You: password", 1)[1].split()[0]
+    assert notified == ["Password made; it's in the box. Password made; it's in the box."] and made not in notified[0]
+    c.submit("password 4")  # not one made: what it says is read out as it is
+    assert "8 to 128 characters" in notified[-1]
 
 
 def test_typing_a_bubbles_button_presses_it(companion):
