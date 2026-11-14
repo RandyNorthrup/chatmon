@@ -903,6 +903,48 @@ def test_a_question_that_only_sounds_like_a_command_goes_to_the_ai(companion, mo
     assert c.reminders.upcoming() == []
 
 
+def test_every_command_in_the_table_does_what_it_did(companion, monkeypatch):
+    """Each command found by its phrase (commands.py) acts as the inline chain did."""
+    from chatmon import app as appmod
+
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    opened, checked, shown = [], [], []
+    monkeypatch.setattr(appmod.QDesktopServices, "openUrl", lambda url: opened.append(url.toString()))
+    monkeypatch.setattr(c, "check_for_updates", lambda: checked.append(True))
+    monkeypatch.setattr(c, "open_settings", lambda: shown.append("settings"))
+    monkeypatch.setattr(c, "_popup", lambda menu, pos: shown.append([a.text() for a in menu.actions() if a.text()][0]))
+    c.open_ask()
+    c.submit("rename chat")  # nothing to name yet: a question after all
+    assert brain.asked[-1][1] == "rename chat"
+    brain.answer("Name what?")
+    c.submit("Rename this chat")
+    assert c.ask_box.title.text() == "Rename this chat"
+    c.ask_box.dismiss()  # Esc: left as it is
+    c.open_ask()
+    c.submit("help")
+    assert "Without any AI" in c.ask_box.answer.toPlainText()
+    c.submit("chats")
+    assert shown[-1] == "New chat"  # the history menu, by the box
+    c.submit("Preferences")
+    assert shown[-1] == "settings" and not c.ask_box.isVisible()
+    c.open_ask()
+    c.submit("check for updates")
+    assert checked == [True] and not c.ask_box.isVisible()
+    c.open_ask()
+    c.submit("feature request")
+    assert opened and "template=feature_request" in opened[-1] and "idea form" in c.ask_box.answer.toPlainText()
+    c.start_focus(25)
+    c.open_ask()
+    c.submit("end focus")
+    assert c.reminders.focus() is None and "Focus stopped." in c.ask_box.answer.toPlainText()
+    c.submit("/new")
+    assert c.chat.messages == [] and "New chat" in c.ask_box.answer.toPlainText()
+    c.submit("go away")
+    assert c.behavior.hidden and not c.ask_box.isVisible()
+    assert len(brain.asked) == 1  # none of it went to the AI but the first
+
+
 def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
     c = companion
     c.open_ask()
