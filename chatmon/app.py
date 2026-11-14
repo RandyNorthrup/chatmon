@@ -15,21 +15,19 @@ from pathlib import Path
 
 from PyQt6 import sip
 from PyQt6.QtCore import QEvent, QObject, QPoint, QProcess, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
-from PyQt6.QtGui import QActionGroup, QDesktopServices, QFontMetricsF, QGuiApplication, QIcon, QKeyEvent
+from PyQt6.QtGui import QDesktopServices, QFontMetricsF, QGuiApplication, QIcon, QKeyEvent
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, a11y, agents, asking, attachments, autostart, brains, changelog, chats, commands, companions, context, events, heads_up, memory, messages, offline, paths, presence, reminders, report, styles, sysnotify, updates
+from . import __version__, a11y, agents, asking, attachments, autostart, brains, changelog, chats, commands, companions, context, events, heads_up, memory, menus, messages, paths, presence, reminders, report, styles, sysnotify, updates
 from .behavior import Behavior
 from .bubble import AskBox
-from .commands import offline_clock
 from .penguin import Stage
 from .settings import State, load_config, merge
 from .sprites import Sprites, silhouette
 
 PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
-AGENTS_FRESH = 30  # seconds a look at how the agents stand holds good for filling in the menu
 MATCH = "match"  # the bubble style that follows the companion
 APP_USER_MODEL_ID = "RandyNorthrup.Chatmon"  # Windows: the app's identity (packaging/windows/chatmon.iss gives its shortcuts it too)
 
@@ -174,15 +172,9 @@ class Companion(QObject):
 
         # The menu is always filled in: a tray that shows it over D-Bus (Waybar,
         # and other StatusNotifierItem trays) reads it before asking for it to open.
-        self.menu = QMenu()
-        self.menu.aboutToShow.connect(self._fill_menu)
-        self.menu.aboutToHide.connect(self._menu_closed)  # the QMenu popup; the stage's menu says so itself
+        self.menus = menus.Menus(self)
+        self.menu = self.menus.menu
         self._menu_open = False
-        self._menu_stale = False
-        self._menu_timer = QTimer(self)
-        self._menu_timer.setSingleShot(True)
-        self._menu_timer.timeout.connect(self._fill_menu)
-        self._menu_clock: tuple = ()
         self._agent_status: dict[str, str] = {}
         self._refreshing = False  # finding out, off the screen's thread, how each agent stands
         self._refresh_next: bool | None = None  # asked again meanwhile: whether that look migrates too
@@ -202,7 +194,7 @@ class Companion(QObject):
         self._install_kind: str | None = None
         self._problem_told = False
         self._looking = False  # finding out, off the screen's thread, whether model servers here are running
-        self._fill_menu()
+        self.menus.fill()
         self.tray = QSystemTrayIcon(self._tray_icon())
         self.tray.setContextMenu(self.menu)
         self.tray.setToolTip("Chatmon")
@@ -618,45 +610,6 @@ class Companion(QObject):
             except OSError as exc:
                 print(f"{paths.APP}: couldn't save the chat: {exc}", file=sys.stderr)
 
-    RECENT_CHATS = 12  # in the menu itself; the rest under "Older chats"
-
-    def _chats_menu(self, sub: QMenu, in_box: bool = False) -> None:
-        """Your chats, each with what can be done with it, and keeping or clearing them all."""
-        sub.addAction("New chat", self._new_chat if in_box else self._open_new_chat)
-        if self.chat.messages:
-            sub.addAction("Rename this chat…", partial(self._ask_new_name, self.chat.id))
-        recent = self.chat_book.recent() if self._keeps_chats() else []
-        if recent:
-            sub.addSection("Your chats")
-            for chat in recent[: self.RECENT_CHATS]:
-                self._chat_item(sub, chat)
-            if len(recent) > self.RECENT_CHATS:
-                older = sub.addMenu(f"Older chats ({len(recent) - self.RECENT_CHATS})")
-                for chat in recent[self.RECENT_CHATS :]:
-                    self._chat_item(older, chat)
-        else:
-            empty = sub.addAction("No saved chats yet" if self._keeps_chats() else "Chats aren't being kept")
-            empty.setEnabled(False)
-        sub.addSeparator()
-        keep = sub.addAction("Keep chat history")
-        keep.setCheckable(True)
-        keep.setChecked(self._keeps_chats())
-        keep.toggled.connect(self._set_keep_chats)
-        sub.addAction("Clear chat history…", self._ask_to_clear_chats)
-
-    def _chat_item(self, menu: QMenu, chat: chats.Chat) -> None:
-        """One chat: carry on with it, rename, pin, save or delete it."""
-        mark = "★ " if chat.pinned else ""
-        here = "  (this one)" if chat.id == self.chat.id else ""
-        item = menu.addMenu(f"{mark}{chat.title or 'A chat'}   ·   {chats.when(chat.updated)}{here}")
-        item.addAction("Carry on", partial(self._resume_chat, chat.id))
-        item.addAction("Rename…", partial(self._ask_new_name, chat.id))
-        item.addAction("Instructions for this chat…", partial(self._ask_chat_instructions, chat.id))
-        item.addAction("Unpin" if chat.pinned else "Pin to the top", partial(self._pin_chat, chat.id, not chat.pinned))
-        item.addAction("Save as Markdown…", partial(self._export_chat, chat.id))
-        item.addSeparator()
-        item.addAction("Delete…", partial(self._ask_to_delete_chat, chat.id))
-
     def _chat_by_id(self, chat_id: str) -> chats.Chat | None:
         return self.chat if chat_id == self.chat.id else self.chat_book.load(chat_id)
 
@@ -785,7 +738,7 @@ class Companion(QObject):
             button = self.ask_box.history_button
             pos = button.mapToGlobal(QPoint(0, button.height()))
         menu = QMenu()
-        self._chats_menu(menu, in_box=True)
+        menus.chats_menu(self, menu, in_box=True)
         self._popup(menu, pos)
 
     def _open_new_chat(self) -> None:
@@ -1139,15 +1092,6 @@ class Companion(QObject):
         else:
             QGuiApplication.clipboard().setText(text)
 
-    def _notes_menu(self, sub: QMenu) -> None:
-        for i, note in enumerate(commands.notes(self.state), 1):
-            text = " ".join(note["text"].split())
-            item = sub.addMenu(f"{i}. {text[:48] + '…' if len(text) > 48 else text}")
-            item.addAction("Copy", partial(self._copy, note["text"]))
-            item.addAction("Delete", partial(commands.kept, self, offline.Asked("delete note", str(i))))
-        sub.addSeparator()
-        sub.addAction("Add a note…", partial(self.open_ask, "note: "))
-
     def _status(self) -> str:
         brain = self._brain()
         battery, disks = heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders())
@@ -1225,8 +1169,7 @@ class Companion(QObject):
         self._last_wall = now
         self._check_away()
         self._check_accessibility()
-        if self._menu_clock != self._time_labels():
-            self._menu_changed()
+        self.menus.tick()  # a countdown in the menu says what's left: the menu isn't built again for it
         mono = self._now()
         for source, (state, since) in list(self.agents.items()):
             if state == "working" and mono - since > WORK_EXPIRES:
@@ -1490,23 +1433,6 @@ class Companion(QObject):
             buttons.append(("Open the log", self.open_log))
         self.say("Something went wrong in me", "I kept going, but you can tell my maker what happened.", buttons + [("OK", None)], timeout_s=45, background=True)
 
-    def _help_menu(self, sub: QMenu) -> None:
-        sub.addAction(f"What's new in {__version__}", self.show_whats_new)
-        if self.updater.ready is not None and self.updater.release is not None:
-            sub.addAction(f"Install Chatmon {self.updater.release.version}", self._update_now)
-        else:
-            sub.addAction("Check for updates now", self.check_for_updates)
-        auto = sub.addAction("Check for updates every day")
-        auto.setCheckable(True)
-        auto.setChecked(self._checks_updates())
-        auto.toggled.connect(self._set_check_updates)
-        sub.addSeparator()
-        sub.addAction("Report a problem…", self.report_problem)
-        sub.addAction("Suggest an idea…", partial(self.report_problem, report.IDEA))
-        sub.addAction("Open the log", self.open_log)
-        version = sub.addAction(f"Chatmon {__version__}")
-        version.setEnabled(False)
-
     def _set_check_updates(self, on: bool) -> None:
         self.state.set("check_updates", on)
         self.state.save()
@@ -1637,14 +1563,14 @@ class Companion(QObject):
         working = any(state == "working" for state, _ in self.agents.values())
         self.behavior.set_working(working, self._now())
 
-    # -- menus
+    # -- menus (menus.py)
 
     def show_menu(self, pos: QPoint) -> None:
         """The penguin's own menu (right-click): it stands still and looks at you while it's open."""
         self._menu_open = True
         self.behavior.set_attending(True, self._now())
         if self.stage.draws_menus():
-            self._fill_menu()
+            self.menus.opening()  # the stage draws it: no aboutToShow
             self.stage.open_menu(self.menu, pos)
         else:
             self.menu.popup(pos)
@@ -1653,9 +1579,7 @@ class Companion(QObject):
         if self._menu_open and not self.stage.menu.is_open():
             self._menu_open = False
             self.behavior.set_attending(self.ask_box.isVisible(), self._now())
-        if self._menu_stale and not self._quitting:
-            self._menu_stale = False
-            self._menu_timer.start(0)
+        self.menus.closed()
 
     def _tray_clicked(self, reason) -> None:
         # On macOS opening the menu-bar menu is a Trigger too (Qt says so as the menu starts): there the menu's
@@ -1664,148 +1588,13 @@ class Companion(QObject):
             self.set_hidden(not self.behavior.hidden)
 
     def _menu_changed(self) -> None:
-        """Something the menu shows changed: fill it in again, once things settle,
-        and never under an open menu (its items would vanish under the pointer). Never once quit: a look at the
-        brains or the agents finishing late would set the refill going again."""
-        if self._quitting:
-            return
-        if self.menu.isVisible() or self.stage.menu.is_open():
-            self._menu_stale = True
-        else:
-            self._menu_timer.start(0)
-
-    def _time_labels(self) -> tuple:
-        """The parts of the menu that change with the clock."""
-        now = time.time()
-        focus = self.reminders.focus()
-        left = max(1, round((focus.due - now) / 60)) if focus else None
-        watch = offline_clock(self._now() - self._stopwatch, seconds=False) if self._stopwatch is not None else None
-        return (left, watch, tuple(reminders.describe(r.due, now) for r in self.reminders.upcoming() if r.kind != "focus"))
+        """Something the menu shows changed: it's filled in again once things settle (menus.py)."""
+        self.menus.changed()
 
     def _offline_in_box(self, words: str) -> None:
         """Do something from the menu as if it were asked in the box, and show it there."""
         self.open_ask()
         self._local(words)
-
-    def _fill_menu(self) -> None:
-        self._menu_timer.stop()
-        self._menu_clock = self._time_labels()
-        m = self.menu
-        for sub in m.findChildren(QMenu, options=Qt.FindChildOption.FindDirectChildrenOnly):
-            sub.deleteLater()  # clear() keeps submenus
-        m.clear()
-        m.addAction(f"Ask {self.name}…", self.open_ask)
-        self._chats_menu(m.addMenu("Chats"))
-        m.addAction("Remind me…", partial(self.open_ask, "remind me in "))
-        focus = self.reminders.focus()
-        if focus:
-            left = max(1, round((focus.due - time.time()) / 60))
-            m.addAction(f"Stop focus ({left} min left)", self.stop_focus)
-        else:
-            sub = m.addMenu("Focus timer")
-            for minutes in sorted({15, 25, 50, int(self.config["focus"]["minutes"])}):
-                sub.addAction(f"{minutes} minutes", partial(self.start_focus, minutes))
-        if self._stopwatch is not None:
-            m.addAction(f"Stop the stopwatch ({offline_clock(self._now() - self._stopwatch, seconds=False)})", partial(self._offline_in_box, "stop stopwatch"))
-        notes = commands.notes(self.state)
-        self._notes_menu(m.addMenu(f"Notes ({len(notes)})" if notes else "Notes"))
-        upcoming = [r for r in self.reminders.upcoming() if r.kind != "focus"]
-        if upcoming:
-            sub = m.addMenu(f"Reminders ({len(upcoming)})")
-            for r in upcoming:
-                sub.addAction(f"✕  {reminders.describe(r.due, time.time())}: {r.text}", partial(self._cancel, r.id))
-        m.addSeparator()
-        self._brain_menu(m.addMenu("Brain"))
-        self._companion_menu(m.addMenu("Companion"))
-        self._style_menu(m.addMenu("Bubble style"))
-        self._agents_menu(m.addMenu("AI agents"))
-        if not self._refreshing and self._now() - self._agents_seen > AGENTS_FRESH:
-            self._refresh_agents()  # changed outside Chatmon, maybe; a look under way fills the menu in again
-        walk = m.addAction("Walk around")
-        walk.setCheckable(True)
-        walk.setChecked(self.behavior.walk_enabled)
-        walk.toggled.connect(self._set_walk)
-        m.addAction("Come out" if self.behavior.hidden else "Hide (peek now and then)", partial(self.set_hidden, not self.behavior.hidden))
-        login = m.addAction("Start when I log in")
-        login.setCheckable(True)
-        login.setChecked(autostart.enabled())
-        login.toggled.connect(self._set_autostart)
-        m.addSeparator()
-        if self.updater.ready is not None and self.updater.release is not None:
-            m.addAction(f"Update to Chatmon {self.updater.release.version}", self._update_now)
-        self._help_menu(m.addMenu("Help & updates"))
-        m.addAction("Settings…", self.open_settings)
-        m.addAction("Reload settings file", self.reload)
-        m.addAction("Quit", self.quit)
-        self._look_again()
-
-    def _brain_menu(self, sub: QMenu) -> None:
-        group = QActionGroup(sub)
-        current = self._brain(wait=False)
-        picked = self.state.get("brain")
-        auto = sub.addAction(f"Automatic ({current.label if current else 'none found'})")
-        auto.setCheckable(True)
-        auto.setChecked(not picked)
-        auto.triggered.connect(partial(self._pick_brain, None))
-        group.addAction(auto)
-        groups = (
-            ("AI tools you're signed in to", lambda b: b.type == "command"),
-            ("On this computer", lambda b: b.local),
-            ("APIs (billed per question; pick one to use it)", lambda b: b.type != "command" and not b.local),
-        )
-        for title, belongs in groups:
-            sub.addSection(title)
-            for brain in (b for b in self.brains.values() if belongs(b)):
-                ok = brain.available(wait=False)
-                action = sub.addAction(brain.label if ok else f"{brain.label} ({brain.why_not()})")
-                action.setCheckable(True)
-                action.setEnabled(ok)
-                action.setChecked(picked == brain.name)
-                action.triggered.connect(partial(self._pick_brain, brain.name))
-                group.addAction(action)
-        if current is not None:
-            self._brain_options_menu(sub, current)
-
-    THINKING = {"auto": "Automatic (the model's own choice)", "on": "On", "off": "Off"}
-
-    def _brain_options_menu(self, sub: QMenu, brain: brains.Brain) -> None:
-        """How the brain in use answers: its model, how hard it thinks, whether it thinks at all."""
-        modes = brain.thinking_modes()
-        if not (brain.models or brain.effort_levels() or len(modes) > 1):
-            return
-        sub.addSection(f"{brain.label}: how it answers")
-        base = self.brains[brain.name]  # as set up, before any picks: its defaults
-        if brain.models:
-            own = "The tool’s own choice" if brain.type == "command" else "Its own default"
-            menu = sub.addMenu(f"Model: {brain.model or own.lower()}")
-            group = QActionGroup(menu)
-            if not base.model:
-                self._option(menu, group, own, not brain.model, None, brain.name, "model", "")
-            for model in dict.fromkeys([*brain.models, *([brain.model] if brain.model else [])]):
-                label = model + ("  (default)" if model == base.model else "")
-                # Any model can be picked: an effort or thinking it doesn't take is dropped with the switch.
-                self._option(menu, group, label, brain.model == model, brain.refuses(model=model, effort="", thinking="auto"), brain.name, "model", model)
-        levels = brain.effort_levels()
-        if levels:
-            menu = sub.addMenu(f"Effort: {brain.effort or 'the model’s default'}")
-            group = QActionGroup(menu)
-            self._option(menu, group, "The model’s default", not brain.effort, None, brain.name, "effort", "")
-            for level in levels:
-                label = level + ("  (default)" if level == base.effort else "")
-                self._option(menu, group, label, brain.effort == level, brain.refuses(effort=level), brain.name, "effort", level)
-        if len(modes) > 1:
-            menu = sub.addMenu(f"Thinking: {self.THINKING[brain.thinking].split(' (')[0]}")
-            group = QActionGroup(menu)
-            for mode in modes:
-                self._option(menu, group, self.THINKING[mode], brain.thinking == mode, brain.refuses(thinking=mode), brain.name, "thinking", mode)
-
-    def _option(self, menu: QMenu, group: QActionGroup, label: str, checked: bool, refused: str | None, brain: str, key: str, value: str) -> None:
-        action = menu.addAction(label if refused is None else f"{label}  ({refused})")
-        action.setCheckable(True)
-        action.setChecked(checked)
-        action.setEnabled(refused is None)
-        action.triggered.connect(partial(self._set_brain_option, brain, key, value))
-        group.addAction(action)
 
     def _set_brain_option(self, brain: str, key: str, value: str) -> None:
         options = dict(self.state.get("brain_options") or {})
@@ -1966,24 +1755,6 @@ class Companion(QObject):
             )
         self._refresh_agents()
 
-    def _agents_menu(self, sub: QMenu) -> None:
-        sub.addSection("Let them tell me what they're doing")
-        missing = []
-        for agent in agents.AGENTS:
-            state = self._agent_status.get(agent.name, "found" if agent.detected() else "not found")
-            if state == "not found":
-                missing.append(agent.label)
-                continue
-            action = sub.addAction(agent.label + (" (installed but off)" if state == "installed but off" else ""))
-            action.setCheckable(True)
-            action.setChecked(state == "connected")
-            action.toggled.connect(partial(self._set_agent, agent))
-        if missing:
-            note = sub.addAction("Not found here: " + ", ".join(missing))
-            note.setEnabled(False)
-        sub.addSeparator()
-        sub.addAction("Another agent or script…", self._other_agents)
-
     def _set_agent(self, agent: agents.Agent, on: bool) -> None:
         self.say(f"{'Connecting' if on else 'Disconnecting'} {agent.label}…", timeout_s=20)
         self.background.run(agent.connect if on else agent.disconnect, partial(self._agent_set, agent))
@@ -2036,17 +1807,6 @@ class Companion(QObject):
         self.tray.setIcon(self._tray_icon())
         self.app.setWindowIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
 
-    def _companion_menu(self, sub: QMenu) -> None:
-        group = QActionGroup(sub)
-        current = self._companion().id
-        for companion in companions.COMPANIONS.values():
-            action = sub.addAction(companion.label)
-            action.setCheckable(True)
-            action.setChecked(companion.id == current)
-            action.setEnabled(companions.get(companion.id) is companion)  # its strips are installed
-            action.triggered.connect(partial(self._pick_companion, companion.id))
-            group.addAction(action)
-
     def _pick_companion(self, name: str) -> None:
         if name == self._companion().id:
             return
@@ -2057,24 +1817,6 @@ class Companion(QObject):
         self._apply_bubble_style()  # "Match companion" follows it
         self._menu_changed()
         self.behavior.react("wave", self._now())
-
-    def _style_menu(self, sub: QMenu) -> None:
-        group = QActionGroup(sub)
-        current = self._bubble_style_name()
-        matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()
-        for name, label in [(MATCH, f"Match companion ({matching})")] + [(s.name, s.label) for s in styles.STYLES.values()]:
-            action = sub.addAction(label)
-            action.setCheckable(True)
-            action.setChecked(name == current)
-            action.triggered.connect(partial(self._pick_style, name))
-            group.addAction(action)
-            if name == MATCH:
-                sub.addSeparator()
-        sub.addSeparator()
-        moving = sub.addAction("Animate bubbles")
-        moving.setCheckable(True)
-        moving.setChecked(self._bubble_effects())
-        moving.toggled.connect(self._set_bubble_effects)
 
     def _bubble_style_name(self) -> str:
         """The style picked from the menu, else the one in the settings: a style's name, or MATCH."""
@@ -2278,6 +2020,7 @@ class Companion(QObject):
 
     def quit(self) -> None:
         self._quitting = True
+        self.menus.stop()
         self._stop_update_checks()
         watcher = getattr(self, "_lock_watcher", None)
         if watcher is not None and hasattr(watcher, "close"):

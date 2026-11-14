@@ -112,7 +112,7 @@ def test_hide_menu_and_reload(companion):
     spin(1.0)
     assert c.behavior.hidden
     c.set_hidden(False)
-    c._fill_menu()
+    c.menus.fill()
     labels = [a.text() for a in c.menu.actions() if a.text()]
     assert labels[0] == "Ask Sparky…" and "Quit" in labels
     c.reload()
@@ -131,6 +131,37 @@ def test_the_tray_menu_is_filled_before_anyone_opens_it(companion):
     c.handle({"type": "remind", "text": "in 30m to stretch"})
     spin(0.1)
     assert any(a.text().startswith("Reminders (1)") for a in c.menu.actions())
+
+
+def all_actions(menu):
+    """Every item in a menu and its submenus."""
+    for action in menu.actions():
+        yield action
+        if action.menu() is not None:
+            yield from all_actions(action.menu())
+
+
+def test_a_clock_tick_changes_only_the_times_in_the_menu(companion):
+    """A countdown in the menu used to rebuild all of it every minute: every chat and every agent's look."""
+    from PyQt6 import sip
+
+    c = companion
+    c.start_focus(25)
+    c.submit("remind me in 30m to stretch")
+    c.submit("stopwatch")
+    spin(0.1)
+    items = list(all_actions(c.menu))
+    texts = [a.text() for a in items]
+    assert any(t.startswith("Stop focus (25 min left)") for t in texts) and any(t.startswith("✕  in 30 min: stretch") for t in texts)
+    assert any(t == "Stop the stopwatch (0 min)" for t in texts)
+    c.reminders.focus().due -= 10 * 60  # ten minutes go by
+    next(r for r in c.reminders.upcoming() if r.text == "stretch").due -= 10 * 60
+    c._stopwatch -= 2 * 60
+    c._check_time()  # the clock's tick
+    spin(0.1)
+    assert not any(sip.isdeleted(a) for a in items) and list(all_actions(c.menu)) == items  # the same items, not built again
+    texts = [a.text() for a in items]
+    assert "Stop focus (15 min left)" in texts and "✕  in 20 min: stretch" in texts and "Stop the stopwatch (2 min)" in texts
 
 
 def test_a_window_manager_cant_close_the_stage_or_strand_the_ask_box(companion):
@@ -154,7 +185,7 @@ def test_picking_a_companion_swaps_its_sprites_at_once(companion):
     c = companion
     assert c._companion().id == "penguin" and c.sprites is c.stage.sprites
     penguin_frame = c.sprites.frame("idle", 0, False).image
-    c._fill_menu()
+    c.menus.fill()
     menu = next(a.menu() for a in c.menu.actions() if a.text() == "Companion")
     labels = [a.text() for a in menu.actions()]
     assert labels == [x.label for x in companions.COMPANIONS.values()]
@@ -190,7 +221,7 @@ def test_bubbles_match_the_companion_unless_a_style_was_chosen(companion):
     assert c._bubble_style_name() == "match" and c._bubble_style().name == "electric"
     c._pick_companion("fire-red-panda")
     assert c._bubble_style().name == "fire" and c.stage.bubble.style.name == "fire" and c.ask_box.style.name == "fire"
-    c._fill_menu()
+    c.menus.fill()
     menu = next(a.menu() for a in c.menu.actions() if a.text() == "Bubble style")
     assert [a.text() for a in menu.actions() if a.isChecked() and a.text() != "Animate bubbles"] == ["Match companion (fire)"]
 
@@ -308,11 +339,13 @@ def test_the_greeting_never_covers_a_message_that_came_first(companion):
 
 
 def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
+    from chatmon import menus
+
     c = companion
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     c._pick_brain("anthropic-api")
     menu = QMenu()
-    c._brain_menu(menu)
+    menus.brain_menu(c, menu)
     subs = {a.text().split(":")[0]: a.menu() for a in menu.actions() if a.menu()}
     assert {"Model", "Effort", "Thinking"} <= set(subs)
 
@@ -328,7 +361,7 @@ def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
     brain = c._brain()
     assert (brain.name, brain.model, brain.effort) == ("anthropic-api", "claude-sonnet-5-5", "medium")
     menu = QMenu()
-    c._brain_menu(menu)
+    menus.brain_menu(c, menu)
     subs = {a.text().split(":")[0]: a.menu() for a in menu.actions() if a.menu()}
     click("Thinking", "Off")  # Sonnet 5.5 can, at medium
     assert c._brain().thinking == "off" and c.state.get("brain_options")["anthropic-api"]["thinking"] == "off"
@@ -452,14 +485,18 @@ def test_looks_at_the_agents_one_look_at_a_time(companion, monkeypatch):
     assert len(looks) == 2 and looks[1][0].args == (True,)
     looks[1][1]({"claude": "found"})
     assert len(looks) == 2 and not c._refreshing
-    # Filling the menu in again looks only once what it knows has gone stale.
-    from chatmon import app as appmod
+    # Opening the menu looks only once what it knows has gone stale; filling it in for a change never looks.
+    from chatmon import menus
 
     monkeypatch.setattr(c, "_look_again", lambda: None)  # the brains' look, not the agents'
-    c._fill_menu()
+    c.menus.opening()
     assert len(looks) == 2
-    c._agents_seen -= appmod.AGENTS_FRESH + 1
-    c._fill_menu()
+    c._agents_seen -= menus.AGENTS_FRESH + 1
+    c.menus.fill()
+    c._menu_changed()
+    spin(0.1)
+    assert len(looks) == 2
+    c.menus.opening()
     assert len(looks) == 3 and looks[2][0].args == (False,)
 
 
@@ -550,7 +587,7 @@ def test_the_help_menu_and_its_words_in_the_ask_box(companion, monkeypatch):
     c = companion
     opened = []
     monkeypatch.setattr(appmod.QDesktopServices, "openUrl", lambda url: opened.append(url.toString()))
-    c._fill_menu()
+    c.menus.fill()
     help_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Help & updates")
     labels = [a.text() for a in help_menu.actions() if a.text()]
     assert labels[:3] == [f"What's new in {appmod.__version__}", "Check for updates now", "Check for updates every day"]
@@ -618,7 +655,7 @@ def test_a_chat_is_kept_and_can_be_carried_on(companion, monkeypatch):
     c.submit("And for a dog?")
     brain.answer("Biscuit.")
     assert brain.asked[-1][0] == []  # a new chat starts with nothing to go on
-    c._fill_menu()
+    c.menus.fill()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
     titles = [a.text() for a in chats_menu.actions()]
     assert any(t.startswith("And for a dog?") for t in titles) and any(t.startswith("What's a good name for a cat?") for t in titles)
@@ -714,7 +751,7 @@ def test_chats_can_be_renamed_pinned_saved_and_deleted(companion, monkeypatch, t
 
     c._pin_chat(first.id, True)
     assert [ch.title for ch in c.chat_book.recent()] == ["Cat names", "second question"]  # pinned first, though older
-    c._fill_menu()
+    c.menus.fill()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
     item = next(a.menu() for a in chats_menu.actions() if a.text().startswith("★ Cat names"))
     assert [a.text() for a in item.actions() if a.text()] == ["Carry on", "Rename…", "Instructions for this chat…", "Unpin", "Save as Markdown…", "Delete…"]
@@ -735,11 +772,13 @@ def test_older_chats_are_one_menu_further(companion):
     from chatmon import chats
 
     c = companion
-    for i in range(c.RECENT_CHATS + 3):
+    from chatmon import menus
+
+    for i in range(menus.RECENT_CHATS + 3):
         chat = chats.Chat()
         chat.add(chats.Message("user", f"chat {i}", at=1000.0 + i))
         c.chat_book.save(chat)
-    c._fill_menu()
+    c.menus.fill()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
     older = next(a.menu() for a in chats_menu.actions() if a.text() == "Older chats (3)")
     assert [a.text().split("   ·")[0] for a in older.actions()] == ["chat 2", "chat 1", "chat 0"]
@@ -956,12 +995,12 @@ def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
     assert "1. buy milk 2. call Sam" in shown  # a numbered list
     c.submit("delete note 1")
     assert [n["text"] for n in c.state.get("notes")] == ["call Sam"]
-    c._fill_menu()
+    c.menus.fill()
     labels = [a.text() for a in c.menu.actions()]
     assert "Notes (1)" in labels
     c.submit("stopwatch")
     assert c._stopwatch is not None
-    c._fill_menu()
+    c.menus.fill()
     assert any(a.text().startswith("Stop the stopwatch") for a in c.menu.actions())
     c.submit("stop stopwatch")
     assert c._stopwatch is None and "Stopwatch stopped at" in c.ask_box.answer.toPlainText()
