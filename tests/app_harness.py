@@ -105,18 +105,19 @@ def until(condition, seconds=5.0):
 
 
 class PretendBrain:
-    """Stands in for asking a brain: records each question, and answers when told to."""
+    """Stands in for asking a brain: records each question, and answers when told to. The brain it stands for is in the
+    companion's brains, and is the one found for every question (as when nothing needs looking at)."""
 
-    def __init__(self, c, monkeypatch, kind="anthropic", tools_off=True):
+    def __init__(self, c, monkeypatch, kind="anthropic", tools_off=True, name="pretend", label="Pretend API"):
         from chatmon import brains
 
         self.c, self.asked = c, []
         self.brain = brains.Brain(
-            "pretend", kind, label="Pretend API", model="m", api_key="k", command=["pretend"] if kind == "command" else [], tools_off=tools_off
+            name, kind, label=label, model="m", api_key="k", command=["pretend"] if kind == "command" else [], tools_off=tools_off
         )
         monkeypatch.setattr(c, "_brain", lambda wait=True: self.brain)
         monkeypatch.setattr(c, "_find_brain", lambda then: then(self.brain))  # found at once, as with nothing unsure
-        monkeypatch.setitem(c.brains, "pretend", self.brain)
+        monkeypatch.setitem(c.brains, name, self.brain)
         monkeypatch.setattr(c.asker, "ask", lambda brain, system, history, question, timeout, attached=(): self.asked.append((history, question, list(attached))))
 
     def answer(self, text):

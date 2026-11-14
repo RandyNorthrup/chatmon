@@ -198,3 +198,23 @@ def test_a_leftover_temporary_file_is_never_written_through(tmp_path):
     (tmp_path / "state.json.tmp").symlink_to(elsewhere)  # left there, or put there
     settings.write_private(target, "{}")
     assert elsewhere.read_text(encoding="utf-8") == "mine" and target.read_text(encoding="utf-8") == "{}"
+
+
+def test_almost_empty_stays_below_low_in_the_settings_file():
+    """M7-03: a battery "almost empty" at or above "low" would warn of low after the almost-empty warning."""
+    from chatmon.settings import coerce
+
+    config, problems = coerce(merge(DEFAULTS, {"heads_up": {"battery_low": 15, "battery_critical": 20}}))
+    assert config["heads_up"]["battery_critical"] == 14
+    assert problems == ["heads_up.battery_critical should be below battery_low, so it's 14 for now"]
+    config, problems = coerce(merge(DEFAULTS, {"heads_up": {"battery_low": 0, "battery_critical": 20}}))  # warnings off: no order
+    assert config["heads_up"]["battery_critical"] == 20 and problems == []
+
+
+def test_new_settings_take_only_the_words_they_know():
+    from chatmon.settings import coerce
+
+    config, problems = coerce(merge(DEFAULTS, {"accessibility": {"bubble_time": "forever", "reduced_motion": "on"}}))
+    assert config["accessibility"]["bubble_time"] == "normal" and config["accessibility"]["reduced_motion"] == "on"
+    assert problems == ["accessibility.bubble_time should be 'normal', 'longer', 'much longer', 'until closed', so it's 'normal' for now"]
+    assert tomllib.loads(TEMPLATE)["sound"]["cues"] == DEFAULTS["sound"]["cues"]  # the template says what the defaults are

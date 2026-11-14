@@ -102,9 +102,7 @@ class Companion(QObject):
         self.server_problem = server_problem  # why hooks can't reach it, if they can't
         self.state = State.load()
         self.config, self.config_error = self._load_config()
-        for server in self.state.get("trusted_servers") or []:  # model servers you've said Automatic may use (brains.trusted)
-            if isinstance(server, str):
-                brains.confirm_server(f"http://{server}")
+        self._trust_saved_servers()
         self._settings_window = None
         self._chats_window = None
         # Whether you're there, and whether now's a time for quiet: the platform's own word for each.
@@ -176,7 +174,8 @@ class Companion(QObject):
         self.stage = Stage(self.sprites, self.behavior)
         self.ask_box = AskBox()
         self._apply_bubble_style()
-        if self.stage.hosts_windows():  # the Wayland overlay: drawn there, not a window of its own
+        self._overlay = self.stage.hosts_windows()  # the Wayland overlay draws the ask box, unless it's a window for a screen reader
+        if self._overlay:
             self.stage.host(self.ask_box)
         else:
             self.stage.keep_clear_of(self.ask_box)
@@ -481,12 +480,29 @@ class Companion(QObject):
         return True
 
     def _screen_reader(self) -> a11y.Reader | None:
+        """The screen reader to read bubbles aloud with, unless reading aloud is off."""
         if not self.config["accessibility"].get("read_aloud", True):
             return None
+        return self._reader_running()
+
+    def _reader_running(self) -> a11y.Reader | None:
+        """The screen reader running, as last looked (every READER_EVERY seconds)."""
         now = time.monotonic()
         if now - self._reader_seen > self.READER_EVERY:
             self._reader, self._reader_seen = a11y.reader(), now
         return self._reader
+
+    def _ask_box_as_window(self) -> bool:
+        """Whether the ask box is a window of its own where the overlay would draw it: as Settings says, and with
+        "auto" while a screen reader runs (a window is what it can find and read; the overlay's drawing isn't)."""
+        picked = str(self.config["accessibility"].get("accessible_ask_box", "auto"))
+        return picked == "on" or (picked == "auto" and self._reader_running() is not None)
+
+    def _check_hosting(self) -> None:
+        """On the overlay: the ask box drawn there, or a window of its own (M3's set_hosting), as it should be now.
+        Not while it's open: it moves the next time."""
+        if self._overlay and not self.ask_box.isVisible():
+            self.stage.set_hosting(not self._ask_box_as_window())
 
     def _read_aloud(self, title: str, text: str = "", buttons=None, important: bool = False) -> None:
         """Have a running screen reader say it: its own way where there's one (Orca, VoiceOver), else a
@@ -578,6 +594,9 @@ class Companion(QObject):
         factor = BUBBLE_TIMES.get(str(a.get("bubble_time", "normal")), 1.0)
         self.stage.bubble.timeout_policy = TimeoutPolicy(until_closed=True) if factor is None else TimeoutPolicy(factor=factor)
         self.ask_box.set_reduced_motion(self._reduce_motion)
+        self.stage.set_reduced_motion(self._reduce_motion)
+        self.stage.follow_pointer_screen(bool(self.config["follow_screen"]))  # stays off where the pointer can't be followed
+        self._check_hosting()
 
     def eventFilter(self, watched, event) -> bool:
         """Ctrl+1 to Ctrl+9 in the ask box press the bubble's buttons; the desktop's colours changing reach the box
@@ -752,6 +771,7 @@ class Companion(QObject):
                 text=self._transcript(), prefill=prefill, activate=focus,
             )
             self.ask_box.chatting(True)
+            self.ask_box.hint.setToolTip(f"{ASK_HINT} · {via}")  # the box shortens it to its width
             self._show_chat()
             if fresh:
                 self.ask_box.set_answer("*New chat* · **carry on** with the last one")
@@ -766,7 +786,7 @@ class Companion(QObject):
         """The chat in the box, newest exchange first in view, with `pending` after it and what's streaming in so far."""
         self.ask_box.set_answer(self._transcript(pending), at_end=True)
         q = self.questions.answering(self.chat.id)
-        if q is not None and q.partial and not pending:
+        if q is not None and q.partial:
             self.ask_box.set_partial(q.partial)
 
     def _carry_on(self) -> bool:
@@ -1288,6 +1308,12 @@ class Companion(QObject):
             return True
         return False
 
+    def _trust_saved_servers(self) -> None:
+        """The model servers you've said Automatic may use (brains.trusted), as kept in state, handed back."""
+        for server in self.state.get("trusted_servers") or []:
+            if isinstance(server, str):
+                brains.confirm_server(f"http://{server}")
+
     def _trust_server(self, url: str) -> None:
         brains.confirm_server(url)
         self.state.set("trusted_servers", brains.confirmed_servers())
@@ -1377,9 +1403,12 @@ class Companion(QObject):
         q = self.questions.answering(self.chat.id)
         if q is None or q.fold is not None:
             return
-        q.partial += text
+        first, q.partial = not q.partial, q.partial + text
         if self._box_shows_chat():
-            self.ask_box.append_partial(text)
+            if first:
+                self._show_chat()  # "… is thinking" gives way to the answer itself
+            else:
+                self.ask_box.set_partial(q.partial)  # all of it so far: the box may have been drawn again since the last piece
 
     def _answered(self, answer: str) -> None:
         now = self._now()
@@ -1474,7 +1503,7 @@ class Companion(QObject):
         other = self._next_brain(q.brain)
         if other is not None:
             buttons.append((f"Ask {other.label}", partial(self._try_again, q, other)))
-        buttons.append(("Settings", self.open_settings))
+        buttons.append(("Settings", partial(self.open_settings, "ai")))
         self.say(f"{label} couldn't answer", error, buttons, timeout_s=None, key="answer-failed", cue="error")
 
     def _try_again(self, q: asking.Question, brain: brains.Brain | None) -> None:
@@ -1695,6 +1724,7 @@ class Companion(QObject):
         self._last_wall = now
         self._check_away()
         self._check_accessibility()
+        self._check_hosting()  # a screen reader started or stopped
         self.menus.tick()  # a countdown in the menu says what's left: the menu isn't built again for it
         mono = self._now()
         for source, (state, since) in list(self.agents.items()):
@@ -2136,12 +2166,12 @@ class Companion(QObject):
             if event == "done":
                 self.behavior.react("hop", now)
                 if not self.ask_box.isVisible():
-                    self.say(f"{label} finished", snippet, timeout_s=8, key=key, background=True)
+                    self.say(f"{label} finished", snippet, timeout_s=8, key=key, background=True, cue="done")
             elif event == "success":
                 self.behavior.react("beam", now)
-                self.say(f"{label}: success!", snippet, timeout_s=8, key=key, background=True)
+                self.say(f"{label}: success!", snippet, timeout_s=8, key=key, background=True, cue="success")
             elif event == "error":
-                self.say(f"{label} hit a problem", snippet or "Take a look when you can.", timeout_s=20, key=key, background=True)
+                self.say(f"{label} hit a problem", snippet or "Take a look when you can.", timeout_s=20, key=key, background=True, cue="error")
         self._update_working()
 
     def _update_working(self) -> None:
@@ -2166,9 +2196,10 @@ class Companion(QObject):
         name = getattr(self.stage.surface, "setAccessibleName", None)
         if name is not None:
             name(f"{self.name}: " + "; ".join(states.splitlines()) if states else self.name)
-        badge = bool(self._waiting_agents())
-        if badge != self._tray_badge:
-            self._tray_badge = badge
+        waiting = len(self._waiting_agents())
+        self.stage.set_badge(sum(1 for state, _ in self.agents.values() if state == "working"), waiting)
+        if bool(waiting) != self._tray_badge:
+            self._tray_badge = bool(waiting)
             self.tray.setIcon(self._tray_icon())
 
     # -- menus (menus.py)
@@ -2177,7 +2208,9 @@ class Companion(QObject):
         """The penguin's own menu (right-click): it stands still and looks at you while it's open."""
         self._menu_open = True
         self.behavior.set_attending(True, self._now())
-        if self.stage.draws_menus():
+        # On the overlay the penguin's menu is always the stage's own: with the ask box a window for a screen reader,
+        # the overlay draws no menus for it, but a Qt menu opened from the overlay has no window of Qt's to belong to.
+        if self.stage.draws_menus() or self._overlay:
             self.menus.opening()  # the stage draws it: no aboutToShow
             self.stage.open_menu(self.menu, pos)
         else:
