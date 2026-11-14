@@ -380,8 +380,8 @@ def test_unacknowledged_reminders_come_back_at_start():
     book.add(10**9, "later")
     book.fire(200)
     again = ReminderBook.from_list(json.loads(json.dumps(book.to_list())))  # as state.json keeps it
-    assert [(x.id, x.text, x.fired) for x in again.due(300)] == [(r.id, "call Sam", True)]
-    assert again.fire(300) == []  # already told about before the restart: due() still lists it
+    assert again.fire(300) == []  # told about before the restart: not news again...
+    assert [(x.id, x.text, x.fired) for x in again.due(300)] == [(r.id, "call Sam", True)]  # ...but still there to show
 
 
 def test_reminders_saved_before_repeats_read_back_unchanged():

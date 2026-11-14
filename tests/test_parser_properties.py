@@ -83,6 +83,7 @@ def _calculates_or_says_it_cant(text: str) -> None:
 @example("2**2**2**2**2**2")
 @example("factorial(170)*factorial(170)*factorial(170)")
 @example("round(1, -10**300)")
+@example("sqrt((-1) ** 0.5)")  # a complex number where a real one goes
 def test_a_sum_is_answered_or_refused_quickly_and_never_too_long(text):
     _calculates_or_says_it_cant(text)
 
@@ -140,6 +141,7 @@ def _real(zone_name: str, wall: datetime) -> datetime:
 @example("Australia/Lord_Howe", datetime(2026, 10, 4, 1, 50), "in 30 minutes")  # a half-hour change
 @example("Europe/London", datetime(2026, 10, 25, 1, 59), "every day at 1:30")
 @example("Asia/Kolkata", datetime(2040, 12, 31, 23, 59), "in 3650 days")
+@example("Asia/Kolkata", datetime(2017, 1, 1, 12, 0), "2027-03-14")  # ten years on by the year, but past LONGEST
 def test_a_reminders_time_is_always_ahead_and_never_too_far(zone_name, wall, text):
     now = _real(zone_name, wall)
     when = parse_when(text, now)
