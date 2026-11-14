@@ -687,7 +687,7 @@ def test_a_quit_companion_runs_and_paints_nothing_more(companion):
         spin(0.5)
     finally:
         QApplication.instance().removeEventFilter(paints)
-    running = [t for owner in (c, c.ask_box, c.stage) for t in owner.findChildren(QTimer) if t.isActive()]
+    running = [(t.interval(), type(t.parent()).__name__, t.objectName()) for owner in (c, c.ask_box, c.stage) for t in owner.findChildren(QTimer) if t.isActive()]
     assert running == [] and painted == [] and not c.ask_box.isVisible()
 
 def test_after_an_update_it_shows_whats_new_once(companion):
@@ -1339,6 +1339,20 @@ def test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none(companio
     assert len(c._update_procs) == 1  # the stuck one, still running
     assert until(lambda: not c._update_procs, 10) and c._update_counts == {"apt": 3, "stuck": 0}  # killed: none from it
     assert until(lambda: c.stage.bubble.title == "Updates waiting") and "3 system updates" in c.stage.bubble.doc.toPlainText()
+
+
+def test_the_days_updates_heads_up_waits_for_a_bubble_showing_instead_of_going_unsaid(companion):
+    """Told once a day: skipped because a bubble was up, it used to be lost until the next day."""
+    c = companion
+    spin(1.8)  # the greeting, out of the way
+    c.stage.dismiss_message()
+    c.say("Delete “Cat names”?", "It can't be brought back.", [("Delete it", None), ("Keep it", None)], timeout_s=30)
+    c._update_round, c._update_expected, c._update_counts = 7, 1, {}
+    c._tally_updates(7, "apt", 4)
+    spin(2.5)
+    assert c.stage.bubble.title == "Delete “Cat names”?"  # not over the question
+    c.stage.dismiss_message()
+    assert until(lambda: c.stage.bubble.title == "Updates waiting") and "4 system updates" in c.stage.bubble.doc.toPlainText()
 
 
 def test_a_late_answer_from_an_earlier_look_at_updates_is_ignored(companion, monkeypatch):

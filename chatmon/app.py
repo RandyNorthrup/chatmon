@@ -1357,7 +1357,7 @@ class Companion(QObject):
         if len(self._update_counts) == self._update_expected:
             self._update_deadline.stop()
             notice = self.watcher.updates(sum(self._update_counts.values()), date.today(), self._restart_needed)
-            if notice and not self.stage.message_visible():
+            if notice:  # told once a day: it waits its turn behind a bubble on screen, rather than going unsaid
                 self.behavior.react("wave", self._now())
                 buttons = [("OK", None)]
                 if sys.platform == "win32":
