@@ -62,10 +62,12 @@ def test_greets_and_reacts_to_agents(companion):
     c.handle({"type": "event", "event": "working", "source": "claude", "message": ""})
     assert c.behavior.working_since is not None
     c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve the deploy?"})
-    assert c.behavior.alert and c.stage.bubble.title == "Claude needs you"
+    assert until(lambda: c.behavior.alert)  # once the greeting has been up long enough to read
+    assert c.stage.bubble.title == "Claude needs you"
     # something else to say waits until the alert is answered
     c.handle({"type": "event", "event": "done", "source": "codex", "message": "All tests pass."})
-    assert c.stage.bubble.title == "Claude needs you" and len(c._waiting) == 1
+    spin(2.5)
+    assert c.stage.bubble.title == "Claude needs you" and [m.title for m in c.messages.waiting] == ["Codex finished"]
     c.handle({"type": "event", "event": "done", "source": "claude", "message": "Deployed."})
     assert not c.behavior.alert and c.behavior.working_since is None
     spin(0.6)
@@ -571,8 +573,7 @@ def test_a_problem_inside_chatmon_offers_to_report_it_once(companion):
         raise ValueError("boom")
     except ValueError:
         appmod._log_exception(*sys.exc_info())
-    spin(0.1)
-    assert c.stage.bubble.title == "Something went wrong in me"
+    assert until(lambda: c.stage.bubble.title == "Something went wrong in me")  # once the greeting has been read
     assert [b.label for b in c.stage.bubble.buttons][0] == "Report it"
     c.stage.dismiss_message()
     appmod._log_exception(ValueError, ValueError("again"), None)
@@ -913,7 +914,7 @@ def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
     c._check_quiet()
     c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
     spin(0.2)
-    assert not c.stage.message_visible() and len(c._held) == 1
+    assert not c.stage.message_visible() and len(c.messages.held("quiet")) == 1
     c.open_ask()  # you're using Chatmon: what you ask for isn't held back
     c.submit("status")
     assert "Brain:" in c.ask_box.answer.toPlainText()
@@ -921,7 +922,47 @@ def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
     desk.why_quiet = None
     c._check_quiet()
     spin(1.0)
-    assert c.stage.message_visible() and c.stage.bubble.title == "Claude finished" and c._held == []
+    assert c.stage.message_visible() and c.stage.bubble.title == "Claude finished" and c.messages.held() == []
+
+
+def test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert(companion):
+    """"Delete chat?" (or Focus done, or a break) used to be replaced by whatever came next: now an agent's news
+    waits for it, and a needs-you that matters more pushes it aside only for as long as it's up."""
+    c = companion
+    spin(1.8)  # the greeting, out of the way
+    c.stage.dismiss_message()
+    deleted = []
+    c.say("Delete “Cat names”?", "It can't be brought back.", [("Delete it", lambda: deleted.append(True)), ("Keep it", None)], timeout_s=30)
+    c.handle({"type": "event", "event": "done", "source": "codex", "message": ""})
+    spin(2.5)  # past the minimum: it still waits, for as long as the question is up
+    assert c.stage.bubble.title == "Delete “Cat names”?" and [m.title for m in c.messages.waiting] == ["Codex finished"]
+    c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
+    assert until(lambda: c.stage.bubble.title == "Claude needs you") and c.behavior.alert
+    c.stage.dismiss_message()  # answered
+    assert until(lambda: c.stage.bubble.title == "Delete “Cat names”?") and not c.behavior.alert  # back, still answerable
+    assert c.stage.press_button("Delete it") and deleted == [True]
+    assert until(lambda: c.stage.bubble.title == "Codex finished")  # and only then the news
+
+
+def test_a_focus_session_holds_what_comes_on_its_own_until_its_over(companion):
+    c = companion
+    spin(1.8)  # the greeting, out of the way
+    c.stage.dismiss_message()
+    c.start_focus(25)
+    assert c.stage.bubble.title == "Focus time"  # what you did still shows
+    c.stage.dismiss_message()
+    c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+    c.handle({"type": "say", "text": "Backup finished."})
+    spin(0.6)
+    assert not c.stage.message_visible() and len(c.messages.held("focus")) == 2
+    c.handle({"type": "event", "event": "needs-you", "source": "codex", "message": "Approve?"})
+    assert c.stage.bubble.title == "Codex needs you"  # what needs you doesn't wait for focus
+    c.stage.dismiss_message()
+    c.stop_focus()
+    assert until(lambda: c.stage.bubble.title == "Focus stopped")
+    c.stage.dismiss_message()
+    assert until(lambda: c.stage.bubble.title == "Claude finished") and not c.messages.holding("focus")
+    assert until(lambda: c.stage.bubble.title == "Sparky" and "Backup finished." in c.stage.bubble.doc.toPlainText())  # in turn
 
 
 def test_on_macos_an_ask_box_left_open_under_a_full_screen_app_holds_nothing_back(companion, monkeypatch):
@@ -936,10 +977,10 @@ def test_on_macos_an_ask_box_left_open_under_a_full_screen_app_holds_nothing_bac
     c._check_quiet()
     monkeypatch.setattr(sys, "platform", "darwin")
     c.say("Claude finished", timeout_s=8)
-    assert len(c._held) == 1 and c.stage.bubble.title != "Claude finished"
+    assert len(c.messages.held("quiet")) == 1 and c.stage.bubble.title != "Claude finished"
     monkeypatch.setattr(sys, "platform", "win32")
     c.say("Codex finished", timeout_s=8)
-    assert len(c._held) == 1 and c.stage.bubble.title == "Codex finished"
+    assert len(c.messages.held("quiet")) == 1 and c.stage.bubble.title == "Codex finished"
 
 
 def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(companion, monkeypatch):
@@ -956,7 +997,7 @@ def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(com
     desk.why_quiet, desk.is_covered = "a full-screen game", True
     c._check_quiet()
     c.alert("reminder:x", "Reminder", "**Stretch**")
-    assert c._alert_key is None and len(c._held) == 1
+    assert c._alert_key is None and len(c.messages.held("quiet")) == 1
     if sys.platform != "darwin":
         assert shown == [("Reminder", "Chatmon has something for you.")]  # never its words: the system keeps them
     desk.why_quiet, desk.is_covered = None, False
