@@ -17,6 +17,8 @@ from functools import cache
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QApplication
 
+from .i18n import N_, _
+
 DEFAULT = "electric"
 TEXT_CONTRAST = 4.5  # WCAG AA, normal-size text
 OUTLINE_CONTRAST = 3.0  # WCAG 1.4.11: a control's outline, a focus ring
@@ -67,7 +69,7 @@ class Colours:
 @dataclass(frozen=True)
 class Style:
     name: str
-    label: str
+    label_en: str  # its name in menus, in English: `label` is in the person's language
     title: str  # empty: the desktop's own colours (the plain style)
     body: str
     primary: Button  # the first button (the one that does something)
@@ -78,6 +80,10 @@ class Style:
     link: str = ""  # links; empty: the desktop's
     selection: str = ""  # selected text's background; empty: the desktop's
     selection_text: str = ""
+
+    @property
+    def label(self) -> str:
+        return _(self.label_en)
 
     def text_colours(self) -> tuple[QColor, QColor]:
         """Title and body colours."""
@@ -204,31 +210,31 @@ STYLES: dict[str, Style] = {
     s.name: s
     for s in (
         Style(
-            "electric", "Electric", "#ffffff", "#d6ecff",
+            "electric", N_("Electric"), "#ffffff", "#d6ecff",
             Button("#0e2a55", "#45d3f7", "#ffffff", "#0e2a55"), Button("#0b1d3d", "#2fa9cf", "#ffffff", "#0b1d3d"),
             "#0a1a36", "#45d3f7", fill="#072449", link="#45d3f7", selection="#45d3f7", selection_text="#0a1a36",
         ),
         Style(
-            "fire", "Fire", "#fff4ea", "#f3dccd",
+            "fire", N_("Fire"), "#fff4ea", "#f3dccd",
             Button("#2a130c", "#ff8a2a", "#ffffff", "#2a130c"), Button("#1f0e0a", "#d9661f", "#ffffff", "#1f0e0a"),
             "#170907", "#ff8a2a", fill="#310d05", link="#ff8a2a", selection="#ff8a2a", selection_text="#170907",
         ),
         Style(
-            "ghost", "Ghost", "#ffffff", "#e2ddf0",
+            "ghost", N_("Ghost"), "#ffffff", "#e2ddf0",
             Button("#33313f", "#ddd2f7", "#ffffff", "#33313f"), Button("#2b2a35", "#b9afd6", "#ffffff", "#2b2a35"),
             "#24232c", "#c9bdf0", fill="#343744", link="#c9bdf0", selection="#c9bdf0", selection_text="#24232c",
         ),
         Style(
-            "fairy", "Fairy", "#402238", "#4a2b40",
+            "fairy", N_("Fairy"), "#402238", "#4a2b40",
             Button("#f6a2bf", "#9c2f5b", "#402238", "#fff4f7"), Button("#fff4f7", "#9c2f5b", "#402238", "#fff4f7"),
             "#fff4f7", "#9c2f5b", fill="#fad7e3", link="#9c2f5b", selection="#9c2f5b", selection_text="#fff4f7",
         ),
         Style(
-            "leaf", "Leaf", "#1f3d1c", "#2d4a2a",
+            "leaf", N_("Leaf"), "#1f3d1c", "#2d4a2a",
             Button("#fbf7ec", "#24461f", "#1f3d1c", "#fbf7ec"), Button("#fbf7ec", "#24461f", "#1f3d1c", "#fbf7ec"),
             "#fffdf6", "#2f6a2a", fill="#f5ebd8", link="#2f6a2a", selection="#2f6a2a", selection_text="#fffdf6",
         ),
-        Style("plain", "Plain (desktop colours)", "", "", Button("", "", "", ""), Button("", "", "", ""), "", ""),
+        Style("plain", N_("Plain (desktop colours)"), "", "", Button("", "", "", ""), Button("", "", "", ""), "", ""),
     )
 }
 

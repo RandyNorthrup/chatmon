@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import paths
+from .i18n import _
 from .settings import read_kept, write_private
 
 MAX_ITEMS = 100
@@ -61,13 +62,13 @@ class Memory:
         """Remember `text`; why not, if it isn't."""
         text = " ".join(text.split()).strip(" .")
         if not text:
-            return "There's nothing there to remember."
+            return _("There's nothing there to remember.")
         if len(text) > MAX_LENGTH:
-            return f"That's a lot to remember at once: up to {MAX_LENGTH} characters, please."
+            return _("That's a lot to remember at once: up to {count} characters, please.").format(count=MAX_LENGTH)
         if any(i.text.lower() == text.lower() for i in self.items):
             return None
         if len(self.items) >= MAX_ITEMS:
-            return f"I remember {MAX_ITEMS} things already. Forget one first (*what do you remember* lists them)."
+            return _("I remember {count} things already. Forget one first (*what do you remember* lists them).").format(count=MAX_ITEMS)
         self.items.append(Item(text, time.time()))
         self.save()
         return None

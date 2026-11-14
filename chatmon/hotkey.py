@@ -28,6 +28,8 @@ from typing import NamedTuple
 
 from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, QObject, QSocketNotifier, Qt, pyqtSignal
 
+from .i18n import N_, _
+
 MODIFIERS = ("ctrl", "alt", "shift", "meta")  # Qt's ControlModifier, AltModifier, ShiftModifier, MetaModifier
 MODIFIER_NAMES = {"ctrl": "Ctrl", "alt": "Alt", "shift": "Shift", "meta": "Meta"}
 MODIFIER_ALIASES = {"ctrl": "ctrl", "control": "ctrl", "ctl": "ctrl", "alt": "alt", "option": "alt", "opt": "alt",
@@ -72,9 +74,11 @@ KEYS.update({c: Key(ord(c), _MAC_LETTERS[c], c.lower()) for c in "ABCDEFGHIJKLMN
 KEYS.update({f"F{n}": Key(0x70 + n - 1, _MAC_F[n - 1] if n <= len(_MAC_F) else None, f"F{n}") for n in range(1, 25)})
 ALONE = {f"F{n}" for n in range(13, 25)}  # keys no app types with, which may be a shortcut by themselves
 
-CONFLICT = "{combo} is already used by another app. Pick another shortcut."
-NO_PORTAL = ("This desktop doesn't let apps have shortcuts of their own (it has no GlobalShortcuts portal). You can set "
-             "one in your desktop's keyboard settings that runs: chatmon ask")
+# Shown translated: _(CONFLICT).format(combo=...), _(NO_PORTAL).
+CONFLICT = N_("{combo} is already used by another app. Pick another shortcut.")
+# Translators: "chatmon ask" is a command to type, as it is.
+NO_PORTAL = N_("This desktop doesn't let apps have shortcuts of their own (it has no GlobalShortcuts portal). You can set "
+               "one in your desktop's keyboard settings that runs: chatmon ask")
 
 
 class Combo(NamedTuple):
@@ -102,10 +106,11 @@ def parse(sequence: str, platform: str = sys.platform) -> Combo:
     """The combination a shortcut names; ValueError, with a sentence to show, if it names none Chatmon can set."""
     text = (sequence or "").strip()
     if not text:
-        raise ValueError("A shortcut needs a key, such as Ctrl+Alt+Space.")
+        # Translators: key names in a shortcut are written in English, as Chatmon reads them: Ctrl+Alt+Space.
+        raise ValueError(_("A shortcut needs a key, such as Ctrl+Alt+Space."))
     parts = [p.strip() for p in text.split("+")]
     if not all(parts):
-        raise ValueError(f'"{text}" isn\'t a shortcut: write it like Ctrl+Alt+Space.')
+        raise ValueError(_('"{shortcut}" isn\'t a shortcut: write it like Ctrl+Alt+Space.').format(shortcut=text))
     modifiers: set[str] = set()
     key = None
     for part in parts:
@@ -118,15 +123,15 @@ def parse(sequence: str, platform: str = sys.platform) -> Combo:
             continue
         name = _key_name(part)
         if name is None:
-            raise ValueError(f'Chatmon doesn\'t know the key "{part}".')
+            raise ValueError(_('Chatmon doesn\'t know the key "{key}".').format(key=part))
         if key is not None:
-            raise ValueError(f"A shortcut has one key, not {key} and {name}.")
+            raise ValueError(_("A shortcut has one key, not {key} and {other}.").format(key=key, other=name))
         key = name
     if key is None:
-        raise ValueError(f'"{text}" needs a key as well, such as Space.')
+        raise ValueError(_('"{shortcut}" needs a key as well, such as Space.').format(shortcut=text))
     combo = Combo(frozenset(modifiers), key)
     if not modifiers & {"ctrl", "alt", "meta"} and key not in ALONE:
-        raise ValueError(f"{combo.text()} would take that key from every app you type in: add Ctrl, Alt or Meta.")
+        raise ValueError(_("{shortcut} would take that key from every app you type in: add Ctrl, Alt or Meta.").format(shortcut=combo.text()))
     return combo
 
 
@@ -160,7 +165,7 @@ class _Windows(QAbstractNativeEventFilter):
         # A system class: no window procedure of Chatmon's own to keep alive.
         self.hwnd = user32.CreateWindowExW(0, "STATIC", "Chatmon shortcut", 0, 0, 0, 0, 0, wintypes.HWND(self.HWND_MESSAGE), None, None, None)
         if not self.hwnd:
-            raise OSError(ctypes.get_last_error(), "Windows wouldn't make the shortcut's window")
+            raise OSError(ctypes.get_last_error(), _("Windows wouldn't make the shortcut's window"))
         self.id: int | None = None  # the registration in force
         QCoreApplication.instance().installNativeEventFilter(self)
 
@@ -170,8 +175,8 @@ class _Windows(QAbstractNativeEventFilter):
         if not self._user32.RegisterHotKey(self.hwnd, new_id, flags, KEYS[combo.key].windows):
             error = ctypes.get_last_error()
             if error == self.ERROR_HOTKEY_ALREADY_REGISTERED:
-                return CONFLICT.format(combo=combo.text())
-            return f"Windows wouldn't set up {combo.text()} (error {error})."
+                return _(CONFLICT).format(combo=combo.text())
+            return _("Windows wouldn't set up {shortcut} (error {error}).").format(shortcut=combo.text(), error=error)
         self.release()
         self.id = new_id
         return None
@@ -251,22 +256,22 @@ class _Carbon:
         spec = _EventTypeSpec(self.KEYBOARD, self.HOT_KEY_PRESSED)
         status = carbon.InstallEventHandler(self.target, self._handler, 1, ctypes.byref(spec), None, ctypes.byref(self._handler_ref))
         if status != 0:
-            raise OSError(status, "Carbon wouldn't install the shortcut's handler")
+            raise OSError(status, _("Carbon wouldn't install the shortcut's handler"))
         self.id: int | None = None
         self._ref: int | None = None
 
     def grab(self, combo: Combo) -> str | None:
         code = KEYS[combo.key].mac
         if code is None:
-            return f"Macs have no {combo.key} key."
+            return _("Macs have no {key} key.").format(key=combo.key)
         new_id = 2 if self.id == 1 else 1
         ref = ctypes.c_void_p()
         status = self._carbon.RegisterEventHotKey(code, sum(self.FLAGS[m] for m in combo.modifiers), _EventHotKeyID(self.SIGNATURE, new_id),
                                                   self.target, self.EXCLUSIVE, ctypes.byref(ref))
         if status == self.HOT_KEY_EXISTS:
-            return CONFLICT.format(combo=combo.text())
+            return _(CONFLICT).format(combo=combo.text())
         if status != 0:
-            return f"macOS wouldn't set up {combo.text()} (error {status})."
+            return _("macOS wouldn't set up {shortcut} (error {error}).").format(shortcut=combo.text(), error=status)
         self.release()
         self.id, self._ref = new_id, ref.value
         return None
@@ -342,7 +347,7 @@ class _X11:
         self._x, self._pressed = xlib, pressed
         self.display = xlib.XOpenDisplay(display.encode() if display else None)
         if not self.display:
-            raise OSError("There's no X display to set a shortcut on.")
+            raise OSError(_("There's no X display to set a shortcut on."))
         self.root = xlib.XDefaultRootWindow(self.display)
         self.grabbed: tuple[int, int] | None = None  # (keycode, modifiers) in force
         self._event = (ctypes.c_long * 24)()  # an XEvent: a union of 24 longs
@@ -376,14 +381,16 @@ class _X11:
     def grab(self, combo: Combo) -> str | None:
         keycode = self._x.XKeysymToKeycode(self.display, self._x.XStringToKeysym(KEYS[combo.key].x11.encode()))
         if not keycode:
-            return f"This keyboard has no {combo.key} key."
+            return _("This keyboard has no {key} key.").format(key=combo.key)
         modifiers = sum(self.FLAGS[m] for m in combo.modifiers)
         if (keycode, modifiers) == self.grabbed:
             return None
         errors = self._grab_all(keycode, modifiers)
         if errors:
             self._ungrab_all(keycode, modifiers)  # whichever of the lock states it did get
-            return CONFLICT.format(combo=combo.text()) if self.BAD_ACCESS in errors else f"X wouldn't set up {combo.text()} (error {errors[0]})."
+            if self.BAD_ACCESS in errors:
+                return _(CONFLICT).format(combo=combo.text())
+            return _("X wouldn't set up {shortcut} (error {error}).").format(shortcut=combo.text(), error=errors[0])
         self.release()
         self.grabbed = (keycode, modifiers)
         return None
@@ -463,7 +470,7 @@ class Hotkey(QObject):
             from .shortcutportal import PortalShortcut
 
             return PortalShortcut(tell)
-        raise OSError("There's no display to set a shortcut on.")
+        raise OSError(_("There's no display to set a shortcut on."))
 
     def register(self, sequence: str) -> str | None:
         """Claim the shortcut, in place of any this one had; a sentence saying why it couldn't, or None. A failed
@@ -479,7 +486,7 @@ class Hotkey(QObject):
                 self._backend = self._make_backend()
             error = self._backend.grab(combo)
         except (AttributeError, OSError) as exc:  # the platform's library isn't there, or refused outright
-            return getattr(exc, "strerror", None) or str(exc) or "Shortcuts can't be set here."
+            return getattr(exc, "strerror", None) or str(exc) or _("Shortcuts can't be set here.")
         if error is None:
             self.combo = combo
             if self.kind != "portal":  # the portal says what the desktop chose, once it has

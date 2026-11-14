@@ -20,7 +20,8 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-from . import paths
+from . import localefmt, paths
+from .i18n import _, ngettext
 from .settings import private_dir, write_private
 
 MAX_FILE = 64 * 2**20  # bytes: a chat file bigger than this isn't read (it isn't one of ours)
@@ -63,12 +64,12 @@ class Chat:
         """The chat as a Markdown document, to keep or share."""
         from datetime import datetime
 
-        lines = [f"# {self.title or 'A chat with Chatmon'}", "", f"*{datetime.fromtimestamp(self.created):%A %d %B %Y, %H:%M}*", ""]
+        lines = [f"# {self.title or _('A chat with Chatmon')}", "", f"*{localefmt.date_and_time(datetime.fromtimestamp(self.created))}*", ""]
         for m in self.messages:
             if m.role == "user":
-                lines += [f"**You:** {m.text}" if m.text else "**You:**", ""]
+                lines += [_("**You:** {text}").format(text=m.text) if m.text else _("**You:**"), ""]
                 if m.attached:
-                    lines += [f"*Attached: {', '.join(m.attached)}*", ""]
+                    lines += [_("*Attached: {files}*").format(files=", ".join(m.attached)), ""]
             else:
                 lines += [f"**{m.brain or 'Chatmon'}:**", "", m.text, ""]
         return "\n".join(lines)
@@ -278,12 +279,13 @@ def when(t: float, now: float | None = None) -> str:
     now = time.time() if now is None else now
     t = _time(t)
     if now - t < 60:
-        return "just now"
+        return _("just now")
     if now - t < 3600:
-        return f"{int((now - t) // 60)} min ago"
+        minutes = int((now - t) // 60)
+        return ngettext("{n} min ago", "{n} min ago", minutes).format(n=minutes)
     d, n = datetime.fromtimestamp(t), datetime.fromtimestamp(now)
     if d.date() == n.date():
-        return f"today {(d.hour % 12) or 12}:{d.minute:02d} {'AM' if d.hour < 12 else 'PM'}"
+        return _("today {time}").format(time=localefmt.time_of_day(d))
     if d.date() == n.date() - timedelta(days=1):
-        return "yesterday"
-    return f"{d:%a %b} {d.day}"
+        return _("yesterday")
+    return localefmt.short_day(d.date())

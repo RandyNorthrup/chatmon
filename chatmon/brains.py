@@ -37,6 +37,7 @@ from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkReques
 from . import attachments, paths
 from .attachments import IMAGE, PDF, Attachment
 from .events import INTERNAL_ENV
+from .i18n import N_, _
 
 # Model ids current as of 10 November 2026 (checked on each provider's own pages); the menu offers the
 # `models` listed, and any can be set in the settings.
@@ -270,9 +271,13 @@ def describe(brain: Brain) -> str:
     """Its model, effort and thinking, as far as they're set: "claude-opus-5-5, effort low"."""
     parts = [brain.model] if brain.model and brain.model != "auto" else []
     if brain.effort:
-        parts.append(f"effort {brain.effort}")
-    if brain.thinking != "auto":
-        parts.append(f"thinking {brain.thinking}")
+        parts.append(_("effort {level}").format(level=brain.effort))
+    if brain.thinking == "on":
+        parts.append(_("thinking on"))
+    elif brain.thinking == "off":
+        parts.append(_("thinking off"))
+    elif brain.thinking != "auto":
+        parts.append(_("thinking {mode}").format(mode=brain.thinking))
     return ", ".join(parts)
 
 
@@ -483,17 +488,21 @@ class Brain:
         effort = self.effort if effort is None else effort
         thinking = self.thinking if thinking is None else thinking
         if model and not _MODEL_NAME.fullmatch(model):
-            return "not a model name"  # it reaches command lines: never something a tool could read as a flag
+            return _("not a model name")  # it reaches command lines: never something a tool could read as a flag
         levels = self.effort_levels(model)
         if effort and not levels:
-            return "it has no effort setting"
+            return _("it has no effort setting")
         if effort and effort not in levels:
-            return f"this model doesn't take {effort}"
+            return _("this model doesn't take {effort}").format(effort=effort)
         if thinking not in self.thinking_modes():
-            return "it has no thinking setting"
+            return _("it has no thinking setting")
         only = self.thinking_models.get(thinking)
         if only is not None and model not in only:
-            return f"this model can't turn thinking {thinking}"
+            if thinking == "on":
+                return _("this model can't turn thinking on")
+            if thinking == "off":
+                return _("this model can't turn thinking off")
+            return _("this model can't turn thinking {mode}").format(mode=thinking)
         if self.type == "anthropic":
             return _anthropic_why_not(model, effort, thinking)
         return None
@@ -533,13 +542,13 @@ class Brain:
 
     def why_not(self) -> str:
         if self.type == "command":
-            return f"{self.command[0] if self.command else 'command'} not found"
+            return _("{program} not found").format(program=self.command[0] if self.command else "command")
         if self.local:
-            return "not running"
+            return _("not running")
         missing = [v for v in self.requires if not os.environ.get(v)]
         if self.api_key_env and not self.has_key():
             missing.insert(0, self.api_key_env)
-        return f"{', '.join(missing)} not set" if missing else "not set up"
+        return _("{variables} not set").format(variables=", ".join(missing)) if missing else _("not set up")
 
 
 ANTHROPIC_EFFORTS = ["low", "medium", "high", "xhigh", "max"]  # every current Claude model takes these
@@ -557,11 +566,11 @@ def _anthropic_why_not(model: str, effort: str, thinking: str) -> str | None:
     if thinking != "off":
         return None
     if model in _ALWAYS_THINKS:
-        return "this model always thinks; lower its effort instead"
+        return _("this model always thinks; lower its effort instead")
     if model in _OFF_BETWEEN_TOOLS | _OFF_UP_TO_HIGH and effort in _ABOVE_HIGH:
-        return "thinking can be off only at effort high or below"
+        return _("thinking can be off only at effort high or below")
     if model not in _OFF_BETWEEN_TOOLS | _OFF_UP_TO_HIGH | _OFF_ANY:
-        return "not known to be possible on this model"
+        return _("not known to be possible on this model")
     return None
 
 
@@ -585,17 +594,17 @@ _SCALAR = (str, int, float)
 # What each setting of a brain must be, to be read at all: a value of another kind is left out (the built-in one
 # stays) and said, never a crash at start or a command line made of a string's letters.
 _KINDS: dict[str, tuple[str, object]] = {
-    **{k: ("text", lambda v: isinstance(v, str)) for k in ("type", "label", "url", "model", "api_key_env", "api_key", "effort", "thinking",
-                                                           "effort_field", "path", "output")},
-    **{k: ("a list of text", lambda v: isinstance(v, list) and all(isinstance(a, _SCALAR) for a in v))
+    **{k: (N_("text"), lambda v: isinstance(v, str)) for k in ("type", "label", "url", "model", "api_key_env", "api_key", "effort", "thinking",
+                                                               "effort_field", "path", "output")},
+    **{k: (N_("a list of text"), lambda v: isinstance(v, list) and all(isinstance(a, _SCALAR) for a in v))
        for k in ("command", "models", "efforts", "model_args", "effort_args", "requires", "env")},
-    **{k: ("a table of lists", lambda v: isinstance(v, dict) and all(isinstance(a, list) and all(isinstance(x, _SCALAR) for x in a) for a in v.values()))
+    **{k: (N_("a table of lists"), lambda v: isinstance(v, dict) and all(isinstance(a, list) and all(isinstance(x, _SCALAR) for x in a) for a in v.values()))
        for k in ("thinking_args", "model_efforts", "thinking_models")},
-    "thinking_fields": ("a table of tables", lambda v: isinstance(v, dict) and all(isinstance(a, dict) for a in v.values())),
-    "headers": ("a table of text", lambda v: isinstance(v, dict) and all(isinstance(a, _SCALAR) for a in v.values())),
-    "extra": ("a table", lambda v: isinstance(v, dict)),
-    **{k: ("true or false", lambda v: isinstance(v, bool)) for k in ("local", "tools_off", "stream")},
-    "auto": ("true or false", lambda v: v is None or isinstance(v, bool)),
+    "thinking_fields": (N_("a table of tables"), lambda v: isinstance(v, dict) and all(isinstance(a, dict) for a in v.values())),
+    "headers": (N_("a table of text"), lambda v: isinstance(v, dict) and all(isinstance(a, _SCALAR) for a in v.values())),
+    "extra": (N_("a table"), lambda v: isinstance(v, dict)),
+    **{k: (N_("true or false"), lambda v: isinstance(v, bool)) for k in ("local", "tools_off", "stream")},
+    "auto": (N_("true or false"), lambda v: v is None or isinstance(v, bool)),
 }
 
 
@@ -610,7 +619,7 @@ def load_brains(ai_config: dict, problems: list[str] | None = None) -> dict[str,
         for key, value in (user.get(name) if isinstance(user.get(name), dict) else {}).items():
             kind = _KINDS.get(key)
             if kind is not None and not kind[1](value):
-                problems.append(f"ai.brains.{name}.{key} should be {kind[0]}, so it's left out")
+                problems.append(_("{setting} should be {kind}, so it's left out").format(setting=f"ai.brains.{name}.{key}", kind=_(kind[0])))
                 continue
             spec[key] = value
         if spec.get("type") not in TYPES:
@@ -680,7 +689,7 @@ def expand_url(value: str) -> str:
     def part(m: re.Match) -> str:
         found = os.environ.get(m.group(1), "")
         if not _URL_PART.fullmatch(found):
-            raise BrainError(f"${{{m.group(1)}}} isn't a plain name, so it can't go in the URL")
+            raise BrainError(_("{variable} isn't a plain name, so it can't go in the URL").format(variable="${" + m.group(1) + "}"))
         return found
 
     return _VAR.sub(part, value)
@@ -698,7 +707,7 @@ def check_url(url: str) -> None:
     except ValueError:
         pass
     if parts.scheme != "http" or not local:
-        raise BrainError(f"{url} isn't HTTPS; only a server on this computer may use plain HTTP")
+        raise BrainError(_("{url} isn't HTTPS; only a server on this computer may use plain HTTP").format(url=url))
 
 
 # -- context windows: how much a brain's model can take at once (context.py fits a chat to it)
@@ -819,17 +828,17 @@ def cant_take(brain: Brain, attached: list[Attachment]) -> str | None:
     kinds = {a.kind for a in attached}
     if attached and brain.reads_files():
         # It can read files here: an attached file could tell it to read others (your chats, your keys).
-        return (
-            f"{brain.label} can read files on this computer, so I don't give it attachments: one could tell it to "
+        return _(
+            "{brain} can read files on this computer, so I don't give it attachments: one could tell it to "
             "read your other files. Claude Code, Muse Code, an API or a model server here can take them."
-        )
+        ).format(brain=brain.label)
     if brain.type == "command" and kinds & {IMAGE, PDF}:
-        return (
-            f"{brain.label} runs here with its tools off, so it can be given text but not pictures or PDFs. "
+        return _(
+            "{brain} runs here with its tools off, so it can be given text but not pictures or PDFs. "
             "For those, pick an API under **Brain** (or a model server here that can see images)."
-        )
+        ).format(brain=brain.label)
     if brain.type == "openai" and PDF in kinds:
-        return f"{brain.label} can't read PDFs this way. The Anthropic and OpenAI APIs can, or attach the text instead."
+        return _("{brain} can't read PDFs this way. The Anthropic and OpenAI APIs can, or attach the text instead.").format(brain=brain.label)
     return None
 
 
@@ -960,33 +969,33 @@ def _error_message(data: dict) -> str | None:
 
 def parse_anthropic(data: dict) -> str:
     if data.get("type") == "error" or "error" in data:
-        raise BrainError(_error_message(data) or "the API returned an error")
+        raise BrainError(_error_message(data) or _("the API returned an error"))
     if data.get("stop_reason") == "refusal":
-        raise BrainError("it declined to answer that one")
+        raise BrainError(_("it declined to answer that one"))
     text = "".join(block.get("text", "") for block in data.get("content", []) if block.get("type") == "text").strip()
     if not text:
-        raise BrainError("the answer came back empty")
+        raise BrainError(_("the answer came back empty"))
     return text
 
 
 def parse_openai(data: dict) -> str:
     if "error" in data:
-        raise BrainError(_error_message(data) or "the API returned an error")
+        raise BrainError(_error_message(data) or _("the API returned an error"))
     try:
         content = data["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError):
-        raise BrainError("the answer wasn't in the expected shape") from None
+        raise BrainError(_("the answer wasn't in the expected shape")) from None
     if isinstance(content, list):
         content = "".join(part.get("text", "") for part in content if isinstance(part, dict))
     text = (content or "").strip()
     if not text:
-        raise BrainError("the answer came back empty")
+        raise BrainError(_("the answer came back empty"))
     return text
 
 
 def parse_responses(data: dict) -> str:
     if data.get("error"):
-        raise BrainError(_error_message(data) or "the API returned an error")
+        raise BrainError(_error_message(data) or _("the API returned an error"))
     text = data.get("output_text") if isinstance(data.get("output_text"), str) else ""
     if not text:
         parts = []
@@ -998,14 +1007,14 @@ def parse_responses(data: dict) -> str:
         text = "".join(parts)
     text = text.strip()
     if not text:
-        raise BrainError("the answer came back empty")
+        raise BrainError(_("the answer came back empty"))
     return text
 
 
 def _redirected(reply: QNetworkReply) -> str | None:
     status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
     if isinstance(status, int) and 300 <= status < 400:
-        return "it answered with a redirect, which isn't followed (the key goes only where the settings say)"
+        return _("it answered with a redirect, which isn't followed (the key goes only where the settings say)")
     return None
 
 
@@ -1027,7 +1036,7 @@ def _parsed(parse, data: dict) -> str:
     except BrainError:
         raise
     except (AttributeError, KeyError, TypeError, IndexError, ValueError):
-        raise BrainError("the answer wasn't in the expected shape") from None
+        raise BrainError(_("the answer wasn't in the expected shape")) from None
 
 
 def _with_model(brain: Brain, model: str) -> Brain:
@@ -1039,7 +1048,7 @@ def first_model(data: dict) -> str:
     for entry in data.get("data") or data.get("models") or []:
         if isinstance(entry, dict) and (entry.get("id") or entry.get("name")):
             return str(entry.get("id") or entry.get("name"))
-    raise BrainError("it has no model loaded")
+    raise BrainError(_("it has no model loaded"))
 
 
 def endpoint(brain: Brain):
@@ -1058,11 +1067,14 @@ def clean_output(text: str) -> str:
 
 # -- what went wrong, in words you can act on
 
-_HINTS = {
-    401: "Check its key{where}.",
-    403: "Check its key{where}, and that it may use this model.",
-    404: "Check the model's name and the brain's URL in the settings.",
-    429: "It's rate limited: wait a little, or check your plan's limits.",
+_HINTS = {  # a status's advice: (for a brain whose key may be in an environment variable, for one whose key isn't)
+    401: (N_("Check its key in {variable} or the one saved in Settings."), N_("Check its key in Settings.")),
+    403: (
+        N_("Check its key in {variable} or the one saved in Settings, and that it may use this model."),
+        N_("Check its key in Settings, and that it may use this model."),
+    ),
+    404: (N_("Check the model's name and the brain's URL in the settings."),) * 2,
+    429: (N_("It's rate limited: wait a little, or check your plan's limits."),) * 2,
 }
 
 
@@ -1070,11 +1082,18 @@ def http_error(brain: Brain, status: int, raw: bytes) -> str:
     """A reply of 400 or more, as a sentence: the provider's own error (its error, message or detail), the status,
     and what to do about it. Never the key itself, should a provider repeat it."""
     message = _said(raw)
-    hint = _HINTS.get(status, "")
+    advice = _HINTS.get(status)
     if status >= 500:
-        hint = "The provider is having trouble: try again in a while."
-    where = f" in {brain.api_key_env} or the one saved in Settings" if brain.api_key_env else " in Settings"
-    text = f"{message.rstrip('.') if message else 'it refused the question'} (HTTP {status}). {hint.format(where=where)}"
+        hint = _("The provider is having trouble: try again in a while.")
+    elif advice is None:
+        hint = ""
+    elif brain.api_key_env:
+        hint = _(advice[0]).format(variable=brain.api_key_env)
+    else:
+        hint = _(advice[1])
+    said = message.rstrip(".") if message else _("it refused the question")
+    # Translators: an HTTP error: the provider's own words (or "it refused the question"), then what to do about it.
+    text = _("{error} (HTTP {status}). {advice}").format(error=said, status=status, advice=hint)
     return _scrub(text.strip(), brain)
 
 
@@ -1113,13 +1132,13 @@ def network_error(brain: Brain, url: str, error: QNetworkReply.NetworkError, det
     E = QNetworkReply.NetworkError
     host = urlsplit(url).hostname or url
     if error == E.HostNotFoundError:
-        return f"couldn't find {host}: are you offline?"
+        return _("couldn't find {host}: are you offline?").format(host=host)
     if error == E.ConnectionRefusedError:
-        return f"nothing is answering at {host}: is it running?" if brain.local else f"{host} refused the connection"
+        return _("nothing is answering at {host}: is it running?").format(host=host) if brain.local else _("{host} refused the connection").format(host=host)
     if error in (E.TimeoutError, E.TemporaryNetworkFailureError, E.NetworkSessionFailedError, E.UnknownNetworkError, E.RemoteHostClosedError):
-        return f"the connection to {host} failed ({detail}): are you offline?"
+        return _("the connection to {host} failed ({error}): are you offline?").format(host=host, error=detail)
     if error == E.SslHandshakeFailedError:
-        return f"the secure connection to {host} failed ({detail})"
+        return _("the secure connection to {host} failed ({error})").format(host=host, error=detail)
     return detail
 
 
@@ -1173,9 +1192,9 @@ class Stream:
             raise BrainError(self.error)
         text = (self.final if self.final is not None else "".join(self.pieces)).strip()
         if not text and self._refusal:
-            raise BrainError(f"it declined to answer that one ({''.join(self._refusal).strip()[:200]})")
+            raise BrainError(_("it declined to answer that one ({reason})").format(reason="".join(self._refusal).strip()[:200]))
         if not text:
-            raise BrainError("the answer came back empty")
+            raise BrainError(_("the answer came back empty"))
         return text
 
     def _json_line(self, line: str, new: list[str]) -> None:
@@ -1198,7 +1217,7 @@ class Stream:
         elif kind == "result":
             result = event.get("result") if isinstance(event.get("result"), str) else ""
             if event.get("is_error") or (event.get("subtype") not in (None, "success")):
-                self.error = result.strip() or str(event.get("subtype") or "it stopped with an error")
+                self.error = result.strip() or str(event.get("subtype") or _("it stopped with an error"))
             else:
                 self.final = result
 
@@ -1228,9 +1247,9 @@ class Stream:
         if kind == "content_block_delta" and delta.get("type") == "text_delta" and isinstance(delta.get("text"), str):
             self._piece(delta["text"], new)
         elif kind == "message_delta" and delta.get("stop_reason") == "refusal":
-            self.error = "it declined to answer that one"
+            self.error = _("it declined to answer that one")
         elif kind == "error":
-            self.error = _error_message(event) or "the API returned an error"
+            self.error = _error_message(event) or _("the API returned an error")
 
     def _responses(self, event: dict, new: list[str]) -> None:
         kind = event.get("type")
@@ -1240,13 +1259,13 @@ class Stream:
             self._refusal.append(event["delta"])
         elif kind == "response.failed":
             response = event.get("response") if isinstance(event.get("response"), dict) else {}
-            self.error = _error_message(response) or "the API returned an error"
+            self.error = _error_message(response) or _("the API returned an error")
         elif kind == "error":
-            self.error = (event.get("message") if isinstance(event.get("message"), str) else None) or _error_message(event) or "the API returned an error"
+            self.error = (event.get("message") if isinstance(event.get("message"), str) else None) or _error_message(event) or _("the API returned an error")
 
     def _chat(self, event: dict, new: list[str]) -> None:
         if "error" in event:
-            self.error = _error_message(event) or "the API returned an error"
+            self.error = _error_message(event) or _("the API returned an error")
             return
         choices = event.get("choices")
         first = choices[0] if isinstance(choices, list) and choices and isinstance(choices[0], dict) else {}
@@ -1416,7 +1435,7 @@ def _end_tree(root: int) -> int:
         handle = kernel32.OpenProcess(terminate_and_query, False, pid)
         if not handle:
             return None
-        made, ended, kernel, user = (ctypes.c_ulonglong() for _ in range(4))
+        made, ended, kernel, user = (ctypes.c_ulonglong() for _time in range(4))
         if not kernel32.GetProcessTimes(handle, ctypes.byref(made), ctypes.byref(ended), ctypes.byref(kernel), ctypes.byref(user)):
             kernel32.CloseHandle(handle)
             return None
@@ -1524,7 +1543,7 @@ class Asker(QObject):
             check_url(url)
         except BrainError as exc:
             self._timer.stop()
-            error = f"{brain.label}: {exc}."
+            error = _("{brain}: {error}.").format(brain=brain.label, error=exc)
             QTimer.singleShot(0, lambda: self.failed.emit(error))
             return
         if brain.model in ("", "auto"):  # a local server: ask it which model it has
@@ -1577,7 +1596,10 @@ class Asker(QObject):
             # cmd.exe would read the question (and earlier answers) as part of a command line: a quote and an
             # ampersand in it would run whatever followed, %VAR% would be filled in, and 8 KB is the most it takes.
             self._timer.stop()
-            error = f"{brain.label}: {Path(program).name} is run by cmd.exe, which can't be handed a question safely; use {{prompt_file}} or stdin."
+            # Translators: {option} is "{prompt_file}", a setting's own word, to be written as it is.
+            error = _("{brain}: {program} is run by cmd.exe, which can't be handed a question safely; use {option} or stdin.").format(
+                brain=brain.label, program=Path(program).name, option="{prompt_file}"
+            )
             QTimer.singleShot(0, lambda: self.failed.emit(error))
             return
         args, use_stdin = [], True
@@ -1646,7 +1668,7 @@ class Asker(QObject):
             try:
                 answer = stream.answer()
             except BrainError as exc:
-                self.failed.emit(f"{self._brain.label} didn't answer ({exc}).")
+                self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=self._brain.label, reason=exc))
                 return
             if code == 0 or stream.final is not None:
                 self.answered.emit(answer)
@@ -1656,13 +1678,13 @@ class Asker(QObject):
         if code == 0 and answer:
             self.answered.emit(answer)
             return
-        detail = err.splitlines()[-1] if err else (f"exit code {code}" if code else "no answer")
-        self.failed.emit(f"{self._brain.label} didn't answer ({detail}).")
+        detail = err.splitlines()[-1] if err else (_("exit code {code}").format(code=code) if code else _("no answer"))
+        self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=self._brain.label, reason=detail))
 
     def _process_error(self, error) -> None:
         if error == QProcess.ProcessError.FailedToStart and self._proc is not None:
             self.cancel()
-            self.failed.emit(f"Couldn't start {self._brain.command[0]}.")
+            self.failed.emit(_("Couldn't start {program}.").format(program=self._brain.command[0]))
 
     def _temp(self, prefix: str) -> Path:
         fd, name = tempfile.mkstemp(prefix=prefix, suffix=".txt", dir=self._dir)
@@ -1725,7 +1747,8 @@ class Asker(QObject):
             model = first_model(_json_object(raw))
         except (ValueError, BrainError) as exc:
             self._timer.stop()
-            self.failed.emit(f"{self._brain.label}: {_sentence(str(exc)) if isinstance(exc, BrainError) else 'no model list.'}")
+            why = _sentence(str(exc)) if isinstance(exc, BrainError) else _("no model list.")
+            self.failed.emit(_("{brain}: {error}").format(brain=self._brain.label, error=why))
             return
         self._then(model)
 
@@ -1748,7 +1771,7 @@ class Asker(QObject):
         self._raw += chunk
         if len(self._raw) > MAX_REPLY:
             self.cancel()
-            self.failed.emit(f"{self._brain.label}: the answer was too long to read.")
+            self.failed.emit(_("{brain}: the answer was too long to read.").format(brain=self._brain.label))
 
     def _reply_finished(self) -> None:
         reply, self._reply = self._reply, None
@@ -1784,12 +1807,12 @@ class Asker(QObject):
                 data = {}
             self.answered.emit(_parsed(self._parse, data))
         except BrainError as exc:
-            self.failed.emit(f"{self._brain.label}: {_sentence(_scrub(str(exc), self._brain))}")
+            self.failed.emit(_("{brain}: {error}").format(brain=self._brain.label, error=_sentence(_scrub(str(exc), self._brain))))
 
     def _timed_out(self) -> None:
-        label = self._brain.label if self._brain else "The brain"
+        brain = self._brain
         self.cancel()
-        self.failed.emit(f"{label} took too long to answer.")
+        self.failed.emit(_("{brain} took too long to answer.").format(brain=brain.label) if brain else _("The brain took too long to answer."))
 
 
 def _sentence(text: str) -> str:
@@ -1832,7 +1855,7 @@ class Finder(QObject):
         def look() -> None:
             found = quick
             try:
-                for _ in range(LOOKS):  # a server found running is then asked whose it is: a second look
+                for _look in range(LOOKS):  # a server found running is then asked whose it is: a second look
                     look_again()
                     found = choose(brains, configured, picked, wait=False, prefer=prefer)
                     if not unsure():

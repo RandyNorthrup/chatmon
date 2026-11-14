@@ -25,6 +25,7 @@ from dataclasses import asdict, dataclass, field, replace
 from datetime import date, datetime, time, timedelta, tzinfo
 
 from . import localefmt
+from .i18n import N_, _, ngettext
 
 _WORDS = {
     "a": 1, "an": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "ten": 10,
@@ -145,7 +146,7 @@ def _rule(rule: str) -> tuple[tuple[int, ...], int, int]:
     """A repeat rule's weekdays (Monday is 0), hour and minute. ValueError for anything else."""
     m = _RULE_RE.fullmatch(rule) if isinstance(rule, str) else None
     if not m:
-        raise ValueError(f"not a repeat rule: {rule!r}")
+        raise ValueError(f"not a repeat rule: {rule!r}")  # a mistake in code, not words to show
     days = {"daily": tuple(range(7)), "weekdays": tuple(range(5))}.get(m.group(1)) or (_RULE_CODES.index(m.group(1)),)
     return days, int(m.group(2)), int(m.group(3))
 
@@ -165,15 +166,20 @@ def next_time(rule: str, after: float, tz: tzinfo | None = None) -> float:
     return min(moments)
 
 
+# One sentence for each day, not a day's name put into one: some languages change the name with the sentence.
+_EVERY = (N_("every Monday at {time}"), N_("every Tuesday at {time}"), N_("every Wednesday at {time}"), N_("every Thursday at {time}"),
+          N_("every Friday at {time}"), N_("every Saturday at {time}"), N_("every Sunday at {time}"))
+
+
 def describe_repeat(rule: str) -> str:
     """"every day at 9:00 AM", "every weekday at 9:00 AM", "every Monday at 9:00 AM"."""
     days, hour, minute = _rule(rule)
     at = localefmt.time_of_day(time(hour, minute))
     if len(days) == 7:
-        return f"every day at {at}"
+        return _("every day at {time}").format(time=at)
     if len(days) == 5:
-        return f"every weekday at {at}"
-    return f"every {localefmt.WEEKDAYS[days[0]]} at {at}"
+        return _("every weekday at {time}").format(time=at)
+    return _(_EVERY[days[0]]).format(time=at)
 
 
 # -- reading when
@@ -382,7 +388,7 @@ def parse_command(text: str, now: datetime) -> Command | None:
             return Command("unclear", text=_what(m.group("rest")))
         if when.due is None:
             return Command("unclear", text=_what(when.rest), ambiguous=when.ambiguous)
-        return Command("reminder", when.due, _what(when.rest) or "Reminder", repeat=when.repeat)
+        return Command("reminder", when.due, _what(when.rest) or _("Reminder"), repeat=when.repeat)
     m = re.match(r"^(?:set\s+(?:a\s+)?)?timer\b\s*(?P<rest>.*)$", t, re.I)
     if m:
         lead = _LEADING_RE.match(m.group("rest"))
@@ -391,7 +397,7 @@ def parse_command(text: str, now: datetime) -> Command | None:
             secs = float(d) * 60 if d.isdigit() else seconds_in(d)
             if 0 < secs <= LONGEST:
                 rest = m.group("rest")[lead.end() :]
-                return Command("timer", _at(now.timestamp() + secs, now), _what(re.sub(r"^\s*for\s+", "", rest)) or "Timer")
+                return Command("timer", _at(now.timestamp() + secs, now), _what(re.sub(r"^\s*for\s+", "", rest)) or _("Timer"))
         return None
     m = re.match(r"^(?:start\s+(?:a\s+)?)?focus(?:\s+(?:session|time|mode))?\b\s*(?P<rest>.*)$", t, re.I)
     if m:
@@ -410,14 +416,15 @@ def parse_command(text: str, now: datetime) -> Command | None:
 def explain(command: Command, markdown: bool = True) -> str:
     """What to say about a reminder whose time is missing or can't be told: Markdown, or plain for a terminal."""
     words = command.ambiguous
+    # Translators: the examples between asterisks are what to type, and stay English: that's what Chatmon reads.
     if re.search(r"\d{1,2}/\d{1,2}", words):
-        text = (f'I can\'t tell which day "{words}" is: day and month come in either order. '
-                "Write the month's name (*apr 3*), or the year first (*2027-04-03*).")
+        text = _('I can\'t tell which day "{words}" is: day and month come in either order. '
+                 "Write the month's name (*apr 3*), or the year first (*2027-04-03*).").format(words=words)
     elif words:
-        text = (f'I couldn\'t tell when "{words}" is. Try one day and one time, like *friday at 3pm*, '
-                "*dec 3 at 9am*, *in 2 hours* or *every weekday at 9*.")
+        text = _('I couldn\'t tell when "{words}" is. Try one day and one time, like *friday at 3pm*, '
+                 "*dec 3 at 9am*, *in 2 hours* or *every weekday at 9*.").format(words=words)
     else:
-        text = "When should I remind you? Try *remind me in 20m to stretch* or *remind me at 3pm to call Sam*."
+        text = _("When should I remind you? Try *remind me in 20m to stretch* or *remind me at 3pm to call Sam*.")
     return text if markdown else text.replace("*", "")
 
 
@@ -430,18 +437,19 @@ def describe(due: float, now: float, tz: tzinfo | None = None) -> str:
     """"in 5 min", "at 3:30 PM", "tomorrow at 9:00 AM", "on Fri Dec 25 at 3:00 PM", "was due at 2:00 PM"..."""
     delta = due - now
     if 0 <= delta < 3600:
-        return f"in {max(1, round(delta / 60))} min"
+        minutes = max(1, round(delta / 60))
+        return ngettext("in {n} min", "in {n} min", minutes).format(n=minutes)
     try:
         d, n = _local(due, tz), _local(now, tz)
     except (OSError, OverflowError, ValueError):  # one saved before there was a limit, past what the clock can show
-        return "a long way off"
+        return _("a long way off")
     if d.date() == n.date():
-        said = f"at {clock(d)}"
+        said = _("was due at {time}") if delta < 0 else _("at {time}")
     elif d.date() == n.date() + timedelta(days=1):
-        said = f"tomorrow at {clock(d)}"
+        said = _("tomorrow at {time}")  # due tomorrow is never past due
     else:
-        said = f"on {localefmt.short_day(d.date())} at {clock(d)}"
-    return f"was due {said}" if delta < 0 else said
+        said = _("was due on {day} at {time}") if delta < 0 else _("on {day} at {time}")
+    return said.format(day=localefmt.short_day(d.date()), time=clock(d))
 
 
 # -- snoozing
@@ -453,8 +461,8 @@ _SNOOZES = (5, 15, 60)  # minutes, besides tomorrow morning
 def _minutes_label(minutes: float) -> str:
     if minutes >= 60 and minutes % 60 == 0:
         hours = int(minutes // 60)
-        return f"{hours} hour{'s' if hours != 1 else ''}"
-    return f"{minutes:g} min"
+        return ngettext("{n} hour", "{n} hours", hours).format(n=hours)
+    return _("{minutes} min").format(minutes=f"{minutes:g}")
 
 
 def snooze_choices(now: float, minutes: float = DEFAULT_SNOOZE_MINUTES, tz: tzinfo | None = None) -> list[tuple[str, float]]:
@@ -463,7 +471,7 @@ def snooze_choices(now: float, minutes: float = DEFAULT_SNOOZE_MINUTES, tz: tzin
     choices = [(_minutes_label(m), now + m * 60) for m in dict.fromkeys((minutes, *_SNOOZES)) if 0 < m * 60 <= LONGEST]
     today = _local(now, tz)
     tomorrow = _on_wall(today.date() + timedelta(days=1), DEFAULT_HOUR, 0, today)
-    choices.append((f"Tomorrow at {clock(tomorrow)}", tomorrow.timestamp()))
+    choices.append((_("Tomorrow at {time}").format(time=clock(tomorrow)), tomorrow.timestamp()))
     return choices
 
 
@@ -560,7 +568,7 @@ class ReminderBook:
     def snooze(self, rid: str, until: float) -> bool:
         """Put it off until the moment `until` (see snooze_choices). A repeating one's later times stay as they were."""
         if not math.isfinite(until):
-            raise ValueError("a snooze needs a time")
+            raise ValueError(_("a snooze needs a time"))
         r = self.get(rid)
         if r is None:
             return False
@@ -573,9 +581,9 @@ class ReminderBook:
         if r is None:
             return False
         if text is not None and not text.strip():
-            raise ValueError("a reminder needs some words")
+            raise ValueError(_("a reminder needs some words"))
         if when is not None and not math.isfinite(when):
-            raise ValueError("a reminder needs a time")
+            raise ValueError(_("a reminder needs a time"))
         if repeat is not _KEEP and repeat is not None:
             _rule(repeat)
         if text is not None:

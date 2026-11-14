@@ -30,6 +30,7 @@ from dataclasses import dataclass, field
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from . import winrt
+from .i18n import N_, _
 
 GROUP = "chatmon"  # every toast Chatmon shows is in this group, so clear() takes only Chatmon's own
 MAX_BUTTONS = 5  # Windows shows at most five actions
@@ -43,11 +44,11 @@ NOT_XML = re.compile("[\x00-\x08\x0b\x0c\x0e-\x1f￾￿]")
 
 # NotificationSetting: whether Windows will show this app's toasts.
 ENABLED, OFF_FOR_APP, OFF_FOR_USER, OFF_BY_POLICY, OFF_BY_MANIFEST = 0, 1, 2, 3, 4
-WHY_NOT = {
-    OFF_FOR_APP: "Notifications from Chatmon are turned off in Windows' settings.",
-    OFF_FOR_USER: "Notifications are turned off in Windows' settings.",
-    OFF_BY_POLICY: "Notifications are turned off by your organization.",
-    OFF_BY_MANIFEST: "Windows doesn't allow Chatmon's notifications.",
+WHY_NOT = {  # shown as _(WHY_NOT[setting])
+    OFF_FOR_APP: N_("Notifications from Chatmon are turned off in Windows' settings."),
+    OFF_FOR_USER: N_("Notifications are turned off in Windows' settings."),
+    OFF_BY_POLICY: N_("Notifications are turned off by your organization."),
+    OFF_BY_MANIFEST: N_("Windows doesn't allow Chatmon's notifications."),
 }
 # ToastDismissalReason
 DISMISSED_BY_YOU, HIDDEN_BY_CHATMON, TIMED_OUT = 0, 1, 2
@@ -289,14 +290,14 @@ class Toaster(QObject):
         xml = toast_xml(title, text, buttons, scenario, tag, silent)
         self.why_not = None
         if sys.platform != "win32":
-            self.why_not = "Toasts are Windows' own."
+            self.why_not = _("Toasts are Windows' own.")
             return None
         if not self.app_id:
-            self.why_not = "Chatmon has no app ID for Windows to show its notifications under."
+            self.why_not = _("Chatmon has no app ID for Windows to show its notifications under.")
             return None
         setting = self.setting()
         if setting != ENABLED:
-            self.why_not = WHY_NOT.get(setting, "Windows wouldn't say whether it shows notifications.")
+            self.why_not = _(WHY_NOT[setting]) if setting in WHY_NOT else _("Windows wouldn't say whether it shows notifications.")
             return None
         if not self._post(xml, tag):
             return None
@@ -313,7 +314,7 @@ class Toaster(QObject):
             io = winrt.query(document, IID_XML_IO) if document else None
             toast_factory = winrt.factory(TOAST, IID_TOAST_FACTORY)
             if notifier is None or io is None or toast_factory is None:
-                self.why_not = "This Windows has no toasts."
+                self.why_not = _("This Windows has no toasts.")
                 return False
             with winrt.HString(xml) as text:
                 winrt.method(io, XML_LOAD, ctypes.c_void_p)(io, text.handle)
@@ -346,7 +347,7 @@ class Toaster(QObject):
             self._keep_few()
             return True
         except OSError:
-            self.why_not = "Windows couldn't show the notification."
+            self.why_not = _("Windows couldn't show the notification.")
             self._forget(tag)
             return False
         finally:

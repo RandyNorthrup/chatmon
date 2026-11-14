@@ -22,6 +22,7 @@ from typing import Any
 
 from . import chats
 from .chats import Chat, ChatBook
+from .i18n import _, join, ngettext
 from .memory import MAX_ITEMS, MAX_LENGTH, Item, Memory
 from .settings import State, private_dir
 
@@ -65,14 +66,16 @@ class Contents:
     made: str = ""
 
     def summary(self) -> str:
-        parts = ["your settings"] if self.settings else []
-        for count, one, many in ((len(self.memory), "thing remembered", "things remembered"), (len(self.notes), "note", "notes"),
-                                 (len(self.reminders), "reminder", "reminders"), (len(self.chats), "chat", "chats")):
-            if count:
-                parts.append(f"{count} {one if count == 1 else many}")
-        if not parts:
-            return "nothing"
-        return parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + " and " + parts[-1]
+        parts = [_("your settings")] if self.settings else []
+        if self.memory:
+            parts.append(ngettext("{n} thing remembered", "{n} things remembered", len(self.memory)).format(n=len(self.memory)))
+        if self.notes:
+            parts.append(ngettext("{n} note", "{n} notes", len(self.notes)).format(n=len(self.notes)))
+        if self.reminders:
+            parts.append(ngettext("{n} reminder", "{n} reminders", len(self.reminders)).format(n=len(self.reminders)))
+        if self.chats:
+            parts.append(ngettext("{n} chat", "{n} chats", len(self.chats)).format(n=len(self.chats)))
+        return join(parts) if parts else _("nothing")
 
 
 def default_name(now: float | None = None) -> str:
@@ -133,74 +136,77 @@ def read(path: Path) -> Contents:
     path = Path(path)
     try:
         if path.stat().st_size > MAX_ZIP:
-            raise BackupError(f"{path.name} is too big to be a Chatmon backup")
+            raise BackupError(_("{file} is too big to be a Chatmon backup").format(file=path.name))
         zf = zipfile.ZipFile(path)
     except (OSError, zipfile.BadZipFile) as exc:
-        raise BackupError(f"{path.name} isn't a Chatmon backup ({exc.__class__.__name__}: it can't be opened as a zip file)") from None
+        raise BackupError(_("{file} isn't a Chatmon backup ({error}: it can't be opened as a zip file)").format(file=path.name, error=exc.__class__.__name__)) from None
     with zf:
         infos = zf.infolist()
         names = [i.filename for i in infos if not i.is_dir()]
         strange = [n for n in names if n != MANIFEST and n not in PARTS and not CHAT_FILE.fullmatch(n)]
         if strange or len(names) != len(set(names)) or any(i.is_dir() and i.filename != "chats/" for i in infos):
-            raise BackupError(f"{path.name} holds things a Chatmon backup doesn't ({', '.join(strange[:3]) or 'a name twice'}), so nothing was read")
+            what = ", ".join(strange[:3]) or _("a name twice")
+            raise BackupError(_("{file} holds things a Chatmon backup doesn't ({what}), so nothing was read").format(file=path.name, what=what))
         if MANIFEST not in names:
-            raise BackupError(f"{path.name} isn't a Chatmon backup (it has no {MANIFEST})")
+            raise BackupError(_("{file} isn't a Chatmon backup (it has no {part})").format(file=path.name, part=MANIFEST))
         if sum(1 for n in names if n.startswith("chats/")) > MAX_CHATS:
-            raise BackupError(f"{path.name} holds more chats than Chatmon keeps")
+            raise BackupError(_("{file} holds more chats than Chatmon keeps").format(file=path.name))
         total = 0
         loaded: dict[str, Any] = {}
         for info in infos:
             if info.is_dir():
                 continue
             if info.file_size > MAX_PART or (info.file_size > 2**20 and info.file_size > MAX_RATIO * max(info.compress_size, 1)):
-                raise BackupError(f"{info.filename} in {path.name} unpacks far bigger than any Chatmon file, so nothing was read")
+                raise BackupError(_("{part} in {file} unpacks far bigger than any Chatmon file, so nothing was read").format(part=info.filename, file=path.name))
             with zf.open(info) as part:
                 raw = part.read(MAX_PART + 1)  # the size the zip claims isn't trusted: what's read is counted
             total += len(raw)
             if len(raw) > MAX_PART or total > MAX_TOTAL:
-                raise BackupError(f"{path.name} unpacks far bigger than any Chatmon backup, so nothing was read")
+                raise BackupError(_("{file} unpacks far bigger than any Chatmon backup, so nothing was read").format(file=path.name))
             try:
                 loaded[info.filename] = json.loads(raw.decode("utf-8"))
             except (UnicodeDecodeError, ValueError, RecursionError):
-                raise BackupError(f"{info.filename} in {path.name} is damaged, so nothing was read") from None
+                raise BackupError(_("{part} in {file} is damaged, so nothing was read").format(part=info.filename, file=path.name)) from None
     return _checked(loaded, path.name)
 
 
 def _checked(loaded: dict[str, Any], name: str) -> Contents:
     manifest = loaded[MANIFEST]
     if not isinstance(manifest, dict) or manifest.get("format") != FORMAT or not isinstance(manifest.get("version"), int):
-        raise BackupError(f"{name} isn't a Chatmon backup")
+        raise BackupError(_("{file} isn't a Chatmon backup").format(file=name))
     if manifest["version"] > VERSION:
-        raise BackupError(f"{name} was made by a newer Chatmon: update this one, then bring it back")
+        raise BackupError(_("{file} was made by a newer Chatmon: update this one, then bring it back").format(file=name))
     out = Contents(made=str(manifest.get("made") or "")[:40])
     settings = loaded.get("settings.json", {})
     if not isinstance(settings, dict):
-        raise BackupError(f"the settings in {name} aren't in the right shape, so nothing was read")
+        raise BackupError(_("the settings in {file} aren't in the right shape, so nothing was read").format(file=name))
     out.settings = {k: _no_secrets(v) for k, v in settings.items() if k in SETTINGS_KEYS}
     memory = loaded.get("memory.json", [])
+    misshapen = _("what's remembered in {file} isn't in the right shape, so nothing was read").format(file=name)
     if not isinstance(memory, list) or len(memory) > MAX_ITEMS:
-        raise BackupError(f"what's remembered in {name} isn't in the right shape, so nothing was read")
+        raise BackupError(misshapen)
     for m in memory:
         if not (isinstance(m, dict) and isinstance(m.get("text"), str) and m["text"].strip() and len(m["text"]) <= MAX_LENGTH):
-            raise BackupError(f"what's remembered in {name} isn't in the right shape, so nothing was read")
+            raise BackupError(misshapen)
         out.memory.append(Item(m["text"].strip(), _time(m.get("at"))))
     notes = loaded.get("notes.json", [])
     if not isinstance(notes, list) or len(notes) > MAX_NOTES or not all(isinstance(n, dict) and isinstance(n.get("text"), str) for n in notes):
-        raise BackupError(f"the notes in {name} aren't in the right shape, so nothing was read")
+        raise BackupError(_("the notes in {file} aren't in the right shape, so nothing was read").format(file=name))
     out.notes = [{"text": n["text"][:MAX_NOTE], "at": _time(n.get("at"))} for n in notes]
     reminders = loaded.get("reminders.json", [])
+    misshapen = _("the reminders in {file} aren't in the right shape, so nothing was read").format(file=name)
     if not isinstance(reminders, list) or len(reminders) > MAX_REMINDERS:
-        raise BackupError(f"the reminders in {name} aren't in the right shape, so nothing was read")
+        raise BackupError(misshapen)
     for r in reminders:
         checked = _reminder(r)
         if checked is None:
-            raise BackupError(f"the reminders in {name} aren't in the right shape, so nothing was read")
+            raise BackupError(misshapen)
         out.reminders.append(checked)
     for filename, data in loaded.items():
         if filename.startswith("chats/"):
             chat = chats.from_json(data)
             if chat is None or f"chats/{chat.id}.json" != filename:
-                raise BackupError(f"{filename} in {name} isn't a chat, so nothing was read")
+                raise BackupError(_("{part} in {file} isn't a chat, so nothing was read").format(part=filename, file=name))
             out.chats.append(chat)
     return out
 
@@ -221,7 +227,7 @@ def bring_back(contents: Contents, state: State, memory: Memory, book: ChatBook 
             here = book.load(chat.id)
             if here is None or here.updated <= chat.updated:
                 book.save(chat)
-    return f"Brought back {contents.summary()}."
+    return _("Brought back {what}.").format(what=contents.summary())
 
 
 def _reminder(r: Any) -> dict | None:

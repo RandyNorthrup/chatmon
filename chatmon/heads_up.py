@@ -18,6 +18,8 @@ from datetime import date
 from pathlib import Path
 from typing import Callable
 
+from .i18n import _, ngettext
+
 
 @dataclass
 class Notice:
@@ -266,8 +268,8 @@ class Watcher:
             return None
         self._battery_told = level
         if level == "critical":
-            return Notice("battery", "Battery almost empty", f"Battery at {percent:.0f}%. Plug in now.", urgent=True)
-        return Notice("battery", "Battery low", f"Battery at {percent:.0f}%. Time to find the charger.", urgent=True)
+            return Notice("battery", _("Battery almost empty"), _("Battery at {percent}%. Plug in now.").format(percent=f"{percent:.0f}"), urgent=True)
+        return Notice("battery", _("Battery low"), _("Battery at {percent}%. Time to find the charger.").format(percent=f"{percent:.0f}"), urgent=True)
 
     def disks(self, readings: list[tuple[str, float]], today: date) -> list[Notice]:
         out = []
@@ -276,7 +278,8 @@ class Watcher:
         for folder, percent in readings:
             if percent >= self.disk_full and self._disk_told.get(folder) != today:
                 self._disk_told[folder] = today
-                out.append(Notice(f"disk:{folder}", "Disk almost full", f"The disk holding {folder} is {percent:.0f}% full.", urgent=True))
+                text = _("The disk holding {folder} is {percent}% full.").format(folder=folder, percent=f"{percent:.0f}")
+                out.append(Notice(f"disk:{folder}", _("Disk almost full"), text, urgent=True))
         return out
 
     def updates(self, count: int, today: date, restart: bool = False) -> Notice | None:
@@ -284,6 +287,6 @@ class Watcher:
             return None
         self._updates_told = today
         if restart:
-            return Notice("updates", "Restart to finish updating", "Your computer has installed updates that need a restart to finish.")
-        plural = "s" if count != 1 else ""
-        return Notice("updates", "Updates waiting", f"{count} system update{plural} waiting to install.")
+            return Notice("updates", _("Restart to finish updating"), _("Your computer has installed updates that need a restart to finish."))
+        waiting = ngettext("{n} system update waiting to install.", "{n} system updates waiting to install.", count).format(n=count)
+        return Notice("updates", _("Updates waiting"), waiting)
