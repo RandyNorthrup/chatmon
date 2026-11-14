@@ -225,6 +225,8 @@ def test_linux_players_follow_the_sound_server_and_never_make_you_wait(tmp_path,
     while not log.exists() and time.monotonic() < deadline:
         time.sleep(0.05)
     assert log.read_text().split() == ["pw-play", "--volume=0.50", str(cues / "needs-you.wav")]
+    for player in players:
+        player.close()
 
 
 @pytest.mark.skipif(sys.platform != "darwin", reason="macOS only")
