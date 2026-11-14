@@ -108,7 +108,7 @@ relative_files = true  # each OS's data names files the same way, so CI can comb
 chatmon = ["chatmon", "*/chatmon", '*\chatmon']
 
 [tool.coverage.report]
-fail_under = 72  # Windows alone measured 73.9%, and Windows with Linux 82.4% (2026-11-14); CI combines three OSes
+fail_under = 72  # Windows alone measured 74.9%, and Windows with Linux 82.7% (2026-11-14); CI combines three OSes
 precision = 1
 
 [tool.ruff]
@@ -133,11 +133,13 @@ enable_error_code = ["redundant-expr", "truthy-bool", "unused-awaitable", "exhau
 # (assessment item M6B-02). Every module not listed is checked, and CI fails on any error in one.
 module = [
     "chatmon.a11y", "chatmon.agents", "chatmon.app", "chatmon.attachments", "chatmon.backup", "chatmon.brains",
-    "chatmon.bubble", "chatmon.bubbleart", "chatmon.cli", "chatmon.clickthrough", "chatmon.commands", "chatmon.context",
-    "chatmon.ed25519", "chatmon.events", "chatmon.heads_up", "chatmon.keychain", "chatmon.layer", "chatmon.linuxsession",
-    "chatmon.macnative", "chatmon.menus", "chatmon.messages", "chatmon.offline", "chatmon.packagekit", "chatmon.paths",
-    "chatmon.penguin", "chatmon.portal", "chatmon.portowner", "chatmon.presence", "chatmon.reminders", "chatmon.settings",
-    "chatmon.settingswin", "chatmon.sprites", "chatmon.updates", "chatmon.wayland", "chatmon.windrop", "chatmon.winfocus",
-    "chatmon.winlock", "chatmon.winpipe", "chatmon.wintrust", "chatmon.xkb",
+    "chatmon.bubble", "chatmon.bubbleart", "chatmon.cli", "chatmon.clickthrough", "chatmon.commands",
+    "chatmon.context", "chatmon.ed25519", "chatmon.events", "chatmon.heads_up", "chatmon.hotkey", "chatmon.keychain",
+    "chatmon.layer", "chatmon.libdbus", "chatmon.linuxsession", "chatmon.macnative", "chatmon.menus",
+    "chatmon.messages", "chatmon.offline", "chatmon.packagekit", "chatmon.paths", "chatmon.penguin", "chatmon.portal",
+    "chatmon.portowner", "chatmon.presence", "chatmon.reminders", "chatmon.richtext", "chatmon.settings",
+    "chatmon.settingswin", "chatmon.sound", "chatmon.sprites", "chatmon.stagemenu", "chatmon.updates",
+    "chatmon.wayland", "chatmon.windrop", "chatmon.winfocus", "chatmon.winlock", "chatmon.winpipe", "chatmon.winrt",
+    "chatmon.wintoast", "chatmon.wintrust", "chatmon.xkb",
 ]
 ignore_errors = true

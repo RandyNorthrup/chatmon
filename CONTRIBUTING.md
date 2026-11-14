@@ -18,8 +18,9 @@ python -m chatmon           # Chatmon from this checkout (bin/chatmon does the s
 installs the same versions without the hashes, and Chatmon with them.
 
 On Linux, Qt needs a few of the system's libraries (CI installs `libegl1 libgl1 libxkbcommon0 libfontconfig1
-libdbus-1-3`). Some tests also use `dbus-run-session` (the `dbus` package) and the Wayland protocol files
-(`wayland-protocols`, `libwayland-dev`). Without them, those tests skip and say why.
+libdbus-1-3`). Some tests also use `dbus-run-session` and `dbus-monitor` (the `dbus` and `dbus-x11` packages), the
+Wayland protocol files (`wayland-protocols`, `libwayland-dev`), and an X server with XTest: run the tests under
+`xvfb-run -a` (`xvfb`, `libxtst6`), as CI does. Without them, those tests skip and say why.
 
 `CHATMON_INSTANCE=<name> python -m chatmon` runs a Chatmon apart from the one you use every day: its own address
 for hooks, so the two never hear each other.
@@ -32,10 +33,9 @@ python -m pytest
 
 The tests need no screen: `tests/conftest.py` picks Qt's offscreen platform, and gives the run a Chatmon address
 of its own, so no test reaches a Chatmon you have running. `pyproject.toml` turns warnings into errors (all but
-`ResourceWarning`, which is listed at the end instead), stops
-any test that runs past two minutes (pytest-timeout, which the tests require), and prints why each skipped test
-skipped. Each platform's own tests run on that platform and skip elsewhere, which is why CI runs on Linux,
-Windows and macOS.
+`ResourceWarning`, which is listed at the end instead), stops any test that runs past two minutes (pytest-timeout,
+which the tests require), and prints why each skipped test skipped. Each platform's own tests run on that platform
+and skip elsewhere, which is why CI runs on Linux, Windows and macOS.
 
 A few tests are left out unless asked for, because they touch something outside the test:
 
