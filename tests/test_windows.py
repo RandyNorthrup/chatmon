@@ -608,6 +608,11 @@ def test_a_catalog_never_vouches_for_a_download():
     assert updates.windows_signer(windows_own)[0] != "Valid"
 
 
+@pytest.mark.skipif(
+    os.environ.get("CHATMON_TEST_WINDOWS_UPDATE") != "1",
+    reason="asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1",
+)
+@pytest.mark.timeout(330)  # its own limit for the search is 300 s
 def test_the_windows_update_check_runs_and_says_something_readable():
     import subprocess
 
