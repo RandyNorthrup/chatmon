@@ -452,7 +452,7 @@ Owner decisions taken on 2026-11-14 are recorded in [ROADMAP.md](ROADMAP.md#owne
 - **M6A-13 There's no type checker** (313 errors in 30 files). **Done when:**
   - mypy is configured, with `--platform` legs.
   - The 17 clean modules are gated now, and the rest listed as exemptions.
-- **M6A-14 Release notes point at main.** `packaging/build.py:54` tells people to pipx install from main. **Done when**
+- **M6A-14 Release notes point at main** (owned by M1A, which owns `build.py`). `packaging/build.py:54` tells people to pipx install from main. **Done when**
   they pin `@v{version}`.
 - **M6A-15 Test jobs download all the art.** **Done when** test jobs use a sparse checkout without `art/` and `docs/`.
 

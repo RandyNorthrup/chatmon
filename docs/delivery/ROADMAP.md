@@ -36,14 +36,14 @@ belongs elsewhere becomes an integration note in its plan, for M7 (or the owner 
 | Milestone | Owns |
 |---|---|
 | M0 Architecture and app core | `chatmon/app.py`, `chatmon/cli.py`, new `chatmon/messages.py`, `chatmon/asking.py`, `chatmon/menus.py`, `chatmon/commands.py`; tests `tests/test_messages.py`, `tests/test_cli.py`, `tests/test_app_smoke.py` |
-| M1A Security, updates, IPC, packaging | `chatmon/updates.py`, `chatmon/wintrust.py`, `chatmon/events.py`, `chatmon/winpipe.py`, `chatmon/paths.py`, `chatmon/agents.py`, `chatmon/attachments.py`, `chatmon/ed25519.py`, `packaging/linux/**` (except `nfpm.yaml` dependency lines owned by M6A), `packaging/macos/**`, `packaging/windows/*.iss`, `chatmon/integrations/**`; tests for these |
+| M1A Security, updates, IPC, packaging | `chatmon/updates.py`, `chatmon/wintrust.py`, `chatmon/events.py`, `chatmon/winpipe.py`, `chatmon/paths.py`, `chatmon/agents.py`, `chatmon/attachments.py`, `chatmon/ed25519.py`, `packaging/linux/**` (including `nfpm.yaml`), `packaging/macos/**`, `packaging/windows/*.iss`, `packaging/build.py`, `packaging/chatmon.spec`, `chatmon/integrations/**`; tests for these. M6A-14 (release notes pin) moves here, since it is in `build.py`. |
 | M1B Brains and stored data | `chatmon/brains.py`, `chatmon/chats.py`, `chatmon/memory.py`, `chatmon/settings.py`, new `chatmon/keychain.py`, new `chatmon/backup.py`; tests for these |
 | M2 Bubbles and ask box | `chatmon/bubble.py`, `chatmon/bubbleart.py`, `chatmon/styles.py`, new `chatmon/highlight.py`; tests for these |
 | M3 Stage, sprites, overlay | `chatmon/penguin.py`, `chatmon/sprites.py`, `chatmon/behavior.py`, `chatmon/stagemenu.py`, `chatmon/clickthrough.py`, `chatmon/layer.py`, `chatmon/wayland.py`, `chatmon/xkb.py`, `chatmon/companions.py`; tests for these |
 | M4A Platform awareness | `chatmon/presence.py`, `chatmon/a11y.py`, `chatmon/macnative.py`, `chatmon/linuxsession.py`, `chatmon/sysnotify.py`, `chatmon/heads_up.py`, `chatmon/portal.py`, `chatmon/winlock.py`; tests for these |
 | M4B Hotkey, sound, toasts | new `chatmon/hotkey.py`, `chatmon/sound.py`, `chatmon/wintoast.py`, `chatmon/winfocus.py`; tests for these. The sound files themselves are M9's. |
 | M5 Reminders, offline, locale | `chatmon/reminders.py`, `chatmon/offline.py`, `chatmon/context.py`, new `chatmon/phrases/` (data) and `chatmon/localefmt.py`; tests for these |
-| M6A CI and tooling | `.github/**`, `pyproject.toml` (`[tool.*]` sections, `[project.optional-dependencies]` and `[project.scripts]`; package-data globs are coordinated, see below), `packaging/requirements*.txt`, `packaging/build.py`, `packaging/chatmon.spec`, `packaging/linux/nfpm.yaml`, root `penguin-companion`, `SECURITY.md`, `CONTRIBUTING.md`, `tests/conftest.py`, `tests/test_windows.py`, new `tests/test_package_data.py` |
+| M6A CI and tooling | `.github/**`, `pyproject.toml` (`[tool.*]` sections, `[project.optional-dependencies]` and `[project.scripts]`; package-data globs are coordinated, see below), `packaging/requirements*.txt`, root `penguin-companion`, `SECURITY.md`, `CONTRIBUTING.md`, `tests/conftest.py`, `tests/test_windows.py`, new `tests/test_package_data.py` |
 | M9 Sounds (coordinator) | `chatmon/sounds/**`, `art/sounds/**`, the flow skill |
 
 **Shared files nobody edits in wave 1:** `README.md`, `chatmon/changelog.md`, `chatmon/__init__.py` (the version) and
