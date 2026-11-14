@@ -285,13 +285,13 @@ def _insert_after(doc: QTextDocument, position: int, kind: str, n: int | None, t
 
 def _frame_code(c: QTextCursor, look: Look) -> None:
     """A code block on its own tinted panel, in a fixed-width font, wrapping rather than running off the edge."""
-    lines = QTextBlockFormat()
-    lines.setNonBreakableLines(False)
-    lines.setTopMargin(0)
-    lines.setBottomMargin(0)
-    c.mergeBlockFormat(lines)
+    doc = c.document()
+    code = QTextBlockFormat(doc.findBlock(c.selectionStart()).blockFormat())
+    code.setNonBreakableLines(False)
+    code.setTopMargin(0)
+    code.setBottomMargin(0)
     mono = QTextCharFormat()
-    mono.setFontFamilies([QFontDatabase.systemFont(QFontDatabase.SystemFont.FixedFont).family()])
+    mono.setFontFamilies(code_families())
     mono.setFontFixedPitch(True)
     mono.setFontPointSize(look.code_points)
     c.mergeCharFormat(mono)
@@ -301,4 +301,28 @@ def _frame_code(c: QTextCursor, look: Look) -> None:
     panel.setTopMargin(CODE_SPACE)
     panel.setBottomMargin(CODE_SPACE)
     panel.setBorder(0)
-    c.insertFrame(panel)
+    frame = c.insertFrame(panel)
+    # A block's format is kept on the separator before it, and the frame's own marks are separators: the
+    # code's format ends up on the marks, the code's first line without it. Put each where it belongs.
+    fix = QTextCursor(doc)
+    block = doc.findBlock(frame.firstPosition())
+    while block.isValid() and block.position() <= frame.lastPosition():
+        fix.setPosition(block.position())
+        fix.setBlockFormat(code)
+        block = block.next()
+    for mark in (frame.firstPosition() - 1, frame.lastPosition() + 1):
+        outside = doc.findBlock(mark)
+        if outside.isValid() and not outside.text():
+            fix.setPosition(outside.position())
+            fix.setBlockFormat(_HAIRLINE)
+
+
+_HAIRLINE = QTextBlockFormat()  # the empty line a frame leaves either side of itself: as good as none
+_HAIRLINE.setLineHeight(1, QTextBlockFormat.LineHeightTypes.FixedHeight.value)
+_HAIRLINE.setTopMargin(0)
+_HAIRLINE.setBottomMargin(0)
+
+
+def code_families() -> list[str]:
+    """Fixed-width fonts for code, best first: Qt's own pick on Windows is Courier New, thin and wide."""
+    return ["Cascadia Mono", "Consolas", "SF Mono", "Menlo", "DejaVu Sans Mono", QFontDatabase.systemFont(QFontDatabase.SystemFont.FixedFont).family()]

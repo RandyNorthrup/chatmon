@@ -1,0 +1,26 @@
+..s.s...............................s................................... [ 11%]
+...ssss.......................................................s......... [ 22%]
+........................................................................ [ 34%]
+........................................................................ [ 45%]
+................................F.....sss....ss.ssss...........s......ss [ 57%]
+sssss................................................................... [ 68%]
+.................s...s....s................................ss........... [ 80%]
+.......................................................s.ss...ssssssssss [ 91%]
+s.ssssssss..................s..............s....sssss                    [100%]
+================================== FAILURES ===================================
+____________________ test_send_without_a_running_companion ____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024F7CD6F230>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-498/test_send_without_a_running_co0')
+
+    def test_send_without_a_running_companion(monkeypatch, tmp_path):
+        monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path))
+>       assert events.send({"type": "show"}) is False
+E       AssertionError: assert True is False
+E        +  where True = <function send at 0x0000024F7CB38EB0>({'type': 'show'})
+E        +    where <function send at 0x0000024F7CB38EB0> = events.send
+
+tests\test_events.py:60: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_events.py::test_send_without_a_running_companion - Assertio...
+1 failed, 569 passed, 59 skipped in 78.97s (0:01:18)

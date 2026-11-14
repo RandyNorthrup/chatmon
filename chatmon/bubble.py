@@ -28,18 +28,20 @@ from PyQt6.QtGui import (
     QPalette,
     QPen,
     QPixmap,
+    QTextOption,
 )
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QMenu, QTextBrowser, QToolButton, QVBoxLayout, QWidget
 
-from . import bubbleart, richtext, styles
+from . import bubbleart, highlight, richtext, styles
 
-ACCENT = QColor(styles.PLAIN_ACCENT)  # the penguin's glowing cyan nodes
+ACCENT = QColor(styles.PLAIN_ACCENT)  # the penguin's glowing cyan nodes (the stage's menus; bubbles take the style's)
 PAD = 14
 TAIL = 12
 RADIUS = 14
 FADE = 0.14  # seconds
 SPILL = 3  # px an effect may reach past a bubble's frame (a flame's tip): the stage draws that much round it
 ANIM_FPS = 30  # how often an animated bubble is redrawn (its frames crossfade in between)
+BODY_POINTS = 10.5  # the bubbles' text, at the desktop's usual font size
 
 
 def open_link(url: QUrl) -> None:
@@ -48,12 +50,38 @@ def open_link(url: QUrl) -> None:
         QDesktopServices.openUrl(url)
 
 
+PLAIN_ALPHA = 248  # the plain bubble's fill lets a trace of the desktop through
+
+
 def colours() -> tuple[QColor, QColor]:
     """The plain bubble's fill and text, from the desktop's light or dark theme."""
-    pal = QApplication.palette()
-    fill = QColor(pal.color(QPalette.ColorRole.Base))
-    fill.setAlpha(248)
-    return fill, QColor(pal.color(QPalette.ColorRole.Text))
+    c = styles.get("plain").colours()
+    fill = QColor(c.fill)
+    fill.setAlpha(PLAIN_ALPHA)
+    return fill, c.body
+
+
+def look(c: styles.Colours, points: float) -> richtext.Look:
+    """How rich text is dressed in a bubble with these colours and text size."""
+    return richtext.Look(link=c.link, code_fill=c.code_fill, code_points=max(6.0, points - 0.5))
+
+
+def paint_context(c: styles.Colours) -> QAbstractTextDocumentLayout.PaintContext:
+    """The palette a bubble's document is drawn with: its text, its links, and its rules (a document draws a
+    rule in its WindowText colour)."""
+    ctx = QAbstractTextDocumentLayout.PaintContext()
+    for group in (QPalette.ColorGroup.Active, QPalette.ColorGroup.Inactive):
+        ctx.palette.setColor(group, QPalette.ColorRole.Text, c.body)
+        ctx.palette.setColor(group, QPalette.ColorRole.Link, c.link)
+        ctx.palette.setColor(group, QPalette.ColorRole.WindowText, c.accent)
+    return ctx
+
+
+def wrap_anywhere(doc) -> None:
+    """Long words and links break where they must rather than running off the bubble."""
+    option = doc.defaultTextOption()
+    option.setWrapMode(QTextOption.WrapMode.WrapAtWordBoundaryOrAnywhere)
+    doc.setDefaultTextOption(option)
 
 
 def bubble_path(box: QRectF, tail_x: float) -> QPainterPath:
@@ -75,6 +103,11 @@ def _font(points: float, bold: bool = False) -> QFont:
     return font
 
 
+def _colours_key(c: styles.Colours) -> tuple:
+    """Colours as a cache key: the plain style's change with the desktop's theme."""
+    return (c.fill.rgba(), c.title.rgba(), c.body.rgba(), c.link.rgba(), c.accent.rgba(), c.primary.fill.rgba() if c.primary.fill else 0)
+
+
 @dataclass
 class _Button:
     label: str
@@ -92,6 +125,7 @@ class SpeechBubble:
         self.title = ""
         self.doc = richtext.SafeDocument()
         self.doc.setDocumentMargin(0)
+        wrap_anywhere(self.doc)
         self.buttons: list[_Button] = []
         self.size = QSizeF()
         self.hover: int | None = None
@@ -107,6 +141,7 @@ class SpeechBubble:
         self.style = styles.get(None)
         self.animate = True
         self.art = bubbleart.art(self.style.name, "message")
+        self.highlighter = highlight.CodeHighlighter(self.doc, highlight.code_colours(self.style.colours()))
         self._words: tuple[tuple, QPixmap] | None = None  # the title, text and buttons, drawn once
         self._frame: tuple[tuple, QPixmap] | None = None  # the whole bubble, drawn once per frame of its animation
 
@@ -147,7 +182,9 @@ class SpeechBubble:
         self._frame = None
         title_font, body_font = _font(10.5, bold=True), _font(10.5)
         self.doc.setDefaultFont(body_font)
-        richtext.set_markdown(self.doc, self._text)
+        c = self.style.colours()
+        self.highlighter.set_colours(highlight.code_colours(c))
+        richtext.render(self.doc, self._text, look(c, body_font.pointSizeF()))
         has_text = bool(self._text)
         metrics = QFontMetricsF(body_font)
         self.buttons = [_Button(label, action, QRectF(0, 0, metrics.horizontalAdvance(label) + 28, metrics.height() + 10)) for label, action in self._button_specs]
@@ -229,15 +266,9 @@ class SpeechBubble:
         move) however often it is put on the screen: it follows a walking penguin at 60 frames a second,
         and drawing its art each time cost twice what the animation needs. A fade is applied to the
         finished picture, rather than to each layer as it's drawn."""
-        if self.art:
-            title_c, body_c = self.style.text_colours()
-            colours_key: tuple = ()
-        else:
-            fill, text = colours()
-            title_c = body_c = text
-            colours_key = (fill.rgba(), text.rgba())
+        c = self.style.colours()
         size = (max(1, round((self.size.width() + 2 * SPILL) * ratio)), max(1, round((self.size.height() + 2 * SPILL) * ratio)))
-        key = (ratio, size, round(tail_x * ratio), self.hover, self.anim_key(now), self.style.name, colours_key, title_c.rgba(), body_c.rgba())
+        key = (ratio, size, round(tail_x * ratio), self.hover, self.anim_key(now), self.style.name, _colours_key(c))
         if self._frame is None or self._frame[0] != key:
             pix = self._frame[1] if self._frame is not None and (self._frame[1].width(), self._frame[1].height()) == size else QPixmap(*size)
             pix.setDevicePixelRatio(ratio)
@@ -250,35 +281,36 @@ class SpeechBubble:
             else:
                 box = QRectF(1, 1, self.size.width() - 2, self.size.height() - TAIL - 2)
                 path = bubble_path(box, tail_x)
+                fill = QColor(c.fill)
+                fill.setAlpha(PLAIN_ALPHA)
                 q.fillPath(path, fill)
-                q.setPen(QPen(ACCENT, 2))
+                q.setPen(QPen(c.accent, 2))
                 q.drawPath(path)
-            q.drawPixmap(QPointF(0, 0), self._words_pixmap(q, title_c, body_c))
+            q.drawPixmap(QPointF(0, 0), self._words_pixmap(q, c))
             q.end()
             self._frame = (key, pix)
         return self._frame[1]
 
-    def _words_pixmap(self, p: QPainter, title_c: QColor, body_c: QColor) -> QPixmap:
+    def _words_pixmap(self, p: QPainter, c: styles.Colours) -> QPixmap:
         """The title, ✕, text and buttons on a see-through pixmap the bubble's size. An animated bubble is
         drawn thirty times a second and laying out its text each time cost as much as some styles' art,
         so they are drawn once per message, button hovered and colours."""
         ratio = bubbleart.device_ratio(p)
-        key = (ratio, self.hover, title_c.rgba(), body_c.rgba(), self.style.name)
+        key = (ratio, self.hover, _colours_key(c), self.style.name)
         if self._words is None or self._words[0] != key:
             pix = QPixmap(max(1, round(self.size.width() * ratio)), max(1, round(self.size.height() * ratio)))
             pix.setDevicePixelRatio(ratio)
             pix.fill(Qt.GlobalColor.transparent)
             q = QPainter(pix)
             q.setRenderHint(QPainter.RenderHint.Antialiasing)
-            self._draw_words(q, title_c, body_c)
+            self._draw_words(q, c)
             q.end()
             self._words = (key, pix)
         return self._words[1]
 
-    def _draw_words(self, p: QPainter, title_c: QColor, body_c: QColor) -> None:
-        style = self.style
+    def _draw_words(self, p: QPainter, colours: styles.Colours) -> None:
         c = self._content
-        p.setPen(title_c)
+        p.setPen(colours.title)
         p.setFont(self._title_font)
         p.drawText(QRectF(c.x(), c.y(), c.width() - 20, 40), Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop, self.title)
         p.setFont(_font(9.5))
@@ -286,22 +318,17 @@ class SpeechBubble:
         if self._has_text:
             p.save()
             p.translate(c.x(), self._body_top)
-            ctx = QAbstractTextDocumentLayout.PaintContext()
-            ctx.palette.setColor(QPalette.ColorRole.Text, body_c)
-            ctx.palette.setColor(QPalette.ColorRole.Link, QColor(style.accent))
-            self.doc.documentLayout().draw(p, ctx)
+            self.doc.documentLayout().draw(p, paint_context(colours))
             p.restore()
         p.setFont(_font(10))
         for i, b in enumerate(self.buttons):
-            look = style.primary if i == 0 else style.other
-            outline = QColor(look.outline)
+            button = colours.primary if i == 0 else colours.other
             if i == self.hover:  # lit up: filled with its outline colour
-                fill, label = outline, QColor(look.fill) if look.fill and self.art else QColor("white")
+                fill, label = button.hover_fill, button.hover_text
             else:
-                fill = QColor(look.fill) if look.fill else None
-                label = QColor(look.text) if look.text else body_c
+                fill, label = button.fill, button.text
             p.setBrush(fill if fill is not None else Qt.BrushStyle.NoBrush)
-            p.setPen(QPen(outline, 1.5))
+            p.setPen(QPen(button.outline, 1.5))
             r = b.rect.adjusted(0.75, 0.75, -0.75, -0.75)
             p.drawRoundedRect(r, r.height() / 2, r.height() / 2)
             p.setPen(label)
@@ -471,7 +498,10 @@ class AskBox(QWidget):
         self.answer.setFrameShape(QTextBrowser.Shape.NoFrame)
         self.answer.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.answer.document().setDocumentMargin(2)
+        wrap_anywhere(self.answer.document())
         self.answer.setAccessibleName("Conversation")
+        self._markdown = ""  # what the answer area shows, as given: it's drawn again from this when the style changes
+        self.highlighter = highlight.CodeHighlighter(self.answer.document(), highlight.code_colours(self.style.colours()))
         layout.addWidget(self.answer)
         self.chips = QWidget()  # what's attached to the next question, each with its ✕
         self.chips_layout = QHBoxLayout(self.chips)
@@ -513,7 +543,7 @@ class AskBox(QWidget):
         self.layout().setContentsMargins(*self._margins)
         self._style()
         if self.isVisible():
-            self.set_answer(self.answer.toMarkdown() if self.answer.isVisible() else "")
+            self.set_answer(self._markdown)
             self._run_frames()
 
     def _content_width(self) -> int:
@@ -695,8 +725,11 @@ class AskBox(QWidget):
     def set_answer(self, markdown: str, at_end: bool = False) -> None:
         """What the bubble shows above the field: an answer, or the whole chat (`at_end`: scrolled to its
         latest, as a chat is read)."""
+        self._markdown = markdown
         if markdown:
-            richtext.set_markdown(self.answer.document(), markdown)
+            c = self.style.colours()
+            self.highlighter.set_colours(highlight.code_colours(c))
+            richtext.render(self.answer.document(), markdown, look(c, BODY_POINTS))
             doc = self.answer.document()
             doc.setTextWidth(self._content_width() - 10)
             self.answer.setFixedHeight(min(int(doc.size().height()) + 4, self.MAX_ANSWER))
@@ -756,33 +789,25 @@ class AskBox(QWidget):
             self.submitted.emit(text)
 
     def _style(self) -> None:
-        if self.art:
-            title, text = self.style.text_colours()
-        else:
-            _, text = colours()
-            title = text
-        dim = QColor(text)
-        dim.setAlpha(165)
-        base = self.style.entry_colour() if self.art else QApplication.palette().color(QPalette.ColorRole.Base)
-        accent = self.style.accent if self.art else ACCENT.name()
-        self.answer.document().setDefaultStyleSheet(f"a {{ color: {accent}; }}")
+        c = self.style.colours()
+        text, title, dim, base, accent = c.body.name(), c.title.name(), c.dim.name(), c.entry.name(), c.accent.name()
+        selection = f"selection-background-color: {c.selection.name()}; selection-color: {c.selection_text.name()};"
         self.setStyleSheet(
             f"""
-            QLabel, QTextBrowser {{ color: {text.name()}; background: transparent; font-size: 10.5pt; }}
-            QLabel#title {{ font-weight: 600; color: {title.name()}; }}
-            QLabel#hint {{ color: {dim.name(QColor.NameFormat.HexArgb)}; font-size: 9pt; }}
+            QLabel, QTextBrowser {{ color: {text}; background: transparent; font-size: 10.5pt; {selection} }}
+            QLabel#title {{ font-weight: 600; color: {title}; }}
+            QLabel#hint {{ color: {dim}; font-size: 9pt; }}
             QLineEdit {{ border: 1px solid {accent}; border-radius: 8px; padding: 6px 8px;
-                         background: {base.name()}; color: {text.name()}; font-size: 10.5pt;
-                         selection-background-color: {accent}; }}
-            QToolButton {{ color: {title.name()}; border: none; padding: 2px 6px; }}
-            QToolButton:hover {{ color: {accent}; }}
+                         background: {base}; color: {c.entry_text.name()}; font-size: 10.5pt; {selection} }}
+            QToolButton {{ color: {title}; border: none; padding: 2px 6px; }}
+            QToolButton:hover {{ color: {c.link.name()}; }}
             QToolButton#attach {{ color: {accent}; border: 1.5px solid {accent}; border-radius: 13px;
                                   min-width: 24px; max-width: 24px; min-height: 24px; max-height: 24px;
-                                  padding: 0 0 2px 0; font-size: 14pt; font-weight: 700; background: {base.name()}; }}
-            QToolButton#attach:hover {{ color: {base.name()}; background: {accent}; }}
-            QToolButton#chip {{ color: {text.name()}; border: 1px solid {accent}; border-radius: 9px;
-                                padding: 1px 8px; font-size: 9pt; background: {base.name()}; }}
-            QToolButton#chip:hover {{ color: {accent}; }}
+                                  padding: 0 0 2px 0; font-size: 14pt; font-weight: 700; background: {base}; }}
+            QToolButton#attach:hover {{ color: {base}; background: {accent}; }}
+            QToolButton#chip {{ color: {c.entry_text.name()}; border: 1px solid {accent}; border-radius: 9px;
+                                padding: 1px 8px; font-size: 9pt; background: {base}; }}
+            QToolButton#chip:hover {{ color: {c.link.name()}; }}
             QScrollBar:vertical {{ width: 6px; background: transparent; margin: 0; }}
             QScrollBar::handle:vertical {{ background: {accent}; border-radius: 3px; min-height: 24px; }}
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height: 0; }}
@@ -791,6 +816,9 @@ class AskBox(QWidget):
         )
         for child in self.findChildren(QWidget):
             child.ensurePolished()
+        hint = self.entry.palette()
+        hint.setColor(QPalette.ColorRole.PlaceholderText, c.placeholder)
+        self.entry.setPalette(hint)
 
     def hideEvent(self, event) -> None:
         self._frames.stop()
@@ -811,10 +839,12 @@ class AskBox(QWidget):
             if not self.stage_draws_art:
                 self.paint_art(p, 0, 0)
             return
-        fill, _ = colours()
+        c = self.style.colours()
+        fill = QColor(c.fill)
+        fill.setAlpha(PLAIN_ALPHA)
         path = bubble_path(QRectF(self.rect()).adjusted(1, 1, -1, -1 - TAIL), self._tail_x)
         p.fillPath(path, fill)
-        p.setPen(QPen(ACCENT, 2))
+        p.setPen(QPen(c.accent, 2))
         p.drawPath(path)
 
     def keyPressEvent(self, event) -> None:

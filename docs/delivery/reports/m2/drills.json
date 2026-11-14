@@ -6,8 +6,12 @@
       "file": "chatmon/richtext.py",
       "find": "        return nothing(kind)",
       "replace": "        return super().loadResource(kind, url)",
-      "test": ["tests/test_bubble_safety.py"],
-      "expect": ["a picture's bytes were read"]
+      "test": [
+        "tests/test_bubble_safety.py"
+      ],
+      "expect": [
+        "a picture's bytes were read"
+      ]
     },
     {
       "id": "M2-01-empty-image",
@@ -15,8 +19,12 @@
       "file": "chatmon/richtext.py",
       "find": "        return blank",
       "replace": "        return b\"\"",
-      "test": ["tests/test_bubble_safety.py"],
-      "expect": ["itself"]
+      "test": [
+        "tests/test_bubble_safety.py"
+      ],
+      "expect": [
+        "itself"
+      ]
     },
     {
       "id": "M2-01-html",
@@ -24,8 +32,12 @@
       "file": "chatmon/richtext.py",
       "find": "MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub | QTextDocument.MarkdownFeature.MarkdownNoHTML",
       "replace": "MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub",
-      "test": ["tests/test_bubble_safety.py"],
-      "expect": ["HTML was read"]
+      "test": [
+        "tests/test_bubble_safety.py"
+      ],
+      "expect": [
+        "HTML was read"
+      ]
     },
     {
       "id": "M2-01-images-left",
@@ -33,8 +45,12 @@
       "file": "chatmon/richtext.py",
       "find": "    doc.setMarkdown(markdown, MARKDOWN)\n    without_images(doc)",
       "replace": "    doc.setMarkdown(markdown, MARKDOWN)",
-      "test": ["tests/test_bubble_safety.py"],
-      "expect": ["an image was left in"]
+      "test": [
+        "tests/test_bubble_safety.py"
+      ],
+      "expect": [
+        "an image was left in"
+      ]
     },
     {
       "id": "M2-01-title-markup",
@@ -42,8 +58,157 @@
       "file": "chatmon/bubble.py",
       "find": "self.title.setTextFormat(Qt.TextFormat.PlainText)",
       "replace": "self.title.setTextFormat(Qt.TextFormat.AutoText)",
-      "test": ["tests/test_bubble_safety.py::test_a_title_hint_or_attachment_name_is_shown_as_text"],
-      "expect": ["magenta_pixels"]
+      "test": [
+        "tests/test_bubble_safety.py::test_a_title_hint_or_attachment_name_is_shown_as_text"
+      ],
+      "expect": [
+        "magenta_pixels"
+      ]
+    },
+    {
+      "id": "M2-05-palette",
+      "requirement": "M2-05",
+      "file": "chatmon/styles.py",
+      "find": "    highlight = readable(role(QPalette.ColorRole.Highlight), fill, OUTLINE_CONTRAST)",
+      "replace": "    highlight = readable(QColor(PLAIN_ACCENT), fill, OUTLINE_CONTRAST)",
+      "test": [
+        "tests/test_contrast.py"
+      ],
+      "expect": [
+        "test_the_plain_style_wears_a_high_contrast_theme_as_it_is",
+        "test_the_plain_bubble_draws_in_the_palettes_colours"
+      ]
+    },
+    {
+      "id": "M2-05-readable",
+      "requirement": "M2-05",
+      "file": "chatmon/styles.py",
+      "find": "    if contrast(fg, bg) >= ratio:",
+      "replace": "    if True:",
+      "test": [
+        "tests/test_contrast.py"
+      ],
+      "expect": [
+        "test_the_plain_style_reads_whatever_the_palette[faint]"
+      ]
+    },
+    {
+      "id": "M2-05-link-colour",
+      "requirement": "M2-05",
+      "file": "chatmon/richtext.py",
+      "find": "    _merge(doc, _spans(doc, lambda b, f: f.isAnchor()), look)",
+      "replace": "    pass",
+      "test": [
+        "tests/test_contrast.py"
+      ],
+      "expect": [
+        "test_links_in_answers_wear_the_styles_colour_not_the_apps"
+      ]
+    },
+    {
+      "id": "M2-20-fairy-link",
+      "requirement": "M2-20",
+      "file": "chatmon/styles.py",
+      "find": "fill=\"#fad7e3\", link=\"#9c2f5b\"",
+      "replace": "fill=\"#fad7e3\", link=\"#d4658f\"",
+      "test": [
+        "tests/test_contrast.py"
+      ],
+      "expect": [
+        "fairy links"
+      ]
+    },
+    {
+      "id": "M2-20-selected-text",
+      "requirement": "M2-20",
+      "file": "chatmon/bubble.py",
+      "find": " selection-color: {c.selection_text.name()};",
+      "replace": "",
+      "test": [
+        "tests/test_contrast.py"
+      ],
+      "expect": [
+        "test_selected_text_in_the_ask_box_wears_the_selection_colours"
+      ]
+    },
+    {
+      "id": "M2-02-no-wrap",
+      "requirement": "M2-02",
+      "file": "chatmon/richtext.py",
+      "find": "    code.setNonBreakableLines(False)",
+      "replace": "    code.setNonBreakableLines(True)",
+      "test": [
+        "tests/test_rich_text.py"
+      ],
+      "expect": [
+        "test_code_wraps_on_a_tinted_panel_in_a_speech_bubble",
+        "test_code_wraps_in_the_ask_box"
+      ]
+    },
+    {
+      "id": "M2-02-no-panel",
+      "requirement": "M2-02",
+      "file": "chatmon/richtext.py",
+      "find": "    panel.setBackground(look.code_fill)",
+      "replace": "    pass",
+      "test": [
+        "tests/test_rich_text.py"
+      ],
+      "expect": [
+        "test_code_wraps_on_a_tinted_panel_in_a_speech_bubble"
+      ]
+    },
+    {
+      "id": "M2-02-headings",
+      "requirement": "M2-02",
+      "file": "chatmon/richtext.py",
+      "find": "HEADING_MOST = 1  #",
+      "replace": "HEADING_MOST = 3  #",
+      "test": [
+        "tests/test_rich_text.py"
+      ],
+      "expect": [
+        "test_headings_stay_near_the_texts_size"
+      ]
+    },
+    {
+      "id": "M2-17-keywords",
+      "requirement": "M2-17",
+      "file": "chatmon/highlight.py",
+      "find": "                if word.group() in keywords:",
+      "replace": "                if False:",
+      "test": [
+        "tests/test_rich_text.py"
+      ],
+      "expect": [
+        "test_python_keywords_strings_numbers_and_comments_are_coloured"
+      ]
+    },
+    {
+      "id": "M2-17-block-comment",
+      "requirement": "M2-17",
+      "file": "chatmon/highlight.py",
+      "find": "self.setCurrentBlockState(INSIDE_COMMENT)",
+      "replace": "self.setCurrentBlockState(0)",
+      "test": [
+        "tests/test_rich_text.py"
+      ],
+      "expect": [
+        "test_a_block_comment_carries_on_to_the_next_lines"
+      ]
+    },
+    {
+      "id": "M2-17-contrast",
+      "requirement": "M2-17",
+      "file": "chatmon/highlight.py",
+      "find": "styles.readable(styles.blend(c.body, panel, 150), panel))",
+      "replace": "styles.blend(c.body, panel, 60))",
+      "test": [
+        "tests/test_rich_text.py"
+      ],
+      "expect": [
+        "test_code_colours_read_on_the_code_panel_and_stand_apart"
+      ]
     }
   ]
 }
