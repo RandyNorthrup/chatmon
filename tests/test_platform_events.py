@@ -140,10 +140,8 @@ def test_the_uia_provider_answers_as_ui_automation_asks(qapp):
     options = ctypes.c_int()
     assert vtable.get_ProviderOptions(me, ctypes.byref(options)) == winuia.S_OK and options.value == winuia.SERVER_SIDE_PROVIDER
     value = winuia.VARIANT()
-    vtable.GetPropertyValue(me, winuia.UIA_IS_CONTROL_ELEMENT, ctypes.byref(value))
-    assert (value.vt, value.value.boolVal) == (winuia.VT_BOOL, winuia.VARIANT_TRUE)  # in the control view screen readers use
     vtable.GetPropertyValue(me, winuia.UIA_NAME, ctypes.byref(value))
-    assert value.vt == winuia.VT_BSTR and ctypes.wstring_at(value.value.bstrVal) == "Chatmon"
+    assert value.vt == winuia.VT_BSTR and ctypes.wstring_at(value.value.bstrVal) == "Chatmon announcements"
     provider._oleaut.SysFreeString(value.value.bstrVal)
     vtable.GetPropertyValue(me, 30003, ctypes.byref(value))  # ControlType: left to the window's host provider
     assert value.vt == winuia.VT_EMPTY
@@ -152,7 +150,7 @@ def test_the_uia_provider_answers_as_ui_automation_asks(qapp):
 
 
 ANNOUNCER = r"""
-import sys, time
+import os, sys, time
 sys.path.insert(0, sys.argv[1])
 from PyQt6.QtWidgets import QApplication
 app = QApplication([])
@@ -165,12 +163,18 @@ def pump(seconds):
         time.sleep(0.02)
 
 print("prepared", winuia.prepare(), flush=True)
+print("window", winuia._announcer.hwnd, flush=True)
 print("too soon", winuia.say("Too soon.", False), flush=True)  # UI Automation hasn't taken the window in yet
 pump(winuia.READY_AFTER + 0.3)
 winuia.in_front = lambda: True  # as with the ask box open: Chatmon is the app in front
-notified = []
-print("route", a11y.announce(a11y.Reader("Narrator"), sys.argv[2], important=True, notify=lambda: notified.append(1)), notified, flush=True)
-pump(1.5)
+notified, routes = [], set()
+for attempt in range(4):  # a client just started may take a moment to listen to a new process: again until heard
+    routes.add(a11y.announce(a11y.Reader("Narrator"), sys.argv[2], important=True, notify=lambda: notified.append(1)))
+    pump(1.5)
+    if os.path.exists(sys.argv[3]) and os.path.getsize(sys.argv[3]):
+        break
+print("routes", sorted(routes), notified, flush=True)
+pump(2)  # still answering UI Automation while the test asks the window's name
 """
 
 
@@ -180,20 +184,29 @@ def test_a_ui_automation_client_hears_the_announcement(tmp_path):
     notification event with the words, from the announcer window on Qt's real Windows platform."""
     pytest.importorskip("comtypes")
     log, words = tmp_path / "heard.jsonl", "Reminder. Stretch your legs."
-    client = subprocess.Popen([sys.executable, str(HERE / "uia_client.py"), str(log), "40"], stdout=subprocess.PIPE, text=True)
+    client = subprocess.Popen([sys.executable, str(HERE / "uia_client.py"), "listen", str(log), "40"], stdout=subprocess.PIPE, text=True)
+    env = dict(os.environ, QT_QPA_PLATFORM="windows")
+    announcer = None
     try:
         assert client.stdout.readline().strip() == "ready"
-        env = dict(os.environ, QT_QPA_PLATFORM="windows")
-        out = subprocess.run([sys.executable, "-c", ANNOUNCER, str(HERE.parent), words], capture_output=True, text=True, timeout=60, env=env)
-        assert out.stdout.splitlines() == ["prepared True", "too soon False", "route uia []"], out.stderr
+        announcer = subprocess.Popen([sys.executable, "-c", ANNOUNCER, str(HERE.parent), words, str(log)], stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE, text=True, env=env)
+        said = [announcer.stdout.readline().strip() for _ in range(4)]
+        assert said[0] == "prepared True" and said[1].startswith("window ") and said[2:] == ["too soon False", "routes ['uia'] []"], said
+        # The window's element is the announcer's own provider (it names itself), not Qt's or the bare window's.
+        name = subprocess.run([sys.executable, str(HERE / "uia_client.py"), "name", said[1].split()[1]], capture_output=True, text=True, timeout=30)
+        announcer.wait(30)
         deadline = time.monotonic() + 10
         while time.monotonic() < deadline and not (log.exists() and log.read_text(encoding="utf-8").strip()):
             time.sleep(0.1)
-        heard = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()]
+        heard = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()] if log.exists() else []
     finally:
         client.kill()
         client.wait(10)
-    assert heard == [{"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"}]  # Other, ImportantAll
+        if announcer is not None:
+            announcer.kill()
+    assert name.stdout.strip() == "Chatmon announcements", name.stderr
+    assert heard and all(h == {"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"} for h in heard), heard  # Other, ImportantAll
 
 
 def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypatch):

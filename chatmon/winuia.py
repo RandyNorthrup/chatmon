@@ -2,12 +2,13 @@
 and JAWS read: UiaRaiseNotificationEvent, Windows 10 1709 and later.
 https://learn.microsoft.com/en-us/windows/win32/api/uiautomationcoreapi/nf-uiautomationcoreapi-uiaraisenotificationevent
 
-UI Automation passes the event on only from a provider that a shown window hands out itself, for WM_GETOBJECT:
-one from UiaHostProviderFromHwnd, or one no window answers with, is dropped without a word (checked on Windows 11
-with a UI Automation client listening). Chatmon's other windows are Qt's, whose own providers carry their
-accessibility, so the notifications come from a window of their own: one pixel, see-through, never taking a click
-or the keyboard, whose provider here is the least UI Automation asks for, IRawElementProviderSimple in ctypes.
-(Qt's QAccessibleAnnouncementEvent does this for Qt's own windows, but no PyQt6 has a binding for it.)
+What UI Automation passes on, as checked on Windows 11 with a UI Automation client listening: an event raised from a
+provider of the app's own (IRawElementProviderSimple, here in ctypes), not one using COM threading, on a window
+that's been shown a moment. One raised on UiaHostProviderFromHwnd's provider, on a window that hands out another
+provider (a Qt window with a line edit in it), or right after the window is shown, is dropped without a word. So
+the notifications come from a window of their own (one pixel, see-through, never taking a click or the keyboard)
+that hands out this provider itself, for WM_GETOBJECT, whatever Qt would answer for it. (Qt's
+QAccessibleAnnouncementEvent does all this for Qt's own windows, but no PyQt6 has a binding for it.)
 
 NVDA reads a notification only from the app in front (event_UIA_notification in its NVDAObjects/UIA), so
 `in_front()` says whether Chatmon is, and the caller has another way to say it while it isn't.
@@ -28,20 +29,19 @@ from PyQt6.QtGui import QGuiApplication
 WM_GETOBJECT = 0x003D
 UIA_ROOT_OBJECT_ID = -25  # UiaRootObjectId: WM_GETOBJECT's lParam when UI Automation asks for a window's provider
 SERVER_SIDE_PROVIDER = 0x1 << 1  # ProviderOptions_ServerSideProvider; without UseComThreading, which UIA won't raise from
-UIA_NAME, UIA_IS_CONTROL_ELEMENT, UIA_IS_CONTENT_ELEMENT = 30005, 30016, 30017  # UIA property ids
+UIA_NAME = 30005  # UIA_NamePropertyId; every other property is the window's own (its host provider's)
 NOTIFICATION_KIND_OTHER = 4  # NotificationKind_Other
 IMPORTANT_ALL, ALL = 0, 2  # NotificationProcessing: an important one is said even over others
-VT_EMPTY, VT_BSTR, VT_BOOL = 0, 8, 11
-VARIANT_TRUE = -1
+VT_EMPTY, VT_BSTR = 0, 8
 S_OK, E_NOINTERFACE = 0, -2147467262  # 0x80004002
 IID_IUNKNOWN = uuid.UUID("00000000-0000-0000-c000-000000000046")
 IID_IRAW_ELEMENT_PROVIDER_SIMPLE = uuid.UUID("d6dd68d1-86fd-4332-8666-9abedea2d24c")
-NAME = "Chatmon"
-READY_AFTER = 1.0  # seconds from showing the window to the first notification UI Automation passes on (0 loses it)
+NAME = "Chatmon announcements"  # what a screen reader exploring the desktop finds the window called
+READY_AFTER = 3.0  # seconds from showing the window to its first notification: UI Automation loses one raised at once
 
 
 class _Value(ctypes.Union):
-    _fields_ = [("boolVal", ctypes.c_short), ("bstrVal", ctypes.c_void_p), ("lVal", ctypes.c_long), ("record", ctypes.c_void_p * 2)]
+    _fields_ = [("bstrVal", ctypes.c_void_p), ("record", ctypes.c_void_p * 2)]  # BRECORD, the widest member, sets the size
 
 
 class VARIANT(ctypes.Structure):
@@ -84,9 +84,8 @@ def _libraries():
 
 class Provider:
     """The announcer window's UI Automation provider: a COM object (IRawElementProviderSimple) made in ctypes. It
-    names itself, counts as a control (UI Automation's control view, which screen readers listen in, leaves the
-    rest out), and has the window's own host provider for everything else. UI Automation calls it from threads of
-    its own; it only ever answers with constants. Kept for the life of the process: COM may hold it to the end."""
+    names itself and has the window's own host provider for everything else. UI Automation calls it from threads
+    of its own; it only ever answers with constants. Kept for the life of the process: COM may hold it to the end."""
 
     def __init__(self, hwnd: int):
         self.hwnd = hwnd
@@ -125,9 +124,7 @@ class Provider:
     def _property(self, this, prop, out) -> int:
         value = out.contents
         value.vt = VT_EMPTY
-        if prop in (UIA_IS_CONTROL_ELEMENT, UIA_IS_CONTENT_ELEMENT):
-            value.vt, value.value.boolVal = VT_BOOL, VARIANT_TRUE
-        elif prop == UIA_NAME:
+        if prop == UIA_NAME:
             value.vt, value.value.bstrVal = VT_BSTR, self._oleaut.SysAllocString(NAME)  # the caller frees it
         return S_OK
 
@@ -136,7 +133,7 @@ class Provider:
 
 
 class Announcer(QAbstractNativeEventFilter):
-    """The window notifications come from, and its provider, answered for WM_GETOBJECT from a native event filter
+    """The window notifications come from, and its provider, handed out for WM_GETOBJECT by a native event filter
     put in place before the window is first shown (UI Automation asks then)."""
 
     def __init__(self):
@@ -146,7 +143,7 @@ class Announcer(QAbstractNativeEventFilter):
         flags = (Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowTransparentForInput
                  | Qt.WindowType.WindowDoesNotAcceptFocus)
         self.window = QWidget(None, flags)
-        self.window.setWindowTitle(NAME)
+        self.window.setWindowTitle("Chatmon")
         self.window.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)  # nothing drawn: nothing seen
         self.window.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         screen = QGuiApplication.primaryScreen().geometry()

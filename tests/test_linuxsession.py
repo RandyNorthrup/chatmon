@@ -40,10 +40,13 @@ def test_running_on_battery_saves_power_too(qapp):
     watcher.told = False  # as told at start on a machine plugged in, without power-saver
     upower = ("/org/freedesktop/UPower", "org.freedesktop.UPower")
     profiles = ("/org/freedesktop/UPower/PowerProfiles", "org.freedesktop.UPower.PowerProfiles")
-    watcher._changed(_properties_changed(*upower, {"OnBattery": True}))  # unplugged
+    watcher._changed(_properties_changed(*upower, {"OnBattery": True}))  # unplugged: on battery alone saves power
+    assert heard == [True]
     watcher._changed(_properties_changed(*profiles, {"ActiveProfile": "power-saver"}))  # still saving: no news
     watcher._changed(_properties_changed(*upower, {"OnBattery": False}))  # plugged in, power-saver still on
+    assert heard == [True]
     watcher._changed(_properties_changed(*profiles, {"ActiveProfile": "balanced"}))
+    assert heard == [True, False]
     watcher._changed(_properties_changed(*upower, {"Percentage": 50.0}))  # another of UPower's properties
     watcher._changed(_properties_changed("/org/freedesktop/UPower/devices/battery_BAT0", "org.freedesktop.UPower.Device", {"OnBattery": True}))
     assert heard == [True, False]

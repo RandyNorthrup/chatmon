@@ -1,8 +1,11 @@
-"""A UI Automation client, as a screen reader is one, for tests/test_platform_events.py: it listens for notification
-events from every window and writes each one's words to the file named on its command line, a JSON line each.
-Needs comtypes (a test-only tool). Says "ready" once it listens; runs for the seconds given, then stops.
+"""A UI Automation client, as a screen reader is one, for tests/test_platform_events.py. Needs comtypes (a
+test-only tool).
 
-usage: python tests/uia_client.py LOG SECONDS
+usage: python tests/uia_client.py listen LOG SECONDS
+         listens for notification events from every window, and writes each one to LOG, a JSON line each; says
+         "ready" once it listens, and stops after SECONDS
+       python tests/uia_client.py name HWND
+         prints the name UI Automation gives that window's element
 """
 
 import json
@@ -13,7 +16,6 @@ sys.coinit_flags = 0  # the multithreaded apartment: UI Automation calls the han
 import comtypes
 import comtypes.client
 
-LOG, SECONDS = sys.argv[1], float(sys.argv[2])
 UIA = comtypes.client.GetModule("UIAutomationCore.dll")
 automation = comtypes.client.CreateObject(UIA.CUIAutomation8, interface=UIA.IUIAutomation5)
 
@@ -21,16 +23,24 @@ automation = comtypes.client.CreateObject(UIA.CUIAutomation8, interface=UIA.IUIA
 class Heard(comtypes.COMObject):
     _com_interfaces_ = [UIA.IUIAutomationNotificationEventHandler]
 
+    def __init__(self, log: str):
+        super().__init__()
+        self.log = log
+
     def HandleNotificationEvent(self, sender, kind, processing, words, activity):
-        with open(LOG, "a", encoding="utf-8") as log:
-            log.write(json.dumps({"kind": kind, "processing": processing, "words": words, "activity": activity}) + "\n")
+        with open(self.log, "a", encoding="utf-8") as out:
+            out.write(json.dumps({"kind": kind, "processing": processing, "words": words, "activity": activity}) + "\n")
         return 0
 
 
-handler = Heard()
-automation.AddNotificationEventHandler(automation.GetRootElement(), UIA.TreeScope_Subtree, None, handler)
-print("ready", flush=True)
-end = time.monotonic() + SECONDS
-while time.monotonic() < end:
-    time.sleep(0.1)
-automation.RemoveAllEventHandlers()
+if sys.argv[1] == "name":
+    print(automation.ElementFromHandle(int(sys.argv[2])).CurrentName, flush=True)
+else:
+    log, seconds = sys.argv[2], float(sys.argv[3])
+    handler = Heard(log)
+    automation.AddNotificationEventHandler(automation.GetRootElement(), UIA.TreeScope_Subtree, None, handler)
+    print("ready", flush=True)
+    end = time.monotonic() + seconds
+    while time.monotonic() < end:
+        time.sleep(0.1)
+    automation.RemoveAllEventHandlers()
