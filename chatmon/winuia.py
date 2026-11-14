@@ -3,11 +3,12 @@ and JAWS read: UiaRaiseNotificationEvent, Windows 10 1709 and later.
 https://learn.microsoft.com/en-us/windows/win32/api/uiautomationcoreapi/nf-uiautomationcoreapi-uiaraisenotificationevent
 
 What UI Automation passes on, as checked on Windows 11 with a UI Automation client listening: an event raised from a
-provider of the app's own (IRawElementProviderSimple, here in ctypes), not one using COM threading, on a window
-that's been shown a moment. One raised on UiaHostProviderFromHwnd's provider, on a window that hands out another
-provider (a Qt window with a line edit in it), or right after the window is shown, is dropped without a word. So
-the notifications come from a window of their own (one pixel, see-through, never taking a click or the keyboard)
-that hands out this provider itself, for WM_GETOBJECT, whatever Qt would answer for it. (Qt's
+provider of the app's own (IRawElementProviderSimple, here in ctypes) that says it's server-side, on a window that's
+been shown a moment. One raised on UiaHostProviderFromHwnd's provider, from a provider that says it's client-side,
+on a window that hands out another provider (a Qt window with a line edit in it), or right after the window is
+shown, is dropped without a word. So the notifications come from a window of their own (one pixel, see-through,
+never taking a click or the keyboard) that hands out this provider itself, for WM_GETOBJECT, whatever Qt would
+answer for it. (Qt's
 QAccessibleAnnouncementEvent does all this for Qt's own windows, but no PyQt6 has a binding for it.)
 
 NVDA reads a notification only from the app in front (event_UIA_notification in its NVDAObjects/UIA), so
@@ -28,7 +29,7 @@ from PyQt6.QtGui import QGuiApplication
 
 WM_GETOBJECT = 0x003D
 UIA_ROOT_OBJECT_ID = -25  # UiaRootObjectId: WM_GETOBJECT's lParam when UI Automation asks for a window's provider
-SERVER_SIDE_PROVIDER = 0x1 << 1  # ProviderOptions_ServerSideProvider; without UseComThreading, which UIA won't raise from
+SERVER_SIDE_PROVIDER = 0x1 << 1  # ProviderOptions_ServerSideProvider: the app's own (client-side ones are dropped)
 UIA_NAME = 30005  # UIA_NamePropertyId; every other property is the window's own (its host provider's)
 NOTIFICATION_KIND_OTHER = 4  # NotificationKind_Other
 IMPORTANT_ALL, ALL = 0, 2  # NotificationProcessing: an important one is said even over others
