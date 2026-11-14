@@ -1,0 +1,6 @@
+$ python -c "import sys, PyQt6.QtCore as c; print(sys.version.split()[0], c.PYQT_VERSION_STR)"
+3.14.10 6.11.0
+$ python -m pytest --version
+pytest 9.2.0
+$ ruff --version
+ruff 0.17.4
