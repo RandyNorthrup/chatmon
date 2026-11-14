@@ -306,6 +306,32 @@ def test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves(stage):
     assert not s.surface.damaged.contains(local.center())  # the words inside aren't drawn again
 
 
+def test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus(stage):
+    s, box = stage
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    s.keyboard_focus(True)
+    geo = box.geometry()
+    assert box.graphicsProxyWidget() is not None and s.hosts_windows() and s.draws_menus()
+    s.set_hosting(False)
+    spin(0.1)
+    assert box.graphicsProxyWidget() is None and box.isWindow() and box.isVisible()  # a window of its own, still open
+    assert box.windowHandle() is not None and box.windowHandle().isVisible() and box.geometry() == geo
+    assert not s.hosts_windows() and not s.draws_menus()  # the app's menus go to Qt again
+    assert box.entry.contextMenuPolicy() == Qt.ContextMenuPolicy.DefaultContextMenu and not box.stage_draws_art
+    assert s.surface.focus[-1] == (False, False)  # the overlay gave the keyboard back
+    s.key(key("x"), True, False)
+    assert box.entry.text() == ""  # its keys are its own now, not the overlay's
+    gpos = centre_of(box, box.entry)
+    assert not s.press(gpos - QPointF(s.origin()), gpos, Qt.MouseButton.LeftButton)  # nor the overlay's clicks
+    s.show_message("Still here", "")  # the chatmon and its bubbles stay on the overlay
+    spin(0.2)
+    assert s.message_visible()
+    s.set_hosting(True)
+    spin(0.1)
+    assert box.graphicsProxyWidget() is not None and s.hosts_windows() and s.hosted.widget is box
+
+
 def test_a_message_goes_above_the_open_box(stage):
     s, box = stage
     box.open(QPoint(400, 600), "Ask", "hint", "placeholder")

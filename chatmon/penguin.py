@@ -22,6 +22,7 @@ the overlay's pointer and keyboard.
 from __future__ import annotations
 
 import math
+import os
 import sys
 import time
 
@@ -31,6 +32,7 @@ from PyQt6.QtGui import (
     QContextMenuEvent,
     QCursor,
     QFont,
+    QFontMetricsF,
     QGuiApplication,
     QInputMethodEvent,
     QKeyEvent,
@@ -65,6 +67,14 @@ ANIM_FPS = getattr(bubbles, "ANIM_FPS", 30)  # how often an animated bubble's ar
 Z_STEP = 1 / 1.2  # s per step of the sleeping z's
 NEAR = 160  # px around what takes clicks within which the pointer is polled every frame (Windows, macOS)
 FAR_POLL = 0.1  # s between polls of the pointer farther away: it can't reach the chatmon in less
+FOLLOW_AFTER = 1.0  # s the pointer stays on another screen before the chatmon comes over to it (when asked to)
+# The agents badge: needs-you an amber diamond with black figures, working a blue circle with white ones (both
+# over 4.5:1), each with a dark edge for any background behind it. The shape says which, not just the colour.
+BADGE = 20  # px across a working badge, at least; a needs-you diamond is a little bigger, to hold its figure
+BADGE_COLOURS = {"needs-you": (QColor("#f59e0b"), QColor("#000000")), "working": (QColor("#1d4ed8"), QColor("#ffffff"))}
+BADGE_EDGE = QColor(16, 16, 20, 230)
+PULSE_STEP = 0.25  # s per step of the ring round a needs-you badge (still, with reduced motion)
+PULSE_REACH = 8  # px the ring reaches past the badge
 
 
 WINDOW_CURSORS = {
@@ -209,10 +219,34 @@ class Hosted(QObject):
             widget.stage_draws_art = True
         self._contents: tuple[tuple, QPixmap] | None = None
         # Its context menus are drawn by the stage too (a QMenu would be an XWayland window).
+        self._rewired: list[QWidget] = []
         for child in widget.findChildren(QWidget):
             if child.contextMenuPolicy() == Qt.ContextMenuPolicy.DefaultContextMenu and hasattr(child, "createStandardContextMenu"):
                 child.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
                 child.customContextMenuRequested.connect(lambda pos, c=child: self._context_menu(c, pos))
+                self._rewired.append(child)
+
+    def unhost(self) -> QWidget:
+        """Let the widget go: a window of its own again, where it was, open if it was open, with Qt's own context
+        menus. That's what a screen reader can find: a widget in a scene nobody shows is out of its reach."""
+        widget, shown = self.widget, self.widget.isVisible()
+        self.scene.changed.disconnect(self._changed)
+        self.proxy.visibleChanged.disconnect(self.stage._wake)
+        for child in self._rewired:
+            try:
+                child.customContextMenuRequested.disconnect()
+            except TypeError:
+                pass
+            child.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
+        if hasattr(widget, "stage_draws_art"):
+            widget.stage_draws_art = False
+        geometry = widget.geometry()
+        widget.hide()
+        self.proxy.setWidget(None)
+        widget.setGeometry(geometry)
+        if shown:
+            widget.show()
+        return widget
 
     def visible(self) -> bool:
         return self.widget.isVisible()
@@ -472,6 +506,13 @@ class Stage(QObject):
         self._primary = ""  # the selected text last made the primary selection
         self._inputs: tuple = ()  # what takes clicks, as last sent to the surface (local x, y, w, h)
         self._covered = False  # a full-screen window is in front on this screen
+        self._unhosted = False  # told to leave the ask box a window and menus to Qt (set_hosting)
+        self._unhosted_widget: QWidget | None = None
+        self._badge = (0, 0)  # agents (working, needing you)
+        self._badges: tuple = ()  # what the badge is as last drawn: (state, rect, figure) each, local
+        self._pulse = -1  # the needs-you ring's step as last drawn
+        self._follow = False  # follow the pointer's screen
+        self._away: tuple[QScreen, float] | None = None  # the screen the pointer went to, and since when
         self._last_tick = -math.inf
         self._cursor_pos = QCursor.pos  # where the pointer is, in Qt's screen coordinates
         self._screen_at = QGuiApplication.screenAt
@@ -607,17 +648,111 @@ class Stage(QObject):
         return self._screen
 
     def draws_menus(self) -> bool:
-        """Whether menus have to be drawn on the stage (its surface says so)."""
-        return bool(getattr(self.surface, "draws_menus", False))
+        """Whether menus have to be drawn on the stage (its surface says so, unless it's told not to host)."""
+        return bool(getattr(self.surface, "draws_menus", False)) and not self._unhosted
 
     def hosts_windows(self) -> bool:
-        """Whether the ask box has to be drawn on the stage too (its surface says so)."""
-        return bool(getattr(self.surface, "hosts_windows", False))
+        """Whether the ask box has to be drawn on the stage too (its surface says so, unless it's told not to)."""
+        return bool(getattr(self.surface, "hosts_windows", False)) and not self._unhosted
 
     def host(self, widget: QWidget) -> None:
-        """Draw this top-level widget on the stage instead of as a window."""
-        self.hosted = Hosted(self, widget)
+        """Draw this top-level widget on the stage instead of as a window (kept for later while hosting is off)."""
         self.keep_clear_of(widget)
+        if self._unhosted:
+            self._unhosted_widget = widget
+        else:
+            self.hosted = Hosted(self, widget)
+
+    def set_hosting(self, on: bool) -> None:
+        """Draw the ask box on the overlay (on: the default there), or leave it a normal Qt window, with Qt's own
+        menus, which a screen reader can find and read (off). Off, the stage says it neither hosts windows nor
+        draws menus, so the app gives its menus to Qt as it does everywhere else; the overlay still draws the
+        chatmon and its bubbles."""
+        if on != self._unhosted:
+            return
+        self._unhosted = not on
+        if not on:
+            self.close_menu()
+            if self.hosted is not None:
+                hosted, self.hosted = self.hosted, None
+                if hosted.was_visible:
+                    self.hosted_shown(hosted, False, False)  # the overlay gives the keyboard back
+                self._unhosted_widget = hosted.unhost()
+                hosted.deleteLater()
+            if self._text_state is not None:
+                self._text_state = None
+                set_text_input = getattr(self.surface, "set_text_input", None)
+                if set_text_input is not None:
+                    set_text_input(None)
+        elif self._unhosted_widget is not None and self.hosts_windows():
+            widget, self._unhosted_widget = self._unhosted_widget, None
+            self.host(widget)
+        self._input_parts = None
+        self._key = None
+        self._wake()
+
+    # -- reduced motion, agents at a glance, and which screen
+
+    def set_reduced_motion(self, on: bool) -> None:
+        """Less movement, as the system or you ask: moods hold one pose and waves, hops and peeks are left out (the
+        behaviour), and the sleeping z's and the needs-you badge's ring stand still."""
+        self.behavior.set_reduced_motion(on, self._clock())
+        self._key = None
+        self._wake()
+
+    def set_badge(self, working: int = 0, needs_you: int = 0) -> None:
+        """How many agents are working and how many need you, in a small badge by the chatmon: needs-you an
+        amber diamond, working a blue circle, each with its count. 0 and 0: no badge."""
+        badge = (max(0, int(working)), max(0, int(needs_you)))
+        if badge != self._badge:
+            self._badge = badge
+            self._wake()
+
+    def badge_description(self) -> str:
+        """The badge in words, for a screen reader: "1 agent needs you, 2 agents working"; "" without one."""
+        working, waiting = self._badge
+        parts = []
+        if waiting:
+            parts.append(f"{waiting} agent needs you" if waiting == 1 else f"{waiting} agents need you")
+        if working:
+            parts.append(f"{working} agent working" if working == 1 else f"{working} agents working")
+        return ", ".join(parts)
+
+    def follow_pointer_screen(self, on: bool) -> bool:
+        """Come over to the screen the pointer is on once it has stayed there FOLLOW_AFTER (an option, off by
+        default). Only where apps are told where the pointer is (Windows, macOS, X11): on a Wayland desktop
+        they aren't, and this stays off. Returns whether it's on now."""
+        self._follow = bool(on) and self._pointer_known()
+        self._away = None
+        self._wake()
+        return self._follow
+
+    def _pointer_known(self) -> bool:
+        platform = QGuiApplication.platformName()
+        return platform in ("windows", "cocoa") or (platform == "xcb" and not os.environ.get("WAYLAND_DISPLAY"))
+
+    def _follow_pointer(self, now: float) -> None:
+        """Following the pointer's screen: over to it once the pointer has stayed there FOLLOW_AFTER, landing on
+        that screen's floor as far along it as it was on this one. Not while you're using it (a drag, a press,
+        a menu, the ask box)."""
+        busy = self._dragging or self._press is not None or self.behavior.held or self.menu.is_open()
+        busy = busy or (self._clear_of is not None and self._clear_of.isVisible())
+        there = self._screen_at(self._cursor_pos())
+        if busy or there is None or there is self._screen:
+            self._away = None
+            return
+        if self._away is None or self._away[0] is not there:
+            self._away = (there, now)
+            return
+        if now - self._away[1] < FOLLOW_AFTER:
+            return
+        self._away = None
+        old, new = self._screen.availableGeometry(), there.availableGeometry()
+        along = (self.behavior.x - old.x()) / max(1, old.width())
+        x = new.x() + EDGE + along * max(0, new.width() - 2 * EDGE)
+        self._use_screen(there)
+        self.behavior.hold(x, 0.0, now)
+        self.behavior.release(now)  # lands there, with a hop (without one, for reduced motion)
 
     def keep_clear_of(self, widget: QWidget) -> None:
         """Put speech bubbles above this widget (the ask box) while it's open:
@@ -669,6 +804,8 @@ class Stage(QObject):
         due = [self.behavior.next_change(now), self._bubble_due(now)]
         if zs.isValid() and not self.behavior.reduced_motion:
             due.append((int(now / Z_STEP) + 1) * Z_STEP + 0.001)
+        if self._pulse >= 0:
+            due.append((int(now / PULSE_STEP) + 1) * PULSE_STEP + 0.001)
         if self.hosted is not None and self.hosted.anim_key(now) >= 0:
             due.append(now + 1 / ANIM_FPS)
         menu_due = getattr(self.menu, "next_change", None)
@@ -845,6 +982,8 @@ class Stage(QObject):
         now = self._clock()
         self._last_tick = now
         self._timer.stop()  # a wake from what this tick sets off schedules the next one sooner; else _next_tick
+        if self._follow:
+            self._follow_pointer(now)
         if not self._dragging:
             here = self._screen_at(QPoint(int(self.behavior.x), self._geo.center().y()))
             if here is not None:
@@ -889,15 +1028,19 @@ class Stage(QObject):
             menu_tick(now)  # a submenu due to open, a scroll arrow held
         fade = round(self.bubble.opacity(now) * 20) if self.bubble.drawn() else -1
         menu_rects = self.menu.rects()
+        badges = self._badge_layout(penguin, sprite)
+        waiting = any(state == "needs-you" for state, _, _ in badges)
+        pulse = int(now / PULSE_STEP) % 4 if waiting and not self.behavior.reduced_motion else -1
         # What looks different, each part on its own: only what changed is drawn again.
         key = (
             (f.anim, f.index, f.mirror, penguin.topLeft(), self._z_phase),
             (bubble_box.topLeft(), self.bubble.hover, fade, self.bubble.anim_key(now)),
             self.menu.look(),
             self.hosted.anim_key(now) if self.hosted is not None else -1,
+            (tuple((state, r.x(), r.y(), r.width(), r.height(), figure) for state, r, figure in badges), pulse),
         )
         if key != self._key:
-            old = self._key or (None, None, None, None)
+            old = self._key or (None, None, None, None, None)
             dirty = QRegion()
             if key[0] != old[0]:
                 dirty = QRegion(self._penguin.toAlignedRect().adjusted(-2, -2, 2, 2)).united(QRegion(penguin.toAlignedRect().adjusted(-2, -2, 2, 2)))
@@ -910,6 +1053,10 @@ class Stage(QObject):
                     dirty = dirty.united(QRegion(r.adjusted(-2, -2, 2, 2)))
             if key[3] != old[3] and self.hosted is not None and self.hosted.visible():  # its bubble moved on a frame
                 dirty = dirty.united(self.hosted.ring().translated(-origin))
+            if key[4] != old[4]:
+                for _state, r, _figure in self._badges + badges:
+                    dirty = dirty.united(QRegion(r.toAlignedRect().adjusted(-PULSE_REACH - 2, -PULSE_REACH - 2, PULSE_REACH + 2, PULSE_REACH + 2)))
+                self._badges, self._pulse = badges, pulse
             self._menu_rects = menu_rects
             self._key = key
             self._penguin, self._bubble_box = penguin, bubble_box
@@ -989,6 +1136,8 @@ class Stage(QObject):
             p.drawPixmap(self._penguin.topLeft(), self.sprites.frame(f.anim, f.index, f.mirror).pixmap)
             if self._sleeping(f):
                 self._paint_zs(p, self._z_rect(self._penguin), self._z_phase)
+        if self._badges:
+            self._paint_badges(p)
         if self.bubble.drawn() and not self._bubble_box.isNull() and region.intersects(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)):
             p.save()
             p.translate(self._bubble_box.topLeft())
@@ -998,6 +1147,68 @@ class Stage(QObject):
             self.hosted.paint(p, region)
         if self.menu.is_open() and any(region.intersects(r.adjusted(-3, -3, 3, 3)) for r in self._menu_rects):
             self.menu.paint(p)
+
+    def _badge_layout(self, penguin: QRectF, sprite) -> tuple:
+        """Where the badges go: at the top right of the creature itself (its outline, not the frame round it),
+        needs-you first, then working leftward of it; inside the stage."""
+        working, waiting = self._badge
+        if penguin.isNull() or sprite is None or not (working or waiting):
+            return ()
+        right = max(x + w for x, y, w, h in sprite.rects) + penguin.x()
+        top = min(y for x, y, w, h in sprite.rects) + penguin.y()
+        font = self._badge_font()
+        metrics = QFontMetricsF(font)
+        badges, edge = [], right + BADGE / 2
+        for state, count in (("needs-you", waiting), ("working", working)):
+            if not count:
+                continue
+            figure = str(count) if count < 10 else "9+"
+            size = max(BADGE + (6 if state == "needs-you" else 0), metrics.horizontalAdvance(figure) + (16 if state == "needs-you" else 8))
+            left = min(max(edge - size, 2.0), self._geo.width() - size - 2)
+            badges.append((state, QRectF(round(left), round(max(top - size / 3, 2.0)), size, size), figure))
+            edge = left - 2
+        return tuple(badges)
+
+    @staticmethod
+    def _badge_font() -> QFont:
+        font = QFont()
+        font.setBold(True)
+        font.setPixelSize(12)
+        return font
+
+    @staticmethod
+    def _badge_path(state: str, r: QRectF) -> QPainterPath:
+        path = QPainterPath()
+        if state == "needs-you":  # a diamond: a warning's shape
+            c = r.center()
+            path.moveTo(c.x(), r.top())
+            path.lineTo(r.right(), c.y())
+            path.lineTo(c.x(), r.bottom())
+            path.lineTo(r.left(), c.y())
+            path.closeSubpath()
+        else:
+            path.addEllipse(r)
+        return path
+
+    def _paint_badges(self, p: QPainter) -> None:
+        p.save()
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        p.setFont(self._badge_font())
+        for state, r, figure in self._badges:
+            fill, ink = BADGE_COLOURS[state]
+            if state == "needs-you" and self._pulse >= 0:  # a ring that widens and fades, a step at a time
+                reach = 2 + self._pulse * (PULSE_REACH - 2) / 3
+                ring = QColor(fill)
+                ring.setAlpha(200 - self._pulse * 50)
+                p.setPen(QPen(ring, 2))
+                p.drawPath(self._badge_path(state, r.adjusted(-reach, -reach, reach, reach)))
+            path = self._badge_path(state, r)
+            p.fillPath(path, fill)
+            p.setPen(QPen(BADGE_EDGE, 1.5))
+            p.drawPath(path)
+            p.setPen(ink)
+            p.drawText(r, Qt.AlignmentFlag.AlignCenter, figure)
+        p.restore()
 
     def _paint_zs(self, p: QPainter, rect: QRect, phase: int) -> None:
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
