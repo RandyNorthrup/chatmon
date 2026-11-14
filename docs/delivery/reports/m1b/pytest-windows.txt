@@ -1,0 +1,119 @@
+..s.s...............................s.......................F........... [ 10%]
+...ssss.......................................................s......... [ 21%]
+........................................................................ [ 32%]
+........................................................................ [ 43%]
+...................................F.....sss....ss.ssss...........s..... [ 54%]
+ssss.....sssssss........................................................ [ 65%]
+............................s..ss...s....s.............................. [ 76%]
+..ss............ss...................................................... [ 87%]
+..........s.ss...sssssssssss.ssssssss..................s..............s. [ 98%]
+...sssss                                                                 [100%]
+================================== FAILURES ===================================
+___________________________ test_a_hook_reaches_it ____________________________
+
+companion = <chatmon.app.Companion object at 0x000002EB9073B610>
+
+    def test_a_hook_reaches_it(companion):
+        """A separate process, as a hook would be, says something and hears back."""
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        code = (
+            "import sys; sys.path.insert(0, sys.argv[1]);"
+            "from chatmon import events;"
+            "sys.exit(0 if events.send({'type': 'say', 'text': 'hello from a hook'}, timeout=5) else 1)"
+        )
+        proc = subprocess.Popen([sys.executable, "-c", code, root])
+        deadline = time.monotonic() + 20
+        while proc.poll() is None and time.monotonic() < deadline:
+            spin(0.05)
+        assert proc.returncode == 0
+        spin(0.2)
+>       assert companion.stage.bubble.title == "Sparky" and "hello from a hook" in companion.stage.bubble.doc.toPlainText()
+E       AssertionError: assert ('' == 'Sparky'
+E         
+E         - Sparky)
+
+tests\test_app_smoke.py:89: AssertionError
+____________________ test_send_without_a_running_companion ____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002EB8F2F7850>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-718/test_send_without_a_running_co0')
+
+    def test_send_without_a_running_companion(monkeypatch, tmp_path):
+        monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path))
+>       assert events.send({"type": "show"}) is False
+E       AssertionError: assert True is False
+E        +  where True = <function send at 0x000002EB8F1709E0>({'type': 'show'})
+E        +    where <function send at 0x000002EB8F1709E0> = events.send
+
+tests\test_events.py:60: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_hook_reaches_it - AssertionError: asse...
+FAILED tests/test_events.py::test_send_without_a_running_companion - Assertio...
+SKIPPED [1] tests\test_a11y.py:46: Linux with dbus-run-session
+SKIPPED [1] tests\test_a11y.py:70: macOS
+SKIPPED [1] tests\test_agents.py:494: POSIX permissions
+SKIPPED [1] tests\test_app_smoke.py:337: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:361: a Windows pipe takes a sender's bytes only once Chatmon reads that connection, so a message can't wait unread for it this way
+SKIPPED [1] tests\test_app_smoke.py:393: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:413: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_autostart.py:23: the XDG autostart entry
+SKIPPED [1] tests\test_events.py:102: a named pipe there
+SKIPPED [1] tests\test_events.py:113: macOS's temporary folder of your own
+SKIPPED [1] tests\test_events.py:126: a named pipe there
+SKIPPED [1] tests\test_events.py:176: a named pipe there
+SKIPPED [1] tests\test_events.py:239: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:281: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_events.py:304: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:332: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:349: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_heads_up.py:135: macOS only
+SKIPPED [1] tests\test_keychain.py:74: the macOS Keychain
+SKIPPED [1] tests\test_keychain.py:130: Linux with dbus-run-session
+SKIPPED [1] tests\test_keychain.py:145: Linux with dbus-run-session
+SKIPPED [1] tests\test_keychain.py:156: Linux with dbus-run-session
+SKIPPED [1] tests\test_linuxsession.py:28: no PackageKit here
+SKIPPED [1] tests\test_macnative.py:20: macOS only
+SKIPPED [1] tests\test_macnative.py:54: macOS only
+SKIPPED [1] tests\test_macnative.py:88: macOS only
+SKIPPED [1] tests\test_macnative.py:116: macOS only
+SKIPPED [1] tests\test_macnative.py:134: macOS only
+SKIPPED [1] tests\test_macnative.py:162: macOS only
+SKIPPED [1] tests\test_portal_bus.py:41: Linux with dbus-run-session
+SKIPPED [1] tests\test_portowner.py:45: Linux's /proc/net/tcp
+SKIPPED [1] tests\test_portowner.py:58: Linux's /proc/net/tcp
+SKIPPED [1] tests\test_presence.py:70: macOS only
+SKIPPED [1] tests\test_presence.py:139: no GNOME session here
+SKIPPED [1] tests\test_rename.py:57: Windows keeps it in the registry
+SKIPPED [1] tests\test_rename.py:69: Windows keeps it in the registry
+SKIPPED [1] tests\test_settings.py:154: file modes are POSIX's; on Windows these folders are the user's by their ACLs
+SKIPPED [1] tests\test_settings.py:190: file modes are POSIX's; on Windows these folders are the user's by their ACLs
+SKIPPED [1] tests\test_updates.py:368: macOS only
+SKIPPED [2] tests\test_updates.py:404: pkexec: Linux
+SKIPPED [1] tests\test_wayland.py:46: Wayland sockets are Unix paths
+SKIPPED [1] tests\test_wayland.py:203: no Wayland protocol files installed
+SKIPPED [1] tests\test_wayland.py:311: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:413: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:424: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:438: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:524: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:546: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:570: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:579: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:590: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:643: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:694: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:724: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:758: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:771: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:784: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:797: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:866: Wayland is Linux only
+SKIPPED [1] tests\test_windows.py:416: needs QT_QPA_PLATFORM=windows
+SKIPPED [1] tests\test_windows.py:788: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+SKIPPED [1] tests\test_xkb.py:25: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:33: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:44: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:54: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:61: libxkbcommon isn't installed
+2 failed, 587 passed, 67 skipped in 109.65s (0:01:49)
+pytest exit=1

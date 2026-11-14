@@ -146,9 +146,11 @@ def test_the_secret_service_keeps_replaces_and_forgets_a_key_in_its_own_types(tm
 def test_a_locked_keyring_is_never_prompted_to_fill_in_the_menu_only_to_save(tmp_path):
     pytest.importorskip("PyQt6.QtDBus")
     got, asked = _on_a_private_bus(tmp_path, "--locked")
-    assert got["absent"] is None and got["read"] is None and "locked" in got["set"]
+    assert got["absent"] is None and got["read"] is None and not got["has absent"] and not got["has"]  # there, but locked
+    assert "locked" in got["set"] and "locked" in got["delete"]
     prompts = [a for a in asked if a["member"] == "Prompt"]
-    assert len(prompts) == 2  # saving twice: each time the keyring's own window, never for reading
+    assert len(prompts) == 3  # saving twice and removing once: the keyring's own window each time, never for reading
+    assert len([a for a in asked if a["member"] == "SearchItems"]) >= 4  # reading looked, and found it locked
 
 
 @needs_a_bus

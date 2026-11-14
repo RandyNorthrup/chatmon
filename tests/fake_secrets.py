@@ -1,7 +1,7 @@
 """A pretend Secret Service (org.freedesktop.secrets), for tests/test_keychain.py: run on a private session bus.
 It keeps items in memory and answers as GNOME Keyring does, in the specification's own types, and writes each call
 it gets, with the call's D-Bus signature, to the file named on its command line. `--locked`: its collection is
-locked, so reading finds nothing unlocked and saving needs a prompt. https://specifications.freedesktop.org/secret-service/"""
+locked, with a key already in it, so reading finds it only among the locked and saving or removing needs a prompt. https://specifications.freedesktop.org/secret-service/"""
 
 import json
 import sys
@@ -146,6 +146,9 @@ app = QCoreApplication([])
 expose(ROOT, Service)
 expose(COLLECTION, Collection)
 expose(PROMPT, Prompt)
+if LOCKED:  # a key saved before the keyring was locked: there to find, not to read without asking
+    items[COLLECTION + "/0"] = {"attributes": {"application": "chatmon", "brain": "anthropic-api"}, "secret": b"sk-old", "type": "text/plain"}
+    expose(COLLECTION + "/0", Item)
 assert QDBusConnection.sessionBus().registerService("org.freedesktop.secrets")
 print("ready", flush=True)
 app.exec()

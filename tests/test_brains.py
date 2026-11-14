@@ -720,15 +720,18 @@ if sys.platform == "win32":  # as npm installs a tool: a .cmd file, with the rea
     command = ["slowbrain"]
 else:
     command = [sys.executable, str(sleeper), str(flag)]
-asker = brains.Asker()
-asker.ask(brains.Brain("slow", "command", label="Slow", command=command), "", [], "hi", 60)
-deadline = time.monotonic() + 20
-while not flag.exists() and time.monotonic() < deadline:
-    spin(0.05)
-asker.cancel()
-del asker  # straight away, its process not yet ended
-gc.collect()
-spin(1.5)
+for _ in range(4):  # it went wrong about seven times in ten: four tries all but always catch it
+    flag.unlink(missing_ok=True)
+    asker = brains.Asker()
+    asker.ask(brains.Brain("slow", "command", label="Slow", command=command), "", [], "hi", 60)
+    deadline = time.monotonic() + 20
+    while not flag.exists() and time.monotonic() < deadline:
+        spin(0.05)
+    asker.cancel()
+    del asker  # straight away, its process not yet ended
+    gc.collect()
+    spin(0.5)
+spin(1)
 print("survived", [t for t in said if "Destroyed while" in t])
 """
 
