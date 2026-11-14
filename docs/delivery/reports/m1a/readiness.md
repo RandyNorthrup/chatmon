@@ -66,3 +66,11 @@ the check itself must make (tampered list, bad signature, older version), as the
    `wintrust.py` and `updates.verify`). Nothing else is ordered.
 
 Result: ready to implement, with findings 1, 2 and 5 carried as integration notes and pending operations.
+
+## Re-check after implementation
+
+The plan's narrative gained its Results, Integration notes, Changelog notes and README notes, and the drill
+specs were named `drill-spec.json` and `drill-spec-linux.json` (the harness writes its results beside the log,
+under the log's name). No requirement, criterion or task changed. Findings 1, 2 and 5 turned out as foreseen:
+seven tests in other milestones' files fail on Windows until the conftest isolation lands (Integration notes 1),
+`packages.yml` needs the new helper call (Integration notes 2), and the macOS checks wait for CI. Still ready.

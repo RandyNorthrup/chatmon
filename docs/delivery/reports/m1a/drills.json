@@ -1,0 +1,575 @@
+[
+  {
+    "id": "AC-01-VERIFY-signature",
+    "requirement": "M1A-01",
+    "file": "chatmon/releasecheck.py",
+    "mutation": {
+      "find": "    if not any(ed25519.verify(bytes.fromhex(key), text, signature) for key in (RELEASE_KEYS if keys is None else keys)):",
+      "replace": "    if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_releasecheck.py::test_a_tampered_list_is_refused",
+      "tests/test_releasecheck.py::test_a_bad_signature_is_refused"
+    ],
+    "expected": [
+      "DID NOT RAISE"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f19f92136b3f31d6582374e69fe12358c6b0512503cd5fb3caeea401bd1fc07",
+    "baseline_exit": 0,
+    "mutated_sha256": "792ed56338643cb3f8217a5ad6ff3ea449bda845cb57f9d98bb6d796ce2cb119",
+    "mutated_exit": 1,
+    "observed": "E       Failed: DID NOT RAISE Refused",
+    "after_sha256": "9f19f92136b3f31d6582374e69fe12358c6b0512503cd5fb3caeea401bd1fc07",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01-VERIFY-version",
+    "requirement": "M1A-01",
+    "file": "chatmon/releasecheck.py",
+    "mutation": {
+      "find": "    if version_key(version) <= version_key(installed):",
+      "replace": "    if version_key(version) < version_key(installed):"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_releasecheck.py::test_an_older_or_the_same_version_is_refused"
+    ],
+    "expected": [
+      "test_an_older_or_the_same_version_is_refused[9.0.0]",
+      "DID NOT RAISE"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f19f92136b3f31d6582374e69fe12358c6b0512503cd5fb3caeea401bd1fc07",
+    "baseline_exit": 0,
+    "mutated_sha256": "c0721393ffb4329adfddf0e2bc191adc64283eb317c0bfb244b19c0c5affd875",
+    "mutated_exit": 1,
+    "observed": "_____________ test_an_older_or_the_same_version_is_refused[9.0.0] _____________",
+    "after_sha256": "9f19f92136b3f31d6582374e69fe12358c6b0512503cd5fb3caeea401bd1fc07",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01-USER-handoff",
+    "requirement": "M1A-01",
+    "file": "chatmon/updates.py",
+    "mutation": {
+      "find": "        return PKEXEC, [HELPER, str(path), str(sums), str(signature)], {}",
+      "replace": "        return PKEXEC, [HELPER, str(path), sha256(path) if path.exists() else \"0\" * 64], {}"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_updates.py::test_root_is_handed_the_signed_list_never_a_checksum"
+    ],
+    "expected": [
+      "test_root_is_handed_the_signed_list_never_a_checksum"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "baseline_exit": 0,
+    "mutated_sha256": "e551832b7ffb7b7f4466e6fba914aad9cc9862c01be1e2fd6162c46caddd94cf",
+    "mutated_exit": 1,
+    "observed": "____________ test_root_is_handed_the_signed_list_never_a_checksum _____________",
+    "after_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-03-sqos",
+    "requirement": "M1A-03",
+    "file": "chatmon/winpipe.py",
+    "mutation": {
+      "find": "                             FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, None)",
+      "replace": "                             FILE_FLAG_OVERLAPPED, None)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_winpipe.py::test_a_server_learns_who_you_are_but_can_never_act_as_you"
+    ],
+    "expected": [
+      "assert [2] == [1]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "55627d50aa56bd9f9305ee75e563f0e7567d29290588c574d55f4b1edede4c53",
+    "baseline_exit": 0,
+    "mutated_sha256": "a5f877a5fca179167ed62969c3a8ca6e91c0a552e925d9f09707346cbdb60eab",
+    "mutated_exit": 1,
+    "observed": "E       assert [2] == [1]",
+    "after_sha256": "55627d50aa56bd9f9305ee75e563f0e7567d29290588c574d55f4b1edede4c53",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-03-owner",
+    "requirement": "M1A-03",
+    "file": "chatmon/winpipe.py",
+    "mutation": {
+      "find": "        if not server_is_me(handle):",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_winpipe.py::test_a_pipe_someone_else_serves_is_told_nothing"
+    ],
+    "expected": [
+      "test_a_pipe_someone_else_serves_is_told_nothing"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "55627d50aa56bd9f9305ee75e563f0e7567d29290588c574d55f4b1edede4c53",
+    "baseline_exit": 0,
+    "mutated_sha256": "5993d54f2cc1ffd8de26c6cb87377fc643cf789dd909524ba2de265c47bb3197",
+    "mutated_exit": 1,
+    "observed": "_______________ test_a_pipe_someone_else_serves_is_told_nothing _______________",
+    "after_sha256": "55627d50aa56bd9f9305ee75e563f0e7567d29290588c574d55f4b1edede4c53",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-04-gate",
+    "requirement": "M1A-04",
+    "file": "chatmon/agents.py",
+    "mutation": {
+      "find": "    root's rights (see elevated).\"\"\"\r\n    if elevated():",
+      "replace": "    root's rights (see elevated).\"\"\"\r\n    if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_agents.py::test_elevated_no_agents_command_line_ever_starts"
+    ],
+    "expected": [
+      "DID NOT RAISE"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "da8db9b327bbbc397bd337afe15c261fca6ea2ed6570adda3546c714cdf13a1b",
+    "baseline_exit": 0,
+    "mutated_sha256": "835a978342b9966354a63ad3a1759328163146baac2f53b02733e79db5d0fe45",
+    "mutated_exit": 1,
+    "observed": "E           Failed: DID NOT RAISE AgentError",
+    "after_sha256": "da8db9b327bbbc397bd337afe15c261fca6ea2ed6570adda3546c714cdf13a1b",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-05-revocation-asked",
+    "requirement": "M1A-05",
+    "file": "chatmon/wintrust.py",
+    "mutation": {
+      "find": "    data.fdwRevocationChecks = WTD_REVOKE_WHOLECHAIN",
+      "replace": "    data.fdwRevocationChecks = WTD_REVOKE_NONE"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintrust.py::test_revocation_is_asked_for_the_whole_chain"
+    ],
+    "expected": [
+      "test_revocation_is_asked_for_the_whole_chain"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "d68b8b6fff71e0a61d99738c5a810b6d2633f1bdb32378f8186097ee76cbca88",
+    "baseline_exit": 0,
+    "mutated_sha256": "2fb69a42a891715c92c5198f6cd478342857f9ecd15fb56387d23e77f2f8cece",
+    "mutated_exit": 1,
+    "observed": "________________ test_revocation_is_asked_for_the_whole_chain _________________",
+    "after_sha256": "d68b8b6fff71e0a61d99738c5a810b6d2633f1bdb32378f8186097ee76cbca88",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-05-try-later",
+    "requirement": "M1A-05",
+    "file": "chatmon/updates.py",
+    "mutation": {
+      "find": "        if status == \"RevocationUnknown\":",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_updates.py::test_a_revoked_certificate_is_never_installed_and_an_unknown_one_not_yet"
+    ],
+    "expected": [
+      "test_a_revoked_certificate_is_never_installed_and_an_unknown_one_not_yet"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "baseline_exit": 0,
+    "mutated_sha256": "a9391b944741d2ee7cca1e2e28ad862f0d8e12881a8936bb175c82b61fb6a47c",
+    "mutated_exit": 1,
+    "observed": "__ test_a_revoked_certificate_is_never_installed_and_an_unknown_one_not_yet ___",
+    "after_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-06-hold",
+    "requirement": "M1A-06",
+    "file": "chatmon/updates.py",
+    "mutation": {
+      "find": "            hold = wintrust.hold(copy)",
+      "replace": "            hold = None"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change"
+    ],
+    "expected": [
+      "test_the_windows_installer_runs_from_a_copy_nobody_can_change"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "baseline_exit": 0,
+    "mutated_sha256": "f8c7a013e1e299895327b4c799957c4d388eb017d405d8dba0309917849c2d08",
+    "mutated_exit": 1,
+    "observed": "________ test_the_windows_installer_runs_from_a_copy_nobody_can_change ________",
+    "after_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-07-prune",
+    "requirement": "M1A-07",
+    "file": "chatmon/agents.py",
+    "mutation": {
+      "find": "    for *_, item in sorted(found)[:-BACKUPS_KEPT]:",
+      "replace": "    for *_, item in sorted(found)[:0]:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_agents.py::test_backups_are_private_new_files_and_only_the_newest_five_are_kept"
+    ],
+    "expected": [
+      "test_backups_are_private_new_files_and_only_the_newest_five_are_kept"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "da8db9b327bbbc397bd337afe15c261fca6ea2ed6570adda3546c714cdf13a1b",
+    "baseline_exit": 0,
+    "mutated_sha256": "916860b7dfa5f6cb6eb8e9cd4167c21cf300a7b249109189b5b28ecc6f5169cb",
+    "mutated_exit": 1,
+    "observed": "____ test_backups_are_private_new_files_and_only_the_newest_five_are_kept _____",
+    "after_sha256": "da8db9b327bbbc397bd337afe15c261fca6ea2ed6570adda3546c714cdf13a1b",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-08-codex-top",
+    "requirement": "M1A-08",
+    "file": "chatmon/agents.py",
+    "mutation": {
+      "find": "if item.strip() and not item.lstrip().startswith(\"#\")), len(lines))",
+      "replace": "if item.lstrip().startswith(\"[\")), len(lines))"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_agents.py::test_codex_takes_a_config_with_arrays_inside_arrays",
+      "tests/test_agents.py::test_codex_connect_then_disconnect_changes_nothing_but_notify"
+    ],
+    "expected": [
+      "Couldn't add the notify line cleanly"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "da8db9b327bbbc397bd337afe15c261fca6ea2ed6570adda3546c714cdf13a1b",
+    "baseline_exit": 0,
+    "mutated_sha256": "9b0ee6caf5e85c3eb6fd847204112fcb3fac472229207286c0b3c0e6fa9029ab",
+    "mutated_exit": 1,
+    "observed": ">           raise AgentError(\"Couldn't add the notify line cleanly; not touching the file.\")",
+    "after_sha256": "da8db9b327bbbc397bd337afe15c261fca6ea2ed6570adda3546c714cdf13a1b",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09-ORDER-swap",
+    "requirement": "M1A-09",
+    "file": "chatmon/attachments.py",
+    "mutation": {
+      "find": "    if not stat.S_ISREG(info.st_mode) or (info.st_dev, info.st_ino) != (looked.st_dev, looked.st_ino):",
+      "replace": "    if not stat.S_ISREG(info.st_mode):"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_attachments.py::test_a_file_swapped_between_the_look_and_the_open_is_refused"
+    ],
+    "expected": [
+      "DID NOT RAISE"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "461680add09637a5c835d8668ede91d454a39f450f4072e0fc683ae408f3217d",
+    "baseline_exit": 0,
+    "mutated_sha256": "9bd6a63b287d6d402edd9bb62e23e0adc29f3e3c539c0488ea7a592d4eb143bd",
+    "mutated_exit": 1,
+    "observed": "E       Failed: DID NOT RAISE AttachError",
+    "after_sha256": "461680add09637a5c835d8668ede91d454a39f450f4072e0fc683ae408f3217d",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09-ORDER-look-first",
+    "requirement": "M1A-09",
+    "file": "chatmon/attachments.py",
+    "mutation": {
+      "find": "    if not stat.S_ISREG(looked.st_mode):",
+      "replace": "    if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_attachments.py::test_a_folder_is_refused_without_being_opened"
+    ],
+    "expected": [
+      "test_a_folder_is_refused_without_being_opened"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "461680add09637a5c835d8668ede91d454a39f450f4072e0fc683ae408f3217d",
+    "baseline_exit": 0,
+    "mutated_sha256": "e5f765c66dfdc1b251502ca8fcffbe5b606b33821664442aac74c42fe57a7b83",
+    "mutated_exit": 1,
+    "observed": "________________ test_a_folder_is_refused_without_being_opened ________________",
+    "after_sha256": "461680add09637a5c835d8668ede91d454a39f450f4072e0fc683ae408f3217d",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09-REMOTE-drive",
+    "requirement": "M1A-09",
+    "file": "chatmon/attachments.py",
+    "mutation": {
+      "find": "_drive_type(drive + \"\\\\\") == DRIVE_REMOTE:",
+      "replace": "_drive_type(drive + \"\\\\\") == -1:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_attachments.py::test_windows_mapped_drives_are_refused_and_local_ones_taken"
+    ],
+    "expected": [
+      "DID NOT RAISE"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "461680add09637a5c835d8668ede91d454a39f450f4072e0fc683ae408f3217d",
+    "baseline_exit": 0,
+    "mutated_sha256": "d6df6ab4605db83d3b85a92132f1735b2e600046b6fff8b4de764bb6c8ee4e49",
+    "mutated_exit": 1,
+    "observed": "E       Failed: DID NOT RAISE AttachError",
+    "after_sha256": "461680add09637a5c835d8668ede91d454a39f450f4072e0fc683ae408f3217d",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-11-local",
+    "requirement": "M1A-11",
+    "file": "chatmon/paths.py",
+    "mutation": {
+      "find": "    if sys.platform == \"win32\":\r\n        return _local()",
+      "replace": "    if sys.platform == \"win32\":\r\n        return _roaming()"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_paths.py::test_on_windows_everything_lives_on_this_computer"
+    ],
+    "expected": [
+      "test_on_windows_everything_lives_on_this_computer"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1427e80e866d5e82424292d689cc4f0ab6d9d3e7648481e56691749f16018442",
+    "baseline_exit": 0,
+    "mutated_sha256": "5b206bc6cbf90530e0594bc76ac4bd2e3acd33bc187ea95d8b0d55308c002a4d",
+    "mutated_exit": 1,
+    "observed": "______________ test_on_windows_everything_lives_on_this_computer ______________",
+    "after_sha256": "1427e80e866d5e82424292d689cc4f0ab6d9d3e7648481e56691749f16018442",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-11-newer-wins",
+    "requirement": "M1A-11",
+    "file": "chatmon/paths.py",
+    "mutation": {
+      "find": "            if target.exists() and target.stat().st_mtime >= item.stat().st_mtime:",
+      "replace": "            if target.exists():"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_paths.py::test_they_join_whats_on_this_computer_already_the_newer_file_winning"
+    ],
+    "expected": [
+      "test_they_join_whats_on_this_computer_already_the_newer_file_winning"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1427e80e866d5e82424292d689cc4f0ab6d9d3e7648481e56691749f16018442",
+    "baseline_exit": 0,
+    "mutated_sha256": "441f3595d38f85ed9101a79cd34e4cd9aa5bc22a6b77d993a53ea1969ef042e6",
+    "mutated_exit": 1,
+    "observed": "____ test_they_join_whats_on_this_computer_already_the_newer_file_winning _____",
+    "after_sha256": "1427e80e866d5e82424292d689cc4f0ab6d9d3e7648481e56691749f16018442",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12-kind",
+    "requirement": "M1A-12",
+    "file": "chatmon/updates.py",
+    "mutation": {
+      "find": "                    if subprocess.run(query, capture_output=True, timeout=10).returncode == 0:",
+      "replace": "                    if subprocess.run(query, capture_output=True, timeout=10).returncode != 0:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_updates.py::test_a_chatmon_installed_by_the_system_says_which_package_manager"
+    ],
+    "expected": [
+      "test_a_chatmon_installed_by_the_system_says_which_package_manager"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "baseline_exit": 0,
+    "mutated_sha256": "6f5443f0e70f2506cd3c452b82f25b3ce59548dd75fbcbab5f539b58e3624bfc",
+    "mutated_exit": 1,
+    "observed": "______ test_a_chatmon_installed_by_the_system_says_which_package_manager ______",
+    "after_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12-relaunch",
+    "requirement": "M1A-12",
+    "file": "chatmon/updates.py",
+    "mutation": {
+      "find": "        relaunch = relaunch_command(self.kind)",
+      "replace": "        relaunch = None"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why"
+    ],
+    "expected": [
+      "test_an_install_runs_root_side_then_relaunches_or_says_why[installed]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "baseline_exit": 0,
+    "mutated_sha256": "ac3a4c110aa7286b797ee388e07623bf75f2962fbf44050a4295866738e561ed",
+    "mutated_exit": 1,
+    "observed": "____ test_an_install_runs_root_side_then_relaunches_or_says_why[installed] ____",
+    "after_sha256": "5dbb6e09f06f3da43d7c4e72ba3cef4329330d1d85927da3115c022de2dc41ca",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-M6A-14-pin",
+    "requirement": "M6A-14",
+    "file": "packaging/build.py",
+    "mutation": {
+      "find": "chatmon@v{v}",
+      "replace": "chatmon"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_packaging.py::test_release_notes_pin_the_pipx_install_to_the_release"
+    ],
+    "expected": [
+      "test_release_notes_pin_the_pipx_install_to_the_release"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ff874dd9e294d79bbe307bf9463eca4d55467018b6bb0201d300eca4463982f2",
+    "baseline_exit": 0,
+    "mutated_sha256": "d5b8019be6b9fca946ed867a40c05ea1ae2cb338705116150b53ed1e81ccb846",
+    "mutated_exit": 1,
+    "observed": "___________ test_release_notes_pin_the_pipx_install_to_the_release ____________",
+    "after_sha256": "ff874dd9e294d79bbe307bf9463eca4d55467018b6bb0201d300eca4463982f2",
+    "restored_exit": 0
+  }
+]

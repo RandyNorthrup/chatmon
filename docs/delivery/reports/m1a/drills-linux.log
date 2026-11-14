@@ -1,0 +1,400 @@
+red drills from docs/delivery/reports/m1a/drill-spec-linux.json
+python: /tmp/m1a-venv/bin/python
+copy: /tmp/chatmon-drill-oua_z1b1
+copied 219 files
+
+=== drill AC-01-LINUX-launcher-owner (M1A-01) on packaging/linux/verify-update
+command: /tmp/m1a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own
+-- green: exit 0, 4 passed
+....                                                                     [100%]
+4 passed in 0.49s
+-- red: exit 1
+    @pytest.mark.parametrize("change", ["group-writable module", "others-writable folder", "module is a link", "compiled copy writable"])
+    def test_the_check_isnt_loaded_from_anything_but_roots_own(linux, change, tmp_path):
+        release, home, record, _temp, run = linux
+        module = home / "chatmon" / "ed25519.py"
+        if change == "group-writable module":
+            module.chmod(0o664)
+        elif change == "others-writable folder":
+            (home / "chatmon").chmod(0o757)
+        elif change == "module is a link":
+            elsewhere = tmp_path / "ed25519.py"
+            shutil.copy(module, elsewhere)
+            module.unlink()
+            module.symlink_to(elsewhere)
+        else:
+            compiled = home / "chatmon" / "__pycache__"
+            compiled.mkdir(mode=0o755)
+            write(compiled / "releasecheck.cpython-399.pyc", "", 0o666)
+        out = run(release.package, release.sums, release.sig)
+>       assert out.returncode == 3 and "isn't root's alone" in out.stderr, out
+E       AssertionError: CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-1/test_the_check_isnt_loaded_fro2/install-update', '/tm...t-of-randy/pytest-1/test_the_check_isnt_loaded_fro2/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')
+E       assert (0 == 3)
+E        +  where 0 = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-1/test_the_check_isnt_loaded_fro2/install-update', '/tm...t-of-randy/pytest-1/test_the_check_isnt_loaded_fro2/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='').returncode
+
+tests/test_install_update.py:193: AssertionError
+_ test_the_check_isnt_loaded_from_anything_but_roots_own[compiled copy writable] _
+
+linux = (<test_install_update.Release object at 0x7b127c89b490>, PosixPath('/tmp/pytest-of-randy/pytest-1/test_the_check_isnt_...('/tmp/pytest-of-randy/pytest-1/test_the_check_isnt_loaded_fro3/tmp'), <function linux.<locals>.run at 0x7b127c77a560>)
+change = 'compiled copy writable'
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-1/test_the_check_isnt_loaded_fro3')
+
+    @pytest.mark.parametrize("change", ["group-writable module", "others-writable folder", "module is a link", "compiled copy writable"])
+    def test_the_check_isnt_loaded_from_anything_but_roots_own(linux, change, tmp_path):
+        release, home, record, _temp, run = linux
+        module = home / "chatmon" / "ed25519.py"
+        if change == "group-writable module":
+            module.chmod(0o664)
+        elif change == "others-writable folder":
+            (home / "chatmon").chmod(0o757)
+        elif change == "module is a link":
+            elsewhere = tmp_path / "ed25519.py"
+            shutil.copy(module, elsewhere)
+            module.unlink()
+            module.symlink_to(elsewhere)
+        else:
+            compiled = home / "chatmon" / "__pycache__"
+            compiled.mkdir(mode=0o755)
+            write(compiled / "releasecheck.cpython-399.pyc", "", 0o666)
+        out = run(release.package, release.sums, release.sig)
+>       assert out.returncode == 3 and "isn't root's alone" in out.stderr, out
+E       AssertionError: CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-1/test_the_check_isnt_loaded_fro3/install-update', '/tm...t-of-randy/pytest-1/test_the_check_isnt_loaded_fro3/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')
+E       assert (0 == 3)
+E        +  where 0 = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-1/test_the_check_isnt_loaded_fro3/install-update', '/tm...t-of-randy/pytest-1/test_the_check_isnt_loaded_fro3/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='').returncode
+
+tests/test_install_update.py:193: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[group-writable module]
+FAILED tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[others-writable folder]
+FAILED tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[module is a link]
+FAILED tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[compiled copy writable]
+4 failed in 1.40s
+-- restored green: exit 0, 4 passed
+....                                                                     [100%]
+4 passed in 0.54s
+
+=== drill AC-01-LINUX-refusal-stops (M1A-01) on packaging/linux/install-update
+command: /tmp/m1a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_install_update.py::test_a_tampered_list_is_refused_by_root tests/test_install_update.py::test_an_older_release_is_refused_by_root
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.29s
+-- red: exit 1
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___________________ test_a_tampered_list_is_refused_by_root ____________________
+
+linux = (<test_install_update.Release object at 0x7250041b67b0>, PosixPath('/tmp/pytest-of-randy/pytest-4/test_a_tampered_list...('/tmp/pytest-of-randy/pytest-4/test_a_tampered_list_is_refuse0/tmp'), <function linux.<locals>.run at 0x7250040a3b60>)
+
+    def test_a_tampered_list_is_refused_by_root(linux):
+        release, _home, record, _temp, run = linux
+        release.sums.write_bytes(release.sums.read_bytes() + b"# changed after signing\n")
+        out = run(release.package, release.sums, release.sig)
+>       assert out.returncode == 3 and "isn't signed with Chatmon's release key" in out.stderr, out
+E       AssertionError: CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-4/test_a_tampered_list_is_refuse0/install-update', '/tm...e=0, stdout='', stderr="The update wasn't installed: its list of checksums isn't signed with Chatmon's release key.
+E         ")
+E       assert (0 == 3)
+E        +  where 0 = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-4/test_a_tampered_list_is_refuse0/install-update', '/tm...e=0, stdout='', stderr="The update wasn't installed: its list of checksums isn't signed with Chatmon's release key.\n").returncode
+
+tests/test_install_update.py:137: AssertionError
+___________________ test_an_older_release_is_refused_by_root ___________________
+
+linux = (<test_install_update.Release object at 0x7250041fa850>, PosixPath('/tmp/pytest-of-randy/pytest-4/test_an_older_releas...('/tmp/pytest-of-randy/pytest-4/test_an_older_release_is_refus0/tmp'), <function linux.<locals>.run at 0x7250040a2b90>)
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-4/test_an_older_release_is_refus0')
+
+    def test_an_older_release_is_refused_by_root(linux, tmp_path):
+        """A real, signed release, but not newer than the one installed: rolling back is refused."""
+        _release, home, record, _temp, run = linux
+        old = Release(tmp_path / "old", "chatmon_0.9.1-1_all.deb", b"an older package")
+        package_copy(home, old.public)
+        out = run(old.package, old.sums, old.sig)
+>       assert out.returncode == 3 and "isn't newer than the 0.9.2 installed" in out.stderr, out
+E       AssertionError: CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-4/test_an_older_release_is_refus0/install-update', '/tm...=0, stdout='', stderr="The update wasn't installed: it's Chatmon 0.9.1, which isn't newer than the 0.9.2 installed.
+E         ")
+E       assert (0 == 3)
+E        +  where 0 = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-4/test_an_older_release_is_refus0/install-update', '/tm...=0, stdout='', stderr="The update wasn't installed: it's Chatmon 0.9.1, which isn't newer than the 0.9.2 installed.\n").returncode
+
+tests/test_install_update.py:155: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_install_update.py::test_a_tampered_list_is_refused_by_root
+FAILED tests/test_install_update.py::test_an_older_release_is_refused_by_root
+2 failed in 0.28s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.22s
+
+=== drill AC-01-LINUX-installs-the-copy (M1A-01) on packaging/linux/install-update
+command: /tmp/m1a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_install_update.py::test_a_signed_newer_package_is_installed_from_roots_own_copy
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.17s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_a_signed_newer_package_is_installed_from_roots_own_copy _________
+
+linux = (<test_install_update.Release object at 0x75bf530927b0>, PosixPath('/tmp/pytest-of-randy/pytest-7/test_a_signed_newer_...('/tmp/pytest-of-randy/pytest-7/test_a_signed_newer_package_is0/tmp'), <function linux.<locals>.run at 0x75bf52f7fb60>)
+
+    def test_a_signed_newer_package_is_installed_from_roots_own_copy(linux):
+        release, _home, record, temp, run = linux
+        out = run(release.package, release.sums, release.sig)
+        assert out.returncode == 0, out
+        assert (record / "installed").read_bytes() == release.package.read_bytes()
+        args = (record / "args").read_text().split()
+>       assert args[:2] == ["install", "-y"] and Path(args[-1]).name == "update.deb" and Path(args[-1]).parent.parent == temp
+E       AssertionError: assert (['install', '-y'] == ['install', '-y']
+E         
+E         Use -v to get more diff and 'chatmon_9.0.0-1_all.deb' == 'update.deb'
+E         
+E         - update.deb
+E         + chatmon_9.0.0-1_all.deb)
+
+tests/test_install_update.py:128: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_install_update.py::test_a_signed_newer_package_is_installed_from_roots_own_copy
+1 failed in 0.14s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.18s
+
+=== drill AC-02-owner (M1A-02) on packaging/macos/scripts/postinstall
+command: /tmp/m1a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing
+-- green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.07s
+-- red: exit 1
+....F                                                                    [100%]
+=================================== FAILURES ===================================
+__________ test_a_folder_not_roots_alone_gets_nothing[someone else's] __________
+
+postinstall = (PosixPath('/tmp/pytest-of-randy/pytest-10/test_a_folder_not_roots_alone_4/usr/local'), PosixPath('/tmp/pytest-of-randy/pytest-10/test_a_folder_not_roots_alone_4/usr/local/bin'), <function postinstall.<locals>.run at 0x7dde62488b40>)
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-10/test_a_folder_not_roots_alone_4')
+unsafe = "someone else's"
+
+    @POSIX
+    @pytest.mark.parametrize("unsafe", ["others can write", "group can write", "holder others can write", "a link", "someone else's"])
+    def test_a_folder_not_roots_alone_gets_nothing(postinstall, tmp_path, unsafe):
+        local, bin_, run = postinstall
+        bin_.mkdir(mode=0o755)
+        bin_.chmod(0o755)
+        owner = None
+        if unsafe == "others can write":
+            bin_.chmod(0o777)
+        elif unsafe == "group can write":
+            bin_.chmod(0o775)
+        elif unsafe == "holder others can write":
+            local.chmod(0o777)
+        elif unsafe == "a link":
+            bin_.rmdir()
+            elsewhere = tmp_path / "elsewhere"
+            elsewhere.mkdir(mode=0o755)
+            bin_.symlink_to(elsewhere)
+        else:
+            owner = os.getuid() + 1  # "root" is someone this test isn't
+        out = run(owner)
+>       assert out.returncode == 0 and "isn't root's alone" in out.stderr, out
+E       AssertionError: CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-10/test_a_folder_not_roots_alone_4/postinstall'], returncode=0, stdout='', stderr='')
+E       assert (0 == 0 and "isn't root's alone" in '')
+E        +  where 0 = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-10/test_a_folder_not_roots_alone_4/postinstall'], returncode=0, stdout='', stderr='').returncode
+E        +  and   '' = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-10/test_a_folder_not_roots_alone_4/postinstall'], returncode=0, stdout='', stderr='').stderr
+
+tests/test_packaging.py:92: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[someone else's]
+1 failed, 4 passed in 0.10s
+-- restored green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.07s
+
+=== drill AC-02-writable (M1A-02) on packaging/macos/scripts/postinstall
+command: /tmp/m1a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing
+-- green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.07s
+-- red: exit 1
+        if unsafe == "others can write":
+            bin_.chmod(0o777)
+        elif unsafe == "group can write":
+            bin_.chmod(0o775)
+        elif unsafe == "holder others can write":
+            local.chmod(0o777)
+        elif unsafe == "a link":
+            bin_.rmdir()
+            elsewhere = tmp_path / "elsewhere"
+            elsewhere.mkdir(mode=0o755)
+            bin_.symlink_to(elsewhere)
+        else:
+            owner = os.getuid() + 1  # "root" is someone this test isn't
+        out = run(owner)
+>       assert out.returncode == 0 and "isn't root's alone" in out.stderr, out
+E       AssertionError: CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_1/postinstall'], returncode=0, stdout='', stderr='')
+E       assert (0 == 0 and "isn't root's alone" in '')
+E        +  where 0 = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_1/postinstall'], returncode=0, stdout='', stderr='').returncode
+E        +  and   '' = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_1/postinstall'], returncode=0, stdout='', stderr='').stderr
+
+tests/test_packaging.py:92: AssertionError
+_____ test_a_folder_not_roots_alone_gets_nothing[holder others can write] ______
+
+postinstall = (PosixPath('/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_2/usr/local'), PosixPath('/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_2/usr/local/bin'), <function postinstall.<locals>.run at 0x73c580ab7110>)
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_2')
+unsafe = 'holder others can write'
+
+    @POSIX
+    @pytest.mark.parametrize("unsafe", ["others can write", "group can write", "holder others can write", "a link", "someone else's"])
+    def test_a_folder_not_roots_alone_gets_nothing(postinstall, tmp_path, unsafe):
+        local, bin_, run = postinstall
+        bin_.mkdir(mode=0o755)
+        bin_.chmod(0o755)
+        owner = None
+        if unsafe == "others can write":
+            bin_.chmod(0o777)
+        elif unsafe == "group can write":
+            bin_.chmod(0o775)
+        elif unsafe == "holder others can write":
+            local.chmod(0o777)
+        elif unsafe == "a link":
+            bin_.rmdir()
+            elsewhere = tmp_path / "elsewhere"
+            elsewhere.mkdir(mode=0o755)
+            bin_.symlink_to(elsewhere)
+        else:
+            owner = os.getuid() + 1  # "root" is someone this test isn't
+        out = run(owner)
+>       assert out.returncode == 0 and "isn't root's alone" in out.stderr, out
+E       AssertionError: CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_2/postinstall'], returncode=0, stdout='', stderr='')
+E       assert (0 == 0 and "isn't root's alone" in '')
+E        +  where 0 = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_2/postinstall'], returncode=0, stdout='', stderr='').returncode
+E        +  and   '' = CompletedProcess(args=['/bin/sh', '/tmp/pytest-of-randy/pytest-13/test_a_folder_not_roots_alone_2/postinstall'], returncode=0, stdout='', stderr='').stderr
+
+tests/test_packaging.py:92: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[others can write]
+FAILED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[group can write]
+FAILED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[holder others can write]
+3 failed, 2 passed in 0.10s
+-- restored green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.07s
+
+=== drill AC-07-private (M1A-07) on chatmon/agents.py
+command: /tmp/m1a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_agents.py::test_backups_are_private_new_files_and_only_the_newest_five_are_kept
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.18s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____ test_backups_are_private_new_files_and_only_the_newest_five_are_kept _____
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-16/test_backups_are_private_new_f0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x753f3c2d0d60>
+
+    def test_backups_are_private_new_files_and_only_the_newest_five_are_kept(tmp_path, monkeypatch):
+        settings = tmp_path / "settings.json"
+        monkeypatch.setattr(agents.time, "strftime", lambda fmt: "20261114-120000")  # all in the same second
+        taken = settings.with_name("settings.json.chatmon-backup-20261114-120000")
+        taken.write_text("someone else's file")  # already at the first name: never written over, nor through
+        if sys.platform != "win32":
+            victim = tmp_path / "victim"
+            victim.write_text("precious")
+            settings.with_name(taken.name + "-2").symlink_to(victim)
+        for i in range(8):
+            settings.write_text(json.dumps({"n": i}))
+            if sys.platform != "win32":
+                settings.chmod(0o644)  # readable by others, as settings files often are
+            copy = agents.backup(settings)
+            assert copy.read_text() == json.dumps({"n": i})
+            if i == 0:  # the names already there were passed over, not written
+                assert copy.name == taken.name + ("-2" if sys.platform == "win32" else "-3")
+                assert taken.read_text() == "someone else's file"
+            if sys.platform != "win32":
+>               assert copy.stat().st_mode & 0o777 == 0o600
+E               AssertionError: assert (33188 & 511) == 384
+E                +  where 33188 = os.stat_result(st_mode=33188, st_ino=7016, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=8, st_atime=1794687027, st_mtime=1794687027, st_ctime=1794687027).st_mode
+E                +    where os.stat_result(st_mode=33188, st_ino=7016, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=8, st_atime=1794687027, st_mtime=1794687027, st_ctime=1794687027) = stat()
+E                +      where stat = PosixPath('/tmp/pytest-of-randy/pytest-16/test_backups_are_private_new_f0/settings.json.chatmon-backup-20261114-120000-3').stat
+
+tests/test_agents.py:649: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_agents.py::test_backups_are_private_new_files_and_only_the_newest_five_are_kept
+1 failed in 0.40s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.17s
+
+=== drill AC-09-REMOTE-linux (M1A-09) on chatmon/attachments.py
+command: /tmp/m1a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_attachments.py::test_linux_network_and_fuse_mounts_are_refused_but_not_fuseblk
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.14s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_linux_network_and_fuse_mounts_are_refused_but_not_fuseblk ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78a06dc2fbb0>
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-19/test_linux_network_and_fuse_mo0')
+opened = ['/tmp/pytest-of-randy/pytest-19/test_linux_network_and_fuse_mo0/notes.txt']
+
+    @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Linux statfs and mountinfo")
+    def test_linux_network_and_fuse_mounts_are_refused_but_not_fuseblk(monkeypatch, tmp_path, opened):
+        f = tmp_path / "notes.txt"
+        f.write_text("local", encoding="utf-8")
+        assert attachments._statfs_type(f) not in attachments.LINUX_REMOTE  # the real answer, here
+        assert attachments.from_path(f).text == "local"
+        for magic, says in ((0x6969, "NFS"), (0xFF534D42, "CIFS"), (0xFE534D42, "SMB"), (attachments.FUSE, "FUSE")):
+            monkeypatch.setattr(attachments, "_statfs_type", lambda path, m=magic: m)
+            monkeypatch.setattr(attachments, "_mount_type", lambda path: "fuse.gvfsd-fuse")
+            opened.clear()
+>           with pytest.raises(attachments.AttachError, match=says):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE AttachError
+
+tests/test_attachments.py:147: Failed
+=========================== short test summary info ============================
+FAILED tests/test_attachments.py::test_linux_network_and_fuse_mounts_are_refused_but_not_fuseblk
+1 failed in 0.07s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.06s
+
+=== drill AC-09-ORDER-pipe (M1A-09) on chatmon/attachments.py
+command: /tmp/m1a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_attachments.py::test_a_pipe_or_a_device_is_refused_without_being_opened
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.05s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_a_pipe_or_a_device_is_refused_without_being_opened ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-22/test_a_pipe_or_a_device_is_ref0')
+opened = ['/tmp/pytest-of-randy/pytest-22/test_a_pipe_or_a_device_is_ref0/pipe']
+
+    @POSIX
+    def test_a_pipe_or_a_device_is_refused_without_being_opened(tmp_path, opened):
+        fifo = tmp_path / "pipe"
+        os.mkfifo(fifo)
+        for path in (fifo, Path("/dev/zero"), Path("/dev/null")):
+>           with pytest.raises(attachments.AttachError, match="isn't a file"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: "isn't a file"
+E             Actual message: 'pipe changed as it was opened'
+
+tests/test_attachments.py:52: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_attachments.py::test_a_pipe_or_a_device_is_refused_without_being_opened
+1 failed in 0.08s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.05s
+
+=== summary
+PASS AC-01-LINUX-launcher-owner
+PASS AC-01-LINUX-refusal-stops
+PASS AC-01-LINUX-installs-the-copy
+PASS AC-02-owner
+PASS AC-02-writable
+PASS AC-07-private
+PASS AC-09-REMOTE-linux
+PASS AC-09-ORDER-pipe
