@@ -958,7 +958,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/behavior.log",
-        "sha256": "275d03dde0d49a0326b4d6cbb95152588ad762b59a7b562fd5525fe0fa28afb4"
+        "sha256": "8d7bb7907812bd7b4430b3e84a9413d6b2e929340189480a84ebd22a128f1f75"
       },
       "inputs": [
         {
@@ -1062,7 +1062,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/suite.log",
-        "sha256": "06f65a113da1555b5c9610d99749be43d41a8e4a6e1483b768d6182deb563da6"
+        "sha256": "4cd82fc018e62a9341b3094a3822b03a78992f2ed98f9e0c1194ead3998ea394"
       },
       "inputs": [
         {
@@ -1153,7 +1153,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -1257,7 +1257,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -1361,7 +1361,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -1465,7 +1465,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -1569,7 +1569,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -1673,7 +1673,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -1777,7 +1777,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -1881,7 +1881,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -1985,7 +1985,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2089,7 +2089,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2193,7 +2193,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2297,7 +2297,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2401,7 +2401,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2505,7 +2505,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2609,7 +2609,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2709,7 +2709,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2809,7 +2809,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -2909,7 +2909,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3009,7 +3009,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3117,7 +3117,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3225,7 +3225,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3333,7 +3333,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3441,7 +3441,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3557,7 +3557,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3673,7 +3673,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3789,7 +3789,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3905,7 +3905,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -3997,7 +3997,7 @@ is always understood. Only English ships; a translation is a new file beside `en
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m5/drills.log",
-        "sha256": "c7fb46177010b318d16da11fe52fe2440a3b29089b27ba099b53946e4bee81c0"
+        "sha256": "6c6e9113f63b2984b187feab2f450b881cf4abf7132837eb2ab4060e2d324e74"
       },
       "inputs": [
         {
@@ -4136,7 +4136,7 @@ is always understood. Only English ships; a translation is a new file beside `en
     ],
     "pending_operations": [],
     "next_action": "Hand back to the coordinator: merge wave1/m5, then M6A adds the phrases/*.json package-data glob and the hypothesis/tzdata test dependencies, and M7 wires the reminder contract, explain(), help_text(), command() and agents_report() into app.py, cli.py and the settings.",
-    "source_revision": "ec26a84"
+    "source_revision": "f7e1d0f"
   }
 }
 ```
