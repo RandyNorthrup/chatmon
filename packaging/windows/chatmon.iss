@@ -176,7 +176,10 @@ end;
 { Take Chatmon's hooks back out of the coding agents connected to it, while chatmon.exe is still here to do
   it: left in, they'd go on running a chatmon that's gone (Codex at the end of every turn). Only agents that
   are connected are touched. As whoever uninstalls (Setup's "as the original user" isn't there at uninstall
-  time): you, in an install for you alone. }
+  time): you, in an install for you alone. In an install for everyone that's an administrator, and then
+  chatmon only edits the agents' files: it never starts an agent's own program (Claude Code's, Muse Code's),
+  which is found in folders you can write to (agents.elevated). Claude Code is disconnected by removing the
+  marketplace folder Chatmon gave it; Muse Code says to disconnect it as yourself. }
 procedure DisconnectAgents;
 var
   Code: Integer;
