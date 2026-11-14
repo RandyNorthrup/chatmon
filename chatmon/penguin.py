@@ -67,6 +67,13 @@ NEAR = 160  # px around what takes clicks within which the pointer is polled eve
 FAR_POLL = 0.1  # s between polls of the pointer farther away: it can't reach the chatmon in less
 
 
+WINDOW_CURSORS = {
+    "pointer": Qt.CursorShape.PointingHandCursor,
+    "text": Qt.CursorShape.IBeamCursor,
+    "grabbing": Qt.CursorShape.ClosedHandCursor,
+}
+
+
 class StageWindow(QWidget):
     """The stage's surface as a window over the screen: X11 (and XWayland
     where there's no layer shell), Windows and macOS."""
@@ -127,6 +134,12 @@ class StageWindow(QWidget):
 
     def device_scale(self) -> float:
         return self.devicePixelRatioF()
+
+    def set_cursor(self, shape: str) -> None:
+        """The pointer's shape over the stage, as the overlay's: a hand over a link, a closed hand dragging."""
+        cursor = WINDOW_CURSORS.get(shape, Qt.CursorShape.ArrowCursor)
+        if self.cursor().shape() != cursor:
+            self.setCursor(cursor)
 
     def close(self) -> None:
         self._closing = True
@@ -220,6 +233,16 @@ class Hosted(QObject):
     def anim_key(self, now: float) -> int:
         key = getattr(self.widget, "anim_key", None)
         return key(now) if key is not None and self.visible() else -1
+
+    def ring(self) -> QRegion:
+        """Where its painted border is, in screen coordinates: all that moves as its art animates (the text area
+        inside its margins doesn't), so only that is drawn again each frame of it."""
+        whole = self.rect()
+        layout = self.widget.layout()
+        if layout is None:
+            return QRegion(whole)
+        m = layout.contentsMargins()
+        return QRegion(whole).subtracted(QRegion(whole.adjusted(m.left(), m.top(), -m.right(), -m.bottom())))
 
     def _changed(self, rects) -> None:
         self._contents = None
@@ -394,8 +417,8 @@ class Hosted(QObject):
         """Typed-in text: replaces the selection, at the cursor."""
         if not self.visible() or not text:
             return
-        if isinstance(self.widget.focusWidget(), QLineEdit):
-            text = " ".join(text.splitlines())  # one line
+        if isinstance(self.widget.focusWidget(), QLineEdit):  # a one-line field; the ask box's own keeps or joins lines itself
+            text = " ".join(text.splitlines())
         event = QInputMethodEvent("", [])
         event.setCommitString(text)
         QApplication.sendEvent(self.scene, event)
@@ -659,12 +682,10 @@ class Stage(QObject):
             return math.inf
         if not b.visible() or b.opacity(now) < 1:
             return now  # fading in or out: every frame
-        own = getattr(b, "next_change", None)
-        if own is not None:
-            return own(now)
         due = now + 1 / ANIM_FPS if b.anim_key(now) >= 0 else math.inf
-        expires = getattr(b, "_expires", None)  # until the bubble says (see the M3 plan's integration notes)
-        return min(due, expires) if isinstance(expires, (int, float)) else due
+        # When it goes by itself; not a time already past, which is a bubble paused while pointed at.
+        expires = b.expires() if hasattr(b, "expires") else None
+        return min(due, expires) if expires is not None and expires > now else due
 
     def _poll_pointer(self) -> None:
         """Tell a surface that has to know (Windows, macOS) whether the pointer is over the chatmon: every frame
@@ -800,6 +821,8 @@ class Stage(QObject):
         self._screen = screen
         self._geo = screen.geometry()
         self._key = None  # draw it all again there
+        # A bubble no taller than its share of this screen (it scrolls past that, with More).
+        self.bubble.max_height = getattr(SpeechBubble, "SCREEN_SHARE", 0.4) * screen.availableGeometry().height()
         self.surface.set_screen(screen, self._geo)
         self._floor()
 
@@ -886,7 +909,7 @@ class Stage(QObject):
                 for r in self._menu_rects + menu_rects:
                     dirty = dirty.united(QRegion(r.adjusted(-2, -2, 2, 2)))
             if key[3] != old[3] and self.hosted is not None and self.hosted.visible():  # its bubble moved on a frame
-                dirty = dirty.united(QRegion(self.hosted.rect().translated(-origin)))
+                dirty = dirty.united(self.hosted.ring().translated(-origin))
             self._menu_rects = menu_rects
             self._key = key
             self._penguin, self._bubble_box = penguin, bubble_box
@@ -1045,13 +1068,14 @@ class Stage(QObject):
             self.hosted.mouse(QEvent.Type.MouseMove, gpos, Qt.MouseButton.NoButton, held)
             self._set_cursor(self.hosted.cursor_at(gpos))
             return
-        self._set_cursor("grabbing" if self._dragging else "default")
         if self._press is None:
             hover = self._target_at(pos.toPoint())
             self.bubble.hover = hover if isinstance(hover, int) else None
             self._bubble_hovered(hover not in (None, "penguin"))
             self.behavior.hovered = hover == "penguin"
+            self._set_cursor("pointer" if hover == "link" else "default")  # a link in the bubble: a click opens it
             return
+        self._set_cursor("grabbing" if self._dragging else "default")
         if self._press_on != "penguin":
             return
         if not self._dragging and (gpos.toPoint() - self._press).manhattanLength() < 6:
@@ -1077,6 +1101,8 @@ class Stage(QObject):
             self.behavior.release(self._clock())
         elif target == "penguin":
             self.clicked.emit()
+        elif target == "link" and self._target_at(pos.toPoint()) == "link":
+            self.bubble.open_link_at(QPointF(pos) - self._bubble_box.topLeft())  # http, https or mailto only
         elif target == "close" or (target == "body" and not self.bubble.buttons):
             self.dismiss_message()
         elif isinstance(target, int) and self._target_at(pos.toPoint()) == target:
@@ -1092,10 +1118,10 @@ class Stage(QObject):
         self.behavior.hovered = False
 
     def _bubble_hovered(self, on: bool) -> None:
-        """Tell the bubble the pointer is on it (or not), once it takes that (M2: a bubble waits while read)."""
+        """Tell the bubble the pointer is on it (or not): its clock stops while it's being read."""
         set_hovered = getattr(self.bubble, "set_hovered", None)
         if set_hovered is not None:
-            set_hovered(on)
+            set_hovered(on, self._clock())
 
     def _set_cursor(self, shape: str) -> None:
         set_cursor = getattr(self.surface, "set_cursor", None)

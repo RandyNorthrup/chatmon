@@ -223,6 +223,89 @@ def test_the_wheel_scrolls_a_long_menu(stage):
     menu.deleteLater()
 
 
+class Clock:
+    def __init__(self, t=10.0):
+        self.t = t
+
+    def __call__(self):
+        return self.t
+
+
+def bubble_point(s, wanted) -> QPointF:
+    """A point on the stage over the part of the bubble `wanted` names ("link", "body", a button's index)."""
+    box = s._bubble_box
+    for y in range(int(box.top()), int(box.bottom())):
+        for x in range(int(box.left()), int(box.right())):
+            if s.bubble.hit(QPointF(x, y) - box.topLeft()) == wanted:
+                return QPointF(x, y)
+    raise AssertionError(f"no {wanted} in the bubble")
+
+
+def test_a_bubble_waits_while_the_pointer_is_on_it(stage):
+    s, box = stage
+    clock = Clock()
+    s._clock = clock
+    s.show_message("Reminder", "Stretch your legs, it has been an hour.", timeout_s=3)
+    s._tick()
+    stay = s.bubble.expires() - clock.t
+    on = bubble_point(s, "body")
+    clock.t += 1
+    s.move(on, on + QPointF(s.origin()))
+    clock.t += stay + 5  # long past when it would have gone
+    s._tick()
+    assert s.message_visible()
+    s.pointer_left()
+    clock.t += stay - 1 - 0.2  # the rest of its time, nearly
+    s._tick()
+    assert s.message_visible()
+    clock.t += 0.4
+    s._tick()
+    assert not s.message_visible()
+
+
+def test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click(stage, monkeypatch):
+    from chatmon import bubble
+
+    opened = []
+    monkeypatch.setattr(bubble, "open_link", lambda url: opened.append(url.toString()))
+    s, box = stage
+    s.show_message("Answer", "See [the docs](https://example.com/docs) for more.", timeout_s=None)
+    spin(0.3)
+    link = bubble_point(s, "link")
+    gpos = link + QPointF(s.origin())
+    s.move(link, gpos)
+    assert s.surface.cursor == "pointer"
+    assert s.press(link, gpos, Qt.MouseButton.LeftButton)
+    s.release(link, gpos, Qt.MouseButton.LeftButton)
+    assert opened == ["https://example.com/docs"] and s.message_visible()  # opened, and the bubble stays
+    elsewhere = bubble_point(s, "body")
+    s.move(elsewhere, elsewhere + QPointF(s.origin()))
+    assert s.surface.cursor == "default"
+
+
+def test_a_bubble_is_never_taller_than_its_share_of_the_stages_screen(stage):
+    s, box = stage
+    s._use_screen(s.screen(), again=True)
+    assert s.bubble.max_height == pytest.approx(0.4 * s.screen().availableGeometry().height())
+
+
+def test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves(stage):
+    s, box = stage
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    ring = s.hosted.ring()
+    geo = box.geometry()
+    assert ring.contains(geo.topLeft() + QPoint(3, geo.height() // 2)) and not ring.contains(geo.center())
+    frames = iter(range(1000, 2000))
+    s.hosted.anim_key = lambda now: next(frames)  # a new frame of its art at every tick
+    s._tick()
+    s.surface.damaged = QRegion()
+    s._tick()
+    local = geo.translated(-s.origin())
+    assert s.surface.damaged.contains(local.topLeft() + QPoint(3, local.height() // 2))
+    assert not s.surface.damaged.contains(local.center())  # the words inside aren't drawn again
+
+
 def test_a_message_goes_above_the_open_box(stage):
     s, box = stage
     box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
