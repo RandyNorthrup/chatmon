@@ -75,7 +75,8 @@ def main() -> int:
         receipt["red"] = {
             "mutation": f"{rec['id']}: in {drilled}, {rec['mutation']['find']!r} became {rec['mutation']['replace']!r}",
             "baseline_exit": rec["baseline_exit"], "mutated_exit": rec["mutated_exit"], "restored_exit": rec["restored_exit"],
-            "expected_diagnostic": "; ".join(rec["expected"]), "observed_diagnostic": rec["observed"],
+            # The one of the drill's expected strings the harness saw (it records the first line that matched one).
+            "expected_diagnostic": next((e for e in rec["expected"] if e in rec["observed"]), rec["expected"][0]), "observed_diagnostic": rec["observed"],
             "before": [{"path": drilled, "sha256": rec["before_sha256"]}],
             "mutated": [{"path": drilled, "sha256": rec["mutated_sha256"]}],
             "after": [{"path": drilled, "sha256": rec["after_sha256"]}],
