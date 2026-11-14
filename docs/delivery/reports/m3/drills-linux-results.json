@@ -1,0 +1,156 @@
+[
+  {
+    "id": "M3-04-buffers",
+    "requirement": "M3-04",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "MAX_BUFFERS = 2",
+      "replace": "MAX_BUFFERS = 3"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+    ],
+    "expected": [
+      "test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "90deeb65c322cd2a9b867f0b48f64d4eb2f39382e9345eee6848735ed6455d9d",
+    "baseline_exit": 0,
+    "mutated_sha256": "9805393e904c578fb4c9b67099e8377269a0483045fe6b325f516db1922a0225",
+    "mutated_exit": 1,
+    "observed": "______ test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still ______",
+    "after_sha256": "90deeb65c322cd2a9b867f0b48f64d4eb2f39382e9345eee6848735ed6455d9d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-04-trim",
+    "requirement": "M3-04",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "                self._buffers.remove(buf)",
+      "replace": "                pass  # drill: destroyed but still counted"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+    ],
+    "expected": [
+      "assert len(surf._buffers) == 1"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "90deeb65c322cd2a9b867f0b48f64d4eb2f39382e9345eee6848735ed6455d9d",
+    "baseline_exit": 0,
+    "mutated_sha256": "27f4f19fbd3247c7268f3bb0d89fe53e22729fc5f52ca800c43152aed6093c2c",
+    "mutated_exit": 1,
+    "observed": ">       assert len(surf._buffers) == 1 and surf._buffers[0] is surf._shown",
+    "after_sha256": "90deeb65c322cd2a9b867f0b48f64d4eb2f39382e9345eee6848735ed6455d9d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-09-latin",
+    "requirement": "M3-09",
+    "file": "chatmon/xkb.py",
+    "mutation": {
+      "find": "            sym = self._latin_sym(xkb_code) or sym",
+      "replace": "            sym = 0 or sym"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_xkb.py::test_shortcuts_on_a_russian_layout_are_the_latin_keys",
+      "tests/test_xkb.py::test_the_latin_symbol_comes_from_the_first_layout_that_has_one"
+    ],
+    "expected": [
+      "test_shortcuts_on_a_russian_layout_are_the_latin_keys",
+      "test_the_latin_symbol_comes_from_the_first_layout_that_has_one"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "4bb5d93133e05ae9239889aad0e86dcb9e45730a9b1833b301af0fe26b7d09d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "477e4d0f97cf96403b3170c12527ce8e3d15aa19a6b85342ac82e54e9c84bda5",
+    "mutated_exit": 1,
+    "observed": "____________ test_shortcuts_on_a_russian_layout_are_the_latin_keys _____________",
+    "after_sha256": "4bb5d93133e05ae9239889aad0e86dcb9e45730a9b1833b301af0fe26b7d09d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-09-overlay",
+    "requirement": "M3-09",
+    "file": "chatmon/xkb.py",
+    "mutation": {
+      "find": "            sym = self._latin_sym(xkb_code) or sym",
+      "replace": "            sym = 0 or sym"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout",
+      "tests/test_overlay_stage.py::test_ctrl_v_pastes_under_a_russian_layout"
+    ],
+    "expected": [
+      "test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout",
+      "test_ctrl_v_pastes_under_a_russian_layout"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "4bb5d93133e05ae9239889aad0e86dcb9e45730a9b1833b301af0fe26b7d09d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "477e4d0f97cf96403b3170c12527ce8e3d15aa19a6b85342ac82e54e9c84bda5",
+    "mutated_exit": 1,
+    "observed": "_______ test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout _______",
+    "after_sha256": "4bb5d93133e05ae9239889aad0e86dcb9e45730a9b1833b301af0fe26b7d09d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-10-xserver",
+    "requirement": "M3-10",
+    "file": "chatmon/clickthrough.py",
+    "mutation": {
+      "find": "        shape = device_rects(key[0], ratio)",
+      "replace": "        shape = key[0]"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon-wt/m3/docs/delivery/reports/m3/wslpy.bat",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_clickthrough.py::test_the_x_server_gets_the_shape_in_device_pixels"
+    ],
+    "expected": [
+      "test_the_x_server_gets_the_shape_in_device_pixels"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3163bf87deb2d48820c6621f6608af1c9e114471ba4bf10d19f9c109bf216603",
+    "baseline_exit": 0,
+    "mutated_sha256": "8ce9fc5a46ce6137689a2ea624e54b9d466592a97c4b3ad31e1d76d810b6be71",
+    "mutated_exit": 1,
+    "observed": "______________ test_the_x_server_gets_the_shape_in_device_pixels _______________",
+    "after_sha256": "3163bf87deb2d48820c6621f6608af1c9e114471ba4bf10d19f9c109bf216603",
+    "restored_exit": 0
+  }
+]

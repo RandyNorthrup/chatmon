@@ -3,13 +3,15 @@ their animation is a loop that closes by construction."""
 
 import json
 import re
+import time
 from pathlib import Path
 
 import pytest
-from PyQt6.QtCore import QPoint, QRectF, QSizeF, Qt
-from PyQt6.QtGui import QColor, QImage, QPainter, QPixmap
+from PyQt6.QtCore import QEvent, QEventLoop, QObject, QPoint, QPointF, QRectF, QSizeF, Qt, QTimer
+from PyQt6.QtGui import QColor, QEnterEvent, QImage, QPainter, QPixmap
+from PyQt6.QtWidgets import QApplication
 
-from chatmon import bubbleart, paths, styles
+from chatmon import bubble, bubbleart, paths, styles
 from chatmon.bubble import AskBox, SpeechBubble
 
 PAINTED = ["electric", "fire", "ghost", "fairy", "leaf"]
@@ -396,3 +398,202 @@ def test_an_answer_can_never_make_qt_read_a_file(qapp, tmp_path):
     box = AskBox()
     box.set_answer(text)
     assert images(box.answer.document()) == 0 and "[image]" in box.answer.toPlainText()
+
+
+# -- drawing cost (M2-13, M2-14, M2-15)
+
+
+def full_picture(art, text: QSizeF, tip: float, ratio: float) -> bytes:
+    """The still composed whole, as it was before it was kept in two parts: the reference."""
+    lo, hi = art.tail_range(text.width())
+    tip = round(min(max(tip, lo), hi))
+    whole = art._compose(art.still, round(text.width()), round(text.height()), tip, ratio)
+    frame = art.frame_for(text)
+    img = QImage(round(frame.size.width() * ratio), round(frame.size.height() * ratio), QImage.Format.Format_ARGB32_Premultiplied)
+    img.setDevicePixelRatio(ratio)
+    img.fill(QColor(0, 0, 0, 0))
+    p = QPainter(img)
+    p.drawPixmap(0, 0, whole)
+    p.end()
+    return img.constBits().asstring(img.sizeInBytes())
+
+
+def drawn(art, text: QSizeF, tip: float, ratio: float, age: float = 0.0, animate: bool = False, effects: float = 1.0) -> bytes:
+    frame = art.frame_for(text)
+    img = QImage(round(frame.size.width() * ratio), round(frame.size.height() * ratio), QImage.Format.Format_ARGB32_Premultiplied)
+    img.setDevicePixelRatio(ratio)
+    img.fill(QColor(0, 0, 0, 0))
+    p = QPainter(img)
+    art.paint(p, 0, 0, text, tip, age, animate, effects)
+    p.end()
+    return img.constBits().asstring(img.sizeInBytes())
+
+
+@pytest.mark.parametrize("name", PAINTED)
+@pytest.mark.parametrize("ratio", [1.0, 2.0])
+def test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is(qapp, name, ratio):
+    art = bubbleart.art(name, f"parts {ratio}")
+    text = QSizeF(300, 92)
+    lo, hi = art.tail_range(text.width())
+    for tip in (lo, (lo + hi) / 2, hi, lo + 7, hi - 13):
+        assert drawn(art, text, tip, ratio) == full_picture(art, text, tip, ratio), (name, tip)
+
+
+@pytest.mark.parametrize("name", PAINTED)
+def test_a_moving_notch_composes_only_its_band(qapp, name, monkeypatch):
+    art = bubbleart.art(name, "moving notch")
+    composed = []
+    real = bubbleart.BubbleArt._compose
+
+    def counting(self, pix, tw, th, tip, ratio, rows=None):
+        composed.append(rows[0] == 0 if rows else None)
+        return real(self, pix, tw, th, tip, ratio, rows)
+
+    monkeypatch.setattr(bubbleart.BubbleArt, "_compose", counting)
+    text = QSizeF(300, 92)
+    lo, hi = art.tail_range(text.width())
+    tips = [lo + i for i in range(0, int(hi - lo), max(1, int(hi - lo) // 30))]
+    rims = set()
+    laid_out = None
+    for i, tip in enumerate(tips):
+        drawn(art, text, tip, 1.0, age=i / 30, animate=True)
+        rims.add(id(art.rim(300, 92, tip)))
+        sizes = [(len(layer._corners), len(layer._layouts)) for layer in art.layers if isinstance(layer, bubbleart.Scroll)]
+        laid_out = laid_out or sizes
+        assert sizes == laid_out, f"{name}: the border's corners are laid out once per size, not per notch place"
+    uppers = composed.count(True)
+    assert composed.count(None) == 0, "nothing is composed whole any more"
+    assert uppers <= 2, f"{name}: the picture above the band is composed once per size and art ({uppers} times)"
+    assert composed.count(False) >= len(tips), "each notch place gets its band"
+    assert len(rims) == 1, "one border for the size, whatever the notch"
+
+
+def test_effects_strength_fades_layers_out_onto_the_still(qapp):
+    art = bubbleart.art("electric", "strength")
+    text = QSizeF(300, 92)
+    still = drawn(art, text, 200, 1.0, age=1.3, animate=False)
+    assert drawn(art, text, 200, 1.0, age=1.3, animate=True, effects=0.0) == still
+    full, half = drawn(art, text, 200, 1.0, age=1.3, animate=True), drawn(art, text, 200, 1.0, age=1.3, animate=True, effects=0.5)
+    assert full != still and half != still and half != full
+
+
+def settled_at(message: SpeechBubble) -> float:
+    return message._shown_at + bubble.Effects.run(message._period) + bubble.EFFECTS_SETTLE
+
+
+@pytest.mark.parametrize("name", PAINTED)
+def test_a_speech_bubbles_effects_settle_and_come_back(qapp, name):
+    message = SpeechBubble()
+    message.set_style(styles.get(name), True)
+    message.show("Build finished", "Three tests were slow.", [], None, 100.0)
+    assert message._period > 0
+    assert message.anim_key(101.0) != -1, "it moves at first"
+    end = settled_at(message)
+    assert message._period <= end - 100.0 <= 2 * max(message._period, bubble.EFFECTS_LEAST) + bubble.EFFECTS_SETTLE
+    assert message.anim_key(end + 0.05) == -1 and message.anim_key(end + 30) == -1, "then it's still"
+    message.tick(end + 1)
+    message.set_hovered(True)
+    assert message.anim_key(end + 1.1) != -1, "pointed at, it moves again"
+    message.set_hovered(False, end + 2)
+    message.show("Next", "New words.", [], None, end + 100)
+    assert message.anim_key(end + 100.5) != -1, "new words, it moves again"
+    message.set_power_saving(True)
+    assert message.anim_key(end + 100.6) == -1, "power saving: the still picture"
+
+
+@pytest.mark.parametrize("name", PAINTED)
+def test_a_bubble_left_up_stops_drawing(qapp, name):
+    message = SpeechBubble()
+    message.set_style(styles.get(name), True)
+    message.show("Left up", "Nobody's looking.", [], None, 0.0)
+    keys = {message.anim_key(i / 30) for i in range(60 * 30)}
+    most = (bubble.Effects.run(message._period) + bubble.EFFECTS_SETTLE) * 30 + 1
+    assert len(keys - {-1}) <= most  # it was 1800 frames in a minute
+
+
+def bubble_picture(message: SpeechBubble, now: float) -> bytes:
+    img = QImage(round(message.size.width()) + 8, round(message.size.height()) + 8, QImage.Format.Format_ARGB32_Premultiplied)
+    img.fill(QColor(0, 0, 0, 0))
+    p = QPainter(img)
+    message.paint(p, message.size.width() / 2, now)
+    p.end()
+    return img.constBits().asstring(img.sizeInBytes())
+
+
+def test_a_settled_or_power_saving_bubble_draws_its_still_picture(qapp):
+    moving, still = SpeechBubble(), SpeechBubble()
+    moving.set_style(styles.get("electric"), True)
+    still.set_style(styles.get("electric"), False)
+    for message in (moving, still):
+        message.show("Left up", "Nobody's looking.", [], None, 0.0)
+    end = settled_at(moving)
+    assert bubble_picture(moving, 1.0) != bubble_picture(still, 1.0)
+    assert bubble_picture(moving, end + 1) == bubble_picture(still, end + 1) == bubble_picture(moving, end + 7.3)
+    moving.show("Again", "Nobody's looking.", [], None, 0.0)
+    moving.set_power_saving(True)
+    still.show("Again", "Nobody's looking.", [], None, 0.0)
+    assert bubble_picture(moving, 1.0) == bubble_picture(still, 1.0)
+
+
+class Paints(QObject):
+    def __init__(self, box):
+        super().__init__()
+        self.box, self.own, self.children = box, 0, 0
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.Type.Paint and obj.isWidgetType() and obj.window() is self.box:
+            if obj is self.box:
+                self.own += 1
+            else:
+                self.children += 1
+        return False
+
+
+def spin(seconds: float) -> None:
+    loop = QEventLoop()
+    QTimer.singleShot(int(seconds * 1000), loop.quit)
+    loop.exec()
+
+
+@pytest.fixture
+def animated_box(qapp):
+    box = AskBox()
+    box.set_reduced_motion(True)
+    box.set_style(styles.get("electric"), True)
+    box.open(QPoint(600, 600), "Ask Sparky", "Enter to ask", "Ask anything", text="**You:** hello\n\nHi there.", activate=False)
+    spin(0.2)
+    yield box
+    box.hide()
+    box.deleteLater()
+
+
+def test_the_animated_ask_box_repaints_only_its_border(animated_box):
+    box = animated_box
+    assert box._frames.isActive()
+    box.answer.setFocus()  # the field's blinking caret is drawn again too, but that isn't the animation
+    spin(0.1)
+    paints = Paints(box)
+    QApplication.instance().installEventFilter(paints)
+    try:
+        spin(0.6)
+    finally:
+        QApplication.instance().removeEventFilter(paints)
+    assert paints.own >= 5, "the border is drawn"
+    assert paints.children == 0, "nothing inside it is drawn again"
+
+
+def test_the_ask_box_settles_and_wakes(animated_box):
+    box = animated_box
+    box._effects.since -= 1000  # long ago: its effects have settled
+    box._next_frame()
+    assert not box._frames.isActive() and box.anim_key(time.monotonic()) == -1
+    box.set_answer("**You:** hello\n\nSomething new.")
+    assert box._frames.isActive() and box.anim_key(time.monotonic()) != -1, "new words: it moves again"
+    box._effects.since -= 1000
+    box._next_frame()
+    box.enterEvent(QEnterEvent(QPointF(5, 5), QPointF(5, 5), QPointF(605, 605)))
+    assert box._frames.isActive(), "pointed at: it moves again"
+    box.set_power_saving(True)
+    assert not box._frames.isActive() and box.anim_key(time.monotonic()) == -1, "power saving: the still picture"
+    box.set_power_saving(False)
+    assert box._frames.isActive()

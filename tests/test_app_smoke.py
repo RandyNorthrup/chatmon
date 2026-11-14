@@ -1461,11 +1461,9 @@ def test_in_power_saver_mode_the_stage_draws_less_often(companion):
 
     c = companion
     c._power_saving(True)
-    spin(0.2)
-    assert c.stage._timer.interval() in (1000 // penguin.SAVER_FPS, 1000 // penguin.SAVER_SLOW_FPS)
+    assert c.stage._frame_interval() == pytest.approx(1 / min(c.stage._refresh_hz(), penguin.SAVER_FPS))
     c._power_saving(False)
-    spin(0.2)
-    assert c.stage._timer.interval() in (1000 // penguin.FPS, 1000 // penguin.SLOW_FPS)
+    assert c.stage._frame_interval() == pytest.approx(1 / c.stage._refresh_hz())
 
 
 def test_nothing_is_drawn_while_nothing_can_be_seen(companion, monkeypatch):

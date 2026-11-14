@@ -1,0 +1,1500 @@
+[
+  {
+    "id": "M2-01-loads",
+    "requirement": "M2-01",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "        return nothing(kind)",
+      "replace": "        return super().loadResource(kind, url)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_safety.py"
+    ],
+    "expected": [
+      "a picture's bytes were read"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "ace90263b2fa7a7fbece6e20921ef1696c804bfcdb65762ad80405425bbaa782",
+    "mutated_exit": 1,
+    "observed": ">       assert leaked == [], f\"a picture's bytes were read for {leaked}\"",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-01-empty-image",
+    "requirement": "M2-01",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "        return blank",
+      "replace": "        return b\"\""
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_safety.py"
+    ],
+    "expected": [
+      "itself"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "9f8cec4190a243f36e2bf818a6b4330566e880ecc2315552e786b8579ee7affe",
+    "mutated_exit": 1,
+    "observed": "# Qt keeps a picture it read itself (when a request came back empty) as the document's resource. (Asking",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-01-html",
+    "requirement": "M2-01",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub | QTextDocument.MarkdownFeature.MarkdownNoHTML",
+      "replace": "MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_safety.py"
+    ],
+    "expected": [
+      "HTML was read"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "41438f7a89ac7ce1691331a4d859812b714399590bdbb294c7ed177aaf3bb742",
+    "mutated_exit": 1,
+    "observed": ">       assert '<img src=\"' in shown and \"background-image\" in shown, \"HTML was read: it doesn't show as the text it is\"",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-01-images-left",
+    "requirement": "M2-01",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "    doc.setMarkdown(markdown, MARKDOWN)\n    without_images(doc)",
+      "replace": "    doc.setMarkdown(markdown, MARKDOWN)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_safety.py"
+    ],
+    "expected": [
+      "an image was left in"
+    ],
+    "status": "fail",
+    "reason": "mutation text occurs 0 times, expected 1",
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0
+  },
+  {
+    "id": "M2-01-title-markup",
+    "requirement": "M2-01",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "self.title.setTextFormat(Qt.TextFormat.PlainText)",
+      "replace": "self.title.setTextFormat(Qt.TextFormat.AutoText)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_safety.py::test_a_title_hint_or_attachment_name_is_shown_as_text"
+    ],
+    "expected": [
+      "magenta_pixels"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "656049b9809989656c4ce0a3e8a2e55c280ce1cf32e0a98ce9c43cd34095c461",
+    "mutated_exit": 1,
+    "observed": ">           assert magenta_pixels(box.grab().toImage()) == 0",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-05-palette",
+    "requirement": "M2-05",
+    "file": "chatmon/styles.py",
+    "mutation": {
+      "find": "    highlight = readable(role(QPalette.ColorRole.Highlight), fill, OUTLINE_CONTRAST)",
+      "replace": "    highlight = readable(QColor(PLAIN_ACCENT), fill, OUTLINE_CONTRAST)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_contrast.py"
+    ],
+    "expected": [
+      "test_the_plain_style_wears_a_high_contrast_theme_as_it_is",
+      "test_the_plain_bubble_draws_in_the_palettes_colours"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b9d542c9a7a97ac6a7d289faa4a3b925b73e15b8f7976da4f91911435a37dd39",
+    "baseline_exit": 0,
+    "mutated_sha256": "38a140a66d70f97a2e7b1754bd69c51db29881b142ff097fb8f0dc925f95052c",
+    "mutated_exit": 1,
+    "observed": "_ test_the_plain_style_wears_a_high_contrast_theme_as_it_is[windows high contrast black] _",
+    "after_sha256": "b9d542c9a7a97ac6a7d289faa4a3b925b73e15b8f7976da4f91911435a37dd39",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-05-readable",
+    "requirement": "M2-05",
+    "file": "chatmon/styles.py",
+    "mutation": {
+      "find": "    if contrast(fg, bg) >= ratio:",
+      "replace": "    if True:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_contrast.py"
+    ],
+    "expected": [
+      "test_the_plain_style_reads_whatever_the_palette[faint]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b9d542c9a7a97ac6a7d289faa4a3b925b73e15b8f7976da4f91911435a37dd39",
+    "baseline_exit": 0,
+    "mutated_sha256": "993d48bdf0e5ebe856a6947e862842f0e4ed83e351905f4b91817ee9ec7d456f",
+    "mutated_exit": 1,
+    "observed": "___________ test_the_plain_style_reads_whatever_the_palette[faint] ____________",
+    "after_sha256": "b9d542c9a7a97ac6a7d289faa4a3b925b73e15b8f7976da4f91911435a37dd39",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-05-link-colour",
+    "requirement": "M2-05",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "    _merge(doc, _spans(doc, lambda b, f: f.isAnchor()), look)",
+      "replace": "    pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_contrast.py"
+    ],
+    "expected": [
+      "test_links_in_answers_wear_the_styles_colour_not_the_apps"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "14a829f366158c8983f18ce199c73e3be912507502e79d2413af39928e9b8bff",
+    "mutated_exit": 1,
+    "observed": "_____ test_links_in_answers_wear_the_styles_colour_not_the_apps[electric] _____",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-20-fairy-link",
+    "requirement": "M2-20",
+    "file": "chatmon/styles.py",
+    "mutation": {
+      "find": "fill=\"#fad7e3\", link=\"#9c2f5b\"",
+      "replace": "fill=\"#fad7e3\", link=\"#d4658f\""
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_contrast.py"
+    ],
+    "expected": [
+      "fairy links"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b9d542c9a7a97ac6a7d289faa4a3b925b73e15b8f7976da4f91911435a37dd39",
+    "baseline_exit": 0,
+    "mutated_sha256": "5167300409dbf78b783035976585bfbed0d1cc7ecebadcdd294a421b14d48ea4",
+    "mutated_exit": 1,
+    "observed": "E       AssertionError: fairy links: 2.62",
+    "after_sha256": "b9d542c9a7a97ac6a7d289faa4a3b925b73e15b8f7976da4f91911435a37dd39",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-20-selected-text",
+    "requirement": "M2-20",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": " selection-color: {c.selection_text.name()};",
+      "replace": ""
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_contrast.py"
+    ],
+    "expected": [
+      "test_selected_text_in_the_ask_box_wears_the_selection_colours"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "481d70b7e2a79585556814f888c34573a985f3442fbd1d78475cd46f62a5464e",
+    "mutated_exit": 1,
+    "observed": "___ test_selected_text_in_the_ask_box_wears_the_selection_colours[electric] ___",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-02-no-wrap",
+    "requirement": "M2-02",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "    code.setNonBreakableLines(False)",
+      "replace": "    code.setNonBreakableLines(True)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_rich_text.py"
+    ],
+    "expected": [
+      "test_code_wraps_on_a_tinted_panel_in_a_speech_bubble",
+      "test_code_wraps_in_the_ask_box"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "7a256747a90130c32136ead1422d23d5a7db1733b76f25647cb6705e6002f6e7",
+    "mutated_exit": 1,
+    "observed": "_______ test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[electric] ________",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-02-no-panel",
+    "requirement": "M2-02",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "    panel.setBackground(look.code_fill)",
+      "replace": "    pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_rich_text.py"
+    ],
+    "expected": [
+      "test_code_wraps_on_a_tinted_panel_in_a_speech_bubble"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "7f1f45786c36529a6b34376607bb29410293ae1ec80a0cccc95b0fcc45f7348e",
+    "mutated_exit": 1,
+    "observed": "_______ test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[electric] ________",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-02-headings",
+    "requirement": "M2-02",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "HEADING_MOST = 1  #",
+      "replace": "HEADING_MOST = 3  #"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_rich_text.py"
+    ],
+    "expected": [
+      "test_headings_stay_near_the_texts_size"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "dfdfc548108c51ad35d9591d1a27257aa31f3f81bc95728b95f02d449fb58e39",
+    "mutated_exit": 1,
+    "observed": "___________________ test_headings_stay_near_the_texts_size ____________________",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-17-keywords",
+    "requirement": "M2-17",
+    "file": "chatmon/highlight.py",
+    "mutation": {
+      "find": "                if word.group() in keywords:",
+      "replace": "                if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_rich_text.py"
+    ],
+    "expected": [
+      "test_python_keywords_strings_numbers_and_comments_are_coloured"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8",
+    "baseline_exit": 0,
+    "mutated_sha256": "902845f114cc51377e4bbb9cdbf7d5bbb68302ba8b3a7b2f2ba1aa817ed29d75",
+    "mutated_exit": 1,
+    "observed": "_______ test_python_keywords_strings_numbers_and_comments_are_coloured ________",
+    "after_sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-17-block-comment",
+    "requirement": "M2-17",
+    "file": "chatmon/highlight.py",
+    "mutation": {
+      "find": "self.setCurrentBlockState(INSIDE_COMMENT)",
+      "replace": "self.setCurrentBlockState(0)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_rich_text.py"
+    ],
+    "expected": [
+      "test_a_block_comment_carries_on_to_the_next_lines"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8",
+    "baseline_exit": 0,
+    "mutated_sha256": "0ea07770608d6d67c2ae99bb0ff37e2e2acfd2e3784d2195c0504756090f753a",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_block_comment_carries_on_to_the_next_lines ______________",
+    "after_sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-17-contrast",
+    "requirement": "M2-17",
+    "file": "chatmon/highlight.py",
+    "mutation": {
+      "find": "styles.readable(styles.blend(c.body, panel, 150), panel))",
+      "replace": "styles.blend(c.body, panel, 60))"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_rich_text.py"
+    ],
+    "expected": [
+      "test_code_colours_read_on_the_code_panel_and_stand_apart"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8",
+    "baseline_exit": 0,
+    "mutated_sha256": "7b9e47ac66d3cac17c391018f276e7ec09271f31f41ec5e435fec7fd682ee281",
+    "mutated_exit": 1,
+    "observed": "_____ test_code_colours_read_on_the_code_panel_and_stand_apart[electric] ______",
+    "after_sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-03-no-cap",
+    "requirement": "M2-03",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        if has_text and 6 + text_h + (12 + rows_h if buttons else 0) > room:",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_a_long_message_is_capped_and_more_has_the_rest"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "26e066e015201d47ceafb56c6670dc7b3440536d6d0a17a6b8ecd30c419551ef",
+    "mutated_exit": 1,
+    "observed": "________ test_a_long_message_is_capped_and_more_has_the_rest[electric] ________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-03-one-row",
+    "requirement": "M2-03",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            if rows[-1] and used + self.BUTTON_GAP + b.rect.width() > inner:",
+      "replace": "            if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_buttons_wrap_onto_rows_inside_the_bubble"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "cd3127400d5a51e2f9dcef0cf5a0b86b628f31ea55946f34ae1b92f47c4e911b",
+    "mutated_exit": 1,
+    "observed": "___________ test_buttons_wrap_onto_rows_inside_the_bubble[electric] ___________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-04-one-line",
+    "requirement": "M2-04",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        self._title_lines = text_lines(self.title, title_font, inner - self.CLOSE_W, self.TITLE_LINES)",
+      "replace": "        self._title_lines = [self.title]"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "17b40173554fb8abf52b8763f756c05812a916ca9051932c8dd80e11e708ea37",
+    "mutated_exit": 1,
+    "observed": "_ test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button[electric] _",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-08-fixed-clock",
+    "requirement": "M2-08",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        return max(asked, self.least + self.per_word * words) * max(0.25, self.factor)",
+      "replace": "        return asked * max(0.25, self.factor)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_a_bubble_stays_long_enough_to_read"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "5efc81cb3b33ecfdb922c9ed0e9e1056ce83d92d72ee24d5cf33c1b64d164fc1",
+    "mutated_exit": 1,
+    "observed": "___________________ test_a_bubble_stays_long_enough_to_read ___________________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-08-hover-ignored",
+    "requirement": "M2-08",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        if self._expires is not None and not self._hovered and now >= self._expires:",
+      "replace": "        if self._expires is not None and now >= self._expires:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "1206282d26c7f3a9eee726858ac93f63f74f59150ac55b1c6b653cfaf2ce12f9",
+    "mutated_exit": 1,
+    "observed": "_______ test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was ________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-09-any-scheme",
+    "requirement": "M2-09",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        return url if url is not None and url.scheme() in SAFE_SCHEMES else None",
+      "replace": "        return url"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_links_in_a_bubble_can_be_clicked_but_only_safe_ones"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "b15a8c94b175151b7d197ca3ee959aaed939591434438cbd6f7a577895a32d0d",
+    "mutated_exit": 1,
+    "observed": "__________ test_links_in_a_bubble_can_be_clicked_but_only_safe_ones ___________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-09-not-a-link",
+    "requirement": "M2-09",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            return \"link\"",
+      "replace": "            return \"body\""
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_links_in_a_bubble_can_be_clicked_but_only_safe_ones"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "21c71bd341d62b04a50d6bd94f338f5d5b2ba87a9cdffe6c5433a091754fd914",
+    "mutated_exit": 1,
+    "observed": "__________ test_links_in_a_bubble_can_be_clicked_but_only_safe_ones ___________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-07-desktop-font",
+    "requirement": "M2-07",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "    grow = desktop / BODY_POINTS if desktop > BODY_POINTS else 1.0",
+      "replace": "    grow = 1.0"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_text_follows_a_larger_desktop_font"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "bd53c6d65cc83e8d1d5cdd14d53edfa98fd62836ea3f5582954ded95ec0f8b28",
+    "mutated_exit": 1,
+    "observed": "___________________ test_text_follows_a_larger_desktop_font ___________________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-07-fixed-width",
+    "requirement": "M2-07",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        return min(room, width_for(self.MAX_WIDTH, body))",
+      "replace": "        return min(room, self.MAX_WIDTH)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_speech_bubble.py"
+    ],
+    "expected": [
+      "test_the_text_size_setting_scales_text_and_widths"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "28faf266c0afa8ad46c6d04d513a9b26eb5697b9ed8c7f37d9b9e5c045b3d737",
+    "mutated_exit": 1,
+    "observed": "______________ test_the_text_size_setting_scales_text_and_widths ______________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-06-buttons",
+    "requirement": "M2-06",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            QToolButton:focus {{ border: 2px solid {focus}; }}",
+      "replace": ""
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "shows its focus"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "5cdb6e203f384e879e835d78707d109f0fd27a4c9a66f2e1539336d865280405",
+    "mutated_exit": 1,
+    "observed": ">           assert ring(box, control, focus) == 4, f\"{what} shows its focus ({name})\"",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-06-field",
+    "requirement": "M2-06",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "QTextEdit#entry:focus {{ border: 2px solid {focus}; padding: 3px 5px; }}",
+      "replace": "QTextEdit#entry:focus {{ border: 1px solid {focus}; padding: 4px 6px; }}"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "field shows its focus"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "e470823612c60fa5061625274eb46b41f4abffad972db3a9418b7e810ff3ba2c",
+    "mutated_exit": 1,
+    "observed": "E           AssertionError: field shows its focus (electric)",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-07-box-width",
+    "requirement": "M2-07",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        width = width_for(self.WIDTH, self._body_font()) * (self.EXPANDED_WIDTH if self.expanded else 1.0)",
+      "replace": "        width = self.WIDTH * (self.EXPANDED_WIDTH if self.expanded else 1.0)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_the_text_size_setting_grows_the_box_and_its_text"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "00cb55195eca8c36f414573d73cc4d4a8411ce29215567264d8fbae6e208957c",
+    "mutated_exit": 1,
+    "observed": "____________ test_the_text_size_setting_grows_the_box_and_its_text ____________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-10-at-the-end",
+    "requirement": "M2-10",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            bar.setValue(min(bar.maximum(), int(top)))",
+      "replace": "            bar.setValue(bar.maximum())"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_a_long_answer_opens_at_the_start_of_the_newest_exchange"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "9f48502e7e9c5c55f877846085fc1171498b6e6476b0b0bf6342193db41077e7",
+    "mutated_exit": 1,
+    "observed": "________ test_a_long_answer_opens_at_the_start_of_the_newest_exchange _________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-11-no-room",
+    "requirement": "M2-11",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        return room if self.expanded else min(",
+      "replace": "        return min("
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_the_box_can_be_made_bigger_and_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "03f0783c0fa1bf70ef6698b8186df6fe56d3cfb8d5beed5abd6edcb33ed2cf00",
+    "mutated_exit": 1,
+    "observed": "__________________ test_the_box_can_be_made_bigger_and_back ___________________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-11-no-rules",
+    "requirement": "M2-11",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "        inserts.append((start - 1, \"rule\", None))",
+      "replace": "        pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_turns_are_ruled_apart"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "0420862060ca6ef914d7f09119fd47b106a18b166211732902dcee84fc99bcf4",
+    "mutated_exit": 1,
+    "observed": "_________________________ test_turns_are_ruled_apart __________________________",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-12-no-new-line",
+    "requirement": "M2-12",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            if self.multiline and event.modifiers() & Qt.KeyboardModifier.ShiftModifier:",
+      "replace": "            if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_shift_enter_adds_a_line_and_enter_sends_it_all"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "9b64310c3e3d4ca55b0dacaec93d1ae6bb0990d8091071c87fb9ce19d01ffae0",
+    "mutated_exit": 1,
+    "observed": "_____________ test_shift_enter_adds_a_line_and_enter_sends_it_all _____________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-12-paste-joined",
+    "requirement": "M2-12",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        return text if self.multiline else \" \".join(text.splitlines())",
+      "replace": "        return \" \".join(text.splitlines())"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_a_short_paste_keeps_its_line_breaks"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "30fa01879b50c199077626304b733f4c5152acadae386cc7ccb87bacdd47a1ce",
+    "mutated_exit": 1,
+    "observed": "__________________ test_a_short_paste_keeps_its_line_breaks ___________________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-12-qt-selection",
+    "requirement": "M2-12",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        if query == Qt.InputMethodQuery.ImCurrentSelection:",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_the_field_keeps_the_calls_the_app_and_overlay_use"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "4194c108a643128c1be87dda69aba602cf9a25265a0ceafc3e659fe9383d4cd4",
+    "mutated_exit": 1,
+    "observed": "___________ test_the_field_keeps_the_calls_the_app_and_overlay_use ____________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-16-no-copy",
+    "requirement": "M2-16",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            self.copy_requested.emit(texts[n])",
+      "replace": "            pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_each_answer_and_code_block_can_be_copied"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "142f2763ade2b01799f239309be840c27a30845d27d282a7fd2e773e6d7324bc",
+    "mutated_exit": 1,
+    "observed": "________________ test_each_answer_and_code_block_can_be_copied ________________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-16-forged",
+    "requirement": "M2-16",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "    return int(n) if given == token and n.isdigit() else None",
+      "replace": "    return int(n) if n.isdigit() else None"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_a_copy_link_written_by_an_answer_copies_nothing"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "baseline_exit": 0,
+    "mutated_sha256": "4da656e9390042897289bd810b6d86f49365c3141f131058dc6002fe0bb75a55",
+    "mutated_exit": 1,
+    "observed": "____________ test_a_copy_link_written_by_an_answer_copies_nothing _____________",
+    "after_sha256": "69381d2fd8e1ec79ad9db1e625806637110733e549b949c80b7fcd3011f0a99a",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-18-no-clock",
+    "requirement": "M2-18",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "                self._busy_clock.start()",
+      "replace": "                pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "it counts each second"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "e38e214c2db4be09815c98d4dfa21f1ca6f0e4eb66f521fa307a351d2119f08f",
+    "mutated_exit": 1,
+    "observed": ">       assert box.busy_label.text() == \"Claude is answering\u2026 13 s\", \"it counts each second\"",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-18-no-stop",
+    "requirement": "M2-18",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        self.stop_button.clicked.connect(self.stop_requested.emit)",
+      "replace": "        pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "604d5e8c0b896cbf82ce873afa07a83e80cb70a8884d053ec7623f63bb39a848",
+    "mutated_exit": 1,
+    "observed": "_____ test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped _____",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-18-no-partial",
+    "requirement": "M2-18",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        self._partial += text",
+      "replace": "        pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_streamed_text_shows_as_it_comes_and_the_answer_replaces_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "c5efc30d5a2585fa5a9b05131e4aea86df6f2644b96276449a0e7b07340b31d8",
+    "mutated_exit": 1,
+    "observed": "_______ test_streamed_text_shows_as_it_comes_and_the_answer_replaces_it _______",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-19-no-fade-in",
+    "requirement": "M2-19",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            self._fade_in.start()",
+      "replace": "            pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_it_fades_in_and_out"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "0450c9a35834e725058a2480fd29c336a6a3bc8ac81719c06790622a106c002c",
+    "mutated_exit": 1,
+    "observed": "__________________________ test_it_fades_in_and_out ___________________________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-19-no-ghost",
+    "requirement": "M2-19",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "                _Ghost(self.grab(), self.geometry(), self.windowOpacity(), self.FADE_MS)",
+      "replace": "                pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_it_fades_in_and_out"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "c2dd345056ceac64a8e7f518e90ac0fb0e325c1a56fa0ab5d9c4a14e2791dd7f",
+    "mutated_exit": 1,
+    "observed": "__________________________ test_it_fades_in_and_out ___________________________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-19-motion-ignored",
+    "requirement": "M2-19",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        return not self.reduced_motion and not self.stage_draws_art",
+      "replace": "        return not self.stage_draws_art"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py"
+    ],
+    "expected": [
+      "test_with_reduced_motion_it_comes_and_goes_at_once"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "4948d4287e89090944ea3659ac8df6f5313a11c286d8d694e98cb37ad7e7ffea",
+    "mutated_exit": 1,
+    "observed": "_____________ test_with_reduced_motion_it_comes_and_goes_at_once ______________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-13-never-settles",
+    "requirement": "M2-13",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        return min(rise, 1 - _smooth((age - run) / EFFECTS_SETTLE))",
+      "replace": "        return rise"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py"
+    ],
+    "expected": [
+      "test_a_speech_bubbles_effects_settle_and_come_back",
+      "test_a_bubble_left_up_stops_drawing"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "5a14de2ff1b30bf0e42b87cc50d8ac5e63f497391b13d067b4106353826e94a0",
+    "mutated_exit": 1,
+    "observed": "________ test_a_speech_bubbles_effects_settle_and_come_back[electric] _________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-13-power-saving",
+    "requirement": "M2-13",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        if not (self._visible and self.animate and self.art is not None and self.art.layers) or self.power_saving:",
+      "replace": "        if not (self._visible and self.animate and self.art is not None and self.art.layers):"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py"
+    ],
+    "expected": [
+      "power saving: the still picture"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "9775306838fa0b445bb734625ef7b96555beef712bdc5ff8548d997f77f56b22",
+    "mutated_exit": 1,
+    "observed": ">       assert message.anim_key(end + 100.6) == -1, \"power saving: the still picture\"",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-13-hover-wake",
+    "requirement": "M2-13",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            self._effects.wake(now, self._period)",
+      "replace": "            pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py"
+    ],
+    "expected": [
+      "pointed at, it moves again"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "5dabd324a91ae0bb3799c76f98c2c0e5a225dba8aa520effd5ec2d67fc8e933c",
+    "mutated_exit": 1,
+    "observed": ">       assert message.anim_key(end + 1.1) != -1, \"pointed at, it moves again\"",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-13-box-keeps-drawing",
+    "requirement": "M2-13",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "            self._frames.stop()  # that was the still picture: nothing more to draw",
+      "replace": "            pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py"
+    ],
+    "expected": [
+      "test_the_ask_box_settles_and_wakes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "9e818957d64c6c42bd89d8a02eaa7b3f6d40f8d4a79b1c88b41c9934a2bdbdd3",
+    "mutated_exit": 1,
+    "observed": "_____________________ test_the_ask_box_settles_and_wakes ______________________",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-14-whole-box",
+    "requirement": "M2-14",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        self.update(self._ring())",
+      "replace": "        self.update()"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py"
+    ],
+    "expected": [
+      "nothing inside it is drawn again"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "baseline_exit": 0,
+    "mutated_sha256": "c222384335e0bca80fbeaac703090d771f4ffeed024887501dab614f4d3246e9",
+    "mutated_exit": 1,
+    "observed": ">       assert paints.children == 0, \"nothing inside it is drawn again\"",
+    "after_sha256": "9f49a4d5e904ea1925e83a04760796bd72db3648e9517f3421f15c6d58434f5d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-15-upper-every-time",
+    "requirement": "M2-15",
+    "file": "chatmon/bubbleart.py",
+    "mutation": {
+      "find": "        upper = self._cache.get((tag, tw, th, ratio))",
+      "replace": "        upper = None"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py"
+    ],
+    "expected": [
+      "is composed once per size"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "4ece0253a73e265baf7014a74d35fe94ff113f0439810f5c9a2faef211955820",
+    "baseline_exit": 0,
+    "mutated_sha256": "12438eca8c425ac2ac0382456736a4464ed92637138d02df78871b4ce198a92c",
+    "mutated_exit": 1,
+    "observed": ">       assert uppers <= 2, f\"{name}: the picture above the band is composed once per size and art ({uppers} times)\"",
+    "after_sha256": "4ece0253a73e265baf7014a74d35fe94ff113f0439810f5c9a2faef211955820",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-15-border-per-notch",
+    "requirement": "M2-15",
+    "file": "chatmon/bubbleart.py",
+    "mutation": {
+      "find": "        if key not in self._rims:",
+      "replace": "        if True:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py"
+    ],
+    "expected": [
+      "one border for the size"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "4ece0253a73e265baf7014a74d35fe94ff113f0439810f5c9a2faef211955820",
+    "baseline_exit": 0,
+    "mutated_sha256": "fe58ab3af968db83f9e7b4d66cf9f697dcc92b7d70debbd765bda142d417d50d",
+    "mutated_exit": 1,
+    "observed": ">       assert len(rims) == 1, \"one border for the size, whatever the notch\"",
+    "after_sha256": "4ece0253a73e265baf7014a74d35fe94ff113f0439810f5c9a2faef211955820",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-15-band-off-by-one",
+    "requirement": "M2-15",
+    "file": "chatmon/bubbleart.py",
+    "mutation": {
+      "find": "        p.translate(0, -first / ratio)",
+      "replace": "        p.translate(0, -first / ratio + 1)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py"
+    ],
+    "expected": [
+      "test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "4ece0253a73e265baf7014a74d35fe94ff113f0439810f5c9a2faef211955820",
+    "baseline_exit": 0,
+    "mutated_sha256": "0154044f92ce6ebf705037773af91c6fb6a4c1531fb2363d1b8128242926dccb",
+    "mutated_exit": 1,
+    "observed": "_ test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[1.0-electric] _",
+    "after_sha256": "4ece0253a73e265baf7014a74d35fe94ff113f0439810f5c9a2faef211955820",
+    "restored_exit": 0
+  }
+]

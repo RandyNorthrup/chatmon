@@ -1,0 +1,42 @@
+{
+  "acceptance": 24,
+  "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+  ],
+  "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+  "evidence": 28,
+  "findings": [
+    {
+      "code": "outcome-unresolved",
+      "location": "CI-linux-macos",
+      "message": "After the coordinator pushes the merged branch, read the Linux and macOS jobs and send any M3 failure back to M3"
+    },
+    {
+      "code": "outcome-unresolved",
+      "location": "M0-power-saver-test",
+      "message": "M0 or the coordinator replaces its body with the code in the plan's Integration notes when merging wave1/m3"
+    },
+    {
+      "code": "outcome-unresolved",
+      "location": "M3-14-on-wayland",
+      "message": "M7 tries it on Hyprland or Sway when wiring the accessible ask-box setting, and keeps the penguin's menu on the stage there if Qt can't show it (Integration notes)"
+    },
+    {
+      "code": "outcome-unresolved",
+      "location": "X11-shape-in-CI",
+      "message": "M6A adds xvfb and runs the Linux job under xvfb-run -a (Integration notes)"
+    }
+  ],
+  "passed": false,
+  "requirements": 16,
+  "stage": "closure",
+  "tasks": 9
+}

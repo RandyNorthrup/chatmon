@@ -1,0 +1,40 @@
+command: python -m pytest -q -p no:cacheprovider -rs tests/test_stage_timer.py tests/test_stage_features.py tests/test_stagemenu.py tests/test_overlay_stage.py tests/test_behavior.py tests/test_sprites.py tests/test_clickthrough.py tests/test_stage_screens.py tests/test_xkb.py tests/test_wayland.py
+host: Windows 11 Pro 10.0.26200, Python 3.14.10, PyQt6 6.11.0 (offscreen)
+source: a3447706f7636ef052ee91e74c98aa574d1bbd79
+............................................s........................... [ 59%]
+...........s...sssssssss...sssssssssssss.ssssssss                        [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_overlay_stage.py:421: libxkbcommon isn't installed (the overlay is Linux only)
+SKIPPED [1] tests\test_clickthrough.py:135: needs an X server (DISPLAY), as under Xvfb
+SKIPPED [1] tests\test_xkb.py:25: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:33: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:44: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:54: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:61: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:75: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:93: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:100: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:111: libxkbcommon isn't installed
+SKIPPED [1] tests\test_wayland.py:46: Wayland sockets are Unix paths
+SKIPPED [1] tests\test_wayland.py:203: no Wayland protocol files installed
+SKIPPED [1] tests\test_wayland.py:313: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:415: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:464: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:475: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:489: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:583: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:613: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:632: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:656: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:665: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:676: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:729: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:780: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:810: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:844: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:857: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:870: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:883: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:952: Wayland is Linux only
+89 passed, 32 skipped in 7.12s
+exit 0

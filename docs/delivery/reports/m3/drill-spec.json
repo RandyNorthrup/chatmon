@@ -1,0 +1,357 @@
+{
+ "drills": [
+  {
+   "id": "M3-01-idle",
+   "requirement": "M3-01",
+   "file": "chatmon/penguin.py",
+   "find": "        return min(max(min(due) - now, self._frame_interval()), IDLE_FLOOR)",
+   "replace": "        return self._frame_interval()",
+   "test": [
+    "tests/test_stage_timer.py::test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none"
+   ],
+   "expect": [
+    "test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none"
+   ]
+  },
+  {
+   "id": "M3-01-missed",
+   "requirement": "M3-01",
+   "file": "chatmon/behavior.py",
+   "find": "        return min(due, end + LATE, self._next_frame(now))",
+   "replace": "        return min(due, end + LATE)",
+   "test": [
+    "tests/test_stage_timer.py::test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none",
+    "tests/test_behavior.py::test_standing_still_it_names_the_next_change_seconds_ahead"
+   ],
+   "expect": [
+    "changed at",
+    "the stage slept until"
+   ]
+  },
+  {
+   "id": "M3-01-quiet",
+   "requirement": "M3-01",
+   "file": "chatmon/penguin.py",
+   "find": "        if not self.drawing:\n            return\n        self._schedule(self._last_tick",
+   "replace": "        self._schedule(self._last_tick",
+   "test": [
+    "tests/test_stage_timer.py::test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops"
+   ],
+   "expect": [
+    "test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops"
+   ]
+  },
+  {
+   "id": "M3-01-pointer",
+   "requirement": "M3-01",
+   "file": "chatmon/penguin.py",
+   "find": "(self._frame_interval() if near else FAR_POLL)",
+   "replace": "(self._frame_interval())",
+   "test": [
+    "tests/test_stage_timer.py::test_the_pointer_is_polled_every_frame_only_near_the_chatmon"
+   ],
+   "expect": [
+    "test_the_pointer_is_polled_every_frame_only_near_the_chatmon"
+   ]
+  },
+  {
+   "id": "M3-02-refresh",
+   "requirement": "M3-02",
+   "file": "chatmon/penguin.py",
+   "find": "        return min(max(rate, MIN_HZ), MAX_HZ) if rate > 0 else DEFAULT_HZ",
+   "replace": "        return DEFAULT_HZ",
+   "test": [
+    "tests/test_stage_timer.py::test_while_it_moves_it_ticks_at_the_screens_refresh_rate"
+   ],
+   "expect": [
+    "test_while_it_moves_it_ticks_at_the_screens_refresh_rate"
+   ]
+  },
+  {
+   "id": "M3-02-pixels",
+   "requirement": "M3-02",
+   "file": "chatmon/penguin.py",
+   "find": "            left = round((f.x - origin.x() - sprite.anchor) * k) / k",
+   "replace": "            left = round(f.x - origin.x() - sprite.anchor)",
+   "test": [
+    "tests/test_stage_timer.py::test_the_sprite_sits_on_the_device_pixel_grid"
+   ],
+   "expect": [
+    "assert halves >= 2"
+   ]
+  },
+  {
+   "id": "M3-02-drag",
+   "requirement": "M3-02",
+   "file": "chatmon/penguin.py",
+   "find": "        self._schedule(self._last_tick + self._frame_interval() - self._clock())",
+   "replace": "        self._schedule(IDLE_FLOOR)",
+   "test": [
+    "tests/test_stage_timer.py::test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock"
+   ],
+   "expect": [
+    "test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock"
+   ]
+  },
+  {
+   "id": "M3-03-once",
+   "requirement": "M3-03",
+   "file": "chatmon/sprites.py",
+   "find": "    img.setDevicePixelRatio(scale)  # before the pixmap is made: changing a pixmap's ratio afterwards can copy it",
+   "replace": "    pass  # drill: no ratio before the pixmap is made",
+   "test": [
+    "tests/test_sprites.py::test_a_frame_is_kept_once_with_a_mask_that_agrees_with_its_pixels"
+   ],
+   "expect": [
+    "devicePixelRatio() == 2.0"
+   ]
+  },
+  {
+   "id": "M3-03-cache",
+   "requirement": "M3-03",
+   "file": "chatmon/sprites.py",
+   "find": "        _CUT.move_to_end(key)",
+   "replace": "        pass  # drill: the newest is not moved to the end",
+   "test": [
+    "tests/test_sprites.py::test_the_previous_screens_frames_are_kept_for_a_drag_back"
+   ],
+   "expect": [
+    "test_the_previous_screens_frames_are_kept_for_a_drag_back"
+   ]
+  },
+  {
+   "id": "M3-05-keys",
+   "requirement": "M3-05",
+   "file": "chatmon/stagemenu.py",
+   "find": "            else:\n                self.close()\n        elif key in (Qt.Key.Key_Down",
+   "replace": "            else:\n                pass\n        elif key in (Qt.Key.Key_Down",
+   "test": [
+    "tests/test_stagemenu.py::test_the_keyboard_moves_opens_picks_and_closes"
+   ],
+   "expect": [
+    "test_the_keyboard_moves_opens_picks_and_closes"
+   ]
+  },
+  {
+   "id": "M3-05-route",
+   "requirement": "M3-05",
+   "file": "chatmon/penguin.py",
+   "find": "        if self.menu.is_open():  # an open menu has the keys, the ask box's Esc too",
+   "replace": "        if False:  # an open menu has the keys, the ask box's Esc too",
+   "test": [
+    "tests/test_overlay_stage.py::test_esc_closes_an_open_menu_not_the_box_under_it"
+   ],
+   "expect": [
+    "test_esc_closes_an_open_menu_not_the_box_under_it"
+   ]
+  },
+  {
+   "id": "M3-05-focus",
+   "requirement": "M3-05",
+   "file": "chatmon/penguin.py",
+   "find": "            focus(on, on)\n",
+   "replace": "            pass\n",
+   "test": [
+    "tests/test_overlay_stage.py::test_the_keyboard_picks_from_the_penguins_menu_and_the_overlay_takes_it_while_open"
+   ],
+   "expect": [
+    "assert s.surface.focus == [(True, True)]"
+   ]
+  },
+  {
+   "id": "M3-05-outline",
+   "requirement": "M3-05",
+   "file": "chatmon/stagemenu.py",
+   "find": "            p.drawRoundedRect(row.adjusted(FOCUS_PEN / 2, FOCUS_PEN / 2, -FOCUS_PEN / 2, -FOCUS_PEN / 2), 3, 3)\n",
+   "replace": "",
+   "test": [
+    "tests/test_stagemenu.py::test_it_draws_the_lit_row_solid_with_an_outline"
+   ],
+   "expect": [
+    "test_it_draws_the_lit_row_solid_with_an_outline"
+   ]
+  },
+  {
+   "id": "M3-06-scroll",
+   "requirement": "M3-06",
+   "file": "chatmon/stagemenu.py",
+   "find": "        size = QRect(0, 0, width, min(content, max(row + 2 * SCROLLER, area.height())))",
+   "replace": "        size = QRect(0, 0, width, content)",
+   "test": [
+    "tests/test_stagemenu.py::test_a_menu_taller_than_the_screen_scrolls"
+   ],
+   "expect": [
+    "test_a_menu_taller_than_the_screen_scrolls"
+   ]
+  },
+  {
+   "id": "M3-06-hover",
+   "requirement": "M3-06",
+   "file": "chatmon/stagemenu.py",
+   "find": "            self._pending = (pi, ii, self._clock() + SUBMENU_DELAY)",
+   "replace": "            self._pending = (pi, ii, self._clock())",
+   "test": [
+    "tests/test_stagemenu.py::test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes"
+   ],
+   "expect": [
+    "test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes"
+   ]
+  },
+  {
+   "id": "M3-07-contrast",
+   "requirement": "M3-07",
+   "file": "chatmon/stagemenu.py",
+   "find": "MUTED_AIM = 5.0",
+   "replace": "MUTED_AIM = 2.5",
+   "test": [
+    "tests/test_stagemenu.py::test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid"
+   ],
+   "expect": [
+    "test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid"
+   ]
+  },
+  {
+   "id": "M3-08-rows",
+   "requirement": "M3-08",
+   "file": "chatmon/stagemenu.py",
+   "find": "        return max(ROW, QFontMetrics(self._font()).height() + ROW_PAD)",
+   "replace": "        return ROW",
+   "test": [
+    "tests/test_stagemenu.py::test_rows_grow_with_the_font"
+   ],
+   "expect": [
+    "test_rows_grow_with_the_font"
+   ]
+  },
+  {
+   "id": "M3-10-shape",
+   "requirement": "M3-10",
+   "file": "chatmon/clickthrough.py",
+   "find": "math.ceil((x + w) * ratio) - left",
+   "replace": "round((x + w) * ratio) - left",
+   "test": [
+    "tests/test_clickthrough.py::test_the_x_input_shape_is_in_device_pixels_rounded_outward"
+   ],
+   "expect": [
+    "test_the_x_input_shape_is_in_device_pixels_rounded_outward"
+   ]
+  },
+  {
+   "id": "M3-11-still",
+   "requirement": "M3-11",
+   "file": "chatmon/behavior.py",
+   "find": "            clips = self._still(clips)",
+   "replace": "            clips = list(clips)",
+   "test": [
+    "tests/test_behavior.py::test_reduced_motion_holds_each_looping_mood_still"
+   ],
+   "expect": [
+    "test_reduced_motion_holds_each_looping_mood_still"
+   ]
+  },
+  {
+   "id": "M3-11-zs",
+   "requirement": "M3-11",
+   "file": "chatmon/penguin.py",
+   "find": "(2 if self.behavior.reduced_motion else int(now / Z_STEP) % 3)",
+   "replace": "(int(now / Z_STEP) % 3)",
+   "test": [
+    "tests/test_stage_features.py::test_reduced_motion_stills_the_creature_and_its_zs"
+   ],
+   "expect": [
+    "test_reduced_motion_stills_the_creature_and_its_zs"
+   ]
+  },
+  {
+   "id": "M3-12-hold",
+   "requirement": "M3-12",
+   "file": "chatmon/behavior.py",
+   "find": "            return Frame(\"walk\", clip.frames[n % len(clip.frames)], clip.mirror, self.x, self.lift)",
+   "replace": "            return Frame(\"idle\", 0, clip.mirror, self.x, self.lift)",
+   "test": [
+    "tests/test_behavior.py::test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after"
+   ],
+   "expect": [
+    "test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after"
+   ]
+  },
+  {
+   "id": "M3-13-badge",
+   "requirement": "M3-13",
+   "file": "chatmon/penguin.py",
+   "find": "        if state == \"needs-you\":  # a diamond: a warning's shape",
+   "replace": "        if False:  # a diamond: a warning's shape",
+   "test": [
+    "tests/test_stage_features.py::test_the_badge_counts_agents_by_state_with_a_shape_for_each"
+   ],
+   "expect": [
+    "test_the_badge_counts_agents_by_state_with_a_shape_for_each"
+   ]
+  },
+  {
+   "id": "M3-14-unhosted",
+   "requirement": "M3-14",
+   "file": "chatmon/penguin.py",
+   "find": "        return bool(getattr(self.surface, \"hosts_windows\", False)) and not self._unhosted",
+   "replace": "        return bool(getattr(self.surface, \"hosts_windows\", False))",
+   "test": [
+    "tests/test_overlay_stage.py::test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus"
+   ],
+   "expect": [
+    "test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus"
+   ]
+  },
+  {
+   "id": "M3-15-follow",
+   "requirement": "M3-15",
+   "file": "chatmon/penguin.py",
+   "find": "        if now - self._away[1] < FOLLOW_AFTER:",
+   "replace": "        if False:",
+   "test": [
+    "tests/test_stage_features.py::test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second"
+   ],
+   "expect": [
+    "test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second"
+   ]
+  },
+  {
+   "id": "M3-M2-hover",
+   "requirement": "M3-M2",
+   "file": "chatmon/penguin.py",
+   "find": "            self._bubble_hovered(hover not in (None, \"penguin\"))\n",
+   "replace": "",
+   "test": [
+    "tests/test_overlay_stage.py::test_a_bubble_waits_while_the_pointer_is_on_it"
+   ],
+   "expect": [
+    "test_a_bubble_waits_while_the_pointer_is_on_it"
+   ]
+  },
+  {
+   "id": "M3-M2-link",
+   "requirement": "M3-M2",
+   "file": "chatmon/penguin.py",
+   "find": "            self.bubble.open_link_at(QPointF(pos) - self._bubble_box.topLeft())  # http, https or mailto only",
+   "replace": "            pass  # http, https or mailto only",
+   "test": [
+    "tests/test_overlay_stage.py::test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click"
+   ],
+   "expect": [
+    "test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click"
+   ]
+  },
+  {
+   "id": "M3-M2-ring",
+   "requirement": "M3-M2",
+   "file": "chatmon/penguin.py",
+   "find": "                dirty = dirty.united(self.hosted.ring().translated(-origin))",
+   "replace": "                dirty = dirty.united(QRegion(self.hosted.rect().translated(-origin)))",
+   "test": [
+    "tests/test_overlay_stage.py::test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves"
+   ],
+   "expect": [
+    "test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves"
+   ]
+  }
+ ]
+}

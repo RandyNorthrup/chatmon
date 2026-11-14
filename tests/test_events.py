@@ -119,6 +119,7 @@ def test_a_long_user_name_puts_the_socket_in_your_own_temporary_folder(monkeypat
     """A socket's address is 104 bytes on macOS: past about 37 characters of user name, the usual path won't
     fit. Then it's in the temporary folder macOS keeps for you alone, the same for every process of yours."""
     monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("CHATMON_INSTANCE", raising=False)  # your own socket's name, not the test run's
     monkeypatch.setattr(paths.Path, "home", lambda: Path("/Users") / ("a" * 40))
     sock = paths.socket_path()
     assert len(os.fsencode(sock)) <= paths.SOCKET_PATH_MAX and sock.name == "chatmon.sock"

@@ -125,7 +125,11 @@ AXIS_VERTICAL = 0
 CURSOR_SHAPES = {"default": 1, "pointer": 4, "text": 9, "grab": 16, "grabbing": 17}
 WHEEL_PER_PIXEL = 8  # Qt's angle delta (120 a notch) per pixel of Wayland scroll (15 a notch)
 REPEAT_RATE, REPEAT_DELAY = 25, 600  # until the compositor says (wl_keyboard version 4)
-MAX_BUFFERS = 3
+# Buffers cover the whole output (a layer surface anchored to every edge takes no other size, and moving a
+# smaller one would lag behind the chatmon): some 33 MB each at 4K and a scale of 2. Two at most, one painted
+# while the compositor holds the other, and the spare let go once the stage has been still TRIM_AFTER_MS.
+MAX_BUFFERS = 2
+TRIM_AFTER_MS = 2000
 
 # The interfaces we bind, and the newest version of each we speak.
 WANTED = {
@@ -627,6 +631,10 @@ class LayerSurface(QObject):
         self._present_timer = QTimer(self)
         self._present_timer.setSingleShot(True)
         self._present_timer.timeout.connect(self._present)
+        self._trim_timer = QTimer(self)
+        self._trim_timer.setSingleShot(True)
+        self._trim_timer.timeout.connect(self._trim)
+        self._shown: Buffer | None = None  # the buffer last attached: what the compositor shows
 
     @classmethod
     def create(cls, stage) -> LayerSurface | None:
@@ -772,6 +780,7 @@ class LayerSurface(QObject):
     def close(self) -> None:
         self._closing = True
         self._present_timer.stop()
+        self._trim_timer.stop()
         self._stop_repeat()
         self._destroy_surface()
         for _pointer, device in self.pointers.values():
@@ -1200,6 +1209,7 @@ class LayerSurface(QObject):
         for buf in self._buffers:
             buf.destroy()
         self._buffers = []
+        self._shown = None
         if self._viewport is not None:
             c.request(self._viewport, VIEWPORT_DESTROY)
         if self._fractional is not None:
@@ -1275,6 +1285,7 @@ class LayerSurface(QObject):
         for buf in self._buffers:
             buf.destroy()
         self._buffers = []
+        self._shown = None
         if self._viewport is not None:
             self.conn.request(self._viewport, VIEWPORT_SET_DESTINATION, "ii", *self._size)
         else:
@@ -1307,7 +1318,9 @@ class LayerSurface(QObject):
                 for r in self._to_buffer(self._pending, buf):
                     c.request(self._surface, SURFACE_DAMAGE_BUFFER, "iiii", r.x(), r.y(), r.width(), r.height())
                 buf.busy = True
+                self._shown = buf
                 self._pending = QRegion()
+                self._trim_timer.start(TRIM_AFTER_MS)  # from the last frame: still that long, the spare goes
                 callback = c.new_id(self._frame_done)
                 c.request(self._surface, SURFACE_FRAME, "n", callback)
                 self._frame_pending = True
@@ -1325,6 +1338,18 @@ class LayerSurface(QObject):
         buf.busy = False
         if not self._pending.isEmpty():
             self._schedule()
+
+    def _trim(self) -> None:
+        """The stage has been still a while: keep one buffer, the one on screen, and let the other go (it was
+        only needed while frames came faster than the compositor gave buffers back)."""
+        if self._closing or len(self._buffers) <= 1:
+            return
+        keep = self._shown if self._shown in self._buffers else self._buffers[0]
+        for buf in list(self._buffers):
+            if buf is not keep and not buf.busy:
+                buf.destroy()
+                self._buffers.remove(buf)
+        self._flush()
 
     def _free_buffer(self) -> Buffer | None:
         for buf in self._buffers:

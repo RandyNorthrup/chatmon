@@ -2,7 +2,9 @@
 
 Frames are scaled to the screen's real pixels (`scale`: device pixels per
 logical pixel, 2 on a 2x screen), so the penguin is as sharp as the art
-allows; sizes, hit tests and outlines stay in logical pixels.
+allows; sizes, hit tests and outlines stay in logical pixels. Each frame is
+kept once, as a pixmap, with a byte-per-pixel mask of where it is solid for
+hit tests (a quarter of the full-colour copy it used to keep beside it).
 
 Every companion (companions.py) has its own folder of strips and manifest;
 `Sprites` loads the one folder it is given.
@@ -11,6 +13,7 @@ Every companion (companions.py) has its own folder of strips and manifest;
 from __future__ import annotations
 
 import json
+from collections import OrderedDict
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -21,12 +24,13 @@ from PyQt6.QtGui import QImage, QPainter, QPixmap, QTransform
 SIDE_VIEWS = {"walk", "beam"}
 OPAQUE = 40  # alpha above which a pixel counts as part of the penguin
 BAND = 4  # rows per rectangle in a frame's outline
+KEEP_CUT = 2  # sets of frames kept (by folder, size and scale): the screen's now, and the one before it
 
 
 @dataclass
 class SpriteFrame:
     pixmap: QPixmap  # device pixels, with its device pixel ratio set
-    image: QImage  # the same, for exact hit tests
+    mask: bytes  # 1 where a device pixel is part of the penguin, 0 elsewhere, row by row: exact hit tests
     anchor: int  # x of the penguin's centre line within the frame (logical)
     outline: list[QRect]  # the opaque area as a few rectangles, for click-through (logical)
     scale: float = 1.0  # device pixels per logical pixel
@@ -35,18 +39,24 @@ class SpriteFrame:
     def __post_init__(self) -> None:
         self.rects = tuple((r.x(), r.y(), r.width(), r.height()) for r in self.outline)
 
+    @property
+    def image(self) -> QImage:
+        """The frame's pixels as an image, made when asked for (the menu bar's icon), never kept."""
+        return self.pixmap.toImage()
+
     def width(self) -> int:
-        return round(self.image.width() / self.scale)
+        return round(self.pixmap.width() / self.scale)
 
     def height(self) -> int:
-        return round(self.image.height() / self.scale)
+        return round(self.pixmap.height() / self.scale)
 
     def hit(self, x: int, y: int) -> bool:
         """Whether the penguin is at (x, y), logical pixels within the frame."""
         dx, dy = int(x * self.scale), int(y * self.scale)
-        if not (0 <= dx < self.image.width() and 0 <= dy < self.image.height()):
+        w = self.pixmap.width()
+        if not (0 <= dx < w and 0 <= dy < self.pixmap.height()):
             return False
-        return self.image.pixelColor(dx, dy).alpha() > OPAQUE
+        return self.mask[dy * w + dx] == 1
 
 
 @dataclass
@@ -80,13 +90,17 @@ def _foot_centre(img: QImage) -> float:
 _SOLID = bytes(1 if a > OPAQUE else 0 for a in range(256))  # an alpha byte to 1 where it counts as the penguin
 
 
-def _outline(img: QImage) -> list[QRect]:
-    rows = _alpha_rows(img)
+def _solid_rows(img: QImage) -> list[bytes]:
+    """Each row as bytes, 1 where the pixel is part of the penguin: at C speed, a frame has some fifty thousand."""
+    return [alphas.translate(_SOLID) for alphas in _alpha_rows(img)]
+
+
+def _outline(img: QImage, rows: list[bytes] | None = None) -> list[QRect]:
+    rows = _solid_rows(img) if rows is None else rows
     rects = []
     for top in range(0, len(rows), BAND):
         left, right = img.width(), -1
-        for alphas in rows[top : top + BAND]:
-            solid = alphas.translate(_SOLID)  # bytes, at C speed: a frame has some fifty thousand pixels
+        for solid in rows[top : top + BAND]:
             first = solid.find(1)
             if first >= 0:
                 left, right = min(left, first), max(right, solid.rfind(1))
@@ -96,14 +110,15 @@ def _outline(img: QImage) -> list[QRect]:
 
 
 def _frame(img: QImage, anchor: int, scale: float) -> SpriteFrame:
+    rows = _solid_rows(img)
+    img.setDevicePixelRatio(scale)  # before the pixmap is made: changing a pixmap's ratio afterwards can copy it
     pixmap = QPixmap.fromImage(img)
-    pixmap.setDevicePixelRatio(scale)
     outline = []
-    for r in _outline(img):  # device pixels to logical, rounding outward
+    for r in _outline(img, rows):  # device pixels to logical, rounding outward
         left, top = int(r.left() / scale), int(r.top() / scale)
         right, bottom = -int(-(r.right() + 1) // scale), -int(-(r.bottom() + 1) // scale)
         outline.append(QRect(left, top, right - left, bottom - top))
-    return SpriteFrame(pixmap, img, anchor, outline, scale)
+    return SpriteFrame(pixmap, b"".join(rows), anchor, outline, scale)
 
 
 def silhouette(frame: SpriteFrame) -> QPixmap:
@@ -126,10 +141,16 @@ def silhouette(frame: SpriteFrame) -> QPixmap:
     return pixmap
 
 
+# Frames already cut, by (folder, size, scale), newest last: dragging the chatmon back to the monitor it came
+# from finds them still here instead of cutting every strip again.
+_CUT: OrderedDict[tuple[str, int, float], dict[tuple[str, bool], list[SpriteFrame]]] = OrderedDict()
+
+
 class Sprites:
     """One companion's animations, scaled for the screen. Each is cut into frames the first time one of its
     frames is asked for (`load_next` cuts the rest ahead, a little at a time): cutting all of them at once
-    took seconds at every start, and again whenever the screen's scale or the companion changed."""
+    took seconds at every start, and again whenever the screen's scale or the companion changed. The frames of
+    the last KEEP_CUT folders, sizes and scales are kept, shared by every Sprites made for them."""
 
     def __init__(self, anim_dir: Path, size: int, scale: float = 1.0):
         self.scale = scale = max(0.5, float(scale))
@@ -138,7 +159,11 @@ class Sprites:
         self.info: dict[str, AnimInfo] = {
             name: AnimInfo(int(m["frames"]), float(m["fps"]), bool(m["loop"])) for name, m in self._manifest.items()
         }
-        self._frames: dict[tuple[str, bool], list[SpriteFrame]] = {}
+        key = (str(anim_dir), int(size), scale)
+        self._frames: dict[tuple[str, bool], list[SpriteFrame]] = _CUT.setdefault(key, {})
+        _CUT.move_to_end(key)
+        while len(_CUT) > KEEP_CUT:
+            _CUT.popitem(last=False)
         heights = []
         for m in self._manifest.values():
             factor = float(m.get("scale", 1.0)) * size / int(m["h"])
