@@ -1,0 +1,53 @@
+red drills from docs\delivery\reports\m4b\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-xrx8nhvu
+copied 220 files
+
+=== drill D-00A-eager-objc (AC-00A) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_m4b_imports.py::test_it_imports_here
+-- green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.37s
+-- red: exit 1
+.F......                                                                 [100%]
+================================== FAILURES ===================================
+_________________________ test_it_imports_here[sound] _________________________
+
+module = 'sound'
+
+    @pytest.mark.parametrize("module", MODULES)
+    def test_it_imports_here(module):
+        env = dict(os.environ, PYTHONPATH=str(ROOT), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", f"import chatmon.{module}"], cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+>       assert out.returncode == 0, out.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             import chatmon.sound
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-xrx8nhvu\chatmon\sound.py", line 317, in <module>
+E             MacPlayer()
+E             ~~~~~~~~~^^
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-xrx8nhvu\chatmon\sound.py", line 183, in __init__
+E             objc = ctypes.cdll.LoadLibrary(ctypes.util.find_library("objc") or "/usr/lib/libobjc.dylib")
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 554, in LoadLibrary
+E             return self._dlltype(name)
+E                    ~~~~~~~~~~~~~^^^^^^
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 433, in __init__
+E             self._handle = self._load_library(name, mode, handle, winmode)
+E                            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 451, in _load_library
+E             return _LoadLibrary(self._name, winmode)
+E         FileNotFoundError: Could not find module 'C:\usr\lib\libobjc.dylib' (or one of its dependencies). Try using the full path with constructor syntax.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe', '-c', 'import chatmon.sound'],...dule \'C:\\usr\\lib\\libobjc.dylib\' (or one of its dependencies). Try using the full path with constructor syntax.\n').returncode
+
+tests\test_m4b_imports.py:19: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_m4b_imports.py::test_it_imports_here[sound] - AssertionErro...
+1 failed, 7 passed in 1.45s
+-- restored green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.48s
+
+=== summary
+PASS D-00A-eager-objc

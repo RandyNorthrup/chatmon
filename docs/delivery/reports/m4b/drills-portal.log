@@ -1,0 +1,35 @@
+red drills from docs\delivery\reports\m4b\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-5lqm7pcy
+copied 220 files
+
+=== drill D-01F-trigger (AC-01F) on chatmon/shortcutportal.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.44s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_the_keys_are_asked_for_in_the_xdg_shortcuts_format ___________
+
+    def test_the_keys_are_asked_for_in_the_xdg_shortcuts_format():
+        trigger = shortcutportal.xdg_trigger
+>       assert trigger(hotkey.parse("Ctrl+Alt+Space")) == "CTRL+ALT+space"
+E       AssertionError: assert 'CTRL+ALT+Space' == 'CTRL+ALT+space'
+E         
+E         - CTRL+ALT+space
+E         ?          ^
+E         + CTRL+ALT+Space
+E         ?          ^
+
+tests\test_hotkey_portal.py:25: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format
+1 failed in 0.41s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.34s
+
+=== summary
+PASS D-01F-trigger
