@@ -41,7 +41,9 @@ def test_an_answer_shows_as_it_streams_in_and_survives_the_box_being_drawn_again
     c._partial("Mo")
     c._partial("chi, or ")
     assert c.questions.current.partial == "Mochi, or "
-    assert until(lambda: "Mochi, or" in shown(c)) and "thinking" not in shown(c)  # under the question, in order
+    box = c.ask_box  # if this fails, which part of "the box shows the chat" didn't hold
+    assert until(lambda: "Mochi, or" in shown(c), 10), (box.isVisible(), box.entry.isVisible(), box.history_button.isVisible(), shown(c))
+    assert "thinking" not in shown(c)  # under the question, in order
     c.submit("5 km in miles")  # the chat is drawn again for an answer of Chatmon's own
     c._partial("Biscuit")
     assert until(lambda: "Mochi, or Biscuit" in shown(c)) and "3.107 miles" in shown(c)  # all of it, not just the newest piece
@@ -306,7 +308,11 @@ def test_a_chat_keeps_its_brain_and_another_brain_can_answer_the_last_question(c
 
 
 def test_carrying_a_chat_on_asks_its_own_brain_before_the_one_picked(companion, monkeypatch):
+    from chatmon import brains
+
     c = companion
+    for name in ("_unsure", "_unsure_owner"):  # nothing left to look at by earlier tests: the answer comes at once
+        monkeypatch.setattr(brains, name, set())
     a, b = api("pretend", "Pretend API"), api("other", "Other API")
     monkeypatch.setattr(c, "brains", {"pretend": a, "other": b})
     c.state.set("brain", "other")

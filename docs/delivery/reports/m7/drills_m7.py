@@ -143,6 +143,20 @@ DRILLS = [
       f"{M7}::test_more_opens_the_whole_text_and_the_box_remembers_its_size_and_says_shift_enter"),
     d("M5-chat-times-12h", "AC-M5-1", "chatmon/chats.py", '        return f"today {localefmt.time_of_day(d)}"',
       '        return f"today {(d.hour % 12) or 12}:{d.minute:02d} {\'AM\' if d.hour < 12 else \'PM\'}"', f"{CW}::test_chat_times_follow_the_locale"),
+    d("M7-07-no-stage-badge", "AC-07-1", A, "        self.stage.set_badge(sum(1 for state, _ in self.agents.values() if state == \"working\"), waiting)\n", "\n",
+      f"{M7}::test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"),
+    d("M7-11-player-never-quiet", "AC-11-3", A, "quiet=lambda: self._quiet or self.reminders.focus() is not None)", "quiet=lambda: False)",
+      f"{M7}::test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet"),
+    d("M7-11-hotkey-unregistered", "AC-11-4", A, "        error = hotkey.register(sequence, self._hotkey_pressed, failed=self._hotkey_failed)", "        error = None",
+      f"{M7}::test_the_hotkey_is_registered_from_settings_toggles_the_box_and_a_problem_is_said_once"),
+    d("M7-11-balloon-not-toast", "AC-11-4", A, "            if wintoast.show(title, text, list(buttons), scenario) is not None:", "            if False:",
+      f"{M7}::test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"),
+    d("M7-11-box-always-hosted", "AC-11-5", A, "            self.stage.set_hosting(not self._ask_box_as_window())", "            pass",
+      f"{M7}::test_the_ask_box_is_a_window_with_a_screen_reader_where_the_overlay_draws_it"),
+    d("M7-11-follow-ignored", "AC-11-5", A, "        self.stage.follow_pointer_screen(bool(self.config[\"follow_screen\"]))", "        self.stage.follow_pointer_screen(False)",
+      f"{M7}::test_follow_me_across_monitors_is_a_setting"),
+    d("M7-11-magnifier-not-placed", "AC-11-6", A, "        wincaret.place(self.stage.native_window(),", "        (lambda *a: None)(self.stage.native_window(),",
+      f"{M7}::test_on_windows_magnifier_goes_to_each_bubble_and_lets_go_when_it_closes"),
 ]
 
 

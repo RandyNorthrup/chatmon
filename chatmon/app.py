@@ -358,22 +358,21 @@ class Companion(QObject):
             # it just waits.
             # Only that something's waiting: the system keeps notifications (Action Center, a phone linked
             # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
-            self._system_notice(title, "Chatmon has something for you.")
+            # A reminder's toast offers what its bubble does (Done, a snooze), so it can be seen to from there.
+            self._system_notice(title, "Chatmon has something for you.", buttons[:2] if reminder and buttons else (), "reminder" if reminder else None)
 
-    def _system_notice(self, title: str, text: str, seconds: int = 10) -> None:
-        """A notification of the system's own, which follows your Do Not Disturb and keeps a history (so `text` is
-        never a message's own words): Windows' toast once M4B's wintoast.py is here, else the tray's balloon; on
-        Linux the desktop's notification server, tray or not. macOS: none (see alert)."""
+    def _system_notice(self, title: str, text: str, buttons=(), scenario: str | None = None, seconds: int = 10) -> None:
+        """A notification of the system's own, which follows your Do Not Disturb and keeps a history: Windows' toast
+        (wintoast.py), else the tray's balloon; on Linux the desktop's notification server, tray or not. macOS: none
+        (see alert). `buttons`: (label, action) pairs, on a toast only."""
         if sys.platform.startswith("linux"):
             sysnotify.send(title, text)
         elif sys.platform == "win32":
-            try:
-                from . import wintoast  # M4B's
-            except ImportError:
-                wintoast = None
-            if wintoast is not None and wintoast.show(title, text, [], "default") is None:
+            from . import wintoast
+
+            if wintoast.show(title, text, list(buttons), scenario) is not None:
                 return
-            if QSystemTrayIcon.supportsMessages():
+            if QSystemTrayIcon.supportsMessages():  # no toast here (wintoast.toaster().why_not says why): the balloon
                 self.tray.showMessage(title, text, QSystemTrayIcon.MessageIcon.Information, seconds * 1000)
 
     def _post(self, message: messages.Message) -> bool:
@@ -412,6 +411,8 @@ class Companion(QObject):
         self._recent.append((time.time(), message))
         self.stage.show_message(message.title, message.text, [(label, self._presses(action)) for label, action in message.buttons], message.timeout_s)
         self._read_aloud(message.title, message.text, message.buttons, important=message.alert)
+        if sys.platform == "win32" and self.config["accessibility"].get("magnifier_follows", True):
+            QTimer.singleShot(50, self._magnify_bubble)  # once the stage has laid it out
         if message.cue != SILENT:
             self._cue(message.cue or "pop")
 
@@ -440,14 +441,19 @@ class Companion(QObject):
         return self._play(name)
 
     def _play(self, name: str) -> bool:
-        """Hand `name` to M4B's player, at the volume set; False while it isn't part of Chatmon yet."""
-        try:
-            from . import sound  # M4B's
-        except ImportError:
-            return False
-        sound.configure(True, int(self.config["sound"].get("volume", 70)) / 100, dict(self.config["sound"].get("cues") or {}))
-        sound.play(name)
-        return True
+        """Hand `name` to the player (sound.py), as configured (_configure_sound): True if it started."""
+        from . import sound
+
+        return sound.play(name)
+
+    def _configure_sound(self) -> None:
+        """The player told the switch, the volume and each sound's setting, and asked before each sound whether it's a
+        time for quiet, as _cue asks."""
+        from . import sound
+
+        s = self.config["sound"]
+        sound.configure(bool(s.get("enabled", True)), int(s.get("volume", 70)), dict(s.get("cues") or {}),
+                        quiet=lambda: self._quiet or self.reminders.focus() is not None)
 
     def _end_alert(self) -> None:
         if self._alert_key is not None:
@@ -513,10 +519,8 @@ class Companion(QObject):
         words = a11y.spoken(title, text, [label for label, _ in buttons or []])
         if reader.speak is not None:
             reader.speak(words, important)
-        elif sys.platform.startswith("linux"):
-            sysnotify.send(a11y.plain(title), words)
-        elif sys.platform == "win32" and QSystemTrayIcon.supportsMessages():
-            self.tray.showMessage(a11y.plain(title), words, QSystemTrayIcon.MessageIcon.Information, 15_000)
+        elif sys.platform.startswith("linux") or sys.platform == "win32":
+            self._system_notice(a11y.plain(title), words, seconds=15)
 
     # -- you being away, and times for quiet
 
@@ -597,6 +601,7 @@ class Companion(QObject):
         self.stage.set_reduced_motion(self._reduce_motion)
         self.stage.follow_pointer_screen(bool(self.config["follow_screen"]))  # stays off where the pointer can't be followed
         self._check_hosting()
+        self._configure_sound()
 
     def eventFilter(self, watched, event) -> bool:
         """Ctrl+1 to Ctrl+9 in the ask box press the bubble's buttons; the desktop's colours changing reach the box
@@ -620,7 +625,22 @@ class Companion(QObject):
         """Walking, as the settings say; the system's reduced motion stills it, unless you chose yourself."""
         return bool(self.config["walk"]) and (self._walk_picked or not self._reduce_motion)
 
+    def _magnify_bubble(self) -> None:
+        """Windows' Magnifier, when it runs, goes to the bubble that just showed (wincaret.py), unless you're typing
+        in the ask box (it follows the field then)."""
+        from . import wincaret
+
+        rect = self.stage.bubble_rect()
+        if rect.isEmpty() or self.ask_box.isActiveWindow() or not wincaret.magnifier_running():
+            return
+        scale = self.stage.device_scale()
+        wincaret.place(self.stage.native_window(), round(rect.x() * scale), round(rect.y() * scale), round(rect.width() * scale), round(rect.height() * scale))
+
     def _message_closed(self) -> None:
+        if sys.platform == "win32" and self.config["accessibility"].get("magnifier_follows", True):
+            from . import wincaret
+
+            wincaret.clear()
         self._end_alert()
         self._note_closed()
         self.messages.closed()
@@ -2434,19 +2454,36 @@ class Companion(QObject):
             self._attach_pasted(kind, payload)
 
     def _register_hotkey(self) -> None:
-        """The hotkey from Settings opens the ask box from anywhere, once M4B's hotkey.py is part of Chatmon."""
+        """The hotkey from Settings opens the ask box from anywhere (hotkey.py): registered at start and whenever it
+        changes, taken back when it's emptied. A problem with it is said once for that hotkey."""
         sequence = str(self.config.get("hotkey") or "").strip()
         if sequence == self._hotkey:
             return
-        try:
-            from . import hotkey  # M4B's
-        except ImportError:
+        from . import hotkey
+
+        if not sequence:
+            hotkey.unregister()
+            self._hotkey = ""
             return
-        error = hotkey.register(sequence, self.open_ask) if sequence else None
+        error = hotkey.register(sequence, self._hotkey_pressed, failed=self._hotkey_failed)
         if error:
-            self.say("That hotkey didn't work", error, timeout_s=15)
+            self._hotkey_failed(error)
         else:
             self._hotkey = sequence
+
+    def _hotkey_pressed(self) -> None:
+        """The hotkey: the ask box, as a click on the chatmon opens it (and closes it, pressed again)."""
+        if self.ask_box.isVisible():
+            self.ask_box.dismiss()
+        else:
+            self.open_ask()
+
+    def _hotkey_failed(self, why: str) -> None:
+        sequence = str(self.config.get("hotkey") or "")
+        if self.state.get("hotkey_told") != sequence:  # said once for this hotkey, not at every start
+            self.state.set("hotkey_told", sequence)
+            self.state.save()
+            self.say("The hotkey to ask didn't work", f"{why}\n\nSettings › Accessibility picks another.", timeout_s=20, background=True)
 
     def _other_agents(self) -> None:
         self.open_ask()
@@ -2608,6 +2645,7 @@ class Companion(QObject):
         "bubble_time": ("accessibility", "bubble_time"), "reduced_motion": ("accessibility", "reduced_motion"),
         "accessible_ask_box": ("accessibility", "accessible_ask_box"), "sound": ("sound", "enabled"), "volume": ("sound", "volume"),
         "cues": ("sound", "cues"), "hotkey": ("hotkey",), "follow_screen": ("follow_screen",),
+        "magnifier_follows": ("accessibility", "magnifier_follows"),
     }
 
     def _settings_values(self) -> tuple[dict, dict]:
@@ -2632,6 +2670,7 @@ class Companion(QObject):
             "reduced_motion": str(c["accessibility"]["reduced_motion"]), "accessible_ask_box": str(c["accessibility"]["accessible_ask_box"]),
             "sound": bool(c["sound"]["enabled"]), "volume": int(c["sound"]["volume"]), "cues": dict(c["sound"]["cues"]),
             "hotkey": str(c["hotkey"]), "follow_screen": bool(c["follow_screen"]), "api_key": None,
+            "magnifier_follows": bool(c["accessibility"]["magnifier_follows"]),
         }
         current = self._brain(wait=False)
         matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()
@@ -2868,6 +2907,14 @@ class Companion(QObject):
             self.app.styleHints().colorSchemeChanged.disconnect(self._scheme_changed)
         except TypeError:  # never connected
             pass
+        if self._hotkey:
+            from . import hotkey
+
+            hotkey.unregister()
+        if sys.platform == "win32":
+            from . import wintoast
+
+            wintoast.toaster().clear()  # nothing would hear their buttons now
         self.menus.stop()
         self._stop_update_checks()
         watcher = getattr(self, "_lock_watcher", None)
@@ -3118,6 +3165,13 @@ def run() -> int:
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_USER_MODEL_ID)
         except (AttributeError, OSError):
             pass
+        if not getattr(sys, "frozen", False):  # pip or source: no Start menu shortcut carries the ID, so name it for toasts
+            from . import wintoast
+
+            try:
+                wintoast.register_app_id(APP_USER_MODEL_ID, "Chatmon")
+            except OSError as exc:
+                print(f"Couldn't name Chatmon for Windows' notifications: {exc}", file=sys.stderr)
     app = QApplication(sys.argv[:1])
     app.setApplicationName(paths.APP)
     app.setApplicationDisplayName("Chatmon")

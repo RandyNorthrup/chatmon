@@ -110,13 +110,16 @@ def toaster(qapp):
 @windows
 def test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon(toaster, qapp):
     tag = toaster.show("Chatmon test", "A toast from Chatmon's tests, removed at once.", ["OK"], silent=True)
-    if notifications_on():
-        assert tag is not None and toaster.why_not is None
+    setting = toaster.setting()
+    if notifications_on() and setting == wintoast.ENABLED:
+        assert tag is not None and toaster.why_not is None, toaster.why_not
         assert wait_for(qapp, lambda: tag in toaster.in_action_center()), "Windows never had the toast"
         assert toaster.hide(tag)
+    elif notifications_on():  # on for you, off by Windows itself (a policy, a manifest, a CI runner's session): said so
+        assert tag is None and toaster.why_not == wintoast.WHY_NOT[setting] and toaster.listening == [], (setting, toaster.why_not)
     else:
         assert tag is None and toaster.why_not == wintoast.WHY_NOT[wintoast.OFF_FOR_USER]
-        assert toaster.setting() == wintoast.OFF_FOR_USER and toaster.listening == []
+        assert setting == wintoast.OFF_FOR_USER and toaster.listening == []
 
 
 @windows
@@ -133,8 +136,11 @@ def test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread(toaster, qapp)
     if notifications_on():
         assert wait_for(qapp, lambda: tag in toaster.in_action_center())
         assert toaster.hide(tag)
-        assert wait_for(qapp, lambda: heard)
-        assert heard == [("dismissed", tag, wintoast.HIDDEN_BY_CHATMON, True)]
+        assert wait_for(qapp, lambda: ("dismissed", tag, wintoast.HIDDEN_BY_CHATMON, True) in heard)
+        # Windows may say first that it timed out (a CI runner's Windows expires a toast nobody can see): every report
+        # comes back on the Qt thread, and Chatmon's own hiding is the last.
+        assert heard[-1] == ("dismissed", tag, wintoast.HIDDEN_BY_CHATMON, True)
+        assert all(h[:2] == ("dismissed", tag) and h[2] in (wintoast.TIMED_OUT, wintoast.HIDDEN_BY_CHATMON) and h[3] for h in heard), heard
     else:
         assert wait_for(qapp, lambda: heard)
         WPN_E_NOTIFICATION_TYPE_DISABLED = -0x7FC1FEEC  # 0x803E0114

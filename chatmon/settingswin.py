@@ -11,6 +11,8 @@ keychain; the window never keeps it anywhere.
 
 from __future__ import annotations
 
+import sys
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QKeySequence
 from PyQt6.QtWidgets import (
@@ -32,7 +34,7 @@ CUES = [("needs-you", "An agent needs me"), ("reminder", "A reminder"), ("focus-
 DEFAULTS = {
     "reminder_snooze": 10, "text_scale": 100, "bubble_time": "normal", "reduced_motion": "system", "accessible_ask_box": "auto",
     "sound": True, "volume": 70, "cues": {name: name in ("needs-you", "reminder", "focus-done") for name, _ in CUES}, "hotkey": "",
-    "follow_screen": False,
+    "follow_screen": False, "magnifier_follows": True,
     "api_key": None,
 }
 
@@ -287,6 +289,9 @@ class SettingsWindow(QDialog):
         self.read_aloud.setChecked(v["read_aloud"])
         self.accessible_ask_box = _combo(ASK_BOX_WINDOW, v["accessible_ask_box"])
         self.reduced_motion = _combo(MOTION, v["reduced_motion"])
+        self.magnifier_follows = QCheckBox("Magnifier goes to each bubble as it shows")
+        self.magnifier_follows.setChecked(v["magnifier_follows"])
+        self.magnifier_follows.setVisible(sys.platform == "win32")  # Windows' Magnifier
         self.hotkey = QKeySequenceEdit(QKeySequence(v["hotkey"], QKeySequence.SequenceFormat.PortableText))
         self.hotkey.setMaximumSequenceLength(1)
         self.hotkey.setClearButtonEnabled(True)
@@ -318,7 +323,9 @@ class SettingsWindow(QDialog):
         form.addRow("Ask box as its own window", self.accessible_ask_box)
         form.addRow("", _note("Where Chatmon draws on its own overlay (Wayland), a window of its own is what screen readers can find."))
         form.addRow("Movement", self.reduced_motion)
+        form.addRow("", self.magnifier_follows)
         form.addRow("Hotkey to ask", self.hotkey)
+        form.addRow("", _note("Opens the ask box from anywhere; pressed again, closes it. Clear it for none."))
         form.addRow("", self.sound)
         form.addRow("Volume", self.volume)
         form.addRow("", sounds)
@@ -411,6 +418,7 @@ class SettingsWindow(QDialog):
             "text_scale": self.text_scale.currentData(),
             "bubble_time": self.bubble_time.currentData(),
             "accessible_ask_box": self.accessible_ask_box.currentData(),
+            "magnifier_follows": self.magnifier_follows.isChecked(),
             "reduced_motion": self.reduced_motion.currentData(),
             "hotkey": self.hotkey.keySequence().toString(QKeySequence.SequenceFormat.PortableText),
             "sound": self.sound.isChecked(),

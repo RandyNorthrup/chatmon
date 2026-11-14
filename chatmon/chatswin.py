@@ -89,7 +89,8 @@ class ChatsWindow(QDialog):
             self._later.start()
 
     def shown_ids(self) -> list[str]:
-        return [self.list.item(i).data(Qt.ItemDataRole.UserRole) for i in range(self.list.count())]
+        items = (self.list.item(i) for i in range(self.list.count()))
+        return [item.data(Qt.ItemDataRole.UserRole) for item in items if item is not None]
 
     def _words(self) -> list[str]:
         return self.search.text().casefold().split()
@@ -114,7 +115,8 @@ class ChatsWindow(QDialog):
         self._show()
 
     def _show(self) -> None:
-        chosen = self.list.currentItem().data(Qt.ItemDataRole.UserRole) if self.list.currentItem() else None
+        current = self.list.currentItem()
+        chosen = current.data(Qt.ItemDataRole.UserRole) if current is not None else None
         words = self._words()
         self.list.clear()
         for listed in self._listed:

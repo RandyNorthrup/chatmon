@@ -7,6 +7,7 @@ import copy
 import json
 import math
 import os
+import sys
 import time
 import tomllib
 from collections.abc import Callable
@@ -24,7 +25,8 @@ DEFAULTS: dict[str, Any] = {
     "companion": "penguin",
     "bubble_style": "match",
     "bubble_effects": True,
-    "hotkey": "",
+    # Opens the ask box from anywhere. On macOS Qt's Ctrl is Command, and Command+Option+Space is Finder's search.
+    "hotkey": "Ctrl+Shift+Space" if sys.platform == "darwin" else "Ctrl+Alt+Space",
     "follow_screen": False,
     "ai": {"brain": "auto", "timeout_seconds": 180, "brains": {}},
     "agents": {"show_replies": False},
@@ -33,7 +35,8 @@ DEFAULTS: dict[str, Any] = {
     "breaks": {"remind": True, "every_minutes": 60, "snooze_minutes": 10},
     "reminders": {"snooze_minutes": 10},
     "focus": {"minutes": 25, "tell_when_done": True},
-    "accessibility": {"read_aloud": True, "text_scale": 100, "bubble_time": "normal", "reduced_motion": "system", "accessible_ask_box": "auto"},
+    "accessibility": {"read_aloud": True, "text_scale": 100, "bubble_time": "normal", "reduced_motion": "system", "accessible_ask_box": "auto",
+                      "magnifier_follows": True},
     # Sounds for alerts only, until you turn others on; one switch turns them all off (owner, 2026-11-14).
     "sound": {
         "enabled": True,
@@ -82,9 +85,9 @@ bubble_style = "match"
 # Animate the bubbles' edges. false keeps the style but holds it still.
 bubble_effects = true
 
-# A key combination that opens the ask box from anywhere, like "Ctrl+Alt+Space".
-# Empty: none.
-hotkey = ""
+# A key combination that opens the ask box from anywhere. Left out, it's
+# "Ctrl+Alt+Space" ("Ctrl+Shift+Space" on macOS, where Ctrl is Command); "" for none.
+# hotkey = "Ctrl+Alt+Space"
 
 # Follow the pointer to another monitor.
 follow_screen = false
@@ -220,6 +223,8 @@ reduced_motion = "system"
 # The ask box as a window of its own, which screen readers find, where Chatmon
 # draws its own overlay (Wayland): "auto" (when a screen reader runs), "on", "off".
 accessible_ask_box = "auto"
+# Windows: Magnifier, when it's running, goes to each bubble as it shows.
+magnifier_follows = true
 
 [sound]
 # One switch for every sound.

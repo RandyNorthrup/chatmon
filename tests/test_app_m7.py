@@ -282,7 +282,9 @@ def test_the_desktops_colours_and_reduced_motion_apply_at_once(companion):
 def test_sounds_play_for_alerts_only_unless_turned_on_and_never_in_quiet_or_focus(companion, monkeypatch):
     c = companion
     played = []
-    monkeypatch.setattr(c, "_play", lambda name: played.append(name) or True)
+    monkeypatch.setattr(c, "_play", lambda name: played.append(name) or True)  # the player itself is sound.py's (test_sound.py)
+    c._override(("sound", "enabled"), True)  # the harness turns sound off; Chatmon's own default is on
+    c.reload(quietly=True)
     out_of_the_way(c)
     c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
     c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
@@ -308,13 +310,122 @@ def test_sounds_play_for_alerts_only_unless_turned_on_and_never_in_quiet_or_focu
     assert c._cue("needs-you") is False  # one switch for all
 
 
-@pytest.mark.skipif(sys.platform != "win32", reason="M4B's player isn't merged on any platform yet; on Windows its absence is checked here")
-def test_until_m4bs_player_is_here_a_cue_plays_nothing(companion):
-    import importlib.util
+def test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet(companion, monkeypatch):
+    from chatmon import sound
 
-    if importlib.util.find_spec("chatmon.sound") is not None:
-        pytest.skip("M4B's sound.py is merged: its own tests and M7's wiring test cover it")
-    assert companion._play("needs-you") is False
+    c = companion
+    told = []
+    monkeypatch.setattr(sound, "configure", lambda enabled, volume, cues, quiet=None: told.append((enabled, volume, cues, quiet)))
+    c._override(("sound",), {"enabled": True, "volume": 40, "cues": {"done": True}})
+    c.reload(quietly=True)
+    enabled, volume, cues, quiet = told[-1]
+    assert (enabled, volume, cues["done"], cues["needs-you"]) == (True, 40, True, True)
+    assert not quiet()
+    c.desk.why_quiet = "Do Not Disturb"
+    c._check_quiet()
+    assert quiet()  # sound.py asks before each sound
+    c.desk.why_quiet = None
+    c._check_quiet()
+    c.start_focus(25)
+    assert quiet()
+
+
+def test_the_hotkey_is_registered_from_settings_toggles_the_box_and_a_problem_is_said_once(companion, monkeypatch):
+    from chatmon import hotkey
+
+    c = companion
+    calls = []
+    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None: calls.append(("register", sequence, callback, failed)) or None)
+    monkeypatch.setattr(hotkey, "unregister", lambda: calls.append(("unregister",)))
+    c._override(("hotkey",), "Ctrl+Alt+K")
+    c.reload(quietly=True)
+    assert calls == [("register", "Ctrl+Alt+K", c._hotkey_pressed, c._hotkey_failed)]
+    c.reload(quietly=True)
+    assert len(calls) == 1  # unchanged: not again
+    calls[0][2]()
+    assert c.ask_box.isVisible()  # pressed: the box
+    calls[0][2]()
+    assert not c.ask_box.isVisible()  # pressed again: closed
+    out_of_the_way(c)
+    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None: "Ctrl+Alt+J is already used by another app. Pick another shortcut.")
+    c._override(("hotkey",), "Ctrl+Alt+J")
+    c.reload(quietly=True)
+    assert until(lambda: c.stage.bubble.title == "The hotkey to ask didn't work") and "already used" in c.stage.bubble.doc.toPlainText()
+    c.stage.dismiss_message()
+    c._hotkey = ""
+    c.reload(quietly=True)  # the same hotkey, failing again (the next start): not said again
+    spin(0.3)
+    assert not c.stage.message_visible()
+    c._hotkey = "Ctrl+Alt+K"
+    c._override(("hotkey",), "")
+    c.reload(quietly=True)
+    assert calls[-1] == ("unregister",) and c._hotkey == ""
+
+
+def test_the_hotkeys_default_isnt_finders_search_on_macos():
+    import importlib
+
+    from chatmon import settings
+
+    assert settings.DEFAULTS["hotkey"] == ("Ctrl+Shift+Space" if sys.platform == "darwin" else "Ctrl+Alt+Space")
+    assert importlib.import_module("chatmon.hotkey").parse(settings.DEFAULTS["hotkey"])  # one hotkey.py can register
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows' toasts")
+def test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons(companion, monkeypatch):
+    from app_harness import NoToasts
+
+    from chatmon import wintoast
+
+    c = companion
+    shown, balloons = [], []
+
+    class Toasts(NoToasts):
+        def show(self, title, text="", buttons=(), scenario=None):
+            shown.append((title, text, [label for label, _ in buttons], scenario))
+            return "tag-1"
+
+    monkeypatch.setattr(wintoast, "toaster", lambda: Toasts())
+    monkeypatch.setattr(c.tray, "showMessage", lambda *a: balloons.append(a))
+    from PyQt6.QtWidgets import QSystemTrayIcon
+
+    monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))  # offscreen has no tray
+    c.desk.why_quiet, c.desk.is_covered = "a full-screen game", True
+    c._check_quiet()
+    r = c.reminders.add(time.time() - 1, "stretch")
+    c._check_reminders()
+    assert shown == [("Reminder", "Chatmon has something for you.", ["Done", "Snooze 10 min"], "reminder")] and balloons == []  # never its words
+    monkeypatch.setattr(wintoast, "toaster", lambda: NoToasts())  # no toast to be had: the balloon
+    c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
+    assert balloons and balloons[-1][:2] == ("Claude needs you", "Chatmon has something for you.")
+    assert c.reminders.get(r.id).fired
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows' Magnifier")
+def test_on_windows_magnifier_goes_to_each_bubble_and_lets_go_when_it_closes(companion, monkeypatch):
+    from chatmon import wincaret
+
+    c = companion
+    out_of_the_way(c)
+    c.behavior.set_walk(False, c._now())  # the bubble follows a walking chatmon: held still, to compare where it is
+    placed, cleared = [], []
+    monkeypatch.setattr(wincaret, "magnifier_running", lambda: True)
+    monkeypatch.setattr(wincaret, "place", lambda hwnd, x, y, w, h: placed.append((hwnd, x, y, w, h)) or True)
+    monkeypatch.setattr(wincaret, "clear", lambda: cleared.append(1))
+    c.say("Claude finished", "All tests pass.", timeout_s=8)
+    assert until(lambda: placed)
+    hwnd, x, y, w, h = placed[0]
+    rect, scale = c.stage.bubble_rect(), c.stage.device_scale()
+    assert hwnd == c.stage.native_window() and (x, y, w, h) == (round(rect.x() * scale), round(rect.y() * scale), round(rect.width() * scale), round(rect.height() * scale))
+    assert w > 0 and h > 0
+    c.stage.dismiss_message()
+    assert cleared
+    c._override(("accessibility", "magnifier_follows"), False)
+    c.reload(quietly=True)
+    placed.clear()
+    c.say("Codex finished", timeout_s=8)
+    spin(0.3)
+    assert placed == []  # the option off
 
 
 def test_the_ask_box_is_a_window_with_a_screen_reader_where_the_overlay_draws_it(companion):

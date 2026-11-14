@@ -9,7 +9,7 @@ import time
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QEventLoop, QTimer  # noqa: E402
+from PyQt6.QtCore import QEventLoop, QPoint, QTimer  # noqa: E402
 from PyQt6.QtNetwork import QLocalServer  # noqa: E402
 from PyQt6.QtWidgets import QApplication  # noqa: E402
 
@@ -64,12 +64,25 @@ def make_companion(tmp_path, monkeypatch):
     from chatmon.settings import State
 
     monkeypatch.setattr(agents, "_run_json", lambda argv, what: [])  # never run a real agent's command line
+    # Never a real shortcut taken from the desktop, nor a sound played, whatever a test does to the settings (one that
+    # replaced them once registered Ctrl+Alt+Space for the rest of the run): hotkey.py and sound.py have their own tests.
+    from chatmon import hotkey, sound
+
+    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None: None)
+    monkeypatch.setattr(hotkey, "unregister", lambda: None)
+    monkeypatch.setattr(sound, "play", lambda cue: False)
+    if sys.platform == "win32":  # never a toast in the computer's Action Center: the tray's balloon, which tests stand in for
+        from chatmon import wintoast
+
+        monkeypatch.setattr(wintoast, "toaster", lambda: NoToasts())
 
     from chatmon import __version__
 
     # Seen this version already (no what's new), asked about every agent already (no offer to connect them),
     # and never looking for updates (no network in tests).
-    seen = {"name": "Sparky", "x": 600, "seen_version": __version__, "check_updates": False, "agent_status": {a.name: "found" for a in agents.AGENTS}}
+    # And no hotkey or sound of the computer's own: a test never takes a shortcut from the desktop, nor plays a sound.
+    seen = {"name": "Sparky", "x": 600, "seen_version": __version__, "check_updates": False, "agent_status": {a.name: "found" for a in agents.AGENTS},
+            "settings": {"hotkey": "", "sound": {"enabled": False}}}
     State(paths.state_file(), seen).save()
     qapp = QApplication.instance() or QApplication([])
     qapp.setQuitOnLastWindowClosed(False)
@@ -89,12 +102,29 @@ def make_companion(tmp_path, monkeypatch):
     c.desk.close()
     c.desk = PretendDesk()
     c._check_accessibility()  # what it read of reduced motion and high contrast as it started, read again from it
+    # The pointer, too: far from the chatmon. The stage pauses a bubble under it (M3), and the offscreen cursor stays
+    # wherever an earlier test left it, so a bubble that should time out could wait for ever.
+    c.stage._cursor_pos = lambda: QPoint(-100_000, -100_000)
     try:
         yield c
     finally:
         c.quit()
         server.close()
         keychain.use(real_keychain)
+
+
+class NoToasts:
+    """Windows' toasts as a computer with notifications off has them: none shown (the caller uses the balloon), and
+    nothing to clear."""
+
+    why_not = "notifications are off in tests"
+    cleared = 0
+
+    def show(self, *args, **kwargs):
+        return None
+
+    def clear(self):
+        NoToasts.cleared += 1
 
 
 def until(condition, seconds=5.0):
