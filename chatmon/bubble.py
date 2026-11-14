@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import html
 import os
+import re
 import sys
 import time
 from dataclasses import dataclass
@@ -28,6 +29,7 @@ from PyQt6.QtGui import (
     QPalette,
     QPen,
     QPixmap,
+    QTextLayout,
     QTextOption,
 )
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QMenu, QTextBrowser, QToolButton, QVBoxLayout, QWidget
@@ -42,11 +44,13 @@ FADE = 0.14  # seconds
 SPILL = 3  # px an effect may reach past a bubble's frame (a flame's tip): the stage draws that much round it
 ANIM_FPS = 30  # how often an animated bubble is redrawn (its frames crossfade in between)
 BODY_POINTS = 10.5  # the bubbles' text, at the desktop's usual font size
+SAFE_SCHEMES = ("http", "https", "mailto")  # what a link in a bubble may open: nothing on this computer
+WORD = re.compile(r"\w+")
 
 
 def open_link(url: QUrl) -> None:
     """Links in answers open in the browser; nothing else (no files, no apps)."""
-    if url.scheme() in ("http", "https", "mailto"):
+    if url.scheme() in SAFE_SCHEMES:
         QDesktopServices.openUrl(url)
 
 
@@ -96,9 +100,24 @@ def bubble_path(box: QRectF, tail_x: float) -> QPainterPath:
     return path.united(tail)
 
 
-def _font(points: float, bold: bool = False) -> QFont:
+def text_points(base: float, scale: float = 1.0) -> float:
+    """A text size: `base` (its size with the desktop's usual font) grown with the desktop's font where that's
+    larger, times the text-size setting `scale`."""
+    desktop = QApplication.font().pointSizeF()
+    grow = desktop / BODY_POINTS if desktop > BODY_POINTS else 1.0
+    return base * grow * scale
+
+
+def width_for(px: float, font: QFont) -> float:
+    """`px`, a width that suits text at the usual size, for text in `font`: in proportion to its line height."""
+    usual = QFont(font)
+    usual.setPointSizeF(BODY_POINTS)
+    return px * QFontMetricsF(font).height() / QFontMetricsF(usual).height()
+
+
+def _font(points: float, bold: bool = False, scale: float = 1.0) -> QFont:
     font = QFont(QApplication.font())
-    font.setPointSizeF(points)
+    font.setPointSizeF(text_points(points, scale))
     font.setBold(bold)
     return font
 
@@ -115,11 +134,56 @@ class _Button:
     rect: QRectF
 
 
+@dataclass(frozen=True)
+class TimeoutPolicy:
+    """How long a speech bubble stays: long enough to read. At least `least` seconds plus `per_word` for each of
+    its words, or what the message asked for if that's longer; times `factor` (a "longer" setting); or until it's
+    closed. A message that asks to stay (no timeout: an alert, a question) stays whatever the policy."""
+
+    until_closed: bool = False
+    factor: float = 1.0
+    least: float = 4.0
+    per_word: float = 0.3
+
+    def seconds(self, asked: float | None, words: int) -> float | None:
+        if not asked or self.until_closed:
+            return None
+        return max(asked, self.least + self.per_word * words) * max(0.25, self.factor)
+
+
+def text_lines(text: str, font: QFont, width: float, most: int) -> list[str]:
+    """`text` broken into lines `width` px wide in `font`: at most `most`, the last cut short with "…"."""
+    layout = QTextLayout(text, font)
+    option = QTextOption()
+    option.setWrapMode(QTextOption.WrapMode.WrapAtWordBoundaryOrAnywhere)
+    layout.setTextOption(option)
+    spans = []
+    layout.beginLayout()
+    while True:
+        line = layout.createLine()
+        if not line.isValid():
+            break
+        line.setLineWidth(max(1.0, width))
+        spans.append((line.textStart(), line.textLength()))
+    layout.endLayout()
+    lines = [text[start : start + length].strip() for start, length in spans[:most]]
+    if len(spans) > most:
+        rest = " ".join(text[spans[most - 1][0] :].split())
+        lines[-1] = QFontMetricsF(font).elidedText(rest, Qt.TextElideMode.ElideRight, max(1.0, width))
+    return lines or [""]
+
+
 class SpeechBubble:
     """A message above the penguin's head. It has no window of its own: the
     stage draws it, so it follows the penguin smoothly."""
 
-    MAX_WIDTH = 340
+    MAX_WIDTH = 340  # px at the usual text size; it grows with the text (`_max_width`)
+    SCREEN_SHARE = 0.4  # of the screen's height, at most
+    TITLE_LINES = 2
+    CLOSE_W = 22
+    BUTTON_GAP = 8
+    ROW_GAP = 6
+    MORE = "More"
 
     def __init__(self):
         self.title = ""
@@ -130,14 +194,25 @@ class SpeechBubble:
         self.size = QSizeF()
         self.hover: int | None = None
         self.on_close: Callable[[], None] | None = None
+        self.on_more: Callable[[str, str], None] | None = None  # More: (title, the whole text), to be read in full
+        self.timeout_policy = TimeoutPolicy()
+        self.max_height: float | None = None  # px; None: SCREEN_SHARE of the primary screen
+        self.text_scale = 1.0
+        self._text = ""
+        self._button_specs: list = []
         self._shown_at = 0.0
+        self._now = 0.0  # the clock as last told (show, tick)
         self._expires: float | None = None
         self._closing_at: float | None = None
+        self._hovered = False
+        self._paused_at: float | None = None
         self._visible = False
         self._close_rect = QRectF()
         self._body_top = 0.0
         self._body = QRectF()
         self._content = QRectF()
+        self._title_lines: list[str] = []
+        self._clip: float | None = None  # how much of the text shows, when it's cut short (px from its top)
         self.style = styles.get(None)
         self.animate = True
         self.art = bubbleart.art(self.style.name, "message")
@@ -149,6 +224,12 @@ class SpeechBubble:
         """Draw in `style` from the next message on (and the one showing, if any)."""
         self.style, self.animate = style, animate
         self.art = bubbleart.art(style.name, "message")
+        if self._visible and self._closing_at is None:
+            self._layout()
+
+    def set_text_scale(self, scale: float) -> None:
+        """The text-size setting: 1 is the usual size (or the desktop's, if larger)."""
+        self.text_scale = min(3.0, max(0.75, scale))
         if self._visible and self._closing_at is None:
             self._layout()
 
@@ -171,42 +252,92 @@ class SpeechBubble:
         self.hover = None
         self._text = text or ""
         self._button_specs = list(buttons or [])
-        self._shown_at, self._closing_at = now, None
-        self._expires = now + timeout_s if timeout_s else None
+        self._shown_at, self._closing_at, self._now = now, None, now
+        self._hovered, self._paused_at = False, None
         self._visible = True
         self._layout()
+        stay = self.timeout_policy.seconds(timeout_s, self.words())
+        self._expires = now + stay if stay is not None else None
+
+    def words(self) -> int:
+        """How many words there are to read: the title's and the text's."""
+        return len(WORD.findall(self.title)) + len(WORD.findall(self.doc.toPlainText()))
+
+    def expires(self) -> float | None:
+        """When it goes, on its own clock (None: when it's closed)."""
+        return self._expires
+
+    def set_hovered(self, on: bool, now: float | None = None) -> None:
+        """The pointer is over it (or has left): its clock stops while you read, and goes on from where it was."""
+        now = self._now if now is None else now
+        if on == self._hovered:
+            return
+        self._hovered = on
+        if on:
+            self._paused_at = now
+        elif self._paused_at is not None:
+            if self._expires is not None:
+                self._expires += max(0.0, now - self._paused_at)
+            self._paused_at = None
+
+    def _max_width(self, body: QFont) -> float:
+        """The widest a bubble gets: wider with larger text, never past most of the screen."""
+        screen = QGuiApplication.primaryScreen()
+        room = screen.availableGeometry().width() * 0.9 if screen is not None else 2000
+        return min(room, width_for(self.MAX_WIDTH, body))
+
+    def _max_height(self) -> float:
+        if self.max_height:
+            return self.max_height
+        screen = QGuiApplication.primaryScreen()
+        return self.SCREEN_SHARE * (screen.availableGeometry().height() if screen is not None else 1000)
 
     def _layout(self) -> None:
         """Lay the title, text and buttons out (from 0, 0), then put them inside the bubble."""
         self._words = None
         self._frame = None
-        title_font, body_font = _font(10.5, bold=True), _font(10.5)
+        scale = self.text_scale
+        title_font, body_font = _font(BODY_POINTS, bold=True, scale=scale), _font(BODY_POINTS, scale=scale)
+        self._title_font, self._button_font, self._close_font = title_font, _font(10, scale=scale), _font(9.5, scale=scale)
         self.doc.setDefaultFont(body_font)
         c = self.style.colours()
         self.highlighter.set_colours(highlight.code_colours(c))
         richtext.render(self.doc, self._text, look(c, body_font.pointSizeF()))
         has_text = bool(self._text)
-        metrics = QFontMetricsF(body_font)
-        self.buttons = [_Button(label, action, QRectF(0, 0, metrics.horizontalAdvance(label) + 28, metrics.height() + 10)) for label, action in self._button_specs]
-        title_w = QFontMetricsF(title_font).horizontalAdvance(self.title) + 28
-        buttons_w = sum(b.rect.width() for b in self.buttons) + 8 * max(0, len(self.buttons) - 1)
-        inner_max = self.MAX_WIDTH - 2 * PAD  # the text's widest, whatever bubble it's in
+        title_metrics, body_metrics = QFontMetricsF(title_font), QFontMetricsF(body_font)
+        buttons = self._buttons(self._button_specs)
+        inner_max = self._max_width(body_font) - 2 * PAD  # the text's widest, whatever bubble it's in
         self.doc.setTextWidth(inner_max)
-        inner = min(inner_max, max(160, title_w, buttons_w, self.doc.idealWidth() + 1 if has_text else 0))
+        title_w = title_metrics.horizontalAdvance(self.title) + self.CLOSE_W + 6
+        one_row = sum(b.rect.width() for b in buttons) + self.BUTTON_GAP * max(0, len(buttons) - 1)
+        least = 160 * scale
+        inner = min(inner_max, max(least, title_w, one_row, self.doc.idealWidth() + 1 if has_text else 0))
         self.doc.setTextWidth(inner)
-        title_h = QFontMetricsF(title_font).height()
+        self._title_lines = text_lines(self.title, title_font, inner - self.CLOSE_W, self.TITLE_LINES)
+        title_h = title_metrics.lineSpacing() * len(self._title_lines)
+        chrome = (self.art.margins()[1] + self.art.margins()[3]) if self.art else 2 * PAD + TAIL
+        room = self._max_height() - chrome - title_h  # for the text and the buttons
+        text_h = self.doc.size().height() if has_text else 0.0
+        rows_h = self._rows(buttons, inner)
+        self._clip = None
+        if has_text and 6 + text_h + (12 + rows_h if buttons else 0) > room:
+            if self.on_more is not None:
+                buttons = self._buttons(self._button_specs + [(self.MORE, self._more)])
+                rows_h = self._rows(buttons, inner)
+            ellipsis = body_metrics.lineSpacing()
+            fits = room - 6 - (12 + rows_h if buttons else 0) - ellipsis
+            self._clip = self._whole_lines(max(fits, 2 * body_metrics.lineSpacing()))
+            text_h = self._clip + ellipsis
         height = title_h
         body_top = height + 6
         if has_text:
-            height += 6 + self.doc.size().height()
-        if self.buttons:
+            height += 6 + text_h
+        if buttons:
             height += 12
-            x = inner
-            for b in reversed(self.buttons):
-                x -= b.rect.width()
-                b.rect.moveTo(x, height)
-                x -= 8
-            height += self.buttons[0].rect.height()
+            for b in buttons:
+                b.rect.translate(0, height)
+            height += rows_h
+        self.buttons = buttons
         if self.art:
             frame = self.art.frame_for(QSizeF(inner, height))
             origin = frame.text.topLeft()
@@ -221,8 +352,54 @@ class SpeechBubble:
         for b in self.buttons:
             b.rect.translate(origin)
         self._body_top = origin.y() + body_top
-        self._close_rect = QRectF(origin.x() + inner - 18, origin.y() - 3, 22, title_h + 6)
-        self._title_font, self._has_text = title_font, has_text
+        line_h = title_metrics.lineSpacing()
+        self._close_rect = QRectF(origin.x() + inner - self.CLOSE_W + 4, origin.y() - 3, self.CLOSE_W, line_h + 6)
+        self._has_text = has_text
+
+    def _buttons(self, specs) -> list[_Button]:
+        metrics = QFontMetricsF(self._button_font)
+        return [_Button(label, action, QRectF(0, 0, metrics.horizontalAdvance(label) + 28, metrics.height() + 10)) for label, action in specs]
+
+    def _rows(self, buttons: list[_Button], inner: float) -> float:
+        """Put the buttons in rows, each right-aligned and no wider than the text: their height in all."""
+        rows: list[list[_Button]] = [[]]
+        used = 0.0
+        for b in buttons:
+            b.rect.setWidth(min(b.rect.width(), inner))  # a label too long for any row is cut short
+            if rows[-1] and used + self.BUTTON_GAP + b.rect.width() > inner:
+                rows.append([])
+                used = 0.0
+            used += (self.BUTTON_GAP if rows[-1] else 0) + b.rect.width()
+            rows[-1].append(b)
+        y = 0.0
+        for row in rows:
+            if not row:
+                continue
+            x = inner - (sum(b.rect.width() for b in row) + self.BUTTON_GAP * (len(row) - 1))
+            for b in row:
+                b.rect.moveTo(x, y)
+                x += b.rect.width() + self.BUTTON_GAP
+            y += row[0].rect.height() + self.ROW_GAP
+        return max(0.0, y - self.ROW_GAP)
+
+    def _whole_lines(self, limit: float) -> float:
+        """The bottom of the last line of text that ends within `limit` px of its top."""
+        best = 0.0
+        block = self.doc.begin()
+        while block.isValid():
+            lines = block.layout()
+            top = lines.position().y()
+            for i in range(lines.lineCount()):
+                line = lines.lineAt(i)
+                bottom = top + line.y() + line.height()
+                if bottom <= limit:
+                    best = max(best, bottom)
+            block = block.next()
+        return best or limit
+
+    def _more(self) -> None:
+        if self.on_more is not None:
+            self.on_more(self.title, self._text)
 
     def dismiss(self, now: float) -> None:
         """Closed as far as anyone is concerned; it fades out on its own."""
@@ -233,7 +410,8 @@ class SpeechBubble:
                 self.on_close()
 
     def tick(self, now: float) -> None:
-        if self._expires is not None and now >= self._expires:
+        self._now = now
+        if self._expires is not None and not self._hovered and now >= self._expires:
             self.dismiss(now)
         if self._closing_at is not None and now - self._closing_at >= FADE:
             self._visible, self._closing_at = False, None
@@ -244,15 +422,36 @@ class SpeechBubble:
         return min(1.0, (now - self._shown_at) / FADE)
 
     def hit(self, pos: QPointF) -> str | int | None:
-        """What's at `pos` (bubble coordinates): a button's index, "close", "body"."""
+        """What's at `pos` (bubble coordinates): a button's index, "close", "link" (see `link_at`), "body"."""
         if self._close_rect.contains(pos):
             return "close"
         for i, b in enumerate(self.buttons):
             if b.rect.contains(pos):
                 return i
+        if self.link_at(pos) is not None:
+            return "link"
         if self._body.contains(pos):
             return "body"
         return None
+
+    def link_at(self, pos: QPointF) -> QUrl | None:
+        """The link under `pos` (bubble coordinates), if it's one that may be opened: http, https or mailto."""
+        if not self._has_text or not self._visible:
+            return None
+        local = pos - QPointF(self._content.x(), self._body_top)
+        if local.x() < 0 or local.y() < 0 or local.x() > self._content.width() or (self._clip is not None and local.y() > self._clip):
+            return None
+        href = self.doc.documentLayout().anchorAt(local)
+        url = QUrl(href) if href else None
+        return url if url is not None and url.scheme() in SAFE_SCHEMES else None
+
+    def open_link_at(self, pos: QPointF) -> bool:
+        """Open the link under `pos` in the browser; False if there's none (or not one that may be opened)."""
+        url = self.link_at(pos)
+        if url is None:
+            return False
+        open_link(url)
+        return True
 
     def paint(self, p: QPainter, tail_x: float, now: float) -> None:
         frame = self._frame_pixmap(bubbleart.device_ratio(p), tail_x, now)
@@ -312,15 +511,24 @@ class SpeechBubble:
         c = self._content
         p.setPen(colours.title)
         p.setFont(self._title_font)
-        p.drawText(QRectF(c.x(), c.y(), c.width() - 20, 40), Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop, self.title)
-        p.setFont(_font(9.5))
+        line_h = QFontMetricsF(self._title_font).lineSpacing()
+        for i, line in enumerate(self._title_lines):
+            p.drawText(QRectF(c.x(), c.y() + i * line_h, c.width() - self.CLOSE_W, line_h), Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop, line)
+        p.setFont(self._close_font)
         p.drawText(self._close_rect, Qt.AlignmentFlag.AlignCenter, "✕")
         if self._has_text:
             p.save()
             p.translate(c.x(), self._body_top)
+            if self._clip is not None:  # cut short: whole lines, then "…" (More has the rest)
+                p.setClipRect(QRectF(-SPILL, -SPILL, c.width() + 2 * SPILL, self._clip + SPILL))
             self.doc.documentLayout().draw(p, paint_context(colours))
             p.restore()
-        p.setFont(_font(10))
+            if self._clip is not None:
+                p.setPen(colours.body)
+                p.setFont(self.doc.defaultFont())
+                p.drawText(QRectF(c.x(), self._body_top + self._clip, c.width(), line_h * 1.5), Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop, "…")
+        p.setFont(self._button_font)
+        metrics = QFontMetricsF(self._button_font)
         for i, b in enumerate(self.buttons):
             button = colours.primary if i == 0 else colours.other
             if i == self.hover:  # lit up: filled with its outline colour
@@ -332,7 +540,7 @@ class SpeechBubble:
             r = b.rect.adjusted(0.75, 0.75, -0.75, -0.75)
             p.drawRoundedRect(r, r.height() / 2, r.height() / 2)
             p.setPen(label)
-            p.drawText(b.rect, Qt.AlignmentFlag.AlignCenter, b.label)
+            p.drawText(b.rect, Qt.AlignmentFlag.AlignCenter, metrics.elidedText(b.label, Qt.TextElideMode.ElideRight, b.rect.width() - 16))
 
 
 class Entry(QLineEdit):

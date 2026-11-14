@@ -209,6 +209,123 @@
       "expect": [
         "test_code_colours_read_on_the_code_panel_and_stand_apart"
       ]
+    },
+    {
+      "id": "M2-03-no-cap",
+      "requirement": "M2-03",
+      "file": "chatmon/bubble.py",
+      "find": "        if has_text and 6 + text_h + (12 + rows_h if buttons else 0) > room:",
+      "replace": "        if False:",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_a_long_message_is_capped_and_more_has_the_rest"
+      ]
+    },
+    {
+      "id": "M2-03-one-row",
+      "requirement": "M2-03",
+      "file": "chatmon/bubble.py",
+      "find": "            if rows[-1] and used + self.BUTTON_GAP + b.rect.width() > inner:",
+      "replace": "            if False:",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_buttons_wrap_onto_rows_inside_the_bubble"
+      ]
+    },
+    {
+      "id": "M2-04-one-line",
+      "requirement": "M2-04",
+      "file": "chatmon/bubble.py",
+      "find": "        self._title_lines = text_lines(self.title, title_font, inner - self.CLOSE_W, self.TITLE_LINES)",
+      "replace": "        self._title_lines = [self.title]",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button"
+      ]
+    },
+    {
+      "id": "M2-08-fixed-clock",
+      "requirement": "M2-08",
+      "file": "chatmon/bubble.py",
+      "find": "        return max(asked, self.least + self.per_word * words) * max(0.25, self.factor)",
+      "replace": "        return asked * max(0.25, self.factor)",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_a_bubble_stays_long_enough_to_read"
+      ]
+    },
+    {
+      "id": "M2-08-hover-ignored",
+      "requirement": "M2-08",
+      "file": "chatmon/bubble.py",
+      "find": "        if self._expires is not None and not self._hovered and now >= self._expires:",
+      "replace": "        if self._expires is not None and now >= self._expires:",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was"
+      ]
+    },
+    {
+      "id": "M2-09-any-scheme",
+      "requirement": "M2-09",
+      "file": "chatmon/bubble.py",
+      "find": "        return url if url is not None and url.scheme() in SAFE_SCHEMES else None",
+      "replace": "        return url",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_links_in_a_bubble_can_be_clicked_but_only_safe_ones"
+      ]
+    },
+    {
+      "id": "M2-09-not-a-link",
+      "requirement": "M2-09",
+      "file": "chatmon/bubble.py",
+      "find": "            return \"link\"",
+      "replace": "            return \"body\"",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_links_in_a_bubble_can_be_clicked_but_only_safe_ones"
+      ]
+    },
+    {
+      "id": "M2-07-desktop-font",
+      "requirement": "M2-07",
+      "file": "chatmon/bubble.py",
+      "find": "    grow = desktop / BODY_POINTS if desktop > BODY_POINTS else 1.0",
+      "replace": "    grow = 1.0",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_text_follows_a_larger_desktop_font"
+      ]
+    },
+    {
+      "id": "M2-07-fixed-width",
+      "requirement": "M2-07",
+      "file": "chatmon/bubble.py",
+      "find": "        return min(room, width_for(self.MAX_WIDTH, body))",
+      "replace": "        return min(room, self.MAX_WIDTH)",
+      "test": [
+        "tests/test_speech_bubble.py"
+      ],
+      "expect": [
+        "test_the_text_size_setting_scales_text_and_widths"
+      ]
     }
   ]
 }
