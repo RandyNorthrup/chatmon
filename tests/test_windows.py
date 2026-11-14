@@ -516,9 +516,11 @@ def test_without_a_console_it_keeps_a_log(tmp_path):
     assert "a warning" in log.read_text(encoding="utf-8")
 
 
-def test_the_pipe_is_named_for_you_and_this_session(qapp):
+def test_the_pipe_is_named_for_you_and_this_session(qapp, monkeypatch):
     """Pipe names are one namespace for every session: yours carries your SID and the session's number."""
     import re
+
+    monkeypatch.delenv("CHATMON_INSTANCE", raising=False)  # your own pipe's name, not the test run's
 
     from chatmon import paths, winpipe
 

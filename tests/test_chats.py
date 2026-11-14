@@ -9,7 +9,7 @@ import sys
 import pytest
 from PyQt6.QtGui import QColor, QImage
 
-from chatmon import attachments, brains, chats
+from chatmon import attachments, brains, chats, paths
 from chatmon.attachments import AttachError
 
 
@@ -354,6 +354,7 @@ def test_clearing_history_removes_attached_text_with_the_chats(tmp_path):
 
 @pytest.mark.skipif(sys.platform != "win32", reason="the roaming app-data folder is Windows'")
 def test_on_windows_chats_stay_off_the_roaming_profile_and_old_ones_move(tmp_path, monkeypatch):
+    monkeypatch.setattr(sys, "platform", "win32")
     profile = tmp_path / "profile"
     monkeypatch.setenv("USERPROFILE", str(profile))
     monkeypatch.setenv("APPDATA", str(profile / "AppData" / "Roaming"))
@@ -362,8 +363,9 @@ def test_on_windows_chats_stay_off_the_roaming_profile_and_old_ones_move(tmp_pat
     chat = chats.Chat()
     chat.add(chats.Message("user", "from before"))
     chats.ChatBook(old).save(chat)
+    paths.migrate()  # what the app does first: the roaming folder moves to this computer's own, once
     book = chats.ChatBook()
-    assert book.root() == profile / "AppData" / "Local" / "chatmon" / "chats"
-    assert [c.id for c in book.recent()] == [chat.id] and not old.exists()  # moved, once
-    monkeypatch.setenv("LOCALAPPDATA", r"C:\Users\Somebody\AppData\Local")  # not this profile's: never somebody else's
-    assert chats.folder() == profile / "AppData" / "Local" / "chatmon" / "chats"
+    assert book.root() == profile / "AppData" / "Local" / "chatmon" / "state" / "chats"
+    assert [c.id for c in book.recent()] == [chat.id] and not old.exists()
+
+

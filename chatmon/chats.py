@@ -14,10 +14,7 @@ from __future__ import annotations
 
 import copy
 import json
-import os
 import re
-import shutil
-import sys
 import time
 import uuid
 from dataclasses import asdict, dataclass, field
@@ -141,44 +138,9 @@ def title_for(text: str) -> str:
 
 
 def folder() -> Path:
-    """Where chats are kept: made readable by you alone, with chats from where an older Chatmon kept them moved in."""
-    path = _home()
-    old = _roaming()
-    if old is not None and old.is_dir() and not path.exists():
-        _move(old, path)
-    return private_dir(path)
-
-
-def _home() -> Path:
-    if sys.platform != "win32":
-        return paths.state_dir() / "chats"  # Linux's XDG state folder and macOS's Application Support stay here
-    # Windows: the local app-data folder, which a roaming profile never copies to a server. It's always inside your
-    # profile; if it isn't (a profile moved for a test, say), the profile's own AppData\Local, not somebody else's.
-    profile = Path(os.environ.get("USERPROFILE") or Path.home())
-    local = Path(os.environ.get("LOCALAPPDATA") or profile / "AppData" / "Local")
-    if not local.is_relative_to(profile):
-        local = profile / "AppData" / "Local"
-    return local / paths.APP / "chats"
-
-
-def _roaming() -> Path | None:
-    """Where chats were kept before 0.10 on Windows: the roaming app-data folder."""
-    return paths.state_dir() / "chats" if sys.platform == "win32" else None
-
-
-def _move(old: Path, new: Path) -> None:
-    private_dir(new.parent)
-    try:
-        os.replace(old, new)  # the same disk: a rename
-        return
-    except OSError:
-        pass
-    private_dir(new)
-    for item in old.glob("*.json"):  # another disk (a redirected profile): one at a time
-        try:
-            shutil.move(str(item), str(new / item.name))
-        except OSError:
-            continue
+    """Where chats are kept, made readable by you alone: the state folder's `chats`. On Windows the state folder is
+    this computer's own (%LOCALAPPDATA%), never the roaming profile; `paths.migrate()` moved the old one there."""
+    return private_dir(paths.state_dir() / "chats")
 
 
 _LATEST = 4102444800.0  # 2100-01-01: any time past this in a file is nonsense
@@ -294,10 +256,9 @@ class ChatBook:
             pass
 
     def clear(self) -> int:
-        """Delete every chat (where an older Chatmon kept them too); how many went."""
+        """Delete every chat; how many went."""
         gone = 0
-        old = _roaming() if self._root is None else None
-        for root in [self.root()] + ([old] if old is not None and old.is_dir() else []):
+        for root in [self.root()]:
             try:
                 for path in root.glob("*.json"):
                     if _ID.fullmatch(path.stem):
