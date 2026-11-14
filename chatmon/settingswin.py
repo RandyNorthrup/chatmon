@@ -34,7 +34,7 @@ CUES = [("needs-you", "An agent needs me"), ("reminder", "A reminder"), ("focus-
 DEFAULTS = {
     "reminder_snooze": 10, "text_scale": 100, "bubble_time": "normal", "reduced_motion": "system", "accessible_ask_box": "auto",
     "sound": True, "volume": 70, "cues": {name: name in ("needs-you", "reminder", "focus-done") for name, _ in CUES}, "hotkey": "",
-    "follow_screen": False, "magnifier_follows": True,
+    "follow_screen": False, "magnifier_follows": True, "speech_fallback": False,
     "api_key": None,
 }
 
@@ -292,6 +292,9 @@ class SettingsWindow(QDialog):
         self.magnifier_follows = QCheckBox("Magnifier goes to each bubble as it shows")
         self.magnifier_follows.setChecked(v["magnifier_follows"])
         self.magnifier_follows.setVisible(sys.platform == "win32")  # Windows' Magnifier
+        self.speech_fallback = QCheckBox("Speak announcements aloud while Chatmon is in the background (macOS's own voice)")
+        self.speech_fallback.setChecked(v["speech_fallback"])
+        self.speech_fallback.setVisible(sys.platform == "darwin")  # VoiceOver holds them until Chatmon is in front
         self.hotkey = QKeySequenceEdit(QKeySequence(v["hotkey"], QKeySequence.SequenceFormat.PortableText))
         self.hotkey.setMaximumSequenceLength(1)
         self.hotkey.setClearButtonEnabled(True)
@@ -324,6 +327,7 @@ class SettingsWindow(QDialog):
         form.addRow("", _note("Where Chatmon draws on its own overlay (Wayland), a window of its own is what screen readers can find."))
         form.addRow("Movement", self.reduced_motion)
         form.addRow("", self.magnifier_follows)
+        form.addRow("", self.speech_fallback)
         form.addRow("Hotkey to ask", self.hotkey)
         form.addRow("", _note("Opens the ask box from anywhere; pressed again, closes it. Clear it for none."))
         form.addRow("", self.sound)
@@ -419,6 +423,7 @@ class SettingsWindow(QDialog):
             "bubble_time": self.bubble_time.currentData(),
             "accessible_ask_box": self.accessible_ask_box.currentData(),
             "magnifier_follows": self.magnifier_follows.isChecked(),
+            "speech_fallback": self.speech_fallback.isChecked(),
             "reduced_motion": self.reduced_motion.currentData(),
             "hotkey": self.hotkey.keySequence().toString(QKeySequence.SequenceFormat.PortableText),
             "sound": self.sound.isChecked(),

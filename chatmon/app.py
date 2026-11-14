@@ -107,6 +107,8 @@ class Companion(QObject):
         self._chats_window = None
         # Whether you're there, and whether now's a time for quiet: the platform's own word for each.
         self.desk = presence.Desk(QGuiApplication.platformName())
+        self._watch_desk(self.desk)  # before its first reading, whose answers come a moment later on Linux
+        self._notifier = sysnotify.Notifier(self) if sys.platform.startswith("linux") else None  # Linux's notifications, one for the app
         self._quiet: str | None = None  # why bubbles from the background wait, if they do
         self.messages = messages.MessageQueue()  # what's to be said, in order (messages.py)
         self._message_timer = QTimer(self)  # looks at the queue again when something waiting may show
@@ -358,15 +360,27 @@ class Companion(QObject):
             # it just waits.
             # Only that something's waiting: the system keeps notifications (Action Center, a phone linked
             # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
-            # A reminder's toast offers what its bubble does (Done, a snooze), so it can be seen to from there.
-            self._system_notice(title, "Chatmon has something for you.", buttons[:2] if reminder and buttons else (), "reminder" if reminder else None)
+            # A reminder's notification offers what its bubble does (Done, a snooze), so it can be seen to from there.
+            self._system_notice(title, "Chatmon has something for you.", list(buttons[:2]) if reminder and buttons else [], "reminder" if reminder else None)
 
-    def _system_notice(self, title: str, text: str, buttons=(), scenario: str | None = None, seconds: int = 10) -> None:
-        """A notification of the system's own, which follows your Do Not Disturb and keeps a history: Windows' toast
-        (wintoast.py), else the tray's balloon; on Linux the desktop's notification server, tray or not. macOS: none
-        (see alert). `buttons`: (label, action) pairs, on a toast only."""
-        if sys.platform.startswith("linux"):
-            sysnotify.send(title, text)
+    def _system_notice(self, title: str, text: str, buttons=(), scenario: str | None = None, seconds: int = 10, aloud: bool = False) -> None:
+        """A notification of the system's own, which keeps a history: Windows' toast (wintoast.py), else the tray's
+        balloon; on Linux the desktop's notification server, tray or not (sysnotify.Notifier). macOS: none (see
+        alert). `buttons`: (label, action) pairs, pressable from the notification. `aloud`: it's for a screen reader
+        to read out (Linux: transient, each replacing the last). On Linux a held alert is urgent, which shows through
+        GNOME's Do Not Disturb, so not when Do Not Disturb is why it's held."""
+        if sys.platform.startswith("linux") and self._notifier is not None:
+            labels = [label for label, _ in buttons]
+
+            def pressed(i: int) -> None:
+                if 0 <= i < len(buttons) and buttons[i][1]:
+                    buttons[i][1]()
+
+            if aloud:
+                self._notifier.read_aloud(title, text, labels, pressed)
+            else:
+                urgency = sysnotify.URGENCY_NORMAL if self._quiet == "Do Not Disturb" else sysnotify.URGENCY_CRITICAL
+                self._notifier.alert(title, text, labels, pressed, urgency=urgency)
         elif sys.platform == "win32":
             from . import wintoast
 
@@ -517,10 +531,19 @@ class Companion(QObject):
         if reader is None:
             return
         words = a11y.spoken(title, text, [label for label, _ in buttons or []])
-        if reader.speak is not None:
-            reader.speak(words, important)
-        elif sys.platform.startswith("linux") or sys.platform == "win32":
-            self._system_notice(a11y.plain(title), words, seconds=15)
+        a11y.announce(reader, words, important, notify=lambda: self._system_notice(a11y.plain(title), words, buttons or (), aloud=True, seconds=15))
+
+    def _watch_desk(self, desk: presence.Desk) -> None:
+        """What the desktop says as it changes (M4A's Desk): reduced motion and high contrast, applied at once rather
+        than at the next look, and a screen reader starting or stopping (Windows)."""
+        desk.settings_changed.connect(self._check_accessibility)
+        desk.screen_reader_changed.connect(self._screen_reader_changed)
+
+    def _screen_reader_changed(self) -> None:
+        """A screen reader started or stopped (Windows says so): look again at once, and put the ask box where it
+        can find it."""
+        self._reader_seen = float("-inf")
+        self._check_hosting()
 
     # -- you being away, and times for quiet
 
@@ -599,6 +622,7 @@ class Companion(QObject):
         self.stage.bubble.timeout_policy = TimeoutPolicy(until_closed=True) if factor is None else TimeoutPolicy(factor=factor)
         self.ask_box.set_reduced_motion(self._reduce_motion)
         self.stage.set_reduced_motion(self._reduce_motion)
+        a11y.set_speech_fallback(bool(a.get("speech_fallback", False)))  # macOS
         self.stage.follow_pointer_screen(bool(self.config["follow_screen"]))  # stays off where the pointer can't be followed
         self._check_hosting()
         self._configure_sound()
@@ -1743,8 +1767,7 @@ class Companion(QObject):
             self.breaks.back(now)
         self._last_wall = now
         self._check_away()
-        self._check_accessibility()
-        self._check_hosting()  # a screen reader started or stopped
+        self._check_hosting()  # a screen reader started or stopped (macOS and Linux say nothing of it)
         self.menus.tick()  # a countdown in the menu says what's left: the menu isn't built again for it
         mono = self._now()
         for source, (state, since) in list(self.agents.items()):
@@ -1772,18 +1795,28 @@ class Companion(QObject):
         if sys.platform == "win32":
             from . import winlock
 
-            self._lock_watcher = winlock.LockWatcher(self._screen_locked, self._sleeping, seen=self._seen, saving=self._power_saving)
+            self._lock_watcher = winlock.LockWatcher(self._screen_locked, self._sleeping, seen=self._seen, saving=self._power_saving,
+                                                     settings=self.desk.windows_setting_changed)
             return
         if sys.platform == "darwin":
-            # PyQt ships QtDBus on macOS too, and on an Intel Mac with Homebrew's dbus Qt finds its libdbus and
-            # asks for a session bus macOS doesn't have: a wait on the screen's thread at every start, for nothing.
+            # Not QtDBus: PyQt ships it on macOS too, and on an Intel Mac with Homebrew's dbus Qt finds its libdbus and
+            # asks for a session bus macOS doesn't have. NSWorkspace says it all instead (macnative.py).
+            from . import macnative
+
+            watcher = macnative.WorkspaceWatcher()
+            watcher.slept.connect(self._sleeping)
+            watcher.screens_slept.connect(lambda asleep: self._seen(not asleep))  # nothing drawn while the displays sleep
+            watcher.accessibility_changed.connect(self._check_accessibility)
+            watcher.low_power_changed.connect(self._power_saving)
+            self._lock_watcher = watcher
+            self._power_saving(bool(macnative.low_power_mode()))
             return
         try:  # D-Bus: Linux and the BSDs
             from . import linuxsession
         except ImportError:
             return
-        self._lock_watcher = linuxsession.SessionWatcher(self._screen_locked, self._sleeping)
-        self._power_watcher = linuxsession.PowerProfile(self._power_saving)
+        self._lock_watcher = linuxsession.SessionWatcher(self._screen_locked, self._sleeping, seen=self._seen, parent=self)
+        self._power_watcher = linuxsession.PowerProfile(self._power_saving, parent=self)
 
     def _power_saving(self, on: bool) -> None:
         """The system's power saver: the stage draws less often, and the bubble and the box hold their still pictures."""
@@ -2645,7 +2678,7 @@ class Companion(QObject):
         "bubble_time": ("accessibility", "bubble_time"), "reduced_motion": ("accessibility", "reduced_motion"),
         "accessible_ask_box": ("accessibility", "accessible_ask_box"), "sound": ("sound", "enabled"), "volume": ("sound", "volume"),
         "cues": ("sound", "cues"), "hotkey": ("hotkey",), "follow_screen": ("follow_screen",),
-        "magnifier_follows": ("accessibility", "magnifier_follows"),
+        "magnifier_follows": ("accessibility", "magnifier_follows"), "speech_fallback": ("accessibility", "speech_fallback"),
     }
 
     def _settings_values(self) -> tuple[dict, dict]:
@@ -2671,6 +2704,7 @@ class Companion(QObject):
             "sound": bool(c["sound"]["enabled"]), "volume": int(c["sound"]["volume"]), "cues": dict(c["sound"]["cues"]),
             "hotkey": str(c["hotkey"]), "follow_screen": bool(c["follow_screen"]), "api_key": None,
             "magnifier_follows": bool(c["accessibility"]["magnifier_follows"]),
+            "speech_fallback": bool(c["accessibility"]["speech_fallback"]),
         }
         current = self._brain(wait=False)
         matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()

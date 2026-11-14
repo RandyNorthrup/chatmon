@@ -606,13 +606,20 @@ def test_asks_for_no_session_bus_on_macos(monkeypatch):
     pytest.importorskip("PyQt6.QtDBus")  # not in PyQt's Windows build
     from chatmon import app as appmod, linuxsession
 
-    watched = []
-    monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept: watched.append(True))
-    monkeypatch.setattr(linuxsession, "PowerProfile", lambda saving: None)
-    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=None)
+    from chatmon import macnative
+
+    watched, workspace = [], []
+    monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept, seen=None, parent=None: watched.append(True))
+    monkeypatch.setattr(linuxsession, "PowerProfile", lambda saving, parent=None: None)
+    signal = types.SimpleNamespace(connect=lambda handler: None)
+    # macOS hears sleep, the displays, accessibility and Low Power Mode from NSWorkspace instead (M4A's macnative).
+    monkeypatch.setattr(macnative, "WorkspaceWatcher", lambda: workspace.append(True) or types.SimpleNamespace(
+        slept=signal, screens_slept=signal, accessibility_changed=signal, low_power_changed=signal))
+    monkeypatch.setattr(macnative, "low_power_mode", lambda: False)
+    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=lambda on: None, _seen=None, _check_accessibility=None)
     monkeypatch.setattr(sys, "platform", "darwin")
     appmod.Companion._watch_screen_lock(me)
-    assert watched == []
+    assert watched == [] and workspace == [True]
     monkeypatch.setattr(sys, "platform", "linux")
     appmod.Companion._watch_screen_lock(me)
     assert watched == [True]  # where there is one, it still listens
@@ -1183,9 +1190,8 @@ def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(com
     shown = []
     monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
     monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: shown.append((title, text)))
-    from chatmon import sysnotify
-
-    monkeypatch.setattr(sysnotify, "send", lambda title, text: shown.append((title, text)) or True)  # Linux: tray or not
+    if c._notifier is not None:  # Linux: the desktop's notification server, tray or not
+        monkeypatch.setattr(c._notifier, "alert", lambda title, text, buttons=None, pressed=None, urgency=2: shown.append((title, text)) or True)
     desk.why_quiet, desk.is_covered = "a full-screen game", True
     c._check_quiet()
     c.alert("reminder:x", "Reminder", "**Stretch**")
@@ -1709,15 +1715,15 @@ def test_a_screen_reader_hears_bubbles_alerts_and_answers(companion, monkeypatch
 
 
 def test_without_a_way_to_speak_linux_reads_it_through_a_notification(companion, monkeypatch):
-    from chatmon import sysnotify
+    from app_harness import PretendNotifier
 
     c = companion
     PretendReader(c, speaks=False)
-    sent = []
-    monkeypatch.setattr(sysnotify, "send", lambda title, text: sent.append((title, text)) or True)
+    c._notifier = PretendNotifier()  # sysnotify.Notifier, as Linux makes it
     monkeypatch.setattr(sys, "platform", "linux")
-    c.say("Reminder", "Stretch")
-    assert sent == [("Reminder", "Reminder. Stretch.")]
+    c.say("Reminder", "Stretch", [("Done", None)], timeout_s=None)
+    [(title, words, buttons)] = c._notifier.read  # read aloud, its buttons pressable there
+    assert title == "Reminder" and words.startswith("Reminder. Stretch.") and buttons == ["Done"]
 
 
 def test_reading_aloud_can_be_turned_off(companion):

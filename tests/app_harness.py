@@ -105,12 +105,30 @@ def make_companion(tmp_path, monkeypatch):
     # The pointer, too: far from the chatmon. The stage pauses a bubble under it (M3), and the offscreen cursor stays
     # wherever an earlier test left it, so a bubble that should time out could wait for ever.
     c.stage._cursor_pos = lambda: QPoint(-100_000, -100_000)
+    if c._notifier is not None:  # Linux: nothing sent to the desktop's notification server
+        c._notifier = PretendNotifier()
     try:
         yield c
     finally:
         c.quit()
         server.close()
         keychain.use(real_keychain)
+
+
+class PretendNotifier:
+    """Linux's notifications (sysnotify.Notifier) as the test sees them: what was read aloud and what alerted, never
+    sent to the desktop."""
+
+    def __init__(self):
+        self.read, self.alerts = [], []
+
+    def read_aloud(self, title, body, buttons=None, pressed=None):
+        self.read.append((title, body, list(buttons or [])))
+        return True
+
+    def alert(self, title, body, buttons=None, pressed=None, urgency=2):
+        self.alerts.append((title, body, list(buttons or []), urgency, pressed))
+        return True
 
 
 class NoToasts:

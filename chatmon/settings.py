@@ -36,7 +36,7 @@ DEFAULTS: dict[str, Any] = {
     "reminders": {"snooze_minutes": 10},
     "focus": {"minutes": 25, "tell_when_done": True},
     "accessibility": {"read_aloud": True, "text_scale": 100, "bubble_time": "normal", "reduced_motion": "system", "accessible_ask_box": "auto",
-                      "magnifier_follows": True},
+                      "magnifier_follows": True, "speech_fallback": False},
     # Sounds for alerts only, until you turn others on; one switch turns them all off (owner, 2026-11-14).
     "sound": {
         "enabled": True,
@@ -225,6 +225,9 @@ reduced_motion = "system"
 accessible_ask_box = "auto"
 # Windows: Magnifier, when it's running, goes to each bubble as it shows.
 magnifier_follows = true
+# macOS: say announcements in macOS's own voice while Chatmon is in the background
+# (VoiceOver would otherwise hold them until you come back to Chatmon).
+speech_fallback = false
 
 [sound]
 # One switch for every sound.

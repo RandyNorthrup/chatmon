@@ -641,3 +641,85 @@ def test_back_up_and_bring_back_from_settings(companion, tmp_path):
     assert c.stage.press_button("Bring it back")
     assert c.memory.texts() == ["I use Arch"] and [r.text for r in c.reminders.upcoming()] == ["renew the domain"]  # read again
     assert until(lambda: c.stage.bubble.title == "Backup brought back")
+
+
+# -- M4A: what the platform says, heard as it changes
+
+
+def test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change(companion):
+    """M4A's Desk says when reduced motion or high contrast may have changed, and when a screen reader starts or stops:
+    applied at once, no longer at the next 30-second look."""
+    from PyQt6.QtGui import QGuiApplication
+
+    from chatmon import presence
+
+    c = companion
+    desk = presence.Desk(QGuiApplication.platformName())
+    try:
+        c._watch_desk(desk)
+        c.desk.motion = True  # the readings stay the test's own (PretendDesk); the signal is the real Desk's
+        desk.settings_changed.emit()
+        assert c._reduce_motion and c.ask_box.reduced_motion
+        c._reader_seen = time.monotonic()
+        desk.screen_reader_changed.emit()
+        assert c._reader_seen == float("-inf")  # looked for again at the next read-aloud
+    finally:
+        desk.close()
+
+
+def test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard(companion, monkeypatch):
+    import types
+
+    from chatmon import macnative
+
+    c = companion
+    handlers: dict[str, list] = {}
+
+    def signal(name):
+        return types.SimpleNamespace(connect=lambda handler: handlers.setdefault(name, []).append(handler))
+
+    watcher = types.SimpleNamespace(**{n: signal(n) for n in ("slept", "screens_slept", "accessibility_changed", "low_power_changed")})
+    monkeypatch.setattr(macnative, "WorkspaceWatcher", lambda: watcher)
+    monkeypatch.setattr(macnative, "low_power_mode", lambda: True)
+    old = getattr(c, "_lock_watcher", None)
+    if old is not None and hasattr(old, "close"):
+        old.close()  # this platform's own, let go of first
+    monkeypatch.setattr(sys, "platform", "darwin")
+    c._watch_screen_lock()
+    assert c.stage.power_saving and c.ask_box.power_saving  # Low Power Mode, read once at start
+    handlers["slept"][0](True)  # the Mac goes to sleep
+    assert c.stage.drawing is False
+    handlers["slept"][0](False)
+    assert c.stage.drawing is True
+    handlers["screens_slept"][0](True)  # the displays sleep: nothing drawn
+    assert c.stage.drawing is False
+    handlers["screens_slept"][0](False)
+    handlers["low_power_changed"][0](False)
+    assert not c.stage.power_saving
+    c.desk.motion = True
+    handlers["accessibility_changed"][0]()
+    assert c._reduce_motion
+    monkeypatch.undo()
+    c._lock_watcher = None  # nothing of the stand-in's to close at quit
+
+
+def test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits(companion, monkeypatch):
+    from app_harness import PretendNotifier
+
+    from chatmon import sysnotify
+
+    c = companion
+    c._notifier = PretendNotifier()
+    monkeypatch.setattr(sys, "platform", "linux")
+    c.desk.why_quiet, c.desk.is_covered = "a full-screen game", True
+    c._check_quiet()
+    r = c.reminders.add(time.time() - 1, "stretch")
+    c._check_reminders()
+    title, body, buttons, urgency, pressed = c._notifier.alerts[-1]
+    assert (title, body, buttons, urgency) == ("Reminder", "Chatmon has something for you.", ["Done", "Snooze 10 min"], sysnotify.URGENCY_CRITICAL)
+    pressed(0)  # Done, pressed on the notification
+    assert c.reminders.get(r.id) is None
+    c.desk.why_quiet = "Do Not Disturb"
+    c._check_quiet()
+    c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
+    assert c._notifier.alerts[-1][3] == sysnotify.URGENCY_NORMAL  # urgent would show through GNOME's Do Not Disturb
