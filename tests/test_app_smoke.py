@@ -114,9 +114,16 @@ def test_hide_menu_and_reload(companion):
     c.set_hidden(False)
     c.menus.fill()
     labels = [a.text() for a in c.menu.actions() if a.text()]
-    assert labels[0] == "Ask Sparky…" and "Quit" in labels
-    c.reload()
-    assert c.stage.message_visible()
+    assert labels == ["Ask Sparky…", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
+                      "Hide (peek now and then)", "Settings…", "Help & updates", "Quit"]
+    submenu = {a.text(): a.menu() for a in c.menu.actions() if a.menu()}
+    appearance = [a.text() for a in submenu["Appearance"].actions()]
+    assert appearance == ["Companion", "Bubble style", "Walk around", "Start when I log in"]
+    help_items = {a.text(): a for a in submenu["Help & updates"].actions()}
+    focus_items = [a.text() for a in submenu["Focus and notes"].actions() if a.text()]
+    assert focus_items == ["Focus timer", "15 minutes", "25 minutes", "50 minutes", "Notes", "Add a note…"]
+    help_items["Reload settings file"].trigger()
+    assert c.stage.message_visible() and c.stage.bubble.title == "Settings reloaded"
 
 
 def test_the_tray_menu_is_filled_before_anyone_opens_it(companion):
@@ -162,6 +169,7 @@ def test_a_clock_tick_changes_only_the_times_in_the_menu(companion):
     assert not any(sip.isdeleted(a) for a in items) and list(all_actions(c.menu)) == items  # the same items, not built again
     texts = [a.text() for a in items]
     assert "Stop focus (15 min left)" in texts and "✕  in 20 min: stretch" in texts and "Stop the stopwatch (2 min)" in texts
+    assert "Focus and notes (15 min left)" in texts
 
 
 def test_a_window_manager_cant_close_the_stage_or_strand_the_ask_box(companion):
@@ -186,7 +194,8 @@ def test_picking_a_companion_swaps_its_sprites_at_once(companion):
     assert c._companion().id == "penguin" and c.sprites is c.stage.sprites
     penguin_frame = c.sprites.frame("idle", 0, False).image
     c.menus.fill()
-    menu = next(a.menu() for a in c.menu.actions() if a.text() == "Companion")
+    appearance = next(a.menu() for a in c.menu.actions() if a.text() == "Appearance")
+    menu = next(a.menu() for a in appearance.actions() if a.text() == "Companion")
     labels = [a.text() for a in menu.actions()]
     assert labels == [x.label for x in companions.COMPANIONS.values()]
     assert [a.text() for a in menu.actions() if a.isChecked()] == ["Electric penguin"]
@@ -222,7 +231,8 @@ def test_bubbles_match_the_companion_unless_a_style_was_chosen(companion):
     c._pick_companion("fire-red-panda")
     assert c._bubble_style().name == "fire" and c.stage.bubble.style.name == "fire" and c.ask_box.style.name == "fire"
     c.menus.fill()
-    menu = next(a.menu() for a in c.menu.actions() if a.text() == "Bubble style")
+    appearance = next(a.menu() for a in c.menu.actions() if a.text() == "Appearance")
+    menu = next(a.menu() for a in appearance.actions() if a.text() == "Bubble style")
     assert [a.text() for a in menu.actions() if a.isChecked() and a.text() != "Animate bubbles"] == ["Match companion (fire)"]
 
     next(a for a in menu.actions() if a.text() == "Leaf").trigger()  # a style chosen by name wins
@@ -996,12 +1006,13 @@ def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
     c.submit("delete note 1")
     assert [n["text"] for n in c.state.get("notes")] == ["call Sam"]
     c.menus.fill()
-    labels = [a.text() for a in c.menu.actions()]
-    assert "Notes (1)" in labels
+    focus_and_notes = next(a.menu() for a in c.menu.actions() if a.text() == "Focus and notes")
+    assert "Notes (1)" in [a.text() for a in focus_and_notes.actions()]
     c.submit("stopwatch")
     assert c._stopwatch is not None
     c.menus.fill()
-    assert any(a.text().startswith("Stop the stopwatch") for a in c.menu.actions())
+    focus_and_notes = next(a.menu() for a in c.menu.actions() if a.text() == "Focus and notes")
+    assert any(a.text().startswith("Stop the stopwatch") for a in focus_and_notes.actions())
     c.submit("stop stopwatch")
     assert c._stopwatch is None and "Stopwatch stopped at" in c.ask_box.answer.toPlainText()
     c.submit("remind me in 30m to stretch")

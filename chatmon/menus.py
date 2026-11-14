@@ -83,48 +83,64 @@ class Menus:
         for sub in m.findChildren(QMenu, options=Qt.FindChildOption.FindDirectChildrenOnly):
             sub.deleteLater()  # clear() keeps submenus
         m.clear()
+        # What you do with it first; then the brain and the agents; how it looks; and Chatmon itself.
         m.addAction(f"Ask {c.name}…", c.open_ask)
         chats_menu(c, m.addMenu("Chats"))
-        m.addAction("Remind me…", partial(c.open_ask, "remind me in "))
-        focus = c.reminders.focus()
-        if focus:
-            self._clock(m.addAction(_focus_left(focus), c.stop_focus), partial(_focus_left, focus))
-        else:
-            sub = m.addMenu("Focus timer")
-            for minutes in sorted({15, 25, 50, int(c.config["focus"]["minutes"])}):
-                sub.addAction(f"{minutes} minutes", partial(c.start_focus, minutes))
-        if c._stopwatch is not None:
-            stop = m.addAction(_stopwatch(c), partial(c._offline_in_box, "stop stopwatch"))
-            self._clock(stop, partial(_stopwatch, c))
-        kept = commands.notes(c.state)
-        notes_menu(c, m.addMenu(f"Notes ({len(kept)})" if kept else "Notes"))
         upcoming = [r for r in c.reminders.upcoming() if r.kind != "focus"]
         if upcoming:
             sub = m.addMenu(f"Reminders ({len(upcoming)})")
+            sub.addAction("Remind me…", partial(c.open_ask, "remind me in "))
+            sub.addSeparator()
             for r in upcoming:
                 self._clock(sub.addAction(_reminder(r), partial(c._cancel, r.id)), partial(_reminder, r))
+        else:
+            m.addAction("Remind me…", partial(c.open_ask, "remind me in "))
+        self._focus_and_notes(m)
         m.addSeparator()
         brain_menu(c, m.addMenu("Brain"))
-        companion_menu(c, m.addMenu("Companion"))
-        style_menu(c, m.addMenu("Bubble style"))
         agents_menu(c, m.addMenu("AI agents"))
-        walk = m.addAction("Walk around")
+        appearance = m.addMenu("Appearance")
+        companion_menu(c, appearance.addMenu("Companion"))
+        style_menu(c, appearance.addMenu("Bubble style"))
+        walk = appearance.addAction("Walk around")
         walk.setCheckable(True)
         walk.setChecked(c.behavior.walk_enabled)
         walk.toggled.connect(c._set_walk)
-        m.addAction("Come out" if c.behavior.hidden else "Hide (peek now and then)", partial(c.set_hidden, not c.behavior.hidden))
-        login = m.addAction("Start when I log in")
+        login = appearance.addAction("Start when I log in")
         login.setCheckable(True)
         login.setChecked(autostart.enabled())
         login.toggled.connect(c._set_autostart)
+        m.addAction("Come out" if c.behavior.hidden else "Hide (peek now and then)", partial(c.set_hidden, not c.behavior.hidden))
         m.addSeparator()
         if c.updater.ready is not None and c.updater.release is not None:
             m.addAction(f"Update to Chatmon {c.updater.release.version}", c._update_now)
-        help_menu(c, m.addMenu("Help & updates"))
         m.addAction("Settings…", c.open_settings)
-        m.addAction("Reload settings file", c.reload)
+        help_menu(c, m.addMenu("Help & updates"))
         m.addAction("Quit", c.quit)
         c._look_again()
+
+
+    def _focus_and_notes(self, m: QMenu) -> None:
+        """A focus session (its countdown in the menu's name while it runs), the stopwatch, and your notes."""
+        c = self.c
+        focus = c.reminders.focus()
+        sub = m.addMenu(_focus_title(focus))
+        if focus:
+            self._clock(sub.menuAction(), partial(_focus_title, focus))
+            self._clock(sub.addAction(_focus_left(focus), c.stop_focus), partial(_focus_left, focus))
+        else:
+            sub.addSection("Focus timer")
+            for minutes in sorted({15, 25, 50, int(c.config["focus"]["minutes"])}):
+                sub.addAction(f"{minutes} minutes", partial(c.start_focus, minutes))
+        if c._stopwatch is not None:
+            self._clock(sub.addAction(_stopwatch(c), partial(c._offline_in_box, "stop stopwatch")), partial(_stopwatch, c))
+        kept = commands.notes(c.state)
+        sub.addSection(f"Notes ({len(kept)})" if kept else "Notes")
+        notes_menu(c, sub)
+
+
+def _focus_title(focus: reminders.Reminder | None) -> str:
+    return f"Focus and notes ({max(1, round((focus.due - time.time()) / 60))} min left)" if focus else "Focus and notes"
 
 
 def _focus_left(focus: reminders.Reminder) -> str:
@@ -185,7 +201,6 @@ def notes_menu(c, sub: QMenu) -> None:
         item = sub.addMenu(f"{i}. {text[:48] + '…' if len(text) > 48 else text}")
         item.addAction("Copy", partial(c._copy, note["text"]))
         item.addAction("Delete", partial(commands.kept, c, offline.Asked("delete note", str(i))))
-    sub.addSeparator()
     sub.addAction("Add a note…", partial(c.open_ask, "note: "))
 
 
@@ -203,6 +218,7 @@ def help_menu(c, sub: QMenu) -> None:
     sub.addAction("Report a problem…", c.report_problem)
     sub.addAction("Suggest an idea…", partial(c.report_problem, report.IDEA))
     sub.addAction("Open the log", c.open_log)
+    sub.addAction("Reload settings file", c.reload)
     version = sub.addAction(f"Chatmon {__version__}")
     version.setEnabled(False)
 
