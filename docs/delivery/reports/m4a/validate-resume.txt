@@ -1,0 +1,20 @@
+FAIL: resume record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, checkpoint-freshness
+outcome-unresolved | CI-linux | Coordinator's CI run on Linux: tests/test_platform_events.py, tests/test_portal_bus.py, tests/test_heads_up.py, tests/test_linuxsession.py, tests/test_presence.py (the Qt contrast-signal test runs where pip's PyQt6 is 6.12 or later).
+outcome-unresolved | CI-macos | Coordinator's CI run on macOS: tests/test_macnative.py::test_sleep_wake_displays_accessibility_and_low_power_are_heard and tests/test_presence.py::test_macos_reads_increase_contrast. On a pass, record EV-macos-ci as passing and mark T-04 and T-09 verified; on a failure, the output comes back to this milestone.
+outcome-unresolved | CI-windows-comtypes | M6A adds comtypes (Windows only) to the test extras; then the coordinator's Windows CI run includes tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement.
+evidence-environment | EV-linux-suite | Receipt environment differs from the current profile
+evidence-environment | EV-linux-tests | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-01a-read-fallback | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-02-x11-place | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-04a-asked-each-time | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-04a-listener-outlives-desk | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-04b-qt-signal | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-05-dunst-question | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-05-starts-services | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-06a-upower-not-followed | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-07a-not-replaced | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-07b-action-unheard | Receipt environment differs from the current profile
+evidence-environment | EV-red-L-AC-10-not-one-call | Receipt environment differs from the current profile
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1
