@@ -108,9 +108,14 @@ class MessageQueue:
         """The bubble on screen was closed, answered or timed out."""
         self.showing = None
 
-    def _best(self) -> Message | None:
-        ready = [m for m in self.waiting if self.passes(m)]
-        return min(ready, key=lambda m: (m.priority, m.background, m.seq)) if ready else None
+    def _ready(self) -> list[Message]:
+        """What no hold keeps back, best placed first. The best-placed one may not be able to show yet (the bubble
+        on screen matters as much); one further down still may: newer news of what's showing, or what you did."""
+        return sorted((m for m in self.waiting if self.passes(m)), key=lambda m: (m.priority, m.background, m.seq))
+
+    def _earliest(self, message: Message, now: float) -> float:
+        """The soonest `message` could take over: now, or once the bubble showing has been up MIN_SHOWN."""
+        return max(now, self.shown_at + MIN_SHOWN) if message.background and self.showing is not None else now
 
     def _takes_over(self, best: Message, now: float) -> bool:
         showing = self.showing
@@ -127,8 +132,8 @@ class MessageQueue:
         thinks is showing is still on screen (one closed without `closed()` is forgotten)."""
         if not visible:
             self.showing = None
-        best = self._best()
-        if best is None or not self._takes_over(best, now):
+        best = next((m for m in self._ready() if self._takes_over(m, now)), None)
+        if best is None:
             return None
         pushed = self.showing
         if pushed is not None and pushed.priority != PLAIN and not _same(best, pushed):
@@ -140,10 +145,5 @@ class MessageQueue:
     def wake_at(self, now: float) -> float | None:
         """When to call `next()` again for something waiting to show (None: not until a bubble closes, a message
         comes, or a hold changes)."""
-        best = self._best()
-        if best is None:
-            return None
-        if self.showing is None:
-            return now
-        at = max(now, self.shown_at + MIN_SHOWN) if best.background else now
-        return at if self._takes_over(best, at) else None
+        times = [at for m in self._ready() if self._takes_over(m, at := self._earliest(m, now))]
+        return min(times) if times else None

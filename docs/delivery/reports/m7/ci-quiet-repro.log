@@ -1,0 +1,86 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+______________________ test_greets_and_reacts_to_agents _______________________
+
+companion = <chatmon.app.Companion object at 0x00000240D3855950>
+
+    def test_greets_and_reacts_to_agents(companion):
+        c = companion
+        spin(1.8)
+        assert c.stage.message_visible() and "Sparky" in c.stage.bubble.title
+        c.handle({"type": "event", "event": "working", "source": "claude", "message": ""})
+        assert c.behavior.working_since is not None
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve the deploy?"})
+        assert until(lambda: c.behavior.alert)  # once the greeting has been up long enough to read
+        assert c.stage.bubble.title == "Claude needs you"
+        # something else to say waits until the alert is answered
+        c.handle({"type": "event", "event": "done", "source": "codex", "message": "All tests pass."})
+        spin(2.5)
+        assert c.stage.bubble.title == "Claude needs you" and [m.title for m in c.messages.waiting] == ["Codex finished"]
+        c.handle({"type": "event", "event": "done", "source": "claude", "message": "Deployed."})
+        assert not c.behavior.alert and c.behavior.working_since is None
+        spin(0.6)
+>       assert c.stage.message_visible()
+E       assert False
+E        +  where False = message_visible()
+E        +    where message_visible = <chatmon.penguin.Stage object at 0x00000240D3855810>.message_visible
+E        +      where <chatmon.penguin.Stage object at 0x00000240D3855810> = <chatmon.app.Companion object at 0x00000240D3855950>.stage
+
+tests\test_app_smoke.py:74: AssertionError
+_ test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert _
+
+companion = <chatmon.app.Companion object at 0x00000240D54805F0>
+
+    def test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert(companion):
+        """"Delete chat?" (or Focus done, or a break) used to be replaced by whatever came next: now an agent's news
+        waits for it, and a needs-you that matters more pushes it aside only for as long as it's up."""
+        c = companion
+        spin(1.8)  # the greeting, out of the way
+        c.stage.dismiss_message()
+        deleted = []
+        c.say("Delete “Cat names”?", "It can't be brought back.", [("Delete it", lambda: deleted.append(True)), ("Keep it", None)], timeout_s=30)
+        c.handle({"type": "event", "event": "done", "source": "codex", "message": ""})
+        spin(2.5)  # past the minimum: it still waits, for as long as the question is up
+        assert c.stage.bubble.title == "Delete “Cat names”?" and [m.title for m in c.messages.waiting] == ["Codex finished"]
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
+        assert until(lambda: c.stage.bubble.title == "Claude needs you") and c.behavior.alert
+        c.stage.dismiss_message()  # answered
+        assert until(lambda: c.stage.bubble.title == "Delete “Cat names”?") and not c.behavior.alert  # back, still answerable
+        assert c.stage.press_button("Delete it") and deleted == [True]
+>       assert until(lambda: c.stage.bubble.title == "Codex finished")  # and only then the news
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert False
+E        +  where False = until(<function test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert.<locals>.<lambda> at 0x00000240D2DC12D0>)
+
+tests\test_app_smoke.py:1216: AssertionError
+_____ test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none _____
+
+companion = <chatmon.app.Companion object at 0x00000240D54FF610>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000240D552FBF0>
+
+    def test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none(companion, monkeypatch):
+        from chatmon import app as appmod, heads_up
+    
+        c = companion
+        slow = [sys.executable, "-c", "import time; time.sleep(30)"]
+        fast = [sys.executable, "-c", "print('3 waiting')"]
+        monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("stuck", slow, lambda out, code: 9),
+                                                                heads_up.UpdateCheck("apt", fast, lambda out, code: 3 if "3" in out else None)])
+        monkeypatch.setattr(appmod, "UPDATE_CHECK_TIMEOUT_S", 6)  # room for a Python to start on a busy computer
+        c.config["heads_up"]["updates"] = True
+        spin(1.8)
+        c.stage.dismiss_message()
+        c._check_updates()
+        assert until(lambda: c._update_counts == {"apt": 3}, 6)
+        assert len(c._update_procs) == 1  # the stuck one, still running
+        assert until(lambda: not c._update_procs, 10) and c._update_counts == {"apt": 3, "stuck": 0}  # killed: none from it
+>       assert until(lambda: c.stage.bubble.title == "Updates waiting") and "3 system updates" in c.stage.bubble.doc.toPlainText()
+E       assert (False)
+E        +  where False = until(<function test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none.<locals>.<lambda> at 0x00000240D562F530>)
+
+tests\test_app_smoke.py:1341: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_greets_and_reacts_to_agents - assert False
+FAILED tests/test_app_smoke.py::test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert
+FAILED tests/test_app_smoke.py::test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none
+3 failed in 32.12s

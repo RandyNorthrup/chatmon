@@ -597,3 +597,20 @@ def test_the_ask_box_settles_and_wakes(animated_box):
     assert not box._frames.isActive() and box.anim_key(time.monotonic()) == -1, "power saving: the still picture"
     box.set_power_saving(False)
     assert box._frames.isActive()
+
+
+def test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since(animated_box, monkeypatch):
+    """Windows' clock moves in steps of about 15 ms. Woken, the effects rise from nothing, and with no time gone by
+    since, their strength was still 0: the box decided there was nothing to draw and never started again (Windows
+    CI failed test_the_ask_box_settles_and_wakes this way). Here the clock stands still, as it does there."""
+    box = animated_box
+    box._effects.since -= 1000  # long ago: settled
+    box._next_frame()
+    assert not box._frames.isActive()
+    now = time.monotonic()
+    monkeypatch.setattr(bubble.time, "monotonic", lambda: now)
+    box.set_answer("**You:** hello\n\nSomething new.")
+    assert box._frames.isActive() and box.anim_key(now) != -1, "new words: it moves again"
+    assert box.effects(now) == 0.0  # and rises from the still picture it was showing, without a jump
+    box._next_frame()
+    assert box._frames.isActive(), "a frame drawn at strength 0 is the start of the rise, not the end of it"

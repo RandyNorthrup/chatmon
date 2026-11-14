@@ -153,6 +153,35 @@ def test_newer_news_of_whats_showing_replaces_it_after_the_minimum():
     assert q.next(10) is None  # the older one is gone, not queued behind
 
 
+def test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over():
+    """The queue used to look only at its best-placed message: with another agent's needs-you waiting (which can't
+    push aside the one showing), newer words from the agent showing waited until it was closed, and then behind
+    the other one."""
+    q = MessageQueue()
+    q.add(alert("Claude needs you", "agent:claude", text="Approve?"))
+    assert shown(q, 0) == "Claude needs you"
+    q.add(alert("Codex needs you", "agent:codex"))
+    q.add(alert("Claude needs you", "agent:claude", text="Approve the deploy?"))
+    assert q.wake_at(1) == MIN_SHOWN  # it has a time to show, not "when that's closed"
+    m = q.next(MIN_SHOWN)
+    assert m is not None and m.text == "Approve the deploy?"
+    q.closed()
+    assert shown(q, 10) == "Codex needs you"  # the other agent's, after it
+    q.closed()
+    assert q.next(20) is None
+
+
+def test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum():
+    q = MessageQueue()
+    q.add(news("Codex finished"))
+    assert shown(q, 0) == "Codex finished"
+    q.add(prompt("Backup done: open it?", background=True))  # matters more, but waits for the minimum
+    q.add(plain("5 km = 3.1 miles"))  # what you asked for
+    assert shown(q, 0.5) == "5 km = 3.1 miles"
+    assert q.wake_at(0.6) == 0.5 + MIN_SHOWN
+    assert shown(q, 0.5 + MIN_SHOWN) == "Backup done: open it?"
+
+
 def test_an_alert_waits_for_the_alert_showing():
     q = MessageQueue()
     q.add(alert("Claude needs you", "agent:claude"))

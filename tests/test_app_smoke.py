@@ -21,6 +21,35 @@ def spin(seconds: float) -> None:
     loop.exec()
 
 
+class PretendDesk:
+    """The platform's readings, set by the test."""
+
+    def __init__(self):
+        self.idle, self.why_quiet, self.is_covered, self.motion, self.contrast, self.notice = 0.0, None, False, False, False, None
+        self.overlay_idle_since = None
+
+    def idle_seconds(self):
+        return self.idle
+
+    def quiet(self, _window=0):
+        return self.why_quiet
+
+    def covered(self, _window):
+        return self.is_covered
+
+    def reduce_motion(self):
+        return self.motion
+
+    def high_contrast(self):
+        return self.contrast
+
+    def notice_seconds(self):
+        return self.notice
+
+    def close(self):
+        pass
+
+
 @pytest.fixture
 def companion(tmp_path, monkeypatch):
     for var in ("XDG_CONFIG_HOME", "XDG_STATE_HOME", "APPDATA"):
@@ -50,6 +79,12 @@ def companion(tmp_path, monkeypatch):
     c = appmod.Companion(qapp, server)
     c._file_chooser = None  # Qt's dialogs, which the tests stand in for: never the desktop's portal
     c._reader_seen = float("inf")  # no screen reader, never looked for: tests never talk to the desktop's
+    # The desktop's own readings (full screen, presentation, Focus, reduced motion, idle time) are the test's to
+    # set, never the computer's it runs on: a CI runner's desktop says "quiet", which held every bubble from
+    # the background from the first look on (five seconds in).
+    c.desk.close()
+    c.desk = PretendDesk()
+    c._check_accessibility()  # what it read of reduced motion and high contrast as it started, read again from it
     yield c
     c.quit()
     server.close()
@@ -1147,33 +1182,26 @@ def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
     assert [r.text for r in c.reminders.upcoming()] == ["stretch"]
 
 
-class PretendDesk:
-    """The platform's readings, set by the test."""
+@pytest.fixture
+def quiet_desktop(monkeypatch):
+    """The computer the tests run on is in a presentation, with a full-screen window in front: as a CI runner's
+    desktop says it is."""
+    from chatmon import presence
 
-    def __init__(self):
-        self.idle, self.why_quiet, self.is_covered, self.motion, self.contrast, self.notice = 0.0, None, False, False, False, None
-        self.overlay_idle_since = None
+    monkeypatch.setattr(presence.Desk, "quiet", lambda self, stage_window=0: "a presentation")
+    monkeypatch.setattr(presence.Desk, "covered", lambda self, stage_window: True)
+    monkeypatch.setattr(presence.Desk, "reduce_motion", lambda self: True)
 
-    def idle_seconds(self):
-        return self.idle
 
-    def quiet(self, _window=0):
-        return self.why_quiet
-
-    def covered(self, _window):
-        return self.is_covered
-
-    def reduce_motion(self):
-        return self.motion
-
-    def high_contrast(self):
-        return self.contrast
-
-    def notice_seconds(self):
-        return self.notice
-
-    def close(self):
-        pass
+def test_the_computer_the_tests_run_on_holds_nothing_back(quiet_desktop, companion):
+    """Windows CI failed three smoke tests that passed here: its desktop said "quiet", and from the first look (five
+    seconds in) every bubble from the background waited. The companion's desk is the test's own."""
+    c = companion
+    c._check_quiet()
+    assert not c.messages.holding("quiet")
+    c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+    assert until(lambda: c.stage.bubble.title == "Claude finished")
+    assert c.behavior.walk_enabled  # the desktop's reduced motion didn't stop it either
 
 
 def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):

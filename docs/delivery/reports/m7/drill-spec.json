@@ -1,0 +1,71 @@
+{
+  "drills": [
+    {
+      "id": "CI-01-host-desk-read",
+      "requirement": "M7-CI",
+      "file": "tests/test_app_smoke.py",
+      "find": "    c.desk = PretendDesk()",
+      "replace": "    pass  # the computer's own desk, as before",
+      "test": [
+        "tests/test_app_smoke.py::test_the_computer_the_tests_run_on_holds_nothing_back"
+      ],
+      "expect": [
+        "test_the_computer_the_tests_run_on_holds_nothing_back"
+      ]
+    },
+    {
+      "id": "CI-02-queue-best-only",
+      "requirement": "M7-CI",
+      "file": "chatmon/messages.py",
+      "find": "best = next((m for m in self._ready() if self._takes_over(m, now)), None)",
+      "replace": "best = next((m for m in self._ready()[:1] if self._takes_over(m, now)), None)",
+      "test": [
+        "tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over",
+        "tests/test_messages.py::test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum"
+      ],
+      "expect": [
+        "test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over",
+        "test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum"
+      ]
+    },
+    {
+      "id": "CI-03-wake-best-only",
+      "requirement": "M7-CI",
+      "file": "chatmon/messages.py",
+      "find": "times = [at for m in self._ready() if",
+      "replace": "times = [at for m in self._ready()[:1] if",
+      "test": [
+        "tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over"
+      ],
+      "expect": [
+        "test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over"
+      ]
+    },
+    {
+      "id": "CI-04-askbox-wakes-by-strength",
+      "requirement": "M7-CI",
+      "file": "chatmon/bubble.py",
+      "find": "        if drawn_here and self._moving(time.monotonic()):",
+      "replace": "        if drawn_here and self.effects(time.monotonic()) > 0.0:",
+      "test": [
+        "tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since"
+      ],
+      "expect": [
+        "new words: it moves again"
+      ]
+    },
+    {
+      "id": "CI-05-askbox-frame-stops-at-zero",
+      "requirement": "M7-CI",
+      "file": "chatmon/bubble.py",
+      "find": "        if not self._moving(time.monotonic()):",
+      "replace": "        if self.effects(time.monotonic()) <= 0.0:",
+      "test": [
+        "tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since"
+      ],
+      "expect": [
+        "a frame drawn at strength 0 is the start of the rise"
+      ]
+    }
+  ]
+}
