@@ -139,26 +139,12 @@ def _connect(name: str, timeout: float) -> socket.socket:
 
 
 def _send_pipe(data: bytes, timeout: float) -> str:
-    from PyQt6.QtNetwork import QLocalSocket
-
+    """Windows: pipe names are first come, first served, for every user on the PC. winpipe.deliver opens the
+    pipe for identification only (its server can't act as you) and checks whose it is, on that handle, before
+    saying anything; a pipe that turns you away is someone else's (your own Chatmon always lets you in)."""
     from . import winpipe
 
-    ms = int(timeout * 1000)
-    sock = QLocalSocket()
-    sock.connectToServer(paths.server_name())
-    if not sock.waitForConnected(ms):
-        # Your own Chatmon always lets you in, so a pipe that turns you away is someone else's.
-        return FOREIGN if sock.error() == QLocalSocket.LocalSocketError.SocketAccessError else ABSENT
-    # Pipe names are first come, first served, for every user on the PC: check whose this one is
-    # before saying anything, on the very handle we'd say it through.
-    if not winpipe.server_is_me(int(sock.socketDescriptor())):
-        sock.abort()
-        return FOREIGN
-    sock.write(data)
-    sock.waitForBytesWritten(ms)
-    sock.waitForReadyRead(ms)
-    sock.disconnectFromServer()
-    return SENT
+    return winpipe.deliver(paths.server_name(), data, int(timeout * 1000))
 
 
 def clean(message: dict[str, Any]) -> dict[str, Any]:
