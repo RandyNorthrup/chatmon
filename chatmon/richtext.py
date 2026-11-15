@@ -8,11 +8,12 @@ parsed at all (`MARKDOWN`), and images become "[image]" before anything draws th
 
 Then `render` makes what's left readable in a bubble: code blocks wrap, on a tinted panel, in a fixed-width
 font; headings stay near the text's size; links are underlined, in the style's link colour; and a chat's
-turns (each beginning "**You:**", as the app writes them) are found, ruled apart and offered for copying.
+turns (each beginning "**You:**", as `question_markdown` writes them) are found, ruled apart and offered for copying.
 """
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 
 from PyQt6.QtCore import Qt, QUrl
@@ -35,8 +36,29 @@ from .i18n import _
 # GitHub's markdown (tables, strikethrough, task lists, bare links) with no HTML: no <img>, no CSS
 # backgrounds, no <link> stylesheets, nothing that names a resource but markdown's own images.
 MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub | QTextDocument.MarkdownFeature.MarkdownNoHTML
-TURN = "You:"  # a chat turn starts with a paragraph beginning "**You:**" (app.py's transcript)
 HEADING_MOST = 1  # headings are at most one step larger than the text (Qt makes a level-1 heading three)
+
+
+def you_label() -> str:
+    """The word each of your questions starts with in the chat, in bold: what a turn is found by."""
+    # Translators: starts each of your questions in the chat, in bold: "You: how do I…".
+    return _("You:")
+
+
+def attached_label() -> str:
+    """The word starting the italic line under a question that names what was attached."""
+    # Translators: starts the line under a question that names what came with it: "Attached: notes.md, photo.png".
+    return _("Attached:")
+
+
+def question_markdown(text: str, attached: Iterable[str] = ()) -> str:
+    """A question as the chat shows it, which `render` finds turns by: "**You:** …" (`text` is Markdown already),
+    then what was attached, by name, in italics."""
+    line = f"**{you_label()}** {text}" if text else f"**{you_label()}**"
+    names = list(attached)
+    return line + (f"\n\n*{attached_label()} {', '.join(names)}*" if names else "")
+
+
 CODE_PAD = 6  # px inside a code block's panel
 CODE_SPACE = 4  # px above and below it
 COPY_SCHEME = "chatmon-copy"  # the ask box's Copy links: chatmon-copy:<token>/<n>
@@ -228,11 +250,11 @@ def _code_groups(doc: QTextDocument) -> list[list[QTextBlock]]:
 
 
 def _turn_starts(doc: QTextDocument) -> list[int]:
-    """Where each chat turn begins: a paragraph whose first words are a bold "You:"."""
-    starts = []
+    """Where each chat turn begins: a paragraph whose first words are a bold "You:" (you_label)."""
+    starts, you = [], you_label()
     block = doc.begin()
     while block.isValid():
-        if not is_code(block) and block.text().startswith(TURN):
+        if not is_code(block) and block.text().startswith(you):
             it = block.begin()
             if not it.atEnd() and it.fragment().charFormat().fontWeight() >= 600:
                 starts.append(block.position())
@@ -243,11 +265,11 @@ def _turn_starts(doc: QTextDocument) -> list[int]:
 def _answer_ranges(doc: QTextDocument, starts: list[int]) -> list[tuple[int, int]]:
     """(start, end) of each turn's answer: after the question's paragraph (and the "Attached: …" line after
     it, if any) up to the next turn."""
-    ranges = []
+    ranges, attached = [], attached_label()
     for i, start in enumerate(starts):
         question = doc.findBlock(start)
         first = question.next()
-        if first.isValid() and first.text().startswith("Attached:") and first.begin().fragment().charFormat().fontItalic():
+        if first.isValid() and first.text().startswith(attached) and first.begin().fragment().charFormat().fontItalic():
             first = first.next()
         end = (starts[i + 1] - 1) if i + 1 < len(starts) else doc.characterCount() - 1
         begin = first.position() if first.isValid() else end

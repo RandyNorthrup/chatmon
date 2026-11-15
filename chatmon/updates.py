@@ -341,6 +341,12 @@ def metered() -> bool:
         return False
 
 
+# What the last `failed` was about, in `Updater.failure`: words are for people, so the app tells them apart by this.
+CHECK_FAILED = "check"  # looking for, downloading or checking a release
+INSTALL_FAILED = "install"  # an install that was tried and didn't go through ("The update wasn't installed…")
+NOT_READY = "not ready"  # install() with nothing ready, or a Chatmon that can't install itself
+
+
 class Updater(QObject):
     """Checks for, downloads and installs updates, one step at a time, never holding up the screen."""
 
@@ -366,6 +372,8 @@ class Updater(QObject):
         self._signed: tuple[bytes, bytes] = (b"", b"")  # that list and its signature, for root to check again
         self._held: Prepared | None = None  # Windows: the installer's held copy, kept as it is until Chatmon quits
         self.busy = False
+        self.metered = False  # the last newer_only was because the connection is metered (asking downloads it)
+        self.failure: str | None = None  # what the last `failed` was about: CHECK_FAILED, INSTALL_FAILED or NOT_READY
         self.retry = QTimer(self)  # a check that couldn't finish for now (TryLater), tried again
         self.retry.setSingleShot(True)
         self.retry.setInterval(RETRY_AFTER * 1000)
@@ -436,12 +444,18 @@ class Updater(QObject):
             self.available.emit(release)
             return
         if not self._by_hand and metered():
-            return self._only_tell(_("You're on a metered connection, so I haven't downloaded it. **Check for updates now** in my menu downloads it anyway."))
+            return self._only_tell(_("You're on a metered connection, so I haven't downloaded it. **Check for updates now** in my menu downloads it anyway."), metered=True)
         self._get(release.assets[SUMS_SIG], lambda sig: self._get(release.assets[SUMS], lambda text: self._sums(text, sig, name)))
 
-    def _only_tell(self, how: str) -> None:
+    def _only_tell(self, how: str, metered: bool = False) -> None:
         self.busy = False
+        self.metered = metered
         self.newer_only.emit(self.release, how)
+
+    def _failed(self, failure: str, why: str) -> None:
+        """Say why something failed, and what it was about (self.failure)."""
+        self.failure = failure
+        self.failed.emit(why)
 
     # -- downloading
 
@@ -521,9 +535,9 @@ class Updater(QObject):
         """Install the verified download. Windows' installer takes over (it asks Chatmon to quit when it's
         ready, and starts it again); elsewhere the system asks for your password, then Chatmon starts again."""
         if self.ready is None or self.release is None or not self.ready.exists() or self.busy:
-            return self.failed.emit(_("There's no update ready to install."))
+            return self._failed(NOT_READY, _("There's no update ready to install."))
         if installer_command(self.kind, self.ready) is None:
-            return self.failed.emit(_("This Chatmon can't install updates itself."))
+            return self._failed(NOT_READY, _("This Chatmon can't install updates itself."))
         self.busy = True
         # Checked again, just before: it may have waited days for you to say yes.
         ready, expected, kind = self.ready, self._expected, self.kind
@@ -532,13 +546,13 @@ class Updater(QObject):
     def _install_checked(self, prepared) -> None:
         if isinstance(prepared, TryLater):  # not known bad: kept, to try again
             self.busy = False
-            return self.failed.emit(_("The update wasn't installed yet: {why}. Try again once you're online.").format(why=prepared))
+            return self._failed(INSTALL_FAILED, _("The update wasn't installed yet: {why}. Try again once you're online.").format(why=prepared))
         if not isinstance(prepared, Prepared):
             self.busy = False
             self.ready.unlink(missing_ok=True)
             self.ready = None
             why = prepared if not isinstance(prepared, Exception) else _("it could not be checked")
-            return self.failed.emit(_("The update wasn't installed: {why}.").format(why=why))
+            return self._failed(INSTALL_FAILED, _("The update wasn't installed: {why}.").format(why=why))
         program, args, env = installer_command(self.kind, prepared.path)
         if self.kind == WINDOWS:
             # Chatmon stays: the installer asks it to quit (`chatmon quit`) once it's going ahead, and starts it
@@ -551,7 +565,7 @@ class Updater(QObject):
                 wintrust.release(self._held.hold)  # a copy from an install that was turned down
             self._held = prepared
             if not QProcess.startDetached(program, args, str(prepared.path.parent))[0]:
-                return self.failed.emit(_("The update wasn't installed: its installer couldn't start."))
+                return self._failed(INSTALL_FAILED, _("The update wasn't installed: its installer couldn't start."))
             self.handed_over.emit()
             return
         proc = QProcess(self)
@@ -569,7 +583,7 @@ class Updater(QObject):
         if error == QProcess.ProcessError.FailedToStart:
             proc.deleteLater()
             self.busy = False
-            self.failed.emit(_("The update wasn't installed: {program} couldn't start.").format(program=Path(proc.program()).name))
+            self._failed(INSTALL_FAILED, _("The update wasn't installed: {program} couldn't start.").format(program=Path(proc.program()).name))
 
     def _installed(self, proc: QProcess, code: int) -> None:
         if sip.isdeleted(proc):  # Chatmon quitting while it ran
@@ -579,10 +593,11 @@ class Updater(QObject):
         self.busy = False
         if code != 0:
             if self.kind in (DEB, RPM) and code == 126:  # pkexec: the password prompt was dismissed
-                return self.failed.emit(_("The update wasn't installed: the password prompt was closed."))
+                return self._failed(INSTALL_FAILED, _("The update wasn't installed: the password prompt was closed."))
             if self.kind in (DEB, RPM) and code == 127:  # pkexec: no prompt to ask with, or not allowed
                 command = f"sudo {shlex.join([HELPER, str(self.ready), *map(str, sums_for(self.ready))])}"
-                return self.failed.emit(
+                return self._failed(
+                    INSTALL_FAILED,
                     _("The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
                       "In a terminal: `{command}`").format(command=command)
                 )
@@ -590,8 +605,8 @@ class Updater(QObject):
             # Root's own check (releasecheck.py, which loads nothing it needn't, translations included) said why,
             # in an English sentence that starts so.
             if detail.startswith("The update wasn't installed"):
-                return self.failed.emit(detail)
-            return self.failed.emit(_("The update wasn't installed ({detail}).").format(detail=detail))
+                return self._failed(INSTALL_FAILED, detail)
+            return self._failed(INSTALL_FAILED, _("The update wasn't installed ({detail}).").format(detail=detail))
         relaunch = relaunch_command(self.kind)
         if relaunch is not None:
             QProcess.startDetached(*relaunch)
@@ -603,7 +618,7 @@ class Updater(QObject):
         if self._file is not None:
             self._file.close()
             self._file = None
-        self.failed.emit(_("Couldn't check for updates: {why}.").format(why=why))
+        self._failed(CHECK_FAILED, _("Couldn't check for updates: {why}.").format(why=why))
 
     def cancel(self) -> None:
         if self._reply is not None:

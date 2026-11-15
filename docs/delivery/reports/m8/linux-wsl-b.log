@@ -1,0 +1,127 @@
+# WSL Linux 6.18.58.1-microsoft-standard-WSL2; Python 3.14.9 PyQt6 6.12.1 Qt 6.12.0; 2026-11-15T01:47:48Z
+$ LANG=en_US.UTF-8 QT_QPA_PLATFORM=offscreen python -m pytest -q -p no:cacheprovider -rs tests/test_i18n.py tests/test_i18n_app.py tests/test_rich_text.py tests/test_winfiles.py tests/test_updates.py tests/test_asking.py tests/test_app_m7.py tests/test_app_reminders.py tests/test_app_smoke.py tests/test_commands.py tests/test_cli.py tests/test_settingswin.py tests/test_offline.py tests/test_reminders.py tests/test_chats.py tests/test_backup.py tests/test_ask_box.py tests/test_package_data.py
+........................................................................ [ 12%]
+...................................s..............s..........ss......... [ 25%]
+........................................................................ [ 38%]
+..............................................s......................... [ 51%]
+........................................................................ [ 64%]
+........................................................................ [ 77%]
+........................................................................ [ 90%]
+s..................................................sss                   [100%]
+=============================== warnings summary ===============================
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[installed]
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 37755)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[refused]
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 42281)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_newer_release_is_downloaded_checked_and_offered
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 44105)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_tampered_download_is_thrown_away_never_offered
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 43133)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_past_the_limit_is_stopped
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 42103)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_nothing_newer_says_so
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 37673)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_chatmon_that_cant_install_it_is_only_told
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 45179)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_metered_connection_is_said_by_a_flag_not_by_its_words
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 41829)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_each_failure_says_what_it_was_about
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 40439)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_is_checked_again_just_before_its_installed
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 40833)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_installer_that_wont_start_says_so_and_frees_the_updater
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 36967)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_checksums_not_signed_with_the_release_key_are_never_trusted
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 34799)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 33517)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_what_pkexec_said_is_told_plainly[126-password prompt was closed]
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 39063)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_what_pkexec_said_is_told_plainly[127-no password prompt running]
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 34545)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_that_cant_be_checked_yet_is_looked_at_again_within_the_hour
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 40651)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_that_cant_be_checked_at_install_time_is_kept_for_later
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 44107)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_updates.py:632: holding a file open against changes: Windows
+SKIPPED [1] tests/test_app_m7.py:149: Windows pipes: the access list keeps other users out, and each connection is checked too
+SKIPPED [1] tests/test_app_m7.py:374: Windows' toasts
+SKIPPED [1] tests/test_app_m7.py:419: Windows' Magnifier
+SKIPPED [1] tests/test_cli.py:94: only Windows keeps a program you're not using from coming to the front
+SKIPPED [1] tests/test_chats.py:355: the roaming app-data folder is Windows'
+SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+549 passed, 9 skipped, 17 warnings in 140.45s (0:02:20)
+QProcess: Destroyed while process ("/mnt/c/nvm4w/nodejs/claude") is still running.
+exit 0
