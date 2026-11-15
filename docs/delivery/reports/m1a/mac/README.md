@@ -56,9 +56,9 @@ proves the fixture's guard, not the ownership check. MAC-AC-01-MACOS-writable ke
 half the test exercises, and the test fails on its own assertion.
 
 **What no drill here covers.** The `! -user root` half can't be drilled by this test. Every file in its copy of
-Chatmon.app belongs to the test user, and only root can give a file to someone else. That half has no test that
-would notice it going. Packages' macOS jobs show only that the .pkg installs Chatmon.app as root's, which is what
-that half expects.
+Chatmon.app belongs to the test user, and only root can give a file to someone else. When these drills ran, that half
+had no test that would notice it going. It has one now, `test_mac_an_app_that_isnt_roots_is_never_run_as_root`
+(3bcd857), and its drill is in [../mac-owner/](../mac-owner/README.md).
 
 **Earlier runs**, all in [3586a0d/](3586a0d/). In the first ([drills-attempt1.log](3586a0d/drills-attempt1.log) and
 the files beside it), the harness reported both drills as FAIL. The tests failed just as they did later, but the spec

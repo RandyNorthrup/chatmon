@@ -755,7 +755,9 @@ them.
         "W4C-BEH-WINDOWS",
         "W4C-RED-AC-01-USER-handoff",
         "W4C-RED-AC-01-VERIFY-signature",
-        "W4C-RED-AC-01-VERIFY-version"
+        "W4C-RED-AC-01-VERIFY-version",
+        "W4D-BEH-WINDOWS",
+        "W4D-RED-AC-01-USER-handoff"
       ],
       "blocker": null,
       "superseded_by": null
@@ -814,7 +816,11 @@ them.
         "W4C-BEH-PKG-CONTAINERS",
         "W4C-RED-AC-01-LINUX-installs-the-copy",
         "W4C-RED-AC-01-LINUX-launcher-owner",
-        "W4C-RED-AC-01-LINUX-refusal-stops"
+        "W4C-RED-AC-01-LINUX-refusal-stops",
+        "W4D-BEH-LINUX",
+        "W4D-RED-AC-01-LINUX-launcher-owner",
+        "W4D-RED-AC-01-LINUX-refusal-stops",
+        "W4D-RED-AC-01-LINUX-installs-the-copy"
       ],
       "blocker": null,
       "superseded_by": null
@@ -879,7 +885,12 @@ them.
         "W4C-BEH-CI-MACOS",
         "W4C-BEH-PKG-MACOS",
         "W4C-RED-AC-01-USER-handoff",
-        "MAC-RED-AC-01-MACOS"
+        "MAC-RED-AC-01-MACOS",
+        "W4D-BEH-WINDOWS",
+        "W4D-BEH-MACOS",
+        "W4D-RED-AC-01-USER-handoff",
+        "W4D-RED-AC-01-MACOS-writable",
+        "W4D-RED-AC-01-MACOS-owner"
       ],
       "blocker": null,
       "superseded_by": null
@@ -920,7 +931,9 @@ them.
         "W4C-BEH-CI-LINUX",
         "W4C-BEH-CI-MACOS",
         "W4C-RED-AC-02-owner",
-        "W4C-RED-AC-02-writable"
+        "W4C-RED-AC-02-writable",
+        "W4D-BEH-LINUX",
+        "W4D-BEH-MACOS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -967,7 +980,8 @@ them.
         "W4C-BEH-WINDOWS",
         "W4C-MAN-AC10",
         "W4C-RED-AC-03-owner",
-        "W4C-RED-AC-03-sqos"
+        "W4C-RED-AC-03-sqos",
+        "W4D-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1005,7 +1019,8 @@ them.
         "W4B-RED-AC-04-gate",
         "W4C-READY",
         "W4C-BEH-WINDOWS",
-        "W4C-RED-AC-04-gate"
+        "W4C-RED-AC-04-gate",
+        "W4D-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1051,7 +1066,8 @@ them.
         "W4C-READY",
         "W4C-BEH-WINDOWS",
         "W4C-RED-AC-05-revocation-asked",
-        "W4C-RED-AC-05-try-later"
+        "W4C-RED-AC-05-try-later",
+        "W4D-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1095,7 +1111,8 @@ them.
         "W4B-RED-AC-06-hold",
         "W4C-READY",
         "W4C-BEH-WINDOWS",
-        "W4C-RED-AC-06-hold"
+        "W4C-RED-AC-06-hold",
+        "W4D-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1134,7 +1151,9 @@ them.
         "W4C-READY",
         "W4C-BEH-WINDOWS",
         "W4C-BEH-CI-LINUX",
-        "W4C-RED-AC-07-private"
+        "W4C-RED-AC-07-private",
+        "W4D-BEH-WINDOWS",
+        "W4D-BEH-LINUX"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1168,7 +1187,8 @@ them.
         "W4B-RED-AC-08-codex-top",
         "W4C-READY",
         "W4C-BEH-WINDOWS",
-        "W4C-RED-AC-08-codex-top"
+        "W4C-RED-AC-08-codex-top",
+        "W4D-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1226,7 +1246,10 @@ them.
         "W4C-RED-AC-09-ORDER-pipe",
         "W4C-RED-AC-09-ORDER-swap",
         "W4C-RED-AC-09-REMOTE-drive",
-        "W4C-RED-AC-09-REMOTE-linux"
+        "W4C-RED-AC-09-REMOTE-linux",
+        "W4D-BEH-WINDOWS",
+        "W4D-BEH-LINUX",
+        "W4D-BEH-MACOS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1276,7 +1299,8 @@ them.
         "W4C-READY",
         "W4C-BEH-WINDOWS",
         "W4C-RED-AC-11-local",
-        "W4C-RED-AC-11-newer-wins"
+        "W4C-RED-AC-11-newer-wins",
+        "W4D-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1313,7 +1337,8 @@ them.
         "W4B-RED-AC-12-kind",
         "W4C-READY",
         "W4C-BEH-WINDOWS",
-        "W4C-RED-AC-12-kind"
+        "W4C-RED-AC-12-kind",
+        "W4D-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1347,7 +1372,8 @@ them.
         "W4B-RED-AC-M6A-14-pin",
         "W4C-READY",
         "W4C-BEH-WINDOWS",
-        "W4C-RED-AC-M6A-14-pin"
+        "W4C-RED-AC-M6A-14-pin",
+        "W4D-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -11909,7 +11935,7 @@ them.
         "AC-M6A-14"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -12061,7 +12087,7 @@ them.
       ],
       "scope_sha256": "4dff7ed3bf828475aa6ed6089ab6168bc42fe5630ee6b4257705a008a34e2cf7",
       "red": null,
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-MAN-AC10",
@@ -12236,7 +12262,7 @@ them.
         "AC-09-REMOTE"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -12359,7 +12385,7 @@ them.
       ],
       "scope_sha256": "1714a29cd8d2fc9e944ce56bc6a86383af9abd1b72dd2dfc3ce7ef4c0302fe4c",
       "red": null,
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-BEH-CI-MACOS",
@@ -12369,7 +12395,7 @@ them.
         "AC-09-REMOTE"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -12484,7 +12510,7 @@ them.
       ],
       "scope_sha256": "55333bb00eeae285d72f570b7a55bbc709036ba21fb3d9e80dc5ec30fd8da0b9",
       "red": null,
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-BEH-PKG-CONTAINERS",
@@ -12492,7 +12518,7 @@ them.
         "AC-01-LINUX"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -12591,7 +12617,7 @@ them.
       ],
       "scope_sha256": "0d76a1b0a1b330ca0dda9b99664c076d5ac01bf713844c358bdd6fc839547d95",
       "red": null,
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-BEH-PKG-MACOS",
@@ -12599,7 +12625,7 @@ them.
         "AC-01-MACOS"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -12698,7 +12724,7 @@ them.
       ],
       "scope_sha256": "d41adef9aa795bff7734a759d8826f0e018ae9827d0ae64d89dea6a5f25a6fda",
       "red": null,
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-RED-AC-01-LINUX-installs-the-copy",
@@ -12706,7 +12732,7 @@ them.
         "AC-01-LINUX"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "/var/tmp/plans-venv/bin/python",
         "-m",
@@ -12828,7 +12854,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-RED-AC-01-LINUX-launcher-owner",
@@ -12836,7 +12862,7 @@ them.
         "AC-01-LINUX"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "/var/tmp/plans-venv/bin/python",
         "-m",
@@ -12958,7 +12984,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-RED-AC-01-LINUX-refusal-stops",
@@ -12966,7 +12992,7 @@ them.
         "AC-01-LINUX"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "/var/tmp/plans-venv/bin/python",
         "-m",
@@ -13089,7 +13115,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-RED-AC-01-USER-handoff",
@@ -13097,7 +13123,7 @@ them.
         "AC-01-USER"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -13219,7 +13245,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4C-RED-AC-01-VERIFY-signature",
@@ -15383,7 +15409,7 @@ them.
         "AC-01-MACOS"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "/Users/user/chatmon-drills-tmp/venv/bin/python",
         "-m",
@@ -15496,6 +15522,1223 @@ them.
           {
             "path": "chatmon/updates.py",
             "sha256": "12088f2c04cd9bcbd1f6c76c1cb560052434de485f5ecab595c92e29587d018b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ]
+      },
+      "reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push (the validator's findings: inputs-stale)"
+    },
+    {
+      "id": "W4D-BEH-WINDOWS",
+      "acceptance": [
+        "AC-01-VERIFY",
+        "AC-01-USER",
+        "AC-03",
+        "AC-04",
+        "AC-05",
+        "AC-06",
+        "AC-07",
+        "AC-08",
+        "AC-09-ORDER",
+        "AC-09-REMOTE",
+        "AC-11",
+        "AC-12",
+        "AC-M6A-14"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on 3bcd857's files (the log's header has HEAD and the source digest) on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 179 skipped (other platforms' tests, each skip with its reason; the new owner test is one of them), exit 0. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/suite-windows.log",
+        "sha256": "14a7c13a7ef50d44bd5e3f552f230fe40ce67e1b6f59113cbbc4d23f7cdad60d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "packaging/macos/install-update",
+          "sha256": "2aeb3dbea121e55bb3f50652e813a194571d532cfdfa13ba73ad6b2dee384b9b"
+        },
+        {
+          "path": "packaging/windows/chatmon.iss",
+          "sha256": "86001c867d285a61be87fa776a1f12a91ada50d4ae412e1c2587cb527ed1db26"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_attachments.py",
+          "sha256": "542ec6b580475afaf7882b3133464446cf2784b3e4ba8b075e44690a80222eeb"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_paths.py",
+          "sha256": "1b1c01a5cb28181ab28e35a7d70e042e0c1b558cb5b7ef4da6ff4ef434ef05c5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_rename.py",
+          "sha256": "2bc6f8e0b193279895a904cd3b1288b37b50badbb880d0c15db2e2998c188260"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_winpipe.py",
+          "sha256": "9db3e69245aafd5908e90357b62c384f1f3d14d8c46384cf4811c9844dd2d7b9"
+        },
+        {
+          "path": "tests/test_wintrust.py",
+          "sha256": "c2a6d618063847b9fa4995a0ee8ac0390c61428c94b04af845bad831a7cd7e1a"
+        }
+      ],
+      "scope_sha256": "4dff7ed3bf828475aa6ed6089ab6168bc42fe5630ee6b4257705a008a34e2cf7",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4D-BEH-LINUX",
+      "acceptance": [
+        "AC-01-LINUX",
+        "AC-02",
+        "AC-07",
+        "AC-09-ORDER",
+        "AC-09-REMOTE"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "wsl.exe",
+        "-d",
+        "archlinux",
+        "--",
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-v",
+        "-rA",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_install_update.py",
+        "tests/test_packaging.py",
+        "tests/test_agents.py",
+        "tests/test_attachments.py"
+      ],
+      "method": "In WSL (Arch Linux; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11.0, Qt 6.11.2, pytest 9.2.0) on 3bcd857's files, through docs/delivery/reports/m1a/mac-owner/run-wsl.sh, as a normal user: the Linux tests CI's Linux job had shown for these criteria, which can't be re-run without a push. Passed: tests/test_install_update.py's root-side tests (a signed newer package installed from root's own copy; a tampered list, a bad signature, an older release and a changed package refused; a caller's checksum never taken; the check loaded only from root's own files), tests/test_packaging.py's postinstall tests, tests/test_agents.py's private backups and tests/test_attachments.py's Linux mount and pipe tests: 76 passed, 11 skipped (macOS and Windows only), exit 0, every warning an error. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/linux-tests.log",
+        "sha256": "db104a3c4652e741dc6a5dbf5af83f9f726f0aee086d13f453c9bd2fde116e9a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/linux/install-update",
+          "sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe"
+        },
+        {
+          "path": "packaging/linux/nfpm.yaml",
+          "sha256": "1e540dce29d30f4d4ed546c49b5a0336f3d98765c85f5d65d2d35bf2300beb07"
+        },
+        {
+          "path": "packaging/linux/test-install-update.sh",
+          "sha256": "4c507928cff3ca6747fa6caa2b7de37852fc999932823bb71382e45ee20b4a06"
+        },
+        {
+          "path": "packaging/linux/verify-update",
+          "sha256": "46d526f4116846523da302f83cd94f1c2a2f0a3ca410b4893cd501526230b5bd"
+        },
+        {
+          "path": "packaging/macos/scripts/postinstall",
+          "sha256": "07b9f717e770966a800226cd485a80f8c4f7f76a853fc5ad5e6a3ee3975aa278"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_attachments.py",
+          "sha256": "542ec6b580475afaf7882b3133464446cf2784b3e4ba8b075e44690a80222eeb"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "1714a29cd8d2fc9e944ce56bc6a86383af9abd1b72dd2dfc3ce7ef4c0302fe4c",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4D-BEH-MACOS",
+      "acceptance": [
+        "AC-01-MACOS",
+        "AC-02",
+        "AC-09-REMOTE"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "/Users/user/chatmon-drills-tmp/venv/bin/python",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "--deselect",
+        "tests/test_keychain.py::test_macos_keychain_keeps_replaces_and_forgets_a_key"
+      ],
+      "method": "The whole suite on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh with docs/delivery/reports/m1a/mac/job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m1a/mac-owner/context-observed.txt), in a temporary copy of 3bcd857's files (git archive; the unpacked tree checked against the commit's, 80fd2bd0), run in his signed-in Aqua session by m1a/mac/aqua.sh, offscreen as CI's macOS job runs it: 1236 passed, 201 skipped, 1 deselected (the test that writes to the owner's login keychain), exit 0. All 19 of tests/test_install_update.py's tests that run on macOS passed, the new test_mac_an_app_that_isnt_roots_is_never_run_as_root among them (the root code as shipped refuses an app root doesn't own), and so did tests/test_packaging.py's postinstall tests under BSD ls and tests/test_attachments.py's macOS statfs test; none of those is in the log's skip list. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/suite-offscreen.log",
+        "sha256": "9ebf737ea0ea89307102051b7fad2aa8e88fe032b6aa8afc9117417fd701bddf"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "packaging/macos/install-update",
+          "sha256": "2aeb3dbea121e55bb3f50652e813a194571d532cfdfa13ba73ad6b2dee384b9b"
+        },
+        {
+          "path": "packaging/macos/scripts/postinstall",
+          "sha256": "07b9f717e770966a800226cd485a80f8c4f7f76a853fc5ad5e6a3ee3975aa278"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_attachments.py",
+          "sha256": "542ec6b580475afaf7882b3133464446cf2784b3e4ba8b075e44690a80222eeb"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "55333bb00eeae285d72f570b7a55bbc709036ba21fb3d9e80dc5ec30fd8da0b9",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4D-RED-AC-01-LINUX-launcher-owner",
+      "acceptance": [
+        "AC-01-LINUX"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own"
+      ],
+      "method": "Red drill AC-01-LINUX-launcher-owner in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3bcd857's files (mac-owner/files.lst), from mac-owner/run-wsl.sh: green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected ('_ test_the_check_isnt_loaded_from_anything_but_roots_own[group-writable module] _'); the file's bytes put back (checked by SHA-256) and green again. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/drills-linux.log",
+        "sha256": "3e0e01d0ce9d5fd31c4d6af8247b0c6ccccdb72719a9a3174223f704a0b3b3d9"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/linux/install-update",
+          "sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe"
+        },
+        {
+          "path": "packaging/linux/nfpm.yaml",
+          "sha256": "1e540dce29d30f4d4ed546c49b5a0336f3d98765c85f5d65d2d35bf2300beb07"
+        },
+        {
+          "path": "packaging/linux/test-install-update.sh",
+          "sha256": "4c507928cff3ca6747fa6caa2b7de37852fc999932823bb71382e45ee20b4a06"
+        },
+        {
+          "path": "packaging/linux/verify-update",
+          "sha256": "46d526f4116846523da302f83cd94f1c2a2f0a3ca410b4893cd501526230b5bd"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "0d76a1b0a1b330ca0dda9b99664c076d5ac01bf713844c358bdd6fc839547d95",
+      "red": {
+        "mutation": "AC-01-LINUX-launcher-owner: in packaging/linux/verify-update, '    return info.st_uid == OWNER and not stat.S_ISLNK(info.st_mode) and not info.st_mode & (stat.S_IWGRP | stat.S_IWOTH)' became '    return True'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_check_isnt_loaded_from_anything_but_roots_own",
+        "observed_diagnostic": "_ test_the_check_isnt_loaded_from_anything_but_roots_own[group-writable module] _",
+        "before": [
+          {
+            "path": "packaging/linux/verify-update",
+            "sha256": "46d526f4116846523da302f83cd94f1c2a2f0a3ca410b4893cd501526230b5bd"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/linux/verify-update",
+            "sha256": "c4827c01ab14404cc4239f815b0bda683ed1d820a493f7effceb84ce26b40117"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/linux/verify-update",
+            "sha256": "46d526f4116846523da302f83cd94f1c2a2f0a3ca410b4893cd501526230b5bd"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4D-RED-AC-01-LINUX-refusal-stops",
+      "acceptance": [
+        "AC-01-LINUX"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_install_update.py::test_a_tampered_list_is_refused_by_root",
+        "tests/test_install_update.py::test_an_older_release_is_refused_by_root"
+      ],
+      "method": "Red drill AC-01-LINUX-refusal-stops in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3bcd857's files (mac-owner/files.lst), from mac-owner/run-wsl.sh: green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected ('___________________ test_a_tampered_list_is_refused_by_root ____________________'); the file's bytes put back (checked by SHA-256) and green again. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/drills-linux.log",
+        "sha256": "3e0e01d0ce9d5fd31c4d6af8247b0c6ccccdb72719a9a3174223f704a0b3b3d9"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/linux/install-update",
+          "sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe"
+        },
+        {
+          "path": "packaging/linux/nfpm.yaml",
+          "sha256": "1e540dce29d30f4d4ed546c49b5a0336f3d98765c85f5d65d2d35bf2300beb07"
+        },
+        {
+          "path": "packaging/linux/test-install-update.sh",
+          "sha256": "4c507928cff3ca6747fa6caa2b7de37852fc999932823bb71382e45ee20b4a06"
+        },
+        {
+          "path": "packaging/linux/verify-update",
+          "sha256": "46d526f4116846523da302f83cd94f1c2a2f0a3ca410b4893cd501526230b5bd"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "0d76a1b0a1b330ca0dda9b99664c076d5ac01bf713844c358bdd6fc839547d95",
+      "red": {
+        "mutation": "AC-01-LINUX-refusal-stops: in packaging/linux/install-update, '\"$dir/SHA256SUMS.txt.sig\" >/dev/null || exit 3' became '\"$dir/SHA256SUMS.txt.sig\" >/dev/null || true'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_tampered_list_is_refused_by_root",
+        "observed_diagnostic": "___________________ test_a_tampered_list_is_refused_by_root ____________________",
+        "before": [
+          {
+            "path": "packaging/linux/install-update",
+            "sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/linux/install-update",
+            "sha256": "72d07c5aaef28531b053ec8e5396b9a5f0449f5c58b6754f0d2e4d9989187e56"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/linux/install-update",
+            "sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4D-RED-AC-01-LINUX-installs-the-copy",
+      "acceptance": [
+        "AC-01-LINUX"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_install_update.py::test_a_signed_newer_package_is_installed_from_roots_own_copy"
+      ],
+      "method": "Red drill AC-01-LINUX-installs-the-copy in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3bcd857's files (mac-owner/files.lst), from mac-owner/run-wsl.sh: green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected ('_________ test_a_signed_newer_package_is_installed_from_roots_own_copy _________'); the file's bytes put back (checked by SHA-256) and green again. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/drills-linux.log",
+        "sha256": "3e0e01d0ce9d5fd31c4d6af8247b0c6ccccdb72719a9a3174223f704a0b3b3d9"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/linux/install-update",
+          "sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe"
+        },
+        {
+          "path": "packaging/linux/nfpm.yaml",
+          "sha256": "1e540dce29d30f4d4ed546c49b5a0336f3d98765c85f5d65d2d35bf2300beb07"
+        },
+        {
+          "path": "packaging/linux/test-install-update.sh",
+          "sha256": "4c507928cff3ca6747fa6caa2b7de37852fc999932823bb71382e45ee20b4a06"
+        },
+        {
+          "path": "packaging/linux/verify-update",
+          "sha256": "46d526f4116846523da302f83cd94f1c2a2f0a3ca410b4893cd501526230b5bd"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "0d76a1b0a1b330ca0dda9b99664c076d5ac01bf713844c358bdd6fc839547d95",
+      "red": {
+        "mutation": "AC-01-LINUX-installs-the-copy: in packaging/linux/install-update, '    apt-get install -y \"$dir/update.deb\"' became '    apt-get install -y \"$file\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_signed_newer_package_is_installed_from_roots_own_copy",
+        "observed_diagnostic": "_________ test_a_signed_newer_package_is_installed_from_roots_own_copy _________",
+        "before": [
+          {
+            "path": "packaging/linux/install-update",
+            "sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/linux/install-update",
+            "sha256": "865132b13b559696bafc15ae2378d35d48a64053c5b3c634496e306dfd73390a"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/linux/install-update",
+            "sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4D-RED-AC-01-USER-handoff",
+      "acceptance": [
+        "AC-01-USER"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_updates.py::test_root_is_handed_the_signed_list_never_a_checksum"
+      ],
+      "method": "Red drill AC-01-USER-handoff through tests/drills/run.py on this Windows workstation (wave4c/drill-spec.json --only AC-01-USER-handoff), in a temporary copy of 3bcd857's files: green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected ('____________ test_root_is_handed_the_signed_list_never_a_checksum _____________'); the file's bytes put back (checked by SHA-256) and green again. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/drills-windows.log",
+        "sha256": "742afda12cecb7f5e605de37fd24560ff7cb6a71612a14890e73bc450a74202a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "packaging/macos/install-update",
+          "sha256": "2aeb3dbea121e55bb3f50652e813a194571d532cfdfa13ba73ad6b2dee384b9b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "d41adef9aa795bff7734a759d8826f0e018ae9827d0ae64d89dea6a5f25a6fda",
+      "red": {
+        "mutation": "AC-01-USER-handoff: in chatmon/updates.py, '        return PKEXEC, [HELPER, str(path), str(sums), str(signature)], {}' became '        return PKEXEC, [HELPER, str(path), sha256(path) if path.exists() else \"0\" * 64], {}'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_root_is_handed_the_signed_list_never_a_checksum",
+        "observed_diagnostic": "____________ test_root_is_handed_the_signed_list_never_a_checksum _____________",
+        "before": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "3f8fb0a17c5dcf0e8ae671cc836c6746331846bd125f81ef21c02ac22bfdd01f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4D-RED-AC-01-MACOS-writable",
+      "acceptance": [
+        "AC-01-MACOS"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/Users/user/chatmon-drills-tmp/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root"
+      ],
+      "method": "Red drill MAC-AC-01-MACOS-writable on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh with docs/delivery/reports/m1a/mac/job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m1a/mac-owner/context-observed.txt), in a temporary copy of 3bcd857's files (git archive; the unpacked tree checked against the commit's, 80fd2bd0): green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected (\"E         app=\\\\'/U...st-of-user/pytest-4/test_mac_an_app_others_could_c0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')\"); the file's bytes put back (checked by SHA-256) and green again. In _MACOS_ROOT, '-o -perm +022' became '-o -name nothing', so find no longer reports a file that group or others can write: test_mac_an_app_others_could_change_is_never_run_as_root failed in its own body at tests/test_install_update.py:300, the root script exiting 0 having installed, where 3 and the refusal were asserted. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/drills.log",
+        "sha256": "8b995b46caf9b844aae22655e25a354b5c83cc83ea1fada20d95d3f54855c489"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "packaging/macos/install-update",
+          "sha256": "2aeb3dbea121e55bb3f50652e813a194571d532cfdfa13ba73ad6b2dee384b9b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "d41adef9aa795bff7734a759d8826f0e018ae9827d0ae64d89dea6a5f25a6fda",
+      "red": {
+        "mutation": "MAC-AC-01-MACOS-writable: in chatmon/updates.py, '-o -perm +022' became '-o -name nothing'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "returncode=0, stdout='', stderr=''",
+        "observed_diagnostic": "E         app=\\'/U...st-of-user/pytest-4/test_mac_an_app_others_could_c0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')",
+        "before": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "12088f2c04cd9bcbd1f6c76c1cb560052434de485f5ecab595c92e29587d018b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4D-RED-AC-01-MACOS-owner",
+      "acceptance": [
+        "AC-01-MACOS"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/Users/user/chatmon-drills-tmp/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_install_update.py::test_mac_an_app_that_isnt_roots_is_never_run_as_root"
+      ],
+      "method": "Red drill MAC-AC-01-MACOS-owner on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh with docs/delivery/reports/m1a/mac/job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m1a/mac-owner/context-observed.txt), in a temporary copy of 3bcd857's files (git archive; the unpacked tree checked against the commit's, 80fd2bd0): green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected (\"E         app=\\\\'/U...st-of-user/pytest-1/test_mac_an_app_that_isnt_root0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')\"); the file's bytes put back (checked by SHA-256) and green again. In _MACOS_ROOT, '! -user root -o ' was taken out, so find no longer reports a file root doesn't own: test_mac_an_app_that_isnt_roots_is_never_run_as_root, which runs the root code as shipped (only the app's path changed) on an app only its owner, the test user, can write, failed in its own body at tests/test_install_update.py:319, the root script exiting 0 having run the copied app's install-update and installed, where 3 and the refusal were asserted. This is the half of the check MAC-RED-AC-01-MACOS's drill couldn't reach. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac-owner/drills.log",
+        "sha256": "8b995b46caf9b844aae22655e25a354b5c83cc83ea1fada20d95d3f54855c489"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "packaging/macos/install-update",
+          "sha256": "2aeb3dbea121e55bb3f50652e813a194571d532cfdfa13ba73ad6b2dee384b9b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "d41adef9aa795bff7734a759d8826f0e018ae9827d0ae64d89dea6a5f25a6fda",
+      "red": {
+        "mutation": "MAC-AC-01-MACOS-owner: in chatmon/updates.py, '! -user root -o ' became ''",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "returncode=0, stdout='', stderr=''",
+        "observed_diagnostic": "E         app=\\'/U...st-of-user/pytest-1/test_mac_an_app_that_isnt_root0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')",
+        "before": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "33ec3bb2f2c34f2bf55367c973f30d7ef9ebe8d5035412bc6426bc483e8f978b"
           }
         ],
         "after": [
@@ -15625,7 +16868,7 @@ them.
       },
       {
         "path": "tests/test_install_update.py",
-        "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        "sha256": "bfbef263b3cc32a29a68635512d7cee3ffe2de425b356c0821eab6d248c44534"
       },
       {
         "path": "tests/test_packaging.py",
@@ -15682,8 +16925,8 @@ them.
       "T-14-notes-pin"
     ],
     "pending_operations": [],
-    "next_action": "None for M1A: every task is verified at a4fe9f8 (3586a0d's M1A files, with the toast merge and the quit guard). The narrative above still says AC-01-MACOS's red drill needs a Mac; it ran on the owner's MacBook Pro on 2026-11-15 (MAC-RED-AC-01-MACOS, docs/delivery/reports/m1a/mac/README.md). The narrative is left as it is because the scope fingerprint hashes it: editing it would make every receipt here stale, so the next round that re-binds this plan should note the drill there. A merge that changes a file these receipts bind, or ROADMAP.md, needs those checks run again.",
-    "source_revision": "a4fe9f8d2f45b35ba23da6b2b06a689604fca1db"
+    "next_action": "None for M1A: every task is verified at 3bcd857. Both halves of _MACOS_ROOT's check now have a test that fails without them (W4D-RED-AC-01-MACOS-writable and -owner). The Packages workflow's container and .pkg receipts (W4C-BEH-PKG-*) are stale history now; its next run on PR #18 can be read for them again. The narrative is left as it is: the scope fingerprint hashes it, so editing it would make every receipt here stale. A merge that changes a file these receipts bind, or ROADMAP.md, needs those checks run again.",
+    "source_revision": "3bcd8574a181e96fe7dfcb4adb76ba8c47813bd1"
   }
 }
 ```

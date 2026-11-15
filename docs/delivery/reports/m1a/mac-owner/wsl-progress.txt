@@ -1,0 +1,4 @@
+wsl drills exit 0
+linux tests # exit 0
+left running: 0
+DONE

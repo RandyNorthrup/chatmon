@@ -1,0 +1,5 @@
+
+=== summary
+PASS MAC-AC-01-MACOS-owner
+PASS MAC-AC-01-MACOS-writable
+harness exit 0

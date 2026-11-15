@@ -1,0 +1,45 @@
+red drills from docs\delivery\reports\m1a\wave4c\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-2v0kb3mm
+copied 310 files
+
+=== drill AC-01-USER-handoff (M1A-01) on chatmon/updates.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_updates.py::test_root_is_handed_the_signed_list_never_a_checksum
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.29s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_root_is_handed_the_signed_list_never_a_checksum _____________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-7641/test_root_is_handed_the_signed0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020C37E87E10>
+
+    def test_root_is_handed_the_signed_list_never_a_checksum(tmp_path, monkeypatch):
+        """Linux: pkexec runs the package's own install-update on the download, the release's signed list and its
+        signature, which root checks itself; nothing in the call is a checksum it would take on trust."""
+        for name in ("pkexec", "install-update"):
+            (tmp_path / name).write_text("#!/bin/sh\n")
+            (tmp_path / name).chmod(0o755)
+        monkeypatch.setattr(updates, "PKEXEC", str(tmp_path / "pkexec"))
+        monkeypatch.setattr(updates, "HELPER", str(tmp_path / "install-update"))
+        deb = tmp_path / "updates" / "chatmon_9.0.0-1_all.deb"
+        for kind in ("deb", "rpm"):
+            program, args, env = updates.installer_command(kind, deb)
+            sums, signature = updates.sums_for(deb)
+>           assert (program, args, env) == (str(tmp_path / "pkexec"), [str(tmp_path / "install-update"), str(deb), str(sums), str(signature)], {})
+E           AssertionError: assert ('C:\\Users\\...0000000'], {}) == ('C:\\Users\\...txt.sig'], {})
+E             
+E             At index 1 diff: ['C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-7641\\test_root_is_handed_the_signed0\\install-update', 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-7641\\test_root_is_handed_the_signed0\\updates\\chatmon_9.0.0-1_all.deb', '0000000000000000000000000000000000000000000000000000000000000000'] != ['C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-7641\\test_root_is_handed_the_signed0\\install-update', 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-7641\\test_root_is_handed_the_signed0\\u...
+E             
+E             ...Full output truncated, use '-vv' to show
+
+tests\test_updates.py:146: AssertionError
+1 failed in 0.34s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.72s
+
+=== summary
+PASS AC-01-USER-handoff
