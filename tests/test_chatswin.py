@@ -127,3 +127,45 @@ def test_chat_times_follow_the_locale(qapp):
         assert chats.when(earlier, now) == "today 9:30 AM"
     finally:
         localefmt.set_locale()
+
+
+GERMAN = r"""msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Chats"
+msgstr "Unterhaltungen"
+
+msgid "Carry on"
+msgstr "Weitermachen"
+
+msgid "Unpin"
+msgstr "Lösen"
+
+msgid "{title}   ·   {when}  (this one)"
+msgstr "{title}   ·   {when}  (diese)"
+
+msgid "Chats aren't being kept (Keep chat history is off)."
+msgstr "Unterhaltungen werden nicht aufbewahrt."
+"""
+
+
+def test_the_window_speaks_the_translation_and_english_where_it_has_none(qapp, book, tmp_path):
+    """With a German catalog (a throwaway one: only English ships), the window's title, buttons, the chat you're in
+    and its empty state are German; what the catalog leaves out (Rename…, the search field) is English."""
+    from chatmon import i18n
+
+    (tmp_path / "de.po").write_text(GERMAN, encoding="utf-8")
+    groceries = book.listing()[0].id
+    i18n.setup("de", tmp_path)
+    w = ChatsWindow(book)
+    try:
+        w.refresh(current=groceries, kept=True)
+        assert w.windowTitle() == "Unterhaltungen" and w.buttons["carry_on"].text() == "Weitermachen"
+        assert w.list.item(0).text().endswith("(diese)") and w.buttons["pin"].text() == "Lösen"
+        assert w.buttons["rename"].text() == "Rename…" and w.search.placeholderText() == "Search your chats"
+        w.refresh(current=groceries, kept=False)
+        assert w.empty.text() == "Unterhaltungen werden nicht aufbewahrt."
+    finally:
+        w.deleteLater()
+        i18n.reset()

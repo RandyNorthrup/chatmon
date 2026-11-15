@@ -1,0 +1,123 @@
+[
+  {
+    "id": "M8-01C-window-title-english",
+    "requirement": "M8-01",
+    "file": "chatmon/chatswin.py",
+    "mutation": {
+      "find": "self.setWindowTitle(_(TITLE))",
+      "replace": "self.setWindowTitle(TITLE)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_window_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3738e64b628ea66ede0e856e590744fc23f551ad326cf21d662e05e5efaa564e",
+    "baseline_exit": 0,
+    "mutated_sha256": "d5cda385c38ce709185fb73e6241dd71034c04ae4ec4aff46f18bbb59a559f43",
+    "mutated_exit": 1,
+    "observed": "____ test_the_window_speaks_the_translation_and_english_where_it_has_none _____",
+    "after_sha256": "3738e64b628ea66ede0e856e590744fc23f551ad326cf21d662e05e5efaa564e",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01C-this-one-glued",
+    "requirement": "M8-01",
+    "file": "chatmon/chatswin.py",
+    "mutation": {
+      "find": "label = _(\"{title}   \u00b7   {when}  (this one)\").format(title=title, when=when)",
+      "replace": "label = f\"{title}   \u00b7   {when}  (this one)\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_window_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3738e64b628ea66ede0e856e590744fc23f551ad326cf21d662e05e5efaa564e",
+    "baseline_exit": 0,
+    "mutated_sha256": "ef3a7e858e65739c901ca3a87e6e82ce476b5bec63a58ab96324c04dc673f435",
+    "mutated_exit": 1,
+    "observed": "____ test_the_window_speaks_the_translation_and_english_where_it_has_none _____",
+    "after_sha256": "3738e64b628ea66ede0e856e590744fc23f551ad326cf21d662e05e5efaa564e",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01C-pin-label-english",
+    "requirement": "M8-01",
+    "file": "chatmon/chatswin.py",
+    "mutation": {
+      "find": "self.buttons[\"pin\"].setText(_(\"Unpin\") if",
+      "replace": "self.buttons[\"pin\"].setText(\"Unpin\" if"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_window_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3738e64b628ea66ede0e856e590744fc23f551ad326cf21d662e05e5efaa564e",
+    "baseline_exit": 0,
+    "mutated_sha256": "679c458ffe2efaae7b9ee893af157bab86242a735d34c80290a3598b5b88829c",
+    "mutated_exit": 1,
+    "observed": "____ test_the_window_speaks_the_translation_and_english_where_it_has_none _____",
+    "after_sha256": "3738e64b628ea66ede0e856e590744fc23f551ad326cf21d662e05e5efaa564e",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01C-template-stale",
+    "requirement": "M8-01",
+    "file": "chatmon/chatswin.py",
+    "mutation": {
+      "find": "_(\"Looking inside your chats\u2026\")",
+      "replace": "_(\"Searching inside your chats\u2026\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n.py::test_the_template_has_every_marked_string_and_reads_as_a_catalog"
+    ],
+    "expected": [
+      "test_the_template_has_every_marked_string_and_reads_as_a_catalog",
+      "run: python packaging/extract_strings.py"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3738e64b628ea66ede0e856e590744fc23f551ad326cf21d662e05e5efaa564e",
+    "baseline_exit": 0,
+    "mutated_sha256": "2ae6e5df4f91a63c88a44f4f51a02dc59ba6b4bf84bd2f3fd5d854f6e0460279",
+    "mutated_exit": 1,
+    "observed": "______ test_the_template_has_every_marked_string_and_reads_as_a_catalog _______",
+    "after_sha256": "3738e64b628ea66ede0e856e590744fc23f551ad326cf21d662e05e5efaa564e",
+    "restored_exit": 0
+  }
+]
