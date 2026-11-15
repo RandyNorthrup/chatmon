@@ -218,7 +218,9 @@ class Companion(QObject):
         self.ask_box.expand_changed.connect(self._remember_expanded)
         for widget in (self.ask_box, self.ask_box.entry, self.ask_box.answer):
             widget.installEventFilter(self)  # Ctrl+1 to Ctrl+9: a bubble's buttons, while you type
-        self.app.styleHints().colorSchemeChanged.connect(self._scheme_changed)  # light or dark: disconnected in quit()
+        scheme = getattr(self.app.styleHints(), "colorSchemeChanged", None)  # Qt 6.5 and later; Ubuntu 24.04 has 6.4
+        if scheme is not None:
+            scheme.connect(self._scheme_changed)  # light or dark: disconnected in quit()
         QTimer.singleShot(0, self._mac_edit_menu)  # once Qt has made the menu bar, as the app starts
         self.asker.answered.connect(self._answered)
         self.asker.failed.connect(self._failed)
@@ -2967,8 +2969,10 @@ class Companion(QObject):
 
     def quit(self) -> None:
         self._quitting = True
+        scheme = getattr(self.app.styleHints(), "colorSchemeChanged", None)  # Qt 6.5 and later
         try:
-            self.app.styleHints().colorSchemeChanged.disconnect(self._scheme_changed)
+            if scheme is not None:
+                scheme.disconnect(self._scheme_changed)
         except TypeError:  # never connected
             pass
         if self._hotkey:

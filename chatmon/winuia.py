@@ -43,6 +43,10 @@ NAME = N_("Chatmon announcements")  # what a screen reader exploring the desktop
 READY_AFTER = 3.0  # seconds from showing the window to its first notification: UI Automation loses one raised at once
 
 
+# Windows' calling convention; CFUNCTYPE elsewhere only so the module imports on every OS (nothing here runs there).
+_FUNCTYPE = getattr(ctypes, "WINFUNCTYPE", ctypes.CFUNCTYPE)
+
+
 class _Value(ctypes.Union):
     _fields_ = [("bstrVal", ctypes.c_void_p), ("record", ctypes.c_void_p * 2)]  # BRECORD, the widest member, sets the size
 
@@ -52,12 +56,12 @@ class VARIANT(ctypes.Structure):
                 ("value", _Value)]
 
 
-_QueryInterface = ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-_Count = ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)  # AddRef, Release
-_Options = ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int))
-_Pattern = ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(ctypes.c_void_p))
-_Property = ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(VARIANT))
-_Host = ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+_QueryInterface = _FUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+_Count = _FUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)  # AddRef, Release
+_Options = _FUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int))
+_Pattern = _FUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(ctypes.c_void_p))
+_Property = _FUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(VARIANT))
+_Host = _FUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 
 
 class _Vtable(ctypes.Structure):

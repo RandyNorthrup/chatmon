@@ -302,7 +302,8 @@ class SettingsWindow(QDialog):
         self.speech_fallback.setChecked(v["speech_fallback"])
         self.speech_fallback.setVisible(sys.platform == "darwin")  # VoiceOver holds them until Chatmon is in front
         self.hotkey = QKeySequenceEdit(QKeySequence(v["hotkey"], QKeySequence.SequenceFormat.PortableText))
-        self.hotkey.setMaximumSequenceLength(1)
+        if hasattr(self.hotkey, "setMaximumSequenceLength"):  # Qt 6.5 and later; Ubuntu 24.04 has 6.4
+            self.hotkey.setMaximumSequenceLength(1)
         self.hotkey.setClearButtonEnabled(True)
         self.hotkey.setAccessibleName("Hotkey to open the ask box")
         self.sound = QCheckBox("Play sounds")
