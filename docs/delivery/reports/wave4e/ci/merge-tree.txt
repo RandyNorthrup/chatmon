@@ -1,0 +1,9 @@
+# The PR CI's merge commit against 45a17b3 (read-only: gh api, git), 2026-11-15T18:03:21Z
+every job's checkout: HEAD is now at eb8a996 Merge 45a17b37fb25590a62fe3391379f7c8d2870da29 into 5d20c55de144b99b3e4204f2ac08017f36396fe8 (19 of 19 logs of CI run 43743804662)
+$ gh api repos/RandyNorthrup/chatmon/git/commits/eb8a996c4d85255e18e7180c2ed22dfebbcc333b --jq '.tree.sha, [.parents[].sha]'
+c14325ae2c4488cc09238c98b367307837bb9fd9
+5d20c55de144b99b3e4204f2ac08017f36396fe8 45a17b37fb25590a62fe3391379f7c8d2870da29
+$ git rev-parse 45a17b3^{tree}
+c14325ae2c4488cc09238c98b367307837bb9fd9
+$ git merge-base --is-ancestor 5d20c55de144b99b3e4204f2ac08017f36396fe8 45a17b3; echo $?
+0

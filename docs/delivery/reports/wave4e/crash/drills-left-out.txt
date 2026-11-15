@@ -1,0 +1,2 @@
+docs/delivery/reports/wave4c/crash/drill-spec.json: 6 drills kept in docs/delivery/reports/wave4e/crash/drill-spec.json, 1 left out
+  CRASH-03-later-sees-it-quit: its find text occurs 2 times in chatmon/app.py (expected 1)

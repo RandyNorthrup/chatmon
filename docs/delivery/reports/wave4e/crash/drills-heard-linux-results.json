@@ -1,0 +1,32 @@
+[
+  {
+    "id": "CRASH-08-heard-passes-on-after-quit",
+    "requirement": "crash-nothing-after-quit",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            if c is not None and not c._quitting:\n                func(c, *args)\n\n        return call",
+      "replace": "            if c is not None:\n                func(c, *args)\n\n        return call"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "expected": [
+      "test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "baseline_exit": 0,
+    "mutated_sha256": "e2da802de01989f5114a648cfcee9d213c18e58be70b16908291b3d5cf96242a",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_quit_companion_runs_nothing_it_had_waiting _______________",
+    "after_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "restored_exit": 0
+  }
+]

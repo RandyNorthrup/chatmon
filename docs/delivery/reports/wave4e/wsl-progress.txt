@@ -1,0 +1,16 @@
+m0/drill-spec-linux.json exit 0 18:23:52-18:24:03
+m6b/drill-spec-linux.json exit 0 18:24:03-18:24:23
+m3/drill-spec-linux-r3.json exit 0 18:24:23-18:24:43
+m3/drill-spec-wayland-linux.json exit 0 18:24:43-18:29:01
+wave4e/drill-spec-heard-linux.json exit 0 18:29:01-18:29:17
+sway-tests-linux.log ======================== 52 passed in 137.43s (0:02:17) ======================== # exit 0 18:29:17-18:31:35
+m3-tests-linux.log 145 passed, 4 skipped in 145.19s (0:02:25) # exit 0 18:31:35-18:34:01
+suite-linux.log 1316 passed, 122 skipped in 441.60s (0:07:21) # exit 0 18:34:01-18:41:23
+m3 memory exit 0 18:41:23-18:41:41
+crash-test-wsl.log 5 of 5 passed 18:41:41-18:42:01
+mypy-pyqt6-6.12.1-linux.log Success: no issues found in 70 source files # exit 0 18:42:01-18:42:04
+mypy-pyqt6-6.12.1-win32.log Success: no issues found in 70 source files # exit 0 18:42:04-18:42:08
+mypy-pyqt6-6.12.1-darwin.log Success: no issues found in 70 source files # exit 0 18:42:08-18:42:12
+m10 howto replay exit 0 18:42:12-18:42:32
+left running: 3
+DONE

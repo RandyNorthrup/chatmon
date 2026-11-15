@@ -1,0 +1,651 @@
+sway	Set up job	﻿2026-11-15T17:55:26.5500136Z Current runner version: '2.338.2'
+sway	Set up job	2026-11-15T17:55:26.5517072Z ##[group]Runner Image Provisioner
+sway	Set up job	2026-11-15T17:55:26.5517759Z Hosted Compute Agent
+sway	Set up job	2026-11-15T17:55:26.5518482Z Version: 20261103.629
+sway	Set up job	2026-11-15T17:55:26.5518953Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+sway	Set up job	2026-11-15T17:55:26.5519459Z Build Date: 2026-11-03T17:26:59Z
+sway	Set up job	2026-11-15T17:55:26.5519967Z Worker ID: {036b717b-5d22-42ce-bc9b-c8d25bf41ef4}
+sway	Set up job	2026-11-15T17:55:26.5520484Z Region: us-west-2
+sway	Set up job	2026-11-15T17:55:26.5520877Z Cloud: AWS
+sway	Set up job	2026-11-15T17:55:26.5521280Z ##[endgroup]
+sway	Set up job	2026-11-15T17:55:26.5522201Z ##[group]Operating System
+sway	Set up job	2026-11-15T17:55:26.5522656Z Ubuntu
+sway	Set up job	2026-11-15T17:55:26.5523037Z 24.04.5
+sway	Set up job	2026-11-15T17:55:26.5523445Z LTS
+sway	Set up job	2026-11-15T17:55:26.5523818Z ##[endgroup]
+sway	Set up job	2026-11-15T17:55:26.5524194Z ##[group]Runner Image
+sway	Set up job	2026-11-15T17:55:26.5524626Z Image: ubuntu-24.04
+sway	Set up job	2026-11-15T17:55:26.5525138Z Version: 20261111.127.1
+sway	Set up job	2026-11-15T17:55:26.5525906Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+sway	Set up job	2026-11-15T17:55:26.5527215Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+sway	Set up job	2026-11-15T17:55:26.5527917Z ##[endgroup]
+sway	Set up job	2026-11-15T17:55:26.5528894Z ##[group]GITHUB_TOKEN Permissions
+sway	Set up job	2026-11-15T17:55:26.5530478Z Contents: read
+sway	Set up job	2026-11-15T17:55:26.5530908Z Metadata: read
+sway	Set up job	2026-11-15T17:55:26.5531300Z ##[endgroup]
+sway	Set up job	2026-11-15T17:55:26.5532759Z Secret source: Actions
+sway	Set up job	2026-11-15T17:55:26.5533363Z Cache mode: write
+sway	Set up job	2026-11-15T17:55:26.5533924Z Prepare workflow directory
+sway	Set up job	2026-11-15T17:55:26.5792427Z Prepare all required actions
+sway	Set up job	2026-11-15T17:55:26.5827996Z Getting action download info
+sway	Set up job	2026-11-15T17:55:26.9187820Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+sway	Set up job	2026-11-15T17:55:28.2823541Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+sway	Set up job	2026-11-15T17:55:28.5061308Z Complete job name: sway
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T17:55:28.5815493Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5816968Z with:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5817737Z   persist-credentials: false
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5818921Z   sparse-checkout: /*
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5819881Z   sparse-checkout-cone-mode: false
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5820844Z   repository: RandyNorthrup/chatmon
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5827659Z   token: ***
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5828558Z   ssh-strict: true
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5829342Z   ssh-user: git
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5830080Z   clean: true
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5830822Z   fetch-depth: 1
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5831581Z   fetch-tags: false
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5832365Z   show-progress: true
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5833148Z   lfs: false
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5833868Z   submodules: false
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5834655Z   set-safe-directory: true
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5835537Z   allow-unsafe-pr-checkout: false
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5836662Z env:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5837464Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:28.5838533Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.5692090Z Syncing repository: RandyNorthrup/chatmon
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.5693442Z ##[group]Getting Git version info
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.5693845Z Working directory is '/home/runner/work/chatmon/chatmon'
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.5694455Z [command]/usr/bin/git version
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7070684Z git version 2.56.1
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7083316Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7091779Z Temporarily overriding HOME='/home/runner/work/_temp/b39da22b-1d0d-4379-bbe6-8f00140b0ffe' before making global git config changes
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7092911Z Adding repository directory to the temporary git global config as a safe directory
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7095814Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7488813Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7491410Z ##[group]Determining repository object format
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7492849Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7493751Z ##[group]Initializing the repository
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.7495019Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8262942Z hint: Using 'master' as the name for the initial branch. This default branch name
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8263633Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8264096Z hint: to use in all of your new repositories, which will suppress this warning,
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8264560Z hint: call:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8264801Z hint:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8265137Z hint: 	git config --global init.defaultBranch <name>
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8265476Z hint:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8265846Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8266304Z hint: 'development'. The just-created branch can be renamed via this command:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8266665Z hint:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8266910Z hint: 	git branch -m <name>
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8267209Z hint:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8267771Z hint: Disable this message with "git config set advice.defaultBranchName false"
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8278526Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8292581Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8336834Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8337657Z ##[group]Disabling automatic garbage collection
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8339953Z [command]/usr/bin/git config --local gc.auto 0
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8362142Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8362718Z ##[group]Setting up auth
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8363038Z Removing SSH command configuration
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8365577Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:31.8391910Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0161090Z Removing HTTP extra header
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0165221Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0191385Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0332385Z Removing includeIf entries pointing to credentials config files
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0335954Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0357514Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0501403Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0525775Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0544766Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0564382Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0583723Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0603901Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0604568Z ##[group]Fetching the repository
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.0607833Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +eb8a996c4d85255e18e7180c2ed22dfebbcc333b:refs/remotes/pull/18/merge
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4845270Z From https://github.com/RandyNorthrup/chatmon
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4846427Z  * [new ref]         eb8a996c4d85255e18e7180c2ed22dfebbcc333b -> pull/18/merge
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4849558Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4850073Z ##[group]Determining the checkout info
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4850597Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4851083Z ##[group]Setting up sparse checkout
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4854366Z [command]/usr/bin/git config core.sparseCheckout true
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4878378Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4894171Z .git/info/sparse-checkout
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4899638Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4900291Z ##[group]Checking out the ref
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:32.4902969Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/18/merge
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6043900Z Updating files:   0% (1/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6044427Z Updating files:   1% (4/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6049782Z Updating files:   2% (7/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6051278Z Updating files:   3% (10/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6051852Z Updating files:   4% (13/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6052803Z Updating files:   5% (16/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6067362Z Updating files:   6% (19/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6079789Z Updating files:   7% (22/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6088422Z Updating files:   8% (25/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6109327Z Updating files:   9% (28/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6130625Z Updating files:  10% (31/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6143875Z Updating files:  11% (35/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6151553Z Updating files:  12% (38/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6164502Z Updating files:  13% (41/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6177001Z Updating files:  14% (44/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6187278Z Updating files:  15% (47/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6205569Z Updating files:  16% (50/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6220685Z Updating files:  17% (53/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6231352Z Updating files:  18% (56/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6242421Z Updating files:  19% (59/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6258396Z Updating files:  20% (62/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6265113Z Updating files:  21% (66/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6279052Z Updating files:  22% (69/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6290973Z Updating files:  23% (72/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6301026Z Updating files:  24% (75/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6311370Z Updating files:  25% (78/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6320786Z Updating files:  26% (81/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6328225Z Updating files:  27% (84/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6330314Z Updating files:  28% (87/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6338769Z Updating files:  29% (90/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6341353Z Updating files:  30% (93/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6344173Z Updating files:  31% (97/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6369449Z Updating files:  32% (100/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6372800Z Updating files:  33% (103/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6376562Z Updating files:  34% (106/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6378003Z Updating files:  35% (109/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6380906Z Updating files:  36% (112/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6381485Z Updating files:  37% (115/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6383335Z Updating files:  38% (118/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6386107Z Updating files:  39% (121/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6390290Z Updating files:  40% (124/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6394357Z Updating files:  41% (128/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6396168Z Updating files:  42% (131/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6398176Z Updating files:  43% (134/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6400619Z Updating files:  44% (137/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6403843Z Updating files:  45% (140/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6405542Z Updating files:  46% (143/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6407750Z Updating files:  47% (146/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6411266Z Updating files:  48% (149/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6416293Z Updating files:  49% (152/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6431437Z Updating files:  50% (155/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6443363Z Updating files:  51% (159/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6445583Z Updating files:  52% (162/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6448319Z Updating files:  53% (165/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6449936Z Updating files:  54% (168/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6451727Z Updating files:  55% (171/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6453921Z Updating files:  56% (174/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6456554Z Updating files:  57% (177/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6457625Z Updating files:  58% (180/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6460145Z Updating files:  59% (183/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6510622Z Updating files:  60% (186/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6511018Z Updating files:  61% (190/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6511448Z Updating files:  62% (193/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6511826Z Updating files:  63% (196/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6512181Z Updating files:  64% (199/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6512534Z Updating files:  65% (202/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6514178Z Updating files:  66% (205/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6520453Z Updating files:  67% (208/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6521016Z Updating files:  68% (211/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6521824Z Updating files:  69% (214/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6522478Z Updating files:  70% (217/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6523120Z Updating files:  71% (221/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6524490Z Updating files:  72% (224/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6525036Z Updating files:  73% (227/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6527482Z Updating files:  74% (230/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6529859Z Updating files:  75% (233/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6534792Z Updating files:  76% (236/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6538557Z Updating files:  77% (239/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6538957Z Updating files:  78% (242/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6541690Z Updating files:  79% (245/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6543876Z Updating files:  80% (248/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6545158Z Updating files:  81% (252/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6547003Z Updating files:  82% (255/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6549236Z Updating files:  83% (258/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6550569Z Updating files:  84% (261/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6551872Z Updating files:  85% (264/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6552804Z Updating files:  86% (267/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6554767Z Updating files:  87% (270/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6556631Z Updating files:  88% (273/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6558604Z Updating files:  89% (276/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6560747Z Updating files:  90% (279/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6562737Z Updating files:  91% (283/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6564677Z Updating files:  92% (286/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6566558Z Updating files:  93% (289/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6567481Z Updating files:  94% (292/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6569728Z Updating files:  95% (295/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6574888Z Updating files:  96% (298/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6576463Z Updating files:  97% (301/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6577811Z Updating files:  98% (304/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6578897Z Updating files:  99% (307/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6579217Z Updating files: 100% (310/310)
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6579521Z Updating files: 100% (310/310), done.
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6610323Z Note: switching to 'refs/remotes/pull/18/merge'.
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6610625Z 
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6610866Z You are in 'detached HEAD' state. You can look around, make experimental
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6611496Z changes and commit them, and you can discard any commits you make in this
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6611990Z state without impacting any branches by switching back to a branch.
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6612307Z 
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6612499Z If you want to create a new branch to retain commits you create, you may
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6613033Z do so (now or later) by using -c with the switch command. Example:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6613301Z 
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6613470Z   git switch -c <new-branch-name>
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6613827Z 
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6614015Z Or undo this operation with:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6614167Z 
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6614277Z   git switch -
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6614407Z 
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6614564Z Turn off this advice by setting config variable advice.detachedHead to false
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6614827Z 
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6615077Z HEAD is now at eb8a996 Merge 45a17b37fb25590a62fe3391379f7c8d2870da29 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6624338Z ##[endgroup]
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6663561Z [command]/usr/bin/git log -1 --format=%H
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6682667Z eb8a996c4d85255e18e7180c2ed22dfebbcc333b
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6689591Z ##[group]Removing auth
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6689898Z Removing SSH command configuration
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6692534Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6713689Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6866078Z Removing HTTP extra header
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6869027Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.6889130Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7029658Z Removing includeIf entries pointing to credentials config files
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7031841Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7051870Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7052595Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7053078Z includeif.gitdir:/github/workspace/.git.path
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7053677Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7057351Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7079180Z /home/runner/work/_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7086131Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-eda45430\-db69\-4d15\-ad8e\-8067c8e4dedd\.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7107563Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7122537Z /home/runner/work/_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7128007Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-eda45430\-db69\-4d15\-ad8e\-8067c8e4dedd\.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7148911Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7165074Z /github/runner_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7169601Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-eda45430\-db69\-4d15\-ad8e\-8067c8e4dedd\.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7193459Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7270652Z /github/runner_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7273594Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-eda45430\-db69\-4d15\-ad8e\-8067c8e4dedd\.config
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7294713Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7432400Z Removing credentials config '/home/runner/work/_temp/git-credentials-eda45430-db69-4d15-ad8e-8067c8e4dedd.config'
+sway	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:33.7437574Z ##[endgroup]
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T17:55:33.7662364Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7662714Z with:
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7662928Z   python-version: 3.14
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7663262Z   check-latest: false
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7665161Z   token: ***
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7665443Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7665832Z   update-environment: true
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7666075Z   allow-prereleases: false
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7666329Z   freethreaded: false
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7666537Z env:
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7666735Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.7666990Z ##[endgroup]
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:33.8493369Z ##[group]Installed versions
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:34.0603718Z Successfully set up CPython (3.14.10)
+sway	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:34.0604406Z ##[endgroup]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	﻿2026-11-15T17:55:34.0685397Z ##[group]Run packages=(sway grim wl-clipboard dbus at-spi2-core python3-gi gir1.2-atspi-2.0 libegl1 libgl1 libxkbcommon0 libfontconfig1
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.0686301Z [36;1mpackages=(sway grim wl-clipboard dbus at-spi2-core python3-gi gir1.2-atspi-2.0 libegl1 libgl1 libxkbcommon0 libfontconfig1[0m
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.0686995Z [36;1m          libdbus-1-3 libwayland-client0 libwayland-cursor0 libwayland-egl1 wayland-protocols)[0m
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.0687580Z [36;1mif ! { sudo apt-get update && sudo apt-get install -y --no-install-recommends "${packages[@]}"; }; then[0m
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.0688341Z [36;1m  echo "::warning::Ubuntu's archive is out of reach; trying kernel.org's mirror of it"[0m
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.0688892Z [36;1m  sudo sed -i -E "s#^URIs:.*#URIs: http://mirrors.edge.kernel.org/ubuntu/#" /etc/apt/sources.list.d/ubuntu.sources[0m
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.0689428Z [36;1m  sudo apt-get update && sudo apt-get install -y --no-install-recommends "${packages[@]}"[0m
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.0689823Z [36;1mfi[0m
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.0690118Z [36;1msway --version[0m
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1532803Z shell: /usr/bin/bash -e {0}
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1533092Z env:
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1533360Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1533678Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1534078Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1534684Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1535017Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1535336Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1535713Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.1536066Z ##[endgroup]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.4052439Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.4678032Z Get:5 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.5122498Z Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.5621375Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [772 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.5630847Z Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.6518195Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [702 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.6578456Z Get:8 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.7628539Z Get:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:34.8459788Z Get:9 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1450 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:35.0479788Z Get:10 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [315 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:35.1020791Z Get:11 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1713 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:35.2043707Z Get:12 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [345 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:35.2577896Z Get:13 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1883 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:35.3611108Z Get:14 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [430 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:35.3669229Z Get:16 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1195 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:35.4171307Z Get:15 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.6 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:36.1622231Z Get:17 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [238 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:36.3275984Z Get:18 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1228 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:36.5774701Z Get:19 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [248 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:36.7398522Z Get:20 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1788 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:37.0119302Z Get:21 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [411 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:46.5696613Z Fetched 13.1 MB in 3s (4812 kB/s)
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.4210690Z Reading package lists...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.4504153Z Reading package lists...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.6253397Z Building dependency tree...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.6259024Z Reading state information...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7582902Z dbus is already the newest version (1.14.10-4ubuntu4.1).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7583568Z python3-gi is already the newest version (3.48.2-1).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7583864Z python3-gi set to manually installed.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7584411Z libgl1 is already the newest version (1.7.0-1build1).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7584762Z libgl1 set to manually installed.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7585137Z libxkbcommon0 is already the newest version (1.6.0-1build1).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7585539Z libxkbcommon0 set to manually installed.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7585990Z libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7586452Z libfontconfig1 set to manually installed.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7586880Z libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7587329Z libdbus-1-3 set to manually installed.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7587777Z libwayland-client0 is already the newest version (1.22.0-2.1build1).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7588478Z libwayland-client0 set to manually installed.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7588953Z libwayland-cursor0 is already the newest version (1.22.0-2.1build1).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7589430Z libwayland-cursor0 set to manually installed.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7589876Z libwayland-egl1 is already the newest version (1.22.0-2.1build1).
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7590356Z libwayland-egl1 set to manually installed.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7590789Z The following additional packages will be installed:
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7591338Z   gir1.2-freedesktop gsettings-desktop-schemas libdisplay-info1 libegl-mesa0
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7591973Z   libgles2 libinput-bin libinput10 libliftoff0 libmtdev1t64 libseat1
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7592479Z   libwacom-common libwacom9 libwayland-server0 libwlroots12t64
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7593078Z   libxcb-composite0 libxcb-ewmh2 libxcb-icccm4 libxcb-render-util0 libxcb-res0
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7593549Z   libxcb-xinput0 session-migration swaybg
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7593956Z Suggested packages:
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7594400Z   libwacom-bin swayidle swaylock xdg-desktop-portal-wlr xdg-desktop-portal-gtk
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7594810Z Recommended packages:
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.7595179Z   wmenu sway-backgrounds foot
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8692443Z The following NEW packages will be installed:
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8692998Z   at-spi2-core gir1.2-atspi-2.0 gir1.2-freedesktop grim
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8693418Z   gsettings-desktop-schemas libdisplay-info1 libegl-mesa0 libegl1 libgles2
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8695050Z   libinput-bin libinput10 libliftoff0 libmtdev1t64 libseat1 libwacom-common
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8695622Z   libwacom9 libwayland-server0 libwlroots12t64 libxcb-composite0 libxcb-ewmh2
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8697269Z   libxcb-icccm4 libxcb-render-util0 libxcb-res0 libxcb-xinput0
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8697791Z   session-migration sway swaybg wayland-protocols wl-clipboard
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8849208Z 0 upgraded, 29 newly installed, 0 to remove and 23 not upgraded.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8849832Z Need to get 1753 kB of archives.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8850247Z After this operation, 7268 kB of additional disk space will be used.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:47.8850771Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.0234408Z Get:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 session-migration amd64 0.3.9build1 [9034 B]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.1015850Z Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 gsettings-desktop-schemas all 46.1-0ubuntu1 [35.6 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.2313733Z Get:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 at-spi2-core amd64 2.52.0-1build1 [56.6 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.3165468Z Get:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 gir1.2-freedesktop amd64 1.80.1-1 [49.7 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.3948010Z Get:6 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 gir1.2-atspi-2.0 amd64 2.52.0-1build1 [19.8 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.4749520Z Get:7 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 grim amd64 1.4.0+ds-2build2 [16.0 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.5543680Z Get:8 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 libdisplay-info1 amd64 0.1.1-2build1 [77.3 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.6379116Z Get:9 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libegl-mesa0 amd64 25.2.8-0ubuntu0.24.04.4 [117 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.7214211Z Get:10 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libwacom-common all 2.10.0-2 [63.4 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.7988254Z Get:11 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libwacom9 amd64 2.10.0-2 [23.9 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.8746568Z Get:12 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libinput-bin amd64 1.25.0-1ubuntu3.7 [23.6 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:48.9525395Z Get:13 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libmtdev1t64 amd64 1.1.6-1.1build1 [14.4 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.0355568Z Get:14 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libinput10 amd64 1.25.0-1ubuntu3.7 [133 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.1653620Z Get:15 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 libliftoff0 amd64 0.4.1-1 [14.8 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.2428563Z Get:16 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 libseat1 amd64 0.8.0-1 [28.3 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.3196264Z Get:17 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libwayland-server0 amd64 1.22.0-2.1build1 [33.9 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.3979859Z Get:18 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libegl1 amd64 1.7.0-1build1 [28.7 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.4744552Z Get:19 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libgles2 amd64 1.7.0-1build1 [17.1 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.6034278Z Get:20 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-composite0 amd64 1.15-1ubuntu2 [5304 B]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.6798600Z Get:21 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-ewmh2 amd64 0.4.1-1.1build3 [18.1 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.7574412Z Get:22 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-icccm4 amd64 0.4.1-1.1build3 [10.8 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.8335678Z Get:23 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-render-util0 amd64 0.3.9-1build4 [9608 B]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.9166655Z Get:24 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-res0 amd64 1.15-1ubuntu2 [6682 B]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:49.9988597Z Get:25 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-xinput0 amd64 1.15-1ubuntu2 [33.2 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:50.0757253Z Get:26 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 libwlroots12t64 amd64 0.17.1-2.1build1 [392 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:50.2122623Z Get:27 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 swaybg amd64 1.2.0-2build2 [15.8 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:50.2895432Z Get:28 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 sway amd64 1.9-1build2 [352 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:50.3732518Z Get:29 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 wl-clipboard amd64 2.2.1-1build1 [33.4 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:50.4505894Z Get:30 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 wayland-protocols all 1.45-1~ubuntu0.24.04.2 [114 kB]
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.3885611Z Fetched 1753 kB in 3s (681 kB/s)
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.4359303Z Selecting previously unselected package session-migration.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7232365Z (Reading database ... 
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7232755Z (Reading database ... 5%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7233477Z (Reading database ... 10%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7233725Z (Reading database ... 15%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7233966Z (Reading database ... 20%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7234207Z (Reading database ... 25%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7234436Z (Reading database ... 30%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7234696Z (Reading database ... 35%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7234929Z (Reading database ... 40%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7235148Z (Reading database ... 45%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.7235429Z (Reading database ... 50%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:51.8340976Z (Reading database ... 55%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:52.4181196Z (Reading database ... 60%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:52.6853794Z (Reading database ... 65%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:52.8486305Z (Reading database ... 70%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:52.9465340Z (Reading database ... 75%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:53.0723946Z (Reading database ... 80%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:54.3897294Z (Reading database ... 85%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:55.2492666Z (Reading database ... 90%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:55.9993206Z (Reading database ... 95%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:55.9993785Z (Reading database ... 100%
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:55.9994195Z (Reading database ... 216380 files and directories currently installed.)
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.0034883Z Preparing to unpack .../00-session-migration_0.3.9build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.0056233Z Unpacking session-migration (0.3.9build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.0524093Z Selecting previously unselected package gsettings-desktop-schemas.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.0618431Z Preparing to unpack .../01-gsettings-desktop-schemas_46.1-0ubuntu1_all.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.0622639Z Unpacking gsettings-desktop-schemas (46.1-0ubuntu1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1115769Z Selecting previously unselected package at-spi2-core.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1208655Z Preparing to unpack .../02-at-spi2-core_2.52.0-1build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1213317Z Unpacking at-spi2-core (2.52.0-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1371759Z Selecting previously unselected package gir1.2-freedesktop:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1459284Z Preparing to unpack .../03-gir1.2-freedesktop_1.80.1-1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1463208Z Unpacking gir1.2-freedesktop:amd64 (1.80.1-1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1597605Z Selecting previously unselected package gir1.2-atspi-2.0:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1682801Z Preparing to unpack .../04-gir1.2-atspi-2.0_2.52.0-1build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1686564Z Unpacking gir1.2-atspi-2.0:amd64 (2.52.0-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1813286Z Selecting previously unselected package grim.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1898488Z Preparing to unpack .../05-grim_1.4.0+ds-2build2_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.1902730Z Unpacking grim (1.4.0+ds-2build2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2049091Z Selecting previously unselected package libdisplay-info1:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2133347Z Preparing to unpack .../06-libdisplay-info1_0.1.1-2build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2146255Z Unpacking libdisplay-info1:amd64 (0.1.1-2build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2289706Z Selecting previously unselected package libegl-mesa0:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2375149Z Preparing to unpack .../07-libegl-mesa0_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2379760Z Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2526814Z Selecting previously unselected package libwacom-common.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2611549Z Preparing to unpack .../08-libwacom-common_2.10.0-2_all.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2616019Z Unpacking libwacom-common (2.10.0-2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.2987689Z Selecting previously unselected package libwacom9:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3076420Z Preparing to unpack .../09-libwacom9_2.10.0-2_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3079934Z Unpacking libwacom9:amd64 (2.10.0-2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3209861Z Selecting previously unselected package libinput-bin.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3296797Z Preparing to unpack .../10-libinput-bin_1.25.0-1ubuntu3.7_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3300552Z Unpacking libinput-bin (1.25.0-1ubuntu3.7) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3449633Z Selecting previously unselected package libmtdev1t64:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3535352Z Preparing to unpack .../11-libmtdev1t64_1.1.6-1.1build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3539453Z Unpacking libmtdev1t64:amd64 (1.1.6-1.1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3707522Z Selecting previously unselected package libinput10:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3793782Z Preparing to unpack .../12-libinput10_1.25.0-1ubuntu3.7_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3797609Z Unpacking libinput10:amd64 (1.25.0-1ubuntu3.7) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.3946850Z Selecting previously unselected package libliftoff0:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4029331Z Preparing to unpack .../13-libliftoff0_0.4.1-1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4033132Z Unpacking libliftoff0:amd64 (0.4.1-1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4161404Z Selecting previously unselected package libseat1:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4246362Z Preparing to unpack .../14-libseat1_0.8.0-1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4250243Z Unpacking libseat1:amd64 (0.8.0-1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4380804Z Selecting previously unselected package libwayland-server0:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4465866Z Preparing to unpack .../15-libwayland-server0_1.22.0-2.1build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4469703Z Unpacking libwayland-server0:amd64 (1.22.0-2.1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4602115Z Selecting previously unselected package libegl1:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4687243Z Preparing to unpack .../16-libegl1_1.7.0-1build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4691111Z Unpacking libegl1:amd64 (1.7.0-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4828863Z Selecting previously unselected package libgles2:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4913575Z Preparing to unpack .../17-libgles2_1.7.0-1build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.4917510Z Unpacking libgles2:amd64 (1.7.0-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5062857Z Selecting previously unselected package libxcb-composite0:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5147946Z Preparing to unpack .../18-libxcb-composite0_1.15-1ubuntu2_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5152242Z Unpacking libxcb-composite0:amd64 (1.15-1ubuntu2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5285396Z Selecting previously unselected package libxcb-ewmh2:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5372321Z Preparing to unpack .../19-libxcb-ewmh2_0.4.1-1.1build3_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5376258Z Unpacking libxcb-ewmh2:amd64 (0.4.1-1.1build3) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5506694Z Selecting previously unselected package libxcb-icccm4:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5591956Z Preparing to unpack .../20-libxcb-icccm4_0.4.1-1.1build3_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5596378Z Unpacking libxcb-icccm4:amd64 (0.4.1-1.1build3) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5726372Z Selecting previously unselected package libxcb-render-util0:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5811771Z Preparing to unpack .../21-libxcb-render-util0_0.3.9-1build4_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5815583Z Unpacking libxcb-render-util0:amd64 (0.3.9-1build4) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.5949497Z Selecting previously unselected package libxcb-res0:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6034978Z Preparing to unpack .../22-libxcb-res0_1.15-1ubuntu2_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6040238Z Unpacking libxcb-res0:amd64 (1.15-1ubuntu2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6171248Z Selecting previously unselected package libxcb-xinput0:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6256822Z Preparing to unpack .../23-libxcb-xinput0_1.15-1ubuntu2_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6260804Z Unpacking libxcb-xinput0:amd64 (1.15-1ubuntu2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6397947Z Selecting previously unselected package libwlroots12t64:amd64.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6483636Z Preparing to unpack .../24-libwlroots12t64_0.17.1-2.1build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6489455Z Unpacking libwlroots12t64:amd64 (0.17.1-2.1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6663664Z Selecting previously unselected package swaybg.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6750026Z Preparing to unpack .../25-swaybg_1.2.0-2build2_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6753618Z Unpacking swaybg (1.2.0-2build2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6901000Z Selecting previously unselected package sway.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.6987435Z Preparing to unpack .../26-sway_1.9-1build2_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7042202Z Unpacking sway (1.9-1build2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7314125Z Selecting previously unselected package wl-clipboard.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7399254Z Preparing to unpack .../27-wl-clipboard_2.2.1-1build1_amd64.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7404164Z Unpacking wl-clipboard (2.2.1-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7567077Z Selecting previously unselected package wayland-protocols.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7652996Z Preparing to unpack .../28-wayland-protocols_1.45-1~ubuntu0.24.04.2_all.deb ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7656663Z Unpacking wayland-protocols (1.45-1~ubuntu0.24.04.2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7964953Z Setting up libliftoff0:amd64 (0.4.1-1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7980137Z Setting up wl-clipboard (2.2.1-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.7991870Z Setting up libwayland-server0:amd64 (1.22.0-2.1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.8002171Z Setting up libxcb-res0:amd64 (1.15-1ubuntu2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.8012998Z Setting up session-migration (0.3.9build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9210742Z Created symlink /etc/systemd/user/graphical-session-pre.target.wants/session-migration.service → /usr/lib/systemd/user/session-migration.service.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9211419Z 
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9226989Z Setting up gir1.2-freedesktop:amd64 (1.80.1-1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9238767Z Setting up libdisplay-info1:amd64 (0.1.1-2build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9249081Z Setting up libxcb-xinput0:amd64 (1.15-1ubuntu2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9259209Z Setting up libxcb-render-util0:amd64 (0.3.9-1build4) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9269806Z Setting up libxcb-icccm4:amd64 (0.4.1-1.1build3) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9279612Z Setting up gir1.2-atspi-2.0:amd64 (2.52.0-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9290546Z Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9300703Z Setting up libgles2:amd64 (1.7.0-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9311375Z Setting up swaybg (1.2.0-2build2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9321193Z Setting up wayland-protocols (1.45-1~ubuntu0.24.04.2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9330682Z Setting up libxcb-composite0:amd64 (1.15-1ubuntu2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9339976Z Setting up libmtdev1t64:amd64 (1.1.6-1.1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9349232Z Setting up libegl1:amd64 (1.7.0-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9359894Z Setting up grim (1.4.0+ds-2build2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9371221Z Setting up libxcb-ewmh2:amd64 (0.4.1-1.1build3) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9380703Z Setting up libseat1:amd64 (0.8.0-1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9391285Z Setting up libwacom-common (2.10.0-2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9400417Z Setting up gsettings-desktop-schemas (46.1-0ubuntu1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9410649Z Setting up libwacom9:amd64 (2.10.0-2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9421086Z Setting up libinput-bin (1.25.0-1ubuntu3.7) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9430747Z Setting up libinput10:amd64 (1.25.0-1ubuntu3.7) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9439946Z Setting up libwlroots12t64:amd64 (0.17.1-2.1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9450262Z Setting up sway (1.9-1build2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:55:56.9509227Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:01.7443240Z Processing triggers for man-db (2.12.0-4build2) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:01.7466187Z Not building database; man-db/auto-update is not 'true'.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:01.7475775Z Processing triggers for libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:01.7576073Z Processing triggers for udev (255.4-1ubuntu8.18) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.2027226Z Setting up at-spi2-core (2.52.0-1build1) ...
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9732811Z 
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9734716Z Running kernel seems to be up-to-date.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9735175Z 
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9735415Z No services need to be restarted.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9735673Z 
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9735796Z No containers need to be restarted.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9736070Z 
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9736238Z No user sessions are running outdated binaries.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9736456Z 
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:02.9736684Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+sway	sway, grim, wl-clipboard, a session bus, AT-SPI with libatspi's Python bindings, and Qt's Wayland libraries	2026-11-15T17:56:03.7643961Z sway version 1.9
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	﻿2026-11-15T17:56:03.7684674Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-test.txt
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7685230Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-test.txt[0m
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7712772Z shell: /usr/bin/bash -e {0}
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7713107Z env:
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7713353Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7713688Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7714127Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7714498Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7714869Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7715212Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7715567Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:03.7715875Z ##[endgroup]
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:07.8027622Z Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:07.8028747Z Ignoring comtypes: markers 'sys_platform == "win32"' don't match your environment
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.1618555Z Collecting coverage==7.17.0 (from -r packaging/requirements-test.txt (line 11))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.2149408Z   Downloading coverage-7.17.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (261 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.4569322Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-test.txt (line 132))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.4660511Z   Downloading hypothesis-6.170.14-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.5576362Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 24.9 MB/s  0:00:00
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.5725548Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-test.txt (line 217))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.5811687Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.5960277Z Collecting packaging==26.3 (from -r packaging/requirements-test.txt (line 221))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.6149583Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.6315482Z Collecting pluggy==1.7.0 (from -r packaging/requirements-test.txt (line 225))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.6396258Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.6823038Z Collecting psutil==7.2.2 (from -r packaging/requirements-test.txt (line 229))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.6918324Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.7131666Z Collecting pygments==2.21.0 (from -r packaging/requirements-test.txt (line 252))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.7218498Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.7599642Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 33.3 MB/s  0:00:00
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.7786000Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-test.txt (line 256))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.7902444Z   Downloading pyqt6-6.11.0-cp310-abi3-manylinux_2_34_x86_64.whl (8.3 MB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.9352319Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 57.9 MB/s  0:00:00
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.9790063Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-test.txt (line 264))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:08.9916156Z   Downloading pyqt6_qt6-6.11.2-py3-none-manylinux_2_34_x86_64.whl (86.0 MB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.6741309Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.0/86.0 MB 126.1 MB/s  0:00:00
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.7637513Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-test.txt (line 274))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.7738854Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-manylinux1_x86_64.manylinux_2_5_x86_64.whl (301 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.7942473Z Collecting pytest==9.2.0 (from -r packaging/requirements-test.txt (line 306))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.8030792Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.8197909Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-test.txt (line 312))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.8280368Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.8425981Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-test.txt (line 316))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.8515334Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.8659290Z Collecting tzdata==2026.6 (from -r packaging/requirements-test.txt (line 320))
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:09.8742128Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:10.2965786Z Installing collected packages: sortedcontainers, pyqt6-qt6, tzdata, pyqt6-sip, pygments, psutil, pluggy, packaging, iniconfig, hypothesis, coverage, pytest, pyqt6, pytest-timeout
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:12.8469388Z 
+sway	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T17:56:12.8482742Z Successfully installed coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 sortedcontainers-2.4.0 tzdata-2026.6
+sway	The overlay on sway, and the pretend compositor's tests beside it	﻿2026-11-15T17:56:12.9398496Z ##[group]Run python -m pytest -p no:cacheprovider tests/test_sway.py tests/test_wayland.py
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9399166Z [36;1mpython -m pytest -p no:cacheprovider tests/test_sway.py tests/test_wayland.py[0m
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9426332Z shell: /usr/bin/bash -e {0}
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9426633Z env:
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9426870Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9427240Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9427635Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9428025Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9428526Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9428866Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9429287Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9429661Z   CHATMON_SWAY: 1
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9429971Z   QT_QPA_PLATFORM: offscreen
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:12.9430375Z ##[endgroup]
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6174388Z ============================= test session starts ==============================
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6174887Z platform linux -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6175403Z rootdir: /home/runner/work/chatmon/chatmon
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6175707Z configfile: pyproject.toml
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6175986Z plugins: hypothesis-6.170.14, timeout-2.4.0
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6176295Z timeout: 120.0s
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6176518Z timeout method: signal
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6176763Z timeout func_only: False
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6177017Z collected 52 items
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:56:14.6177164Z 
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:57:44.1327032Z tests/test_sway.py s.................ss                                  [ 38%]
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:57:44.8515641Z tests/test_wayland.py ................................                   [100%]
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:57:44.8516538Z 
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:57:44.8516884Z =========================== short test summary info ============================
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:57:44.8517726Z SKIPPED [1] tests/test_sway.py:111: wlr-protocols isn't installed
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:57:44.8518781Z SKIPPED [2] tests/test_sway.py:56: Orca isn't installed
+sway	The overlay on sway, and the pretend compositor's tests beside it	2026-11-15T17:57:44.8519531Z =================== 49 passed, 3 skipped in 90.54s (0:01:30) ===================
+sway	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T17:57:44.9181869Z Post job cleanup.
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T17:57:45.0103702Z Post job cleanup.
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0721048Z [command]/usr/bin/git version
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0746117Z git version 2.56.1
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0769188Z Temporarily overriding HOME='/home/runner/work/_temp/8fa31d93-166f-4823-ba8b-cd5f156ad3cd' before making global git config changes
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0770524Z Adding repository directory to the temporary git global config as a safe directory
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0773176Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0795587Z Removing SSH command configuration
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0800885Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0824467Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0973846Z Removing HTTP extra header
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.0977214Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.1001613Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.1147342Z Removing includeIf entries pointing to credentials config files
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.1151345Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+sway	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:57:45.1173431Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+sway	Complete job	﻿2026-11-15T17:57:45.1421668Z Cleaning up orphan processes
