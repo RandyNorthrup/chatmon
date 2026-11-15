@@ -12,8 +12,8 @@ import re
 import secrets
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 from PyQt6.QtCore import QMimeData, QPoint, QPointF, QPropertyAnimation, QRect, QRectF, QSizeF, Qt, QTimer, QUrl, pyqtSignal
 from PyQt6.QtGui import (
@@ -394,7 +394,7 @@ class SpeechBubble:
         self._clip = None
         if has_text and 6 + text_h + (12 + rows_h if buttons else 0) > room:
             if self.on_more is not None:
-                buttons = self._buttons(self._button_specs + [(_(self.MORE), self._more)])
+                buttons = self._buttons([*self._button_specs, (_(self.MORE), self._more)])
                 rows_h = self._rows(buttons, inner)
             ellipsis = body_metrics.lineSpacing()
             fits = room - 6 - (12 + rows_h if buttons else 0) - ellipsis

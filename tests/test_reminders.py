@@ -114,7 +114,7 @@ def test_book_fires_due_in_order_and_round_trips():
     assert [r.text for r in book.fire(250)] == ["first", "second"]
     assert book.acknowledge(a.id) and book.acknowledge(b.id)  # done with: one-offs go
     assert book.focus().text == "later"
-    again = ReminderBook.from_list(book.to_list() + [{"bad": 1}])
+    again = ReminderBook.from_list([*book.to_list(), {"bad": 1}])
     assert [r.text for r in again.upcoming()] == ["later"]
     assert not again.cancel(a.id) and not again.cancel(b.id)
 

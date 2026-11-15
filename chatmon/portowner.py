@@ -59,7 +59,7 @@ def _mac(port: int) -> bool | None:
     if not os.access(LSOF, os.X_OK):
         return None
     try:
-        out = subprocess.run([LSOF, "-nP", f"-iTCP:{port}", "-sTCP:LISTEN", "-Fu"], capture_output=True, text=True, timeout=LSOF_TIMEOUT_S)
+        out = subprocess.run([LSOF, "-nP", f"-iTCP:{port}", "-sTCP:LISTEN", "-Fu"], capture_output=True, text=True, timeout=LSOF_TIMEOUT_S)  # noqa: S603 - lsof at its fixed path
     except (OSError, subprocess.SubprocessError):
         return None
     uids = [int(line[1:]) for line in out.stdout.splitlines() if line.startswith("u") and line[1:].isdigit()]

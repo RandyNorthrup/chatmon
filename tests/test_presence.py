@@ -3,6 +3,7 @@ and never raise."""
 
 import os
 import sys
+from typing import ClassVar
 
 import pytest
 from PyQt6.QtCore import qVersion
@@ -276,7 +277,7 @@ def test_a_full_screen_window_counts_only_on_the_stages_screen():
 def test_covered_on_x11_asks_where_the_full_screen_window_is(monkeypatch):
     class X:  # an X server's answers: a full-screen video in front, on the right monitor
         ok = True
-        rects = {7: (1920, 0, 2560, 1440), 100: (0, 0, 1920, 1080), 200: (1920, 0, 2560, 1440)}
+        rects: ClassVar[dict[int, tuple[int, int, int, int]]] = {7: (1920, 0, 2560, 1440), 100: (0, 0, 1920, 1080), 200: (1920, 0, 2560, 1440)}
 
         def fullscreen_window(self):
             return 7

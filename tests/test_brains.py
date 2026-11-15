@@ -14,7 +14,7 @@ def test_presets_and_overrides(monkeypatch):
     found = brains.load_brains(
         {"brains": {"grok": {"command": ["grok", "-p", "{prompt}", "--disable-web-search"]}, "mine": {"type": "command", "command": ["my-llm"]}, "broken": {"type": "nope"}}}
     )
-    assert list(found)[0] == "claude" and {"codex", "gemini", "grok", "muse"} <= set(found)
+    assert next(iter(found)) == "claude" and {"codex", "gemini", "grok", "muse"} <= set(found)
     assert found["grok"].command[-1] == "--disable-web-search" and found["grok"].label == "Grok"
     assert "mine" in found and "broken" not in found
 
@@ -158,7 +158,7 @@ def test_bedrock_needs_its_region(monkeypatch):
 def test_responses_api():
     brain = Brain("x", "responses", url="https://api.x.ai/v1", model="grok-4.7", api_key="k")
     url, request, parse = brains.endpoint(brain)
-    headers, body = request(brain, "SYS", [("hi", "hello")], "and?")
+    _headers, body = request(brain, "SYS", [("hi", "hello")], "and?")
     assert url == "https://api.x.ai/v1/responses" and body["instructions"] == "SYS" and body["input"][-1] == {"role": "user", "content": "and?"}
     reply = {"output": [{"type": "reasoning"}, {"type": "message", "content": [{"type": "output_text", "text": " Hi! "}]}]}
     assert parse(reply) == "Hi!" and parse({"output_text": "yo"}) == "yo"

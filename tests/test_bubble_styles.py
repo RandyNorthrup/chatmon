@@ -1,6 +1,7 @@
 """The painted chat bubbles: their art loads, text fits inside them, the notch follows the penguin, and
 their animation is a loop that closes by construction."""
 
+import itertools
 import json
 import re
 import time
@@ -260,7 +261,7 @@ def test_effects_never_touch_the_text_area(qapp):
 def test_ask_box_wears_the_style_and_keeps_its_input_inside_the_bubble(qapp):
     box = AskBox()
     try:
-        for name in PAINTED + ["plain"]:
+        for name in [*PAINTED, "plain"]:
             box.set_style(styles.get(name), True)
             box.open(QPoint(600, 600), "Ask Sparky", "Enter to ask", "Ask anything", activate=False)
             body, tail = box.input_rects()
@@ -295,7 +296,7 @@ def test_electric_lightning_runs_round_the_border(qapp):
 
         assert heads(0.3) == pytest.approx(heads(0.3 + period))
         gaps = sorted(heads(1.1))
-        for a, b in zip(gaps, gaps[1:], strict=False):
+        for a, b in itertools.pairwise(gaps):
             assert b - a == pytest.approx(rim.length / count)
         step = abs(runner.laps) * rim.length / period * 0.1  # px in a tenth of a second
         for t in (0.0, 1.3, 5.9):

@@ -24,7 +24,7 @@ import ctypes.util
 import os
 import sys
 from collections.abc import Callable, Mapping
-from typing import NamedTuple
+from typing import ClassVar, NamedTuple
 
 from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, QObject, QSocketNotifier, Qt, pyqtSignal
 
@@ -65,7 +65,7 @@ PUNCTUATION = {
     ".": Key(0xBE, 0x2F, "period"), "/": Key(0xBF, 0x2C, "slash"),
 }
 # macOS's virtual key codes for letters and digits (kVK_ANSI_*), and for F1 to F20 (kVK_F*).
-_MAC_LETTERS = dict(zip("ASDFHGZXCVBQWERYT123465", [*range(0x00, 0x09 + 1), *range(0x0B, 0x17 + 1)], strict=True))
+_MAC_LETTERS = dict(zip("ASDFHGZXCVBQWERYT123465", [*range(0x09 + 1), *range(0x0B, 0x17 + 1)], strict=True))
 _MAC_LETTERS.update({"9": 0x19, "7": 0x1A, "8": 0x1C, "0": 0x1D, "O": 0x1F, "U": 0x20, "I": 0x22, "P": 0x23, "L": 0x25,
                      "J": 0x26, "K": 0x28, "N": 0x2D, "M": 0x2E})
 _MAC_F = [0x7A, 0x78, 0x63, 0x76, 0x60, 0x61, 0x62, 0x64, 0x65, 0x6D, 0x67, 0x6F, 0x69, 0x6B, 0x71, 0x6A, 0x40, 0x4F, 0x50, 0x5A]
@@ -143,7 +143,7 @@ class _Windows(QAbstractNativeEventFilter):
     through Qt's event loop, where a native event filter hears it."""
 
     WM_HOTKEY = 0x0312
-    FLAGS = {"alt": 0x1, "ctrl": 0x2, "shift": 0x4, "meta": 0x8}  # MOD_ALT, MOD_CONTROL, MOD_SHIFT, MOD_WIN
+    FLAGS: ClassVar[dict[str, int]] = {"alt": 0x1, "ctrl": 0x2, "shift": 0x4, "meta": 0x8}  # MOD_ALT, MOD_CONTROL, MOD_SHIFT, MOD_WIN
     MOD_NOREPEAT = 0x4000  # held down, it's pressed once
     ERROR_HOTKEY_ALREADY_REGISTERED = 1409
     HWND_MESSAGE = -3
@@ -223,7 +223,7 @@ class _Carbon:
     event loop dispatches to. Exclusive, so a combination another app holds is refused rather than shared."""
 
     CARBON = "/System/Library/Frameworks/Carbon.framework/Carbon"
-    FLAGS = {"ctrl": 1 << 8, "shift": 1 << 9, "alt": 1 << 11, "meta": 1 << 12}  # cmdKey, shiftKey, optionKey, controlKey
+    FLAGS: ClassVar[dict[str, int]] = {"ctrl": 1 << 8, "shift": 1 << 9, "alt": 1 << 11, "meta": 1 << 12}  # cmdKey, shiftKey, optionKey, controlKey
     KEYBOARD, HOT_KEY_PRESSED = fourcc("keyb"), 5  # kEventClassKeyboard, kEventHotKeyPressed
     DIRECT_OBJECT, HOT_KEY_ID = fourcc("----"), fourcc("hkid")  # kEventParamDirectObject, typeEventHotKeyID
     SIGNATURE = fourcc("CHMN")
@@ -318,7 +318,7 @@ class _X11:
     """XGrabKey on the root window over an X connection of Chatmon's own, read when a QSocketNotifier says it has
     something. A grab is made for each state of NumLock and CapsLock, which X counts as modifiers."""
 
-    FLAGS = {"shift": 1 << 0, "ctrl": 1 << 2, "alt": 1 << 3, "meta": 1 << 6}  # ShiftMask, ControlMask, Mod1Mask, Mod4Mask
+    FLAGS: ClassVar[dict[str, int]] = {"shift": 1 << 0, "ctrl": 1 << 2, "alt": 1 << 3, "meta": 1 << 6}  # ShiftMask, ControlMask, Mod1Mask, Mod4Mask
     LOCK, NUM_LOCK = 1 << 1, 1 << 4  # LockMask, Mod2Mask
     LOCKS = (0, LOCK, NUM_LOCK, LOCK | NUM_LOCK)
     KEY_PRESS = 2

@@ -12,13 +12,15 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QEventLoop, QPoint, QPointF, Qt, QTimer  # noqa: E402
-from PyQt6.QtGui import QGuiApplication, QRegion  # noqa: E402
+import itertools
 
-from chatmon import paths, penguin  # noqa: E402
-from chatmon.behavior import Behavior  # noqa: E402
-from chatmon.penguin import Stage  # noqa: E402
-from chatmon.sprites import Sprites  # noqa: E402
+from PyQt6.QtCore import QEventLoop, QPoint, QPointF, Qt, QTimer
+from PyQt6.QtGui import QGuiApplication, QRegion
+
+from chatmon import paths, penguin
+from chatmon.behavior import Behavior
+from chatmon.penguin import Stage
+from chatmon.sprites import Sprites
 
 
 def spin(seconds: float) -> None:
@@ -133,7 +135,7 @@ def test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none(stage):
     ticks = follow_the_clock(s, clock, 60)
     assert len(ticks) < 60 + 16 * 4  # a second at most while still, and each blink's frames: the old clock ticked 1800 times
     assert max(wait for _, _, wait in ticks) == pytest.approx(penguin.IDLE_FLOOR)
-    blinks = sum(1 for (_, a, _), (_, b, _) in zip(ticks, ticks[1:], strict=False) if (a.index, b.index) == (0, 2))
+    blinks = sum(1 for (_, a, _), (_, b, _) in itertools.pairwise(ticks) if (a.index, b.index) == (0, 2))
     assert blinks >= 11  # still blinking, on time
 
 
@@ -156,7 +158,7 @@ def test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops(stage):
     s.set_covered(False)
     s.behavior.set_hidden(True, clock.t)
     ticks = follow_the_clock(s, clock, 15)
-    gone = [wait for (_, f, wait), (_, g, _) in zip(ticks, ticks[1:], strict=False) if f.anim is None and g.anim is None]
+    gone = [wait for (_, f, wait), (_, g, _) in itertools.pairwise(ticks) if f.anim is None and g.anim is None]
     assert gone and all(wait == pytest.approx(penguin.IDLE_FLOOR) for wait in gone)  # nothing shown: once a second
     s.set_drawing(False)
     assert not s._timer.isActive()
@@ -189,7 +191,7 @@ def test_the_pointer_is_polled_every_frame_only_near_the_chatmon(qapp):
     class Polling(Surface):
         polls_pointer = True
 
-    s, clock = make_stage(Polling)
+    s, _clock = make_stage(Polling)
     s._tick()
     x, y, w, h = s._inputs[0]
     origin = s.origin()
@@ -212,7 +214,7 @@ def test_the_pointer_is_polled_every_frame_only_near_the_chatmon(qapp):
 
 
 def test_a_surface_that_needs_no_polling_is_never_polled(stage):
-    s, clock = stage
+    s, _clock = stage
     s._tick()
     s._poll_pointer()
     assert s.surface.follows == 0 and not s._pointer_timer.isActive()

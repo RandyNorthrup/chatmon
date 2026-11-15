@@ -15,10 +15,10 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QPointF, QRect, Qt  # noqa: E402
-from PyQt6.QtGui import QColor, QRegion  # noqa: E402
+from PyQt6.QtCore import QPointF, QRect, Qt
+from PyQt6.QtGui import QColor, QRegion
 
-from chatmon import layer, wayland  # noqa: E402
+from chatmon import layer, wayland
 
 linux_only = pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Wayland is Linux only")
 
@@ -364,7 +364,7 @@ def test_layer_surface_draws_and_takes_clicks_only_on_the_penguin(qapp):
     _pool, size = wayland.decode("ni", pool_req)
     assert size == 2560 * 1600 * 4
     (buffer_req,) = [p for o, op, p in reqs if op == layer.SHM_POOL_CREATE_BUFFER and o == _pool]
-    _buf, offset, w, h, stride, fmt = wayland.decode("niiiiu", buffer_req)
+    _buf, _offset, w, h, stride, fmt = wayland.decode("niiiiu", buffer_req)
     assert (w, h, stride, fmt) == (2560, 1600, 2560 * 4, layer.SHM_ARGB8888)
     assert named(reqs, surface_id, layer.SURFACE_ATTACH)
     (damage,) = named(reqs, surface_id, layer.SURFACE_DAMAGE_BUFFER)
@@ -414,7 +414,7 @@ def test_layer_surface_draws_and_takes_clicks_only_on_the_penguin(qapp):
 
 @linux_only
 def test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still(qapp):
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     shm = surf.globals["wl_shm"][0]
     created, callbacks = list(ids["buffers"]), list(ids["frames"])
     assert len(created) == 1 and len(callbacks) == 1  # the configure's full paint, waiting for its frame
@@ -631,7 +631,7 @@ def test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout(qapp):
 
 @linux_only
 def test_the_keyboard_is_taken_only_while_the_ask_box_is_open(qapp):
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     surf.set_input([QRect(100, 100, 200, 100)])  # the box
     surf._present()
     server.requests()
@@ -655,7 +655,7 @@ def test_the_keyboard_is_taken_only_while_the_ask_box_is_open(qapp):
 
 @linux_only
 def test_an_older_layer_shell_keeps_the_keyboard_exclusive(qapp):
-    conn, server, stage, surf, ids = _configured(qapp, layer_version=3)
+    _conn, server, _stage, surf, ids = _configured(qapp, layer_version=3)
     surf.focus_keyboard(True, grab=False)
     assert interactivity(server.requests(), ids) == [layer.KEYBOARD_EXCLUSIVE]  # no on_demand before version 4
     surf.close()
@@ -729,7 +729,7 @@ def test_byte_offsets_become_qt_positions():
 @linux_only
 def test_the_clipboard_is_the_overlays_own(qapp):
     """Paste reads the clipboard the compositor offers this connection; copy offers ours."""
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     device = ids["data_device"]
     assert not surf.clipboard_has_text()
     offer = 0xFF000001  # objects the compositor makes have ids from here
@@ -780,7 +780,7 @@ def test_the_clipboard_is_the_overlays_own(qapp):
 @linux_only
 def test_the_primary_selection_too(qapp):
     """The middle-click selection: the same as the clipboard, its own protocol."""
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     device = ids["primary_device"]
     offer = 0xFF000002
     server.send(device, layer.EV_PRIMARY_DEVICE_DATA_OFFER, "n", offer)
@@ -811,7 +811,7 @@ def test_the_primary_selection_too(qapp):
 def test_pasting_into_the_ask_box_prefers_files_then_pictures_then_text(qapp):
     """What the compositor offers for a paste, read in the best type offered: copied files (a file manager
     offers a uri-list), a picture (a screenshot), or text."""
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     device = ids["data_device"]
     for n, (offered, wanted, data) in enumerate(
         (
@@ -844,7 +844,7 @@ def test_pasting_into_the_ask_box_prefers_files_then_pictures_then_text(qapp):
 @linux_only
 def test_it_gives_way_to_full_screen_windows_and_comes_above_them_when_it_must(qapp):
     """The top layer, which full-screen windows cover; the overlay while an alert or the ask box needs you."""
-    conn, server, stage, surf, ids = _configured(qapp)
+    _conn, server, _stage, surf, ids = _configured(qapp)
     surf.raise_above(True)
     surf.raise_above(True)  # once is enough
     surf.raise_above(False)

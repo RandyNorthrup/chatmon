@@ -103,11 +103,7 @@ def test_headings_stay_near_the_texts_size(qapp):
 def formats_at(block, text: str) -> list[QColor]:
     """The highlighter's colours over `text` in `block`."""
     start = block.text().index(text)
-    out = []
-    for r in block.layout().formats():
-        if r.start <= start and start + len(text) <= r.start + r.length:
-            out.append(r.format.foreground().color())
-    return out
+    return [r.format.foreground().color() for r in block.layout().formats() if r.start <= start and start + len(text) <= r.start + r.length]
 
 
 def highlighted(doc_text: str, name: str = "electric"):

@@ -136,8 +136,7 @@ def render(doc: QTextDocument, markdown: str, look: Look, copy_token: str = "", 
         for n, ((_, end), text) in enumerate(zip(answers, out.answers, strict=True)):
             if text.strip() and (copy_last or n < len(answers) - 1):
                 inserts.append((end, "copy answer", len(groups) + n))
-    for start in starts[1:]:
-        inserts.append((start - 1, "rule", None))
+    inserts.extend((start - 1, "rule", None) for start in starts[1:])
     # Last first; where several go after the same block: the code's Copy, then the answer's, then the rule.
     rank = {"copy code": 0, "copy answer": 1, "rule": 2}
     for position, kind, n in sorted(inserts, key=lambda i: (i[0], rank[i[1]]), reverse=True):

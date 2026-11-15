@@ -123,7 +123,7 @@ def _cut(text: str, m: re.Match) -> str:
 
 def _at(seconds: float, like: datetime) -> datetime:
     """The moment `seconds` after the epoch, on the wall clock `like` is on (naive: the computer's own zone)."""
-    return datetime.fromtimestamp(seconds, like.tzinfo) if like.tzinfo else datetime.fromtimestamp(seconds)
+    return datetime.fromtimestamp(seconds, like.tzinfo) if like.tzinfo else datetime.fromtimestamp(seconds)  # noqa: DTZ006 - naive like `like`: local wall time
 
 
 def _on_wall(day: date, hour: int, minute: int, like: datetime) -> datetime:
@@ -134,7 +134,7 @@ def _on_wall(day: date, hour: int, minute: int, like: datetime) -> datetime:
 
 
 def _local(seconds: float, tz: tzinfo | None) -> datetime:
-    return datetime.fromtimestamp(seconds, tz) if tz else datetime.fromtimestamp(seconds)
+    return datetime.fromtimestamp(seconds, tz) if tz else datetime.fromtimestamp(seconds)  # noqa: DTZ006 - no zone given: local wall time
 
 
 # -- repeating reminders: "daily@09:00", "weekdays@09:00", "mon@09:00"

@@ -27,6 +27,7 @@ import sys
 import time
 import tomllib
 from pathlib import Path
+from typing import ClassVar
 
 from . import paths
 from .i18n import N_, _, ngettext
@@ -110,10 +111,11 @@ def backup(path: Path) -> Path | None:
 
 def _prune_backups(path: Path) -> None:
     prefix = f"{path.name}.chatmon-backup-"
-    found = []
-    for item in path.parent.iterdir():
-        if item.name.startswith(prefix) and item.is_file() and not item.is_symlink():
-            found.append((item.stat().st_mtime_ns, len(item.name), item.name, item))
+    found = [
+        (item.stat().st_mtime_ns, len(item.name), item.name, item)
+        for item in path.parent.iterdir()
+        if item.name.startswith(prefix) and item.is_file() and not item.is_symlink()
+    ]
     for *_order, item in sorted(found)[:-BACKUPS_KEPT]:
         item.unlink(missing_ok=True)
 
@@ -250,8 +252,8 @@ class JsonHooks(Agent):
     """Agents whose settings file has Claude Code's shape:
     {"hooks": {"Event": [{"matcher": ..., "hooks": [{"type": "command", "command": "..."}]}]}}"""
 
-    events: dict[str, str] = {}  # the agent's event name: ours
-    matchers: dict[str, str] = {}  # the agent's event name: which of its kind to catch
+    events: ClassVar[dict[str, str]] = {}  # the agent's event name: ours
+    matchers: ClassVar[dict[str, str]] = {}  # the agent's event name: which of its kind to catch
 
     def _load(self) -> dict:
         return load_json(self.config_path())
@@ -287,7 +289,7 @@ class JsonHooks(Agent):
             raise AgentError(_('"hooks" in {file} isn\'t an object; not touching it.').format(file=self.config_path()))
         for event, ours in self.events.items():
             groups = [g for g in (hooks.get(event) or []) if not self._is_ours(g)]
-            hooks[event] = groups + [self._entry(event, ours)]
+            hooks[event] = [*groups, self._entry(event, ours)]
         saved = backup(self.config_path())
         write_atomic(self.config_path(), json.dumps(data, indent=2) + "\n")
         return _changed(True, self.label, self.config_path(), saved)
@@ -325,7 +327,7 @@ def _run_json(argv: list[str], what: str) -> object:
     if not program:
         raise AgentError(_("{program} isn't installed.").format(program=what))
     try:
-        proc = subprocess.run(
+        proc = subprocess.run(  # noqa: S603 - the agent's own listing command, found on PATH; no shell
             [program, *argv[1:]], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120, creationflags=_NO_WINDOW
         )
     except (OSError, subprocess.SubprocessError) as exc:
@@ -664,7 +666,7 @@ class Muse(Agent):
     name, label, command = "muse", "Muse Code", "muse"
     PLUGIN = "chatmon"
     LEGACY_PLUGIN = "penguin-companion"
-    events = {"UserPromptSubmit": "working", "PermissionRequest": "needs-you", "Notification": "needs-you", "Stop": "done", "Interrupt": "idle"}
+    events: ClassVar[dict[str, str]] = {"UserPromptSubmit": "working", "PermissionRequest": "needs-you", "Notification": "needs-you", "Stop": "done", "Interrupt": "idle"}
 
     def bundle_dir(self) -> Path:
         return paths.state_dir() / "integrations" / "muse-plugin"
@@ -740,7 +742,7 @@ class Muse(Agent):
 
 class Gemini(JsonHooks):
     name, label, command = "gemini", "Gemini CLI", "gemini"
-    events = {"BeforeAgent": "working", "Notification": "needs-you", "AfterAgent": "done"}
+    events: ClassVar[dict[str, str]] = {"BeforeAgent": "working", "Notification": "needs-you", "AfterAgent": "done"}
 
     def config_path(self) -> Path:
         return _home_env("GEMINI_CLI_HOME", Path.home()) / ".gemini" / "settings.json"
@@ -751,8 +753,8 @@ class Gemini(JsonHooks):
 
 class Qwen(JsonHooks):
     name, label, command = "qwen", "Qwen Code", "qwen"
-    events = {"UserPromptSubmit": "working", "Notification": "needs-you", "Stop": "done"}
-    matchers = {"Notification": "permission_prompt"}
+    events: ClassVar[dict[str, str]] = {"UserPromptSubmit": "working", "Notification": "needs-you", "Stop": "done"}
+    matchers: ClassVar[dict[str, str]] = {"Notification": "permission_prompt"}
 
     def config_path(self) -> Path:
         return Path.home() / ".qwen" / "settings.json"
@@ -760,7 +762,7 @@ class Qwen(JsonHooks):
 
 class Devin(JsonHooks):
     name, label, command = "devin", "Devin CLI", "devin"
-    events = {"UserPromptSubmit": "working", "Stop": "done"}
+    events: ClassVar[dict[str, str]] = {"UserPromptSubmit": "working", "Stop": "done"}
 
     def config_path(self) -> Path:
         if sys.platform == "win32":
@@ -859,7 +861,7 @@ class Cursor(Agent):
     """Cursor's ~/.cursor/hooks.json: {"version": 1, "hooks": {"event": [{"command": ...}]}}."""
 
     name, label, command = "cursor", "Cursor", "cursor"
-    events = {"beforeSubmitPrompt": "working", "stop": "done"}
+    events: ClassVar[dict[str, str]] = {"beforeSubmitPrompt": "working", "stop": "done"}
 
     def config_path(self) -> Path:
         return Path.home() / ".cursor" / "hooks.json"
@@ -924,7 +926,7 @@ class Cline(Agent):
     """Cline runs the executable named after each event in ~/Documents/Cline/Hooks."""
 
     name, label, command = "cline", "Cline", "cline"
-    events = {"UserPromptSubmit": "working", "TaskComplete": "done", "TaskCancel": "idle"}
+    events: ClassVar[dict[str, str]] = {"UserPromptSubmit": "working", "TaskComplete": "done", "TaskCancel": "idle"}
 
     def config_path(self) -> Path:
         return Path.home() / "Documents" / "Cline" / "Hooks"

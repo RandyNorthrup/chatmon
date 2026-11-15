@@ -13,6 +13,6 @@ if sys.argv[1:2] == ["verify-update"]:
 
     raise SystemExit(verify(sys.argv[2:]))
 
-from chatmon.cli import main  # noqa: E402
+from chatmon.cli import main
 
 raise SystemExit(main())

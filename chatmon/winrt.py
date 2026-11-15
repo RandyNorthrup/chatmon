@@ -12,11 +12,15 @@ https://learn.microsoft.com/en-us/windows/win32/api/winstring/nf-winstring-windo
 from __future__ import annotations
 
 import ctypes
+import logging
 import threading
 import time
 import uuid
+from collections.abc import Callable
 from ctypes import wintypes
-from typing import Callable
+from typing import ClassVar
+
+logger = logging.getLogger(__name__)
 
 IID_IUNKNOWN = "00000000-0000-0000-c000-000000000046"
 IID_IAGILE_OBJECT = "94ea2b94-e9cc-49e0-c0ff-ee64ca8f5b90"  # callable from any thread, never marshalled
@@ -33,7 +37,7 @@ class GUID(ctypes.Structure):
     _fields_ = [("bytes", ctypes.c_ubyte * 16)]
 
     @classmethod
-    def of(cls, text: str) -> "GUID":
+    def of(cls, text: str) -> GUID:
         return cls.from_buffer_copy(uuid.UUID(text).bytes_le)
 
     def __str__(self) -> str:
@@ -93,7 +97,7 @@ class HString:
         self.text = text.replace("\0", "")  # an embedded NUL would end the text early
         self.handle = ctypes.c_void_p()
 
-    def __enter__(self) -> "HString":
+    def __enter__(self) -> HString:
         units = len(self.text.encode("utf-16-le")) // 2  # its length in UTF-16 code units, not characters
         if units and combase().WindowsCreateString(self.text, units, ctypes.byref(self.handle)) != 0:
             raise OSError("WindowsCreateString failed")
@@ -182,8 +186,8 @@ class Delegate:
     marshal it to the thread that made it. Kept alive while Windows holds it; `release()` gives up Chatmon's
     own reference once it's handed over."""
 
-    _held: set["Delegate"] = set()  # alive while anyone holds one
-    _done: list[tuple[float, "Delegate"]] = []  # let go of by everyone, freed a while later: never inside a call
+    _held: ClassVar[set[Delegate]] = set()  # alive while anyone holds one
+    _done: ClassVar[list[tuple[float, Delegate]]] = []  # let go of by everyone, freed a while later: never inside a call
 
     def __init__(self, iid: str, invoke: Callable[[int, int], None]):
         now = time.monotonic()
@@ -223,7 +227,7 @@ class Delegate:
         try:
             self._invoke(sender or 0, args or 0)
         except Exception:  # nothing may escape into Windows' thread: the event is just missed
-            pass
+            logger.debug("a Windows event's handler failed", exc_info=True)
         return 0
 
     def release(self) -> None:

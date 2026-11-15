@@ -8,16 +8,16 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QEventLoop, QPoint, QPointF, QRect, Qt, QTimer, QUrl  # noqa: E402
-from PyQt6.QtGui import QAction, QImage, QKeySequence, QPainter, QRegion  # noqa: E402
-from PyQt6.QtWidgets import QMenu  # noqa: E402
+from PyQt6.QtCore import QEventLoop, QPoint, QPointF, QRect, Qt, QTimer, QUrl
+from PyQt6.QtGui import QAction, QImage, QKeySequence, QPainter, QRegion
+from PyQt6.QtWidgets import QMenu
 
-from chatmon import paths, xkb  # noqa: E402
-from chatmon.behavior import Behavior  # noqa: E402
-from chatmon.bubble import AskBox  # noqa: E402
-from chatmon.penguin import Stage  # noqa: E402
-from chatmon.sprites import Sprites  # noqa: E402
-from chatmon.stagemenu import label_parts  # noqa: E402
+from chatmon import paths, xkb
+from chatmon.behavior import Behavior
+from chatmon.bubble import AskBox
+from chatmon.penguin import Stage
+from chatmon.sprites import Sprites
+from chatmon.stagemenu import label_parts
 
 
 def spin(seconds: float) -> None:
@@ -37,6 +37,7 @@ class Overlay:
         self.input: list[QRect] = []
         self.damaged = QRegion()
         self.cursor = "default"
+        self.copied: list = []
 
     def set_screen(self, screen, geometry):
         pass
@@ -61,7 +62,6 @@ class Overlay:
 
     clipboard = "from another app"
     primary = "selected elsewhere"
-    copied: list = []
 
     def clipboard_has_text(self, which="clipboard"):
         return bool(getattr(self, which))
@@ -175,7 +175,7 @@ def test_esc_closes_an_open_menu_not_the_box_under_it(stage):
 
 
 def test_the_keyboard_picks_from_the_penguins_menu_and_the_overlay_takes_it_while_open(stage):
-    s, box = stage
+    s, _box = stage
     ran = []
     menu = QMenu()
     menu.addAction("Ask", lambda: ran.append("ask"))
@@ -209,7 +209,7 @@ def test_closing_the_box_closes_its_context_menu(stage):
 
 
 def test_the_wheel_scrolls_a_long_menu(stage):
-    s, box = stage
+    s, _box = stage
     menu = QMenu()
     for i in range(80):
         menu.addAction(f"Chat {i}")
@@ -242,7 +242,7 @@ def bubble_point(s, wanted) -> QPointF:
 
 
 def test_a_bubble_waits_while_the_pointer_is_on_it(stage):
-    s, box = stage
+    s, _box = stage
     clock = Clock()
     s._clock = clock
     s.show_message("Reminder", "Stretch your legs, it has been an hour.", timeout_s=3)
@@ -268,7 +268,7 @@ def test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click(stage, monkeypatch
 
     opened = []
     monkeypatch.setattr(bubble, "open_link", lambda url: opened.append(url.toString()))
-    s, box = stage
+    s, _box = stage
     s.show_message("Answer", "See [the docs](https://example.com/docs) for more.", timeout_s=None)
     spin(0.3)
     link = bubble_point(s, "link")
@@ -284,7 +284,7 @@ def test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click(stage, monkeypatch
 
 
 def test_a_bubble_is_never_taller_than_its_share_of_the_stages_screen(stage):
-    s, box = stage
+    s, _box = stage
     s._use_screen(s.screen(), again=True)
     assert s.bubble.max_height == pytest.approx(0.4 * s.screen().availableGeometry().height())
 

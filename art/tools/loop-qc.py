@@ -61,7 +61,7 @@ spec = importlib.util.spec_from_file_location("bubble_preview", HERE / "bubble-p
 preview = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(preview)
 
-from PyQt6.QtCore import QSizeF  # noqa: E402
+from PyQt6.QtCore import QSizeF
 
 BG = {"dark": (30, 33, 40), "light": (233, 235, 240)}
 LIMITS = {"jump": 2.5, "seam": 1.5, "flash": 1.5, "closes": 0.05, "flicker": 0.10, "pop": 60.0, "inside": 0.0, "light": 0.08}

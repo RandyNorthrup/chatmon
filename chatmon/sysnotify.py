@@ -14,7 +14,7 @@ What a notification is for decides how it's sent (Notifier):
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSlot
 

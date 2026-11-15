@@ -174,7 +174,7 @@ def test_run_from_source_it_is_not_frozen():
 
 def test_quit_says_when_nothing_is_running(monkeypatch, capsys):
     monkeypatch.setattr(events, "send", lambda m, timeout=0.5: False)
-    monkeypatch.setattr(paths, "migrate", lambda: [])  # never the real settings folders
+    monkeypatch.setattr(paths, "migrate", list)  # never the real settings folders
     assert cli.main(["quit"]) == 1 and "isn't running" in capsys.readouterr().err
 
 

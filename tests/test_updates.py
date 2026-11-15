@@ -325,7 +325,7 @@ class Inline:
     def run(self, work, then):
         try:
             result = work()
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - handed on, as the real Background hands on whatever went wrong
             result = exc
         then(result)
 
@@ -506,7 +506,7 @@ def test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit(qapp, gith
     from PyQt6.QtCore import QEventLoop, QTimer
 
     github(b"the real installer")
-    updater, seen = run_updater(qapp)
+    updater, _seen = run_updater(qapp)
     updater.kind = updates.WINDOWS
     monkeypatch.setattr(updates, "verify", lambda path, expected, kind: None)
     monkeypatch.setattr(updates, "installer_command", lambda kind, path, expected="": ("setup.exe", ["/VERYSILENT", "/relaunch=1"], {}))

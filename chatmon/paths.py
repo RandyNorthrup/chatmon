@@ -266,7 +266,7 @@ def login_environment(timeout: float = 4.0) -> list[str]:
         # print comes before the marker, and only what follows it is read.
         proc = None
         try:
-            proc = subprocess.Popen(
+            proc = subprocess.Popen(  # noqa: S603 - your own login shell, with a fixed command
                 [shell, "-l", "-i", "-c", f"printf '%s\\0' {_SENTINEL.decode()}; /usr/bin/env -0"],
                 stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, start_new_session=True,
             )

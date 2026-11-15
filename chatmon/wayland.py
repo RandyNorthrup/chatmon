@@ -19,7 +19,7 @@ import select
 import socket
 import struct
 import time
-from typing import Callable
+from collections.abc import Callable
 
 DISPLAY_ID = 1
 HEADER = struct.Struct("<II")

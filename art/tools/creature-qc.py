@@ -37,8 +37,8 @@ import numpy as np
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import creaturespec as cs  # noqa: E402
-import spritefix  # noqa: E402
+import creaturespec as cs
+import spritefix
 
 DRIFT = 1.0  # screen px
 HEAD = 3.0  # percent

@@ -17,16 +17,19 @@ https://learn.microsoft.com/en-us/windows/win32/shell/clipboard
 from __future__ import annotations
 
 import ctypes
+import logging
 import struct
 import uuid
+from collections.abc import Callable
 from ctypes import POINTER, byref, c_void_p, wintypes
-from typing import Callable
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QImage
 
 from . import winfiles
 from .attachments import MAX_FILE
+
+logger = logging.getLogger(__name__)
 
 S_OK = 0
 E_NOINTERFACE = -0x7FFFBFFE  # 0x80004002
@@ -286,6 +289,7 @@ class DropTarget:
             self._effect(effect)
             return S_OK
         except Exception:  # never into Windows' drag loop
+            logger.debug("a drag coming in failed", exc_info=True)
             effect[0] = DROPEFFECT_NONE
             return E_UNEXPECTED
 
@@ -293,7 +297,8 @@ class DropTarget:
         try:
             self._effect(effect)
             return S_OK
-        except Exception:
+        except Exception:  # never into Windows' drag loop
+            logger.debug("a drag moving over failed", exc_info=True)
             effect[0] = DROPEFFECT_NONE
             return E_UNEXPECTED
 
@@ -311,7 +316,8 @@ class DropTarget:
             else:  # read: the rest once the drop is over (the program it came from waits for it)
                 QTimer.singleShot(0, lambda: self._dropped(*found))
             return S_OK
-        except Exception:
+        except Exception:  # never into Windows' drag loop
+            logger.debug("a drop failed", exc_info=True)
             effect[0] = DROPEFFECT_NONE
             return E_UNEXPECTED
         finally:

@@ -188,7 +188,7 @@ def cut_still(style: str, path: Path) -> dict:
     fh, fw = still.shape[:2]
     tw, th = round(fw * art), round(fh * art)
     out = resize(still, tw, th)
-    a = lambda v: round(v * art)  # noqa: E731
+    a = lambda v: round(v * art)
     text = [a(ix0), a(iy0), a(ix1), a(iy1)]
     c, n, tip = a(corner), [a(notch[0]), a(notch[1])], a(cx)
     # Every measure the app cuts the still by is made even, so at half size each piece lands on whole
@@ -244,7 +244,7 @@ def cut_still(style: str, path: Path) -> dict:
         top = _ridge(out[:, cxm], ty0 + 2, fill)
         bottom = _ridge(out[::-1, clear], th - ty1 + 2, fill)
         # Radius: the border line crosses the corner's diagonal r * (1 - 1/sqrt 2) in from the corner point.
-        diag = _weight(np.array([out[int(round(top + d)), int(round(left + d))] for d in range(1, c)]), fill)
+        diag = _weight(np.array([out[int(round(top + d)), int(round(left + d))] for d in range(1, c)]), fill)  # noqa: RUF046 - numpy's round can give a float
         run = np.nonzero(diag >= diag.max() * 0.85)[0] + 1
         radius = float(run.mean()) / (1 - 1 / np.sqrt(2))
         half = max(2.0, min(tx0 - left, ty0 - top) + 1)

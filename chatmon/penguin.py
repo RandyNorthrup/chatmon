@@ -1014,18 +1014,7 @@ class Stage(QObject):
             head = QPoint(round(f.x) - origin.x(), floor)
         zs = self._z_rect(penguin) if self._sleeping(f) else QRect()
 
-        bubble_box = QRectF()
-        if self.bubble.drawn():
-            size = self.bubble.size
-            x = min(max(head.x() - size.width() / 2, 4), self._geo.width() - size.width() - 4)
-            top = head.y()
-            if self._clear_of is not None and self._clear_of.isVisible():
-                top = min(top, self._clear_of.geometry().top() - origin.y())
-            y = max(top - size.height(), 4)
-            # On whole device pixels: off them, every pixmap of an animated bubble is resampled each frame,
-            # which is slow and blurs it by half a pixel.
-            x, y = round(x * k) / k, math.floor(y * k) / k  # down, never up: it stays clear of what is below it
-            bubble_box = QRectF(x, y, size.width(), size.height())
+        bubble_box = self._place_bubble(head, origin, k) if self.bubble.drawn() else QRectF()
 
         # Reduced motion: all three z's, still.
         self._z_phase = (2 if self.behavior.reduced_motion else int(now / Z_STEP) % 3) if zs.isValid() else -1
@@ -1046,49 +1035,8 @@ class Stage(QObject):
             (tuple((state, r.x(), r.y(), r.width(), r.height(), figure) for state, r, figure in badges), pulse),
         )
         if key != self._key:
-            old = self._key or (None, None, None, None, None)
-            dirty = QRegion()
-            if key[0] != old[0]:
-                dirty = QRegion(self._penguin.toAlignedRect().adjusted(-2, -2, 2, 2)).united(QRegion(penguin.toAlignedRect().adjusted(-2, -2, 2, 2)))
-                dirty = dirty.united(QRegion(self._z_rect(self._penguin))).united(QRegion(zs))
-            if key[1] != old[1]:
-                dirty = dirty.united(QRegion(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
-                dirty = dirty.united(QRegion(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
-            if key[2] != old[2]:
-                for r in self._menu_rects + menu_rects:
-                    dirty = dirty.united(QRegion(r.adjusted(-2, -2, 2, 2)))
-            if key[3] != old[3] and self.hosted is not None and self.hosted.visible():  # its bubble moved on a frame
-                dirty = dirty.united(self.hosted.ring().translated(-origin))
-            if key[4] != old[4]:
-                for _state, r, _figure in self._badges + badges:
-                    dirty = dirty.united(QRegion(r.toAlignedRect().adjusted(-PULSE_REACH - 2, -PULSE_REACH - 2, PULSE_REACH + 2, PULSE_REACH + 2)))
-                self._badges, self._pulse = badges, pulse
-            self._menu_rects = menu_rects
-            self._key = key
-            self._penguin, self._bubble_box = penguin, bubble_box
-            self.surface.damage(dirty)
-        hosted_rects: tuple = ()
-        if self.hosted is not None:
-            # Looked at each tick (and the hosted scene wakes the clock when it changes), so however it opens
-            # or closes, the keyboard and input region follow.
-            shown = self.hosted.visible()
-            if shown != self.hosted.was_visible:
-                self.hosted.was_visible = shown
-                self.hosted_shown(self.hosted, shown, shown and getattr(self.hosted.widget, "wants_keyboard", True))
-            if shown:
-                hosted_rects = tuple((r.x() - origin.x(), r.y() - origin.y(), r.width(), r.height()) for r in self.hosted.input_rects())
-            # Selected text is the primary selection, as in any Linux app.
-            selected = self.hosted.selected_text() if shown else ""
-            if selected and selected != self._primary:
-                self.clipboard_copy(selected, "primary")
-            self._primary = selected
-            # The focused field's text and cursor, for an input method, when they change.
-            state = self.hosted.text_state()
-            if state != self._text_state:
-                self._text_state = state
-                set_text_input = getattr(self.surface, "set_text_input", None)
-                if set_text_input is not None:
-                    set_text_input(state)
+            self._damage(key, penguin, zs, bubble_box, menu_rects, badges, pulse, origin)
+        hosted_rects = self._follow_hosted(self.hosted, origin) if self.hosted is not None else ()
         # Where it takes clicks: built again only when something in it changed, and as plain numbers.
         bubble_rect = bubble_box.toAlignedRect() if self.bubble.visible() else None
         parts = (
@@ -1100,22 +1048,89 @@ class Stage(QObject):
             (self._geo.width(), self._geo.height()) if self.menu.is_open() else None,
         )
         if parts != self._input_parts:
-            self._input_parts = parts
-            rects, (px, py), bubble_t, zs_t, hosted_t, menu = parts
-            if menu is not None:  # like any popup menu: a click anywhere else closes it
-                inputs = ((0, 0, *menu),)
-            else:
-                # The sprite sits on half pixels on a 2x screen: whole pixels round it, outward.
-                dx, dy = math.floor(px), math.floor(py)
-                ex, ey = (1 if px != dx else 0), (1 if py != dy else 0)
-                inputs = tuple((x + dx, y + dy, w + ex, h + ey) for x, y, w, h in rects) + tuple(r for r in (bubble_t, zs_t) if r) + hosted_t
-            self._inputs = inputs
-            self.surface.set_input(inputs)
+            self._take_input(parts)
         if head != self._head:
             self._head = head
             self.head_moved.emit()
         self.next_tick_in = self._next_tick(now, zs)
         self._schedule(self.next_tick_in)
+
+    def _place_bubble(self, head: QPoint, origin: QPoint, k: float) -> QRectF:
+        """Where the bubble goes this frame: above the head, inside the stage, clear of what it must stay off."""
+        size = self.bubble.size
+        x = min(max(head.x() - size.width() / 2, 4), self._geo.width() - size.width() - 4)
+        top = head.y()
+        if self._clear_of is not None and self._clear_of.isVisible():
+            top = min(top, self._clear_of.geometry().top() - origin.y())
+        y = max(top - size.height(), 4)
+        # On whole device pixels: off them, every pixmap of an animated bubble is resampled each frame,
+        # which is slow and blurs it by half a pixel.
+        x, y = round(x * k) / k, math.floor(y * k) / k  # down, never up: it stays clear of what is below it
+        return QRectF(x, y, size.width(), size.height())
+
+    def _damage(self, key: tuple, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: list, pulse: int, origin: QPoint) -> None:
+        """Draw again only the parts whose look (their part of `key`) changed since the last frame drawn."""
+        old = self._key or (None, None, None, None, None)
+        dirty = QRegion()
+        if key[0] != old[0]:
+            dirty = QRegion(self._penguin.toAlignedRect().adjusted(-2, -2, 2, 2)).united(QRegion(penguin.toAlignedRect().adjusted(-2, -2, 2, 2)))
+            dirty = dirty.united(QRegion(self._z_rect(self._penguin))).united(QRegion(zs))
+        if key[1] != old[1]:
+            dirty = dirty.united(QRegion(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
+            dirty = dirty.united(QRegion(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
+        if key[2] != old[2]:
+            for r in self._menu_rects + menu_rects:
+                dirty = dirty.united(QRegion(r.adjusted(-2, -2, 2, 2)))
+        if key[3] != old[3] and self.hosted is not None and self.hosted.visible():  # its bubble moved on a frame
+            dirty = dirty.united(self.hosted.ring().translated(-origin))
+        if key[4] != old[4]:
+            for _state, r, _figure in self._badges + badges:
+                dirty = dirty.united(QRegion(r.toAlignedRect().adjusted(-PULSE_REACH - 2, -PULSE_REACH - 2, PULSE_REACH + 2, PULSE_REACH + 2)))
+            self._badges, self._pulse = badges, pulse
+        self._menu_rects = menu_rects
+        self._key = key
+        self._penguin, self._bubble_box = penguin, bubble_box
+        self.surface.damage(dirty)
+
+    def _follow_hosted(self, hosted: Hosted, origin: QPoint) -> tuple:
+        """Keep the keyboard, the primary selection and the input method up with the hosted scene, and say where on
+        the stage it takes clicks. Looked at each tick (and the hosted scene wakes the clock when it changes), so
+        however it opens or closes, the keyboard and input region follow."""
+        hosted_rects: tuple = ()
+        shown = hosted.visible()
+        if shown != hosted.was_visible:
+            hosted.was_visible = shown
+            self.hosted_shown(hosted, shown, shown and getattr(hosted.widget, "wants_keyboard", True))
+        if shown:
+            hosted_rects = tuple((r.x() - origin.x(), r.y() - origin.y(), r.width(), r.height()) for r in hosted.input_rects())
+        # Selected text is the primary selection, as in any Linux app.
+        selected = hosted.selected_text() if shown else ""
+        if selected and selected != self._primary:
+            self.clipboard_copy(selected, "primary")
+        self._primary = selected
+        # The focused field's text and cursor, for an input method, when they change.
+        state = hosted.text_state()
+        if state != self._text_state:
+            self._text_state = state
+            set_text_input = getattr(self.surface, "set_text_input", None)
+            if set_text_input is not None:
+                set_text_input(state)
+        return hosted_rects
+
+    def _take_input(self, parts: tuple) -> None:
+        """Take clicks where `parts` (plain numbers) says: the whole stage while the menu is open, as any popup menu
+        does (a click anywhere else closes it), else the sprite, the bubble, the z's and the hosted scene."""
+        self._input_parts = parts
+        rects, (px, py), bubble_t, zs_t, hosted_t, menu = parts
+        if menu is not None:
+            inputs = ((0, 0, *menu),)
+        else:
+            # The sprite sits on half pixels on a 2x screen: whole pixels round it, outward.
+            dx, dy = math.floor(px), math.floor(py)
+            ex, ey = (1 if px != dx else 0), (1 if py != dy else 0)
+            inputs = tuple((x + dx, y + dy, w + ex, h + ey) for x, y, w, h in rects) + tuple(r for r in (bubble_t, zs_t) if r) + hosted_t
+        self._inputs = inputs
+        self.surface.set_input(inputs)
 
     def _device_scale(self) -> float:
         scale = getattr(self.surface, "device_scale", None)

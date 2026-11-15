@@ -93,7 +93,7 @@ def install_kind() -> str:
         for kind, query in PACKAGE_QUERIES:
             if os.path.exists(query[0]):
                 try:
-                    if subprocess.run(query, capture_output=True, timeout=10).returncode == 0:
+                    if subprocess.run(query, capture_output=True, timeout=10).returncode == 0:  # noqa: S603 - a fixed package-manager query
                         return kind
                 except (OSError, subprocess.SubprocessError):
                     pass

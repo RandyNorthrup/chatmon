@@ -965,15 +965,7 @@ class LayerSurface(QObject):
 
     def _keyboard_event(self, opcode: int, args: bytes) -> None:
         if opcode == EV_KEYBOARD_KEYMAP:
-            fmt, size = decode("uhu", args)
-            fd = self.conn.take_fd()
-            try:
-                if fmt == KEYMAP_XKB_V1:
-                    with mmap.mmap(fd, size, mmap.MAP_PRIVATE, mmap.PROT_READ) as m:
-                        text = m[:size].rstrip(b"\0").decode("utf-8", errors="replace")
-                    self._set_keymap(text)
-            finally:
-                os.close(fd)
+            self._keymap_event(args)
         elif opcode == EV_KEYBOARD_ENTER:
             serial, surface = decode("uo", args[:8])
             _debug(f"keyboard enter (ours: {surface == self._surface})")
@@ -996,20 +988,36 @@ class LayerSurface(QObject):
         elif opcode == EV_KEYBOARD_REPEAT_INFO:
             self._repeat_rate, self._repeat_delay = decode("ii", args)
         elif opcode == EV_KEYBOARD_KEY and self._kb_focus and self._keyboard is not None:
-            serial, _time, code, state = decode("uuuu", args)
-            self._input_serial = serial
-            if state == 1:
-                key = self._keyboard.press(code)
+            self._key_event(self._keyboard, args)
+
+    def _keymap_event(self, args: bytes) -> None:
+        """The compositor's keymap, in a file it hands over: read it, and type with it from now on."""
+        fmt, size = decode("uhu", args)
+        fd = self.conn.take_fd()
+        try:
+            if fmt == KEYMAP_XKB_V1:
+                with mmap.mmap(fd, size, mmap.MAP_PRIVATE, mmap.PROT_READ) as m:
+                    text = m[:size].rstrip(b"\0").decode("utf-8", errors="replace")
+                self._set_keymap(text)
+        finally:
+            os.close(fd)
+
+    def _key_event(self, keyboard: xkb.Keyboard, args: bytes) -> None:
+        """A key pressed or let go while the overlay has the keyboard: to the stage, repeating while it's held."""
+        serial, _time, code, state = decode("uuuu", args)
+        self._input_serial = serial
+        if state == 1:
+            key = keyboard.press(code)
+            self._stop_repeat()
+            if key is not None:
+                self.stage.key(key, True, False)
+                if self._repeat_rate > 0 and keyboard.repeats(code):
+                    self._repeat_key = (code, key)
+                    self._repeat_timer.start(max(1, self._repeat_delay))
+        else:
+            if self._repeat_key is not None and self._repeat_key[0] == code:
                 self._stop_repeat()
-                if key is not None:
-                    self.stage.key(key, True, False)
-                    if self._repeat_rate > 0 and self._keyboard.repeats(code):
-                        self._repeat_key = (code, key)
-                        self._repeat_timer.start(max(1, self._repeat_delay))
-            else:
-                if self._repeat_key is not None and self._repeat_key[0] == code:
-                    self._stop_repeat()
-                self.stage.key(self._keyboard.release(code), False, False)
+            self.stage.key(keyboard.release(code), False, False)
 
     def _set_keymap(self, text: str) -> None:
         if self._xkb_lib is None:

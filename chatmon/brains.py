@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import ipaddress
 import json
+import logging
 import os
 import re
 import shutil
@@ -38,6 +39,8 @@ from . import attachments, paths
 from .attachments import IMAGE, PDF, Attachment
 from .events import INTERNAL_ENV
 from .i18n import N_, _
+
+logger = logging.getLogger(__name__)
 
 # Model ids current as of 10 November 2026 (checked on each provider's own pages); the menu offers the
 # `models` listed, and any can be set in the settings.
@@ -769,7 +772,7 @@ class _NoRedirects(urllib.request.HTTPRedirectHandler):
 
 def _get_json(url: str, brain: Brain, timeout: float = 2.0):
     check_url(url)
-    request = urllib.request.Request(url, headers={"authorization": f"Bearer {brain.key()}"} if brain.key() else {})
+    request = urllib.request.Request(url, headers={"authorization": f"Bearer {brain.key()}"} if brain.key() else {})  # noqa: S310 - check_url allows https, or http here
     with urllib.request.build_opener(_NoRedirects).open(request, timeout=timeout) as reply:
         if reply.status != 200:
             raise ValueError(f"HTTP {reply.status}")
@@ -930,7 +933,7 @@ def openai_request(brain: Brain, system: str, history, question: str, attached=(
     headers = {"content-type": "application/json"}
     if brain.key():
         headers["authorization"] = f"Bearer {brain.key()}"
-    body = {"model": brain.model, "messages": [{"role": "system", "content": system}] + _with_attachments(_messages(history, question), attached, _chat_part)}
+    body = {"model": brain.model, "messages": [{"role": "system", "content": system}, *_with_attachments(_messages(history, question), attached, _chat_part)]}
     if brain.effort and brain.effort_levels():
         _set(body, brain.effort_field or "reasoning_effort", brain.effort)
     return _custom(brain, headers, _thinking_fields(brain, body))
@@ -1001,9 +1004,9 @@ def parse_responses(data: dict) -> str:
         parts = []
         for item in data.get("output") or []:
             if isinstance(item, dict) and item.get("type") == "message":
-                for part in item.get("content") or []:
-                    if isinstance(part, dict) and part.get("type") in ("output_text", "text"):
-                        parts.append(part.get("text", ""))
+                parts.extend(
+                    part.get("text", "") for part in item.get("content") or [] if isinstance(part, dict) and part.get("type") in ("output_text", "text")
+                )
         text = "".join(parts)
     text = text.strip()
     if not text:
@@ -1865,6 +1868,7 @@ class Finder(QObject):
                     if not unsure():
                         break
             except Exception:  # reported as what was known: finding never breaks asking
+                logger.debug("looking for a brain failed; using what was known", exc_info=True)
                 found = quick
             self._looked.emit(then, found)
 

@@ -18,8 +18,8 @@ from __future__ import annotations
 
 import ctypes
 import uuid
+from collections.abc import Callable
 from ctypes import wintypes
-from typing import Callable
 
 from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, QTimer
 from PyQt6.QtGui import QWindow

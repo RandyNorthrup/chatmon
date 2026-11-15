@@ -226,7 +226,7 @@ class CommandPlayer:
     def play(self, path: Path, volume: float) -> bool:
         self._running = [p for p in self._running if p.poll() is None]
         try:
-            self._running.append(subprocess.Popen(player_command(self.name, path, volume), stdin=subprocess.DEVNULL,
+            self._running.append(subprocess.Popen(player_command(self.name, path, volume), stdin=subprocess.DEVNULL,  # noqa: S603 - a known player and a sound file of ours
                                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True))
         except OSError:
             return False

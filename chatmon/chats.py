@@ -64,7 +64,7 @@ class Chat:
         """The chat as a Markdown document, to keep or share."""
         from datetime import datetime
 
-        lines = [f"# {self.title or _('A chat with Chatmon')}", "", f"*{localefmt.date_and_time(datetime.fromtimestamp(self.created))}*", ""]
+        lines = [f"# {self.title or _('A chat with Chatmon')}", "", f"*{localefmt.date_and_time(datetime.fromtimestamp(self.created))}*", ""]  # noqa: DTZ006 - your local time, as you saw it
         for m in self.messages:
             if m.role == "user":
                 lines += [_("**You:** {text}").format(text=m.text) if m.text else _("**You:**"), ""]
@@ -326,7 +326,7 @@ def when(t: float, now: float | None = None) -> str:
     if now - t < 3600:
         minutes = int((now - t) // 60)
         return ngettext("{n} min ago", "{n} min ago", minutes).format(n=minutes)
-    d, n = datetime.fromtimestamp(t), datetime.fromtimestamp(now)
+    d, n = datetime.fromtimestamp(t), datetime.fromtimestamp(now)  # noqa: DTZ006 - "today" is your local day
     if d.date() == n.date():
         return _("today {time}").format(time=localefmt.time_of_day(d))
     if d.date() == n.date() - timedelta(days=1):

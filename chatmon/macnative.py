@@ -22,7 +22,8 @@ import ctypes
 import ctypes.util
 import os
 import re
-from typing import Callable, NamedTuple
+from collections.abc import Callable
+from typing import NamedTuple
 
 from PyQt6.QtCore import QObject, pyqtSignal
 

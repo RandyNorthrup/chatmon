@@ -117,7 +117,42 @@ line-length = 170
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["F", "E9", "B"]
+# Not `ruff format`: the code keeps its own layout. C90 is McCabe complexity, held at 15 below.
+select = ["F", "E9", "B", "UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+# ×, ÷, π and typographic quotes and apostrophes are written on purpose, in strings, docstrings and comments alike.
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "S101",  # assert is how pytest checks
+    "S603", "S607",  # the tests run fixed commands (python, git, dbus, the platform's own tools), never input
+    "S108",  # literal /tmp paths: short socket folders made with mkdtemp, and paths that are only compared
+    "S311",  # random shuffles and jitters the tests' own data; nothing secret comes from it
+    "S314",  # the XML parsed is the Wayland protocol files and toasts Chatmon itself wrote
+    "DTZ001", "DTZ005", "DTZ006",  # reminders and times are the computer's local wall time, as in chatmon/
+]
+# Recorded scripts of finished milestones: their ledgers bind each file by SHA-256, so they stay as they ran.
+"docs/delivery/reports/m2/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/m3/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/m4b/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/m6a/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/m7/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+# Until M6B phase B: M8 is translating these files' strings meanwhile, and phase B fixes their findings after it merges.
+"chatmon/app.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"chatmon/settingswin.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"chatmon/cli.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"chatmon/menus.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"chatmon/messages.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"chatmon/asking.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"chatmon/commands.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"chatmon/settings.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"tests/app_harness.py" = ["UP", "C4", "PIE", "PERF", "RUF", "BLE", "C90"]
+"tests/test_app_smoke.py" = ["UP", "C4", "PIE", "PERF", "RUF", "BLE", "C90"]
+"tests/test_app_reminders.py" = ["UP", "C4", "PIE", "PERF", "RUF", "BLE", "C90"]
+"tests/test_i18n.py" = ["UP", "C4", "PIE", "PERF", "RUF", "BLE", "C90"]
 
 [tool.mypy]
 python_version = "3.11"

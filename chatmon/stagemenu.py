@@ -358,19 +358,8 @@ class StageMenu:
                 del self.panels[-1:]  # back to the menu it came from
             else:
                 self.close()
-        elif key in (Qt.Key.Key_Down, Qt.Key.Key_Up, Qt.Key.Key_Tab, Qt.Key.Key_Backtab):
-            self._step(panel, -1 if key in (Qt.Key.Key_Up, Qt.Key.Key_Backtab) else 1)
-            self._close_beyond(pi)
-        elif key in (Qt.Key.Key_Home, Qt.Key.Key_End):
-            pickable = self._pickable(panel)
-            if pickable:
-                self._activate(panel, pickable[0 if key == Qt.Key.Key_Home else -1])
-                self._close_beyond(pi)
-        elif key in (Qt.Key.Key_PageUp, Qt.Key.Key_PageDown):
-            rows = max(1, panel.view().height() // self._row_height() - 1)
-            for _ in range(rows):
-                self._step(panel, -1 if key == Qt.Key.Key_PageUp else 1, wrap=False)
-            self._close_beyond(pi)
+        elif key in self._MOVES:
+            self._move(pi, panel, key)
         elif key == Qt.Key.Key_Right:
             if panel.active is not None and self._has_submenu(pi, panel.active):
                 self._enter(pi, panel.active)
@@ -383,6 +372,26 @@ class StageMenu:
         else:
             self._letter(pi, event.text())
         return True
+
+    _MOVES = (
+        Qt.Key.Key_Down, Qt.Key.Key_Up, Qt.Key.Key_Tab, Qt.Key.Key_Backtab,
+        Qt.Key.Key_Home, Qt.Key.Key_End, Qt.Key.Key_PageUp, Qt.Key.Key_PageDown,
+    )
+
+    def _move(self, pi: int, panel: _Panel, key: int) -> None:
+        """One of the keys in _MOVES: light another item of panel pi, and close a submenu it moved off."""
+        if key in (Qt.Key.Key_Down, Qt.Key.Key_Up, Qt.Key.Key_Tab, Qt.Key.Key_Backtab):
+            self._step(panel, -1 if key in (Qt.Key.Key_Up, Qt.Key.Key_Backtab) else 1)
+        elif key in (Qt.Key.Key_Home, Qt.Key.Key_End):
+            pickable = self._pickable(panel)
+            if not pickable:
+                return
+            self._activate(panel, pickable[0 if key == Qt.Key.Key_Home else -1])
+        else:
+            rows = max(1, panel.view().height() // self._row_height() - 1)
+            for _ in range(rows):
+                self._step(panel, -1 if key == Qt.Key.Key_PageUp else 1, wrap=False)
+        self._close_beyond(pi)
 
     def _pickable(self, panel: _Panel) -> list[int]:
         return [i for i, item in enumerate(panel.items) if item.pickable()]

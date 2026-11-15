@@ -9,16 +9,19 @@ take on any thread: nothing in them belongs to the screen's.
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import shutil
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Callable
 
 from .i18n import _, ngettext
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -47,8 +50,8 @@ def read_battery() -> tuple[float, bool] | None:
         battery = psutil.sensors_battery()
         if battery is not None:
             return float(battery.percent), bool(battery.power_plugged)
-    except Exception:
-        pass
+    except Exception:  # psutil is optional, and may fail any way on an odd battery: then there's no reading
+        logger.debug("psutil couldn't read the battery", exc_info=True)
     return None
 
 
@@ -160,7 +163,7 @@ def count_dnf(output: str, code: int) -> int | None:
         return None
     lines = []
     for line in output.splitlines():
-        if line.startswith(("Obsoleting", "Security:", "Last metadata")) or line.startswith(" "):
+        if line.startswith(("Obsoleting", "Security:", "Last metadata", " ")):
             continue
         if re.match(r"^\S+\.\S+\s+\S+\s+\S+\s*$", line):
             lines.append(line)

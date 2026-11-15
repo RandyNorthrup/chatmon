@@ -87,7 +87,7 @@ class Collection(QDBusAbstractAdaptor):
     def CreateItem(self, message):
         properties, secret, replace = message.arguments()
         attributes = properties.get("org.freedesktop.Secret.Item.Attributes")
-        session, parameters, value, kind = secret
+        session, _parameters, value, kind = secret
         log(message, attributes=attributes, label=properties.get("org.freedesktop.Secret.Item.Label"), session_open=session in sessions,
             content_type=kind, replace=replace)
         if LOCKED:

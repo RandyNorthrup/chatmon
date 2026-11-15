@@ -34,7 +34,7 @@ def test_read_aloud_notifications_are_transient_and_alerts_urgent(qapp):
     assert urgent["urgency"].typeName() == "uchar" and urgent["urgency"].value() in (2, b"\x02")  # a byte, as the spec has it
     assert "transient" not in urgent and urgent["desktop-entry"] == sysnotify.APP_ID
     message = sysnotify.message("Reminder", "Stretch.", replaces=7, actions=sysnotify.actions_for(["Snooze 10 min", "Done"]), transient=True)
-    name, replaces, icon, title, body, actions, sent_hints, timeout = message.arguments()
+    name, replaces, _icon, title, body, actions, sent_hints, timeout = message.arguments()
     assert (name, replaces, title, body, timeout) == ("Chatmon", 7, "Reminder", "Stretch.", -1)
     assert actions == ["0", "Snooze 10 min", "1", "Done"] and sent_hints["transient"] is True
 
@@ -376,7 +376,7 @@ def test_asking_about_do_not_disturb_never_starts_a_service(tmp_path):
     check = f'echo "started before: $(test -e {started} && echo yes || echo no)"'
     ordinary = ("dbus-send --session --print-reply --dest=org.erikreider.swaync.cc /org/erikreider/swaync/cc "
                 "org.erikreider.swaync.cc.GetDnd >/dev/null 2>&1; sleep 0.5")
-    out, log = _on_a_private_bus(tmp_path, ["--name", "SwayNotificationCenter", "--dnd", "on", "--not-own"], DND_CLIENT, config,
+    out, _log = _on_a_private_bus(tmp_path, ["--name", "SwayNotificationCenter", "--dnd", "on", "--not-own"], DND_CLIENT, config,
                                  after=f'{check}; {ordinary}; echo "started after: $(test -e {started} && echo yes || echo no)"')
     assert "quiet None" in out and "started before: no" in out, out  # not known, and not started
     assert "started after: yes" in out, out  # the service file works: an ordinary call starts it

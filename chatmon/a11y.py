@@ -23,8 +23,8 @@ from __future__ import annotations
 import ctypes
 import re
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 from PyQt6.QtCore import QObject, QProcess, Qt
 
@@ -238,7 +238,7 @@ class VoiceOver(QObject):
         elif _speech_fallback:
             self._speak(text)
         else:
-            self.held = (self.held + [(text, important)])[-self.HELD:]
+            self.held = [*self.held, (text, important)][-self.HELD:]
 
     def state_changed(self, state) -> None:
         if state == Qt.ApplicationState.ApplicationActive and self.held:
