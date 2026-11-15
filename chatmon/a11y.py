@@ -9,6 +9,9 @@ notifications; Orca reads GNOME's). `announce()` picks.
 - Linux, Orca 49 or later: its remote controller on the session bus, PresentMessage(s), which speaks (and
   brailles) whatever is in front. Named org.gnome.Orca.Service in 49 and 50, org.gnome.Orca1.Service from 51.
   https://gitlab.gnome.org/GNOME/orca/-/blob/main/docs/remote-controller.md
+  Another screen reader (an older Orca, Odilia, Fenrir) is found by AT-SPI's ScreenReaderEnabled where at-spi2-core
+  still keeps it (before 2.62), GNOME's screen-reader-enabled setting, or its own process, and the notification
+  says it (linuxsession.ScreenReaders, which hears each without waiting).
 - macOS, VoiceOver: NSAccessibilityAnnouncementRequestedNotification, posted on the app. VoiceOver speaks it for
   the app in front (with the chat open, Chatmon is); from the background it may stay silent. So while Chatmon
   isn't in front, announcements wait (the last few) and are said when you come to it; or, if you chose it
@@ -33,7 +36,6 @@ from .i18n import _, either
 
 logger = logging.getLogger(__name__)
 
-ORCA = (("org.gnome.Orca1.Service", "/org/gnome/Orca1/Service"), ("org.gnome.Orca.Service", "/org/gnome/Orca/Service"))
 SPI_GETSCREENREADER = 0x0046  # set by NVDA, JAWS and others; Narrator doesn't set it
 PRIORITY_MEDIUM, PRIORITY_HIGH = 50, 90  # NSAccessibilityPriorityLevel
 
@@ -45,7 +47,8 @@ class Reader:
 
 
 def reader() -> Reader | None:
-    """The screen reader running now, if there is one."""
+    """The screen reader running now, if there is one. On Linux, as last heard (nothing is asked and waited for):
+    a Desk, made at the app's start, starts listening; the first reading otherwise starts it, and says None."""
     try:
         if sys.platform == "win32":
             return _windows()
@@ -118,28 +121,24 @@ def plain(text: str) -> str:
 
 
 def _linux() -> Reader | None:
-    from PyQt6.QtDBus import QDBus, QDBusConnection, QDBusMessage
+    from PyQt6.QtDBus import QDBusConnection
 
+    from . import linuxsession
+
+    readers = linuxsession.screen_readers()
+    readers.rescan()  # its process, looked for again: a read of /proc
+    found = readers.found()
+    if found is None:
+        return None
+    name, orca = found
+    if orca is None:
+        return Reader(name)  # no way of its own to speak through: the notification says it
     bus: QDBusConnection = QDBusConnection.sessionBus()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
-    if not bus.isConnected():
-        return None
-    interface = bus.interface()
-    if interface is None:  # a connected bus always has one
-        return None
-    for service, path in ORCA:
-        if interface.isServiceRegistered(service).value():
-            def speak(text: str, important: bool, s: str = service, p: str = path) -> None:
-                _orca(bus, s, p, text)
 
-            return Reader("Orca", speak)
-    # An older Orca, or another screen reader: at-spi says one's on (where it still keeps ScreenReaderEnabled).
-    message: QDBusMessage = QDBusMessage.createMethodCall("org.a11y.Bus", "/org/a11y/bus", "org.freedesktop.DBus.Properties", "Get")
-    message.setArguments(["org.a11y.Status", "ScreenReaderEnabled"])
-    reply = bus.call(message, QDBus.CallMode.Block, 500)
-    value: object = reply.arguments()[0] if reply.type() == QDBusMessage.MessageType.ReplyMessage and reply.arguments() else None
-    while hasattr(value, "variant"):
-        value = value.variant()
-    return Reader("a screen reader") if value is True else None
+    def speak(text: str, important: bool, service: str = orca[0], path: str = orca[1]) -> None:
+        _orca(bus, service, path, text)
+
+    return Reader(name, speak)
 
 
 def _orca(bus, service: str, path: str, text: str) -> None:

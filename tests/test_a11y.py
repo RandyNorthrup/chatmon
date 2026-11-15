@@ -33,12 +33,15 @@ import sys
 sys.path.insert(0, sys.argv[1])
 from PyQt6.QtCore import QCoreApplication, QTimer
 app = QCoreApplication([])
-from chatmon import a11y
-reader = a11y.reader()
-print(reader.name if reader else "none", flush=True)
-if reader and reader.speak:
-    reader.speak("Reminder. Stretch.", True)
-QTimer.singleShot(500, app.quit)
+from chatmon import a11y, linuxsession
+linuxsession.screen_readers()  # starts listening, as the app's Desk does at its start; heard a moment later
+def look():
+    reader = a11y.reader()
+    print(reader.name if reader else "none", flush=True)
+    if reader and reader.speak:
+        reader.speak("Reminder. Stretch.", True)
+    QTimer.singleShot(500, app.quit)
+QTimer.singleShot(500, look)
 app.exec()
 """
 
