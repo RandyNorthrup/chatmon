@@ -15,9 +15,14 @@ The Windows and macOS builds carry their own Python and Qt; the Linux ones depen
 
 [`.github/workflows/packages.yml`](../.github/workflows/packages.yml) builds every one on a fresh machine of
 its kind, installs it there, starts Chatmon without a screen (Qt's offscreen platform), talks to it,
-quits it, and uninstalls it. When a release is published, it adds them all to the release, with the
-wheel and sdist; the release's tag has to match `chatmon/__init__.py`'s version. A pull request that
-touches `packaging/`, or running the workflow by hand, builds and checks them without publishing.
+quits it, and uninstalls it. **Pushing a `v*` tag releases**: the tag has to match `chatmon/__init__.py`'s
+version, and the workflow builds, signs and checksums everything, attests every file (`gh attestation
+verify <file> --repo RandyNorthrup/chatmon`), creates a draft release with the changelog's notes and every
+file, checks the draft holds exactly those files, and only then publishes it. A rerun finishes a draft and
+never touches a published release. A pull request that touches `packaging/`, or running the workflow by hand,
+builds and checks them without publishing. Every build tool comes from a hash-locked list
+(`packaging/requirements*.txt`, made from the `.in` files beside them; see CONTRIBUTING.md), and every build
+sets `SOURCE_DATE_EPOCH`.
 
 ## Signing (Windows)
 
@@ -38,10 +43,17 @@ uninstalls it, and checks every signature, before it's published.
 
 **Updates.** Every release has `SHA256SUMS.txt`, signed (`SHA256SUMS.txt.sig`, Ed25519) by the
 workflow's `checksums` job with Chatmon's release key, a secret of the `release` environment. Chatmon's
-updater installs nothing whose checksum isn't in a list that key signed; `chatmon/updates.py` holds its
-public half (`RELEASE_KEYS`), and the job refuses to sign with any other. To change keys, add the new
-public key there, release with the old key, then swap the secret. On Linux, `pkexec` runs the packages'
-own `/usr/lib/chatmon/install-update`, which installs only a root-owned copy matching the checksum.
+updater installs nothing whose checksum isn't in a list that key signed, and nothing older than itself;
+`chatmon/releasecheck.py` holds its public half (`RELEASE_KEYS`), and the job refuses to sign with any other.
+To change keys, add the new public key there, release with the old key, then swap the secret. Root's side
+makes the same check itself, from code only root can change: on Linux, `pkexec` runs the packages' own
+`/usr/lib/chatmon/install-update FILE SUMS SIG`, which copies all three into a root-only folder and runs
+`/usr/lib/chatmon/verify-update` (standard-library Python, with `python3 -I -S`, refusing anything not root's
+alone) before it installs a newer Chatmon; on macOS, root copies Chatmon.app into a root-only folder, refuses
+unless every file of the copy is root's and writable by nobody else, and runs that copy's `verify-update`.
+`packaging/linux/test-install-update.sh` puts the Linux side through its refusals with a throwaway key, in CI's
+containers. On Windows, the installer must be signed by Randy Northrup's certificate (revocation checked) and
+runs from a locked copy in a folder of its own.
 
 **Why Nuitka.** A signature covers a whole program except its certificate table, which Windows leaves out
 of what it checks ([CVE-2013-3900](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900);
@@ -62,7 +74,7 @@ slipped in beside what it covers.
 On the platform you're building for, from the repository's root:
 
 ```sh
-python -m pip install -r packaging/requirements.txt   # Windows and macOS
+python -m pip install --require-hashes -r packaging/requirements.txt   # Windows and macOS
 python packaging/build.py windows   # Visual Studio's C++ build tools, and Inno Setup 6 (winget install JRSoftware.InnoSetup)
 python packaging/build.py macos     # Xcode's command line tools
 python packaging/build.py linux     # nfpm: packaging/linux/get-nfpm.sh downloads and checks it
