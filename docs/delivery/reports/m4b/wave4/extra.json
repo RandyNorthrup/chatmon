@@ -113,5 +113,8 @@
   }
  ],
  "pending": [],
- "next_action": "Four red drills remain, each needing a place to run, not new code. AC-00C, AC-01D and AC-02F need macOS (Randy on a Mac, or the coordinator through a CI run of a drill branch). AC-03E needs a Windows desktop with notifications on (see W4-RED-AC-03E-deferred). Then T-IMPORTS-POSIX, T-HOTKEY-MAC, T-SOUND-MAC and T-TOAST-SHOWN can be verified and M4B closed. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree."
+ "next_action": "Four red drills remain, each needing a place to run, not new code. AC-00C, AC-01D and AC-02F need macOS (Randy on a Mac, or the coordinator through a CI run of a drill branch). AC-03E needs a Windows desktop with notifications on (see W4-RED-AC-03E-deferred). Then T-IMPORTS-POSIX, T-HOTKEY-MAC, T-SOUND-MAC and T-TOAST-SHOWN can be verified and M4B closed. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree.",
+ "drill_skip": {
+  "D-00A-lazy-library": "It went green, red and green again (wave4/drills.log), but it mutates chatmon/libdbus.py, which is T-PORTAL's, not in T-IMPORTS's files or dependencies, so a receipt for AC-00A can't bind it (its earlier receipt was never a passing one). AC-00A's other drills cover it."
+ }
 }

@@ -22,7 +22,10 @@ passed, 148 skipped). Then the plan's 36 Windows drills and its 6 Linux drills (
 red and green again. Two of the Linux drills' texts have gone. L-01F-no-portal's criterion has other drills. AC-02E got
 W4-L-02E-linux-player, on the `servers = {...}` line that replaced the old one, which also went green, red and green. The
 requirements were reviewed again against the amended rules ([wave4/readiness.md](reports/m4b/wave4/readiness.md)).
-T-SOUND-LINUX, T-HOTKEY-X11 and T-PORTAL are now verified.
+T-SOUND-LINUX, T-HOTKEY-X11 and T-PORTAL are now verified. One Windows drill, D-00A-lazy-library, went green, red and
+green but isn't bound. It mutates `chatmon/libdbus.py`, which belongs to T-PORTAL rather than to T-IMPORTS, the task
+that owns AC-00A, so its receipt can't bind that file. Its earlier receipt was never a passing one either. AC-00A's
+other drills cover it.
 
 **What remains: four red drills that need a place to run.**
 
