@@ -35,7 +35,7 @@ TAIL = 12
 # (id, which stubs, file, (find, replace), the diagnostic mypy must print)
 DRILLS = [
     ("signal-from-qtcore", "6.12.1", "chatmon/hotkey.py",
-     ("from .qtsignal import pyqtSignal\n", "from PyQt6.QtCore import pyqtSignal\n"),
+     ("from .qtsignal import pyqtSignal", "from PyQt6.QtCore import pyqtSignal"),
      'Missing named argument "arguments" for "pyqtSignal"'),
     ("parent-unignored", "6.12.1", "chatmon/updates.py",
      ("        super().__init__(parent)  # type: ignore[arg-type]", "        super().__init__(parent)  # noqa: drill"),
@@ -44,10 +44,10 @@ DRILLS = [
      ("bus: QDBusConnection = QDBusConnection.sessionBus()", "bus = QDBusConnection.sessionBus()"),
      'Need type annotation for "bus"'),
     ("null-image-unchecked", "6.12.1", "chatmon/sprites.py",
-     ("    if bits is None:  # a null image: no rows\n        return []\n", ""),
+     ("    if bits is None:  # a null image: no rows", "    if False:  # a null image: no rows"),
      'Item "None" of "voidptr | None" has no attribute "asstring"'),
     ("alias-mistyped", "6.11", "chatmon/qtsignal.py",
-     ("= QtCore.pyqtSignal\n", "= QtCore.pyqtSlot\n"),
+     ("= QtCore.pyqtSignal", "= QtCore.pyqtSlot"),
      "Incompatible types in assignment"),
 ]
 
@@ -63,7 +63,9 @@ def run(cmd: list[str], cwd: Path) -> tuple[int, str]:
 
 
 def tail(out: str) -> str:
-    return "\n".join(out.rstrip().splitlines()[-TAIL:])
+    """mypy's errors and its summary line, without the notes it prints about untyped functions' bodies."""
+    lines = [line for line in out.rstrip().splitlines() if ": note: " not in line]
+    return "\n".join(lines[-TAIL:])
 
 
 def drill(ident: str, stubs: str, rel: str, change: tuple[str, str], expected: str, python: dict[str, str], copy: Path, log: list[str]) -> dict:

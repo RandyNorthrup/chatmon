@@ -20,3 +20,23 @@ PyQt6 6.12.1 Qt runtime 6.12.0
 mypy 2.4.1 (compiled: yes)
 $ git rev-parse HEAD
 fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+
+=== observed again on resuming, 2026-11-15
+$ python verify-delivery.py --observe-context
+{
+  "platform": "windows",
+  "tools": {
+    "python": "3.14.10"
+  }
+}
+$ python -m pytest --version
+pytest 9.2.0
+PyQt6 6.11.0 Qt runtime 6.11.2
+ruff 0.17.4
+mypy 2.4.1 (compiled: yes)
+uv 0.12.7 (61291a8ca 2026-08-27 x86_64-pc-windows-msvc)
+$ %TEMP%\m10-qt6121\Scripts\python.exe
+PyQt6 6.12.1 Qt runtime 6.12.0
+mypy 2.4.1 (compiled: yes)
+$ git rev-parse HEAD
+098c32b29e12868f2c50d914b21918eea691e8e1

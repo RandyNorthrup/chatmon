@@ -123,14 +123,13 @@ RUNS = [
      "mypy for linux, win32 and darwin on the final tree with the shared venv's PyQt6 6.11.0 stubs (CI's lock) and pyproject.toml's settings, "
      "no module exempted: no issues in 70 files on each.",
      [PY, f"{REL}/mypy_runs.py", PY, f"{REL}/mypy-611.log"]),
-    ("E-mypy-6121", "behavior", ["M10-03.A1"], "mypy-6121.log",
-     "mypy for linux, win32 and darwin on the final tree with the throwaway venv's PyQt6 6.12.1 stubs: the only errors left are in the "
-     "wayland worker's layer.py and penguin.py (integration note), none in any other module.",
-     [PY, f"{REL}/mypy_runs.py", NEXT, f"{REL}/mypy-6121.log"]),
+    # mypy-6121.log (the tree itself with 6.12.1's stubs) exits 1, its 14 errors all in layer.py and penguin.py: an observation
+    # in the plan's Results, not a receipt. The copy with the integration note's changes is what passes.
     ("E-mypy-6121-copy", "behavior", ["M10-03.A1"], "mypy-6121-wayland-copy.log",
-     "The same mypy runs with PyQt6 6.12.1's stubs on a scratch copy of the final tree with the integration note's changes to layer.py and "
-     "penguin.py applied (wayland-files-qt6121.diff): no issues on any platform; and with 6.11's stubs on that copy, none either.",
-     [PY, f"{REL}/mypy_runs.py", NEXT, f"{REL}/mypy-6121-wayland-copy.log", "--root", "<scratch copy>"]),
+     "mypy for linux, win32 and darwin with the throwaway venv's PyQt6 6.12.1 stubs on a scratch copy of the final chatmon/ and "
+     "pyproject.toml with the integration note's changes to layer.py and penguin.py applied (wayland-files-qt6121.diff): no issues in "
+     "70 files on each; then the shared venv's 6.11 stubs on the same copy: none either.",
+     [PY, f"{REL}/mypy_runs.py", NEXT, f"{REL}/mypy-6121-wayland-copy.log", "--root", "%TEMP%/m10probe/wcopy"]),
     ("E-suite", "behavior", ["M10-01.A1", "M10-02.A1", "M10-02.A2", "M10-03.A2"], "suite-final.log",
      "The whole suite on the final tree in the shared venv (real Qt objects offscreen, every warning an error): it runs the lock tests, the "
      "build's and i18n's new tests, and every test of a module whose signals moved to chatmon/qtsignal.py.",

@@ -1,0 +1,41 @@
+Two throwaway venvs from C:\Python314 (3.14.10), each installed as CI's Windows test legs install: python -m pip install --require-hashes -r <test lock>
+
+=== 1. %TEMP%\m10-ci-test, from this branch's packaging/requirements-test.txt
+$ python -m pip list
+Package          Version
+---------------- --------
+colorama         0.4.6
+comtypes         1.4.17
+coverage         7.17.0
+hypothesis       6.170.14
+iniconfig        2.3.1
+packaging        26.3
+pip              26.2.2
+pluggy           1.7.0
+psutil           7.2.2
+Pygments         2.21.0
+PyQt6            6.11.0
+PyQt6-Qt6        6.11.2
+PyQt6_sip        13.13.0
+pytest           9.2.0
+pytest-timeout   2.4.0
+sortedcontainers 2.4.0
+tzdata           2026.6
+$ python -m pip install --require-hashes -r packaging/requirements-test.txt   (again: everything already there, every hash checked)
+Requirement already satisfied: sortedcontainers==2.4.0 in C:\Users\Randy\AppData\Local\Temp\m10-ci-test\Lib\site-packages (from -r packaging/requirements-test.txt (line 316)) (2.4.0)
+Requirement already satisfied: tzdata==2026.6 in C:\Users\Randy\AppData\Local\Temp\m10-ci-test\Lib\site-packages (from -r packaging/requirements-test.txt (line 320)) (2026.6)
+
+$ python -m pytest -q -p no:cacheprovider -rs tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+.                                                                        [100%]
+1 passed in 6.27s
+pytest exit 0
+
+=== 2. %TEMP%\m10-ci-before, from fb19cb9's packaging/requirements-test.txt (git show fb19cb9:packaging/requirements-test.txt)
+$ python -m pip list | grep -i comtypes
+(no comtypes)
+$ python -m pytest -q -p no:cacheprovider -rs tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+s                                                                        [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_platform_events.py:185: could not import 'comtypes': No module named 'comtypes'
+1 skipped in 0.32s
+pytest exit 0

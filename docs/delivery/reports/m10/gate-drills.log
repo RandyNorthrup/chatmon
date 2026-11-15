@@ -1,0 +1,65 @@
+M10 gate drills, Python 3.14.10
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-m10-gate-6cxe6msg
+PyQt6 6.12.1: C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe: 6.12.1, mypy 2.4.1 (compiled: yes)
+PyQt6 6.11: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe: 6.11.0, mypy 2.4.1 (compiled: yes)
+applied wayland-files-qt6121.diff: exit 0 
+
+=== drill signal-from-qtcore on chatmon/hotkey.py, PyQt6 6.12.1
+command: C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+-- green: exit 0
+Success: no issues found in 70 source files
+-- red: exit 1
+chatmon\hotkey.py:460: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\hotkey.py:461: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\hotkey.py:462: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\hotkey.py:463: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+Found 4 errors in 1 file (checked 70 source files)
+-- restored green: exit 0
+Success: no issues found in 70 source files
+
+=== drill parent-unignored on chatmon/updates.py, PyQt6 6.12.1
+command: C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+-- green: exit 0
+Success: no issues found in 70 source files
+-- red: exit 1
+chatmon\updates.py:366: error: Argument 1 to "__init__" of "QObject" has incompatible type "QObject | None"; expected "Updater"  [arg-type]
+Found 1 error in 1 file (checked 70 source files)
+-- restored green: exit 0
+Success: no issues found in 70 source files
+
+=== drill constructor-untyped on chatmon/a11y.py, PyQt6 6.12.1
+command: C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+-- green: exit 0
+Success: no issues found in 70 source files
+-- red: exit 1
+chatmon\a11y.py:123: error: Need type annotation for "bus"  [var-annotated]
+Found 1 error in 1 file (checked 70 source files)
+-- restored green: exit 0
+Success: no issues found in 70 source files
+
+=== drill null-image-unchecked on chatmon/sprites.py, PyQt6 6.12.1
+command: C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+-- green: exit 0
+Success: no issues found in 70 source files
+-- red: exit 1
+chatmon\sprites.py:74: error: Item "None" of "voidptr | None" has no attribute "asstring"  [union-attr]
+Found 1 error in 1 file (checked 70 source files)
+-- restored green: exit 0
+Success: no issues found in 70 source files
+
+=== drill alias-mistyped on chatmon/qtsignal.py, PyQt6 6.11
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m mypy --platform linux --no-incremental
+-- green: exit 0
+Success: no issues found in 70 source files
+-- red: exit 1
+chatmon\qtsignal.py:15: error: Incompatible types in assignment (expression has type "def pyqtSlot(*types: Any, name: str | None = ..., result: str | None = ...) -> Callable[[FuncT], FuncT]", variable has type "Callable[..., pyqtSignal]")  [assignment]
+Found 1 error in 1 file (checked 70 source files)
+-- restored green: exit 0
+Success: no issues found in 70 source files
+
+=== summary
+PASS signal-from-qtcore
+PASS parent-unignored
+PASS constructor-untyped
+PASS null-image-unchecked
+PASS alias-mistyped

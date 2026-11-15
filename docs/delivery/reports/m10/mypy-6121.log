@@ -1,0 +1,133 @@
+interpreter: C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe
+python 3.14.10 PyQt6 6.12.1 Qt 6.12.0
+mypy 2.4.1 (compiled: yes)
+tree: C:\Users\Randy\Coding\chatmon-wt\followups
+
+$ C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+chatmon\layer.py:246: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\layer.py:246: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\layer.py:249: error: Argument 1 to "__init__" of "QObject" has incompatible type "QObject"; expected "PipeReader"  [arg-type]
+chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\penguin.py:99: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "StageWindow"  [arg-type]
+chatmon\penguin.py:201: error: Argument 1 to "__init__" of "QObject" has incompatible type "Stage"; expected "Hosted"  [arg-type]
+chatmon\penguin.py:351: error: Left operand of "and" is always true  [redundant-expr]
+chatmon\penguin.py:477: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:477: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:478: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:478: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:479: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:479: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:480: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:480: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:481: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:481: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:482: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:482: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:483: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:483: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:484: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:484: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:529: error: Need type annotation for "app"  [var-annotated]
+Found 14 errors in 2 files (checked 70 source files)
+exit 1
+
+$ C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe -m mypy --platform win32 --no-incremental
+chatmon\layer.py:246: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\layer.py:246: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\layer.py:249: error: Argument 1 to "__init__" of "QObject" has incompatible type "QObject"; expected "PipeReader"  [arg-type]
+chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\penguin.py:99: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "StageWindow"  [arg-type]
+chatmon\penguin.py:201: error: Argument 1 to "__init__" of "QObject" has incompatible type "Stage"; expected "Hosted"  [arg-type]
+chatmon\penguin.py:351: error: Left operand of "and" is always true  [redundant-expr]
+chatmon\penguin.py:477: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:477: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:478: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:478: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:479: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:479: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:480: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:480: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:481: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:481: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:482: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:482: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:483: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:483: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:484: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:484: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:529: error: Need type annotation for "app"  [var-annotated]
+Found 14 errors in 2 files (checked 70 source files)
+exit 1
+
+$ C:\Users\Randy\AppData\Local\Temp/m10-qt6121/Scripts/python.exe -m mypy --platform darwin --no-incremental
+chatmon\layer.py:246: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\layer.py:246: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\layer.py:249: error: Argument 1 to "__init__" of "QObject" has incompatible type "QObject"; expected "PipeReader"  [arg-type]
+chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\penguin.py:99: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "StageWindow"  [arg-type]
+chatmon\penguin.py:201: error: Argument 1 to "__init__" of "QObject" has incompatible type "Stage"; expected "Hosted"  [arg-type]
+chatmon\penguin.py:351: error: Left operand of "and" is always true  [redundant-expr]
+chatmon\penguin.py:477: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:477: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:478: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:478: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:479: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:479: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:480: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:480: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:481: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:481: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:482: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:482: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:483: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:483: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:484: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon\penguin.py:484: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon\penguin.py:529: error: Need type annotation for "app"  [var-annotated]
+Found 14 errors in 2 files (checked 70 source files)
+exit 1
