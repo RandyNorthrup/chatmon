@@ -454,8 +454,8 @@
     "requirement": "M6B-03.A5",
     "file": "chatmon/updates.py",
     "mutation": {
-      "find": "                    logger.debug(\"couldn't ask %s whether it installed Chatmon: %s\", query[0], exc)\n",
-      "replace": "                    pass\n"
+      "find": "                    logger.debug(\"couldn't ask %s whether it installed Chatmon: %s\", query[0], exc)\r\n",
+      "replace": "                    pass\r\n"
     },
     "command": [
       "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
@@ -471,12 +471,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8",
+    "before_sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15",
     "baseline_exit": 0,
-    "mutated_sha256": "f0c7090dce6e8aff7e34cd7cb81ef7b9453ec80ae55b6aac2cbf17d4306e8da6",
+    "mutated_sha256": "fe0826c0f7679589cad9418ee0ff7d0439bca89f6610cef2b2524ab49fefe0a4",
     "mutated_exit": 1,
     "observed": "____ test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked ____",
-    "after_sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8",
+    "after_sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15",
     "restored_exit": 0
   },
   {
@@ -625,12 +625,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4",
+    "before_sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b",
     "baseline_exit": 0,
-    "mutated_sha256": "5360c2a5a9bad2b0fa2a921c3186fbe9cd5e99c3e3066ad881e77e5848b0646f",
+    "mutated_sha256": "0234967f0b7016e6c74e7c1343690ed471c69e99a869bce00b25fd271491de8c",
     "mutated_exit": 1,
-    "observed": "E           ResourceWarning: unclosed <socket.socket fd=1000, family=2, type=1, proto=0, laddr=('127.0.0.1', 64269)>",
-    "after_sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4",
+    "observed": "E           ResourceWarning: unclosed <socket.socket fd=820, family=2, type=1, proto=0, laddr=('127.0.0.1', 57721)>",
+    "after_sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b",
     "restored_exit": 0
   }
 ]

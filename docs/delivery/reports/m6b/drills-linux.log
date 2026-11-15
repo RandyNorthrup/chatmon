@@ -1,19 +1,19 @@
 red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/m6b/docs/delivery/reports/m6b/drill-spec-linux.json
 python: /var/tmp/m6b-venv/bin/python
-copy: /tmp/chatmon-drill-7bq80kwz
-copied 304 files
+copy: /tmp/chatmon-drill-_a4pdk3x
+copied 305 files
 
 === drill M6B-01-overlay-key-press-taken-as-release (M6B-01.A2) on chatmon/layer.py
 command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_typing_reaches_the_stage_through_the_keymap
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 4.02s
+1 passed in 1.29s
 -- red: exit 1
 F                                                                        [100%]
 =================================== FAILURES ===================================
 _______________ test_typing_reaches_the_stage_through_the_keymap _______________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x78b89f01ecb0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7d6fccee6d50>
 
     @linux_only
     def test_typing_reaches_the_stage_through_the_keymap(qapp):
@@ -39,16 +39,16 @@ E         At index 1 diff: ('key', 'z', False) != ('key', 'z', True)
 E         Use -v to get more diff
 
 tests/test_wayland.py:601: AssertionError
-1 failed in 1.69s
+1 failed in 1.01s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.44s
+1 passed in 1.06s
 
 === drill M6B-02-winpipe-loads-windows-on-import (M6B-02.A2) on chatmon/winpipe.py
 command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_imports.py
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 2.66s
+1 passed in 1.38s
 -- red: exit 1
 F                                                                        [100%]
 =================================== FAILURES ===================================
@@ -76,16 +76,16 @@ E
 E       assert not {'winpipe': 'Traceback (most recent call last):\n  File "<string>", line 6, in <module>\n    importlib.import_module("...en importlib._bootstrap>", line 1406, in _gcd_import\nAttributeError: module \'ctypes\' has no attribute \'WinDLL\'\n'}
 
 tests/test_imports.py:36: AssertionError
-1 failed in 2.40s
+1 failed in 1.34s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 2.04s
+1 passed in 1.27s
 
 === drill M6B-03-log-left-at-the-umask (M6B-03.A2) on chatmon/log.py
 command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.77s
+1 passed in 0.71s
 -- red: exit 1
 F                                                                        [100%]
 =================================== FAILURES ===================================
@@ -104,8 +104,8 @@ tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-7/test_the_log_is_readable_onl
         logging.getLogger("chatmon.x").warning("private")
 >       assert os.stat(made_at_the_umask).st_mode & 0o777 == 0o600
 E       AssertionError: assert (33188 & 511) == 384
-E        +  where 33188 = os.stat_result(st_mode=33188, st_ino=419, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=74, st_atime=1794709045, st_mtime=1794709045, st_ctime=1794709045).st_mode
-E        +    where os.stat_result(st_mode=33188, st_ino=419, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=74, st_atime=1794709045, st_mtime=1794709045, st_ctime=1794709045) = <built-in function stat>(PosixPath('/tmp/pytest-of-randy/pytest-7/test_the_log_is_readable_only_0/state/chatmon/chatmon.log'))
+E        +  where 33188 = os.stat_result(st_mode=33188, st_ino=420, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=74, st_atime=1794710087, st_mtime=1794710087, st_ctime=1794710087).st_mode
+E        +    where os.stat_result(st_mode=33188, st_ino=420, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=74, st_atime=1794710087, st_mtime=1794710087, st_ctime=1794710087) = <built-in function stat>(PosixPath('/tmp/pytest-of-randy/pytest-7/test_the_log_is_readable_only_0/state/chatmon/chatmon.log'))
 E        +      where <built-in function stat> = os.stat
 
 tests/test_log.py:101: AssertionError
@@ -113,16 +113,16 @@ tests/test_log.py:101: AssertionError
 chatmon: private
 ------------------------------ Captured log call -------------------------------
 WARNING  chatmon.x:test_log.py:100 private
-1 failed in 1.23s
+1 failed in 1.34s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.02s
+1 passed in 3.01s
 
 === drill M6B-03-log-followed-through-a-link (M6B-03.A2) on chatmon/log.py
 command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 2.04s
+1 passed in 2.10s
 -- red: exit 1
 F                                                                        [100%]
 =================================== FAILURES ===================================
@@ -147,31 +147,31 @@ tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-10/test_the_log_is_readable_on
         made_at_the_umask.symlink_to(elsewhere)
 >       assert log.setup() is None
 E       AssertionError: assert PosixPath('/tmp/pytest-of-randy/pytest-10/test_the_log_is_readable_only_0/state/chatmon/chatmon.log') is None
-E        +  where PosixPath('/tmp/pytest-of-randy/pytest-10/test_the_log_is_readable_only_0/state/chatmon/chatmon.log') = <function setup at 0x77b2e6428a90>()
-E        +    where <function setup at 0x77b2e6428a90> = log.setup
+E        +  where PosixPath('/tmp/pytest-of-randy/pytest-10/test_the_log_is_readable_only_0/state/chatmon/chatmon.log') = <function setup at 0x7de83912ca90>()
+E        +    where <function setup at 0x7de83912ca90> = log.setup
 
 tests/test_log.py:107: AssertionError
 ----------------------------- Captured stderr call -----------------------------
 chatmon: private
 ------------------------------ Captured log call -------------------------------
 WARNING  chatmon.x:test_log.py:100 private
-1 failed in 1.36s
+1 failed in 0.82s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.40s
+1 passed in 0.90s
 
 === drill M6B-03-typed-text-in-the-debug-log (M6B-03.A3) on chatmon/layer.py
 command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 2.58s
+1 passed in 1.01s
 -- red: exit 1
 F                                                                        [100%]
 =================================== FAILURES ===================================
 ________ test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log _________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x79513314ecb0>
-caplog = <_pytest.logging.LogCaptureFixture object at 0x795133161be0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x702fe0c1ad50>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x702fe0a35be0>
 
     @linux_only
     def test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log(qapp, caplog):
@@ -194,7 +194,7 @@ caplog = <_pytest.logging.LogCaptureFixture object at 0x795133161be0>
 >           assert not any(typed in line for line in logged), typed
 E           AssertionError: swordfish
 E           assert not True
-E            +  where True = any(<generator object test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log.<locals>.<genexpr> at 0x79513332eea0>)
+E            +  where True = any(<generator object test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log.<locals>.<genexpr> at 0x702fe0ceef80>)
 
 tests/test_wayland.py:738: AssertionError
 ------------------------------ Captured log call -------------------------------
@@ -205,10 +205,10 @@ DEBUG    chatmon.layer:layer.py:1159 text input enable: cursor 7, anchor 7, 22 b
 DEBUG    chatmon.layer:layer.py:1184 text input event 2 b'\n\x00\x00\x00\xe3\x81\xb2\xe3\x81\xbf\xe3\x81\xa4\x00\x00\x00\x03\x00\x00\x00\x03\x00\x00\x00'
 DEBUG    chatmon.layer:layer.py:1184 text input event 3 b'\n\x00\x00\x00swordfish\x00\x00\x00'
 DEBUG    chatmon.layer:layer.py:1184 text input event 5 b'\x01\x00\x00\x00'
-1 failed in 1.54s
+1 failed in 1.17s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.33s
+1 passed in 1.08s
 
 === summary
 PASS M6B-01-overlay-key-press-taken-as-release

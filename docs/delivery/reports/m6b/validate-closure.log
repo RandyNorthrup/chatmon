@@ -7,6 +7,5 @@ evidence-coverage | M6B-02.A3 | No passing red receipt covers this acceptance cr
 evidence-coverage | M6B-03.A6 | No passing behavior receipt covers this acceptance criterion
 evidence-coverage | M6B-03.A6 | No passing red receipt covers this acceptance criterion
 outcome-unresolved | P-ci | Read the coordinator's next CI run of improve/assessment-fixes after the merge; re-run any failing check here.
-outcome-unresolved | P-m8-merge | When the coordinator resumes M6B: merge improve/assessment-fixes, re-run the gates, then do T6-phase-b from the plan's integration note 1.
 task-unverified | T6-phase-b | Task is blocked, not verified
 Structural and recorded-evidence checks; semantic review remains required.

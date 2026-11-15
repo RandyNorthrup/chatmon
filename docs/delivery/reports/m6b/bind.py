@@ -71,7 +71,7 @@ def main() -> int:
                 "terms and coverage (readiness.md)."),
         receipt("E-suite", "behavior", sorted(set(phase_a) - {"M6B-01.A1", "M6B-02.A1"}), f"{REL}/suite-final.log",
                 "The whole suite on the final source (exported from the index into a scratch folder, real Qt objects offscreen): "
-                "1228 passed, 148 skipped and no warning at all, so no ResourceWarning; it runs test_log.py, test_imports.py and every "
+                "1233 passed, 148 skipped (after merging M8's phase B) and no warning at all, so no ResourceWarning; it runs test_log.py, test_imports.py and every "
                 "test the drills name.",
                 [PY, "-m", "pytest", "-q", "-p", "no:cacheprovider"]),
         receipt("E-template", "behavior", ["M6B-01.A2"], f"{REL}/template.log",
@@ -119,6 +119,8 @@ def main() -> int:
         for a in r["acceptance"]:
             by_ac.setdefault(a, set()).add(r["kind"])
     for task in ledger["tasks"]:
+        if task["id"] == "T6-phase-b":
+            task["blocker"] = "M8's phase B is merged (eede8d1, merged here at ff78572); the coordinator resumes M6B for phase B"
         if task["id"] not in PHASE_A:
             continue
         ok = all({"behavior", "red"} <= by_ac.get(a, set()) for a in task["acceptance"])
@@ -134,10 +136,8 @@ def main() -> int:
             {"id": "P-ci", "description": "CI's Linux (xvfb) legs, the distribution containers (Qt 6.4 on Ubuntu 24.04) and macOS on the M6B changes; "
                                           "Linux was run here in WSL (1257 passed) and macOS only type-checked",
              "next_action": "Read the coordinator's next CI run of improve/assessment-fixes after the merge; re-run any failing check here."},
-            {"id": "P-m8-merge", "description": "M8 phase B is translating the eight hub files; T6-phase-b waits for its merge",
-             "next_action": "When the coordinator resumes M6B: merge improve/assessment-fixes, re-run the gates, then do T6-phase-b from the plan's integration note 1."},
         ],
-        "next_action": "Phase B (T6-phase-b) once M8 merges: integration note 1 lists what to do in the eight files.",
+        "next_action": "Phase B (T6-phase-b) when the coordinator resumes M6B: M8's phase B is merged in, and integration note 1 lists what to do in the eight files.",
         "source_revision": revision,
     }
     out = text[: match.start(1)] + json.dumps(ledger, indent=2, ensure_ascii=False) + text[match.end(1):]

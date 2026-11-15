@@ -1,5 +1,5 @@
 M6B gate drills, 3.14.10, ruff 0.17.4; mypy 2.4.1 (compiled: yes)
-copy: C:\Users\Randy\AppData\Local\Temp\chatmon-gate-drill-m_cf5t1t
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-gate-drill-jqhhp5ew
 
 === drill ruff-UP on chatmon/behavior.py
 command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m ruff check --no-cache .

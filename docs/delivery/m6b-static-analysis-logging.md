@@ -3,7 +3,7 @@
 Milestone M6B of the [improvement roadmap](ROADMAP.md), assessment items M6B-01 to M6B-03, plus the unclosed
 resources [M6A's integration note 4](m6a-ci-tooling.md#integration-notes) left for M6B. Branch `wave3/m6b`, from
 `improve/assessment-fixes` at `dd2e375` (waves 1 and 2 and M8's phase A merged), brought up to `fd0fe70` (the
-coordinator's CI fix: UI Automation stays on Windows, Qt 6.4 guards) by the authorized merge `04690ba`. Commits: `64bff38` (ruff), `0f58e71` (the log), `cdfeeca` (types, loggers and leaks), then the leak in test_wayland and this plan. The ledger
+coordinator's CI fix: UI Automation stays on Windows, Qt 6.4 guards) by the authorized merge `04690ba`, then to `ff78572` (M8's phase B, and the README and changelog for 0.10.0) by `e2ecbf2`. Commits: `64bff38` (ruff), `0f58e71` (the log), `cdfeeca` (types, loggers and leaks), `33d0da8` (the leak in test_wayland), `0116403` (this plan), `e2ecbf2` (the merge, with updates.py's conflict resolved), then the plan again. The ledger
 at the end owns every requirement, task, state and receipt. Reports, logs and the drill spec are in
 [reports/m6b/](reports/m6b/).
 
@@ -37,7 +37,7 @@ package-manager query`). Scoped per-file ignores, each with its reason in `pypro
 
 | Where | Ignored | Why |
 |---|---|---|
-| `tests/**` | S101, S603, S607, S108, S311, S314, DTZ001/005/006 | pytest's asserts; the tests' own fixed commands; mkdtemp'd short socket folders; test data's randomness; XML Chatmon wrote; local wall time, as in the code |
+| `tests/**` | S101, S603, S607, S108, S311, S314, S105/S106, DTZ001/005/006 | pytest's asserts; the tests' own fixed commands; mkdtemp'd short socket folders; test data's randomness; XML Chatmon wrote; made-up tokens (added with M8's merge, whose test passes `copy_token="t"`); local wall time, as in the code |
 | `docs/delivery/reports/m2,m3,m4b,m6a,m7/**` | the new families | recorded scripts whose bytes their ledgers bind by SHA-256 |
 | the eight M8 files, `tests/app_harness.py`, `test_app_smoke.py`, `test_app_reminders.py`, `test_i18n.py` | the new families | until phase B |
 
@@ -127,8 +127,8 @@ offscreen).
 
 | Check | Command | Result |
 |---|---|---|
-| Whole suite, Windows | `python -m pytest -q -p no:cacheprovider` | 1228 passed, 148 skipped, no warnings ([suite-final.log](reports/m6b/suite-final.log)); dd2e375 had 1209 passed, 145 skipped and 21 ResourceWarnings ([suite-ruff.log](reports/m6b/suite-ruff.log)) |
-| Whole suite, Linux (WSL) | the same, in a byte-for-byte copy of the worktree | 1257 passed, 119 skipped, no warnings ([linux-suite.log](reports/m6b/linux-suite.log)); an observation, not a receipt (its environment isn't the plan's) |
+| Whole suite, Windows | `python -m pytest -q -p no:cacheprovider` | 1233 passed, 148 skipped, no warnings, after merging M8's phase B ([suite-final.log](reports/m6b/suite-final.log)); before that merge 1228 passed, 148 skipped ([suite-before-m8b.log](reports/m6b/suite-before-m8b.log)); dd2e375 had 1209 passed, 145 skipped and 21 ResourceWarnings ([suite-ruff.log](reports/m6b/suite-ruff.log)) |
+| Whole suite, Linux (WSL) | the same, in a byte-for-byte copy of the worktree | 1262 passed, 119 skipped, no warnings, after the merge ([linux-suite.log](reports/m6b/linux-suite.log)); an observation, not a receipt (its environment isn't the plan's) |
 | ruff | `python -m ruff check .` | clean ([ruff.log](reports/m6b/ruff.log), with the count of per-line suppressions by code) |
 | mypy | `python -m mypy --platform linux` (and `win32`, `darwin`) | no issues in 69 files on each ([mypy-linux.log](reports/m6b/mypy-linux.log), [mypy-win32.log](reports/m6b/mypy-win32.log), [mypy-darwin.log](reports/m6b/mypy-darwin.log)) |
 | String template | `python packaging/extract_strings.py --check` | unchanged ([template.log](reports/m6b/template.log)) |
@@ -151,24 +151,23 @@ the rerun of the identical tree passed, as did the final run and the same test f
 ([suite-types-logs-crash.log](reports/m6b/suite-types-logs-crash.log), [suite-types-logs.log](reports/m6b/suite-types-logs.log)).
 Nothing in M6B's diff touches that path; it's recorded in case it recurs (integration note 3).
 
-**The ledger.** Readiness validation passes. Closure fails only on phase B (T6-phase-b, blocked on M8's merge, and
-its three criteria) and on the two pending outcomes (CI's run; M8's merge); resume stops only at those two
-outcomes, as it must until they're observed ([validate-readiness.log](reports/m6b/validate-readiness.log),
+**The ledger.** Readiness validation passes. Closure fails only on phase B (T6-phase-b, waiting for the
+coordinator to resume M6B now that M8's phase B is merged, and its three criteria) and on the one pending outcome,
+CI's run; resume stops only at that outcome, as it must until it's observed ([validate-readiness.log](reports/m6b/validate-readiness.log),
 [validate-closure.log](reports/m6b/validate-closure.log), [validate-resume.log](reports/m6b/validate-resume.log)).
 The receipts are built by [bind.py](reports/m6b/bind.py) from the logs above; the handler inventory was joined from
 the source and the notes made as each module was converted.
 
 ## Integration notes
 
-1. **Phase B (M6B, after M8 merges): what to do in the eight files.**
+1. **Phase B (M6B, now that M8's phase B is merged): what to do in the eight files.** Counts are from the merged tree.
    - **ruff:** delete the "Until M6B phase B" block of per-file ignores in pyproject.toml (the eight files and
      `tests/app_harness.py`, `test_app_smoke.py`, `test_app_reminders.py`, `test_i18n.py`) and fix what appears.
-     On dd2e375 that was app.py BLE001 2, C901 1, DTZ005 4, DTZ006 3, DTZ011 3, RUF005 1, RUF012 1; asking.py
-     PERF401; cli.py DTZ005; commands.py DTZ005 2, PERF401, S105 (`PASSWORD_MADE`, a message key, not a password:
-     a line noqa); menus.py DTZ006; settings.py DTZ006, UP037; tests: RUF100 3 + 3 (app_harness, test_app_smoke),
-     RUF015 3, RUF059 1 (test_app_smoke), RUF005 (test_app_reminders), RUF059 (test_i18n). Plus whatever M8 adds.
+     After M8's merge that is 35 findings: DTZ005 7, RUF100 6 (the unused `noqa: E402` in app_harness and
+     test_app_smoke), DTZ006 5, DTZ011 3, RUF015 3, BLE001 2, RUF005 2, PERF401 2, RUF059 2, C901 1 (in app.py),
+     RUF012 1, UP037 1.
    - **mypy:** delete the `[[tool.mypy.overrides]]` block (app, cli, commands, menus, messages, settings,
-     settingswin) and fix the errors: on dd2e375 app 37/46/37 (linux/win32/darwin), menus 60, settingswin 15,
+     settingswin) and fix the errors: after the merge app 35/44/35 (linux/win32/darwin), menus 60, settingswin 15,
      messages 4, cli 3, settings 2/3/2, commands 1.
    - **app.py's log:** call `log.setup()` in `run()` before the Companion is made, in place of
      `_log_without_a_console()`; drop `LOG_LIMIT`, `_open_private` and app.py's `log_file()` for `log.log_file()`
@@ -179,11 +178,12 @@ the source and the notes made as each module was converted.
      translation). `test_app_smoke.py::test_the_log_file_is_yours_alone` tests `_log_without_a_console`;
      `test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link` covers the same for
      `log.setup()`, so that test goes or moves to `log`.
-   - **app.py's prints:** the diagnostics at today's lines 958, 2041, 2362, 3176, 3238 and 3251 become
-     `logger.warning`; "Chatmon is already running; it says hi." (twice) is terminal output and stays. `cli.py`'s
+   - **app.py's prints:** the diagnostics at today's lines 980, 2079, 2405, 3232, 3294 and 3307 become
+     `logger.warning`, and the banner at 3169 `logger.info`; "Chatmon is already running; it says hi." (3277,
+     3304, translated now) is terminal output and stays. `cli.py`'s
      prints all stay (output meant for the person).
-   - **Hidden errors:** the 37 handlers in the eight files that neither raise nor log (on dd2e375), by the plan's
-     conventions; regenerate handlers.md for all modules.
+   - **Hidden errors:** the 37 handlers in the eight files that neither raise nor log (still 37 after the merge),
+     by the plan's conventions; regenerate handlers.md for all modules.
    - **`default::ResourceWarning`:** remove it from `filterwarnings` once the whole suite passes without it on
      Windows and Linux (phase A's runs show none).
 2. **CI (coordinator).** Pending: the Linux xvfb legs and the distribution containers (Qt 6.4 on Ubuntu 24.04)
@@ -195,7 +195,9 @@ the source and the notes made as each module was converted.
    `pyqtSignal` one is a stub bug; one `# type: ignore[call-arg]` per signal, or a stub override, is the likely fix.
 5. **The dev extra pins ruff 0.17.3** (`pyproject.toml`, `requirements-dev.txt`); this work ran 0.17.4, the shared
    venv's. CI's lint job runs 0.17.3 on the same rules; a difference between the two would show there.
-6. **APIs.** `chatmon/log.py`: `setup() -> Path | None`, `reset()`, `log_file()`, `debugging()`,
+6. **M8's `T5-chatswin`.** M6B didn't change `chatmon/chatswin.py` (it already passed mypy and has no handlers), so
+   M8 can wrap its sixteen strings without meeting any M6B change.
+7. **APIs.** `chatmon/log.py`: `setup() -> Path | None`, `reset()`, `log_file()`, `debugging()`,
    `blank_keys(text)`, `LIMIT`, `DEBUG_ENV`. Every module logs through `logging.getLogger(__name__)`.
 
 ## Changelog notes
@@ -1327,7 +1329,7 @@ the source and the notes made as each module was converted.
       ],
       "status": "blocked",
       "evidence": [],
-      "blocker": "M8 is translating these eight files now; the coordinator resumes M6B for phase B once M8 merges",
+      "blocker": "M8's phase B is merged (eede8d1, merged here at ff78572); the coordinator resumes M6B for phase B",
       "superseded_by": null
     }
   ],
@@ -1384,11 +1386,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -1399,7 +1401,7 @@ the source and the notes made as each module was converted.
           "sha256": "a0f4774c4a0ffebcd1bcf2da357d76c8044ff96ca0c9c08a9dfec052151914c5"
         }
       ],
-      "scope_sha256": "c8c94306ec4a5db5aa5c3636cfbe1b1638bdb5b1439277bc1cac4eb5bce69104",
+      "scope_sha256": "8be38ac9f2ac0ef0fcdc2544cd58a442facf2520068d66baf4045d9e266faa36",
       "red": null,
       "reason": null
     },
@@ -1425,7 +1427,7 @@ the source and the notes made as each module was converted.
         "-p",
         "no:cacheprovider"
       ],
-      "method": "The whole suite on the final source (exported from the index into a scratch folder, real Qt objects offscreen): 1228 passed, 148 skipped and no warning at all, so no ResourceWarning; it runs test_log.py, test_imports.py and every test the drills name.",
+      "method": "The whole suite on the final source (exported from the index into a scratch folder, real Qt objects offscreen): 1233 passed, 148 skipped (after merging M8's phase B) and no warning at all, so no ResourceWarning; it runs test_log.py, test_imports.py and every test the drills name.",
       "environment": {
         "platform": "windows",
         "tools": {
@@ -1440,7 +1442,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/suite-final.log",
-        "sha256": "f41c8f251581bc1e1066f42cdd0bfc621f5e5ab2e34bac79c1c9915efa45b80c"
+        "sha256": "d23daf8c970fc63184ca75bd63e777ed31f36d023253a4e5138ed9b55890cfcc"
       },
       "inputs": [
         {
@@ -1625,7 +1627,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -1645,7 +1647,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -1661,7 +1663,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winfocus.py",
@@ -1709,7 +1711,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -1725,7 +1727,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -1841,7 +1843,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sound.py",
@@ -1865,7 +1867,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -1880,7 +1882,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "0a99b0f868c4a222c0187bf2ad643c83313c3433054b3713b1147445fd8b9921",
+      "scope_sha256": "653f98939b348bea99765399cc367fef4812bd0d954e8654db0d9c3f3811024a",
       "red": null,
       "reason": null
     },
@@ -2028,7 +2030,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -2044,7 +2046,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -2056,7 +2058,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -2080,7 +2082,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -2096,7 +2098,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -2188,7 +2190,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -2208,7 +2210,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -2223,7 +2225,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": null,
       "reason": null
     },
@@ -2373,7 +2375,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -2389,7 +2391,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -2401,7 +2403,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -2425,7 +2427,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -2441,7 +2443,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -2533,7 +2535,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -2553,7 +2555,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -2568,7 +2570,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": null,
       "reason": null
     },
@@ -2782,7 +2784,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -2802,7 +2804,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -2818,7 +2820,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winfocus.py",
@@ -2866,7 +2868,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -2882,7 +2884,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -2978,7 +2980,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -2998,7 +3000,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -3013,7 +3015,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "af1ab152cf43cba3dbddd2920888043d96e4e12c5e3910f37f95f1b2aede6e33",
+      "scope_sha256": "09caa4775d97a5062d10555816e2a879bea4d905b18592a0650eb0ab1687f756",
       "red": null,
       "reason": null
     },
@@ -3227,7 +3229,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -3247,7 +3249,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -3263,7 +3265,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winfocus.py",
@@ -3311,7 +3313,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -3327,7 +3329,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -3423,7 +3425,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -3443,7 +3445,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -3458,7 +3460,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "af1ab152cf43cba3dbddd2920888043d96e4e12c5e3910f37f95f1b2aede6e33",
+      "scope_sha256": "09caa4775d97a5062d10555816e2a879bea4d905b18592a0650eb0ab1687f756",
       "red": null,
       "reason": null
     },
@@ -3672,7 +3674,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -3692,7 +3694,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -3708,7 +3710,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winfocus.py",
@@ -3756,7 +3758,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -3772,7 +3774,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -3868,7 +3870,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -3888,7 +3890,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -3903,7 +3905,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "af1ab152cf43cba3dbddd2920888043d96e4e12c5e3910f37f95f1b2aede6e33",
+      "scope_sha256": "09caa4775d97a5062d10555816e2a879bea4d905b18592a0650eb0ab1687f756",
       "red": null,
       "reason": null
     },
@@ -3938,7 +3940,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -4055,7 +4057,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -4071,7 +4073,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -4083,7 +4085,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -4107,7 +4109,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -4123,7 +4125,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -4215,7 +4217,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -4235,7 +4237,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -4250,7 +4252,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "M6B-01-bubble-not-clear-of-the-box: in chatmon/penguin.py, '            top = min(top, self._clear_of.geometry().top() - origin.y())\\r\\n' became '            top = top\\r\\n'",
         "baseline_exit": 0,
@@ -4310,7 +4312,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -4427,7 +4429,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -4443,7 +4445,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -4455,7 +4457,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -4479,7 +4481,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -4495,7 +4497,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -4587,7 +4589,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -4607,7 +4609,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -4622,7 +4624,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "M6B-01-menu-end-key-goes-home: in chatmon/stagemenu.py, 'self._activate(panel, pickable[0 if key == Qt.Key.Key_Home else -1])' became 'self._activate(panel, pickable[0])'",
         "baseline_exit": 0,
@@ -4682,7 +4684,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -4799,7 +4801,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -4815,7 +4817,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -4827,7 +4829,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -4851,7 +4853,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -4867,7 +4869,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -4959,7 +4961,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -4979,7 +4981,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -4994,7 +4996,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "M6B-01-extractor-misses-import-time: in packaging/extract_strings.py, '    if marker in TRANSLATED_NOW and at_import:\\r\\n' became '    if False:\\r\\n'",
         "baseline_exit": 0,
@@ -5054,7 +5056,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -5235,7 +5237,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -5255,7 +5257,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -5271,7 +5273,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winfocus.py",
@@ -5319,7 +5321,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -5335,7 +5337,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -5431,7 +5433,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -5451,7 +5453,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -5466,7 +5468,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "af1ab152cf43cba3dbddd2920888043d96e4e12c5e3910f37f95f1b2aede6e33",
+      "scope_sha256": "09caa4775d97a5062d10555816e2a879bea4d905b18592a0650eb0ab1687f756",
       "red": {
         "mutation": "M6B-02-a-module-loads-macos-on-import: in chatmon/macnative.py, 'logger = logging.getLogger(__name__)\\r\\n' became 'logger = logging.getLogger(__name__)\\r\\n_objc = ctypes.cdll.LoadLibrary(\"/usr/lib/libobjc.A.dylib\")\\r\\n'",
         "baseline_exit": 0,
@@ -5526,7 +5528,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -5551,11 +5553,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -5570,7 +5572,7 @@ the source and the notes made as each module was converted.
           "sha256": "57ce8df1feb1e79349d651e7ff7a4d907cca308da9d45b8ff0f748758316bc3c"
         }
       ],
-      "scope_sha256": "85160681ec1943d503ddb172028b4df27fe0062d75d516126bc1095c5c69d3d8",
+      "scope_sha256": "11e03d8a8d8971c4b15e38211542dfd7552812f1e682abf37bb80ae8c843da71",
       "red": {
         "mutation": "M6B-03-debug-env-ignored: in chatmon/log.py, '    level = logging.DEBUG if debugging() else logging.INFO\\n' became '    level = logging.INFO\\n'",
         "baseline_exit": 0,
@@ -5630,7 +5632,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -5655,11 +5657,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -5674,7 +5676,7 @@ the source and the notes made as each module was converted.
           "sha256": "57ce8df1feb1e79349d651e7ff7a4d907cca308da9d45b8ff0f748758316bc3c"
         }
       ],
-      "scope_sha256": "85160681ec1943d503ddb172028b4df27fe0062d75d516126bc1095c5c69d3d8",
+      "scope_sha256": "11e03d8a8d8971c4b15e38211542dfd7552812f1e682abf37bb80ae8c843da71",
       "red": {
         "mutation": "M6B-03-no-stderr: in chatmon/log.py, '    if sys.stderr is not None:\\n' became '    if False:\\n'",
         "baseline_exit": 0,
@@ -5734,7 +5736,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -5759,11 +5761,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -5778,7 +5780,7 @@ the source and the notes made as each module was converted.
           "sha256": "57ce8df1feb1e79349d651e7ff7a4d907cca308da9d45b8ff0f748758316bc3c"
         }
       ],
-      "scope_sha256": "85160681ec1943d503ddb172028b4df27fe0062d75d516126bc1095c5c69d3d8",
+      "scope_sha256": "11e03d8a8d8971c4b15e38211542dfd7552812f1e682abf37bb80ae8c843da71",
       "red": {
         "mutation": "M6B-03-setup-twice-doubles: in chatmon/log.py, '    reset()\\n    level = ' became '    level = '",
         "baseline_exit": 0,
@@ -5838,7 +5840,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -5863,11 +5865,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -5882,7 +5884,7 @@ the source and the notes made as each module was converted.
           "sha256": "57ce8df1feb1e79349d651e7ff7a4d907cca308da9d45b8ff0f748758316bc3c"
         }
       ],
-      "scope_sha256": "85160681ec1943d503ddb172028b4df27fe0062d75d516126bc1095c5c69d3d8",
+      "scope_sha256": "11e03d8a8d8971c4b15e38211542dfd7552812f1e682abf37bb80ae8c843da71",
       "red": {
         "mutation": "M6B-03-rotated-as-dot-1: in chatmon/log.py, '    return default.removesuffix(\".1\") + \".old\"\\n' became '    return default\\n'",
         "baseline_exit": 0,
@@ -5942,7 +5944,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -5967,11 +5969,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -5986,7 +5988,7 @@ the source and the notes made as each module was converted.
           "sha256": "57ce8df1feb1e79349d651e7ff7a4d907cca308da9d45b8ff0f748758316bc3c"
         }
       ],
-      "scope_sha256": "85160681ec1943d503ddb172028b4df27fe0062d75d516126bc1095c5c69d3d8",
+      "scope_sha256": "11e03d8a8d8971c4b15e38211542dfd7552812f1e682abf37bb80ae8c843da71",
       "red": {
         "mutation": "M6B-03-limit-ten-times: in chatmon/log.py, 'maxBytes=LIMIT,' became 'maxBytes=LIMIT * 10,'",
         "baseline_exit": 0,
@@ -6046,7 +6048,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -6135,7 +6137,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -6179,11 +6181,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -6235,14 +6237,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-keys-not-blanked: in chatmon/log.py, '    return _KEYS.sub(BLANKED, text)\\n' became '    return text\\n'",
         "baseline_exit": 0,
@@ -6302,7 +6304,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -6391,7 +6393,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -6435,11 +6437,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -6491,14 +6493,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-console-not-blanked: in chatmon/log.py, '        console.setFormatter(_Blanking(CONSOLE_FORMAT))\\n' became '        console.setFormatter(logging.Formatter(CONSOLE_FORMAT))\\n'",
         "baseline_exit": 0,
@@ -6558,7 +6560,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -6647,7 +6649,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -6691,11 +6693,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -6747,14 +6749,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-brain-key-not-scrubbed: in chatmon/brains.py, '    return text.replace(key, \"…\") if len(key) >= 8 else text\\r\\n' became '    return text\\r\\n'",
         "baseline_exit": 0,
@@ -6814,7 +6816,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -6903,7 +6905,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -6947,11 +6949,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -7003,14 +7005,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-brain-failure-not-logged: in chatmon/brains.py, '        self.failed.connect(self._log_failure)\\r\\n' became ''",
         "baseline_exit": 0,
@@ -7070,7 +7072,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -7159,7 +7161,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -7203,11 +7205,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -7259,14 +7261,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-autostart-warning-printed: in chatmon/autostart.py, '        logger.warning(\"couldn\\'t add Chatmon to Login Items (%s), so a LaunchAgent starts it\", problem)\\r\\n' became '        print(f\"couldn\\'t add Chatmon to Login Items ({problem}), so a LaunchAgent starts it\", file=sys.stderr)\\r\\n'",
         "baseline_exit": 0,
@@ -7326,7 +7328,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -7415,7 +7417,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -7459,11 +7461,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -7515,14 +7517,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-chat-failure-hidden: in chatmon/chats.py, '            logger.debug(\"couldn\\'t read chat %s: %s\", chat_id, exc)\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -7582,7 +7584,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -7671,7 +7673,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -7715,11 +7717,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -7771,16 +7773,16 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
-        "mutation": "M6B-03-package-manager-failure-hidden: in chatmon/updates.py, '                    logger.debug(\"couldn\\'t ask %s whether it installed Chatmon: %s\", query[0], exc)\\n' became '                    pass\\n'",
+        "mutation": "M6B-03-package-manager-failure-hidden: in chatmon/updates.py, '                    logger.debug(\"couldn\\'t ask %s whether it installed Chatmon: %s\", query[0], exc)\\r\\n' became '                    pass\\r\\n'",
         "baseline_exit": 0,
         "mutated_exit": 1,
         "restored_exit": 0,
@@ -7789,19 +7791,19 @@ the source and the notes made as each module was converted.
         "before": [
           {
             "path": "chatmon/updates.py",
-            "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+            "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/updates.py",
-            "sha256": "f0c7090dce6e8aff7e34cd7cb81ef7b9453ec80ae55b6aac2cbf17d4306e8da6"
+            "sha256": "fe0826c0f7679589cad9418ee0ff7d0439bca89f6610cef2b2524ab49fefe0a4"
           }
         ],
         "after": [
           {
             "path": "chatmon/updates.py",
-            "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+            "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
           }
         ]
       },
@@ -7838,7 +7840,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -7927,7 +7929,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -7971,11 +7973,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -8027,14 +8029,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-phrases-failure-hidden: in chatmon/offline.py, '            logger.debug(\"couldn\\'t read the phrases in %s: %s\", folder / f\"{candidate}.json\", exc)\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -8094,7 +8096,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -8183,7 +8185,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -8227,11 +8229,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -8283,14 +8285,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-reminder-words-logged: in chatmon/reminders.py, '                logger.debug(\"skipped a saved reminder that can\\'t be read (%s)\", type(exc).__name__)\\r\\n' became '                logger.debug(\"skipped a saved reminder that can\\'t be read (%s): %s\", type(exc).__name__, entry)\\r\\n'",
         "baseline_exit": 0,
@@ -8350,7 +8352,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -8439,7 +8441,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -8483,11 +8485,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -8539,14 +8541,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "9d70e152526aa53f202809498758ddbc96202260ea05646777b6317c471bdf6d",
+      "scope_sha256": "7ab17c437c98cee23d43371b7734ab00101b3a33c37e69494fc4e59b6eb4f642",
       "red": {
         "mutation": "M6B-03-player-failure-hidden: in chatmon/sound.py, '            logger.debug(\"couldn\\'t start %s: %s\", self.name, exc)\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -8608,7 +8610,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -8633,11 +8635,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -8657,14 +8659,14 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "e96f03a136155665213fb3955d245d00ba30c04b10ebf21e663a5612f0d06bb9",
+      "scope_sha256": "824ecb05e2b853c64a2cf6dda6712ca779cc5eeaca08b155f09fa34a22dbbe7a",
       "red": {
         "mutation": "M6B-RW-http-error-left-open: in chatmon/brains.py, '        exc.close()\\r\\n        raise\\r\\n' became '        raise\\r\\n'",
         "baseline_exit": 0,
@@ -8726,7 +8728,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/drills.log",
-        "sha256": "e922e0684f49e015146a3bf5c91f96465bf7a8659b7d38fa138780ec65b9f73c"
+        "sha256": "9cd66400e38b2dd20bac8c8475c343cbc43691a76451ae07371baa8b8de29b92"
       },
       "inputs": [
         {
@@ -8751,11 +8753,11 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -8775,37 +8777,37 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
           "sha256": "b96fd98ee481e8bab776493c465bb1ac0b4483fcd98aa52ecbc7ec0898052e8a"
         }
       ],
-      "scope_sha256": "e96f03a136155665213fb3955d245d00ba30c04b10ebf21e663a5612f0d06bb9",
+      "scope_sha256": "824ecb05e2b853c64a2cf6dda6712ca779cc5eeaca08b155f09fa34a22dbbe7a",
       "red": {
         "mutation": "M6B-RW-release-server-left-open: in tests/test_updates.py, '    server.shutdown()\\r\\n    server.server_close()\\r\\n\\r\\n\\r\\ndef run_updater' became '    server.shutdown()\\r\\n\\r\\n\\r\\ndef run_updater'",
         "baseline_exit": 0,
         "mutated_exit": 1,
         "restored_exit": 0,
         "expected_diagnostic": "ResourceWarning",
-        "observed_diagnostic": "E           ResourceWarning: unclosed <socket.socket fd=1000, family=2, type=1, proto=0, laddr=('127.0.0.1', 64269)>",
+        "observed_diagnostic": "E           ResourceWarning: unclosed <socket.socket fd=820, family=2, type=1, proto=0, laddr=('127.0.0.1', 57721)>",
         "before": [
           {
             "path": "tests/test_updates.py",
-            "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+            "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
           }
         ],
         "mutated": [
           {
             "path": "tests/test_updates.py",
-            "sha256": "5360c2a5a9bad2b0fa2a921c3186fbe9cd5e99c3e3066ad881e77e5848b0646f"
+            "sha256": "0234967f0b7016e6c74e7c1343690ed471c69e99a869bce00b25fd271491de8c"
           }
         ],
         "after": [
           {
             "path": "tests/test_updates.py",
-            "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+            "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
           }
         ]
       },
@@ -8837,7 +8839,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -8954,7 +8956,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -8970,7 +8972,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -8982,7 +8984,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -9006,7 +9008,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -9022,7 +9024,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -9114,7 +9116,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -9134,7 +9136,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -9149,7 +9151,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-UP: in chatmon/behavior.py, appended '_DRILL = \"%s\" % 1\\n'",
         "baseline_exit": 0,
@@ -9204,7 +9206,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -9321,7 +9323,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -9337,7 +9339,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -9349,7 +9351,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -9373,7 +9375,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -9389,7 +9391,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -9481,7 +9483,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -9501,7 +9503,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -9516,7 +9518,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-C4: in chatmon/behavior.py, appended '_DRILL = [v for v in (1, 2)]\\n'",
         "baseline_exit": 0,
@@ -9571,7 +9573,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -9688,7 +9690,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -9704,7 +9706,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -9716,7 +9718,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -9740,7 +9742,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -9756,7 +9758,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -9848,7 +9850,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -9868,7 +9870,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -9883,7 +9885,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-PIE: in chatmon/behavior.py, appended '_DRILL = list(range(0, 3))\\n'",
         "baseline_exit": 0,
@@ -9938,7 +9940,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -10055,7 +10057,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -10071,7 +10073,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -10083,7 +10085,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -10107,7 +10109,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -10123,7 +10125,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -10215,7 +10217,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -10235,7 +10237,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -10250,7 +10252,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-PERF: in chatmon/behavior.py, appended 'def _drill(items):\\n    out = []\\n    for i in items:\\n        out.append(i * 2)\\n    return out\\n'",
         "baseline_exit": 0,
@@ -10305,7 +10307,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -10422,7 +10424,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -10438,7 +10440,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -10450,7 +10452,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -10474,7 +10476,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -10490,7 +10492,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -10582,7 +10584,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -10602,7 +10604,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -10617,7 +10619,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-RUF: in chatmon/behavior.py, appended '_DRILL = list(range(3))[0]\\n'",
         "baseline_exit": 0,
@@ -10672,7 +10674,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -10789,7 +10791,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -10805,7 +10807,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -10817,7 +10819,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -10841,7 +10843,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -10857,7 +10859,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -10949,7 +10951,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -10969,7 +10971,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -10984,7 +10986,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-S: in chatmon/behavior.py, appended '_DRILL = eval(\"1\")\\n'",
         "baseline_exit": 0,
@@ -11039,7 +11041,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -11156,7 +11158,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -11172,7 +11174,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -11184,7 +11186,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -11208,7 +11210,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -11224,7 +11226,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -11316,7 +11318,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -11336,7 +11338,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -11351,7 +11353,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-DTZ: in chatmon/behavior.py, appended 'import datetime as _dt\\n\\n_DRILL = _dt.datetime.now()\\n'",
         "baseline_exit": 0,
@@ -11406,7 +11408,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -11523,7 +11525,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -11539,7 +11541,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -11551,7 +11553,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -11575,7 +11577,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -11591,7 +11593,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -11683,7 +11685,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -11703,7 +11705,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -11718,7 +11720,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-BLE: in chatmon/behavior.py, appended 'try:\\n    _DRILL = 1\\nexcept Exception:\\n    _DRILL = 2\\n'",
         "baseline_exit": 0,
@@ -11773,7 +11775,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -11890,7 +11892,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -11906,7 +11908,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -11918,7 +11920,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -11942,7 +11944,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -11958,7 +11960,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -12050,7 +12052,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -12070,7 +12072,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -12085,7 +12087,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-C90: in chatmon/behavior.py, appended 'def _drill(x):\\n    if x == 0:\\n        return 0\\n    if x == 1:\\n        return 1\\n    if x == 2:\\n        return 2\\n    if x == 3:\\n        return 3\\n    if x == 4:\\n        return 4\\n    if x == 5:\\n        return 5\\n    if x == 6:\\n        return 6\\n    if x == 7:\\n        return 7\\n    if x == 8:\\n        return 8\\n    if x == 9:\\n        return 9\\n    if x == 10:\\n        return 10\\n    if x == 11:\\n        return 11\\n    if x == 12:\\n        return 12\\n    if x == 13:\\n        return 13\\n    if x == 14:\\n        return 14\\n    return -1\\n'",
         "baseline_exit": 0,
@@ -12140,7 +12142,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -12257,7 +12259,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -12273,7 +12275,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -12285,7 +12287,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winlock.py",
@@ -12309,7 +12311,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -12325,7 +12327,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -12417,7 +12419,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -12437,7 +12439,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -12452,7 +12454,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "f5c1e3e4f4f4c2e460940530d2c2b419e8d58898a961a0467337a91eb63d32f7",
+      "scope_sha256": "d6fa75d2e5cb4a067d38ae099d4b37e5f76bc8bf392fc6f43e90753e62d6ba16",
       "red": {
         "mutation": "ruff-S101-in-chatmon: in chatmon/behavior.py, appended 'assert __name__\\n'",
         "baseline_exit": 0,
@@ -12507,7 +12509,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -12688,7 +12690,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -12708,7 +12710,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -12724,7 +12726,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winfocus.py",
@@ -12772,7 +12774,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -12788,7 +12790,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -12884,7 +12886,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -12904,7 +12906,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -12919,7 +12921,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "af1ab152cf43cba3dbddd2920888043d96e4e12c5e3910f37f95f1b2aede6e33",
+      "scope_sha256": "09caa4775d97a5062d10555816e2a879bea4d905b18592a0650eb0ab1687f756",
       "red": {
         "mutation": "mypy-brains: in chatmon/brains.py, 'MAX_REPLY = 32 * 2**20' became 'MAX_REPLY: int = \"32 MB\"'",
         "baseline_exit": 0,
@@ -12974,7 +12976,7 @@ the source and the notes made as each module was converted.
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m6b/gate-drills.log",
-        "sha256": "4d370bc5aeb169886549a4fb8040fc8489af184f1179ab5f49566cd238da3b14"
+        "sha256": "9fe7e87cd67cf36eff19597002d087d29e9514fd5ae6556dcdcb0110d19dabe8"
       },
       "inputs": [
         {
@@ -13155,7 +13157,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/richtext.py",
-          "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+          "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
         },
         {
           "path": "chatmon/sound.py",
@@ -13175,7 +13177,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/updates.py",
-          "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+          "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
         },
         {
           "path": "chatmon/wayland.py",
@@ -13191,7 +13193,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "chatmon/winfiles.py",
-          "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+          "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
         },
         {
           "path": "chatmon/winfocus.py",
@@ -13239,7 +13241,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "docs/delivery/m8-translation.md",
-          "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+          "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
         },
         {
           "path": "packaging/build.py",
@@ -13255,7 +13257,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "pyproject.toml",
-          "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+          "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
         },
         {
           "path": "tests/conftest.py",
@@ -13351,7 +13353,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_rich_text.py",
-          "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+          "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
         },
         {
           "path": "tests/test_sprites.py",
@@ -13371,7 +13373,7 @@ the source and the notes made as each module was converted.
         },
         {
           "path": "tests/test_updates.py",
-          "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+          "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
         },
         {
           "path": "tests/test_wayland.py",
@@ -13386,7 +13388,7 @@ the source and the notes made as each module was converted.
           "sha256": "1e958e5590f4c71302a1622442d9fc02c70029c02df05c60c328497a41e978ef"
         }
       ],
-      "scope_sha256": "af1ab152cf43cba3dbddd2920888043d96e4e12c5e3910f37f95f1b2aede6e33",
+      "scope_sha256": "09caa4775d97a5062d10555816e2a879bea4d905b18592a0650eb0ab1687f756",
       "red": {
         "mutation": "mypy-winpipe: in chatmon/winpipe.py, 'REPLY_MAX = 64 * 1024' became 'REPLY_MAX: int = \"64 KB\"'",
         "baseline_exit": 0,
@@ -13417,7 +13419,7 @@ the source and the notes made as each module was converted.
     }
   ],
   "checkpoint": {
-    "scope_sha256": "c8c94306ec4a5db5aa5c3636cfbe1b1638bdb5b1439277bc1cac4eb5bce69104",
+    "scope_sha256": "8be38ac9f2ac0ef0fcdc2544cd58a442facf2520068d66baf4045d9e266faa36",
     "inputs": [
       {
         "path": "art/tools/blink-inbetween.py",
@@ -13477,11 +13479,11 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "chatmon/app.py",
-        "sha256": "ccff29b576917e48e8d04183aba991e0dc2d1d4a38291b3f0762ee6bf0203c42"
+        "sha256": "29c641003c646018728250adaf37b98ab59c6c16c3045df69e21b25135f78fbe"
       },
       {
         "path": "chatmon/asking.py",
-        "sha256": "3c036d7ab8cf9483ce526519528ed903dc2d2d44cdf32f4a93ae69c3e8708f0a"
+        "sha256": "182340f2c869e3f2a015b571a886f3282afed100e04ed15baecc85f948af7fed"
       },
       {
         "path": "chatmon/attachments.py",
@@ -13521,7 +13523,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "chatmon/cli.py",
-        "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
+        "sha256": "2b5be6ddfa8cb0a84213e4704bf0568a0f2d8819434607ddbff37515c8b497d0"
       },
       {
         "path": "chatmon/clickthrough.py",
@@ -13529,7 +13531,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "chatmon/commands.py",
-        "sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90"
+        "sha256": "82d1f05e52b2e9e80f2010045f1d08b97e6a4886f80300820b5032fbf0d02e3f"
       },
       {
         "path": "chatmon/context.py",
@@ -13581,7 +13583,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "chatmon/menus.py",
-        "sha256": "306f037e46cd090cf587b626e71626a9fe0ef200069086b5313ccd5984eb9e51"
+        "sha256": "200fc556419ef781f27591fa78827bd9aa60f512d9b4ee0b0b72b03308079063"
       },
       {
         "path": "chatmon/messages.py",
@@ -13625,15 +13627,15 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "chatmon/richtext.py",
-        "sha256": "e4ed41e0e3da1b8e6041cab960890f978c467278e669da3d99195d9139ea4749"
+        "sha256": "1721a173876e15b97f8feeecdec02d3a4f62d5056bb92ba9f64b2dc721525564"
       },
       {
         "path": "chatmon/settings.py",
-        "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
+        "sha256": "cb580c6acf6081ef3cc51593a3479f0298a4af52138a4433ca8f32cf583f2be4"
       },
       {
         "path": "chatmon/settingswin.py",
-        "sha256": "13e0382f2d97340ba7e8a7921b81a3010e5ade8f3329482045a97cb271313b81"
+        "sha256": "3c5d71e64dbf50792ff670e3a4f1bdcf8483342701710b9d4d710b1fca1c8533"
       },
       {
         "path": "chatmon/sound.py",
@@ -13653,7 +13655,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "chatmon/updates.py",
-        "sha256": "b3ad01829f92a0fd74255702fda0814cc69f517e0cf7dced0bdf35763e2cb8f8"
+        "sha256": "3b616d4b7526efbf0b9db04e113f744c5c3dd507e133dea7d29a756536c73c15"
       },
       {
         "path": "chatmon/wayland.py",
@@ -13669,7 +13671,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "chatmon/winfiles.py",
-        "sha256": "d0b4a14dea5db2edf1ad92840aa08dd786ea4c58a84a554e085646c588d28826"
+        "sha256": "aac1114fa6558fcb052c630e27e3673371410d7b9d7fbcd879c8b6763cd5d2a9"
       },
       {
         "path": "chatmon/winfocus.py",
@@ -13717,7 +13719,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "docs/delivery/m8-translation.md",
-        "sha256": "f2c265164d92b28d0ae68e6778750b7792dcb862132a73b4d8d56b0721d6ee5b"
+        "sha256": "6a1ca9aaaa47221d8ac7c7281d79af57c9142d31f2b422636fa675be0147ac93"
       },
       {
         "path": "packaging/build.py",
@@ -13733,7 +13735,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "pyproject.toml",
-        "sha256": "49515a9a24a40e358730f9ae4ef8894cb4d7c3d8fa91c75d6b12ea6a458b088c"
+        "sha256": "e80c16335bad7f93af92603fa1e12b02162db483cf2818392c29c69e7c9ccfc7"
       },
       {
         "path": "tests/conftest.py",
@@ -13849,7 +13851,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "tests/test_rich_text.py",
-        "sha256": "2a8632e0b184c485b9dae624c16a8eabf63931921e1c42f25bae7676f862b9f4"
+        "sha256": "14e2cf79db133b8cf608c87258d5977d0facc925bb97c3830ccf9252385819cd"
       },
       {
         "path": "tests/test_sound.py",
@@ -13873,7 +13875,7 @@ the source and the notes made as each module was converted.
       },
       {
         "path": "tests/test_updates.py",
-        "sha256": "16d75f795f95287c82a72ffb03518df121d3b20fb2d801944b9baf9a99ead5e4"
+        "sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b"
       },
       {
         "path": "tests/test_wayland.py",
@@ -13911,15 +13913,10 @@ the source and the notes made as each module was converted.
         "id": "P-ci",
         "description": "CI's Linux (xvfb) legs, the distribution containers (Qt 6.4 on Ubuntu 24.04) and macOS on the M6B changes; Linux was run here in WSL (1257 passed) and macOS only type-checked",
         "next_action": "Read the coordinator's next CI run of improve/assessment-fixes after the merge; re-run any failing check here."
-      },
-      {
-        "id": "P-m8-merge",
-        "description": "M8 phase B is translating the eight hub files; T6-phase-b waits for its merge",
-        "next_action": "When the coordinator resumes M6B: merge improve/assessment-fixes, re-run the gates, then do T6-phase-b from the plan's integration note 1."
       }
     ],
-    "next_action": "Phase B (T6-phase-b) once M8 merges: integration note 1 lists what to do in the eight files.",
-    "source_revision": "33d0da8f36073c07ebb824ce98d466cffdf10e05"
+    "next_action": "Phase B (T6-phase-b) when the coordinator resumes M6B: M8's phase B is merged in, and integration note 1 lists what to do in the eight files.",
+    "source_revision": "e2ecbf26279027004aed068bae8a08c9fa7169b2"
   }
 }
 ```

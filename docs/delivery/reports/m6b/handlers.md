@@ -203,10 +203,10 @@ API, the error reaches the person, a routine per-item failure in a loop, or re-r
 | updates.py:183 | `(ImportError, OSError, AttributeError, ValueError)` | left | reaches the person: returned as the signer ("Unknown", the error), which `verify` puts in its sentence |
 | updates.py:242 | `OSError` | left | reaches the person: "it couldn't be copied to be installed ({error})" |
 | updates.py:344 | `(ImportError, AttributeError, RuntimeError)` | left | probing: QNetworkInformation or its backend may not exist in this Qt |
-| updates.py:429 | `(ValueError, RecursionError)` | left | answer: GitHub's reply isn't JSON; said as "GitHub's answer about the latest release wasn't readable" |
-| updates.py:474 | `OSError` | left | reaches the person: "couldn't save the download ({error})" |
-| updates.py:524 | `OSError` | left | reaches the person: "couldn't keep the download ({error})" |
-| updates.py:493 | `OSError` | logged | hidden: writing the download failed; the person hears only that it didn't finish (the abort's words), so the cause is logged |
+| updates.py:437 | `(ValueError, RecursionError)` | left | answer: GitHub's reply isn't JSON; said as "GitHub's answer about the latest release wasn't readable" |
+| updates.py:488 | `OSError` | left | reaches the person: "couldn't save the download ({error})" |
+| updates.py:538 | `OSError` | left | reaches the person: "couldn't keep the download ({error})" |
+| updates.py:507 | `OSError` | logged | hidden: writing the download failed; the person hears only that it didn't finish (the abort's words), so the cause is logged |
 | updates.py:102 | `(OSError, subprocess.SubprocessError)` | logged | hidden: the package manager's query couldn't run or timed out; the next one is asked |
 | wayland.py:164 | `OSError` | logged | hidden: connecting to the compositor's socket (WAYLAND_DISPLAY) failed; no overlay, the stage is an X window |
 | wayland.py:230 | `(BlockingIOError, InterruptedError)` | left | flow: the socket can't take more now; flush() says so and the write notifier finishes later |

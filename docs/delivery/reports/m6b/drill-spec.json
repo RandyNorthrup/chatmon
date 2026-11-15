@@ -199,8 +199,8 @@
       "id": "M6B-03-package-manager-failure-hidden",
       "requirement": "M6B-03.A5",
       "file": "chatmon/updates.py",
-      "find": "                    logger.debug(\"couldn't ask %s whether it installed Chatmon: %s\", query[0], exc)\n",
-      "replace": "                    pass\n",
+      "find": "                    logger.debug(\"couldn't ask %s whether it installed Chatmon: %s\", query[0], exc)\r\n",
+      "replace": "                    pass\r\n",
       "test": [
         "tests/test_updates.py::test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked"
       ],
