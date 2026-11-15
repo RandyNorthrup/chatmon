@@ -41,22 +41,24 @@
   {
    "id": "W4-BEH-PKG-CONTAINERS",
    "leg": "ubu3.15",
-   "log": "pkg-132693794398-linux.log",
+   "log": "pkgpr-132701246294-linux.log",
    "acceptance": [
     "AC-01-LINUX"
    ],
    "no_cilog": true,
-   "method": "Packages run 43675230966 (workflow_dispatch on d3f6a6e, whose packaging/ and chatmon/updates.py are fb19cb9's; fb19cb9 changed only chatmon/settings.py and tests/test_log.py), job linux, step 'Install each on a fresh system, run it, remove it'. It built the deb and rpm and ran packaging/linux/test-install-update.sh, root's own update path, in ubuntu:24.04, debian:trixie and fedora:44 containers. Each printed 'test-install-update: all good' (log lines 228, 256 and 810), and the job succeeded. This resolves the CI-CONTAINER pending operation."
+   "method": "Packages run 43677664360, the pull_request run on PR #18. Its head is fb19cb9, and its test merge with main (df72534) has fb19cb9's own tree, 5d0d6b2 (reports/wave4/ci/pr18-checks.txt), so it built exactly these files. Job linux. It built the deb and rpm, then installed each on a fresh system, ran it and removed it. In ubuntu:24.04, debian:trixie and fedora:44 containers it ran packaging/linux/test-install-update.sh, root's own update path with no caller's checksum. Each printed 'test-install-update: all good' (log lines 240, 268 and 822), and the job succeeded. This resolves the CI-CONTAINER pending operation. The earlier workflow_dispatch run 43675230966 on d3f6a6e (the same packaging/ and pyproject.toml) gave the same results; its logs are in reports/wave4/ci/ too.",
+   "run": "43677664360"
   },
   {
    "id": "W4-BEH-PKG-MACOS",
    "leg": "mac3.14",
-   "log": "pkg-132693794360-macos-macos-latest.log",
+   "log": "pkgpr-132701246370-macos-macos-latest.log",
    "acceptance": [
     "AC-01-MACOS"
    ],
    "no_cilog": true,
-   "method": "Packages run 43675230966 (d3f6a6e; packaging/ unchanged since), job macos (macos-latest), step 'Root's side of updating is in the app, the app is root's, and its check refuses what it can't read'. Chatmon.app was installed from the built .pkg, owned by uid 0, with Contents/Resources/install-update. Its own frozen verify-update refused files that aren't there with exit 3 ('The update wasn't installed: couldn't read missing.txt'). The macos-15-intel job, whose log is in docs/delivery/reports/wave4/ci/, did the same."
+   "method": "Packages run 43677664360, the pull_request run on PR #18. Its head is fb19cb9, and its test merge with main (df72534) has fb19cb9's own tree, 5d0d6b2 (reports/wave4/ci/pr18-checks.txt), so it built exactly these files. Job macos (macos-latest). Chatmon.app was installed from the built .pkg. The job checked that it was owned by uid 0 and had Contents/Resources/install-update. Its own frozen verify-update refused files that aren't there with exit 3 (log line 491: 'The update wasn't installed: couldn't read missing.txt'). The macos-15-intel job did the same (pkgpr-132701246264-macos-macos-15-intel.log, line 582). The earlier workflow_dispatch run 43675230966 on d3f6a6e (the same packaging/ and pyproject.toml) gave the same results; its logs are in reports/wave4/ci/ too.",
+   "run": "43677664360"
   }
  ],
  "receipts": [

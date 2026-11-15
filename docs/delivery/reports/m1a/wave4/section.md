@@ -10,10 +10,10 @@ changing packaging and the requirements. Their merges will make some of these re
 
 - **CI-MACOS: resolved.** In CI run 43677128712 on fb19cb9, with every job green, the macOS tests passed on all three
   macOS legs: the root code with a checked copy of Chatmon.app, the AppleScript hand-off, the postinstall under BSD
-  `ls`, and the `statfs` mount check. In Packages run 43675230966, the macos-latest and macos-15-intel jobs installed the
-  built .pkg. Chatmon.app was root's, with `install-update` inside it, and its own frozen `verify-update` refused missing
+  `ls`, and the `statfs` mount check. In PR #18's Packages run 43677664360, on fb19cb9's own tree, the macos-latest and
+  macos-15-intel jobs installed the built .pkg. Chatmon.app was root's, with `install-update` inside it, and its own frozen `verify-update` refused missing
   files with exit 3.
-- **CI-CONTAINER: resolved.** `packages.yml`'s Linux job ran `packaging/linux/test-install-update.sh`, root's real path,
+- **CI-CONTAINER: resolved.** In the same run, and in the earlier 43675230966, `packages.yml`'s Linux job ran `packaging/linux/test-install-update.sh`, root's real path,
   in ubuntu:24.04, debian:trixie and fedora:44 containers ("all good" three times), with no caller's checksum.
 - **MERGE-ISOLATION: resolved.** `tests/conftest.py` gives every test its own `LOCALAPPDATA` and `CHATMON_INSTANCE`, and
   the whole suite passes on Windows ([wave4/suite-windows.log](reports/wave4/suite-windows.log): 1241 passed, 148
