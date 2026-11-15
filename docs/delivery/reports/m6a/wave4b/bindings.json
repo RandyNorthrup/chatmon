@@ -1,0 +1,513 @@
+{
+ "plan": "docs/delivery/m6a-ci-tooling.md",
+ "section": "docs/delivery/reports/m6a/wave4b/section.md",
+ "rules": {
+  "docs/delivery/ROADMAP.md": "bf9d8ac+wave4b",
+  "pyproject.toml": "bf9d8ac"
+ },
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "task_changes_add": {},
+ "stale_reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023",
+ "receipts": [
+  {
+   "id": "W4B-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "M6A-01.A1",
+    "M6A-01.A2",
+    "M6A-01.A3",
+    "M6A-02.A1",
+    "M6A-03.A1",
+    "M6A-04.A1",
+    "M6A-04.A2",
+    "M6A-05.A1",
+    "M6A-05.A2",
+    "M6A-06.A1",
+    "M6A-06.A2",
+    "M6A-06.A3",
+    "M6A-07.A1",
+    "M6A-08.A1",
+    "M6A-08.A2",
+    "M6A-09.A1",
+    "M6A-10.A1",
+    "M6A-10.A2",
+    "M6A-11.A1",
+    "M6A-12.A1",
+    "M6A-13.A1",
+    "M6A-15.A1",
+    "M6A-I1.A1",
+    "M6A-I1.A2"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4b/readiness.md",
+   "method": "Requirements review, round two, at bf9d8ac (readiness.md): M6A-01 to M6A-15 and M6A-I1 re-read against ASSESSMENT.md, the amended ROADMAP.md (main's 19 required checks) and pyproject.toml as they are now (fail_under 84); no conflict or gap; CONTRIBUTING.md's two sentences fixed; P-RELEASE and P-DEPENDABOT still the owner's and after the merge."
+  },
+  {
+   "id": "W4B-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-01.A3",
+    "M6A-05.A1",
+    "M6A-06.A1",
+    "M6A-08.A1",
+    "M6A-10.A2"
+   ],
+   "artifact": "docs/delivery/reports/wave4b/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on bf9d8ac's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1256 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. For these criteria the suite is the check itself: pyproject.toml's settings (every warning an error, strict marks, the time limit) hold the whole run, and tests/test_requirements.py and tests/test_package_data.py passed in it. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CHECKSUMS",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-I1.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "command": [
+    "C:/Program Files/Git/usr/bin/bash.exe",
+    "<copy>/run-step.sh"
+   ],
+   "exit_code": 0,
+   "method": "The checksums job's own run: block from packages.yml at bf9d8ac, run by gate_drills.py's G-checksums-key setup on a copy with a throwaway Ed25519 key that chatmon/releasecheck.py trusts. Its green run (gate-drills.log, section G-checksums-key) listed and signed both files and found the signing key in RELEASE_KEYS. The real job runs only on a pushed tag; it was skipped in Packages run 43675230966. Evidence for fb19cb9: two other workers are changing code at the same time, so their merges will need this re-checked."
+  },
+  {
+   "id": "W4B-MAN-CI-REVIEW",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-01.A2",
+    "M6A-04.A2",
+    "M6A-05.A2",
+    "M6A-07.A1",
+    "M6A-15.A1",
+    "M6A-I1.A2"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4b/ci-review.md",
+   "method": "Each criterion read again, line by line in ci-review.md, against ci.yml and packages.yml at bf9d8ac, then against what PR #18's runs on bf9d8ac did: CI run 43701523023 (19 jobs, the new sway job among them) and Packages run 43701523037 (the five build jobs; their logs are in wave4b/ci/). That covers: timeouts (the sway job's too), triggers and concurrency; the coverage legs, their upload and the combine; the 3.14 legs and hash-checked installs; the sparse checkouts; the release jobs as written (their tagged run is still P-RELEASE); and the Linux packages installed, run, checked and removed."
+  },
+  {
+   "id": "W4B-MAN-DEPENDABOT",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-02.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4b/dependabot-schema.log",
+   "method": "check-jsonschema 0.39.0 validated .github/dependabot.yml at bf9d8ac against SchemaStore's Dependabot schema (dependabot-schema.log). The file was read again (ci-review.md): three entries, weekly, a 14-day cooldown, the PyQt6 groups, versioning-strategy increase-if-necessary keeping the PyQt6>=6.5 floor, and since round one an ignore for PyQt6 6.12.0, whose own QtDBus stub stops mypy. Dependabot's first run on main is still P-DEPENDABOT."
+  },
+  {
+   "id": "W4B-MAN-SDE",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-06.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4b/source-date-epoch.log",
+   "method": "sde_check.py made two copies of bf9d8ac's wheel inputs with file times a fortnight apart, and built each with python -m build --no-isolation --wheel on the hash-locked build tools. The wheels differed without SOURCE_DATE_EPOCH and were byte-identical with it set to the commit's time, which is how packages.yml's 'Date the build by its commit' step sets it (observed in Packages run 43675230966)."
+  },
+  {
+   "id": "W4B-MAN-WINUPDATE",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-11.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4b/windows-update-optin.log",
+   "method": "On this Windows workstation at bf9d8ac, tests/test_windows.py -k windows_update_check skipped by default, with its reason naming CHATMON_TEST_WINDOWS_UPDATE=1. With the variable set, it ran against Windows Update and passed; its duration is in the log."
+  },
+  {
+   "id": "W4B-MAN-DOCS",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-10.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4b/docs-review.md",
+   "method": "SECURITY.md, CONTRIBUTING.md and the issue chooser read claim by claim against bf9d8ac and the repository's settings (docs-review.md). Round one's two stale sentences are rewritten and true. The new paragraph's claim, that mypy passes with PyQt6 6.12.1's stubs, was checked with mypy 2.4.1 and PyQt6 6.12.1 on linux, win32 and darwin in WSL (mypy-pyqt6-6.12.1-*.log)."
+  },
+  {
+   "id": "W4B-BEH-CI-LINT",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-01.A1",
+    "M6A-12.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/ci/ci-132773560250-lint.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773560250",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job lint. Two steps ran on .github and passed: 'actionlint, on the workflows (and shellcheck, the runner's, on their scripts)' and 'zizmor, the workflows' security audit'. zizmor v1.31.1 completed .github/dependabot.yml, ci.yml and packages.yml with no finding, and the job succeeded. These clean runs check that every action is pinned to a commit SHA and credentials aren't persisted, and they are themselves the actionlint and zizmor runs in CI. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CI-DISTRO-UBUNTU",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-03.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/ci/ci-132773560216-distro-ubuntu-24.04.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773560216",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job distro (ubuntu:24.04). The whole suite ran in the container on Ubuntu 24.04's own python3-pyqt6: 1280 passed, 154 skipped (each with its reason), and the job succeeded. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CI-DISTRO-DEBIAN",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-03.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/ci/ci-132773560171-distro-debian-trixie.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773560171",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job distro (debian:trixie). The whole suite ran on Debian trixie's own PyQt6: 1280 passed, 154 skipped, and the job succeeded. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CI-DISTRO-FEDORA",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-03.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/ci/ci-132773560180-distro-fedora-44.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773560180",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job distro (fedora:44). The whole suite ran on Fedora 44's own PyQt6: 1282 passed, 152 skipped, and the job succeeded. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CI-COVERAGE",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-04.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/ci/ci-132775142433-coverage.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132775142433",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job coverage. It downloaded the three Python 3.14 legs' data (Windows, macOS, ubuntu-24.04-arm), combined it, wrote the table to the summary, and held the total to pyproject.toml's fail_under = 84. TOTAL was 20758 statements with 2261 missed, 86.5%, and the job succeeded. The same data, downloaded and combined here, gives the same total (wave4b/coverage-combined.log). Round one's follow-up is done: the floor went from 72 to 84 (the followups worker, from run 43694278702's 86.2%). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-PKG-INSTALL",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-06.A2"
+   ],
+   "artifact": "docs/delivery/reports/m6a/ci/pkg-132773549252-windows.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523037",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773549252",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "Packages run 43701523037, the pull_request run on PR #18 at bf9d8ac, whose test merge has bf9d8ac's own tree (reports/wave4b/ci: the merge's tree equals bf9d8ac's). Job windows, from log line 267: python -m pip install --require-hashes -r packaging/requirements-build.txt, then --require-hashes --no-build-isolation -r packaging/requirements.txt; both succeeded, and the job built the installer. The macos-latest and macos-15-intel jobs ran the same installs (pkg-132773549569-macos-macos-latest.log, line 173). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-PKG-WHEEL",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-08.A2",
+    "M6A-09.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/ci/pkg-132773549529-python.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523037",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773549529",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "Packages run 43701523037, the pull_request run on PR #18 at bf9d8ac, whose test merge has bf9d8ac's own tree (reports/wave4b/ci: the merge's tree equals bf9d8ac's). Job python. It dated the build by the commit (SOURCE_DATE_EPOCH) and built the wheel and sdist without isolation on the hash-locked setuptools. twine check --strict passed for both (log lines 1161-1162). tests/test_package_data.py then passed on what was built (line 1189). Those tests check that every tracked file under chatmon/ is in the wheel and that the only console script is chatmon. The windows, macos and linux jobs also succeeded, and the five release jobs were skipped, as designed for a run that isn't a tag. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CI-TYPES",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-13.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/ci/ci-132773560129-types-linux.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773560129",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job types (linux): mypy --platform linux on pyproject.toml's [tool.mypy] passed. The types (win32) and types (darwin) jobs, whose logs are in wave4b/ci/, passed too. M6B took every module off the exemption list, so the gate as it stands passes on all three platforms. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-G-actionlint-expression",
+   "kind": "red",
+   "acceptance": [
+    "M6A-12.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "G-actionlint-expression",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill G-actionlint-expression through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-G-checksums-key",
+   "kind": "red",
+   "acceptance": [
+    "M6A-I1.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "G-checksums-key",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill G-checksums-key through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-G-coverage-floor",
+   "kind": "red",
+   "acceptance": [
+    "M6A-04.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "G-coverage-floor",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill G-coverage-floor through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-G-mypy-gated",
+   "kind": "red",
+   "acceptance": [
+    "M6A-13.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "G-mypy-gated",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill G-mypy-gated through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-G-pip-hashes",
+   "kind": "red",
+   "acceptance": [
+    "M6A-06.A2"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "G-pip-hashes",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill G-pip-hashes through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-G-pytest-strict-markers",
+   "kind": "red",
+   "acceptance": [
+    "M6A-01.A3"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "G-pytest-strict-markers",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill G-pytest-strict-markers through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-G-zizmor-unpinned",
+   "kind": "red",
+   "acceptance": [
+    "M6A-01.A1",
+    "M6A-12.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "G-zizmor-unpinned",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill G-zizmor-unpinned through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M6A-01-warnings",
+   "kind": "red",
+   "acceptance": [
+    "M6A-01.A3"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/drills-results.json",
+   "drill": "M6A-01-warnings",
+   "artifact": "docs/delivery/reports/m6a/wave4b/drills.log",
+   "method": "Red drill M6A-01-warnings through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M6A-05-qt",
+   "kind": "red",
+   "acceptance": [
+    "M6A-05.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/drills-results.json",
+   "drill": "M6A-05-qt",
+   "artifact": "docs/delivery/reports/m6a/wave4b/drills.log",
+   "method": "Red drill M6A-05-qt through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M6A-06-hash",
+   "kind": "red",
+   "acceptance": [
+    "M6A-06.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/drills-results.json",
+   "drill": "M6A-06-hash",
+   "artifact": "docs/delivery/reports/m6a/wave4b/drills.log",
+   "method": "Red drill M6A-06-hash through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M6A-06-stale",
+   "kind": "red",
+   "acceptance": [
+    "M6A-06.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/drills-results.json",
+   "drill": "M6A-06-stale",
+   "artifact": "docs/delivery/reports/m6a/wave4b/drills.log",
+   "method": "Red drill M6A-06-stale through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M6A-08-glob",
+   "kind": "red",
+   "acceptance": [
+    "M6A-08.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/drills-results.json",
+   "drill": "M6A-08-glob",
+   "artifact": "docs/delivery/reports/m6a/wave4b/drills.log",
+   "method": "Red drill M6A-08-glob through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M6A-10-dev",
+   "kind": "red",
+   "acceptance": [
+    "M6A-10.A2"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/drills-results.json",
+   "drill": "M6A-10-dev",
+   "artifact": "docs/delivery/reports/m6a/wave4b/drills.log",
+   "method": "Red drill M6A-10-dev through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-W-entry-points",
+   "kind": "red",
+   "acceptance": [
+    "M6A-09.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "W-entry-points",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill W-entry-points through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-W-twine-markup",
+   "kind": "red",
+   "acceptance": [
+    "M6A-08.A2"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "W-twine-markup",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill W-twine-markup through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-W-wheel-sounds",
+   "kind": "red",
+   "acceptance": [
+    "M6A-08.A2"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/gate-drills-results.json",
+   "drill": "W-wheel-sounds",
+   "artifact": "docs/delivery/reports/m6a/wave4b/gate-drills.log",
+   "method": "Red drill W-wheel-sounds through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M6A-03-distro-fails-on-a-failed-test",
+   "kind": "red",
+   "acceptance": [
+    "M6A-03.A1"
+   ],
+   "results": "docs/delivery/reports/m6a/wave4b/distro-drill-results.json",
+   "drill": "W4-M6A-03-distro-fails-on-a-failed-test",
+   "artifact": "docs/delivery/reports/m6a/wave4b/distro-drill.log",
+   "method": "Red drill on .github/scripts/distro-tests.sh as CI's distro jobs run it (docs/delivery/reports/m6a/wave4b/distro_drill.sh, in WSL with podman 6.2.0). Each run was a fresh debian:trixie container on its own PyQt6, against a copy of bf9d8ac's files with LF as git stores them. The script went green; then red, with tests/test_cli.py's '--help' assertion made '== 1' in the copy, so the script failed and the job would; then green again, with the file's bytes put back and checked by SHA-256. The three runs' logs are distro-drill-green.log, -red.log and -restored.log, beside the summary. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  }
+ ],
+ "tasks": {},
+ "pending": [
+  {
+   "id": "P-RELEASE",
+   "description": "The first tag-pushed release (0.10.0) will be the first to draft, attest and publish through the new jobs. PR #18's Packages run 43701523037 at bf9d8ac ran every build job and, as designed for a run that isn't a tag, skipped sign-windows, test-signed-windows, checksums, attest and publish. No v0.10.0 tag exists yet (the newest is v0.9.2; reports/wave4b/github-settings.txt).",
+   "next_action": "At the 0.10.0 release (Randy or the coordinator): push the tag, watch attest and publish, then run gh attestation verify <file> --repo RandyNorthrup/chatmon on one file."
+  },
+  {
+   "id": "P-DEPENDABOT",
+   "description": "Dependabot's first run, including whether it relocks the uv-compiled, hash-locked packaging/requirements*.txt from their .in files, is not observed. Dependabot reads .github/dependabot.yml from main, which doesn't have it yet (reports/wave4b/github-settings.txt, 2026-11-15). The owner turned on Dependabot alerts and security updates on 2026-11-14.",
+   "next_action": "After the PR reaches main (the coordinator), read Dependabot's first pull requests. If it can't relock the uv-made files, lock them by hand on its proposals (CONTRIBUTING.md has the command)."
+  }
+ ],
+ "next_action": "Two outcomes remain, neither in reach before a tag and a merge: the 0.10.0 tag (P-RELEASE, Randy or the coordinator) and Dependabot's first run once .github/dependabot.yml is on main (P-DEPENDABOT, the coordinator). wave4/crash may change code: re-run this plan's checks on the merged tree.",
+ "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545",
+ "watch_paths": [
+  "chatmon/app.py",
+  "chatmon/brains.py",
+  "tests/app_harness.py",
+  "tests/test_app_smoke.py"
+ ],
+ "watch_who": "wave4/crash (not merged at bf9d8ac)"
+}

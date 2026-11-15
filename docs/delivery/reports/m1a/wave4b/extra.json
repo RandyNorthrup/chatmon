@@ -1,0 +1,87 @@
+{
+ "readiness_method": "Requirements review, round two, at bf9d8ac (readiness.md): M1A-01 to M1A-12 and M6A-14 re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now; no conflict or gap; AC-01-MACOS's red drill still needs a Mac.",
+ "windows_note": "AC-01-LINUX, AC-01-MACOS and AC-02 are left out: their tests are POSIX- or macOS-only and skip here (CI's and WSL's receipts cover them).",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "drill_acceptance": {},
+ "tests_add": {},
+ "observe_add": [
+  "tests/test_install_update.py",
+  "tests/test_attachments.py",
+  "tests/test_packaging.py",
+  "tests/test_agents.py::test_backups"
+ ],
+ "ci": [
+  {
+   "id": "W4B-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132773560297-test-ubuntu-24.04-3.15.log",
+   "acceptance": [
+    "AC-01-LINUX",
+    "AC-02",
+    "AC-07",
+    "AC-09-ORDER",
+    "AC-09-REMOTE"
+   ],
+   "method": "CI run 43701523023 on bf9d8ac, job test (ubuntu-24.04, 3.15): every Linux test of these criteria passed. That is tests/test_install_update.py's root-side tests (a signed newer package installed from root's own copy; a tampered list, a bad signature, an older release and a changed package refused; a caller's checksum never taken; the check loaded only from root's own files), tests/test_packaging.py's postinstall tests (a folder not root's alone gets nothing), tests/test_agents.py's private backups, and tests/test_attachments.py's Linux mount and pipe tests. The same tests passed on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the three distro containers."
+  },
+  {
+   "id": "W4B-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132773560342-test-macos-latest-3.14.log",
+   "acceptance": [
+    "AC-01-MACOS",
+    "AC-02",
+    "AC-09-REMOTE"
+   ],
+   "method": "CI run 43701523023 on bf9d8ac, job test (macos-latest, 3.14): tests/test_install_update.py's macOS tests passed. They cover a signed newer package installed from a checked copy of Chatmon.app; a bad list, signature or older release refused; an app others could change never run as root; and the AppleScript handing paths over as data. Also passed: tests/test_packaging.py's postinstall tests under BSD ls and tests/test_attachments.py::test_mac_mounts_not_stored_here_are_refused (macOS statfs). The same tests passed on the 3.11 and 3.15 legs."
+  },
+  {
+   "id": "W4B-BEH-PKG-CONTAINERS",
+   "leg": "ubu3.15",
+   "log": "pkg-132773549513-linux.log",
+   "acceptance": [
+    "AC-01-LINUX"
+   ],
+   "no_cilog": true,
+   "method": "Packages run 43701523037, the pull_request run on PR #18 at bf9d8ac, whose test merge has bf9d8ac's own tree (reports/wave4b/ci: the merge's tree equals bf9d8ac's). Job linux. It built the deb and rpm, then installed each on a fresh system, ran it and removed it. In ubuntu:24.04, debian:trixie and fedora:44 containers it ran packaging/linux/test-install-update.sh, root's own update path with no caller's checksum. Each printed 'test-install-update: all good' (log lines 240, 269 and 823), and the job succeeded.",
+   "run": "43701523037"
+  },
+  {
+   "id": "W4B-BEH-PKG-MACOS",
+   "leg": "mac3.14",
+   "log": "pkg-132773549569-macos-macos-latest.log",
+   "acceptance": [
+    "AC-01-MACOS"
+   ],
+   "no_cilog": true,
+   "method": "Packages run 43701523037, the pull_request run on PR #18 at bf9d8ac, whose test merge has bf9d8ac's own tree (reports/wave4b/ci: the merge's tree equals bf9d8ac's). Job macos (macos-latest). Chatmon.app was installed from the built .pkg. The job checked that it was owned by uid 0 and had Contents/Resources/install-update. Its own frozen verify-update refused files that aren't there with exit 3 (log line 491: 'The update wasn't installed: couldn't read missing.txt'). The macos-15-intel job did the same (pkg-132773549510-macos-macos-15-intel.log, line 495).",
+   "run": "43701523037"
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4B-MAN-AC10",
+   "kind": "manual",
+   "acceptance": [
+    "AC-10"
+   ],
+   "artifact": "docs/delivery/reports/m1a/wave4b/review-ac10.md",
+   "method": "Read winpipe's module and function docstrings again against the code at bf9d8ac (review-ac10.md): they say the DACL keeps other users out and describe client_is_me as a check a server can make on each connection, which app.py's accept path now makes (M7); nothing claims a check that isn't made."
+  },
+  {
+   "id": "W4B-RED-AC-01-MACOS",
+   "kind": "red",
+   "status": "deferred",
+   "acceptance": [
+    "AC-01-MACOS"
+   ],
+   "method": "The drill for macOS's root code: in chatmon/updates.py's _MACOS_ROOT, replace '! -user root -o -perm +022' with '-name nothing', then tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root must fail, and pass again once the text is restored.",
+   "reason": "Not run: the test needs macOS (ditto, BSD find, osascript). No Mac is here or in the test lab, and a CI run of a drill branch needs a push, which this worker may not make. Next action: Randy on a Mac, or the coordinator pushing a throwaway branch with the mutation and dispatching ci.yml on it; until then T-03-macos-root stays implemented."
+  }
+ ],
+ "pending": [],
+ "next_action": "AC-01-MACOS's red drill on macOS (W4-RED-AC-01-MACOS says how): Randy on a Mac, or the coordinator through a CI run of a drill branch; then T-03-macos-root is verified and M1A can close. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree."
+}

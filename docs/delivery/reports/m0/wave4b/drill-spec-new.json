@@ -1,0 +1,108 @@
+{
+  "drills": [
+    {
+      "id": "W4-M0-01-priority",
+      "requirement": "M0-01.A1",
+      "file": "chatmon/messages.py",
+      "find": "return sorted((m for m in self.waiting if self.passes(m)), key=lambda m: (m.priority, m.background, m.seq))",
+      "replace": "return sorted((m for m in self.waiting if self.passes(m)), key=lambda m: m.seq)",
+      "test": [
+        "tests/test_messages.py::test_alerts_then_reminders_then_prompts_then_plain_bubbles"
+      ],
+      "expect": [
+        "test_alerts_then_reminders_then_prompts_then_plain_bubbles"
+      ]
+    },
+    {
+      "id": "W4-M0-04-appearance",
+      "requirement": "M0-04.A2",
+      "file": "chatmon/menus.py",
+      "find": "companion_menu(c, _submenu(appearance, _(\"Companion\")))",
+      "replace": "companion_menu(c, _submenu(m, _(\"Companion\")))",
+      "test": [
+        "tests/test_app_smoke.py::test_hide_menu_and_reload"
+      ],
+      "expect": [
+        "test_hide_menu_and_reload"
+      ]
+    },
+    {
+      "id": "W4-M0-04-reload-under-help",
+      "requirement": "M0-04.A3",
+      "file": "chatmon/menus.py",
+      "find": "sub.addAction(_(\"Reload settings file\"), c.reload)",
+      "replace": "pass",
+      "test": [
+        "tests/test_app_smoke.py::test_hide_menu_and_reload"
+      ],
+      "expect": [
+        "test_hide_menu_and_reload"
+      ]
+    },
+    {
+      "id": "W4-M0-05-hide-not-kept",
+      "requirement": "M0-05.A1",
+      "file": "chatmon/commands.py",
+      "find": "\"stop focus\": _stop_focus, \"hide\": _hide, \"new chat\": _new_chat,",
+      "replace": "\"stop focus\": _stop_focus, \"new chat\": _new_chat,",
+      "test": [
+        "tests/test_commands.py::test_the_same_phrases_run_the_same_commands"
+      ],
+      "expect": [
+        "test_the_same_phrases_run_the_same_commands"
+      ]
+    },
+    {
+      "id": "W4-M0-09-password-read-out",
+      "requirement": "M0-09.A1",
+      "file": "chatmon/commands.py",
+      "find": "c._offline(text, made, spoken=_(PASSWORD_MADE) if \"`\" in made else None)",
+      "replace": "c._offline(text, made)",
+      "test": [
+        "tests/test_app_smoke.py::test_a_password_made_is_never_read_out"
+      ],
+      "expect": [
+        "test_a_password_made_is_never_read_out"
+      ]
+    },
+    {
+      "id": "W4-M0-12-come-forward",
+      "requirement": "M0-12.A2",
+      "file": "chatmon/cli.py",
+      "find": "return bool(ctypes.windll.user32.AllowSetForegroundWindow(ctypes.c_ulong(target)))",
+      "replace": "return False",
+      "test": [
+        "tests/test_cli.py::test_on_windows_ask_lets_only_chatmon_come_forward_before_sending"
+      ],
+      "expect": [
+        "test_on_windows_ask_lets_only_chatmon_come_forward_before_sending"
+      ]
+    },
+    {
+      "id": "W4-M0-03-light-limit",
+      "requirement": "M0-03.A3",
+      "file": "chatmon/menus.py",
+      "find": "listed = c.chat_book.listing(RECENT_CHATS) if c._keeps_chats() else []",
+      "replace": "listed = c.chat_book.listing() if c._keeps_chats() else []",
+      "test": [
+        "tests/test_app_smoke.py::test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window"
+      ],
+      "expect": [
+        "test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window"
+      ]
+    },
+    {
+      "id": "W4-M0-03-light-copies-v2",
+      "requirement": "M0-03.A3",
+      "file": "chatmon/menus.py",
+      "find": "listed = c.chat_book.listing(RECENT_CHATS) if c._keeps_chats() else []",
+      "replace": "listed = c.chat_book.recent(RECENT_CHATS) if c._keeps_chats() else []",
+      "test": [
+        "tests/test_app_smoke.py::test_the_chats_menu_lists_chats_without_reading_any_whole"
+      ],
+      "expect": [
+        "test_the_chats_menu_lists_chats_without_reading_any_whole"
+      ]
+    }
+  ]
+}

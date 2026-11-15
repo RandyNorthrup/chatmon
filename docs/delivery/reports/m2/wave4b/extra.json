@@ -1,0 +1,33 @@
+{
+ "readiness_method": "Requirements review, round two, at bf9d8ac (readiness.md): R-M2-01 to R-M2-20 re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now; no conflict or gap; M2-11's old drill text gone (the plan's other drills cover its criterion).",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "drill_acceptance": {},
+ "observe_add": [
+  "tests/test_ask_box.py",
+  "tests/test_bubble_safety.py",
+  "tests/test_bubble_styles.py",
+  "tests/test_contrast.py",
+  "tests/test_rich_text.py",
+  "tests/test_speech_bubble.py"
+ ],
+ "ci": [
+  {
+   "id": "W4B-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132773560297-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (ubuntu-24.04, 3.15). Every test in M2's six test files passed: tests/test_ask_box.py, test_bubble_safety.py, test_bubble_styles.py, test_contrast.py, test_rich_text.py and test_speech_bubble.py, 158 tests in all with none skipped. The same was true on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the ubuntu:24.04, debian:trixie and fedora:44 containers on their own Qt."
+  },
+  {
+   "id": "W4B-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132773560342-test-macos-latest-3.14.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (macos-latest, 3.14). Every test in M2's six test files passed (158, none skipped), as on the 3.11 and 3.15 legs."
+  }
+ ],
+ "receipts": [],
+ "pending": [],
+ "next_action": "None in M2 on bf9d8ac. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill spec in wave4/ on the merged tree."
+}

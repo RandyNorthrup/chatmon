@@ -1,0 +1,299 @@
+types (darwin)	Set up job	﻿2026-11-15T09:55:15.5023805Z Current runner version: '2.338.2'
+types (darwin)	Set up job	2026-11-15T09:55:15.5077174Z ##[group]Runner Image Provisioner
+types (darwin)	Set up job	2026-11-15T09:55:15.5078015Z Hosted Compute Agent
+types (darwin)	Set up job	2026-11-15T09:55:15.5078668Z Version: 20261103.629
+types (darwin)	Set up job	2026-11-15T09:55:15.5079377Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+types (darwin)	Set up job	2026-11-15T09:55:15.5080131Z Build Date: 2026-11-03T17:26:59Z
+types (darwin)	Set up job	2026-11-15T09:55:15.5080839Z Worker ID: {d9593ff5-85e1-4eb5-bf8c-c2aed25aad8b}
+types (darwin)	Set up job	2026-11-15T09:55:15.5081526Z Region: us-east-1
+types (darwin)	Set up job	2026-11-15T09:55:15.5082087Z Cloud: AWS
+types (darwin)	Set up job	2026-11-15T09:55:15.5082593Z ##[endgroup]
+types (darwin)	Set up job	2026-11-15T09:55:15.5084691Z ##[group]Operating System
+types (darwin)	Set up job	2026-11-15T09:55:15.5085380Z Ubuntu
+types (darwin)	Set up job	2026-11-15T09:55:15.5085855Z 24.04.5
+types (darwin)	Set up job	2026-11-15T09:55:15.5086379Z LTS
+types (darwin)	Set up job	2026-11-15T09:55:15.5086877Z ##[endgroup]
+types (darwin)	Set up job	2026-11-15T09:55:15.5087443Z ##[group]Runner Image
+types (darwin)	Set up job	2026-11-15T09:55:15.5088038Z Image: ubuntu-24.04
+types (darwin)	Set up job	2026-11-15T09:55:15.5088591Z Version: 20261111.127.1
+types (darwin)	Set up job	2026-11-15T09:55:15.5089652Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+types (darwin)	Set up job	2026-11-15T09:55:15.5091444Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+types (darwin)	Set up job	2026-11-15T09:55:15.5092392Z ##[endgroup]
+types (darwin)	Set up job	2026-11-15T09:55:15.5093799Z ##[group]GITHUB_TOKEN Permissions
+types (darwin)	Set up job	2026-11-15T09:55:15.5096133Z Contents: read
+types (darwin)	Set up job	2026-11-15T09:55:15.5096805Z Metadata: read
+types (darwin)	Set up job	2026-11-15T09:55:15.5097330Z ##[endgroup]
+types (darwin)	Set up job	2026-11-15T09:55:15.5099467Z Secret source: Actions
+types (darwin)	Set up job	2026-11-15T09:55:15.5100577Z Cache mode: write
+types (darwin)	Set up job	2026-11-15T09:55:15.5101522Z Prepare workflow directory
+types (darwin)	Set up job	2026-11-15T09:55:15.5487712Z Prepare all required actions
+types (darwin)	Set up job	2026-11-15T09:55:15.5540236Z Getting action download info
+types (darwin)	Set up job	2026-11-15T09:55:15.7047147Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+types (darwin)	Set up job	2026-11-15T09:55:17.4098405Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+types (darwin)	Set up job	2026-11-15T09:55:17.6044438Z Complete job name: types (darwin)
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T09:55:17.6822785Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6824789Z with:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6825663Z   persist-credentials: false
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6826578Z   sparse-checkout: /*
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6827655Z   sparse-checkout-cone-mode: false
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6828643Z   repository: RandyNorthrup/chatmon
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6835266Z   token: ***
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6836091Z   ssh-strict: true
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6836871Z   ssh-user: git
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6837628Z   clean: true
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6838376Z   fetch-depth: 1
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6839149Z   fetch-tags: false
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6839972Z   show-progress: true
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6840776Z   lfs: false
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6841545Z   submodules: false
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6842339Z   set-safe-directory: true
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6843359Z   allow-unsafe-pr-checkout: false
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6844506Z env:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6845257Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.6846186Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.5568230Z Syncing repository: RandyNorthrup/chatmon
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.5569525Z ##[group]Getting Git version info
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.5569955Z Working directory is '/home/runner/work/chatmon/chatmon'
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.5570546Z [command]/usr/bin/git version
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7362789Z git version 2.56.1
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7377933Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7386179Z Temporarily overriding HOME='/home/runner/work/_temp/536d02e4-8c20-44a7-85af-898ccfa7b31d' before making global git config changes
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7387167Z Adding repository directory to the temporary git global config as a safe directory
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7390588Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7698601Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7703807Z ##[group]Determining repository object format
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7704876Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7706072Z ##[group]Initializing the repository
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.7709263Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8144435Z hint: Using 'master' as the name for the initial branch. This default branch name
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8145144Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8145640Z hint: to use in all of your new repositories, which will suppress this warning,
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8146165Z hint: call:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8146414Z hint:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8147154Z hint: 	git config --global init.defaultBranch <name>
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8147497Z hint:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8147862Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8148356Z hint: 'development'. The just-created branch can be renamed via this command:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8148731Z hint:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8149002Z hint: 	git branch -m <name>
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8149289Z hint:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8149719Z hint: Disable this message with "git config set advice.defaultBranchName false"
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8155604Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8164300Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8206900Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8207501Z ##[group]Disabling automatic garbage collection
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8209260Z [command]/usr/bin/git config --local gc.auto 0
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8232670Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8233541Z ##[group]Setting up auth
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8233997Z Removing SSH command configuration
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8237741Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:20.8262421Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1469053Z Removing HTTP extra header
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1474511Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1502238Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1644492Z Removing includeIf entries pointing to credentials config files
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1649028Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1681973Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1817015Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1842110Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1862787Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1884275Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1914452Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1933665Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1934279Z ##[group]Fetching the repository
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.1938117Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +9faddcce70320f13e142002cba2310d06f2ec419:refs/remotes/pull/18/merge
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4742627Z From https://github.com/RandyNorthrup/chatmon
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4743788Z  * [new ref]         9faddcce70320f13e142002cba2310d06f2ec419 -> pull/18/merge
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4747558Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4748121Z ##[group]Determining the checkout info
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4748639Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4749127Z ##[group]Setting up sparse checkout
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4753479Z [command]/usr/bin/git config core.sparseCheckout true
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4780632Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4800122Z .git/info/sparse-checkout
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4805985Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4806486Z ##[group]Checking out the ref
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.4809697Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/18/merge
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8673418Z Note: switching to 'refs/remotes/pull/18/merge'.
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8673841Z 
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8674251Z You are in 'detached HEAD' state. You can look around, make experimental
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8675092Z changes and commit them, and you can discard any commits you make in this
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8675666Z state without impacting any branches by switching back to a branch.
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8675975Z 
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8676213Z If you want to create a new branch to retain commits you create, you may
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8676728Z do so (now or later) by using -c with the switch command. Example:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8677058Z 
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8677210Z   git switch -c <new-branch-name>
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8677430Z 
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8677659Z Or undo this operation with:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8677842Z 
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8678019Z   git switch -
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8678159Z 
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8678436Z Turn off this advice by setting config variable advice.detachedHead to false
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8678795Z 
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8679159Z HEAD is now at 9faddcc Merge bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8687021Z ##[endgroup]
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8728858Z [command]/usr/bin/git log -1 --format=%H
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8753176Z 9faddcce70320f13e142002cba2310d06f2ec419
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8760301Z ##[group]Removing auth
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8760676Z Removing SSH command configuration
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8764619Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8786418Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8941114Z Removing HTTP extra header
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8943494Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.8964110Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9107725Z Removing includeIf entries pointing to credentials config files
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9110654Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9132734Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9133620Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9134091Z includeif.gitdir:/github/workspace/.git.path
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9134425Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9142479Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9153317Z /home/runner/work/_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9160063Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-eec57be2\-5119\-4a20\-bdbf\-63530fda22ad\.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9181973Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9202706Z /home/runner/work/_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9207965Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-eec57be2\-5119\-4a20\-bdbf\-63530fda22ad\.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9229774Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9244819Z /github/runner_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9250822Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-eec57be2\-5119\-4a20\-bdbf\-63530fda22ad\.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9272445Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9287698Z /github/runner_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9292585Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-eec57be2\-5119\-4a20\-bdbf\-63530fda22ad\.config
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9314076Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9456265Z Removing credentials config '/home/runner/work/_temp/git-credentials-eec57be2-5119-4a20-bdbf-63530fda22ad.config'
+types (darwin)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:21.9462165Z ##[endgroup]
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T09:55:21.9675833Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9676204Z with:
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9676463Z   python-version: 3.14
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9676716Z   check-latest: false
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9678443Z   token: ***
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9678750Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9679100Z   update-environment: true
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9679343Z   allow-prereleases: false
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9679674Z   freethreaded: false
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9679902Z env:
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9680117Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:21.9680390Z ##[endgroup]
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:22.0546990Z ##[group]Installed versions
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:22.2600308Z Successfully set up CPython (3.14.10)
+types (darwin)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T09:55:22.2601436Z ##[endgroup]
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	﻿2026-11-15T09:55:22.2696050Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-dev.txt
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.2696672Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-dev.txt[0m
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4079265Z shell: /usr/bin/bash -e {0}
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4079656Z env:
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4079979Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4080300Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4080674Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4081056Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4081415Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4081752Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4082102Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:22.4082417Z ##[endgroup]
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.1200833Z Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.1201937Z Ignoring comtypes: markers 'sys_platform == "win32"' don't match your environment
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.2434488Z Collecting ast-serialize==0.13.1 (from -r packaging/requirements-dev.txt (line 3))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.2803550Z   Downloading ast_serialize-0.13.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.3411091Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 116.0 MB/s  0:00:00
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.5856160Z Collecting coverage==7.17.0 (from -r packaging/requirements-dev.txt (line 70))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.5902844Z   Downloading coverage-7.17.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (261 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.7923548Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-dev.txt (line 191))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.7980510Z   Downloading hypothesis-6.170.14-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.8052265Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 161.4 MB/s  0:00:00
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.8153493Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-dev.txt (line 276))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.8182476Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.8927157Z Collecting librt==0.16.0 (from -r packaging/requirements-dev.txt (line 280))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.8993793Z   Downloading librt-0.16.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (523 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.9607532Z Collecting mypy==2.4.1 (from -r packaging/requirements-dev.txt (line 419))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:27.9656047Z   Downloading mypy-2.4.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (15.4 MB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.0334852Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.4/15.4 MB 230.5 MB/s  0:00:00
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.0583314Z Collecting mypy-extensions==1.1.0 (from -r packaging/requirements-dev.txt (line 473))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.0613597Z   Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.0711315Z Collecting packaging==26.3 (from -r packaging/requirements-dev.txt (line 477))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.0817128Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.0930990Z Collecting pathspec==1.1.1 (from -r packaging/requirements-dev.txt (line 481))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.0965520Z   Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1056129Z Collecting pluggy==1.7.0 (from -r packaging/requirements-dev.txt (line 485))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1084021Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1462500Z Collecting psutil==7.2.2 (from -r packaging/requirements-dev.txt (line 489))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1496340Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1627085Z Collecting pygments==2.21.0 (from -r packaging/requirements-dev.txt (line 512))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1663903Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1735118Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 184.9 MB/s  0:00:00
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1852726Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-dev.txt (line 516))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.1907898Z   Downloading pyqt6-6.11.0-cp310-abi3-manylinux_2_34_x86_64.whl (8.3 MB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.2253619Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 248.7 MB/s  0:00:00
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.2442843Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-dev.txt (line 524))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.2498619Z   Downloading pyqt6_qt6-6.11.2-py3-none-manylinux_2_34_x86_64.whl (86.0 MB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.6184808Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.0/86.0 MB 234.5 MB/s  0:00:00
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.7017746Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-dev.txt (line 534))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.7067456Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-manylinux1_x86_64.manylinux_2_5_x86_64.whl (301 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.7224947Z Collecting pytest==9.2.0 (from -r packaging/requirements-dev.txt (line 566))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.7264732Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.7382471Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-dev.txt (line 572))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.7410842Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.9495899Z Collecting ruff==0.17.3 (from -r packaging/requirements-dev.txt (line 576))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:28.9525583Z   Downloading ruff-0.17.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.6 MB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0080292Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.6/10.6 MB 195.5 MB/s  0:00:00
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0243902Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-dev.txt (line 596))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0270450Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0373173Z Collecting typing-extensions==4.16.0 (from -r packaging/requirements-dev.txt (line 600))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0401316Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0489005Z Collecting tzdata==2026.6 (from -r packaging/requirements-dev.txt (line 604))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0514074Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0845594Z Collecting zizmor==1.31.1 (from -r packaging/requirements-dev.txt (line 608))
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.0880875Z   Downloading zizmor-1.31.1-py3-none-manylinux_2_28_x86_64.whl (9.6 MB)
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.1324237Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.6/9.6 MB 219.6 MB/s  0:00:00
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:29.5048950Z Installing collected packages: sortedcontainers, pyqt6-qt6, zizmor, tzdata, typing-extensions, ruff, pyqt6-sip, pygments, psutil, pluggy, pathspec, packaging, mypy-extensions, librt, iniconfig, hypothesis, coverage, ast-serialize, pytest, pyqt6, mypy, pytest-timeout
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:33.7397232Z 
+types (darwin)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T09:55:33.7415474Z Successfully installed ast-serialize-0.13.1 coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 librt-0.16.0 mypy-2.4.1 mypy-extensions-1.1.0 packaging-26.3 pathspec-1.1.1 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 ruff-0.17.3 sortedcontainers-2.4.0 typing-extensions-4.16.0 tzdata-2026.6 zizmor-1.31.1
+types (darwin)	Run mypy --platform "$PLATFORM"	﻿2026-11-15T09:55:33.8632856Z ##[group]Run mypy --platform "$PLATFORM"
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8633782Z [36;1mmypy --platform "$PLATFORM"[0m
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8660142Z shell: /usr/bin/bash -e {0}
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8660464Z env:
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8660770Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8661092Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8661482Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8661884Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8662234Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8662625Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8663134Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8663466Z   PLATFORM: darwin
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:33.8663698Z ##[endgroup]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0124846Z chatmon/bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0126125Z chatmon/bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0126865Z chatmon/bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0127544Z chatmon/bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0128261Z chatmon/bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0128952Z chatmon/bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0129883Z chatmon/bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0130587Z chatmon/bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0131284Z chatmon/bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0131987Z chatmon/bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0132683Z chatmon/bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0133687Z chatmon/bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0134398Z chatmon/bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0135352Z chatmon/bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0136172Z chatmon/bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.0137017Z chatmon/bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (darwin)	Run mypy --platform "$PLATFORM"	2026-11-15T09:55:37.2542398Z Success: no issues found in 70 source files
+types (darwin)	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T09:55:37.2710253Z Post job cleanup.
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T09:55:37.3692790Z Post job cleanup.
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4309592Z [command]/usr/bin/git version
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4337020Z git version 2.56.1
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4359790Z Temporarily overriding HOME='/home/runner/work/_temp/2a14cc88-c7ec-483c-bb72-c5ace29460bd' before making global git config changes
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4364032Z Adding repository directory to the temporary git global config as a safe directory
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4364809Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4387129Z Removing SSH command configuration
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4391371Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4414778Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4565964Z Removing HTTP extra header
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4568995Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4591809Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4738454Z Removing includeIf entries pointing to credentials config files
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4744111Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (darwin)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:37.4766832Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (darwin)	Complete job	﻿2026-11-15T09:55:37.5045565Z Cleaning up orphan processes

@@ -1,0 +1,530 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/plans2/docs/delivery/reports/m3/wave4b/drill-spec-wayland-linux.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-0o5a1mdz
+copied 310 files
+
+=== drill M3-04-content (M3-04) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_with_subsurfaces_the_buffers_are_the_size_of_what_is_shown tests/test_sway.py::test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales
+-- green: exit 0, 3 passed
+...                                                                      [100%]
+3 passed in 9.01s
+-- red: exit 1
+ResourceWarning: unclosed <socket.socket fd=13, family=1, type=1, proto=0>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pytest/__main__.py", line 9, in <module>
+    raise SystemExit(_console_main())
+                     ~~~~~~~~~~~~~^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 286, in _console_main
+    code = _main(prog=_get_prog_name(sys.argv))
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 262, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+    return self._hookexec(
+           ~~~~~~~~~~~~~~^
+        self.name, self._hookimpls.copy(), call_kwargs, firstresult
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+    raise exception
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+    res = hook_impl.function(*args)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 380, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 375, in wrap_session
+    config._ensure_unconfigure()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 1377, in _ensure_unconfigure
+    self.hook.pytest_unconfigure(config=self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+    return self._hookexec(
+           ~~~~~~~~~~~~~~^
+        self.name, self._hookimpls.copy(), call_kwargs, firstresult
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+    raise exception
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+    res = hook_impl.function(*args)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 169, in pytest_unconfigure
+    collect_unraisable(config)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 75, in collect_unraisable
+    raise errors[0]
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 63, in collect_unraisable
+    warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket fd=13, family=1, type=1, proto=0>: None
+-- restored green: exit 0, 3 passed
+...                                                                      [100%]
+3 passed in 8.81s
+
+=== drill M3-04-move-waits (M3-04) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.69s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__ test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place ___
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7473d72cb390>
+
+    @linux_only
+    def test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place(qapp):
+        conn, server, _stage, surf, ids = _configured(qapp, extra=CONTENT, before_configure=lambda s, _sv, _i: s.set_extent(QRect(10, 10, 50, 50)))
+        subsurface, sub, _parent = wayland.decode("noo", named(ids["setup"], ids["bound"]["wl_subcompositor"], layer.SUBCOMPOSITOR_GET_SUBSURFACE)[0])
+        callbacks = [wayland.decode("n", p)[0] for p in named(ids["first"], sub, layer.SURFACE_FRAME)]
+    
+        def frame():
+            server.send(callbacks[-1], 0, "u", 0)
+            conn.read()
+    
+        frame()
+        surf.damage(QRegion(10, 10, 50, 50))
+        surf._present()  # the first is still the compositor's: a second
+        callbacks.extend(wayland.decode("n", p)[0] for p in named(server.requests(), sub, layer.SURFACE_FRAME))
+        frame()
+        assert len(surf._buffers) == 2 and all(b.busy for b in surf._buffers)
+        surf.set_extent(QRect(700, 500, 50, 50))  # both held by the compositor
+        surf._present()
+        reqs = server.requests()
+>       assert not named(reqs, subsurface, layer.SUBSURFACE_SET_POSITION) and not named(reqs, sub, layer.SURFACE_COMMIT)
+E       AssertionError: assert (not [b'\x95\x02\x00\x00\xcd\x01\x00\x00'])
+E        +  where [b'\x95\x02\x00\x00\xcd\x01\x00\x00'] = named([(25, 1, b'\x95\x02\x00\x00\xcd\x01\x00\x00')], 25, 1)
+E        +    where 1 = layer.SUBSURFACE_SET_POSITION
+
+tests/test_wayland.py:586: AssertionError
+1 failed in 0.79s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.74s
+
+=== drill M3-04-placed (M3-04) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sway.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.01s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else _
+
+sway = <sway_session.Session object at 0x71f6ef765010>
+chatmon = <sway_session.Probe object at 0x71f6ef7652b0>
+hands = <sway_session.Input object at 0x71f6ef765400>
+
+    def test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else(sway, chatmon, hands):
+        """The subsurface goes with the chatmon, its new place and pixels shown together: in every frame sway shows,
+        the chatmon is where the stage put it, once, with no trail where it was."""
+        rect = penguin(chatmon)
+        x, y = centre(rect)
+        hands.move(x, y)
+        hands.button(sway_session.BTN_LEFT, True)
+        seen = []
+        for step in range(1, 6):
+            hands.move(x - 110 * step, y)  # each step farther than the subsurface's margin: it moves every time
+            chatmon.call("settled()", settle=0.15)
+            shot = sway.screenshot(f"drag-{step}")
+            now = penguin(chatmon)
+            columns = drawn_columns(shot, (0, now[1] + now[3] * 0.3, 1280, now[3] * 0.4), sway.background)
+>           seen.append((now, min(columns), max(columns)))
+                              ^^^^^^^^^^^^
+E           ValueError: min() iterable argument is empty
+
+tests/test_sway.py:293: ValueError
+1 failed in 4.90s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.10s
+
+=== drill M3-RC-input (M3-RC) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_layer_surface_draws_and_takes_clicks_only_on_the_penguin tests/test_sway.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.08s
+-- red: exit 1
+ResourceWarning: unclosed <socket.socket fd=13, family=1, type=1, proto=0>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pytest/__main__.py", line 9, in <module>
+    raise SystemExit(_console_main())
+                     ~~~~~~~~~~~~~^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 286, in _console_main
+    code = _main(prog=_get_prog_name(sys.argv))
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 262, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+    return self._hookexec(
+           ~~~~~~~~~~~~~~^
+        self.name, self._hookimpls.copy(), call_kwargs, firstresult
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+    raise exception
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+    res = hook_impl.function(*args)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 380, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 375, in wrap_session
+    config._ensure_unconfigure()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 1377, in _ensure_unconfigure
+    self.hook.pytest_unconfigure(config=self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+    return self._hookexec(
+           ~~~~~~~~~~~~~~^
+        self.name, self._hookimpls.copy(), call_kwargs, firstresult
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+    raise exception
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+    res = hook_impl.function(*args)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 169, in pytest_unconfigure
+    collect_unraisable(config)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 75, in collect_unraisable
+    raise errors[0]
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 63, in collect_unraisable
+    warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket fd=13, family=1, type=1, proto=0>: None
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 4.90s
+
+=== drill M3-RC-keyboard (M3-RC) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive tests/test_sway.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.17s
+-- red: exit 1
+ResourceWarning: unclosed <socket.socket fd=13, family=1, type=1, proto=0>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pytest/__main__.py", line 9, in <module>
+    raise SystemExit(_console_main())
+                     ~~~~~~~~~~~~~^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 286, in _console_main
+    code = _main(prog=_get_prog_name(sys.argv))
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 262, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+    return self._hookexec(
+           ~~~~~~~~~~~~~~^
+        self.name, self._hookimpls.copy(), call_kwargs, firstresult
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+    raise exception
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+    res = hook_impl.function(*args)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 380, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 375, in wrap_session
+    config._ensure_unconfigure()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 1377, in _ensure_unconfigure
+    self.hook.pytest_unconfigure(config=self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+    return self._hookexec(
+           ~~~~~~~~~~~~~~^
+        self.name, self._hookimpls.copy(), call_kwargs, firstresult
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+    raise exception
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+    res = hook_impl.function(*args)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 169, in pytest_unconfigure
+    collect_unraisable(config)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 75, in collect_unraisable
+    raise errors[0]
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 63, in collect_unraisable
+    warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket fd=13, family=1, type=1, proto=0>: None
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.18s
+
+=== drill M3-RC-clipboard (M3-RC) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_the_clipboard_is_the_overlays_own tests/test_sway.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.35s
+-- red: exit 1
+  |     res = hook_impl.function(*args)
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 380, in pytest_cmdline_main
+  |     return wrap_session(config, _main)
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 375, in wrap_session
+  |     config._ensure_unconfigure()
+  |     ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 1377, in _ensure_unconfigure
+  |     self.hook.pytest_unconfigure(config=self)
+  |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+  |     return self._hookexec(
+  |            ~~~~~~~~~~~~~~^
+  |         self.name, self._hookimpls.copy(), call_kwargs, firstresult
+  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |     )
+  |     ^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+  |     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  |            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+  |     raise exception
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+  |     res = hook_impl.function(*args)
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 169, in pytest_unconfigure
+  |     collect_unraisable(config)
+  |     ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 77, in collect_unraisable
+  |     raise ExceptionGroup("multiple unraisable exception warnings", errors)
+  | ExceptionGroup: multiple unraisable exception warnings (2 sub-exceptions)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/assertion/rewrite.py", line 787, in assign
+    |     self.statements.append(ast.Assign([ast.Name(name, ast.Store())], expr))
+    |                                        ~~~~~~~~^^^^^^^^^^^^^^^^^^^
+    | ResourceWarning: unclosed <socket.socket fd=13, family=1, type=1, proto=0>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 63, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    |     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket fd=13, family=1, type=1, proto=0>: None
+    | 
+    +---------------- 2 ----------------
+    | Traceback (most recent call last):
+    |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/assertion/rewrite.py", line 787, in assign
+    |     self.statements.append(ast.Assign([ast.Name(name, ast.Store())], expr))
+    |                                        ~~~~~~~~^^^^^^^^^^^^^^^^^^^
+    | ResourceWarning: unclosed <socket.socket fd=12, family=1, type=1, proto=0>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 63, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    |     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket fd=12, family=1, type=1, proto=0>: None
+    | 
+    +------------------------------------
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.08s
+
+=== drill M3-14-sway-menu (M3-14) on chatmon/penguin.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sway.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 5.67s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back _
+
+reader_session = <sway_session.Session object at 0x7c2938039160>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7c2937fc3610>
+
+    def test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back(reader_session, qapp):
+        session = reader_session
+        probe = Probe(session)
+        hands = Input(session)
+        try:
+            probe.call(SETUP)
+            _screen_reader(session, probe)
+            rect = penguin(probe)
+            hands.click(*centre(rect))
+            probe.call("until(lambda: box.isVisible() and box.windowHandle().isExposed(), 5)", settle=0.3)
+            hands.type("ab")
+            hands.click(*centre(rect), BTN_RIGHT)  # the penguin's menu: on the overlay, Qt's menus having no window to go with
+            assert probe.call("until(lambda: surface._kb_focus, 5); result = stage.menu.is_open()", settle=0.2)
+            hands.key("Down")
+            hands.key("Down")
+            got = probe.call("result = dict(hover=stage.menu.hover, entry=box.entry.text())", settle=0.2)
+>           assert got == {"hover": [0, 1], "entry": "ab"}  # the menu has the keys, the box none of them
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: assert {'hover': None, 'entry': 'ab'} == {'hover': [0,...'entry': 'ab'}
+E             
+E             Omitting 1 identical items, use -vv to show
+E             Differing items:
+E             {'hover': None} != {'hover': [0, 1]}
+E             Use -v to get more diff
+
+tests/test_sway.py:365: AssertionError
+1 failed in 10.29s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 5.82s
+
+=== drill M3-14-sway-bubble (M3-14) on chatmon/penguin.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.40s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses _
+
+reader_session = <sway_session.Session object at 0x789ba79fd160>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x789ba7987610>
+
+    def test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses(reader_session, qapp):
+        session = reader_session
+        probe = Probe(session)
+        hands = Input(session)
+        try:
+            probe.call(SETUP)
+            state = _screen_reader(session, probe)
+            assert state["hosted"] is False and state["reader"] is not None
+            hands.click(*centre(penguin(probe)))
+            probe.call("until(lambda: box.isVisible() and box.windowHandle().isExposed(), 5)", settle=0.3)
+            (view,) = session.views()
+            r = view["rect"]
+            assert view["pid"] == state["pid"] and view["floating"] and view["focused"]  # not tiled over your windows; focused
+            assert abs(r["x"] - (1280 - r["width"]) / 2) <= 1 and abs(r["y"] - (800 - r["height"]) / 2) <= 1  # sway centres it
+            hands.type("hi there")
+            assert probe.call("result = box.entry.text()", settle=0.2) == "hi there"
+            # A bubble while it's open: over the chatmon's head, not over the box (whose place only sway knows).
+            probe.call("stage.show_message('A reminder', 'Stretch your legs.'); settled()", settle=0.4)
+            bx, by, bw, bh = probe.call("result = list(stage._bubble_box.getRect())")
+>           assert bx + bw <= r["x"] or bx >= r["x"] + r["width"] or by + bh <= r["y"] or by >= r["y"] + r["height"]
+E           assert ((488.0 + 224.0) <= 450 or 488.0 >= (450 + 380) or (387.0 + 119.046875) <= 311 or 387.0 >= (311 + 177))
+
+tests/test_sway.py:341: AssertionError
+1 failed in 6.92s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 5.85s
+
+=== drill M3-14-hosting (M3-14) on chatmon/app.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses tests/test_sway.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader tests/test_sway.py::test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said
+-- green: exit 0, 4 passed
+....                                                                     [100%]
+4 passed in 44.07s
+-- red: exit 1
+a_window = True
+
+    @pytest.mark.parametrize("setting, a_window", [("auto", True), ("off", False)])
+    def test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader(reader_session, qapp, setting, a_window):
+        """Why the box becomes a window for a screen reader. Drawn on the overlay (Settings' "accessible ask box" off),
+        Qt still lists it in AT-SPI's tree, but it is never a window anyone activates: no window:activate, so a screen
+        reader neither announces it nor follows what's typed in it (Orca, below). As a window of its own, it is."""
+        session = reader_session
+        probe = Probe(session)
+        hands = Input(session)
+        try:
+            probe.call(SETUP + f"c.config['accessibility']['accessible_ask_box'] = '{setting}'")
+            state = _screen_reader(session, probe)
+>           assert state["hosted"] is not a_window and state["reader"] is not None
+E           assert (True is not True)
+
+tests/test_sway.py:441: AssertionError
+_ test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-433/test_with_orca_the_box_as_a_wi0')
+qapp = <PyQt6.QtWidgets.QApplication object at 0x73c4acdc7890>
+
+    def test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said(tmp_path, qapp):
+        _needs(orca=True)
+        session = Session(tmp_path, atspi=True, orca=True)
+        try:
+            probe = Probe(session)
+            hands = Input(session)
+            try:
+                probe.call(SETUP)
+>               state = probe.call("c._reader_seen = float('-inf'); c._check_hosting(); result = dict(hosted=stage.hosts_windows(), reader=c._reader.name)")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_sway.py:498: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sway_session.Probe object at 0x73c4ace148a0>
+code = "c._reader_seen = float('-inf'); c._check_hosting(); result = dict(hosted=stage.hosts_windows(), reader=c._reader.name)"
+seconds = 30.0, settle = 0.05
+
+    def call(self, code: str, seconds: float = 30.0, settle: float = 0.05):
+        """Run `code` in the probe once it has handled what sway sent it (for `settle` s at least); its `result`."""
+        assert self.proc.stdin is not None
+        self.proc.stdin.write(json.dumps({"code": code, "settle": settle}) + "\n")
+        self.proc.stdin.flush()
+        answer = self._read(seconds)
+        if "error" in answer:
+>           raise ProbeError(f"{answer['error']}\nin:\n{code}")
+E           sway_session.ProbeError: Traceback (most recent call last):
+E             File "/var/tmp/chatmon-wsl-drill-0o5a1mdz/tests/sway_session.py", line 648, in command
+E               exec(compile(message["code"], "<probe>", "exec"), ns)  # noqa: S102  # the test's own code, in its own process
+E               ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             File "<probe>", line 1, in <module>
+E           AttributeError: 'NoneType' object has no attribute 'name'
+E           
+E           in:
+E           c._reader_seen = float('-inf'); c._check_hosting(); result = dict(hosted=stage.hosts_windows(), reader=c._reader.name)
+
+tests/sway_session.py:463: ProbeError
+3 failed, 1 passed in 29.73s
+-- restored green: exit 0, 4 passed
+....                                                                     [100%]
+4 passed in 43.60s
+
+=== summary
+PASS M3-04-content
+PASS M3-04-move-waits
+PASS M3-04-placed
+PASS M3-RC-input
+PASS M3-RC-keyboard
+PASS M3-RC-clipboard
+PASS M3-14-sway-menu
+PASS M3-14-sway-bubble
+PASS M3-14-hosting

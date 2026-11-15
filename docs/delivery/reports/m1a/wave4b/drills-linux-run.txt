@@ -1,0 +1,10 @@
+
+=== summary
+PASS AC-01-LINUX-launcher-owner
+PASS AC-01-LINUX-refusal-stops
+PASS AC-01-LINUX-installs-the-copy
+PASS AC-02-owner
+PASS AC-02-writable
+PASS AC-07-private
+PASS AC-09-REMOTE-linux
+PASS AC-09-ORDER-pipe

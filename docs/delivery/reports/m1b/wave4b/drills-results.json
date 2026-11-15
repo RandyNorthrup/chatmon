@@ -1,0 +1,854 @@
+[
+  {
+    "id": "M1B-01-allowlist",
+    "requirement": "M1B-01",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "    out = {k: v for k, v in environ.items() if k.upper() in exact or (starts and k.upper().startswith(starts))}",
+      "replace": "    out = dict(environ)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_the_allowlist_takes_names_in_any_case_and_endings_after_a_star",
+      "tests/test_brains.py::test_a_command_brain_gets_only_what_it_needs_of_the_environment"
+    ],
+    "expected": [
+      "test_the_allowlist_takes_names_in_any_case_and_endings_after_a_star",
+      "test_a_command_brain_gets_only_what_it_needs_of_the_environment"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "d436f8b4e9341b17c55ea483edf09e52bfdf24a447d1a02bfc603eb1837860dd",
+    "mutated_exit": 1,
+    "observed": "_____ test_the_allowlist_takes_names_in_any_case_and_endings_after_a_star _____",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-02-strict-mcp",
+    "requirement": "M1B-02",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "\"--tools\", \"\", \"--strict-mcp-config\", \"--permission-mode\", \"dontAsk\",",
+      "replace": "\"--tools\", \"\", \"--permission-mode\", \"dontAsk\","
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_claude_code_is_started_without_tools_mcp_servers_or_anyone_asked",
+      "tests/test_streaming.py::test_claude_code_streams_its_answer"
+    ],
+    "expected": [
+      "test_claude_code_is_started_without_tools_mcp_servers_or_anyone_asked",
+      "test_claude_code_streams_its_answer"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "46adbe9e0d145e36615cc6aa25b1501fc41ae39838d29c310cf5b3392c593724",
+    "mutated_exit": 1,
+    "observed": "____ test_claude_code_is_started_without_tools_mcp_servers_or_anyone_asked ____",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-03-owner-check",
+    "requirement": "M1B-03",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "        if b.automatic() and b.available(wait) and (not b.local or trusted(expand(b.url), wait)):",
+      "replace": "        if b.automatic() and b.available(wait):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_automatic_uses_only_a_model_server_of_yours_or_one_you_confirmed"
+    ],
+    "expected": [
+      "test_automatic_uses_only_a_model_server_of_yours_or_one_you_confirmed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "91b98a287ed30b8d7f307ef9bb4598d244303a931c182f795b0ba3d2e751d95d",
+    "mutated_exit": 1,
+    "observed": "____ test_automatic_uses_only_a_model_server_of_yours_or_one_you_confirmed ____",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-03-windows-owner",
+    "requirement": "M1B-03",
+    "file": "chatmon/portowner.py",
+    "mutation": {
+      "find": "    return bool(pids) and all(_runs_as_me(pid) for pid in pids)",
+      "replace": "    return bool(pids)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_portowner.py::test_on_windows_a_port_the_system_holds_isnt_yours"
+    ],
+    "expected": [
+      "test_on_windows_a_port_the_system_holds_isnt_yours"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425",
+    "baseline_exit": 0,
+    "mutated_sha256": "fffd772fead18abd322de53f9f4480e023a2d2d477bcae7c8411b5adc5dfa14c",
+    "mutated_exit": 1,
+    "observed": "_____________ test_on_windows_a_port_the_system_holds_isnt_yours ______________",
+    "after_sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-04-placeholder",
+    "requirement": "M1B-04",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "                out.append((question, m.text if not own_only or _same(m, brain, name) else OTHER_ANSWER))",
+      "replace": "                out.append((question, m.text))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_a_brain_that_reads_files_never_gets_another_brains_answers"
+    ],
+    "expected": [
+      "test_a_brain_that_reads_files_never_gets_another_brains_answers"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "baseline_exit": 0,
+    "mutated_sha256": "05c955a792786bf12e533e5e2b655ee75230bfcd285a34c79a42889c8d6198d8",
+    "mutated_exit": 1,
+    "observed": "_______ test_a_brain_that_reads_files_never_gets_another_brains_answers _______",
+    "after_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-04-summary",
+    "requirement": "M1B-04",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "        if own_only and self.summary_by != name:",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_a_summary_of_every_brains_answers_isnt_given_to_one_that_reads_files"
+    ],
+    "expected": [
+      "test_a_summary_of_every_brains_answers_isnt_given_to_one_that_reads_files"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "baseline_exit": 0,
+    "mutated_sha256": "92248b6b52bc1cfc72b4c91ef3da67a3dd473501adc129fe361d1c750e743403",
+    "mutated_exit": 1,
+    "observed": "__ test_a_summary_of_every_brains_answers_isnt_given_to_one_that_reads_files __",
+    "after_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-06-range",
+    "requirement": "M1B-06",
+    "file": "chatmon/settings.py",
+    "mutation": {
+      "find": "        if not low <= number <= high:",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settings.py::test_a_bad_value_costs_only_its_own_setting",
+      "tests/test_settings.py::test_every_setting_the_app_reads_as_a_number_is_one_after_loading"
+    ],
+    "expected": [
+      "test_a_bad_value_costs_only_its_own_setting",
+      "test_every_setting_the_app_reads_as_a_number_is_one_after_loading"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "baseline_exit": 0,
+    "mutated_sha256": "1a38cca6682daf977cbb68375b4a322f992f27ccdae6115749f1af001679019a",
+    "mutated_exit": 1,
+    "observed": "_________________ test_a_bad_value_costs_only_its_own_setting _________________",
+    "after_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-06-brain-kinds",
+    "requirement": "M1B-06",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "            if kind is not None and not kind[1](value):",
+      "replace": "            if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_a_brain_setting_of_the_wrong_kind_is_left_out_and_said_never_a_crash"
+    ],
+    "expected": [
+      "test_a_brain_setting_of_the_wrong_kind_is_left_out_and_said_never_a_crash"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "bac3ff788798c7ec38ab66f26054ba56d98b144a2c763ff3469ccd95f94d3d3e",
+    "mutated_exit": 1,
+    "observed": "__ test_a_brain_setting_of_the_wrong_kind_is_left_out_and_said_never_a_crash __",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-07-kept-aside",
+    "requirement": "M1B-07",
+    "file": "chatmon/settings.py",
+    "mutation": {
+      "find": "    kept = _set_aside(path)",
+      "replace": "    kept = None"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settings.py::test_a_damaged_state_file_is_kept_aside_and_the_last_good_copy_used",
+      "tests/test_settings.py::test_a_damaged_memory_file_is_never_written_over"
+    ],
+    "expected": [
+      "test_a_damaged_state_file_is_kept_aside_and_the_last_good_copy_used",
+      "test_a_damaged_memory_file_is_never_written_over"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "baseline_exit": 0,
+    "mutated_sha256": "56dbed61269412e388143b9bf970304cc89309922a9d652fed8e216041f90773",
+    "mutated_exit": 1,
+    "observed": "_____ test_a_damaged_state_file_is_kept_aside_and_the_last_good_copy_used _____",
+    "after_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-07-fsync",
+    "requirement": "M1B-07",
+    "file": "chatmon/settings.py",
+    "mutation": {
+      "find": "        os.fsync(fd)\n    except BaseException:",
+      "replace": "        pass\n    except BaseException:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settings.py::test_every_save_reaches_the_disk_before_it_replaces_the_old_file"
+    ],
+    "expected": [
+      "test_every_save_reaches_the_disk_before_it_replaces_the_old_file"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "baseline_exit": 0,
+    "mutated_sha256": "0ae5c40fc078c2b9bfcedfd0dded819ad0b9535a1ef5e812d9715bbec156d685",
+    "mutated_exit": 1,
+    "observed": "______ test_every_save_reaches_the_disk_before_it_replaces_the_old_file _______",
+    "after_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-09-status",
+    "requirement": "M1B-09",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "if isinstance(status, int) and status >= 400:",
+      "replace": "if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_an_http_error_says_what_the_provider_said_the_status_and_what_to_do"
+    ],
+    "expected": [
+      "test_an_http_error_says_what_the_provider_said_the_status_and_what_to_do"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "0e0f6e0332b0b7915e163f8b1fbf997740059ec369e6df521d9d1e328998cfe1",
+    "mutated_exit": 1,
+    "observed": "_ test_an_http_error_says_what_the_provider_said_the_status_and_what_to_do[401-body0-invalid x-api-key-Check its key in ANTHROPIC_API_KEY] _",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-10-no-wait",
+    "requirement": "M1B-10",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "    threading.Thread(target=end, daemon=True).start()",
+      "replace": "    end()"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_cancelling_on_windows_stops_the_tool_behind_a_cmd_file_without_waiting"
+    ],
+    "expected": [
+      "test_cancelling_on_windows_stops_the_tool_behind_a_cmd_file_without_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "6856a83eb06320b5cd35997d749d1c6f7e64161b432110c859de8f6ee8378fb3",
+    "mutated_exit": 1,
+    "observed": "_ test_cancelling_on_windows_stops_the_tool_behind_a_cmd_file_without_waiting _",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-10-reused-numbers",
+    "requirement": "M1B-10",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "            if found[1] < made:",
+      "replace": "            if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_ending_a_brains_processes_never_takes_one_that_only_shares_an_old_parents_number"
+    ],
+    "expected": [
+      "test_ending_a_brains_processes_never_takes_one_that_only_shares_an_old_parents_number"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "992b57ddbae74ad48fba467e8e7c1f674fd934e998516e704a6a79f2346600f7",
+    "mutated_exit": 1,
+    "observed": "_ test_ending_a_brains_processes_never_takes_one_that_only_shares_an_old_parents_number _",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-11-finder",
+    "requirement": "M1B-11",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "        quick = choose(brains, configured, picked, wait=False, prefer=prefer)",
+      "replace": "        quick = choose(brains, configured, picked, wait=True, prefer=prefer)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_finding_the_brain_never_probes_on_the_screens_thread_and_remembers"
+    ],
+    "expected": [
+      "test_finding_the_brain_never_probes_on_the_screens_thread_and_remembers"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "729a85b981c362ee1e65d0349e4b037256617f3df63822e74c53bd7a8c8564c6",
+    "mutated_exit": 1,
+    "observed": "___ test_finding_the_brain_never_probes_on_the_screens_thread_and_remembers ___",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-12-cancel",
+    "requirement": "M1B-12",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "            reply.abort()\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_cancelling_stops_the_stream_and_nothing_comes_after"
+    ],
+    "expected": [
+      "test_cancelling_stops_the_stream_and_nothing_comes_after"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "3e5f6fd838d6f75e26c3d9fd0494b76358e21c68294cff40082aa73753df1354",
+    "mutated_exit": 1,
+    "observed": "__________ test_cancelling_stops_the_stream_and_nothing_comes_after ___________",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-12-claude",
+    "requirement": "M1B-12",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "        if brain.output == \"stream-json\":",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_claude_code_streams_its_answer"
+    ],
+    "expected": [
+      "test_claude_code_streams_its_answer"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "cb8aeeca6f663255ed314a1450495cf5161557573bfb431d1c9e413a35d5d0b7",
+    "mutated_exit": 1,
+    "observed": "_____________________ test_claude_code_streams_its_answer _____________________",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-13-saved-key",
+    "requirement": "M1B-13",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "        return keychain.get(self.name) or \"\"",
+      "replace": "        return \"\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_keychain.py::test_a_brain_uses_its_saved_key_when_its_variable_isnt_set"
+    ],
+    "expected": [
+      "test_a_brain_uses_its_saved_key_when_its_variable_isnt_set"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "5fc79e7eac7fce212059b6b9b762264dfa04204d3b6f9bc7d442a1d3974ce7b6",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_brain_uses_its_saved_key_when_its_variable_isnt_set __________",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-13-windows-store",
+    "requirement": "M1B-13",
+    "file": "chatmon/keychain.py",
+    "mutation": {
+      "find": "        return blob.decode(\"utf-16-le\", \"replace\") or None",
+      "replace": "        return blob.decode(\"latin-1\") or None"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_keychain.py::test_windows_credential_manager_keeps_replaces_and_forgets_a_key"
+    ],
+    "expected": [
+      "test_windows_credential_manager_keeps_replaces_and_forgets_a_key"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1",
+    "baseline_exit": 0,
+    "mutated_sha256": "01d6f9d7e478cf423f48e752dad55b2c5c9d03f062f6257e66d234494e0a8fcb",
+    "mutated_exit": 1,
+    "observed": "______ test_windows_credential_manager_keeps_replaces_and_forgets_a_key _______",
+    "after_sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-13-menu-never-reads",
+    "requirement": "M1B-13",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "or keychain.has(self.name)",
+      "replace": "or bool(keychain.get(self.name))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_keychain.py::test_the_menu_asks_only_whether_a_key_is_saved_never_for_the_key"
+    ],
+    "expected": [
+      "test_the_menu_asks_only_whether_a_key_is_saved_never_for_the_key"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "d20e9273f95cba3620f6c49493577d03469d0365dfcb40cd19549b2bd2d21ebf",
+    "mutated_exit": 1,
+    "observed": "______ test_the_menu_asks_only_whether_a_key_is_saved_never_for_the_key _______",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-13-scrub",
+    "requirement": "M1B-13",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "    return text.replace(key, \"\u2026\") if len(key) >= 8 else text",
+      "replace": "    return text"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_a_provider_repeating_the_key_never_puts_it_on_screen"
+    ],
+    "expected": [
+      "test_a_provider_repeating_the_key_never_puts_it_on_screen"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "097684810cabe9da4ed59489a17938bd0a259b999e1bad301cf629134ea67b2f",
+    "mutated_exit": 1,
+    "observed": "__________ test_a_provider_repeating_the_key_never_puts_it_on_screen __________",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-14-seconds",
+    "requirement": "M1B-14",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "        self.finished.emit(ok, text, round(time.monotonic() - self._started, 2))",
+      "replace": "        self.finished.emit(ok, text, 0.0)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_a_brain_test_says_how_long_the_answer_took_or_whats_wrong"
+    ],
+    "expected": [
+      "test_a_brain_test_says_how_long_the_answer_took_or_whats_wrong"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "78c6c6bf36458d22e549cf6bf5458ba44af630901acf2f2fe07d610269c60121",
+    "mutated_exit": 1,
+    "observed": "_______ test_a_brain_test_says_how_long_the_answer_took_or_whats_wrong ________",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-15-chat-brain",
+    "requirement": "M1B-15",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "            self.brain = message.by",
+      "replace": "            pass"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_a_chat_remembers_its_brain_and_the_question_to_ask_another"
+    ],
+    "expected": [
+      "test_a_chat_remembers_its_brain_and_the_question_to_ask_another"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "baseline_exit": 0,
+    "mutated_sha256": "895fedf9386d0cd7c54900f9a1534b4bf78f75ddbfc20c714cb9c71b9c7ed0c2",
+    "mutated_exit": 1,
+    "observed": "_______ test_a_chat_remembers_its_brain_and_the_question_to_ask_another _______",
+    "after_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-15-prefer",
+    "requirement": "M1B-15",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "    for name in (prefer, picked, configured):",
+      "replace": "    for name in (picked, configured):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_choosing_carries_a_chat_on_with_its_own_brain"
+    ],
+    "expected": [
+      "test_choosing_carries_a_chat_on_with_its_own_brain"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "baseline_exit": 0,
+    "mutated_sha256": "0ccebe1b8a0dd3853b6a4d9aa6bd98a11167459a7bad4f15679fb02ac0f0fa6a",
+    "mutated_exit": 1,
+    "observed": "_____________ test_choosing_carries_a_chat_on_with_its_own_brain ______________",
+    "after_sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-16-no-secrets",
+    "requirement": "M1B-16",
+    "file": "chatmon/backup.py",
+    "mutation": {
+      "find": "        return {k: _no_secrets(v) for k, v in value.items() if not (isinstance(k, str) and _SECRET.search(k))}",
+      "replace": "        return {k: _no_secrets(v) for k, v in value.items()}"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_backup.py::test_no_key_ever_goes_into_a_backup",
+      "tests/test_backup.py::test_a_key_slipped_into_a_backup_by_hand_is_never_brought_back"
+    ],
+    "expected": [
+      "test_no_key_ever_goes_into_a_backup",
+      "test_a_key_slipped_into_a_backup_by_hand_is_never_brought_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac",
+    "baseline_exit": 0,
+    "mutated_sha256": "4353fd2f014e818bf19f09689ceed3cb6aec0d2182155f6b92a4e3ef9c4ca425",
+    "mutated_exit": 1,
+    "observed": "_____________________ test_no_key_ever_goes_into_a_backup _____________________",
+    "after_sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-16-only-its-files",
+    "requirement": "M1B-16",
+    "file": "chatmon/backup.py",
+    "mutation": {
+      "find": "        strange = [n for n in names if n != MANIFEST and n not in PARTS and not CHAT_FILE.fullmatch(n)]",
+      "replace": "        strange = []"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_backup.py::test_a_backup_that_isnt_right_is_refused_whole_and_nothing_changes"
+    ],
+    "expected": [
+      "test_a_backup_that_isnt_right_is_refused_whole_and_nothing_changes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac",
+    "baseline_exit": 0,
+    "mutated_sha256": "d400bc9fb233fb036626c84ab8dcb33f859bc23079998c091212393b8734656f",
+    "mutated_exit": 1,
+    "observed": "_ test_a_backup_that_isnt_right_is_refused_whole_and_nothing_changes[files0-None-holds things a Chatmon backup doesn't] _",
+    "after_sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-17-only-its-brain",
+    "requirement": "M1B-17",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "                if m.sent and _same(m, brain, name):",
+      "replace": "                if m.sent:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_attached_text_goes_again_only_to_the_brain_of_that_name",
+      "tests/test_chats.py::test_attached_text_goes_again_only_to_the_brain_it_went_to"
+    ],
+    "expected": [
+      "test_attached_text_goes_again_only_to_the_brain_of_that_name",
+      "test_attached_text_goes_again_only_to_the_brain_it_went_to"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "baseline_exit": 0,
+    "mutated_sha256": "00e4d1cfc642b9da417f65282ed49c976cf2e34b35bc1a29d3144f65da9afd63",
+    "mutated_exit": 1,
+    "observed": "________ test_attached_text_goes_again_only_to_the_brain_of_that_name _________",
+    "after_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-17-keep-off",
+    "requirement": "M1B-17",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "        if not chat.messages or not chat.keep:",
+      "replace": "        if not chat.messages:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_with_keep_chat_history_off_nothing_is_written"
+    ],
+    "expected": [
+      "test_with_keep_chat_history_off_nothing_is_written"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "baseline_exit": 0,
+    "mutated_sha256": "ccfad06aecfcd28539910be92d17a40cf6b15803321063ce7a20ce4b04134a08",
+    "mutated_exit": 1,
+    "observed": "_____________ test_with_keep_chat_history_off_nothing_is_written ______________",
+    "after_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-17-clear",
+    "requirement": "M1B-17",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "                        path.unlink(missing_ok=True)\n                        gone += 1",
+      "replace": "                        gone += 1"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_clearing_history_removes_attached_text_with_the_chats"
+    ],
+    "expected": [
+      "test_clearing_history_removes_attached_text_with_the_chats"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "baseline_exit": 0,
+    "mutated_sha256": "c6188b180a5aab49886b61bc847207e6ae7883e787a92ce53e0b5694df810896",
+    "mutated_exit": 1,
+    "observed": "_________ test_clearing_history_removes_attached_text_with_the_chats __________",
+    "after_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "restored_exit": 0
+  }
+]

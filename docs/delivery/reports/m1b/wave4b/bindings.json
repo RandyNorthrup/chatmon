@@ -1,0 +1,342 @@
+{
+ "plan": "docs/delivery/m1b-brains-and-stored-data.md",
+ "section": "docs/delivery/reports/m1b/wave4b/section.md",
+ "rules": {
+  "docs/delivery/ROADMAP.md": "bf9d8ac+wave4b",
+  "pyproject.toml": "bf9d8ac"
+ },
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "task_changes_add": {},
+ "stale_reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023",
+ "receipts": [
+  {
+   "id": "W4B-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "AC-M1B-01",
+    "AC-M1B-02",
+    "AC-M1B-03",
+    "AC-M1B-04",
+    "AC-M1B-05",
+    "AC-M1B-06",
+    "AC-M1B-07",
+    "AC-M1B-08",
+    "AC-M1B-09",
+    "AC-M1B-10",
+    "AC-M1B-11",
+    "AC-M1B-12",
+    "AC-M1B-13",
+    "AC-M1B-14",
+    "AC-M1B-15",
+    "AC-M1B-16",
+    "AC-M1B-17"
+   ],
+   "artifact": "docs/delivery/reports/m1b/wave4b/readiness.md",
+   "method": "Requirements review, round two, at bf9d8ac (readiness.md): M1B-01 to M1B-17 re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now and the code that carries them; no conflict or gap; M7's wiring of the APIs (the M7-WIRING operation) checked against M7's verified criteria."
+  },
+  {
+   "id": "W4B-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M1B-01",
+    "AC-M1B-02",
+    "AC-M1B-03",
+    "AC-M1B-04",
+    "AC-M1B-05",
+    "AC-M1B-06",
+    "AC-M1B-07",
+    "AC-M1B-08",
+    "AC-M1B-09",
+    "AC-M1B-10",
+    "AC-M1B-11",
+    "AC-M1B-12",
+    "AC-M1B-13",
+    "AC-M1B-14",
+    "AC-M1B-15",
+    "AC-M1B-16",
+    "AC-M1B-17"
+   ],
+   "artifact": "docs/delivery/reports/wave4b/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on bf9d8ac's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1256 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CI-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M1B-03",
+    "AC-M1B-08",
+    "AC-M1B-13",
+    "AC-M1B-16"
+   ],
+   "artifact": "docs/delivery/reports/m1b/ci/ci-132773560297-test-ubuntu-24.04-3.15.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773560297",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job test (ubuntu-24.04, 3.15). The Secret Service tests passed there, not skipped: tests/test_keychain.py::test_the_secret_service_keeps_replaces_and_forgets_a_key_in_its_own_types, test_a_locked_keyring_is_never_prompted_to_fill_in_the_menu_only_to_save and test_no_keyring_at_all_is_said_and_never_waited_for, on a private session bus from Ubuntu's dbus package, which ci.yml installs. Also passed: the Linux port-owner tests (tests/test_portowner.py::test_on_linux_your_socket_and_someone_elses_on_one_port_isnt_yours and test_on_linux_a_port_another_account_listens_on_isnt_yours), tests/test_settings.py's file and folder modes, and tests/test_backup.py's private zip. The same passed on ubuntu 3.11 and ubuntu-24.04-arm 3.14, and all but the other-account port test passed in the three distro containers. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CI-MACOS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M1B-03",
+    "AC-M1B-08",
+    "AC-M1B-13",
+    "AC-M1B-16"
+   ],
+   "artifact": "docs/delivery/reports/m1b/ci/ci-132773560342-test-macos-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773560342",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job test (macos-latest, 3.14). Passed: tests/test_keychain.py::test_macos_keychain_keeps_replaces_and_forgets_a_key (the Keychain through Security.framework), tests/test_portowner.py::test_a_socket_of_yours_is_yours_and_a_closed_port_nobodys (the lsof port-owner check), tests/test_settings.py's file and folder modes, and tests/test_backup.py's private zip. The same passed on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-BEH-CI-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M1B-13"
+   ],
+   "artifact": "docs/delivery/reports/m1b/ci/ci-132773560375-test-windows-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43701523023",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132773560375",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43701523023 on bf9d8ac, job test (windows-latest, 3.14). The real Credential Manager tests passed there and did not skip with error 1312: tests/test_keychain.py::test_windows_credential_manager_keeps_replaces_and_forgets_a_key and test_windows_keeps_a_key_on_this_computer_and_files_it_under_chatmon. They also passed on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-01-allowlist",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-01"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-01-allowlist",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-01-allowlist through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-02-strict-mcp",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-02"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-02-strict-mcp",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-02-strict-mcp through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-03-owner-check",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-03"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-03-owner-check",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-03-owner-check through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-04-placeholder",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-04"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-04-placeholder",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-04-placeholder through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-06-range",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-06"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-06-range",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-06-range through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-07-kept-aside",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-07"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-07-kept-aside",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-07-kept-aside through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-08-file-mode",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-08"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-linux-results.json",
+   "drill": "M1B-08-file-mode",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills-linux.log",
+   "method": "Red drill M1B-08-file-mode in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-09-status",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-09"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-09-status",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-09-status through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-10-no-wait",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-10"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-10-no-wait",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-10-no-wait through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-11-finder",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-11"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-11-finder",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-11-finder through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-13-saved-key",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-13"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-13-saved-key",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-13-saved-key through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-14-seconds",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-14"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-14-seconds",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-14-seconds through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-15-chat-brain",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-15"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-15-chat-brain",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-15-chat-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-16-no-secrets",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-16"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-16-no-secrets",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-16-no-secrets through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-17-only-its-brain",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-17"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-results.json",
+   "drill": "M1B-17-only-its-brain",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills.log",
+   "method": "Red drill M1B-17-only-its-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-05-stale-folders",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-05"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-new-results.json",
+   "drill": "W4-M1B-05-stale-folders",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills-new.log",
+   "method": "Red drill W4-M1B-05-stale-folders through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  },
+  {
+   "id": "W4B-RED-M1B-12-partial",
+   "kind": "red",
+   "acceptance": [
+    "AC-M1B-12"
+   ],
+   "results": "docs/delivery/reports/m1b/wave4b/drills-new-results.json",
+   "drill": "W4-M1B-12-partial",
+   "artifact": "docs/delivery/reports/m1b/wave4b/drills-new.log",
+   "method": "Red drill W4-M1B-12-partial through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  }
+ ],
+ "tasks": {},
+ "pending": [],
+ "next_action": "None in M1B on bf9d8ac. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree.",
+ "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545",
+ "watch_paths": [
+  "chatmon/app.py",
+  "chatmon/brains.py",
+  "tests/app_harness.py",
+  "tests/test_app_smoke.py"
+ ],
+ "watch_who": "wave4/crash (not merged at bf9d8ac)"
+}

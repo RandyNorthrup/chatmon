@@ -1,0 +1,73 @@
+{
+ "readiness_method": "Requirements review, round two, at bf9d8ac (readiness.md): M7-CI, M7-01 to M7-13 and the INT- requirements re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now; no conflict or gap; WAYLAND-HOSTING answered on a real sway with the real Orca (Hyprland and KDE not tried).",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "drill_acceptance": {
+  "W4-M7-02-no-next-brain": [
+   "AC-02-1"
+  ],
+  "W4-M7-02-welcome-without-brain": [
+   "AC-02-3"
+  ]
+ },
+ "observe_add": [
+  "tests/test_app_m7.py",
+  "tests/test_app_answers.py",
+  "tests/test_app_reminders.py",
+  "tests/test_chatswin.py",
+  "tests/test_app_smoke.py",
+  "tests/test_ask_box.py",
+  "tests/test_events.py"
+ ],
+ "ci": [
+  {
+   "id": "W4B-BEH-CI-WINDOWS",
+   "leg": "win3.14",
+   "log": "ci-132773560375-test-windows-latest-3.14.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (windows-latest, 3.14). Every test these criteria's drills run passed, the smoke tests and ask-box tests among them; their failing on Windows CI was the coordinator's finding (AC-CI-1 to AC-CI-3). The same was true on the 3.11 and 3.15 legs."
+  },
+  {
+   "id": "W4B-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132773560297-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (ubuntu-24.04, 3.15), under xvfb-run. Every test these criteria's drills run passed, including POSIX events.request (tests/test_events.py) and the windows' tests with Linux's own fonts. The same was true on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the three distro containers."
+  },
+  {
+   "id": "W4B-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132773560342-test-macos-latest-3.14.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (macos-latest, 3.14). Every test these criteria's drills run passed with macOS's fonts and events.request over its temporary folder, as on the 3.11 and 3.15 legs."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4B-BEH-WSL-WAYLAND-HOSTING",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-11-5"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave4b/sway-tests-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-p",
+    "no:cacheprovider",
+    "-v",
+    "-rs",
+    "tests/test_sway.py",
+    "tests/test_wayland.py"
+   ],
+   "exit_code": 0,
+   "method": "WAYLAND-HOSTING on a real Wayland compositor: sway 1.12 in WSL (Arch), headless, with the real Orca 51.1 and at-spi2-core 2.62.1, on bf9d8ac's files (/var/tmp/plans-venv, PyQt6 6.11). tests/test_sway.py and tests/test_wayland.py, verbose: 52 passed, none skipped. Among them: test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses (set_hosting(False)), test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back (the menu kept on the stage), test_with_the_box_a_window_its_own_menus_are_qts_beside_it, test_a_screen_reader_finds_the_box_its_field_its_buttons_and_the_conversation, test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said and test_with_orca_the_box_drawn_on_the_overlay_is_neither_announced_nor_echoed, with the real Orca reading it. The same tests, Orca's two apart, passed in CI run 43701523023's sway job on Ubuntu's sway 1.9 (M3's W4B-BEH-CI-SWAY), and the wayland worker's own runs of them are in docs/delivery/m3-stage-overlay.md and reports/m3/. Hyprland and KDE themselves were not tested: sway is the one real compositor here and in CI. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked."
+  }
+ ],
+ "pending": [],
+ "next_action": "None in M7 on bf9d8ac. WAYLAND-HOSTING is answered on sway with Orca; Hyprland and KDE themselves were never tried, which a person with either desktop can still do before release (not a criterion). wave4/crash may change code: re-run the suite and this plan's drill specs in wave4b/ on the merged tree."
+}

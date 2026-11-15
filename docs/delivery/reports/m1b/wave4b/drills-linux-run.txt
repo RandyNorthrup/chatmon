@@ -1,0 +1,8 @@
+
+=== summary
+PASS M1B-08-file-mode
+PASS M1B-08-folder-mode
+PASS M1B-03-linux-owner
+PASS M1B-13-secret-service-value
+PASS M1B-13-locked-no-prompt
+PASS M1B-16-backup-mode
