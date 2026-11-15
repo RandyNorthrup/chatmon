@@ -1,0 +1,21 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 ; /var/tmp/m4a-venv/bin/python: 3.14.9 PyQt6 6.12.1 Qt 6.12.0; 3586a0d's files
+$ /var/tmp/m4a-venv/bin/python -m mypy --platform darwin --no-incremental --cache-dir /var/tmp/plans3-mypy-darwin
+chatmon/bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon/app.py:3173: error: Argument 1 to "removeEventFilter" of "QObject" has incompatible type "Companion"; expected "AskBox"  [arg-type]
+Found 1 error in 1 file (checked 70 source files)
+# exit 1
