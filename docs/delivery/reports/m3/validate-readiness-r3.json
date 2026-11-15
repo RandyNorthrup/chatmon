@@ -1,0 +1,19 @@
+{
+  "acceptance": 28,
+  "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts"
+  ],
+  "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+  "evidence": 29,
+  "findings": [],
+  "passed": true,
+  "requirements": 17,
+  "stage": "readiness",
+  "tasks": 13
+}
