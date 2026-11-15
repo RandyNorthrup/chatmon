@@ -1,0 +1,6 @@
+FAIL: resume record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, checkpoint-freshness
+outcome-unresolved | CI-linux | Read tests/test_screen_readers.py and tests/test_a11y.py from the next CI run: each runs, or skips with its reason (no at-spi2-core, no gsettings schema), and passes.
+outcome-unresolved | CI-macos | Read tests/test_macnative.py::test_sleep_wake_displays_accessibility_and_low_power_are_heard and tests/test_presence.py::test_macos_reads_increase_contrast from the next CI run on the merged tree; on a pass, T-04 and T-09 are verified.
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

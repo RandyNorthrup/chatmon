@@ -1,0 +1,15 @@
+# gates at b5d018a
+$ ruff check .
+All checks passed!
+# exit 0
+$ python -m mypy --platform linux
+Success: no issues found in 70 source files
+# exit 0
+$ python -m mypy --platform win32
+Success: no issues found in 70 source files
+# exit 0
+$ python -m mypy --platform darwin
+Success: no issues found in 70 source files
+# exit 0
+$ python packaging/extract_strings.py --check
+# exit 0
