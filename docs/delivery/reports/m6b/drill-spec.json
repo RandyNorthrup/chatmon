@@ -1,0 +1,281 @@
+{
+  "drills": [
+    {
+      "id": "M6B-01-bubble-not-clear-of-the-box",
+      "requirement": "M6B-01.A2",
+      "file": "chatmon/penguin.py",
+      "find": "            top = min(top, self._clear_of.geometry().top() - origin.y())\r\n",
+      "replace": "            top = top\r\n",
+      "test": [
+        "tests/test_overlay_stage.py::test_a_message_goes_above_the_open_box"
+      ],
+      "expect": [
+        "test_a_message_goes_above_the_open_box"
+      ]
+    },
+    {
+      "id": "M6B-01-menu-end-key-goes-home",
+      "requirement": "M6B-01.A2",
+      "file": "chatmon/stagemenu.py",
+      "find": "self._activate(panel, pickable[0 if key == Qt.Key.Key_Home else -1])",
+      "replace": "self._activate(panel, pickable[0])",
+      "test": [
+        "tests/test_stagemenu.py::test_the_keyboard_moves_opens_picks_and_closes"
+      ],
+      "expect": [
+        "test_the_keyboard_moves_opens_picks_and_closes"
+      ]
+    },
+    {
+      "id": "M6B-01-extractor-misses-import-time",
+      "requirement": "M6B-01.A2",
+      "file": "packaging/extract_strings.py",
+      "find": "    if marker in TRANSLATED_NOW and at_import:\r\n",
+      "replace": "    if False:\r\n",
+      "test": [
+        "tests/test_i18n.py::test_the_extractor_refuses_a_string_that_couldnt_be_translated"
+      ],
+      "expect": [
+        "test_the_extractor_refuses_a_string_that_couldnt_be_translated"
+      ]
+    },
+    {
+      "id": "M6B-02-a-module-loads-macos-on-import",
+      "requirement": "M6B-02.A2",
+      "file": "chatmon/macnative.py",
+      "find": "logger = logging.getLogger(__name__)\r\n",
+      "replace": "logger = logging.getLogger(__name__)\r\n_objc = ctypes.cdll.LoadLibrary(\"/usr/lib/libobjc.A.dylib\")\r\n",
+      "test": [
+        "tests/test_imports.py"
+      ],
+      "expect": [
+        "chatmon.macnative doesn't import on win32"
+      ]
+    },
+    {
+      "id": "M6B-03-debug-env-ignored",
+      "requirement": "M6B-03.A1",
+      "file": "chatmon/log.py",
+      "find": "    level = logging.DEBUG if debugging() else logging.INFO\n",
+      "replace": "    level = logging.INFO\n",
+      "test": [
+        "tests/test_log.py::test_chatmon_debug_keeps_the_details_too"
+      ],
+      "expect": [
+        "test_chatmon_debug_keeps_the_details_too"
+      ]
+    },
+    {
+      "id": "M6B-03-no-stderr",
+      "requirement": "M6B-03.A1",
+      "file": "chatmon/log.py",
+      "find": "    if sys.stderr is not None:\n",
+      "replace": "    if False:\n",
+      "test": [
+        "tests/test_log.py::test_problems_reach_stderr_as_well_and_details_and_news_dont"
+      ],
+      "expect": [
+        "test_problems_reach_stderr_as_well_and_details_and_news_dont"
+      ]
+    },
+    {
+      "id": "M6B-03-setup-twice-doubles",
+      "requirement": "M6B-03.A1",
+      "file": "chatmon/log.py",
+      "find": "    reset()\n    level = ",
+      "replace": "    level = ",
+      "test": [
+        "tests/test_log.py::test_setting_up_twice_keeps_one_of_each"
+      ],
+      "expect": [
+        "test_setting_up_twice_keeps_one_of_each"
+      ]
+    },
+    {
+      "id": "M6B-03-rotated-as-dot-1",
+      "requirement": "M6B-03.A2",
+      "file": "chatmon/log.py",
+      "find": "    return default.removesuffix(\".1\") + \".old\"\n",
+      "replace": "    return default\n",
+      "test": [
+        "tests/test_log.py::test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+      ],
+      "expect": [
+        "test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+      ]
+    },
+    {
+      "id": "M6B-03-limit-ten-times",
+      "requirement": "M6B-03.A2",
+      "file": "chatmon/log.py",
+      "find": "maxBytes=LIMIT,",
+      "replace": "maxBytes=LIMIT * 10,",
+      "test": [
+        "tests/test_log.py::test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+      ],
+      "expect": [
+        "test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+      ]
+    },
+    {
+      "id": "M6B-03-keys-not-blanked",
+      "requirement": "M6B-03.A3",
+      "file": "chatmon/log.py",
+      "find": "    return _KEYS.sub(BLANKED, text)\n",
+      "replace": "    return text\n",
+      "test": [
+        "tests/test_log.py::test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+      ],
+      "expect": [
+        "test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+      ]
+    },
+    {
+      "id": "M6B-03-console-not-blanked",
+      "requirement": "M6B-03.A3",
+      "file": "chatmon/log.py",
+      "find": "        console.setFormatter(_Blanking(CONSOLE_FORMAT))\n",
+      "replace": "        console.setFormatter(logging.Formatter(CONSOLE_FORMAT))\n",
+      "test": [
+        "tests/test_log.py::test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+      ],
+      "expect": [
+        "test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+      ]
+    },
+    {
+      "id": "M6B-03-brain-key-not-scrubbed",
+      "requirement": "M6B-03.A3",
+      "file": "chatmon/brains.py",
+      "find": "    return text.replace(key, \"…\") if len(key) >= 8 else text\r\n",
+      "replace": "    return text\r\n",
+      "test": [
+        "tests/test_log.py::test_a_logged_brain_error_never_carries_the_key"
+      ],
+      "expect": [
+        "test_a_logged_brain_error_never_carries_the_key"
+      ]
+    },
+    {
+      "id": "M6B-03-brain-failure-not-logged",
+      "requirement": "M6B-03.A3",
+      "file": "chatmon/brains.py",
+      "find": "        self.failed.connect(self._log_failure)\r\n",
+      "replace": "",
+      "test": [
+        "tests/test_log.py::test_a_logged_brain_error_never_carries_the_key"
+      ],
+      "expect": [
+        "test_a_logged_brain_error_never_carries_the_key"
+      ]
+    },
+    {
+      "id": "M6B-03-autostart-warning-printed",
+      "requirement": "M6B-03.A4",
+      "file": "chatmon/autostart.py",
+      "find": "        logger.warning(\"couldn't add Chatmon to Login Items (%s), so a LaunchAgent starts it\", problem)\r\n",
+      "replace": "        print(f\"couldn't add Chatmon to Login Items ({problem}), so a LaunchAgent starts it\", file=sys.stderr)\r\n",
+      "test": [
+        "tests/test_autostart.py::test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent"
+      ],
+      "expect": [
+        "test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent"
+      ]
+    },
+    {
+      "id": "M6B-03-chat-failure-hidden",
+      "requirement": "M6B-03.A5",
+      "file": "chatmon/chats.py",
+      "find": "            logger.debug(\"couldn't read chat %s: %s\", chat_id, exc)\r\n",
+      "replace": "            pass\r\n",
+      "test": [
+        "tests/test_chats.py::test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not"
+      ],
+      "expect": [
+        "test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not"
+      ]
+    },
+    {
+      "id": "M6B-03-package-manager-failure-hidden",
+      "requirement": "M6B-03.A5",
+      "file": "chatmon/updates.py",
+      "find": "                    logger.debug(\"couldn't ask %s whether it installed Chatmon: %s\", query[0], exc)\n",
+      "replace": "                    pass\n",
+      "test": [
+        "tests/test_updates.py::test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked"
+      ],
+      "expect": [
+        "test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked"
+      ]
+    },
+    {
+      "id": "M6B-03-phrases-failure-hidden",
+      "requirement": "M6B-03.A5",
+      "file": "chatmon/offline.py",
+      "find": "            logger.debug(\"couldn't read the phrases in %s: %s\", folder / f\"{candidate}.json\", exc)\r\n",
+      "replace": "            pass\r\n",
+      "test": [
+        "tests/test_offline.py::test_a_broken_translation_is_logged_and_a_missing_one_isnt"
+      ],
+      "expect": [
+        "test_a_broken_translation_is_logged_and_a_missing_one_isnt"
+      ]
+    },
+    {
+      "id": "M6B-03-reminder-words-logged",
+      "requirement": "M6B-03.A5",
+      "file": "chatmon/reminders.py",
+      "find": "                logger.debug(\"skipped a saved reminder that can't be read (%s)\", type(exc).__name__)\r\n",
+      "replace": "                logger.debug(\"skipped a saved reminder that can't be read (%s): %s\", type(exc).__name__, entry)\r\n",
+      "test": [
+        "tests/test_reminders.py::test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words"
+      ],
+      "expect": [
+        "test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words"
+      ]
+    },
+    {
+      "id": "M6B-03-player-failure-hidden",
+      "requirement": "M6B-03.A5",
+      "file": "chatmon/sound.py",
+      "find": "            logger.debug(\"couldn't start %s: %s\", self.name, exc)\r\n",
+      "replace": "            pass\r\n",
+      "test": [
+        "tests/test_sound.py::test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays"
+      ],
+      "expect": [
+        "test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays"
+      ]
+    },
+    {
+      "id": "M6B-RW-http-error-left-open",
+      "requirement": "M6B-RW.A1",
+      "file": "chatmon/brains.py",
+      "find": "        exc.close()\r\n        raise\r\n",
+      "replace": "        raise\r\n",
+      "test": [
+        "-W",
+        "error::ResourceWarning",
+        "tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed"
+      ],
+      "expect": [
+        "ResourceWarning"
+      ]
+    },
+    {
+      "id": "M6B-RW-release-server-left-open",
+      "requirement": "M6B-RW.A1",
+      "file": "tests/test_updates.py",
+      "find": "    server.shutdown()\r\n    server.server_close()\r\n\r\n\r\ndef run_updater",
+      "replace": "    server.shutdown()\r\n\r\n\r\ndef run_updater",
+      "test": [
+        "-W",
+        "error::ResourceWarning",
+        "tests/test_updates.py"
+      ],
+      "expect": [
+        "ResourceWarning"
+      ]
+    }
+  ]
+}

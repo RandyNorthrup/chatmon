@@ -1,0 +1,87 @@
+gate typeslogs: index of 0f58e71 + staged changes, tree 2350b0ef44f1ae7723fdba4ae6fffce15fd4ee68
+chatmon from C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\__init__.py
+3.14.10 (tags/v3.14.10:b703b2c, Oct 25 2026, 17:36:52) [MSC v.1944 64 bit (AMD64)]
+..s.s................................s.................................. [  5%]
+...............................Windows fatal exception: access violation
+
+Thread 0x0000c9d8 [Thread-156 (go)] (most recent call first):
+  File "C:\Python314\Lib\socket.py", line 859 in create_connection
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\brains.py", line 354 in _look
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\brains.py", line 333 in look_again
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\app.py", line 77 in go
+  File "C:\Python314\Lib\threading.py", line 1025 in run
+  File "C:\Python314\Lib\threading.py", line 1083 in _bootstrap_inner
+  File "C:\Python314\Lib\threading.py", line 1045 in _bootstrap
+
+Thread 0x00009750 [pytest_timeout tests/test_app_m7.py::test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back] (most recent call first):
+  File "C:\Python314\Lib\threading.py", line 376 in wait
+  File "C:\Python314\Lib\threading.py", line 671 in wait
+  File "C:\Python314\Lib\threading.py", line 1384 in run
+  File "C:\Python314\Lib\threading.py", line 1083 in _bootstrap_inner
+  File "C:\Python314\Lib\threading.py", line 1045 in _bootstrap
+
+Thread 0x0000ba40 [Thread-154 (go)] (most recent call first):
+  File "C:\Python314\Lib\socket.py", line 859 in create_connection
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\brains.py", line 354 in _look
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\brains.py", line 333 in look_again
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\app.py", line 77 in go
+  File "C:\Python314\Lib\threading.py", line 1025 in run
+  File "C:\Python314\Lib\threading.py", line 1083 in _bootstrap_inner
+  File "C:\Python314\Lib\threading.py", line 1045 in _bootstrap
+
+Thread 0x00008fdc [Thread-150 (go)] (most recent call first):
+  File "C:\Python314\Lib\socket.py", line 859 in create_connection
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\brains.py", line 354 in _look
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\brains.py", line 333 in look_again
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\app.py", line 77 in go
+  File "C:\Python314\Lib\threading.py", line 1025 in run
+  File "C:\Python314\Lib\threading.py", line 1083 in _bootstrap_inner
+  File "C:\Python314\Lib\threading.py", line 1045 in _bootstrap
+
+Current thread 0x00009af4 (most recent call first):
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\chatmon\app.py", line 261 in __init__
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\tests\app_harness.py", line 96 in make_companion
+  File "C:\Users\Randy\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\gate-typeslogs\tests\test_app_m7.py", line 21 in companion
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py", line 1067 in call_fixture_func
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py", line 1407 in pytest_fixture_setup
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py", line 1301 in execute
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py", line 797 in _get_active_fixturedef
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py", line 701 in getfixturevalue
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py", line 877 in _fillfixtures
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py", line 1801 in setup
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\runner.py", line 536 in setup
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\runner.py", line 170 in pytest_runtest_setup
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\runner.py", line 250 in <lambda>
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\runner.py", line 361 in from_call
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\runner.py", line 249 in call_and_report
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\runner.py", line 132 in runtestprotocol
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\runner.py", line 118 in pytest_runtest_protocol
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\main.py", line 411 in pytest_runtestloop
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\main.py", line 387 in _main
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\main.py", line 333 in wrap_session
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\main.py", line 380 in pytest_cmdline_main
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\config\__init__.py", line 262 in _main
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\config\__init__.py", line 286 in _console_main
+  File "C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\pytest\__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 203 in _run_module_as_main
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+/tmp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/gate.sh: line 19: 219849 Segmentation fault      QT_QPA_PLATFORM=offscreen "$PY" -m pytest -q -p no:cacheprovider "$@"
+pytest exit 139

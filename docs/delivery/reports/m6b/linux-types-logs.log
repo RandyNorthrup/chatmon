@@ -1,0 +1,193 @@
+== Linux 6.18.58.1-microsoft-standard-WSL2, Python 3.14.9, PyQt6 6.12.1 Qt 6.12.0
+.........................s.............................................. [ 54%]
+....s...s..................................................s             [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_events.py:121: macOS's temporary folder of your own
+SKIPPED [1] tests/test_brains.py:592: cmd.exe and the tools npm installs as .cmd files are Windows'
+SKIPPED [1] tests/test_brains.py:681: Windows' process tree
+SKIPPED [1] tests/test_updates.py:615: holding a file open against changes: Windows
+128 passed, 4 skipped in 24.18s
+pytest exit 0
+== mypy --platform linux (PyQt6 6.12 stubs)
+chatmon/chatswin.py:28: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:29: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:29: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:30: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:30: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:31: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:31: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:32: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:32: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:33: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:33: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:647: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:647: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:648: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:648: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:649: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:649: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:838: error: Need type annotation for "image"  [var-annotated]
+chatmon/bubble.py:869: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "_Ghost"  [arg-type]
+chatmon/bubble.py:902: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:902: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:903: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:903: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:904: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:904: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:905: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:905: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:906: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:906: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:907: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:907: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:908: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:908: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:909: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:909: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:910: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:910: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:911: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:911: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:99: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "StageWindow"  [arg-type]
+chatmon/penguin.py:201: error: Argument 1 to "__init__" of "QObject" has incompatible type "Stage"; expected "Hosted"  [arg-type]
+chatmon/penguin.py:351: error: Left operand of "and" is always true  [redundant-expr]
+chatmon/penguin.py:477: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:477: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:478: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:478: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:479: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:479: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:480: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:480: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:481: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:481: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:482: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:482: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:483: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:483: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:484: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:484: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:529: error: Need type annotation for "app"  [var-annotated]
+Found 104 errors in 17 files (checked 69 source files)
+== mypy --platform win32 (PyQt6 6.12 stubs)
+chatmon/chatswin.py:28: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:29: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:29: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:30: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:30: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:31: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:31: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:32: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:32: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:33: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:33: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:647: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:647: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:648: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:648: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:649: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:649: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:838: error: Need type annotation for "image"  [var-annotated]
+chatmon/bubble.py:869: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "_Ghost"  [arg-type]
+chatmon/bubble.py:902: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:902: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:903: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:903: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:904: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:904: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:905: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:905: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:906: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:906: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:907: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:907: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:908: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:908: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:909: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:909: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:910: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:910: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:911: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:911: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:99: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "StageWindow"  [arg-type]
+chatmon/penguin.py:201: error: Argument 1 to "__init__" of "QObject" has incompatible type "Stage"; expected "Hosted"  [arg-type]
+chatmon/penguin.py:351: error: Left operand of "and" is always true  [redundant-expr]
+chatmon/penguin.py:477: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:477: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:478: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:478: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:479: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:479: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:480: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:480: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:481: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:481: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:482: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:482: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:483: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:483: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:484: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:484: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:529: error: Need type annotation for "app"  [var-annotated]
+Found 104 errors in 17 files (checked 69 source files)
+== mypy --platform darwin (PyQt6 6.12 stubs)
+chatmon/chatswin.py:28: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:29: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:29: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:30: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:30: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:31: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:31: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:32: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:32: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/chatswin.py:33: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/chatswin.py:33: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:647: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:647: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:648: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:648: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:649: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:649: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:838: error: Need type annotation for "image"  [var-annotated]
+chatmon/bubble.py:869: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "_Ghost"  [arg-type]
+chatmon/bubble.py:902: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:902: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:903: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:903: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:904: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:904: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:905: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:905: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:906: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:906: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:907: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:907: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:908: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:908: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:909: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:909: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:910: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:910: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/bubble.py:911: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/bubble.py:911: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:99: error: Argument 1 to "__init__" of "QWidget" has incompatible type "None"; expected "StageWindow"  [arg-type]
+chatmon/penguin.py:201: error: Argument 1 to "__init__" of "QObject" has incompatible type "Stage"; expected "Hosted"  [arg-type]
+chatmon/penguin.py:351: error: Left operand of "and" is always true  [redundant-expr]
+chatmon/penguin.py:477: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:477: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:478: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:478: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:479: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:479: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:480: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:480: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:481: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:481: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:482: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:482: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:483: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:483: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:484: error: Missing named argument "arguments" for "pyqtSignal"  [call-arg]
+chatmon/penguin.py:484: note: "pyqtSignal" defined in "PyQt6.QtCore"
+chatmon/penguin.py:529: error: Need type annotation for "app"  [var-annotated]
+Found 104 errors in 17 files (checked 69 source files)

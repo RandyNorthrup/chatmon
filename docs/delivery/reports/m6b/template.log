@@ -1,0 +1,2 @@
+$ python packaging/extract_strings.py --check
+exit 0
