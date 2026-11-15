@@ -1,0 +1,4 @@
+
+=== summary
+PASS W4-M7-02-no-next-brain
+PASS W4-M7-02-welcome-without-brain

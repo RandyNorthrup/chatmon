@@ -1,0 +1,2 @@
+docs/delivery/reports/m2/drill-spec.json: 49 drills kept in docs/delivery/reports/m2/wave4/drill-spec.json, 1 left out
+  M2-11-no-rules: its find text occurs 0 times in chatmon/richtext.py (expected 1)

@@ -1,0 +1,424 @@
+[
+  {
+    "id": "M8-01B-app-bubble-not-translated",
+    "requirement": "M8-01",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "_(\"New look: {style}.\")",
+      "replace": "\"New look: {style}.\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8",
+    "baseline_exit": 0,
+    "mutated_sha256": "1d92ed2e39f3dcbdf84391bfd1ab37c4e1b2ed669abcfbd8fe0fb12f9397b02d",
+    "mutated_exit": 1,
+    "observed": "__ test_the_app_itself_speaks_the_translation_and_english_where_it_has_none ___",
+    "after_sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-prompt-gets-translated-label",
+    "requirement": "M8-01",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self._companion().label_en.lower()",
+      "replace": "self._companion().label.lower()"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_app_itself_speaks_the_translation_and_english_where_it_has_none",
+      "a small electric penguin desktop companion"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8",
+    "baseline_exit": 0,
+    "mutated_sha256": "8a6799bf5bca81a73dced5ffb02d79a746a63c57152234cbac4424b00bd32f4f",
+    "mutated_exit": 1,
+    "observed": "__ test_the_app_itself_speaks_the_translation_and_english_where_it_has_none ___",
+    "after_sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-install-failure-flag-ignored",
+    "requirement": "M8-01",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self.updater.failure == updates.INSTALL_FAILED",
+      "replace": "False"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked"
+    ],
+    "expected": [
+      "test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8",
+    "baseline_exit": 0,
+    "mutated_sha256": "623ea4e1b56b986b0477f22eeac6e6f8cd1f958380855fa9624a5acd6256c3f2",
+    "mutated_exit": 1,
+    "observed": "_ test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked _",
+    "after_sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-metered-flag-ignored",
+    "requirement": "M8-01",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "if self.updater.metered:",
+      "replace": "if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked"
+    ],
+    "expected": [
+      "test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8",
+    "baseline_exit": 0,
+    "mutated_sha256": "b7614451c52d38bf5e4550b512e40d0e780889b3c84656afdfdabe83090921bd",
+    "mutated_exit": 1,
+    "observed": "_ test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked _",
+    "after_sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-menu-item-not-wrapped",
+    "requirement": "M8-01",
+    "file": "chatmon/menus.py",
+    "mutation": {
+      "find": "m.addAction(_(\"Settings\u2026\"), c.open_settings)",
+      "replace": "m.addAction(\"Settings\u2026\", c.open_settings)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "30dc957489a349a915484f480a5b4621eaf3fe945e62ca76ebcafa3763384a34",
+    "baseline_exit": 0,
+    "mutated_sha256": "0728ca35c9e83fe59e75e3094aa244ba71d91fa7ce2b417d6d82f4a22a481dbb",
+    "mutated_exit": 1,
+    "observed": "__ test_the_app_itself_speaks_the_translation_and_english_where_it_has_none ___",
+    "after_sha256": "30dc957489a349a915484f480a5b4621eaf3fe945e62ca76ebcafa3763384a34",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-style-word-english",
+    "requirement": "M8-01",
+    "file": "chatmon/menus.py",
+    "mutation": {
+      "find": "    return _(STYLE_WORDS[name]) if name in STYLE_WORDS else name",
+      "replace": "    return STYLE_WORDS[name] if name in STYLE_WORDS else name"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "30dc957489a349a915484f480a5b4621eaf3fe945e62ca76ebcafa3763384a34",
+    "baseline_exit": 0,
+    "mutated_sha256": "499fe88aa1472d79fac87f8c3912bf46cd7221f9205dc01c0a862987a60f1d59",
+    "mutated_exit": 1,
+    "observed": "__ test_the_app_itself_speaks_the_translation_and_english_where_it_has_none ___",
+    "after_sha256": "30dc957489a349a915484f480a5b4621eaf3fe945e62ca76ebcafa3763384a34",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-command-plural-glued",
+    "requirement": "M8-01",
+    "file": "chatmon/commands.py",
+    "mutation": {
+      "find": "ngettext(\"Cancelled {n} reminder.\", \"Cancelled {n} reminders.\", len(upcoming)).format(n=len(upcoming))",
+      "replace": "f\"Cancelled {len(upcoming)} reminder{'s' if len(upcoming) != 1 else ''}.\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38",
+    "baseline_exit": 0,
+    "mutated_sha256": "6ddc906611b5346026c6f302d2a2e925dc15eb9905f6f3563f1d6c67d24d4757",
+    "mutated_exit": 1,
+    "observed": "__ test_the_app_itself_speaks_the_translation_and_english_where_it_has_none ___",
+    "after_sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-reminder-line-untranslated",
+    "requirement": "M8-01",
+    "file": "chatmon/commands.py",
+    "mutation": {
+      "find": "    return _(once).format(**words)",
+      "replace": "    return once.format(**words)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "expected": [
+      "test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38",
+    "baseline_exit": 0,
+    "mutated_sha256": "2476deef85d21d6691a1a49ff8c2b3736813b3cab9d6bd43d75f37f9d19df5b7",
+    "mutated_exit": 1,
+    "observed": "__ test_the_app_itself_speaks_the_translation_and_english_where_it_has_none ___",
+    "after_sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-turn-found-by-english",
+    "requirement": "M8-01",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "    starts, you = [], you_label()",
+      "replace": "    starts, you = [], \"You:\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_rich_text.py::test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language"
+    ],
+    "expected": [
+      "test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b",
+    "baseline_exit": 0,
+    "mutated_sha256": "7d2af7a2c971b25c99adbec2b81d1440bd71002318612947b26b9c4d5b74ecd2",
+    "mutated_exit": 1,
+    "observed": "_ test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language _",
+    "after_sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-attached-found-by-english",
+    "requirement": "M8-01",
+    "file": "chatmon/richtext.py",
+    "mutation": {
+      "find": "    ranges, attached = [], attached_label()",
+      "replace": "    ranges, attached = [], \"Attached:\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_rich_text.py::test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language"
+    ],
+    "expected": [
+      "test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b",
+    "baseline_exit": 0,
+    "mutated_sha256": "479cbcf56fcd8a720c43a21c9faaf381b006ddc39ae2420e94534d6d88f4f13d",
+    "mutated_exit": 1,
+    "observed": "_ test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language _",
+    "after_sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-transcript-drops-attached",
+    "requirement": "M8-01",
+    "file": "chatmon/asking.py",
+    "mutation": {
+      "find": "    return richtext.question_markdown(typed(question.text), [a.name for a in question.attached])",
+      "replace": "    return richtext.question_markdown(typed(question.text))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_asking.py::test_the_transcript_tail_shows_what_is_on_its_way_then_what_waits"
+    ],
+    "expected": [
+      "test_the_transcript_tail_shows_what_is_on_its_way_then_what_waits"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8",
+    "baseline_exit": 0,
+    "mutated_sha256": "a83fd2d0217b9a1c0d8d21ef65f2e19377aca2de571ac384fdfa33d64bafc1db",
+    "mutated_exit": 1,
+    "observed": "______ test_the_transcript_tail_shows_what_is_on_its_way_then_what_waits ______",
+    "after_sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-dropped-problem-a-fragment",
+    "requirement": "M8-01",
+    "file": "chatmon/winfiles.py",
+    "mutation": {
+      "find": "_(\"{file} couldn't be read\").format(file=item.name)",
+      "replace": "\"couldn't be read\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_winfiles.py::test_only_what_can_be_attached_is_read"
+    ],
+    "expected": [
+      "test_only_what_can_be_attached_is_read"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "ac43c9d6ce9043e8b06abbeae9d7f27f633e2ee45b36cd85b1ddb1ad376f175e",
+    "mutated_exit": 1,
+    "observed": "___________________ test_only_what_can_be_attached_is_read ____________________",
+    "after_sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-metered-flag-not-set",
+    "requirement": "M8-01",
+    "file": "chatmon/updates.py",
+    "mutation": {
+      "find": "self.metered = metered",
+      "replace": "self.metered = False"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_updates.py::test_a_metered_connection_is_said_by_a_flag_not_by_its_words"
+    ],
+    "expected": [
+      "test_a_metered_connection_is_said_by_a_flag_not_by_its_words"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca878f84f5df93bb338d03fdc065c213a2ff8f4ff2a21f59afdde2a6f0c45e82",
+    "baseline_exit": 0,
+    "mutated_sha256": "9785e17683e5c0ab78cd9c5d61e7caac4abe1fca8e42b171ef3d18cc776d3103",
+    "mutated_exit": 1,
+    "observed": "________ test_a_metered_connection_is_said_by_a_flag_not_by_its_words _________",
+    "after_sha256": "ca878f84f5df93bb338d03fdc065c213a2ff8f4ff2a21f59afdde2a6f0c45e82",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01B-template-stale",
+    "requirement": "M8-01",
+    "file": "chatmon/settingswin.py",
+    "mutation": {
+      "find": "_(\"Hotkey to open the ask box\")",
+      "replace": "_(\"Hotkey that opens the ask box\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n.py::test_the_template_has_every_marked_string_and_reads_as_a_catalog"
+    ],
+    "expected": [
+      "test_the_template_has_every_marked_string_and_reads_as_a_catalog",
+      "run: python packaging/extract_strings.py"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0ca4c6147f85beef239d121f9268d9d08f3889718967fd00cd0f61da6f90f846",
+    "baseline_exit": 0,
+    "mutated_sha256": "4016c71d00364c5b48a0dcb89b606998e6cafa9081f69ad0dcfc2a02bbd0c7d5",
+    "mutated_exit": 1,
+    "observed": "______ test_the_template_has_every_marked_string_and_reads_as_a_catalog _______",
+    "after_sha256": "0ca4c6147f85beef239d121f9268d9d08f3889718967fd00cd0f61da6f90f846",
+    "restored_exit": 0
+  }
+]

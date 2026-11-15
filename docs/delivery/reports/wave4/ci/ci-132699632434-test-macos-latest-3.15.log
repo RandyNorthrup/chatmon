@@ -1,0 +1,684 @@
+test (macos-latest, 3.15)	Set up job	﻿2026-11-15T04:31:26.2514590Z Current runner version: '2.338.2'
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2531960Z ##[group]Runner Image Provisioner
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2532520Z Hosted Compute Agent
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2532880Z Version: 20261028.624
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2533270Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2533730Z Build Date: 2026-10-28T21:51:42Z
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2534160Z Worker ID: {2107c65e-0bc7-4e9d-9b92-7f8578a0baf2}
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2534660Z Region: westus
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2535050Z Cloud: MacCloud
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2535460Z ##[endgroup]
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2536400Z ##[group]Operating System
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2536790Z macOS
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2537110Z 26.7.2
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2537430Z 25G332
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2537750Z ##[endgroup]
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2538130Z ##[group]Runner Image
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2538780Z Image: macos-26-arm64
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2539190Z Version: 20261102.0473.1
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2540030Z Included Software: https://github.com/actions/runner-images/blob/macos-26-arm64/20261102.0473/images/macos/macos-26-arm64-Readme.md
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2541740Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-26-arm64%2F20261102.0473
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2542600Z ##[endgroup]
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2543530Z ##[group]GITHUB_TOKEN Permissions
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2545700Z Contents: read
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2546130Z Metadata: read
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2546550Z ##[endgroup]
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2548650Z Secret source: Actions
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2549210Z Cache mode: write
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.2549670Z Prepare workflow directory
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.3055720Z Prepare all required actions
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.3123030Z Getting action download info
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.4814670Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:26.9851110Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:28.0078960Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+test (macos-latest, 3.15)	Set up job	2026-11-15T04:31:28.3193900Z Complete job name: test (macos-latest, 3.15)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T04:31:28.4402380Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4405110Z with:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4405540Z   persist-credentials: false
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4406030Z   sparse-checkout: /*
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4406570Z   sparse-checkout-cone-mode: false
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4407070Z   repository: RandyNorthrup/chatmon
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4411130Z   token: ***
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4411530Z   ssh-strict: true
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4411910Z   ssh-user: git
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4412260Z   clean: true
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4412640Z   fetch-depth: 1
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4413030Z   fetch-tags: false
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4413560Z   show-progress: true
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4413980Z   lfs: false
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4414350Z   submodules: false
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4414790Z   set-safe-directory: true
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4415890Z   allow-unsafe-pr-checkout: false
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4417200Z env:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4417580Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4418040Z   QT_QPA_PLATFORM: offscreen
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4418570Z   CHATMON_TEST_CLIPBOARD: 1
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4419030Z   COVER: false
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.4419360Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.3147250Z Syncing repository: RandyNorthrup/chatmon
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.3152760Z ##[group]Getting Git version info
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.3154670Z Working directory is '/Users/runner/work/chatmon/chatmon'
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.3179750Z [command]/opt/homebrew/bin/git version
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4518440Z git version 2.56.0
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4545740Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4561480Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/c9395fd2-2ba1-4fbc-821b-66da2b902399/.gitconfig'
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4574180Z Temporarily overriding HOME='/Users/runner/work/_temp/c9395fd2-2ba1-4fbc-821b-66da2b902399' before making global git config changes
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4580620Z Adding repository directory to the temporary git global config as a safe directory
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4582780Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/chatmon/chatmon
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4820410Z Deleting the contents of '/Users/runner/work/chatmon/chatmon'
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4824870Z ##[group]Determining repository object format
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4828360Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4831550Z ##[group]Initializing the repository
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.4834550Z [command]/opt/homebrew/bin/git init /Users/runner/work/chatmon/chatmon
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5588750Z hint: Using 'master' as the name for the initial branch. This default branch name
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5593630Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5598110Z hint: to use in all of your new repositories, which will suppress this warning,
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5601700Z hint: call:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5603680Z hint:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5606100Z hint: 	git config --global init.defaultBranch <name>
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5608850Z hint:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5611530Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5615390Z hint: 'development'. The just-created branch can be renamed via this command:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5618030Z hint:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5619040Z hint: 	git branch -m <name>
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5620180Z hint:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5621620Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5719220Z Initialized empty Git repository in /Users/runner/work/chatmon/chatmon/.git/
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5737820Z [command]/opt/homebrew/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5960050Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5963120Z ##[group]Disabling automatic garbage collection
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.5965850Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.6163310Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.6166200Z ##[group]Setting up auth
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.6168220Z Removing SSH command configuration
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.6171240Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.6387180Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.9121890Z Removing HTTP extra header
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.9123990Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.9315730Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.1085330Z Removing includeIf entries pointing to credentials config files
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.1187660Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.1505870Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.2778490Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.2930850Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/chatmon/chatmon/.git.path /Users/runner/work/_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.3116320Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.3152940Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.3276370Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.3374600Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.3376040Z ##[group]Fetching the repository
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:30.3379070Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0:refs/remotes/origin/improve/assessment-fixes
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.1723880Z From https://github.com/RandyNorthrup/chatmon
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.1726530Z  * [new ref]         fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0 -> origin/improve/assessment-fixes
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.1738110Z [command]/opt/homebrew/bin/git branch --list --remote origin/improve/assessment-fixes
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2303960Z   origin/improve/assessment-fixes
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2309110Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/improve/assessment-fixes
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2549190Z fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2555360Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2556940Z ##[group]Determining the checkout info
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2558380Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2559410Z ##[group]Setting up sparse checkout
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2565860Z [command]/opt/homebrew/bin/git config core.sparseCheckout true
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2697930Z [command]/opt/homebrew/bin/git rev-parse --git-path info/sparse-checkout
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2821410Z .git/info/sparse-checkout
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2833790Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2836180Z ##[group]Checking out the ref
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:31.2839190Z [command]/opt/homebrew/bin/git checkout --progress --force -B improve/assessment-fixes refs/remotes/origin/improve/assessment-fixes
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8567720Z Updating files:   0% (1/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8570430Z Updating files:   1% (4/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8580640Z Updating files:   2% (7/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8592120Z Updating files:   3% (10/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8667310Z Updating files:   4% (13/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8675200Z Updating files:   5% (16/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8722560Z Updating files:   6% (19/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8745670Z Updating files:   7% (22/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8767660Z Updating files:   8% (25/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8806870Z Updating files:   9% (28/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.8908520Z Updating files:  10% (31/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9011200Z Updating files:  11% (34/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9141840Z Updating files:  12% (37/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9245240Z Updating files:  13% (40/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9345640Z Updating files:  14% (43/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9432190Z Updating files:  15% (46/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9438600Z Updating files:  16% (49/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9439080Z Updating files:  17% (52/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9439390Z Updating files:  18% (55/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9439670Z Updating files:  19% (58/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9440010Z Updating files:  20% (61/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9440390Z Updating files:  21% (65/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9440780Z Updating files:  22% (68/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9441130Z Updating files:  23% (71/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9449610Z Updating files:  24% (74/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9450230Z Updating files:  25% (77/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9469550Z Updating files:  26% (80/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9482900Z Updating files:  27% (83/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9502440Z Updating files:  28% (86/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9515660Z Updating files:  29% (89/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9537630Z Updating files:  30% (92/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9546880Z Updating files:  31% (95/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9577010Z Updating files:  32% (98/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9634140Z Updating files:  33% (101/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9705320Z Updating files:  34% (104/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9728880Z Updating files:  35% (107/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9732200Z Updating files:  36% (110/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9733640Z Updating files:  37% (113/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9734200Z Updating files:  38% (116/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9734650Z Updating files:  39% (119/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9735050Z Updating files:  40% (122/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9735520Z Updating files:  41% (126/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9736520Z Updating files:  42% (129/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9737100Z Updating files:  43% (132/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9737850Z Updating files:  44% (135/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9742880Z Updating files:  45% (138/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9746130Z Updating files:  46% (141/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9750360Z Updating files:  47% (144/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9755630Z Updating files:  48% (147/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9759880Z Updating files:  49% (150/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9773890Z Updating files:  50% (153/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9785760Z Updating files:  51% (156/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9793110Z Updating files:  52% (159/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9797510Z Updating files:  53% (162/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9800030Z Updating files:  54% (165/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9803590Z Updating files:  55% (168/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9807700Z Updating files:  56% (171/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9810640Z Updating files:  57% (174/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9815150Z Updating files:  58% (177/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9817870Z Updating files:  59% (180/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9827990Z Updating files:  60% (183/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9893940Z Updating files:  61% (187/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9895370Z Updating files:  62% (190/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9903120Z Updating files:  63% (193/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9944770Z Updating files:  64% (196/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9945800Z Updating files:  65% (199/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9946290Z Updating files:  66% (202/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9946570Z Updating files:  67% (205/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9947130Z Updating files:  68% (208/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9947540Z Updating files:  69% (211/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9948870Z Updating files:  70% (214/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9954060Z Updating files:  71% (217/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9955850Z Updating files:  72% (220/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9958770Z Updating files:  73% (223/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9961650Z Updating files:  74% (226/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9964980Z Updating files:  75% (229/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9970370Z Updating files:  76% (232/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9973820Z Updating files:  77% (235/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9976390Z Updating files:  78% (238/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9981170Z Updating files:  79% (241/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:32.9994230Z Updating files:  80% (244/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0005360Z Updating files:  81% (248/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0011200Z Updating files:  82% (251/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0027750Z Updating files:  83% (254/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0037480Z Updating files:  84% (257/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0047570Z Updating files:  85% (260/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0053360Z Updating files:  86% (263/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0059910Z Updating files:  87% (266/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0077590Z Updating files:  88% (269/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0082380Z Updating files:  89% (272/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0095930Z Updating files:  90% (275/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0108460Z Updating files:  91% (278/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0128740Z Updating files:  92% (281/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0129510Z Updating files:  93% (284/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0140890Z Updating files:  94% (287/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0151520Z Updating files:  95% (290/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0166920Z Updating files:  96% (293/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0172570Z Updating files:  97% (296/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0174340Z Updating files:  98% (299/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0176820Z Updating files:  99% (302/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0177710Z Updating files: 100% (305/305)
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0178860Z Updating files: 100% (305/305), done.
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0244490Z Switched to a new branch 'improve/assessment-fixes'
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0253060Z branch 'improve/assessment-fixes' set up to track 'origin/improve/assessment-fixes'.
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0281190Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0449180Z [command]/opt/homebrew/bin/git log -1 --format=%H
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0555590Z fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0565180Z ##[group]Removing auth
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0565780Z Removing SSH command configuration
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0568710Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.0648160Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.2032110Z Removing HTTP extra header
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.2035680Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.2180210Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3378450Z Removing includeIf entries pointing to credentials config files
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3399450Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3481050Z includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3481800Z includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3482300Z includeif.gitdir:/github/workspace/.git.path
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3482660Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3494840Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3604620Z /Users/runner/work/_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3635690Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-1897741d\-165c\-4117\-8915\-dcb1b5a48f92\.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3756550Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3883940Z /Users/runner/work/_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.3894410Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-1897741d\-165c\-4117\-8915\-dcb1b5a48f92\.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.4010520Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.4096110Z /github/runner_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.4107480Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-1897741d\-165c\-4117\-8915\-dcb1b5a48f92\.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.4194750Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.4265190Z /github/runner_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.4275540Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-1897741d\-165c\-4117\-8915\-dcb1b5a48f92\.config
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.4359560Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.7497450Z Removing credentials config '/Users/runner/work/_temp/git-credentials-1897741d-165c-4117-8915-dcb1b5a48f92.config'
+test (macos-latest, 3.15)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:33.7701950Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T04:31:33.8304680Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8305210Z with:
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8305440Z   python-version: 3.15
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8305630Z   check-latest: false
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8308070Z   token: ***
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8308760Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8309110Z   update-environment: true
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8309350Z   allow-prereleases: false
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8309590Z   freethreaded: false
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8309800Z env:
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8309980Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8310220Z   QT_QPA_PLATFORM: offscreen
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8310460Z   CHATMON_TEST_CLIPBOARD: 1
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8310640Z   COVER: false
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:33.8310820Z ##[endgroup]
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:34.0365140Z ##[group]Installed versions
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:34.0440840Z Version 3.15 was not found in the local cache
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:35.2863920Z Version 3.15 is available for downloading
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:35.2968960Z Download from "https://github.com/actions/python-versions/releases/download/3.15.2-40340363276/python-3.15.2-darwin-arm64.tar.gz"
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:36.6919740Z Extract downloaded archive
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:36.7178510Z [command]/usr/bin/tar xz -C /Users/runner/work/_temp/8066c7c4-8356-4e6d-b593-3e5412088498 -f /Users/runner/work/_temp/96663603-bf23-4dc2-bb1b-8024154f0dce
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:37.1582860Z Execute installation script
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:37.2545980Z Check if Python hostedtoolcache folder exist...
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:37.3042240Z Install Python binaries from prebuilt package
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:26.4169860Z installer: Package name is Python
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:26.4183790Z installer: choices changes file '/var/folders/h5/t85nd63d71x27_8gl5gw3l_w0000gn/T/tmp.EGptITQrHb' applied
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:26.4187220Z installer: Upgrading at base path /
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:26.4188300Z installer: The upgrade was successful.
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:26.4218640Z Create hostedtoolcach symlinks (Required for the backward compatibility)
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:26.4220160Z Create Python 3.15.2 folder
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:26.4808610Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:26.6278000Z Upgrading pip...
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:27.8827560Z Collecting pip
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.1025850Z Downloading pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.1855980Z Downloading pip-26.3-py3-none-any.whl (2.0 MB)
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.5294430Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 9.3 MB/s  0:00:00
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.5295850Z 
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.5572990Z Installing collected packages: pip
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.5573430Z Attempting uninstall: pip
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.5589020Z Found existing installation: pip 26.2.2
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.5812850Z Uninstalling pip-26.2.2:
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:28.7122790Z Successfully uninstalled pip-26.2.2
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:29.8504200Z Successfully installed pip-26.3
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:29.8929090Z Install OpenSSL certificates
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.6799870Z Collecting certifi
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.6822800Z Using cached certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.6896060Z Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.8352430Z Installing collected packages: certifi
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.8432490Z Successfully installed certifi-2026.10.23
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.9616650Z -- pip install --upgrade certifi
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.9633090Z  -- removing any existing file or link
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.9637740Z  -- creating symlink to certifi certificate bundle
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.9639960Z  -- setting permissions
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.9640600Z  -- update complete
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.9754940Z Create complete file
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.9979280Z Successfully set up CPython (3.15.2)
+test (macos-latest, 3.15)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:32:30.9981160Z ##[endgroup]
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	﻿2026-11-15T04:32:31.0337280Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-test.txt
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0348210Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-test.txt[0m
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0447500Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0447880Z env:
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0448240Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0448550Z   QT_QPA_PLATFORM: offscreen
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0448940Z   CHATMON_TEST_CLIPBOARD: 1
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0449220Z   COVER: false
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0449670Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0450260Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.15.2/arm64/lib/pkgconfig
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0450720Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0451330Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0451790Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.0452380Z ##[endgroup]
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:31.5876810Z Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:32.3556150Z Collecting coverage==7.17.0 (from -r packaging/requirements-test.txt (line 7))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:32.5580890Z   Downloading coverage-7.17.0-cp315-cp315-macosx_11_0_arm64.whl (226 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:32.9953040Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-test.txt (line 128))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.0611070Z   Downloading hypothesis-6.170.14-cp315-abi3.abi3t-macosx_11_0_arm64.whl (792 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.2039890Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 792.3/792.3 kB 6.8 MB/s  0:00:00
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.2822050Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-test.txt (line 213))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.3488060Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.4394200Z Collecting packaging==26.3 (from -r packaging/requirements-test.txt (line 217))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.5046810Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.5916000Z Collecting pluggy==1.7.0 (from -r packaging/requirements-test.txt (line 221))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.6562010Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.7862910Z Collecting psutil==7.2.2 (from -r packaging/requirements-test.txt (line 225))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.8495510Z   Downloading psutil-7.2.2-cp36-abi3-macosx_11_0_arm64.whl (129 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.9342750Z Collecting pygments==2.21.0 (from -r packaging/requirements-test.txt (line 248))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:33.9973340Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:34.0804000Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 13.6 MB/s  0:00:00
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:34.1801190Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-test.txt (line 252))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:34.2488610Z   Downloading pyqt6-6.11.0-cp310-abi3-macosx_10_14_universal2.whl (12.4 MB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:34.4944900Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 50.6 MB/s  0:00:00
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:34.5931380Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-test.txt (line 260))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:34.6665890Z   Downloading pyqt6_qt6-6.11.2-py3-none-macosx_11_0_arm64.whl (64.3 MB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:35.7314510Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.3/64.3 MB 60.3 MB/s  0:00:01
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:35.8796470Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-test.txt (line 270))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:35.9440950Z   Downloading pyqt6_sip-13.13.0-cp315-cp315-macosx_10_15_universal2.whl (113 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.0293520Z Collecting pytest==9.2.0 (from -r packaging/requirements-test.txt (line 302))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.0922600Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.1743380Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-test.txt (line 308))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.2410250Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.3274770Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-test.txt (line 312))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.3918880Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.4931970Z Collecting tzdata==2026.6 (from -r packaging/requirements-test.txt (line 316))
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.5615150Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:36.7886670Z Installing collected packages: sortedcontainers, pyqt6-qt6, tzdata, pyqt6-sip, pygments, psutil, pluggy, packaging, iniconfig, hypothesis, coverage, pytest, pyqt6, pytest-timeout
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:40.5029440Z 
+test (macos-latest, 3.15)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:32:40.5056170Z Successfully installed coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 sortedcontainers-2.4.0 tzdata-2026.6
+test (macos-latest, 3.15)	Every test	﻿2026-11-15T04:32:40.7068790Z ##[group]Run run=(python -m pytest)
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7069480Z [36;1mrun=(python -m pytest)[0m
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7069880Z [36;1mif [ "$COVER" = true ]; then run=(python -m coverage run --parallel-mode -m pytest); fi[0m
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7070630Z [36;1mif [ "$RUNNER_OS" = Linux ]; then run=(xvfb-run -a "${run[@]}"); fi[0m
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7071160Z [36;1m"${run[@]}"[0m
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7138730Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7139100Z env:
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7139330Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7139660Z   QT_QPA_PLATFORM: offscreen
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7139950Z   CHATMON_TEST_CLIPBOARD: 1
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7140260Z   COVER: false
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7140570Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7141170Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.15.2/arm64/lib/pkgconfig
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7141690Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7142330Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7142850Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:40.7143240Z ##[endgroup]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2667920Z ============================= test session starts ==============================
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2669110Z platform darwin -- Python 3.15.2, pytest-9.2.0, pluggy-1.7.0
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2669660Z rootdir: /Users/runner/work/chatmon/chatmon
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2670050Z configfile: pyproject.toml
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2670420Z testpaths: tests
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2670690Z plugins: hypothesis-6.170.14, timeout-2.4.0
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2671120Z timeout: 120.0s
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2671330Z timeout method: signal
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2671670Z timeout func_only: False
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2671960Z collected 1389 items
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.2672140Z 
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:45.4396940Z tests/test_a11y.py ..ss.                                                 [  0%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:46.9172270Z tests/test_agents.py .............................................       [  3%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:32:47.1349940Z tests/test_anim_strips.py ...................                            [  4%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:33:00.4135260Z tests/test_app_answers.py .............                                  [  5%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:33:28.3475340Z tests/test_app_m7.py ......s.............ss.................             [  8%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:33:38.8686440Z tests/test_app_reminders.py .......                                      [  9%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:34:03.3749770Z tests/test_app_smoke.py ................................................ [ 12%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:34:45.1208460Z .............................................                            [ 15%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:34:50.7393950Z tests/test_ask_box.py ..............................                     [ 18%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:34:50.7544380Z tests/test_asking.py ........                                            [ 18%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:34:50.7923410Z tests/test_attachments.py ......sssss..                                  [ 19%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:34:50.8003970Z tests/test_autostart.py .s.....                                          [ 20%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:34:51.1141750Z tests/test_backup.py ..................                                  [ 21%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:34:51.4352230Z tests/test_behavior.py ..........................                        [ 23%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:33.5962290Z tests/test_brains.py ................................s.....s...s.        [ 26%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:34.0105860Z tests/test_bubble_safety.py .....                                        [ 26%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:34.5678520Z tests/test_bubble_styles.py ............................................ [ 29%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:35.9675570Z ........                                                                 [ 30%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:36.4231410Z tests/test_chats.py ..............................s                      [ 32%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:37.4056760Z tests/test_chatswin.py ........                                          [ 33%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:37.4649200Z tests/test_cli.py ....s......                                            [ 34%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:37.4709560Z tests/test_clickthrough.py .ssss..s                                      [ 34%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:37.4863700Z tests/test_commands.py ......                                            [ 35%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:38.8617530Z tests/test_companions.py ...........................                     [ 37%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:38.8778820Z tests/test_context.py ...........                                        [ 37%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:35:39.1101500Z tests/test_contrast.py .................................                 [ 40%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:36:45.2216870Z tests/test_events.py ...........................                         [ 42%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:36:50.1909760Z tests/test_heads_up.py .................s                                [ 43%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:36:51.2964960Z tests/test_hotkey.py ..........................sss..ss                   [ 45%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:36:51.3062880Z tests/test_hotkey_portal.py ..sssss                                      [ 46%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:36:55.2916820Z tests/test_i18n.py ...........s......................                    [ 48%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:36:55.5080730Z tests/test_i18n_app.py .                                                 [ 48%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:36:56.8365920Z tests/test_imports.py .                                                  [ 48%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:01.6239770Z tests/test_install_update.py ..................                          [ 50%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:02.3136290Z tests/test_keychain.py ss.sss..                                          [ 50%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:02.3224480Z tests/test_linux_desktop.py ..                                           [ 50%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:02.3450280Z tests/test_linuxsession.py ....ss                                        [ 51%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:02.4119800Z tests/test_localefmt.py .......                                          [ 51%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:03.0755270Z tests/test_log.py ..........                                             [ 52%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:03.8284670Z tests/test_m4b_imports.py ........                                       [ 53%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:03.8532150Z tests/test_macnative.py .sssss..                                         [ 53%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:03.8784460Z tests/test_messages.py ....................                              [ 55%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:03.9327320Z tests/test_offline.py .................................................. [ 58%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:04.0109780Z ...................................................                      [ 62%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:07.3651550Z tests/test_overlay_stage.py ...................s...                      [ 64%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:07.4666030Z tests/test_package_data.py ..sss                                         [ 64%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:07.9542160Z tests/test_packaging.py .........                                        [ 65%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:09.4190000Z tests/test_parser_properties.py .....                                    [ 65%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:09.4590060Z tests/test_paths.py ....s...                                             [ 66%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:09.4857080Z tests/test_platform_events.py ...ssss...ssssssssss                       [ 67%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:09.4904500Z tests/test_portal_bus.py ssss                                            [ 67%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:09.6200710Z tests/test_portowner.py .sss                                             [ 68%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:09.6491740Z tests/test_presence.py sss.....s.....s..........s                        [ 69%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:10.2069200Z tests/test_releasecheck.py ..................                            [ 71%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:10.2895240Z tests/test_reminders.py ................................................ [ 74%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:10.4461020Z ..................................................                       [ 78%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:10.4635170Z tests/test_rename.py .....                                               [ 78%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:10.4859710Z tests/test_requirements.py .....                                         [ 79%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:10.7453710Z tests/test_rich_text.py ...................                              [ 80%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:10.8221260Z tests/test_settings.py .................                                 [ 81%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:11.0007700Z tests/test_settingswin.py .........                                      [ 82%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:13.9720150Z tests/test_sound.py ...........ss....                                    [ 83%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:14.1406900Z tests/test_speech_bubble.py ...................                          [ 84%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:14.2291690Z tests/test_sprites.py ...                                                [ 85%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:14.3006700Z tests/test_stage_features.py .....                                       [ 85%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:14.3079070Z tests/test_stage_screens.py ...                                          [ 85%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:14.9268150Z tests/test_stage_timer.py .........                                      [ 86%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:14.9682460Z tests/test_stagemenu.py ...........                                      [ 87%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:26.1938170Z tests/test_streaming.py .....................                            [ 88%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:35.4605110Z tests/test_updates.py .................................................. [ 92%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.4962000Z .s                                                                       [ 92%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.5370850Z tests/test_wayland.py ....ssssssssssssss.ssssssss                        [ 94%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.5390230Z tests/test_wincaret.py ss.                                               [ 94%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.5494380Z tests/test_windows.py sssssssssssssssssssssssssssssssssss                [ 97%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.5721090Z tests/test_winfiles.py ...                                               [ 97%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.5730060Z tests/test_winlock.py sss                                                [ 97%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.5744820Z tests/test_winpipe.py sssss                                              [ 97%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.5824630Z tests/test_wintoast.py ......sssssss                                     [ 98%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.5851170Z tests/test_wintrust.py ssssssss                                          [ 99%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8457920Z tests/test_xkb.py sssssssss                                              [100%]
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8458400Z 
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8458540Z =========================== short test summary info ============================
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8459390Z SKIPPED [1] tests/test_a11y.py:46: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8460270Z SKIPPED [1] tests/test_a11y.py:62: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8462670Z SKIPPED [1] tests/test_app_m7.py:149: Windows pipes: the access list keeps other users out, and each connection is checked too
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8463300Z SKIPPED [1] tests/test_app_m7.py:423: Windows' toasts
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8463770Z SKIPPED [1] tests/test_app_m7.py:468: Windows' Magnifier
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8464410Z SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8466430Z SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8467010Z SKIPPED [1] tests/test_attachments.py:125: Windows links
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8467470Z SKIPPED [1] tests/test_attachments.py:137: Linux statfs and mountinfo
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8467930Z SKIPPED [1] tests/test_attachments.py:154: Linux paths, resolved as Linux does
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8468620Z SKIPPED [1] tests/test_autostart.py:24: the XDG autostart entry
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8469180Z SKIPPED [1] tests/test_brains.py:479: Claude Code isn't installed here
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8469940Z SKIPPED [1] tests/test_brains.py:592: cmd.exe and the tools npm installs as .cmd files are Windows'
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8470420Z SKIPPED [1] tests/test_brains.py:681: Windows' process tree
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8470970Z SKIPPED [1] tests/test_chats.py:373: the roaming app-data folder is Windows'
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8472410Z SKIPPED [1] tests/test_cli.py:94: only Windows keeps a program you're not using from coming to the front
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8473000Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8473480Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8473910Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8474350Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8475010Z SKIPPED [1] tests/test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8475540Z SKIPPED [2] tests/private_bus.py:19: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8476060Z SKIPPED [1] tests/test_hotkey.py:157: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8476400Z SKIPPED [1] tests/test_hotkey.py:183: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8476850Z SKIPPED [1] tests/test_hotkey.py:200: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8477290Z SKIPPED [1] tests/test_hotkey.py:352: Linux with Xvfb
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8477740Z SKIPPED [1] tests/test_hotkey.py:390: Linux with libX11
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8478250Z SKIPPED [1] tests/test_hotkey_portal.py:95: Linux with dbus-run-session and dbus-monitor
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8482270Z SKIPPED [1] tests/test_hotkey_portal.py:111: Linux with dbus-run-session and dbus-monitor
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8484250Z SKIPPED [1] tests/test_hotkey_portal.py:119: Linux with dbus-run-session and dbus-monitor
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8484810Z SKIPPED [2] tests/test_hotkey_portal.py:127: Linux with dbus-run-session and dbus-monitor
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8486860Z SKIPPED [1] tests/test_i18n.py:211: macOS: Qt reads the system's language list, a command line reads LANG
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8488720Z SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8489210Z SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8489950Z SKIPPED [1] tests/test_keychain.py:139: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8491300Z SKIPPED [1] tests/test_keychain.py:154: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8491830Z SKIPPED [1] tests/test_keychain.py:165: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8497180Z SKIPPED [1] tests/test_linuxsession.py:102: no PackageKit here
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8497740Z SKIPPED [1] tests/test_macnative.py:29: needs Qt's cocoa platform (QT_QPA_PLATFORM=cocoa)
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8498260Z SKIPPED [1] tests/test_macnative.py:63: needs Qt's cocoa platform (QT_QPA_PLATFORM=cocoa)
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8499050Z SKIPPED [1] tests/test_macnative.py:97: needs Qt's cocoa platform (QT_QPA_PLATFORM=cocoa)
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8502690Z SKIPPED [1] tests/test_macnative.py:125: needs Qt's cocoa platform (QT_QPA_PLATFORM=cocoa)
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8504800Z SKIPPED [1] tests/test_macnative.py:143: needs Qt's cocoa platform (QT_QPA_PLATFORM=cocoa)
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8507360Z SKIPPED [1] tests/test_overlay_stage.py:421: libxkbcommon isn't installed (the overlay is Linux only)
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8508080Z SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8508770Z SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8510370Z SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8518880Z SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8520210Z SKIPPED [1] tests/test_platform_events.py:104: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8524820Z SKIPPED [1] tests/test_platform_events.py:119: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8526160Z SKIPPED [1] tests/test_platform_events.py:127: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8527180Z SKIPPED [1] tests/test_platform_events.py:181: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8528010Z SKIPPED [1] tests/test_platform_events.py:305: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8528540Z SKIPPED [8] tests/test_platform_events.py:341: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8530020Z SKIPPED [1] tests/test_platform_events.py:360: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8530980Z SKIPPED [1] tests/test_portal_bus.py:41: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8531380Z SKIPPED [2] tests/test_portal_bus.py:80: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8532110Z SKIPPED [1] tests/test_portal_bus.py:119: Linux with dbus-run-session
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8534210Z SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8535980Z SKIPPED [1] tests/test_portowner.py:45: Linux's /proc/net/tcp
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8536750Z SKIPPED [1] tests/test_portowner.py:58: Linux's /proc/net/tcp
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8537210Z SKIPPED [1] tests/test_presence.py:18: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8538330Z SKIPPED [1] tests/test_presence.py:33: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8539490Z SKIPPED [1] tests/test_presence.py:55: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8544530Z SKIPPED [1] tests/test_presence.py:143: no GNOME session here
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8549100Z SKIPPED [1] tests/test_presence.py:248: PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8553850Z SKIPPED [1] tests/test_presence.py:364: Linux with an X display
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8554400Z SKIPPED [1] tests/test_sound.py:210: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8555360Z SKIPPED [1] tests/test_sound.py:230: Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8556610Z SKIPPED [1] tests/test_updates.py:648: holding a file open against changes: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8558710Z SKIPPED [1] tests/test_wayland.py:204: no Wayland protocol files installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8560000Z SKIPPED [1] tests/test_wayland.py:314: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8562960Z SKIPPED [1] tests/test_wayland.py:416: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8564080Z SKIPPED [1] tests/test_wayland.py:465: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8565790Z SKIPPED [1] tests/test_wayland.py:476: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8567630Z SKIPPED [1] tests/test_wayland.py:490: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8568670Z SKIPPED [1] tests/test_wayland.py:584: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8569640Z SKIPPED [1] tests/test_wayland.py:614: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8570810Z SKIPPED [1] tests/test_wayland.py:633: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8572080Z SKIPPED [1] tests/test_wayland.py:657: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8573340Z SKIPPED [1] tests/test_wayland.py:666: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8576710Z SKIPPED [1] tests/test_wayland.py:677: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8577780Z SKIPPED [1] tests/test_wayland.py:720: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8579520Z SKIPPED [1] tests/test_wayland.py:745: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8580510Z SKIPPED [1] tests/test_wayland.py:765: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8580980Z SKIPPED [1] tests/test_wayland.py:816: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8581320Z SKIPPED [1] tests/test_wayland.py:846: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8582190Z SKIPPED [1] tests/test_wayland.py:880: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8582670Z SKIPPED [1] tests/test_wayland.py:893: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8583640Z SKIPPED [1] tests/test_wayland.py:906: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8584140Z SKIPPED [1] tests/test_wayland.py:919: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8584520Z SKIPPED [1] tests/test_wayland.py:991: Wayland is Linux only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8586030Z SKIPPED [1] tests/test_wincaret.py:52: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8587200Z SKIPPED [1] tests/test_wincaret.py:87: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8588830Z SKIPPED [1] tests/test_windows.py:77: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8589190Z SKIPPED [1] tests/test_windows.py:87: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8591020Z SKIPPED [1] tests/test_windows.py:98: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8592900Z SKIPPED [1] tests/test_windows.py:102: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8594740Z SKIPPED [1] tests/test_windows.py:107: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8624490Z SKIPPED [1] tests/test_windows.py:127: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8625090Z SKIPPED [1] tests/test_windows.py:138: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8626110Z SKIPPED [1] tests/test_windows.py:153: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8627330Z SKIPPED [1] tests/test_windows.py:164: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8628330Z SKIPPED [1] tests/test_windows.py:197: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8628770Z SKIPPED [1] tests/test_windows.py:210: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8629170Z SKIPPED [1] tests/test_windows.py:224: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8629620Z SKIPPED [1] tests/test_windows.py:261: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8629950Z SKIPPED [1] tests/test_windows.py:279: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8630320Z SKIPPED [1] tests/test_windows.py:292: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8630660Z SKIPPED [1] tests/test_windows.py:315: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8631050Z SKIPPED [1] tests/test_windows.py:339: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8631390Z SKIPPED [1] tests/test_windows.py:366: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8631800Z SKIPPED [1] tests/test_windows.py:408: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8632170Z SKIPPED [1] tests/test_windows.py:434: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8632620Z SKIPPED [1] tests/test_windows.py:441: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8633050Z SKIPPED [1] tests/test_windows.py:479: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8633430Z SKIPPED [1] tests/test_windows.py:491: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8633890Z SKIPPED [1] tests/test_windows.py:502: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8634830Z SKIPPED [1] tests/test_windows.py:519: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8635260Z SKIPPED [1] tests/test_windows.py:535: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8635690Z SKIPPED [1] tests/test_windows.py:561: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8636050Z SKIPPED [1] tests/test_windows.py:583: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8636530Z SKIPPED [1] tests/test_windows.py:601: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8637200Z SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8637930Z SKIPPED [1] tests/test_windows.py:684: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8638330Z SKIPPED [1] tests/test_windows.py:699: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8638730Z SKIPPED [1] tests/test_windows.py:739: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8639100Z SKIPPED [1] tests/test_windows.py:795: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8639500Z SKIPPED [1] tests/test_windows.py:818: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8639910Z SKIPPED [1] tests/test_winlock.py:17: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8640370Z SKIPPED [1] tests/test_winlock.py:41: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8640780Z SKIPPED [1] tests/test_winlock.py:78: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8641140Z SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8641590Z SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8641960Z SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8642370Z SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8642750Z SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8644030Z SKIPPED [1] tests/test_wintoast.py:110: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8644440Z SKIPPED [1] tests/test_wintoast.py:124: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8644790Z SKIPPED [1] tests/test_wintoast.py:149: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8645190Z SKIPPED [1] tests/test_wintoast.py:209: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8645600Z SKIPPED [1] tests/test_wintoast.py:233: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8645970Z SKIPPED [1] tests/test_wintoast.py:253: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8646330Z SKIPPED [1] tests/test_wintoast.py:273: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8646780Z SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8647330Z SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8647800Z SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8648660Z SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8650260Z SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8652050Z SKIPPED [1] tests/test_xkb.py:25: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8653120Z SKIPPED [1] tests/test_xkb.py:33: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8654420Z SKIPPED [1] tests/test_xkb.py:44: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8655650Z SKIPPED [1] tests/test_xkb.py:54: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8656760Z SKIPPED [1] tests/test_xkb.py:61: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8746220Z SKIPPED [1] tests/test_xkb.py:75: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8746880Z SKIPPED [1] tests/test_xkb.py:93: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8747900Z SKIPPED [1] tests/test_xkb.py:100: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8749690Z SKIPPED [1] tests/test_xkb.py:111: libxkbcommon isn't installed
+test (macos-latest, 3.15)	Every test	2026-11-15T04:37:36.8750950Z ================ 1218 passed, 171 skipped in 295.39s (0:04:55) =================
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	﻿2026-11-15T04:37:37.2540100Z ##[group]Run if [ "$COVER" = true ]; then python -m coverage run --parallel-mode -m pytest tests/test_macnative.py; else python -m pytest tests/test_macnative.py; fi
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2541540Z [36;1mif [ "$COVER" = true ]; then python -m coverage run --parallel-mode -m pytest tests/test_macnative.py; else python -m pytest tests/test_macnative.py; fi[0m
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2862090Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2862460Z env:
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2862710Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2862980Z   QT_QPA_PLATFORM: cocoa
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2863230Z   CHATMON_TEST_CLIPBOARD: 1
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2863450Z   COVER: false
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2863770Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2864300Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.15.2/arm64/lib/pkgconfig
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2864750Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2865250Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2865690Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.15.2/arm64
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:37.2865950Z ##[endgroup]
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4482950Z ============================= test session starts ==============================
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4484780Z platform darwin -- Python 3.15.2, pytest-9.2.0, pluggy-1.7.0
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4485590Z rootdir: /Users/runner/work/chatmon/chatmon
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4486270Z configfile: pyproject.toml
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4486880Z plugins: hypothesis-6.170.14, timeout-2.4.0
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4487520Z timeout: 120.0s
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4487980Z timeout method: signal
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4488500Z timeout func_only: False
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4489030Z collected 8 items
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:38.4489330Z 
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:43.0735150Z tests/test_macnative.py ........                                         [100%]
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:43.0736260Z 
+test (macos-latest, 3.15)	What Chatmon tells AppKit itself, on macOS's real window server	2026-11-15T04:37:43.0736430Z ============================== 8 passed in 4.61s ===============================
+test (macos-latest, 3.15)	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T04:37:43.3853730Z Post job cleanup.
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T04:37:44.2528120Z Post job cleanup.
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.3744120Z [command]/opt/homebrew/bin/git version
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.3845510Z git version 2.56.0
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.3874010Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/0f97408d-53d9-48ae-8c82-5b685b038e7d/.gitconfig'
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.3886900Z Temporarily overriding HOME='/Users/runner/work/_temp/0f97408d-53d9-48ae-8c82-5b685b038e7d' before making global git config changes
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.3888910Z Adding repository directory to the temporary git global config as a safe directory
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.3890040Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/chatmon/chatmon
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.3999470Z Removing SSH command configuration
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.4005540Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.4069130Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.5035760Z Removing HTTP extra header
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.5038900Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.5103810Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.7121690Z Removing includeIf entries pointing to credentials config files
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.7126000Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (macos-latest, 3.15)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:44.7155510Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (macos-latest, 3.15)	Complete job	﻿2026-11-15T04:37:44.8152030Z Cleaning up orphan processes

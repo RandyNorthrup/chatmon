@@ -1,0 +1,32 @@
+{
+  "drills": [
+    {
+      "id": "W4-M1B-05-stale-folders",
+      "requirement": "AC-M1B-05",
+      "file": "chatmon/brains.py",
+      "find": "_tidying = threading.Thread(target=remove_stale_folders, name=\"chatmon-tidy\", daemon=True)",
+      "replace": "_tidying = threading.Thread(target=lambda: 0, name=\"chatmon-tidy\", daemon=True)",
+      "test": [
+        "tests/test_brains.py::test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept"
+      ],
+      "expect": [
+        "test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept"
+      ]
+    },
+    {
+      "id": "W4-M1B-12-partial",
+      "requirement": "AC-M1B-12",
+      "file": "chatmon/brains.py",
+      "find": "            for piece in stream.feed(chunk):\n                self.partial.emit(piece)\n            return",
+      "replace": "            stream.feed(chunk)\n            return",
+      "test": [
+        "tests/test_streaming.py::test_the_anthropic_api_streams_each_piece_as_its_written",
+        "tests/test_streaming.py::test_the_openai_responses_api_streams"
+      ],
+      "expect": [
+        "test_the_anthropic_api_streams_each_piece_as_its_written",
+        "test_the_openai_responses_api_streams"
+      ]
+    }
+  ]
+}

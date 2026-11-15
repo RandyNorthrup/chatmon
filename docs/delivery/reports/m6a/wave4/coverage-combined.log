@@ -1,0 +1,10 @@
+# CI run 43677128712's coverage data (fb19cb9): the artifacts coverage-windows-latest-3.14, coverage-macos-latest-3.14 and coverage-ubuntu-24.04-arm-3.14, from gh run download 43677128712 -p 'coverage-*', combined here as CI's coverage job combines them
+$ python -m coverage combine --keep --data-file build/wave4-coverage/.coverage.combined <the five data files>
+Combined 5 files
+# exit 0
+$ python -m coverage report --data-file build/wave4-coverage/.coverage.combined (pyproject.toml: fail_under = 72)
+chatmon\winuia.py             152     46     18      2  65.9%
+chatmon\xkb.py                166     23     58     11  83.0%
+-------------------------------------------------------------
+TOTAL                       20434   2270   6230    924  86.2%
+# exit 0

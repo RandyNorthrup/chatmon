@@ -1,0 +1,32 @@
+[
+  {
+    "id": "W4-M5-06-help-not-translated",
+    "requirement": "M5-06.A2",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "name = mine[\"name\"] if isinstance(mine.get(\"name\"), str) else section[\"name\"]",
+      "replace": "name = section[\"name\"]"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood"
+    ],
+    "expected": [
+      "test_another_languages_phrases_and_help_with_english_always_understood"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee",
+    "baseline_exit": 0,
+    "mutated_sha256": "40a8045b7b93cd78b72171e66b085b1c2fa7a617926861a1ff5788a81b426f47",
+    "mutated_exit": 1,
+    "observed": "___ test_another_languages_phrases_and_help_with_english_always_understood ____",
+    "after_sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee",
+    "restored_exit": 0
+  }
+]

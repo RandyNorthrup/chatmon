@@ -1,0 +1,4 @@
+docs/delivery/reports/m4a/drill-spec-linux.json: 10 drills kept in docs/delivery/reports/m4a/wave4/drill-spec-linux.json, 1 left out
+  L-AC-04b-qt-signal: its find text occurs 0 times in chatmon/presence.py (expected 1)
+docs/delivery/reports/m4a/drill-spec.json: 30 drills kept in docs/delivery/reports/m4a/wave4/drill-spec.json, 1 left out
+  AC-08-not-held: its find text occurs 0 times in chatmon/a11y.py (expected 1)

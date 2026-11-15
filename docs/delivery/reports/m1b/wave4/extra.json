@@ -1,0 +1,60 @@
+{
+ "readiness_method": "Requirements review again at fb19cb9 (readiness.md): M1B-01 to M1B-17 re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now and the code that carries them; no conflict or gap; M7's wiring of the APIs (the M7-WIRING operation) checked against M7's verified criteria.",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "drill_acceptance": {
+  "W4-M1B-05-stale-folders": [
+   "AC-M1B-05"
+  ],
+  "W4-M1B-12-partial": [
+   "AC-M1B-12"
+  ]
+ },
+ "observe_add": [
+  "tests/test_keychain.py",
+  "tests/test_portowner.py",
+  "tests/test_settings.py",
+  "tests/test_backup.py"
+ ],
+ "ci": [
+  {
+   "id": "W4-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132699632422-test-ubuntu-24.04-3.15.log",
+   "acceptance": [
+    "AC-M1B-03",
+    "AC-M1B-08",
+    "AC-M1B-13",
+    "AC-M1B-16"
+   ],
+   "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15). The Secret Service tests passed there, not skipped: tests/test_keychain.py::test_the_secret_service_keeps_replaces_and_forgets_a_key_in_its_own_types, test_a_locked_keyring_is_never_prompted_to_fill_in_the_menu_only_to_save and test_no_keyring_at_all_is_said_and_never_waited_for, on a private session bus from Ubuntu's dbus package, which ci.yml installs. Also passed: the Linux port-owner tests (tests/test_portowner.py::test_on_linux_your_socket_and_someone_elses_on_one_port_isnt_yours and test_on_linux_a_port_another_account_listens_on_isnt_yours), tests/test_settings.py's file and folder modes, and tests/test_backup.py's private zip. The same passed on ubuntu 3.11 and ubuntu-24.04-arm 3.14, and all but the other-account port test passed in the three distro containers. This resolves the CI-LINUX pending operation."
+  },
+  {
+   "id": "W4-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132699632411-test-macos-latest-3.14.log",
+   "acceptance": [
+    "AC-M1B-03",
+    "AC-M1B-08",
+    "AC-M1B-13",
+    "AC-M1B-16"
+   ],
+   "method": "CI run 43677128712 on fb19cb9, job test (macos-latest, 3.14). Passed: tests/test_keychain.py::test_macos_keychain_keeps_replaces_and_forgets_a_key (the Keychain through Security.framework), tests/test_portowner.py::test_a_socket_of_yours_is_yours_and_a_closed_port_nobodys (the lsof port-owner check), tests/test_settings.py's file and folder modes, and tests/test_backup.py's private zip. The same passed on the 3.11 and 3.15 legs. This resolves the CI-MACOS pending operation."
+  },
+  {
+   "id": "W4-BEH-CI-WINDOWS",
+   "leg": "win3.14",
+   "log": "ci-132699632366-test-windows-latest-3.14.log",
+   "acceptance": [
+    "AC-M1B-13"
+   ],
+   "method": "CI run 43677128712 on fb19cb9, job test (windows-latest, 3.14). The real Credential Manager tests passed there and did not skip with error 1312: tests/test_keychain.py::test_windows_credential_manager_keeps_replaces_and_forgets_a_key and test_windows_keeps_a_key_on_this_computer_and_files_it_under_chatmon. They also passed on the 3.11 and 3.15 legs. This resolves the CI-WINDOWS pending operation."
+  }
+ ],
+ "receipts": [],
+ "pending": [],
+ "next_action": "None in M1B on fb19cb9. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree."
+}

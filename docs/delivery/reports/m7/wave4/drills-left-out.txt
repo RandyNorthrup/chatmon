@@ -1,0 +1,9 @@
+docs/delivery/reports/m7/drill-spec.json: 73 drills kept in docs/delivery/reports/m7/wave4/drill-spec.json, 8 left out
+  M7-01-answered-unsaid: its find text occurs 0 times in chatmon/app.py (expected 1)
+  M7-02-no-next-brain: its find text occurs 0 times in chatmon/app.py (expected 1)
+  M7-02-welcome-without-brain: its find text occurs 0 times in chatmon/app.py (expected 1)
+  M7-03-key-not-saved: its find text occurs 0 times in chatmon/app.py (expected 1)
+  M7-04-later-missing: its find text occurs 0 times in chatmon/app.py (expected 1)
+  M7-07-no-tooltip: its find text occurs 0 times in chatmon/app.py (expected 1)
+  M7-09-no-all-chats: its find text occurs 0 times in chatmon/menus.py (expected 1)
+  M7-11-hotkey-unregistered: its find text occurs 0 times in chatmon/app.py (expected 1)

@@ -1,0 +1,11 @@
+docs/delivery/reports/m0/drill-spec.json: 22 drills kept in docs/delivery/reports/m0/wave4/drill-spec.json, 10 left out
+  M0-01-priority: its find text occurs 0 times in chatmon/messages.py (expected 1)
+  M0-01-prompt-stays: its find text occurs 0 times in chatmon/messages.py (expected 1)
+  M0-01-focus-holds: its find text occurs 0 times in chatmon/app.py (expected 1)
+  M0-02-still-answering-shown: its find text occurs 0 times in chatmon/asking.py (expected 1)
+  M0-04-appearance: its find text occurs 0 times in chatmon/menus.py (expected 1)
+  M0-04-reload-under-help: its find text occurs 0 times in chatmon/menus.py (expected 1)
+  M0-05-same-phrases: its find text occurs 0 times in chatmon/commands.py (expected 1)
+  M0-05-english-stays: its find text occurs 0 times in chatmon/commands.py (expected 1)
+  M0-09-password-not-read: its find text occurs 0 times in chatmon/commands.py (expected 1)
+  M0-12-come-forward: its find text occurs 0 times in chatmon/cli.py (expected 1)

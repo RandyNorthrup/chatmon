@@ -1,0 +1,618 @@
+test (ubuntu-24.04, 3.11)	Set up job	﻿2026-11-15T04:31:25.8639151Z Current runner version: '2.338.2'
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8677166Z ##[group]Runner Image Provisioner
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8678961Z Hosted Compute Agent
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8680075Z Version: 20261103.629
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8681942Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8683367Z Build Date: 2026-11-03T17:26:59Z
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8684694Z Worker ID: {e6c72ac7-e75d-4755-a943-483ab8406d78}
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8686153Z Region: eastus2
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8687154Z Cloud: Azure
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8688203Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8690898Z ##[group]Operating System
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8692159Z Ubuntu
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8693167Z 24.04.5
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8694140Z LTS
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8695325Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8696314Z ##[group]Runner Image
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8697518Z Image: ubuntu-24.04
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8698489Z Version: 20261111.370.1
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8700617Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8703770Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8706576Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8708613Z ##[group]GITHUB_TOKEN Permissions
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8712109Z Contents: read
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8713212Z Metadata: read
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8714270Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8717517Z Secret source: Actions
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8719643Z Cache mode: write
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.8721232Z Prepare workflow directory
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.9559874Z Prepare all required actions
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:25.9639914Z Getting action download info
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:26.1274703Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:26.2979502Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:26.3790907Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+test (ubuntu-24.04, 3.11)	Set up job	2026-11-15T04:31:26.5582162Z Complete job name: test (ubuntu-24.04, 3.11)
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T04:31:26.6574474Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6575576Z with:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6576032Z   persist-credentials: false
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6576564Z   sparse-checkout: /*
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6577137Z   sparse-checkout-cone-mode: false
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6577696Z   repository: RandyNorthrup/chatmon
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6581519Z   token: ***
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6581959Z   ssh-strict: true
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6582397Z   ssh-user: git
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6582812Z   clean: true
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6583224Z   fetch-depth: 1
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6583651Z   fetch-tags: false
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6584089Z   show-progress: true
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6584535Z   lfs: false
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6584947Z   submodules: false
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6585426Z   set-safe-directory: true
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6585931Z   allow-unsafe-pr-checkout: false
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6586690Z env:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6587143Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6587687Z   QT_QPA_PLATFORM: offscreen
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6588229Z   CHATMON_TEST_CLIPBOARD: 1
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6588867Z   COVER: false
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.6589302Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9837307Z Syncing repository: RandyNorthrup/chatmon
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9839561Z ##[group]Getting Git version info
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9840390Z Working directory is '/home/runner/work/chatmon/chatmon'
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9841563Z [command]/usr/bin/git version
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9946092Z git version 2.56.1
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9967085Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9978050Z Temporarily overriding HOME='/home/runner/work/_temp/2ee932d6-2a28-492d-90a1-7799ce3f1009' before making global git config changes
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9980847Z Adding repository directory to the temporary git global config as a safe directory
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:26.9984010Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0034702Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0038255Z ##[group]Determining repository object format
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0040226Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0041136Z ##[group]Initializing the repository
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0044248Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0184788Z hint: Using 'master' as the name for the initial branch. This default branch name
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0186485Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0188066Z hint: to use in all of your new repositories, which will suppress this warning,
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0189680Z hint: call:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0190339Z hint:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0191304Z hint: 	git config --global init.defaultBranch <name>
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0192846Z hint:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0194270Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0195928Z hint: 'development'. The just-created branch can be renamed via this command:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0196809Z hint:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0197267Z hint: 	git branch -m <name>
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0197789Z hint:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0198883Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0200697Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0206769Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0267323Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0268317Z ##[group]Disabling automatic garbage collection
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0271211Z [command]/usr/bin/git config --local gc.auto 0
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0306583Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0307626Z ##[group]Setting up auth
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0311466Z Removing SSH command configuration
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0312891Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0352661Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0796097Z Removing HTTP extra header
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0803365Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.0839221Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1067611Z Removing includeIf entries pointing to credentials config files
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1072511Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1113862Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1350068Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1392648Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1427133Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1461887Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1497557Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1531258Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1532864Z ##[group]Fetching the repository
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.1540779Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0:refs/remotes/origin/improve/assessment-fixes
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3506361Z From https://github.com/RandyNorthrup/chatmon
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3508189Z  * [new ref]         fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0 -> origin/improve/assessment-fixes
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3515963Z [command]/usr/bin/git branch --list --remote origin/improve/assessment-fixes
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3557427Z   origin/improve/assessment-fixes
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3567941Z [command]/usr/bin/git rev-parse refs/remotes/origin/improve/assessment-fixes
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3593997Z fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3599698Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3601106Z ##[group]Determining the checkout info
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3602924Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3604796Z ##[group]Setting up sparse checkout
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3606063Z [command]/usr/bin/git config core.sparseCheckout true
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3639434Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3663056Z .git/info/sparse-checkout
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3671651Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3675856Z ##[group]Checking out the ref
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.3678170Z [command]/usr/bin/git checkout --progress --force -B improve/assessment-fixes refs/remotes/origin/improve/assessment-fixes
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.1950659Z Switched to a new branch 'improve/assessment-fixes'
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.1955571Z branch 'improve/assessment-fixes' set up to track 'origin/improve/assessment-fixes'.
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.1968489Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2018009Z [command]/usr/bin/git log -1 --format=%H
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2048073Z fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2059137Z ##[group]Removing auth
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2059547Z Removing SSH command configuration
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2063731Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2103490Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2352073Z Removing HTTP extra header
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2357050Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2392915Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2629101Z Removing includeIf entries pointing to credentials config files
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2634012Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2666384Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2668068Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2669796Z includeif.gitdir:/github/workspace/.git.path
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2670988Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2677620Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2704179Z /home/runner/work/_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2714493Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-6347c10d\-79e1\-4a4d\-9932\-a27183c0db84\.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2751521Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2778257Z /home/runner/work/_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2788987Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-6347c10d\-79e1\-4a4d\-9932\-a27183c0db84\.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2826641Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2852565Z /github/runner_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2862115Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-6347c10d\-79e1\-4a4d\-9932\-a27183c0db84\.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2896882Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2921542Z /github/runner_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2931253Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-6347c10d\-79e1\-4a4d\-9932\-a27183c0db84\.config
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2965873Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.3199616Z Removing credentials config '/home/runner/work/_temp/git-credentials-6347c10d-79e1-4a4d-9932-a27183c0db84.config'
+test (ubuntu-24.04, 3.11)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.3211410Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T04:31:28.3564495Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3565035Z with:
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3565304Z   python-version: 3.11
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3565599Z   check-latest: false
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3567999Z   token: ***
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3568403Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3569241Z   update-environment: true
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3569557Z   allow-prereleases: false
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3569850Z   freethreaded: false
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3570325Z env:
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3570724Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3571263Z   QT_QPA_PLATFORM: offscreen
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3571749Z   CHATMON_TEST_CLIPBOARD: 1
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3572224Z   COVER: false
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.3572655Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.4796902Z ##[group]Installed versions
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.4885636Z Successfully set up CPython (3.11.18)
+test (ubuntu-24.04, 3.11)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:31:28.4886709Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	﻿2026-11-15T04:31:28.5030154Z ##[group]Run packages=(libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3 dbus dbus-x11 xvfb libxtst6 wayland-protocols libwayland-dev)
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5031355Z [36;1mpackages=(libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3 dbus dbus-x11 xvfb libxtst6 wayland-protocols libwayland-dev)[0m
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5032188Z [36;1mif ! { sudo apt-get update && sudo apt-get install -y "${packages[@]}"; }; then[0m
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5032842Z [36;1m  echo "::warning::Ubuntu's archive is out of reach; trying kernel.org's mirror of it"[0m
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5033409Z [36;1m  mirror=http://mirrors.edge.kernel.org/ubuntu/[0m
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5033995Z [36;1m  [ "$(dpkg --print-architecture)" = amd64 ] || mirror=http://mirrors.edge.kernel.org/ubuntu-ports/[0m
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5034679Z [36;1m  sudo sed -i -E "s#^URIs:.*#URIs: $mirror#" /etc/apt/sources.list.d/ubuntu.sources[0m
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5035245Z [36;1m  sudo apt-get update && sudo apt-get install -y "${packages[@]}"[0m
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5035699Z [36;1mfi[0m
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5074696Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5075137Z env:
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5075399Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5075728Z   QT_QPA_PLATFORM: offscreen
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5076025Z   CHATMON_TEST_CLIPBOARD: 1
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5076306Z   COVER: false
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5076855Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5077346Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib/pkgconfig
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5077823Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5078256Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5078949Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5079414Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5079786Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.5948618Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.6322347Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.6342240Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.6369167Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.6371110Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.6394476Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.7802747Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [702 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.8000660Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [772 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.8431219Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1450 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.8502876Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [315 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.8549857Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1713 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.8650095Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [345 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.8669804Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1883 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.8770134Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [430 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.8797131Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.6 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:28.9959515Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1195 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:29.0031337Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [238 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:29.0039610Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1228 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:29.0531263Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [248 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:29.0542914Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1788 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:29.0627126Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [411 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:32.5234746Z Fetched 13.1 MB in 1s (9685 kB/s)
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:33.7551502Z Reading package lists...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:33.7940513Z Reading package lists...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.0504376Z Building dependency tree...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.0511726Z Reading state information...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2141746Z libgl1 is already the newest version (1.7.0-1build1).
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2142495Z libgl1 set to manually installed.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2143152Z libxkbcommon0 is already the newest version (1.6.0-1build1).
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2143937Z libxkbcommon0 set to manually installed.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2144787Z libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2145770Z libfontconfig1 set to manually installed.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2146622Z libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2147438Z libdbus-1-3 set to manually installed.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2148211Z dbus is already the newest version (1.14.10-4ubuntu4.1).
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2149395Z xvfb is already the newest version (2:21.1.12-1ubuntu1.9).
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2150763Z libxtst6 is already the newest version (2:1.2.3-1.1ubuntu0.1).
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2151487Z The following additional packages will be installed:
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2152156Z   libegl-mesa0 libwayland-bin libwayland-server0
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2153082Z Suggested packages:
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2153480Z   libwayland-doc
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2386042Z The following NEW packages will be installed:
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2393199Z   dbus-x11 libegl-mesa0 libegl1 libwayland-bin libwayland-dev
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2398079Z   libwayland-server0 wayland-protocols
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2613004Z 0 upgraded, 7 newly installed, 0 to remove and 20 not upgraded.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2613719Z Need to get 409 kB of archives.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2614085Z After this operation, 2370 kB of additional disk space will be used.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2614533Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.2961244Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 dbus-x11 amd64 1.14.10-4ubuntu4.1 [23.3 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.3151566Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libegl-mesa0 amd64 25.2.8-0ubuntu0.24.04.4 [117 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.3352615Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libwayland-server0 amd64 1.22.0-2.1build1 [33.9 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.3539338Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libegl1 amd64 1.7.0-1build1 [28.7 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.3727339Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libwayland-bin amd64 1.22.0-2.1build1 [20.6 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.3913426Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libwayland-dev amd64 1.22.0-2.1build1 [71.3 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.4106396Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 wayland-protocols all 1.45-1~ubuntu0.24.04.2 [114 kB]
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.6944686Z Fetched 409 kB in 0s (2513 kB/s)
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7175876Z Selecting previously unselected package dbus-x11.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7465355Z (Reading database ... 
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7465917Z (Reading database ... 5%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7466384Z (Reading database ... 10%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7467003Z (Reading database ... 15%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7467310Z (Reading database ... 20%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7467567Z (Reading database ... 25%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7467804Z (Reading database ... 30%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7468045Z (Reading database ... 35%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7468278Z (Reading database ... 40%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7468525Z (Reading database ... 45%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7469119Z (Reading database ... 50%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.7524236Z (Reading database ... 55%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:34.8845392Z (Reading database ... 60%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:35.0839809Z (Reading database ... 65%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:35.2489595Z (Reading database ... 70%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:35.4356674Z (Reading database ... 75%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:35.5941805Z (Reading database ... 80%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:35.7969280Z (Reading database ... 85%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:35.9883083Z (Reading database ... 90%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1103264Z (Reading database ... 95%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1103913Z (Reading database ... 100%
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1104635Z (Reading database ... 216752 files and directories currently installed.)
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1155263Z Preparing to unpack .../0-dbus-x11_1.14.10-4ubuntu4.1_amd64.deb ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1182072Z Unpacking dbus-x11 (1.14.10-4ubuntu4.1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1480245Z Selecting previously unselected package libegl-mesa0:amd64.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1624347Z Preparing to unpack .../1-libegl-mesa0_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1644651Z Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.1914866Z Selecting previously unselected package libwayland-server0:amd64.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.2060537Z Preparing to unpack .../2-libwayland-server0_1.22.0-2.1build1_amd64.deb ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.2070868Z Unpacking libwayland-server0:amd64 (1.22.0-2.1build1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.2319674Z Selecting previously unselected package libegl1:amd64.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.2464514Z Preparing to unpack .../3-libegl1_1.7.0-1build1_amd64.deb ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.2473377Z Unpacking libegl1:amd64 (1.7.0-1build1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.2719345Z Selecting previously unselected package libwayland-bin.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.2861839Z Preparing to unpack .../4-libwayland-bin_1.22.0-2.1build1_amd64.deb ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.2869570Z Unpacking libwayland-bin (1.22.0-2.1build1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.3109682Z Selecting previously unselected package libwayland-dev:amd64.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.3254788Z Preparing to unpack .../5-libwayland-dev_1.22.0-2.1build1_amd64.deb ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.3293203Z Unpacking libwayland-dev:amd64 (1.22.0-2.1build1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.3591268Z Selecting previously unselected package wayland-protocols.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.3734626Z Preparing to unpack .../6-wayland-protocols_1.45-1~ubuntu0.24.04.2_all.deb ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.3744986Z Unpacking wayland-protocols (1.45-1~ubuntu0.24.04.2) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4349967Z Setting up libwayland-server0:amd64 (1.22.0-2.1build1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4379284Z Setting up libwayland-bin (1.22.0-2.1build1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4399368Z Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4420229Z Setting up wayland-protocols (1.45-1~ubuntu0.24.04.2) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4440855Z Setting up dbus-x11 (1.14.10-4ubuntu4.1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4477971Z Setting up libegl1:amd64 (1.7.0-1build1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4497907Z Setting up libwayland-dev:amd64 (1.22.0-2.1build1) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4543862Z Processing triggers for man-db (2.12.0-4build2) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4570962Z Not building database; man-db/auto-update is not 'true'.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:36.4585927Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1716785Z 
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1717345Z Running kernel seems to be up-to-date.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1717641Z 
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1717767Z No services need to be restarted.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1717989Z 
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1718106Z No containers need to be restarted.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1718299Z 
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1718443Z No user sessions are running outdated binaries.
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1718991Z 
+test (ubuntu-24.04, 3.11)	Qt's system libraries, a session bus, an X server with XTest, and the Wayland protocol files the overlay's tests check against	2026-11-15T04:31:37.1719226Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	﻿2026-11-15T04:31:38.2401085Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-test.txt
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2401747Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-test.txt[0m
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2423690Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2424037Z env:
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2424238Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2424498Z   QT_QPA_PLATFORM: offscreen
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2424743Z   CHATMON_TEST_CLIPBOARD: 1
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2424962Z   COVER: false
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2425224Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2425665Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib/pkgconfig
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2426084Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2426459Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2426840Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2427252Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:38.2427577Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:39.0150039Z Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:39.8789196Z Collecting coverage==7.17.0 (from -r packaging/requirements-test.txt (line 7))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:40.1460365Z   Downloading coverage-7.17.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (260 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:40.7429974Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-test.txt (line 128))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:40.8247831Z   Downloading hypothesis-6.170.14-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:40.9911852Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 6.8 MB/s  0:00:00
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.0622852Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-test.txt (line 213))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.1380915Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.2107316Z Collecting packaging==26.3 (from -r packaging/requirements-test.txt (line 217))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.2871136Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.3595815Z Collecting pluggy==1.7.0 (from -r packaging/requirements-test.txt (line 221))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.4357093Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.5724602Z Collecting psutil==7.2.2 (from -r packaging/requirements-test.txt (line 225))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.6487625Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.7282180Z Collecting pygments==2.21.0 (from -r packaging/requirements-test.txt (line 248))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.8044478Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.8394521Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 36.2 MB/s  0:00:00
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.9147985Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-test.txt (line 252))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:41.9919594Z   Downloading pyqt6-6.11.0-cp310-abi3-manylinux_2_34_x86_64.whl (8.3 MB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:42.1542710Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 51.0 MB/s  0:00:00
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:42.2369107Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-test.txt (line 260))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:42.3182002Z   Downloading pyqt6_qt6-6.11.2-py3-none-manylinux_2_34_x86_64.whl (86.0 MB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.0154878Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.0/86.0 MB 123.6 MB/s  0:00:00
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.1702497Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-test.txt (line 270))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.2482541Z   Downloading pyqt6_sip-13.13.0-cp311-cp311-manylinux1_x86_64.manylinux_2_5_x86_64.whl (291 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.3332716Z Collecting pytest==9.2.0 (from -r packaging/requirements-test.txt (line 302))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.4095518Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.4816092Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-test.txt (line 308))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.5571853Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.6277539Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-test.txt (line 312))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.7036945Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.7759127Z Collecting tzdata==2026.6 (from -r packaging/requirements-test.txt (line 316))
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.8519781Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:43.9448269Z Installing collected packages: sortedcontainers, pyqt6-qt6, tzdata, pyqt6-sip, pygments, psutil, pluggy, packaging, iniconfig, hypothesis, coverage, pytest, pyqt6, pytest-timeout
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:47.0405988Z 
+test (ubuntu-24.04, 3.11)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:31:47.0419708Z Successfully installed coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 sortedcontainers-2.4.0 tzdata-2026.6
+test (ubuntu-24.04, 3.11)	Every test	﻿2026-11-15T04:31:47.1345382Z ##[group]Run run=(python -m pytest)
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1345751Z [36;1mrun=(python -m pytest)[0m
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1346172Z [36;1mif [ "$COVER" = true ]; then run=(python -m coverage run --parallel-mode -m pytest); fi[0m
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1346713Z [36;1mif [ "$RUNNER_OS" = Linux ]; then run=(xvfb-run -a "${run[@]}"); fi[0m
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1347074Z [36;1m"${run[@]}"[0m
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1367655Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1367997Z env:
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1368201Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1368864Z   QT_QPA_PLATFORM: offscreen
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1369181Z   CHATMON_TEST_CLIPBOARD: 1
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1369410Z   COVER: false
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1369672Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1370094Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib/pkgconfig
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1370514Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1370928Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1371314Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1371704Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:47.1372025Z ##[endgroup]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1860543Z ============================= test session starts ==============================
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1861382Z platform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1862098Z rootdir: /home/runner/work/chatmon/chatmon
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1862659Z configfile: pyproject.toml
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1863083Z testpaths: tests
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1863481Z plugins: timeout-2.4.0, hypothesis-6.170.14
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1863957Z timeout: 120.0s
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1864454Z timeout method: signal
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1864861Z timeout func_only: False
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1865260Z collected 1389 items
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:55.1865477Z 
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:56.1919611Z tests/test_a11y.py ...ss                                                 [  0%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:57.3410876Z tests/test_agents.py .............................................       [  3%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:31:57.5601233Z tests/test_anim_strips.py ...................                            [  4%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:32:09.0412742Z tests/test_app_answers.py .............                                  [  5%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:32:36.4621439Z tests/test_app_m7.py ......s.............ss.................             [  8%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:32:46.7972817Z tests/test_app_reminders.py .......                                      [  9%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:10.3671614Z tests/test_app_smoke.py ................................................ [ 12%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:47.5717538Z .............................................                            [ 15%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:52.3020284Z tests/test_ask_box.py ..............................                     [ 18%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:52.3105073Z tests/test_asking.py ........                                            [ 18%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:52.3253554Z tests/test_attachments.py ......sss..s.                                  [ 19%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:52.3345658Z tests/test_autostart.py .......                                          [ 20%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:52.7438089Z tests/test_backup.py ..................                                  [ 21%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:53.4188565Z tests/test_behavior.py ..........................                        [ 23%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:33:59.9806335Z tests/test_brains.py ................................s.....s...s.        [ 26%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:00.4174809Z tests/test_bubble_safety.py .....                                        [ 26%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:00.9116421Z tests/test_bubble_styles.py ............................................ [ 29%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:02.3019497Z ........                                                                 [ 30%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:02.5659218Z tests/test_chats.py ..............................s                      [ 32%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:03.5166774Z tests/test_chatswin.py ........                                          [ 33%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:03.5611679Z tests/test_cli.py ....s......                                            [ 34%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:03.5815291Z tests/test_clickthrough.py .ssss...                                      [ 34%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:03.5930285Z tests/test_commands.py ......                                            [ 35%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:05.1331701Z tests/test_companions.py ...........................                     [ 37%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:05.1519250Z tests/test_context.py ...........                                        [ 37%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:05.4637602Z tests/test_contrast.py .................................                 [ 40%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:08.0130995Z tests/test_events.py ..............s............                         [ 42%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:08.2392252Z tests/test_heads_up.py ...........s......                                [ 43%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:08.8573053Z tests/test_hotkey.py ..........................sssss..                   [ 45%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:17.8999565Z tests/test_hotkey_portal.py .......                                      [ 46%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:19.4396217Z tests/test_i18n.py ..................................                    [ 48%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:19.4838954Z tests/test_i18n_app.py .                                                 [ 48%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:19.7157907Z tests/test_imports.py .                                                  [ 48%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:20.1935062Z tests/test_install_update.py ............ssssss                          [ 50%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:21.1261698Z tests/test_keychain.py sss.....                                          [ 50%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:21.1289567Z tests/test_linux_desktop.py ..                                           [ 50%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:23.2372380Z tests/test_linuxsession.py ......                                        [ 51%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:23.2663623Z tests/test_localefmt.py .......                                          [ 51%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:23.9232505Z tests/test_log.py ..........                                             [ 52%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:24.3076996Z tests/test_m4b_imports.py ........                                       [ 53%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:24.3121620Z tests/test_macnative.py ssssssss                                         [ 53%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:24.3353126Z tests/test_messages.py ....................                              [ 55%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:24.3971939Z tests/test_offline.py .................................................. [ 58%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:24.4676611Z ...................................................                      [ 62%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:27.8459206Z tests/test_overlay_stage.py .......................                      [ 64%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:27.8611236Z tests/test_package_data.py ..sss                                         [ 64%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:27.9342350Z tests/test_packaging.py .........                                        [ 65%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:29.1047445Z tests/test_parser_properties.py .....                                    [ 65%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:34:29.1225474Z tests/test_paths.py ....s...                                             [ 66%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:08.4148530Z tests/test_platform_events.py ...ssss.............                       [ 67%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.0801313Z tests/test_portal_bus.py ....                                            [ 67%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.0884020Z tests/test_portowner.py .s..                                             [ 68%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.1345140Z tests/test_presence.py ssss....s...s.s...........                        [ 69%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.4019610Z tests/test_releasecheck.py ..................                            [ 71%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.4603986Z tests/test_reminders.py ................................................ [ 74%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.5256840Z ..................................................                       [ 78%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.5338564Z tests/test_rename.py .....                                               [ 78%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.5482255Z tests/test_requirements.py .....                                         [ 79%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.7230186Z tests/test_rich_text.py ...................                              [ 80%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.7618995Z tests/test_settings.py .................                                 [ 81%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:15.8501954Z tests/test_settingswin.py .........                                      [ 82%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:17.7472623Z tests/test_sound.py ..........ss.s..s                                    [ 83%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:17.9055110Z tests/test_speech_bubble.py ...................                          [ 84%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:18.0151975Z tests/test_sprites.py ...                                                [ 85%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:18.1308915Z tests/test_stage_features.py .....                                       [ 85%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:18.1466597Z tests/test_stage_screens.py ...                                          [ 85%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:18.9580426Z tests/test_stage_timer.py .........                                      [ 86%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:18.9818242Z tests/test_stagemenu.py ...........                                      [ 87%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:28.1605478Z tests/test_streaming.py .....................                            [ 88%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:36.9648157Z tests/test_updates.py .................................................. [ 92%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:37.9766518Z .s                                                                       [ 92%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.1365946Z tests/test_wayland.py ...........................                        [ 94%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.1390422Z tests/test_wincaret.py ss.                                               [ 94%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.1567115Z tests/test_windows.py sssssssssssssssssssssssssssssssssss                [ 97%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.2339114Z tests/test_winfiles.py ...                                               [ 97%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.2355130Z tests/test_winlock.py sss                                                [ 97%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.2394947Z tests/test_winpipe.py sssss                                              [ 97%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.2504082Z tests/test_wintoast.py ......sssssss                                     [ 98%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.2545424Z tests/test_wintrust.py ssssssss                                          [ 99%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5400398Z tests/test_xkb.py .........                                              [100%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5401087Z 
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5401396Z =========================== short test summary info ============================
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5402281Z SKIPPED [1] tests/test_a11y.py:62: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5402920Z SKIPPED [1] tests/test_a11y.py:70: macOS
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5404096Z SKIPPED [1] tests/test_app_m7.py:149: Windows pipes: the access list keeps other users out, and each connection is checked too
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5405375Z SKIPPED [1] tests/test_app_m7.py:423: Windows' toasts
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5406163Z SKIPPED [1] tests/test_app_m7.py:468: Windows' Magnifier
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5407017Z SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5407961Z SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5409033Z SKIPPED [1] tests/test_attachments.py:125: Windows links
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5409452Z SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5409907Z SKIPPED [1] tests/test_brains.py:479: Claude Code isn't installed here
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5410502Z SKIPPED [1] tests/test_brains.py:592: cmd.exe and the tools npm installs as .cmd files are Windows'
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5411082Z SKIPPED [1] tests/test_brains.py:681: Windows' process tree
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5411561Z SKIPPED [1] tests/test_chats.py:373: the roaming app-data folder is Windows'
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5412211Z SKIPPED [1] tests/test_cli.py:94: only Windows keeps a program you're not using from coming to the front
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5412814Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5413550Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5413941Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5414350Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5414820Z SKIPPED [1] tests/test_events.py:121: macOS's temporary folder of your own
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5415272Z SKIPPED [1] tests/test_heads_up.py:135: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5415636Z SKIPPED [1] tests/test_hotkey.py:157: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5416147Z SKIPPED [1] tests/test_hotkey.py:183: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5416504Z SKIPPED [1] tests/test_hotkey.py:200: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5416853Z SKIPPED [1] tests/test_hotkey.py:254: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5417387Z SKIPPED [1] tests/test_hotkey.py:271: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5418126Z SKIPPED [1] tests/test_install_update.py:256: macOS's root code: ditto, BSD find, osascript
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5419211Z SKIPPED [3] tests/test_install_update.py:267: macOS's root code: ditto, BSD find, osascript
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5419827Z SKIPPED [1] tests/test_install_update.py:282: macOS's root code: ditto, BSD find, osascript
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5420547Z SKIPPED [1] tests/test_install_update.py:291: macOS's root code: ditto, BSD find, osascript
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5421499Z SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5422067Z SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5422465Z SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5422816Z SKIPPED [1] tests/test_macnative.py:20: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5423134Z SKIPPED [1] tests/test_macnative.py:29: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5423454Z SKIPPED [1] tests/test_macnative.py:63: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5423765Z SKIPPED [1] tests/test_macnative.py:97: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5424080Z SKIPPED [1] tests/test_macnative.py:125: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5424407Z SKIPPED [1] tests/test_macnative.py:143: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5424893Z SKIPPED [1] tests/test_macnative.py:171: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5425449Z SKIPPED [1] tests/test_macnative.py:179: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5426413Z SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5427505Z SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5428580Z SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5429747Z SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5430473Z SKIPPED [1] tests/test_platform_events.py:104: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5431033Z SKIPPED [1] tests/test_platform_events.py:119: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5431569Z SKIPPED [1] tests/test_platform_events.py:127: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5432103Z SKIPPED [1] tests/test_platform_events.py:181: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5432648Z SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5433171Z SKIPPED [1] tests/test_presence.py:18: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5433736Z SKIPPED [1] tests/test_presence.py:33: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5434270Z SKIPPED [1] tests/test_presence.py:55: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5434721Z SKIPPED [1] tests/test_presence.py:74: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5435223Z SKIPPED [1] tests/test_presence.py:143: no GNOME session here
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5435735Z SKIPPED [1] tests/test_presence.py:220: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5436476Z SKIPPED [1] tests/test_presence.py:248: PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5437509Z SKIPPED [1] tests/test_sound.py:185: no QtMultimedia, or no audio device to play to
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5438169Z SKIPPED [1] tests/test_sound.py:210: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5439180Z SKIPPED [1] tests/test_sound.py:261: macOS only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5439872Z SKIPPED [1] tests/test_sound.py:334: no QtMultimedia, or no audio device to play to
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5440740Z SKIPPED [1] tests/test_updates.py:648: holding a file open against changes: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5441414Z SKIPPED [1] tests/test_wincaret.py:52: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5441869Z SKIPPED [1] tests/test_wincaret.py:87: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5442348Z SKIPPED [1] tests/test_windows.py:77: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5443313Z SKIPPED [1] tests/test_windows.py:87: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5443784Z SKIPPED [1] tests/test_windows.py:98: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5444262Z SKIPPED [1] tests/test_windows.py:102: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5444713Z SKIPPED [1] tests/test_windows.py:107: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5445189Z SKIPPED [1] tests/test_windows.py:127: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5445658Z SKIPPED [1] tests/test_windows.py:138: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5446164Z SKIPPED [1] tests/test_windows.py:153: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5446648Z SKIPPED [1] tests/test_windows.py:164: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5447134Z SKIPPED [1] tests/test_windows.py:197: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5447627Z SKIPPED [1] tests/test_windows.py:210: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5448140Z SKIPPED [1] tests/test_windows.py:224: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5449001Z SKIPPED [1] tests/test_windows.py:261: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5449525Z SKIPPED [1] tests/test_windows.py:279: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5450084Z SKIPPED [1] tests/test_windows.py:292: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5450684Z SKIPPED [1] tests/test_windows.py:315: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5451159Z SKIPPED [1] tests/test_windows.py:339: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5451630Z SKIPPED [1] tests/test_windows.py:366: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5452108Z SKIPPED [1] tests/test_windows.py:408: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5452588Z SKIPPED [1] tests/test_windows.py:434: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5453062Z SKIPPED [1] tests/test_windows.py:441: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5453528Z SKIPPED [1] tests/test_windows.py:479: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5454001Z SKIPPED [1] tests/test_windows.py:491: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5454461Z SKIPPED [1] tests/test_windows.py:502: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5454943Z SKIPPED [1] tests/test_windows.py:519: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5455407Z SKIPPED [1] tests/test_windows.py:535: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5455881Z SKIPPED [1] tests/test_windows.py:561: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5456376Z SKIPPED [1] tests/test_windows.py:583: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5456846Z SKIPPED [1] tests/test_windows.py:601: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5457679Z SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5458522Z SKIPPED [1] tests/test_windows.py:684: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5459209Z SKIPPED [1] tests/test_windows.py:699: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5459679Z SKIPPED [1] tests/test_windows.py:739: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5460134Z SKIPPED [1] tests/test_windows.py:795: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5460595Z SKIPPED [1] tests/test_windows.py:818: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5461258Z SKIPPED [1] tests/test_winlock.py:17: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5461729Z SKIPPED [1] tests/test_winlock.py:41: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5462194Z SKIPPED [1] tests/test_winlock.py:78: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5462708Z SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5463258Z SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5463799Z SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5464334Z SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5464862Z SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5465390Z SKIPPED [1] tests/test_wintoast.py:110: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5466346Z SKIPPED [1] tests/test_wintoast.py:124: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5466817Z SKIPPED [1] tests/test_wintoast.py:149: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5467309Z SKIPPED [1] tests/test_wintoast.py:209: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5467802Z SKIPPED [1] tests/test_wintoast.py:233: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5468280Z SKIPPED [1] tests/test_wintoast.py:253: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5468982Z SKIPPED [1] tests/test_wintoast.py:273: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5469576Z SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5470611Z SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5471324Z SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5472030Z SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5472737Z SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T04:35:38.5473391Z ================ 1266 passed, 123 skipped in 228.26s (0:03:48) =================
+test (ubuntu-24.04, 3.11)	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T04:35:38.7538311Z Post job cleanup.
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T04:35:38.8875690Z Post job cleanup.
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:38.9748203Z [command]/usr/bin/git version
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:38.9802978Z git version 2.56.1
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:38.9840892Z Temporarily overriding HOME='/home/runner/work/_temp/e5dde19b-05a2-4b26-8c2b-0adb044f6c4e' before making global git config changes
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:38.9842352Z Adding repository directory to the temporary git global config as a safe directory
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:38.9845700Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:38.9878931Z Removing SSH command configuration
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:38.9885541Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:38.9923994Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:39.0162422Z Removing HTTP extra header
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:39.0166854Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:39.0201134Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:39.0434354Z Removing includeIf entries pointing to credentials config files
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:39.0442522Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (ubuntu-24.04, 3.11)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:39.0488009Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (ubuntu-24.04, 3.11)	Complete job	﻿2026-11-15T04:35:39.0907605Z Cleaning up orphan processes
+test (ubuntu-24.04, 3.11)	Complete job	2026-11-15T04:35:39.1238372Z Terminate orphan process: pid (2990) (dbus-launch)
