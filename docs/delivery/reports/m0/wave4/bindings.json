@@ -1,0 +1,563 @@
+{
+ "plan": "docs/delivery/m0-app-core.md",
+ "section": "docs/delivery/reports/m0/wave4/section.md",
+ "rules": {
+  "docs/delivery/ROADMAP.md": "fb19cb9+wave4",
+  "pyproject.toml": "fb19cb9"
+ },
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "task_changes_add": {
+  "T-M0-13": [
+   {
+    "path": "chatmon/log.py",
+    "action": "modify"
+   },
+   {
+    "path": "tests/test_log.py",
+    "action": "modify"
+   }
+  ],
+  "T-M0-05": [
+   {
+    "path": "chatmon/offline.py",
+    "action": "modify"
+   }
+  ]
+ },
+ "stale_reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI",
+ "receipts": [
+  {
+   "id": "W4-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "M0-01.A1",
+    "M0-01.A2",
+    "M0-01.A3",
+    "M0-01.A4",
+    "M0-01.A5",
+    "M0-02.A1",
+    "M0-02.A2",
+    "M0-02.A3",
+    "M0-02.A4",
+    "M0-03.A1",
+    "M0-03.A2",
+    "M0-03.A3",
+    "M0-04.A1",
+    "M0-04.A2",
+    "M0-04.A3",
+    "M0-05.A1",
+    "M0-05.A2",
+    "M0-06.A1",
+    "M0-06.A2",
+    "M0-07.A1",
+    "M0-08.A1",
+    "M0-08.A2",
+    "M0-09.A1",
+    "M0-10.A1",
+    "M0-10.A2",
+    "M0-11.A1",
+    "M0-12.A1",
+    "M0-12.A2",
+    "M0-12.A3",
+    "M0-13.A1",
+    "M0-CLI.A1"
+   ],
+   "artifact": "docs/delivery/reports/m0/wave4/readiness.md",
+   "method": "Requirements review again at fb19cb9 (readiness.md): M0-01 to M0-13 and M0-CLI re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now, and the code that carries each one today; no conflict, gap or unclear term, and three moves recorded (M0-13 into log.py, M0-05's phrases into en.json, M0-03.A3's listing delivered by M7)."
+  },
+  {
+   "id": "W4-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "M0-01.A1",
+    "M0-01.A2",
+    "M0-01.A3",
+    "M0-01.A4",
+    "M0-01.A5",
+    "M0-02.A1",
+    "M0-02.A2",
+    "M0-02.A3",
+    "M0-02.A4",
+    "M0-03.A1",
+    "M0-03.A2",
+    "M0-03.A3",
+    "M0-04.A1",
+    "M0-04.A2",
+    "M0-04.A3",
+    "M0-05.A1",
+    "M0-05.A2",
+    "M0-06.A1",
+    "M0-06.A2",
+    "M0-07.A1",
+    "M0-08.A1",
+    "M0-08.A2",
+    "M0-09.A1",
+    "M0-10.A1",
+    "M0-10.A2",
+    "M0-11.A1",
+    "M0-12.A1",
+    "M0-12.A2",
+    "M0-12.A3",
+    "M0-CLI.A1"
+   ],
+   "artifact": "docs/delivery/reports/wave4/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on fb19cb9's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1241 passed, 148 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. M0-13.A1 is left out: its test is POSIX-only and skips here (CI's and WSL's receipts cover it). M0-03.A3 is in: tests/test_app_smoke.py::test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window passed here, the Chats submenu built from the light listing. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-05-unknown-id-kept",
+   "kind": "red",
+   "status": "fail",
+   "acceptance": [
+    "M0-05.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-05-unknown-id-kept",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-05-unknown-id-kept through tests/drills/run.py: commands.Table.find made to return any command id, not only the ones COMMANDS keeps.",
+   "reason": "The mutation survived: the test still passed, because offline.load_phrases already leaves out an id English doesn't know, before Table sees it. The drill picked the wrong line, and this is not a gap in the test. W4-M0-05-language-table-ignored (commands.py) and W4-M0-05-english-loses (offline.py, which now carries the phrase tables) replace it, and both went green, red and green."
+  },
+  {
+   "id": "W4-RED-M0-03-light-copies",
+   "kind": "red",
+   "status": "fail",
+   "acceptance": [
+    "M0-03.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-03-light-copies",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-03-light-copies through tests/drills/run.py: menus.chats_menu made to build the submenu from c.chat_book.recent(RECENT_CHATS), whole chats copied, instead of the light listing.",
+   "reason": "The mutation survived: tests/test_app_smoke.py::test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window still passed. No test notices the Chats menu reading whole chats again, which is the 'without copying the chats' half of M0-03.A3. The listing's own tests (tests/test_chatswin.py) prove listing() reads no messages, and the menu uses listing() today, but nothing holds it there. Next action: a menu-level test that fails if chats_menu loads whole chats, in tests/test_app_smoke.py, by a worker who may change code (the coordinator decides who). Until then T-M0-03-light stays implemented."
+  },
+  {
+   "id": "W4-BEH-CI-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "M0-12.A1",
+    "M0-13.A1"
+   ],
+   "artifact": "docs/delivery/reports/m0/ci/ci-132699632422-test-ubuntu-24.04-3.15.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43677128712",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132699632422",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15), every test under xvfb-run: tests/test_app_smoke.py::test_chatmon_ask_from_a_terminal_reaches_it (M0-12.A1: chatmon ask from a terminal reaches the running Chatmon) and tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link (M0-13.A1: the log made 0600, an older one at the umask made 0600, never opened through a link) passed. Both also passed on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the ubuntu:24.04, debian:trixie and fedora:44 containers; both skip on Windows. The CI-posix pending operation is resolved by this run. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto fb19cb9's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-BEH-CI-MACOS",
+   "kind": "behavior",
+   "acceptance": [
+    "M0-12.A1",
+    "M0-13.A1"
+   ],
+   "artifact": "docs/delivery/reports/m0/ci/ci-132699632411-test-macos-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43677128712",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132699632411",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43677128712 on fb19cb9, job test (macos-latest, 3.14): the same two POSIX tests (M0-12.A1, M0-13.A1) passed on macOS, as on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto fb19cb9's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-01-heads-up-not-lost",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-01-heads-up-not-lost",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-01-heads-up-not-lost through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-01-minimum-time",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A4"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-01-minimum-time",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-01-minimum-time through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-01-never-dropped",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-01-never-dropped",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-01-never-dropped through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-01-pushed-comes-back",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-01-pushed-comes-back",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-01-pushed-comes-back through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-01-quiet-holds",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A5"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-01-quiet-holds",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-01-quiet-holds through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-02-both-answered",
+   "kind": "red",
+   "acceptance": [
+    "M0-02.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-02-both-answered",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-02-both-answered through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-02-nothing-vanishes",
+   "kind": "red",
+   "acceptance": [
+    "M0-02.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-02-nothing-vanishes",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-02-nothing-vanishes through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-02-second-waits",
+   "kind": "red",
+   "acceptance": [
+    "M0-02.A1",
+    "M0-02.A4"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-02-second-waits",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-02-second-waits through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-03-agents-on-open-only",
+   "kind": "red",
+   "acceptance": [
+    "M0-03.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-03-agents-on-open-only",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-03-agents-on-open-only through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-03-tick-only-labels",
+   "kind": "red",
+   "acceptance": [
+    "M0-03.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-03-tick-only-labels",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-03-tick-only-labels through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-06-ask-box-doesnt-wait",
+   "kind": "red",
+   "acceptance": [
+    "M0-06.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-06-ask-box-doesnt-wait",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-06-ask-box-doesnt-wait through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-06-readings-off-thread",
+   "kind": "red",
+   "acceptance": [
+    "M0-06.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-06-readings-off-thread",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-06-readings-off-thread through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-07-state-name-wins",
+   "kind": "red",
+   "acceptance": [
+    "M0-07.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-07-state-name-wins",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-07-state-name-wins through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-08-hung-check-stopped",
+   "kind": "red",
+   "acceptance": [
+    "M0-08.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-08-hung-check-stopped",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-08-hung-check-stopped through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-08-late-answer-ignored",
+   "kind": "red",
+   "acceptance": [
+    "M0-08.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-08-late-answer-ignored",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-08-late-answer-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-10-connection-cap",
+   "kind": "red",
+   "acceptance": [
+    "M0-10.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-10-connection-cap",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-10-connection-cap through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-10-read-buffer",
+   "kind": "red",
+   "acceptance": [
+    "M0-10.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-10-read-buffer",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-10-read-buffer through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-11-unparseable-remind",
+   "kind": "red",
+   "acceptance": [
+    "M0-11.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-11-unparseable-remind",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-11-unparseable-remind through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-12-ask-prefilled",
+   "kind": "red",
+   "acceptance": [
+    "M0-12.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-12-ask-prefilled",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-12-ask-prefilled through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-12-ask-sent",
+   "kind": "red",
+   "acceptance": [
+    "M0-12.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-12-ask-sent",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-12-ask-sent through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-12-hooks-connect-all",
+   "kind": "red",
+   "acceptance": [
+    "M0-CLI.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-12-hooks-connect-all",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-12-hooks-connect-all through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-12-status-brain",
+   "kind": "red",
+   "acceptance": [
+    "M0-12.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-results.json",
+   "drill": "M0-12-status-brain",
+   "artifact": "docs/delivery/reports/m0/wave4/drills.log",
+   "method": "Red drill M0-12-status-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-01-priority",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-01-priority",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-01-priority through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-03-light-limit",
+   "kind": "red",
+   "acceptance": [
+    "M0-03.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-03-light-limit",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-03-light-limit through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-04-appearance",
+   "kind": "red",
+   "acceptance": [
+    "M0-04.A1",
+    "M0-04.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-04-appearance",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-04-appearance through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-04-reload-under-help",
+   "kind": "red",
+   "acceptance": [
+    "M0-04.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-04-reload-under-help",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-04-reload-under-help through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-05-english-loses",
+   "kind": "red",
+   "acceptance": [
+    "M0-05.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new2-results.json",
+   "drill": "W4-M0-05-english-loses",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new2.log",
+   "method": "Red drill W4-M0-05-english-loses through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-05-hide-not-kept",
+   "kind": "red",
+   "acceptance": [
+    "M0-05.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-05-hide-not-kept",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-05-hide-not-kept through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-05-language-table-ignored",
+   "kind": "red",
+   "acceptance": [
+    "M0-05.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new2-results.json",
+   "drill": "W4-M0-05-language-table-ignored",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new2.log",
+   "method": "Red drill W4-M0-05-language-table-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-09-password-read-out",
+   "kind": "red",
+   "acceptance": [
+    "M0-09.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-09-password-read-out",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-09-password-read-out through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-12-come-forward",
+   "kind": "red",
+   "acceptance": [
+    "M0-12.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-new-results.json",
+   "drill": "W4-M0-12-come-forward",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-new.log",
+   "method": "Red drill W4-M0-12-come-forward through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-13-log-followed-through-a-link",
+   "kind": "red",
+   "acceptance": [
+    "M0-13.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-linux-results.json",
+   "drill": "W4-M0-13-log-followed-through-a-link",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-linux.log",
+   "method": "Red drill W4-M0-13-log-followed-through-a-link in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  },
+  {
+   "id": "W4-RED-M0-13-log-left-at-the-umask",
+   "kind": "red",
+   "acceptance": [
+    "M0-13.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4/drills-linux-results.json",
+   "drill": "W4-M0-13-log-left-at-the-umask",
+   "artifact": "docs/delivery/reports/m0/wave4/drills-linux.log",
+   "method": "Red drill W4-M0-13-log-left-at-the-umask in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked."
+  }
+ ],
+ "tasks": {
+  "T-M0-03-light": {
+   "status": "implemented",
+   "blocker": null
+  }
+ },
+ "pending": [],
+ "next_action": "M0-03.A3's 'without copying the chats' has no test that would notice its loss (W4-RED-M0-03-light-copies survived): a code worker adds a menu-level test in tests/test_app_smoke.py, then W4-M0-03-light-copies is run again and must go red; then T-M0-03-light is verified and M0 can close. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree.",
+ "source_revision": "fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0"
+}
