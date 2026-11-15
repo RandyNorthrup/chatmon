@@ -23,8 +23,10 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Long messages fit on screen**, ending in "…" with **More**. Bubbles stay long enough to read, wait while you point at them, and their links can be clicked.
 - **Windows:** notifications are Windows' own, with buttons, in Action Center; a reminder stays on screen until you answer it. Magnifier pans to new bubbles.
 - **Your chatmon can follow you to another monitor** (Windows, macOS, X11).
+- **Settings shows how your desktop set the shortcut**: on Wayland, where the desktop has the last word, Settings › Accessibility names the keys it chose.
 - **The first unlock of the day** says what's waiting: today's reminders, agents waiting for you, updates.
 - `chatmon ask [TEXT]` opens the ask box, filled in; `chatmon status` prints the brain, your reminders and your agents.
+- **Chatmon keeps a log** of what went wrong, `chatmon.log` in its state folder, readable only by you; **Open the log** opens it, and `CHATMON_DEBUG=1` keeps the details. No key, chat or typed text ever goes into it: a provider that repeats your key has it blanked out.
 - **Chatmon can be translated**: every word it shows, in its bubbles, menus, Settings and the `chatmon` command, comes from a translation when there's one for your language, or the one you pick in Settings, and Qt's own buttons follow it. Only English ships so far, and a new language is a single file. Times and dates follow your system's regional settings.
 
 ### Changes
@@ -63,6 +65,8 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - Hovering a walking chatmon stops it mid-step instead of snapping it round.
 - The fairy style's highlighted button label could not be seen.
 - pip and pipx installs include the sounds and offline phrases.
+- **macOS:** reminders and bubbles keep their time while Chatmon's windows are out of sight; App Nap no longer holds them back.
+- *status* no longer waits on finding a brain, and a sound still playing at quit finishes cleanly.
 - A repeating reminder reads "Every day at 9:00 AM", and one-of-a-kind counts read right ("1 minute", "1 hook script").
 
 ## 0.9.2

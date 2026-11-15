@@ -106,7 +106,8 @@ app menu (or `chatmon` in a terminal). On macOS it lives in the menu bar, not th
 packages run on your system's Python and PyQt6, which apt and dnf install along with them. On Linux, sounds
 play through QtMultimedia where it's installed (`python3-pyqt6.qtmultimedia` on Debian and Ubuntu), or else
 pw-play, paplay or canberra-gtk-play; on Wayland the shortcut needs a desktop with the GlobalShortcuts portal
-(KDE Plasma, GNOME 48 and later, Hyprland), and elsewhere you can bind `chatmon ask` yourself.
+(KDE Plasma, GNOME 48 and later, Hyprland), which has the last word on the keys (Settings shows the ones it
+chose), and elsewhere you can bind `chatmon ask` yourself.
 
 The Windows installer, and Chatmon's programs, are signed by Randy Northrup. For a while after a new
 version comes out, SmartScreen may still ask about it: check it names Randy Northrup, then **More info** and
@@ -144,7 +145,7 @@ battery levels on Windows and macOS, also install `psutil`.
 
 The first time, it asks what it should be called. Right-click it and tick **Start when I log in** to keep
 it around. On Windows that starts `chatmonw`, which installs alongside `chatmon` and runs it without a
-console window; run that way, Chatmon writes any problems to `chatmon.log` in its state folder. On macOS,
+console window; problems go to `chatmon.log` in its state folder (as they always do). On macOS,
 Chatmon.app becomes one of your Login Items, listed by name in System Settings › General › Login Items,
 where you can turn it off too (run from source or pip, a LaunchAgent starts it instead).
 
@@ -393,6 +394,10 @@ The tray's tooltip says it too, and a badge by your chatmon shows when one needs
   where the settings say. Chatmon's folders and files are readable by you alone from the moment they're made
   (on Linux and macOS, folders 0700 and files 0600), and a damaged file is kept aside as `<name>.bad-<time>`
   while the last good copy is used.
+- **The log is yours alone.** Chatmon writes what went wrong to `chatmon.log` in its state folder, readable
+  only by you (it starts over past 1 MB, keeping the last as `chatmon.log.old`); **Help & updates › Open the
+  log** opens it. It never holds keys, chats or anything you typed, and a provider that repeats your key in an
+  error has it blanked out first.
 - **Backups are yours to move.** **Back up** in Settings saves your settings changes, memory, notes,
   reminders and, if you choose, chats to one file; never keys, and never `config.toml` (it can hold keys).
   **Bring back** checks the whole file before it changes anything.
@@ -467,7 +472,7 @@ after that, and its edges rest after a loop; each chatmon's animations are cut t
 and kept once in memory; only what changed on screen is drawn again; and the stage's clock sleeps until the
 next thing it shows changes (about 100 wake-ups a minute standing idle), at your screen's own refresh rate
 while something moves. `CHATMON_STAGE=window` keeps the X11 way on a Wayland desktop, and `CHATMON_DEBUG=1`
-logs more (the overlay's keyboard focus among it), should either ever be needed.
+keeps the details in the log (the overlay's keyboard focus among them), should either ever be needed.
 
 | File                      | What                                                   |
 | ------------------------- | ------------------------------------------------------ |
