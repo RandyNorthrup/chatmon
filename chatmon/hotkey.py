@@ -26,9 +26,10 @@ import sys
 from collections.abc import Callable, Mapping
 from typing import ClassVar, NamedTuple, Protocol
 
-from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, QObject, QSocketNotifier, Qt, pyqtSignal
+from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, QObject, QSocketNotifier, Qt
 
 from .i18n import N_, _
+from .qtsignal import pyqtSignal
 
 # Windows' DLLs and last error; CDLL and errno elsewhere only so the module imports on every OS (the Windows backend
 # is made on Windows alone).
@@ -462,7 +463,7 @@ class Hotkey(QObject):
     _heard = pyqtSignal(str, str)  # (what, detail), from any thread to this object's
 
     def __init__(self, kind: str | None = None, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.kind = kind if kind is not None else backend_kind()
         self.combo: Combo | None = None
         self.on_pressed: Callable[[], None] | None = None

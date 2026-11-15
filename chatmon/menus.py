@@ -50,8 +50,8 @@ QUICK_LABELS = {"Explain": N_("Explain the clipboard…"), "Summarize": N_("Summ
 
 
 def _submenu(menu: QMenu, title: str) -> QMenu:
-    """A new submenu at the end of `menu`. Qt always makes one; PyQt6 types addMenu's result optional."""
-    return cast(QMenu, menu.addMenu(title))
+    """A new submenu at the end of `menu`. Qt always makes one."""
+    return menu.addMenu(title)  # type: ignore[return-value]  # PyQt6 6.11's stub types it optional (6.12.1's as the menu's own class)
 
 
 def _item(menu: QMenu, text: str) -> QAction:

@@ -5,6 +5,7 @@ shows English rather than nothing, and the template can't fall behind the code.
 Only English ships, so every catalog here is a throwaway one written in the test's own folder."""
 
 import importlib.util
+import shutil
 import subprocess
 import sys
 import textwrap
@@ -257,6 +258,46 @@ def test_qts_own_words_and_a_chosen_languages_dates_follow_it(qapp, tmp_path):
         assert QLocale() == before, "the default locale is put back"
     finally:
         i18n.reset()
+
+
+def test_an_installers_app_finds_qts_own_words_in_its_own_folder(qapp, tmp_path, monkeypatch):
+    """Qt's translations are looked for where Qt says they are first: pip's PyQt6 keeps them in its package, and the
+    .deb and .rpm use the distribution's Qt and its folder. An installer's build (Nuitka on Windows, PyInstaller on
+    macOS) also carries them in the app's own folder (packaging/build.py), which is looked in only there."""
+    from PyQt6 import QtCore
+    from PyQt6.QtCore import QCoreApplication, QLibraryInfo
+
+    from chatmon import paths
+
+    qt = Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+    if not (qt / "qtbase_de.qm").is_file():
+        pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+    monkeypatch.setattr(paths, "frozen", lambda: False)
+    assert [Path(f) for f in i18n.qt_folders(QtCore)] == [qt], "a pip or distribution Qt: its own folder"
+
+    app, elsewhere = tmp_path / "Chatmon", tmp_path / "qt"  # a built app's folder; a Qt whose folder has none
+    (app / i18n.QT_FROZEN).mkdir(parents=True)
+    elsewhere.mkdir()
+    shutil.copyfile(qt / "qtbase_de.qm", app / i18n.QT_FROZEN / "qtbase_de.qm")
+    catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+    monkeypatch.setattr(i18n, "_APP_FOLDER", app)
+    monkeypatch.setattr(i18n, "_qt_library_folder", lambda qtcore: str(elsewhere))
+
+    monkeypatch.setattr(paths, "frozen", lambda: True)
+    assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], "Qt's own folder first"
+    monkeypatch.setattr(i18n, "_APP_FOLDER", qt.parent.parent.parent)  # where pip's PyQt6 is: one folder, however it's spelt
+    monkeypatch.setattr(i18n, "_qt_library_folder", lambda qtcore: qt.as_posix())
+    assert i18n.qt_folders(QtCore) == [str(qt)]
+    monkeypatch.setattr(i18n, "_APP_FOLDER", app)
+    monkeypatch.setattr(i18n, "_qt_library_folder", lambda qtcore: str(elsewhere))
+    i18n.setup("de", tmp_path)
+    assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Abbrechen"
+    i18n.reset()
+
+    monkeypatch.setattr(paths, "frozen", lambda: False)
+    i18n.setup("de", tmp_path)
+    assert i18n._("Stop") == "Anhalten"
+    assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Cancel", "not an installer's build: the app's folder isn't Qt's"
 
 
 def test_choosing_the_systems_own_language_keeps_its_regional_formats(qapp, tmp_path):

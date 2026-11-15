@@ -28,7 +28,9 @@ import sys
 import time
 from typing import TYPE_CHECKING
 
-from PyQt6.QtCore import QObject, QProcess, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import QObject, QProcess, pyqtSlot
+
+from .qtsignal import pyqtSignal
 
 if TYPE_CHECKING:
     from .winfocus import Focus
@@ -210,7 +212,7 @@ def _dbus_call(bus, service: str, path: str, interface: str, method: str, *args)
     except ImportError:  # no QtDBus here
         return None
     try:
-        message = QDBusMessage.createMethodCall(service, path, interface, method)
+        message: QDBusMessage = QDBusMessage.createMethodCall(service, path, interface, method)  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
         if args:
             message.setArguments(list(args))
         reply = bus.call(message, QDBus.CallMode.Block, 500)
@@ -338,7 +340,7 @@ class _GSetting(QObject):
     changed = pyqtSignal()
 
     def __init__(self, schema: str, key: str, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.value: str | None = None
         self._key = key
         self._first: QProcess | None = None

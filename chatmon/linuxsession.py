@@ -25,8 +25,10 @@ import os
 import time
 from collections.abc import Callable
 
-from PyQt6.QtCore import QMetaType, QObject, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import QMetaType, QObject, pyqtSlot
 from PyQt6.QtDBus import QDBus, QDBusArgument, QDBusConnection, QDBusMessage, QDBusPendingCallWatcher, QDBusPendingReply
+
+from .qtsignal import pyqtSignal
 
 LOGIN1 = "org.freedesktop.login1"
 PROPERTIES = "org.freedesktop.DBus.Properties"
@@ -41,7 +43,7 @@ def _value(v):
 
 def _call(service: str, path: str, interface: str, method: str, *args) -> QDBusMessage:
     """A method call that never starts a service which isn't running already."""
-    message = QDBusMessage.createMethodCall(service, path, interface, method)
+    message: QDBusMessage = QDBusMessage.createMethodCall(service, path, interface, method)  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
     if args:
         message.setArguments(list(args))
     message.setAutoStartService(False)
@@ -76,17 +78,17 @@ class SessionWatcher(QObject):
 
     def __init__(self, locked: Callable[[bool], None], slept: Callable[[bool], None], seen: Callable[[bool], None] | None = None,
                  parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self._locked, self._slept, self._seen = locked, slept, seen
         self.locked = False  # as last told
         self.heard: list[str] = []  # which sources it listens to, for the log and the tests
-        session = QDBusConnection.sessionBus()
+        session: QDBusConnection = QDBusConnection.sessionBus()
         if session.isConnected():
             if session.connect("org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", "ActiveChanged", self._active):
                 self.heard.append("ScreenSaver")
             if session.connect("org.gnome.ScreenSaver", "/org/gnome/ScreenSaver", "org.gnome.ScreenSaver", "ActiveChanged", self._active):
                 self.heard.append("GNOME ScreenSaver")
-        system = QDBusConnection.systemBus()
+        system: QDBusConnection = QDBusConnection.systemBus()
         if system.isConnected():
             if system.connect(LOGIN1, "/org/freedesktop/login1", "org.freedesktop.login1.Manager", "PrepareForSleep", self._sleep):
                 self.heard.append("logind sleep")
@@ -101,7 +103,7 @@ class SessionWatcher(QObject):
             if arg is None:
                 continue
             # One message with a timeout of its own: an interface object would ask logind to describe itself first.
-            message = QDBusMessage.createMethodCall(LOGIN1, "/org/freedesktop/login1", "org.freedesktop.login1.Manager", method)
+            message: QDBusMessage = QDBusMessage.createMethodCall(LOGIN1, "/org/freedesktop/login1", "org.freedesktop.login1.Manager", method)
             message.setArguments([QDBusArgument(arg, QMetaType.Type.UInt.value) if method == "GetSessionByPID" else arg])  # type: ignore[call-overload]  # PyQt6's stub types the member's int value as the enum
             reply = system.call(message, QDBus.CallMode.Block, 1000)
             if reply.type() == QDBusMessage.MessageType.ReplyMessage and reply.arguments():
@@ -148,13 +150,13 @@ class PowerProfile(QObject):
     OnBattery), and each change is told once."""
 
     def __init__(self, saving: Callable[[bool], None], parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self._saving = saving
         self.heard: list[str] = []  # the services it listens to
         self.profile_saver = False
         self.on_battery = False
         self.told: bool | None = None
-        self._bus = QDBusConnection.systemBus()
+        self._bus: QDBusConnection = QDBusConnection.systemBus()
         if not self._bus.isConnected():
             return
         self._ask_profile(0)
@@ -229,9 +231,9 @@ class PortalSettings(QObject):
     changed = pyqtSignal()
 
     def __init__(self, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.values: dict[str, bool | None] = {}
-        self._bus = QDBusConnection.sessionBus()
+        self._bus: QDBusConnection = QDBusConnection.sessionBus()
         if not self._bus.isConnected():
             return
         self._bus.connect(PORTAL[0], PORTAL[1], PORTAL[2], "SettingChanged", self._setting_changed)
@@ -297,12 +299,12 @@ class NotificationDnd(QObject):
     IDENTIFY_AGAIN_AFTER = 60.0  # seconds
 
     def __init__(self, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.server: str | None = None
         self.state: bool | None = None
         self._asking = False
         self._failed_at = float("-inf")
-        self._bus = QDBusConnection.sessionBus()
+        self._bus: QDBusConnection = QDBusConnection.sessionBus()
 
     def refresh(self) -> None:
         if self._asking or not self._bus.isConnected():

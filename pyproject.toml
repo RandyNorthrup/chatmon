@@ -35,7 +35,7 @@ classifiers = [
 
 [project.optional-dependencies]
 battery = ["psutil"]
-test = ["pytest", "pytest-timeout", "hypothesis", "tzdata"]
+test = ["pytest", "pytest-timeout", "hypothesis", "tzdata", "comtypes; sys_platform == 'win32'"]
 # Everything CI runs, at the versions it runs them: `pip install -e ".[dev]"`. packaging/requirements-dev.txt locks
 # the same versions with hashes (tests/test_requirements.py keeps the two in step).
 dev = [
@@ -47,6 +47,7 @@ dev = [
     "coverage==7.17.0",
     "hypothesis==6.170.14",
     "tzdata==2026.6",
+    "comtypes==1.4.17; sys_platform == 'win32'",  # the screen-reader test's UI Automation client
     "ruff==0.17.3",
     "mypy==2.4.1",
     "zizmor==1.31.1",

@@ -8,3 +8,4 @@ pytest-timeout==2.4.0
 coverage==7.17.0
 hypothesis==6.170.14  # tests/test_parser_properties.py
 tzdata==2026.6  # a time-zone database for zoneinfo on Windows, for the reminder and parser tests
+comtypes==1.4.17; sys_platform == 'win32'  # tests/uia_client.py: the UI Automation client the screen-reader test listens with

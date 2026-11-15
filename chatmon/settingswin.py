@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import sys
 
-from PyQt6.QtCore import QLocale, Qt, pyqtSignal
+from PyQt6.QtCore import QLocale, Qt
 
 from PyQt6.QtGui import QKeySequence
 from PyQt6.QtWidgets import (
@@ -22,6 +22,7 @@ from PyQt6.QtWidgets import (
 )
 
 from .i18n import N_, _
+from .qtsignal import pyqtSignal
 
 # The window's title and the choices' labels are in English here, marked for translating, and shown translated.
 TITLE = N_("Chatmon Settings")

@@ -10,7 +10,8 @@
       home of its own and without a screen (Qt's offscreen platform).
 
 Needs Nuitka and Visual Studio's C compiler (windows), PyInstaller (macos), Inno Setup 6's ISCC (windows: on PATH, in its usual folders, or $ISCC)
-and nfpm (linux: on PATH or $NFPM). Only the standard library here, so smoke runs on any Python.
+and nfpm (linux: on PATH or $NFPM). Only the standard library at the top, so smoke runs on any Python; the Windows and
+macOS builds import PyQt6 and chatmon where they need them (which of Qt's translations to carry).
 """
 
 from __future__ import annotations
@@ -29,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGING = ROOT / "packaging"
 BUILD = ROOT / "build"
 DIST = ROOT / "dist"
+LOCALE = ROOT / "chatmon" / "locale"  # Chatmon's translations: the languages its installers speak
 BUNDLE_ID = "io.github.randynorthrup.chatmon"
 
 
@@ -37,9 +39,14 @@ def version() -> str:
     return re.search(r'__version__ = "([^"]+)"', text).group(1)
 
 
+def _chatmon_importable() -> None:
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+
+
 def notes(v: str) -> str:
     """A release's notes: its part of chatmon/changelog.md, then how to install it."""
-    sys.path.insert(0, str(ROOT))
+    _chatmon_importable()
     from chatmon import changelog
 
     release = changelog.find(v)
@@ -54,6 +61,46 @@ def notes(v: str) -> str:
         # Pinned to this release's tag: the notes stay true after the next one, and main is never installed.
         + f"```sh\npipx install --force git+https://github.com/RandyNorthrup/chatmon@v{v}\n```\n"
     )
+
+
+def qt_translations() -> list[Path]:
+    """Qt's translations of its own words (qtbase_<lang>.qm) that the installers carry: for each language Chatmon
+    has a translation for (LOCALE), the file Qt itself loads for it, from the Qt the build runs with, as
+    chatmon/i18n.py finds it at run time ("pt" is qtbase_pt_BR.qm). English is Qt's own language, so English alone
+    carries none, and no other of Qt's languages ever ships: nothing would load it."""
+    _chatmon_importable()
+    from PyQt6 import QtCore
+
+    from chatmon import i18n
+
+    qt = QtCore.QLibraryInfo.path(QtCore.QLibraryInfo.LibraryPath.TranslationsPath)
+    found = set()
+    for code in i18n.available(LOCALE)[1:]:
+        translator = i18n.qt_translator(QtCore, code, [qt])
+        if translator is None:
+            print(f"Qt has no translation of its own words for {code} in {qt}: its buttons stay in English there", flush=True)
+        else:
+            found.add(Path(translator.filePath()))
+    return sorted(found)
+
+
+def nuitka_qt_translations() -> list[str]:
+    """Nuitka's options putting qt_translations() where chatmon/i18n.py looks in the built app (i18n.QT_FROZEN)."""
+    _chatmon_importable()
+    from chatmon import i18n
+
+    return [f"--include-data-files={qm}={(i18n.QT_FROZEN / qm.name).as_posix()}" for qm in qt_translations()]
+
+
+def pyinstaller_datas(datas: list[tuple[str, str, str]]) -> list[tuple[str, str, str]]:
+    """PyInstaller's data files (chatmon.spec's a.datas: name in the app, source, kind) with Qt's translations
+    narrowed to qt_translations(). PyQt6's hooks collect every language of Qt's (qt_*, qtbase_*, and each Qt
+    module's), and Chatmon loads only qtbase, and only in a language it speaks."""
+    _chatmon_importable()
+    from chatmon import i18n
+
+    kept = [d for d in datas if not (Path(d[0]).parent == i18n.QT_FROZEN and Path(d[0]).suffix == ".qm")]
+    return kept + [(str(i18n.QT_FROZEN / qm.name), str(qm), "DATA") for qm in qt_translations()]
 
 
 def run(*argv, **kwargs) -> subprocess.CompletedProcess:
@@ -77,7 +124,9 @@ def nuitka(out: Path, mode: str, *options: str) -> Path:
     shutil.rmtree(out, ignore_errors=True)
     run(
         sys.executable, "-m", "nuitka", f"--mode={mode}", "--deployment",
-        "--enable-plugin=pyqt6", "--noinclude-qt-translations",
+        # Qt's own words in the languages Chatmon speaks, and no others (none with English alone). Nuitka's plugin
+        # copies Qt's translations only for QtWebEngine, which Chatmon doesn't use; said outright all the same.
+        "--enable-plugin=pyqt6", "--noinclude-qt-translations", *nuitka_qt_translations(),
         "--include-package=chatmon", "--include-package-data=chatmon",  # its modules imported where used, its pictures
         "--nofollow-import-to=tkinter,unittest,pydoc_data,test",
         "--python-flag=no_site", "--python-flag=isolated",  # nothing from PYTHONPATH, user site-packages or the current folder

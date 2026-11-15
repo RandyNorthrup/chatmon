@@ -31,11 +31,12 @@ from pathlib import Path
 from typing import BinaryIO
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QTimer, QUrl, pyqtSignal
+from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QTimer, QUrl
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
 from . import __version__, changelog, paths, releasecheck
 from .i18n import _
+from .qtsignal import pyqtSignal
 from .releasecheck import DEB, MACOS, MANUAL, PIPX, RPM, SUMS, SUMS_SIG, WINDOWS, sha256, signed_sums
 
 logger = logging.getLogger(__name__)
@@ -339,7 +340,7 @@ def metered() -> bool:
 
         if QNetworkInformation.instance() is None and not QNetworkInformation.loadDefaultBackend():
             return False
-        info = QNetworkInformation.instance()
+        info: QNetworkInformation | None = QNetworkInformation.instance()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
         return bool(info is not None and info.isMetered())
     except (ImportError, AttributeError, RuntimeError):
         return False
@@ -362,7 +363,7 @@ class Updater(QObject):
     handed_over = pyqtSignal()  # Windows' installer has it from here, and quits Chatmon when it's ready to
 
     def __init__(self, background, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self._nam = QNetworkAccessManager(self)
         self._background = background  # runs slow work (hashing, the signature check) off the screen's thread
         self._reply: QNetworkReply | None = None
@@ -590,7 +591,7 @@ class Updater(QObject):
             self.handed_over.emit()
             return
         proc = QProcess(self)
-        environment = QProcessEnvironment.systemEnvironment()
+        environment: QProcessEnvironment = QProcessEnvironment.systemEnvironment()
         for key, value in env.items():
             environment.insert(key, value)
         proc.setProcessEnvironment(environment)

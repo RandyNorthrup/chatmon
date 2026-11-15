@@ -1,0 +1,66 @@
+PyInstaller 6.22.3 (pyinstaller-hooks-contrib 2026.9, PyQt6 6.11.0, Qt 6.11.2, Python 3.14.10) on Windows 11, in a throwaway
+venv (%TEMP%\m10-pyi, installed --require-hashes from a uv lock made with --exclude-newer 2026-10-31), running the real
+packaging/chatmon.spec on scratch copies of the tree. Windows stands in for macOS here: the spec and the hooks are the
+same, the onedir layout puts sys._MEIPASS at Chatmon/_internal instead of Chatmon.app/Contents/Frameworks, and BUNDLE
+does nothing off macOS. packaging/macos/entry.py is replaced by a probe (below) that sets up i18n and writes what it found.
+
+=== 1. fb19cb9's chatmon.spec (no filter), copy with chatmon/locale/de.po: Qt translations in the app
+$ find dist -name '*.qm' | wc -l
+124
+by kind:
+     64 qt
+     32 qtbase
+     28 qtmultimedia
+size of PyQt6/Qt6/translations: 7.1M
+
+=== 2. this branch's chatmon.spec, English alone (the tree as it is)
+$ tail -1 pyinstaller.log
+50968 INFO: Build complete! The results are available in: C:\Users\Randy\AppData\Local\Temp\m10-pyi-en\dist
+$ find dist -name '*.qm' | wc -l
+0
+$ ls dist/Chatmon/_internal/PyQt6/Qt6
+bin
+plugins
+
+=== 3. this branch's chatmon.spec, copy with a throwaway chatmon/locale/de.po
+$ tail -1 pyinstaller.log
+pyinstaller exit 0
+$ find dist -name '*.qm'
+C:\Users\Randy\AppData\Local\Temp/m10-pyi-src/dist/Chatmon/_internal/PyQt6/Qt6/translations/qtbase_de.qm
+$ ls dist/Chatmon/_internal/chatmon/locale
+chatmon.pot
+de.po
+$ CHATMON_PROBE_OUT=probe-out.txt dist/Chatmon/Chatmon.exe; cat probe-out.txt
+frozen: True sys._MEIPASS: C:\Users\Randy\AppData\Local\Temp\m10-pyi-src\dist\Chatmon\_internal
+i18n.LOCALE: C:\Users\Randy\AppData\Local\Temp\m10-pyi-src\dist\Chatmon\_internal\chatmon\locale ['chatmon.pot', 'de.po']
+Qt's own folder (QLibraryInfo): C:/Users/Randy/AppData/Local/Temp/m10-pyi-src/dist/Chatmon/_internal/PyQt6/Qt6/translations
+folders looked in: ['C:\\Users\\Randy\\AppData\\Local\\Temp\\m10-pyi-src\\dist\\Chatmon\\_internal\\PyQt6\\Qt6\\translations']
+language: de
+Stop: Anhalten
+Cancel: Abbrechen
+Qt translation loaded from: C:\Users\Randy\AppData\Local\Temp\m10-pyi-src\dist\Chatmon\_internal\PyQt6\Qt6\translations/qtbase_de.qm
+
+=== the probe (packaging/macos/entry.py in the copies)
+"""A probe in place of Chatmon's entry: what an installer's build finds of Qt's own translations. Windowed, so it
+writes to the file in $CHATMON_PROBE_OUT."""
+import os
+import sys
+
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication
+
+from chatmon import i18n, paths
+
+out = open(os.environ["CHATMON_PROBE_OUT"], "w", encoding="utf-8")
+app = QApplication([])
+print("frozen:", paths.frozen(), "sys._MEIPASS:", getattr(sys, "_MEIPASS", None), file=out)
+print("i18n.LOCALE:", i18n.LOCALE, sorted(p.name for p in i18n.LOCALE.iterdir()), file=out)
+print("Qt's own folder (QLibraryInfo):", QtCore.QLibraryInfo.path(QtCore.QLibraryInfo.LibraryPath.TranslationsPath), file=out)
+print("folders looked in:", i18n.qt_folders(QtCore), file=out)
+print("language:", i18n.setup("de"), file=out)
+print("Stop:", i18n._("Stop"), file=out)
+print("Cancel:", QtCore.QCoreApplication.translate("QPlatformTheme", "Cancel"), file=out)
+translator = i18n._qt_translator
+print("Qt translation loaded from:", translator.filePath() if translator is not None else None, file=out)
+out.close()
