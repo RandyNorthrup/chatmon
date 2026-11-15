@@ -105,7 +105,7 @@ class QtPlayer:
         from PyQt6.QtCore import QCoreApplication
 
         self.effects: dict[Path, QSoundEffect] = {}
-        app = QCoreApplication.instance()
+        app: QCoreApplication | None = QCoreApplication.instance()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
         if app is not None:
             app.aboutToQuit.connect(self.close)
         atexit.register(self.close)

@@ -28,10 +28,11 @@ import xml.etree.ElementTree as ET
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
-from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtCore import QObject
 
 from . import winrt
 from .i18n import N_, _
+from .qtsignal import pyqtSignal
 
 logger = logging.getLogger(__name__)
 
@@ -219,7 +220,7 @@ class Toaster(QObject):
     _heard = pyqtSignal(str, str, int)  # (event, tag, value), from Windows' threads to this object's
 
     def __init__(self, app_id: str | None = None, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.app_id = app_id if app_id is not None else process_app_id()
         self.why_not: str | None = None  # why the last show() showed nothing
         self._statics: int | None = None

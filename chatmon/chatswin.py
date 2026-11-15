@@ -8,11 +8,12 @@ words in the chats themselves too (each chat read once while it doesn't change: 
 
 from __future__ import annotations
 
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QDialog, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QPushButton, QVBoxLayout, QWidget
 
 from . import chats
 from .i18n import N_, _
+from .qtsignal import pyqtSignal
 
 TITLE = N_("Chats")  # the window's title, shown as _(TITLE)
 SEARCH_AFTER_MS = 300  # after the last key, the words inside chats are searched too

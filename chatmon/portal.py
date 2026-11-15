@@ -27,10 +27,10 @@ OK, CANCELLED = 0, 1  # Response's codes; 2: it ended some other way (no chooser
 
 def available() -> bool:
     """A FileChooser to ask: the portal is there and has one (a backend that implements it)."""
-    bus = QDBusConnection.sessionBus()
+    bus: QDBusConnection = QDBusConnection.sessionBus()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
     if not bus.isConnected():
         return False
-    message = QDBusMessage.createMethodCall(SERVICE, PATH, "org.freedesktop.DBus.Properties", "Get")
+    message: QDBusMessage = QDBusMessage.createMethodCall(SERVICE, PATH, "org.freedesktop.DBus.Properties", "Get")
     message.setArguments([CHOOSER, "version"])
     reply = bus.call(message, QDBus.CallMode.Block, 1000)
     return reply.type() == QDBusMessage.MessageType.ReplyMessage
@@ -57,8 +57,8 @@ class FileChooser(QObject):
     cancel); `fallback()` runs instead when the portal couldn't show one."""
 
     def __init__(self, parent: QObject | None = None):
-        super().__init__(parent)
-        self._bus = QDBusConnection.sessionBus()
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
+        self._bus: QDBusConnection = QDBusConnection.sessionBus()
         self._path: str | None = None
         self._then: Callable[[list[str]], None] | None = None
         self._fallback: Callable[[], None] | None = None
@@ -75,7 +75,7 @@ class FileChooser(QObject):
         token = "chatmon_" + secrets.token_hex(8)
         self._path, self._then, self._fallback = request_path(self._bus, token), then, fallback
         self._bus.connect(SERVICE, self._path, REQUEST, "Response", self._response)
-        message = QDBusMessage.createMethodCall(SERVICE, PATH, CHOOSER, method)
+        message: QDBusMessage = QDBusMessage.createMethodCall(SERVICE, PATH, CHOOSER, method)
         message.setArguments(["", title, {**options, "handle_token": token, "modal": True}])
         self._watcher = QDBusPendingCallWatcher(self._bus.asyncCall(message, 30_000), self)
         self._watcher.finished.connect(self._asked)

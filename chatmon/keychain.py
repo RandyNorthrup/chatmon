@@ -366,10 +366,10 @@ class _SecretService:
     def _call(self, path: str, interface: str, method: str, *args):
         from PyQt6.QtDBus import QDBus, QDBusConnection, QDBusMessage
 
-        bus = QDBusConnection.sessionBus()
+        bus: QDBusConnection = QDBusConnection.sessionBus()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
         if not bus.isConnected():
             raise KeychainError(_("there's no desktop session bus to reach a keyring over"))
-        message = QDBusMessage.createMethodCall(self.BUS, path, interface, method)
+        message: QDBusMessage = QDBusMessage.createMethodCall(self.BUS, path, interface, method)
         message.setArguments(list(args))
         reply = bus.call(message, QDBus.CallMode.Block, self.TIMEOUT_MS)
         if reply.type() != QDBusMessage.MessageType.ReplyMessage:

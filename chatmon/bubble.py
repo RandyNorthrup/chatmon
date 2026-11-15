@@ -15,7 +15,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from PyQt6.QtCore import QMimeData, QPoint, QPointF, QPropertyAnimation, QRect, QRectF, QSizeF, Qt, QTimer, QUrl, pyqtSignal
+from PyQt6.QtCore import QMimeData, QPoint, QPointF, QPropertyAnimation, QRect, QRectF, QSizeF, Qt, QTimer, QUrl
 from PyQt6.QtGui import (
     QAbstractTextDocumentLayout,
     QColor,
@@ -40,6 +40,7 @@ from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QMenu, QTextBrows
 
 from . import bubbleart, highlight, richtext, styles
 from .i18n import N_, _, ngettext
+from .qtsignal import pyqtSignal
 
 ACCENT = QColor(styles.PLAIN_ACCENT)  # the penguin's glowing cyan nodes (the stage's menus; bubbles take the style's)
 PAD = 14
@@ -835,7 +836,7 @@ def overlay_contents(mime: str, data: bytes) -> tuple[str, object] | None:
         files = [QUrl(line.strip()).toLocalFile() for line in data.decode("utf-8", errors="replace").splitlines() if line.startswith("file://")]
         return ("files", [os.path.normpath(f) for f in files if f]) if any(files) else None
     if mime.startswith("image/"):
-        image = QImage.fromData(data)
+        image: QImage = QImage.fromData(data)  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
         return ("image", image) if not image.isNull() else None
     text = data.decode("utf-8", errors="replace")
     return ("text", text) if text else None
@@ -866,7 +867,7 @@ class _Ghost(QWidget):
             Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool
             | Qt.WindowType.WindowTransparentForInput | Qt.WindowType.WindowDoesNotAcceptFocus
         )
-        super().__init__(None, flags)
+        super().__init__(None, flags)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type a widget's parent as Self, and never None
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
