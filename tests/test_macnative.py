@@ -26,6 +26,14 @@ def test_app_nap_is_held_off_so_timers_keep_their_time():
     assert macnative.keep_time("again") and macnative._activity == held  # the first one is kept
 
 
+def test_activating_an_app_by_its_process_id_answers_and_never_raises():
+    """`chatmon ask`'s way of making the running Chatmon active (cli._make_chatmon_active): AppKit is asked for the
+    app by its process id; there's none for a process that isn't one, and that's an answer, not an error."""
+    from chatmon import macnative
+
+    assert macnative.activate_app(2**31 - 1) is False  # no such process: no app to activate
+
+
 def test_the_stage_floats_on_every_space_but_not_in_full_screen_apps(cocoa):
     from PyQt6.QtCore import Qt
     from PyQt6.QtWidgets import QWidget

@@ -6,7 +6,8 @@
   https://developer.apple.com/documentation/appkit/nswindow/collectionbehavior-swift.struct
 - Clicks through the stage are switched with setIgnoresMouseEvents: rather than a Qt window flag, which has
   Qt set up the whole window again each time.
-- Chatmon becomes the active app only when you open the ask box, never when a bubble shows.
+- Chatmon becomes the active app only when you open the ask box, never when a bubble shows; `chatmon ask` from a
+  script or launcher asks for it from its own process (activate_app), which macOS 14 and later take.
 - Whether a full-screen app is over the chatmon's screen, from CoreGraphics' window list: bounds, layers and
   owners only, which need no Screen Recording permission (titles and contents would).
 - Starting at login as a login item of its own (SMAppService), not an unattributed LaunchAgent.
@@ -138,6 +139,25 @@ def activate() -> None:
         rt.obj(app, rt.sel("activate"))
     else:
         rt.set_bool(app, rt.sel("activateIgnoringOtherApps:"), True)
+
+
+ACTIVATE_ALL_WINDOWS, ACTIVATE_IGNORING_OTHER_APPS = 1 << 0, 1 << 1  # NSApplicationActivationOptions
+
+
+def activate_app(pid: int) -> bool:
+    """Make the app with process id `pid` the active one, asked from another process: what `chatmon ask` does for
+    the Chatmon running, which macOS 14's cooperative activation won't let make itself active on a script's word.
+    NSRunningApplication's activateWithOptions:, asked from the command's process, is taken (checked on macOS 26.7,
+    for Chatmon from source and as Chatmon.app, an accessory app). True if macOS said it would."""
+    rt = _rt()
+    if rt is None:
+        return False
+    find = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int)(rt.send)
+    app = find(rt.cls("NSRunningApplication"), rt.sel("runningApplicationWithProcessIdentifier:"), pid)
+    if not app:
+        return False
+    activate = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong)(rt.send)
+    return bool(activate(app, rt.sel("activateWithOptions:"), ACTIVATE_ALL_WINDOWS | ACTIVATE_IGNORING_OTHER_APPS))
 
 
 # -- What's on screen: CoreGraphics' window list, each window's owner, layer, bounds and whether it's on screen.
