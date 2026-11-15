@@ -1,0 +1,103 @@
+[
+  {
+    "id": "signal-from-qtcore",
+    "stubs": "PyQt6 6.12.1's stubs",
+    "file": "chatmon/hotkey.py",
+    "command": [
+      "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+      "-m",
+      "mypy",
+      "--platform",
+      "linux",
+      "--no-incremental"
+    ],
+    "expected": "Missing named argument \"arguments\" for \"pyqtSignal\"",
+    "status": "fail",
+    "reason": "mypy isn't green on the copy",
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "tree_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 1
+  },
+  {
+    "id": "parent-unignored",
+    "stubs": "PyQt6 6.12.1's stubs",
+    "file": "chatmon/updates.py",
+    "command": [
+      "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+      "-m",
+      "mypy",
+      "--platform",
+      "linux",
+      "--no-incremental"
+    ],
+    "expected": "Argument 1 to \"__init__\" of \"QObject\" has incompatible type",
+    "status": "fail",
+    "reason": "mypy isn't green on the copy",
+    "before_sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57",
+    "tree_sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57",
+    "baseline_exit": 1
+  },
+  {
+    "id": "constructor-untyped",
+    "stubs": "PyQt6 6.12.1's stubs",
+    "file": "chatmon/a11y.py",
+    "command": [
+      "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+      "-m",
+      "mypy",
+      "--platform",
+      "linux",
+      "--no-incremental"
+    ],
+    "expected": "Need type annotation for \"bus\"",
+    "status": "fail",
+    "reason": "mypy isn't green on the copy",
+    "before_sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e",
+    "tree_sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e",
+    "baseline_exit": 1
+  },
+  {
+    "id": "null-image-unchecked",
+    "stubs": "PyQt6 6.12.1's stubs",
+    "file": "chatmon/sprites.py",
+    "command": [
+      "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+      "-m",
+      "mypy",
+      "--platform",
+      "linux",
+      "--no-incremental"
+    ],
+    "expected": "Item \"None\" of \"voidptr | None\" has no attribute \"asstring\"",
+    "status": "fail",
+    "reason": "mypy isn't green on the copy",
+    "before_sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe",
+    "tree_sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe",
+    "baseline_exit": 1
+  },
+  {
+    "id": "alias-mistyped",
+    "stubs": "PyQt6 6.11's stubs",
+    "file": "chatmon/qtsignal.py",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "mypy",
+      "--platform",
+      "linux",
+      "--no-incremental"
+    ],
+    "expected": "Incompatible types in assignment",
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf",
+    "tree_sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf",
+    "baseline_exit": 0,
+    "mutation": "'= QtCore.pyqtSignal' became '= QtCore.pyqtSlot'",
+    "mutated_sha256": "704e3d0da9eef6f21940603196403dc04548e941ca0bfc31a046a21813741665",
+    "mutated_exit": 1,
+    "observed": "chatmon\\qtsignal.py:15: error: Incompatible types in assignment (expression has type \"def pyqtSlot(*types: Any, name: str | None = ..., result: str | None = ...) -> Callable[[FuncT], FuncT]\", variable has type \"Callable[..., pyqtSignal]\")  [assignment]",
+    "after_sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf",
+    "restored_exit": 0
+  }
+]

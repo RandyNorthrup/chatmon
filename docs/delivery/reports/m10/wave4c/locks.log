@@ -1,0 +1,28 @@
+=== 1. Locking again from the committed .in files reproduces the committed locks (a scratch copy of packaging/; uv 0.12.7), 2026-11-15T16:07:33Z, 3586a0d
+$ (cd packaging) uv pip compile requirements-test.in -o requirements-test.txt --universal --python-version 3.11 --generate-hashes --exclude-newer 2026-10-31
+uv exit 0
+requirements-test.txt: identical to the committed lock
+$ (cd packaging) uv pip compile requirements-dev.in -o requirements-dev.txt --universal --python-version 3.11 --generate-hashes --exclude-newer 2026-10-31
+uv exit 0
+requirements-dev.txt: identical to the committed lock
+
+=== 2. What changed in the locks and their inputs since round two (bf9d8ac)
+$ git diff --stat bf9d8ac 3586a0d -- packaging/requirements-test.in packaging/requirements-test.txt packaging/requirements-dev.in packaging/requirements-dev.txt pyproject.toml
+(no output: all five unchanged)
+
+=== 3. The lock tests
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider -v tests/test_requirements.py
+============================= test session starts =============================
+platform win32 -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0
+rootdir: C:\Users\Randy\Coding\chatmon-wt\plans3
+configfile: pyproject.toml
+plugins: hypothesis-6.170.15, timeout-2.4.0
+timeout: 120.0s
+timeout method: thread
+timeout func_only: False
+collected 6 items
+
+tests\test_requirements.py ......                                        [100%]
+
+============================== 6 passed in 0.20s ==============================
+pytest exit 0
