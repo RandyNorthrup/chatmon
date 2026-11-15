@@ -1,0 +1,26 @@
+m0 resume: PASS 
+m0 closure: PASS 
+m1a resume: PASS 
+m1a closure: PASS 
+m1b resume: PASS 
+m1b closure: PASS 
+m2 resume: PASS 
+m2 closure: PASS 
+m3 resume: PASS 
+m3 closure: PASS 
+m4a resume: PASS 
+m4a closure: PASS 
+m4b resume: PASS 
+m4b closure: PASS 
+m5 resume: PASS 
+m5 closure: PASS 
+m6a resume: FAIL outcome-unresolved:P-DEPENDABOT outcome-unresolved:P-RELEASE 
+m6a closure: FAIL outcome-unresolved:P-DEPENDABOT outcome-unresolved:P-RELEASE 
+m6b resume: PASS 
+m6b closure: PASS 
+m7 resume: PASS 
+m7 closure: PASS 
+m8 resume: PASS 
+m8 closure: PASS 
+m10 resume: FAIL outcome-unresolved:P-CI-NEXT-STUBS 
+m10 closure: FAIL outcome-unresolved:P-CI-NEXT-STUBS 
