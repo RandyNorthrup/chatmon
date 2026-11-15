@@ -1,11 +1,3 @@
-FAIL: closure record/evidence checks
+PASS: closure record/evidence checks
 Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
-evidence-coverage | M6B-01.A3 | No passing behavior receipt covers this acceptance criterion
-evidence-coverage | M6B-01.A3 | No passing red receipt covers this acceptance criterion
-evidence-coverage | M6B-02.A3 | No passing behavior receipt covers this acceptance criterion
-evidence-coverage | M6B-02.A3 | No passing red receipt covers this acceptance criterion
-evidence-coverage | M6B-03.A6 | No passing behavior receipt covers this acceptance criterion
-evidence-coverage | M6B-03.A6 | No passing red receipt covers this acceptance criterion
-outcome-unresolved | P-ci | Read the coordinator's next CI run of improve/assessment-fixes after the merge; re-run any failing check here.
-task-unverified | T6-phase-b | Task is blocked, not verified
 Structural and recorded-evidence checks; semantic review remains required.

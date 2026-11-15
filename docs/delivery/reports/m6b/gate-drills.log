@@ -1,5 +1,5 @@
 M6B gate drills, 3.14.10, ruff 0.17.4; mypy 2.4.1 (compiled: yes)
-copy: C:\Users\Randy\AppData\Local\Temp\chatmon-gate-drill-jqhhp5ew
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-gate-drill-0fuq2ziv
 
 === drill ruff-UP on chatmon/behavior.py
 command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m ruff check --no-cache .
@@ -197,6 +197,47 @@ Found 1 error.
 -- restored green: exit 0
 All checks passed!
 
+=== drill ruff-app on chatmon/app.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m ruff check --no-cache .
+-- green: exit 0
+All checks passed!
+-- red: exit 1
+DTZ005 `datetime.datetime.now()` called without a `tz` argument
+    --> chatmon\app.py:3357:10
+     |
+3355 | import datetime as _dt
+3356 |
+3357 | _DRILL = _dt.datetime.now()
+     |          ^^^^^^^^^^^^^^^^^^
+help: Pass a `datetime.timezone` object to the `tz` parameter
+
+Found 1 error.
+-- restored green: exit 0
+All checks passed!
+
+=== drill ruff-app-test on tests/test_app_smoke.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m ruff check --no-cache .
+-- green: exit 0
+All checks passed!
+-- red: exit 1
+RUF015 Prefer `next(iter(range(3)))` over single element slice
+    --> tests\test_app_smoke.py:1861:10
+     |
+1861 | _DRILL = list(range(3))[0]
+     |          ^^^^^^^^^^^^^^^^^
+help: Replace with `next(iter(range(3)))`
+     |
+1860 |
+     - _DRILL = list(range(3))[0]
+1861 + _DRILL = next(iter(range(3)))
+     |
+note: This is an unsafe fix and may change runtime behavior
+
+Found 1 error.
+1 unsafe fix available with `--fix --unsafe-fixes`.
+-- restored green: exit 0
+All checks passed!
+
 === drill mypy-brains on chatmon/brains.py
 command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m mypy --platform linux --no-incremental
 -- green: exit 0
@@ -313,6 +354,122 @@ chatmon\bubble.py:948: note: By default the bodies of untyped functions are not 
 chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
 Success: no issues found in 69 source files
 
+=== drill mypy-app on chatmon/app.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m mypy --platform linux --no-incremental
+-- green: exit 0
+chatmon\bubble.py:247: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:249: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:253: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:259: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:262: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:264: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:266: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:272: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:278: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:938: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:948: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Success: no issues found in 69 source files
+-- red: exit 1
+chatmon\bubble.py:247: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:249: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:253: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:259: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:262: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:264: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:266: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:272: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:278: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:938: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:948: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\app.py:44: error: Incompatible types in assignment (expression has type "str", variable has type "int")  [assignment]
+Found 1 error in 1 file (checked 69 source files)
+-- restored green: exit 0
+chatmon\bubble.py:247: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:249: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:253: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:259: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:262: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:264: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:266: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:272: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:278: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:938: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:948: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Success: no issues found in 69 source files
+
+=== drill mypy-menus on chatmon/menus.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m mypy --platform linux --no-incremental
+-- green: exit 0
+chatmon\bubble.py:247: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:249: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:253: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:259: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:262: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:264: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:266: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:272: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:278: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:938: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:948: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Success: no issues found in 69 source files
+-- red: exit 1
+chatmon\bubble.py:247: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:249: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:253: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:259: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:262: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:264: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:266: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:272: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:278: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:938: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:948: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\menus.py:43: error: Incompatible types in assignment (expression has type "str", variable has type "int")  [assignment]
+Found 1 error in 1 file (checked 69 source files)
+-- restored green: exit 0
+chatmon\bubble.py:247: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:249: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:253: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:259: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:262: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:264: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:266: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:272: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:278: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:938: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:948: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Success: no issues found in 69 source files
+
 === summary
 PASS ruff-UP
 PASS ruff-C4
@@ -324,5 +481,9 @@ PASS ruff-DTZ
 PASS ruff-BLE
 PASS ruff-C90
 PASS ruff-S101-in-chatmon
+PASS ruff-app
+PASS ruff-app-test
 PASS mypy-brains
 PASS mypy-winpipe
+PASS mypy-app
+PASS mypy-menus

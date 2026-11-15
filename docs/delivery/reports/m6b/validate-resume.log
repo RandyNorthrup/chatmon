@@ -1,4 +1,3 @@
-FAIL: resume record/evidence checks
+PASS: resume record/evidence checks
 Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, checkpoint-freshness
-outcome-unresolved | P-ci | Read the coordinator's next CI run of improve/assessment-fixes after the merge; re-run any failing check here.
 Structural and recorded-evidence checks; semantic review remains required.

@@ -22,7 +22,8 @@ REL = "docs/delivery/reports/m6b"
 PLAN = "docs/delivery/m6b-static-analysis-logging.md"
 VALIDATOR = Path.home() / ".claude/plugins/cache/high-quality-projects-skill/high-quality-projects-skill/0.7.0/scripts/verify-delivery.py"
 PY = "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe"
-PHASE_A = ["T1-ruff", "T2-log", "T3-loggers", "T4-mypy", "T5-leaks"]
+TASKS = ["T1-ruff", "T2-log", "T3-loggers", "T4-mypy", "T5-leaks", "T6-phase-b", "T7-leftovers"]
+STATIC = {"M6B-01.A1", "M6B-01.A3", "M6B-02.A1", "M6B-02.A3"}  # what ruff and mypy check, not the suite
 
 
 def digest(rel: str) -> str:
@@ -58,54 +59,64 @@ def red_from(record: dict, expected: str, mutation: str) -> dict:
     }
 
 
-def main() -> int:
-    text = (ROOT / PLAN).read_text(encoding="utf-8")
-    match = re.search(r"```quality-ledger\n(.*?)\n```", text, re.S)
-    ledger = json.loads(match.group(1))
-    every = [a["id"] for a in ledger["acceptance"]]
-    phase_a = [a for t in ledger["tasks"] if t["id"] in PHASE_A for a in t["acceptance"]]
-    receipts = [
-        receipt("E-readiness", "readiness", every, f"{REL}/readiness.md",
-                "Requirements review of M6B-01..03 and M6A's note 4 against the assessment, the roadmap's rules, the wave-3 brief "
-                "and the coordinator's two added rules: the findings re-checked on dd2e375, decisions D1-D17, failure behaviour, "
-                "terms and coverage (readiness.md)."),
-        receipt("E-suite", "behavior", sorted(set(phase_a) - {"M6B-01.A1", "M6B-02.A1"}), f"{REL}/suite-final.log",
-                "The whole suite on the final source (exported from the index into a scratch folder, real Qt objects offscreen): "
-                "1233 passed, 148 skipped (after merging M8's phase B) and no warning at all, so no ResourceWarning; it runs test_log.py, test_imports.py and every "
-                "test the drills name.",
-                [PY, "-m", "pytest", "-q", "-p", "no:cacheprovider"]),
-        receipt("E-template", "behavior", ["M6B-01.A2"], f"{REL}/template.log",
-                "The string extractor's check on the final source: the template is what the code says, unchanged by M6B.",
-                [PY, "packaging/extract_strings.py", "--check"]),
-        receipt("E-ruff", "behavior", ["M6B-01.A1"], f"{REL}/ruff.log",
-                "ruff with pyproject.toml's eleven families and max-complexity 15 over the whole repository: clean; the log also counts "
-                "the per-line suppressions by code.",
-                [PY, "-m", "ruff", "check", "."]),
-    ]
-    receipts.extend(
-        receipt(f"E-mypy-{platform}", "behavior", ["M6B-02.A1"], f"{REL}/mypy-{platform}.log",
-                f"mypy for {platform} on the final source with pyproject.toml's settings and its seven-module exemption list: no issues in 69 files.",
-                [PY, "-m", "mypy", "--platform", platform])
-        for platform in ("linux", "win32", "darwin")
-    )
-    spec = {d["id"]: d for d in json.loads((HERE / "drill-spec.json").read_text(encoding="utf-8"))["drills"]}
-    for record in json.loads((HERE / "drills-results.json").read_text(encoding="utf-8")):
+def drill_receipts(spec_name: str, results_name: str, log_name: str) -> list[dict]:
+    """A red receipt for each drill of one harness run that went green, red and green."""
+    spec = {d["id"]: d for d in json.loads((HERE / spec_name).read_text(encoding="utf-8"))["drills"]}
+    out = []
+    for record in json.loads((HERE / results_name).read_text(encoding="utf-8")):
         if record["status"] != "pass":
             continue
         drill = spec[record["id"]]
-        expected = next(e for e in drill["expect"] if e in record["observed"]) if any(e in record["observed"] for e in drill["expect"]) else drill["expect"][0]
-        receipts.append(receipt(
-            f"E-red-{record['id']}", "red", [drill["requirement"]], f"{REL}/drills.log",
+        expected = next((e for e in drill["expect"] if e in record["observed"]), drill["expect"][0])
+        out.append(receipt(
+            f"E-red-{record['id']}", "red", [drill["requirement"]], f"{REL}/{log_name}",
             f"Red drill {record['id']} through tests/drills/run.py in a temporary copy: green, {drill['file']} mutated once and the named "
             "tests failed with pytest's tests-failed exit for the intended reason (the log shows the assertion), the file's bytes put back "
             "(SHA-256 checked) and green again.",
             record["command"],
             red_from(record, expected, f"{record['id']}: in {drill['file']}, {drill['find']!r} became {drill['replace']!r}"),
         ))
+    return out
+
+
+def main() -> int:
+    text = (ROOT / PLAN).read_text(encoding="utf-8")
+    match = re.search(r"```quality-ledger\n(.*?)\n```", text, re.S)
+    ledger = json.loads(match.group(1))
+    every = [a["id"] for a in ledger["acceptance"]]
+    tested = [a for t in ledger["tasks"] if t["id"] in TASKS for a in t["acceptance"]]
+    receipts = [
+        receipt("E-readiness", "readiness", every, f"{REL}/readiness.md",
+                "Requirements review of M6B-01..03 and M6A's note 4 against the assessment, the roadmap's rules, the wave-3 brief "
+                "and the coordinator's two added rules: the findings re-checked on dd2e375, decisions D1-D17, failure behaviour, "
+                "terms and coverage; then phase B's and the leftovers' (M6B-LEFT), re-checked on 210c6e0, decisions D18-D23 (readiness.md)."),
+        receipt("E-suite", "behavior", sorted(set(tested) - STATIC), f"{REL}/suite-final.log",
+                "The whole suite on the final source (exported from the index into a scratch folder, real Qt objects offscreen), every "
+                "warning an error, ResourceWarning too: 1241 passed, 148 skipped; it runs test_log.py, test_imports.py and every test the "
+                "drills name.",
+                [PY, "-m", "pytest", "-q", "-p", "no:cacheprovider"]),
+        receipt("E-template", "behavior", ["M6B-01.A2"], f"{REL}/template.log",
+                "The string extractor's check on the final source: the template is what the code says (phase B's two new sentences in it).",
+                [PY, "packaging/extract_strings.py", "--check"]),
+        receipt("E-ruff", "behavior", ["M6B-01.A1", "M6B-01.A3"], f"{REL}/ruff.log",
+                "ruff with pyproject.toml's eleven families and max-complexity 15 over the whole repository, the hub files without any "
+                "exemption: clean; the log also counts the per-line suppressions by code.",
+                [PY, "-m", "ruff", "check", "."]),
+    ]
+    receipts.extend(
+        receipt(f"E-mypy-{platform}", "behavior", ["M6B-02.A1", "M6B-02.A3"], f"{REL}/mypy-{platform}.log",
+                f"mypy for {platform} on the final source with pyproject.toml's settings and no exemption at all: no issues in 69 files.",
+                [PY, "-m", "mypy", "--platform", platform])
+        for platform in ("linux", "win32", "darwin")
+    )
+    for spec_name, results_name, log_name in (("drill-spec.json", "drills-results.json", "drills.log"),
+                                              ("drill-spec-b.json", "drills-b-results.json", "drills-b.log")):
+        receipts.extend(drill_receipts(spec_name, results_name, log_name))
     for record in json.loads((HERE / "gate-drills-results.json").read_text(encoding="utf-8")):
         if record["status"] != "pass":
             continue
-        target = "M6B-02.A1" if record["id"].startswith("mypy") else "M6B-01.A1"
+        phase_b = record["id"] in ("ruff-app", "ruff-app-test", "mypy-app", "mypy-menus")  # the hub files, no longer exempt
+        target = ("M6B-02.A3" if phase_b else "M6B-02.A1") if record["id"].startswith("mypy") else ("M6B-01.A3" if phase_b else "M6B-01.A1")
         receipts.append(receipt(
             f"E-red-gate-{record['id']}", "red", [target], f"{REL}/gate-drills.log",
             f"Gate drill {record['id']} (gate_drills.py) in a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml: the gate "
@@ -119,9 +130,7 @@ def main() -> int:
         for a in r["acceptance"]:
             by_ac.setdefault(a, set()).add(r["kind"])
     for task in ledger["tasks"]:
-        if task["id"] == "T6-phase-b":
-            task["blocker"] = "M8's phase B is merged (eede8d1, merged here at ff78572); the coordinator resumes M6B for phase B"
-        if task["id"] not in PHASE_A:
+        if task["id"] not in TASKS:
             continue
         ok = all({"behavior", "red"} <= by_ac.get(a, set()) for a in task["acceptance"])
         task["status"] = "verified" if ok else "implemented"
@@ -132,12 +141,8 @@ def main() -> int:
     ledger["checkpoint"] = {
         "scope_sha256": snap["scope_sha256"], "inputs": snap["inputs"]["behavior"], "environment": snap["declared_environment"],
         "verified_tasks": sorted(t["id"] for t in ledger["tasks"] if t["status"] == "verified"),
-        "pending_operations": [
-            {"id": "P-ci", "description": "CI's Linux (xvfb) legs, the distribution containers (Qt 6.4 on Ubuntu 24.04) and macOS on the M6B changes; "
-                                          "Linux was run here in WSL (1257 passed) and macOS only type-checked",
-             "next_action": "Read the coordinator's next CI run of improve/assessment-fixes after the merge; re-run any failing check here."},
-        ],
-        "next_action": "Phase B (T6-phase-b) when the coordinator resumes M6B: M8's phase B is merged in, and integration note 1 lists what to do in the eight files.",
+        "pending_operations": [],
+        "next_action": "None in M6B: the coordinator's CI run of the feature branch (Linux xvfb, the Qt 6.4 containers, macOS) is what's left to see (integration note 1).",
         "source_revision": revision,
     }
     out = text[: match.start(1)] + json.dumps(ledger, indent=2, ensure_ascii=False) + text[match.end(1):]

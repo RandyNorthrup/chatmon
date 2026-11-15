@@ -44,11 +44,17 @@ DRILLS = [
     ("ruff-BLE", RUFF, "chatmon/behavior.py", "try:\n    _DRILL = 1\nexcept Exception:\n    _DRILL = 2\n", "BLE001"),
     ("ruff-C90", RUFF, "chatmon/behavior.py", COMPLEX, "C901"),
     ("ruff-S101-in-chatmon", RUFF, "chatmon/behavior.py", "assert __name__\n", "S101"),
+    # Phase B: the eight hub files, and their tests, have no exemption any more.
+    ("ruff-app", RUFF, "chatmon/app.py", "import datetime as _dt\n\n_DRILL = _dt.datetime.now()\n", "DTZ005"),
+    ("ruff-app-test", RUFF, "tests/test_app_smoke.py", "_DRILL = list(range(3))[0]\n", "RUF015"),
 ]
 # A type error in a module that came off the exemption list (find, replace, expected diagnostic).
 MYPY_DRILLS = [
     ("mypy-brains", MYPY, "chatmon/brains.py", ("MAX_REPLY = 32 * 2**20", 'MAX_REPLY: int = "32 MB"'), "Incompatible types in assignment"),
     ("mypy-winpipe", MYPY, "chatmon/winpipe.py", ("REPLY_MAX = 64 * 1024", 'REPLY_MAX: int = "64 KB"'), "Incompatible types in assignment"),
+    # Phase B: the override list is gone, so the hub files are checked too.
+    ("mypy-app", MYPY, "chatmon/app.py", ("MAX_CONNECTIONS = 64", 'MAX_CONNECTIONS: int = "64"'), "Incompatible types in assignment"),
+    ("mypy-menus", MYPY, "chatmon/menus.py", ("RECENT_CHATS = 8", 'RECENT_CHATS: int = "8"'), "Incompatible types in assignment"),
 ]
 
 

@@ -1,0 +1,121 @@
+{
+  "drills": [
+    {
+      "id": "M6B-B-escaped-exception-not-in-the-log",
+      "requirement": "M6B-03.A6",
+      "file": "chatmon/app.py",
+      "find": "    logger.error(\"something went wrong\", exc_info=(kind, value, tb))",
+      "replace": "    logger.debug(\"something went wrong\", exc_info=(kind, value, tb))",
+      "test": [
+        "tests/test_app_smoke.py::test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback"
+      ],
+      "expect": [
+        "test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback"
+      ]
+    },
+    {
+      "id": "M6B-B-status-waits-for-the-brain",
+      "requirement": "M6B-LEFT.A1",
+      "file": "chatmon/app.py",
+      "find": "        self.finder.find(self.brains, self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), found)",
+      "replace": "        found(self._brain())",
+      "test": [
+        "tests/test_app_m7.py::test_status_names_the_brain_from_the_finder_and_never_waits_for_one"
+      ],
+      "expect": [
+        "test_status_names_the_brain_from_the_finder_and_never_waits_for_one"
+      ]
+    },
+    {
+      "id": "M6B-B-desktops-words-not-shown",
+      "requirement": "M6B-LEFT.A2",
+      "file": "chatmon/settingswin.py",
+      "find": "        self.hotkey_bound.setVisible(shown)",
+      "replace": "        self.hotkey_bound.setVisible(False)",
+      "test": [
+        "tests/test_app_m7.py::test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words"
+      ],
+      "expect": [
+        "test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words"
+      ]
+    },
+    {
+      "id": "M6B-B-hotkey-bound-kept-private",
+      "requirement": "M6B-LEFT.A2",
+      "file": "chatmon/hotkey.py",
+      "find": "    _hotkey.on_pressed, _hotkey.on_failed, _hotkey.on_bound = callback, failed, bound",
+      "replace": "    _hotkey.on_pressed, _hotkey.on_failed, _hotkey.on_bound = callback, failed, None",
+      "test": [
+        "tests/test_hotkey.py::test_the_apps_one_shortcut_says_how_the_desktop_has_it"
+      ],
+      "expect": [
+        "test_the_apps_one_shortcut_says_how_the_desktop_has_it"
+      ]
+    },
+    {
+      "id": "M6B-B-players-left-at-quit",
+      "requirement": "M6B-LEFT.A3",
+      "file": "chatmon/app.py",
+      "find": "        sound.close()  # a Linux player still sounding finishes and is reaped, never left behind",
+      "replace": "        pass  # a Linux player still sounding finishes and is reaped, never left behind",
+      "test": [
+        "tests/test_app_m7.py::test_quitting_lets_go_of_the_sound_players"
+      ],
+      "expect": [
+        "test_quitting_lets_go_of_the_sound_players"
+      ]
+    },
+    {
+      "id": "M6B-B-player-not-closed",
+      "requirement": "M6B-LEFT.A3",
+      "file": "chatmon/sound.py",
+      "find": "            if close is not None:\r\n                close()",
+      "replace": "            if close is not None:\r\n                pass",
+      "test": [
+        "tests/test_sound.py::test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind"
+      ],
+      "expect": [
+        "test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind"
+      ]
+    },
+    {
+      "id": "M6B-B-unreadable-settings-hidden",
+      "requirement": "M6B-03.A6",
+      "file": "chatmon/settings.py",
+      "find": "        logger.debug(\"couldn't read %s: %s\", path, exc)",
+      "replace": "        pass",
+      "test": [
+        "tests/test_settings.py::test_a_state_file_that_cant_be_read_is_logged_and_started_afresh"
+      ],
+      "expect": [
+        "test_a_state_file_that_cant_be_read_is_logged_and_started_afresh"
+      ]
+    },
+    {
+      "id": "M6B-B-unclear-script-reminder-unsaid",
+      "requirement": "M6B-LEFT.A4",
+      "file": "chatmon/app.py",
+      "find": "                self.say(_(\"Reminder not set\"), reminders.explain(command), timeout_s=15, background=True)",
+      "replace": "                pass",
+      "test": [
+        "tests/test_app_reminders.py::test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+      ],
+      "expect": [
+        "test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+      ]
+    },
+    {
+      "id": "M6B-B-leak-fails-without-a-flag",
+      "requirement": "M6B-RW.A1",
+      "file": "chatmon/brains.py",
+      "find": "        exc.close()\r\n        raise",
+      "replace": "        raise",
+      "test": [
+        "tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed"
+      ],
+      "expect": [
+        "PytestUnraisableExceptionWarning: Exception ignored while calling deallocator <function _TemporaryFileCloser.__del__"
+      ]
+    }
+  ]
+}

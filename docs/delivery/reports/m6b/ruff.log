@@ -3,12 +3,14 @@ ruff 0.17.4
 $ python -m ruff check .
 All checks passed!
 exit 0
-$ git grep -ho 'noqa: [A-Z0-9, ]*' -- chatmon packaging art tests ':!chatmon/app.py' ':!chatmon/settingswin.py' ':!chatmon/cli.py' ':!chatmon/menus.py' ':!chatmon/messages.py' ':!chatmon/asking.py' ':!chatmon/commands.py' ':!chatmon/settings.py' | sort | uniq -c
+$ git grep -ho 'noqa: [A-Z0-9, ]*' -- chatmon packaging art tests | sort | uniq -c
       1 noqa: B023, B905
       2 noqa: BLE001
       1 noqa: C901
-      4 noqa: DTZ006
-      9 noqa: E402
+      6 noqa: DTZ005
+      9 noqa: DTZ006
+      3 noqa: DTZ011
+      3 noqa: E402
       6 noqa: F821
       2 noqa: F841
       1 noqa: RUF012

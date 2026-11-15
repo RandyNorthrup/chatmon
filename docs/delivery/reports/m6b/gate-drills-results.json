@@ -240,6 +240,54 @@
     "restored_exit": 0
   },
   {
+    "id": "ruff-app",
+    "file": "chatmon/app.py",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "--no-cache",
+      "."
+    ],
+    "expected": "DTZ005",
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "tree_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "baseline_exit": 0,
+    "mutation": "appended 'import datetime as _dt\\n\\n_DRILL = _dt.datetime.now()\\n'",
+    "mutated_sha256": "809df5ed7b4542a83b91a34acd9943d42a6726b6481a0b7b7ffbfb54c060234e",
+    "mutated_exit": 1,
+    "observed": "DTZ005 `datetime.datetime.now()` called without a `tz` argument",
+    "after_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "restored_exit": 0
+  },
+  {
+    "id": "ruff-app-test",
+    "file": "tests/test_app_smoke.py",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "--no-cache",
+      "."
+    ],
+    "expected": "RUF015",
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "c313741b7009b7a1a7c7b13e4f160662aaead0c4f225d48e91b529bdf60d15a3",
+    "tree_sha256": "c313741b7009b7a1a7c7b13e4f160662aaead0c4f225d48e91b529bdf60d15a3",
+    "baseline_exit": 0,
+    "mutation": "appended '_DRILL = list(range(3))[0]\\n'",
+    "mutated_sha256": "cf47bf7eae911aa1ad569bdcead05dfee3524ddfdb06369cdb0c723d8dd3a534",
+    "mutated_exit": 1,
+    "observed": "RUF015 Prefer `next(iter(range(3)))` over single element slice",
+    "after_sha256": "c313741b7009b7a1a7c7b13e4f160662aaead0c4f225d48e91b529bdf60d15a3",
+    "restored_exit": 0
+  },
+  {
     "id": "mypy-brains",
     "file": "chatmon/brains.py",
     "command": [
@@ -285,6 +333,54 @@
     "mutated_exit": 1,
     "observed": "chatmon\\winpipe.py:50: error: Incompatible types in assignment (expression has type \"str\", variable has type \"int\")  [assignment]",
     "after_sha256": "844992d0ec60b49646d47d3c80a3ddb015046585a513d3d1baa7a96591fdd055",
+    "restored_exit": 0
+  },
+  {
+    "id": "mypy-app",
+    "file": "chatmon/app.py",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "mypy",
+      "--platform",
+      "linux",
+      "--no-incremental"
+    ],
+    "expected": "Incompatible types in assignment",
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "tree_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "baseline_exit": 0,
+    "mutation": "'MAX_CONNECTIONS = 64' became 'MAX_CONNECTIONS: int = \"64\"'",
+    "mutated_sha256": "a746c1dd11e6a32130c3c8e48fe25f366294381efc96f70ff5e95d1acf85da36",
+    "mutated_exit": 1,
+    "observed": "chatmon\\app.py:44: error: Incompatible types in assignment (expression has type \"str\", variable has type \"int\")  [assignment]",
+    "after_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "restored_exit": 0
+  },
+  {
+    "id": "mypy-menus",
+    "file": "chatmon/menus.py",
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "mypy",
+      "--platform",
+      "linux",
+      "--no-incremental"
+    ],
+    "expected": "Incompatible types in assignment",
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "30dc957489a349a915484f480a5b4621eaf3fe945e62ca76ebcafa3763384a34",
+    "tree_sha256": "30dc957489a349a915484f480a5b4621eaf3fe945e62ca76ebcafa3763384a34",
+    "baseline_exit": 0,
+    "mutation": "'RECENT_CHATS = 8' became 'RECENT_CHATS: int = \"8\"'",
+    "mutated_sha256": "afff691cba0beb3020df8f70588930ef940accac06facbe82fbf795a897ff3ac",
+    "mutated_exit": 1,
+    "observed": "chatmon\\menus.py:43: error: Incompatible types in assignment (expression has type \"str\", variable has type \"int\")  [assignment]",
+    "after_sha256": "30dc957489a349a915484f480a5b4621eaf3fe945e62ca76ebcafa3763384a34",
     "restored_exit": 0
   }
 ]

@@ -52,3 +52,20 @@ notes and baselines kept as it went.
   phase B's three criteria are owned by the blocked task.
 - Conflicts: none found between the item, the roadmap's owner decisions (no new runtime dependencies; plain-English
   comments) and M8's rule (logs are not translated).
+
+## Phase B (resumed after M8's phase B merged)
+
+The coordinator resumed M6B for the eight hub files once M8's phase B merged (`210c6e0`), and added four leftovers
+in the same files, which become requirement M6B-LEFT. Re-checked on `210c6e0` before anything changed: ruff with
+the phase-B exemptions removed found 35 findings in the eight files and four of their tests; mypy with the override
+list removed found 104 (linux), 114 (win32) and 104 (darwin) errors in seven of them; the eight files had 39 except
+blocks (37 that neither raise nor log) and 9 `print()` calls in app.py (cli.py's 22 are terminal output).
+
+| # | Question | Decision |
+|---|---|---|
+| D18 | The log in app.py | `log.setup()` first thing in `run()`, in place of `_log_without_a_console()`; app.py's `LOG_LIMIT`, `log_file()` and `_open_private` go (log.py has the same name, limit and protections). With no console there's no stderr redirect any more: what Chatmon has to say goes through logging, and `_log_exception` logs at error level with the traceback. |
+| D19 | *status* and the brain (leftover 1) | It asks `brains.Finder` with the same choice `commands.brain_in_use` makes (the menu's pick, else the settings'), so it says the brain a question would go to, never waiting for one, and the model servers are looked at on the finder's thread only when it's unsure. M7's note kept `wait=True` for a "settled" answer; the finder's answer is settled too. |
+| D20 | The hotkey's Wayland wording (leftover 2) | `hotkey.register(..., bound=callback)` hears the desktop's description (the portal's, later; elsewhere at once, as Qt writes the keys). The app keeps the last one and Settings › Accessibility shows "Your desktop has it as: …" only when it differs from the keys in the box. A callback, like `failed`, rather than exposing the module's private Hotkey object. |
+| D21 | Sound at quit (leftover 3) | `sound.close()` (Sounds.close: each player's own close, and the players found again for any later sound), called in `Companion.quit()`. A Linux player still sounding is waited for (up to 3 s, CommandPlayer's own limit) and reaped. |
+| D22 | The macOS reminder test (leftover 4) | Most likely App Nap: python.org's framework Python runs as Python.app, an app as far as macOS is concerned, and offscreen it shows no window, so macOS naps it and holds its timers back, past the 5 s the test waited for a bubble due 2 s later (the failing run's `test_app_reminders.py` took 15.3 s against 12.6 s). Two changes: Chatmon asks macOS not to nap it (NSProcessInfo `beginActivityWithOptions:reason:`, user-initiated, idle system sleep allowed), which also keeps reminders on time when its windows can't be seen; and the test closes the bubble on screen first, so the script's message shows at once instead of racing a timer whose waiting turn is messages.py's to test. Not reproducible here: CI's macOS legs are the check. |
+| D23 | `default::ResourceWarning` | Dropped: the whole suite passes on Windows with every warning an error, and the Linux run showed none. |
