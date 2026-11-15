@@ -1,0 +1,3 @@
+docs/delivery/reports/m7/wave4b/drill-spec-new.json: 2 drills kept in docs/delivery/reports/m7/wave4c/drill-spec-new.json, 0 left out
+docs/delivery/reports/m7/wave4b/drill-spec.json: 72 drills kept in docs/delivery/reports/m7/wave4c/drill-spec.json, 1 left out
+  M7-11-palette-ignored: its find text occurs 0 times in chatmon/app.py (expected 1)
