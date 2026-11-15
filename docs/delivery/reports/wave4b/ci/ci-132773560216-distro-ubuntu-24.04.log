@@ -1,0 +1,469 @@
+distro (ubuntu:24.04)	Set up job	﻿2026-11-15T09:55:16.0106651Z Current runner version: '2.338.2'
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0142182Z ##[group]Runner Image Provisioner
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0142922Z Hosted Compute Agent
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0143324Z Version: 20261103.629
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0143694Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0144166Z Build Date: 2026-11-03T17:26:59Z
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0144559Z Worker ID: {7a1a25c4-038a-432d-a97d-da0f0fa6d550}
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0144952Z Region: centralus
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0145355Z Cloud: Azure
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0145680Z ##[endgroup]
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0146488Z ##[group]Operating System
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0146891Z Ubuntu
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0147188Z 24.04.5
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0147598Z LTS
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0147904Z ##[endgroup]
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0148249Z ##[group]Runner Image
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0148633Z Image: ubuntu-24.04
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0148967Z Version: 20261111.370.1
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0149621Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0150643Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0151351Z ##[endgroup]
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0152030Z ##[group]GITHUB_TOKEN Permissions
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0153439Z Contents: read
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0153781Z Metadata: read
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0154229Z ##[endgroup]
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0155542Z Secret source: Actions
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0156173Z Cache mode: write
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0156587Z Prepare workflow directory
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0399291Z Prepare all required actions
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.0430626Z Getting action download info
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.2344512Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+distro (ubuntu:24.04)	Set up job	2026-11-15T09:55:16.3898239Z Complete job name: distro (ubuntu:24.04)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T09:55:16.4434788Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4435314Z with:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4435577Z   persist-credentials: false
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4435860Z   sparse-checkout: /*
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4436171Z   sparse-checkout-cone-mode: false
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4436463Z   repository: RandyNorthrup/chatmon
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4438499Z   token: ***
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4438731Z   ssh-strict: true
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4438971Z   ssh-user: git
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4439199Z   clean: true
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4439423Z   fetch-depth: 1
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4439652Z   fetch-tags: false
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4439892Z   show-progress: true
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4440132Z   lfs: false
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4440352Z   submodules: false
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4440591Z   set-safe-directory: true
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4440865Z   allow-unsafe-pr-checkout: false
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4441324Z env:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4441557Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.4441828Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6710268Z Syncing repository: RandyNorthrup/chatmon
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6711523Z ##[group]Getting Git version info
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6711890Z Working directory is '/home/runner/work/chatmon/chatmon'
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6712395Z [command]/usr/bin/git version
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6789975Z git version 2.56.1
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6802824Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6809985Z Temporarily overriding HOME='/home/runner/work/_temp/64292ea6-fa5a-46b7-bef6-7fce98ccb32a' before making global git config changes
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6810776Z Adding repository directory to the temporary git global config as a safe directory
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6813852Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6855026Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6857071Z ##[group]Determining repository object format
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6857912Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6858421Z ##[group]Initializing the repository
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6860379Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6964174Z hint: Using 'master' as the name for the initial branch. This default branch name
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6964979Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6965470Z hint: to use in all of your new repositories, which will suppress this warning,
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6965859Z hint: call:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6966072Z hint:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6966353Z hint: 	git config --global init.defaultBranch <name>
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6966677Z hint:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6967061Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6967545Z hint: 'development'. The just-created branch can be renamed via this command:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6967925Z hint:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6968145Z hint: 	git branch -m <name>
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6968394Z hint:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6968721Z hint: Disable this message with "git config set advice.defaultBranchName false"
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6976401Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.6984936Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7036435Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7037143Z ##[group]Disabling automatic garbage collection
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7039153Z [command]/usr/bin/git config --local gc.auto 0
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7065594Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7066403Z ##[group]Setting up auth
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7066696Z Removing SSH command configuration
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7069385Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7096898Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7396662Z Removing HTTP extra header
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7401041Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7428609Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7597030Z Removing includeIf entries pointing to credentials config files
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7601486Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7627443Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7799364Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7828732Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7854047Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7878913Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7903197Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7926413Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7926818Z ##[group]Fetching the repository
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:16.7930390Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +9faddcce70320f13e142002cba2310d06f2ec419:refs/remotes/pull/18/merge
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1067393Z From https://github.com/RandyNorthrup/chatmon
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1068755Z  * [new ref]         9faddcce70320f13e142002cba2310d06f2ec419 -> pull/18/merge
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1071282Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1071967Z ##[group]Determining the checkout info
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1072698Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1073340Z ##[group]Setting up sparse checkout
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1076591Z [command]/usr/bin/git config core.sparseCheckout true
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1107452Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1127048Z .git/info/sparse-checkout
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1133237Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1133786Z ##[group]Checking out the ref
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:17.1135813Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/18/merge
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1462491Z Updating files:   0% (1/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1463823Z Updating files:   1% (4/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1464605Z Updating files:   2% (7/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1465578Z Updating files:   3% (10/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1482443Z Updating files:   4% (13/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1483098Z Updating files:   5% (16/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1483925Z Updating files:   6% (19/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1495396Z Updating files:   7% (22/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1503681Z Updating files:   8% (25/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1519110Z Updating files:   9% (28/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1538428Z Updating files:  10% (31/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1549709Z Updating files:  11% (35/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1556614Z Updating files:  12% (38/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1567359Z Updating files:  13% (41/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1578672Z Updating files:  14% (44/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1587925Z Updating files:  15% (47/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1601097Z Updating files:  16% (50/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1612608Z Updating files:  17% (53/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1621697Z Updating files:  18% (56/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1630775Z Updating files:  19% (59/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1644722Z Updating files:  20% (62/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1651021Z Updating files:  21% (66/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1662189Z Updating files:  22% (69/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1672782Z Updating files:  23% (72/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1680677Z Updating files:  24% (75/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1689807Z Updating files:  25% (78/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1698397Z Updating files:  26% (81/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1704940Z Updating files:  27% (84/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1706955Z Updating files:  28% (87/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1714075Z Updating files:  29% (90/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1716875Z Updating files:  30% (93/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1719172Z Updating files:  31% (97/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1735914Z Updating files:  32% (100/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1739007Z Updating files:  33% (103/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1742421Z Updating files:  34% (106/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1744104Z Updating files:  35% (109/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1746153Z Updating files:  36% (112/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1747517Z Updating files:  37% (115/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1749448Z Updating files:  38% (118/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1752779Z Updating files:  39% (121/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1757262Z Updating files:  40% (124/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1761487Z Updating files:  41% (128/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1763681Z Updating files:  42% (131/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1765569Z Updating files:  43% (134/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1768179Z Updating files:  44% (137/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1771642Z Updating files:  45% (140/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1773834Z Updating files:  46% (143/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1776181Z Updating files:  47% (146/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1779184Z Updating files:  48% (149/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1783761Z Updating files:  49% (152/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1794698Z Updating files:  50% (155/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1803564Z Updating files:  51% (159/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1805783Z Updating files:  52% (162/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1808251Z Updating files:  53% (165/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1809832Z Updating files:  54% (168/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1812074Z Updating files:  55% (171/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1814394Z Updating files:  56% (174/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1817005Z Updating files:  57% (177/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1818261Z Updating files:  58% (180/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1820575Z Updating files:  59% (183/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1854422Z Updating files:  60% (186/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1855661Z Updating files:  61% (190/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1862449Z Updating files:  62% (193/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1863201Z Updating files:  63% (196/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1863902Z Updating files:  64% (199/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1864637Z Updating files:  65% (202/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1865535Z Updating files:  66% (205/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1866408Z Updating files:  67% (208/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1867333Z Updating files:  68% (211/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1868562Z Updating files:  69% (214/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1870817Z Updating files:  70% (217/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1872303Z Updating files:  71% (221/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1873470Z Updating files:  72% (224/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1874521Z Updating files:  73% (227/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1876314Z Updating files:  74% (230/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1878557Z Updating files:  75% (233/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1883248Z Updating files:  76% (236/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1891683Z Updating files:  77% (239/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1892990Z Updating files:  78% (242/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1893872Z Updating files:  79% (245/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1894831Z Updating files:  80% (248/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1895720Z Updating files:  81% (252/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1896562Z Updating files:  82% (255/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1897465Z Updating files:  83% (258/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1898862Z Updating files:  84% (261/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1900209Z Updating files:  85% (264/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1901535Z Updating files:  86% (267/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1903753Z Updating files:  87% (270/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1905440Z Updating files:  88% (273/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1907328Z Updating files:  89% (276/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1909614Z Updating files:  90% (279/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1911353Z Updating files:  91% (283/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1913172Z Updating files:  92% (286/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1914935Z Updating files:  93% (289/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1916128Z Updating files:  94% (292/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1918611Z Updating files:  95% (295/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1923105Z Updating files:  96% (298/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1924861Z Updating files:  97% (301/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1926535Z Updating files:  98% (304/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1928042Z Updating files:  99% (307/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1928880Z Updating files: 100% (310/310)
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1929567Z Updating files: 100% (310/310), done.
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1938837Z Note: switching to 'refs/remotes/pull/18/merge'.
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1939647Z 
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1940177Z You are in 'detached HEAD' state. You can look around, make experimental
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1941632Z changes and commit them, and you can discard any commits you make in this
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1942951Z state without impacting any branches by switching back to a branch.
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1943712Z 
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1944212Z If you want to create a new branch to retain commits you create, you may
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1945402Z do so (now or later) by using -c with the switch command. Example:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1946087Z 
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1946363Z   git switch -c <new-branch-name>
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1946829Z 
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1947090Z Or undo this operation with:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1947509Z 
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1947739Z   git switch -
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1948039Z 
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1948592Z Turn off this advice by setting config variable advice.detachedHead to false
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1949444Z 
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1950407Z HEAD is now at 9faddcc Merge bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1955082Z ##[endgroup]
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.1993305Z [command]/usr/bin/git log -1 --format=%H
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2015234Z 9faddcce70320f13e142002cba2310d06f2ec419
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2023594Z ##[group]Removing auth
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2024255Z Removing SSH command configuration
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2026070Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2053803Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2231605Z Removing HTTP extra header
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2234492Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2263062Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2434357Z Removing includeIf entries pointing to credentials config files
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2436098Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2460767Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2462768Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2464340Z includeif.gitdir:/github/workspace/.git.path
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2465736Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2469197Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2493314Z /home/runner/work/_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2501683Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-fa063b19\-2037\-4724\-8bcc\-be0df880991d\.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2529445Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2548209Z /home/runner/work/_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2554760Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-fa063b19\-2037\-4724\-8bcc\-be0df880991d\.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2580531Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2602128Z /github/runner_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2610736Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-fa063b19\-2037\-4724\-8bcc\-be0df880991d\.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2639860Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2658892Z /github/runner_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2664733Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-fa063b19\-2037\-4724\-8bcc\-be0df880991d\.config
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2691744Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2860717Z Removing credentials config '/home/runner/work/_temp/git-credentials-fa063b19-2037-4724-8bcc-be0df880991d.config'
+distro (ubuntu:24.04)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:55:18.2867779Z ##[endgroup]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	﻿2026-11-15T09:55:18.3131489Z ##[group]Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:18.3133047Z [36;1mdocker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh[0m
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:18.3152139Z shell: /usr/bin/bash -e {0}
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:18.3152763Z env:
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:18.3153443Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:18.3154103Z   IMAGE: ubuntu:24.04
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:18.3154644Z ##[endgroup]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:18.3994443Z Unable to find image 'ubuntu:24.04' locally
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:19.0156539Z 24.04: Pulling from library/ubuntu
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:19.1520989Z 26538842dfbf: Pulling fs layer
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:19.4526644Z 26538842dfbf: Verifying Checksum
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:19.4527216Z 26538842dfbf: Download complete
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:20.0492923Z 26538842dfbf: Pull complete
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:20.0534557Z Digest: sha256:2198e4c65076e9cb0b3d695219df667c0e3b0072da64ca3c2648aca17dcecaf5
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:20.0548166Z Status: Downloaded newer image for ubuntu:24.04
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:32.7480200Z debconf: delaying package configuration, since apt-utils is not installed
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:41.4077862Z Ubuntu 24.04.5 LTS: Python 3.12.3, PyQt6 6.6.1, Qt 6.4.2
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:55:48.5465470Z ...ss................................................................... [  5%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:56:50.1729933Z ................s.............ss........................................ [ 10%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:57:33.4654043Z ........................................................................ [ 15%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:57:38.2435431Z ..................................................sss..s................ [ 20%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:57:40.3499015Z ....................................................................s... [ 25%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:57:47.3556878Z ..s...s................................................................. [ 30%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:57:49.0467553Z .......................s............s.......ssss..s..................... [ 35%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:57:50.4719545Z ......................................................................s. [ 40%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:58:01.5344271Z ......................s................................ssssss........... [ 45%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:58:05.5770826Z ..........ss..................................sssssssss...........s..... [ 50%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:58:06.6273309Z .....................ssssssss........................................... [ 55%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:58:06.8196993Z ........................................................................ [ 60%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:58:18.3319656Z ..................................sss.........s.........s......ssss..... [ 65%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:58:59.2670525Z .............ss.ssss....s...s.s..........s.s............................ [ 70%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:58:59.4888120Z ........................................................................ [ 75%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:19.9816170Z ....................................................s..s................ [ 80%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:22.9446646Z .....................ss.s..s............................................ [ 85%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:32.2912814Z ...........................ssssssssssssssssssss......................... [ 90%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.2200335Z ..........................s................................ss.ssssssssss [ 95%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4957901Z sssssssssssssssssssssssss...ssssssss......sssssssssssssss.........       [100%]
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4959787Z =========================== short test summary info ============================
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4960141Z SKIPPED [1] tests/test_a11y.py:65: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4960377Z SKIPPED [1] tests/test_a11y.py:73: macOS
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4960922Z SKIPPED [1] tests/test_app_m7.py:149: Windows pipes: the access list keeps other users out, and each connection is checked too
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4963071Z SKIPPED [1] tests/test_app_m7.py:423: Windows' toasts
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4963458Z SKIPPED [1] tests/test_app_m7.py:468: Windows' Magnifier
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4963796Z SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4964631Z SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4964985Z SKIPPED [1] tests/test_attachments.py:125: Windows links
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4965315Z SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4965664Z SKIPPED [1] tests/test_brains.py:479: Claude Code isn't installed here
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4966325Z SKIPPED [1] tests/test_brains.py:592: cmd.exe and the tools npm installs as .cmd files are Windows'
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4966759Z SKIPPED [1] tests/test_brains.py:681: Windows' process tree
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4967158Z SKIPPED [1] tests/test_chats.py:373: the roaming app-data folder is Windows'
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4969242Z SKIPPED [1] tests/test_cli.py:94: only Windows keeps a program you're not using from coming to the front
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4970009Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4970307Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4970657Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4970875Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4971263Z SKIPPED [1] tests/test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4971566Z SKIPPED [1] tests/test_events.py:121: macOS's temporary folder of your own
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4971789Z SKIPPED [1] tests/test_heads_up.py:135: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4972006Z SKIPPED [1] tests/test_hotkey.py:157: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4972220Z SKIPPED [1] tests/test_hotkey.py:183: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4972388Z SKIPPED [1] tests/test_hotkey.py:200: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4972559Z SKIPPED [1] tests/test_hotkey.py:254: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4972732Z SKIPPED [1] tests/test_hotkey.py:271: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4972983Z SKIPPED [1] tests/test_hotkey.py:352: Linux with Xvfb
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4973269Z SKIPPED [1] tests/test_i18n.py:243: Qt's own translations aren't installed (a separate package on some distributions)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4973731Z SKIPPED [1] tests/test_i18n.py:274: Qt's own translations aren't installed (a separate package on some distributions)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4974072Z SKIPPED [1] tests/test_install_update.py:256: macOS's root code: ditto, BSD find, osascript
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4974448Z SKIPPED [3] tests/test_install_update.py:267: macOS's root code: ditto, BSD find, osascript
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4974752Z SKIPPED [1] tests/test_install_update.py:282: macOS's root code: ditto, BSD find, osascript
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4975048Z SKIPPED [1] tests/test_install_update.py:291: macOS's root code: ditto, BSD find, osascript
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4975397Z SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4975630Z SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4975846Z SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4976135Z SKIPPED [1] tests/test_linuxsession.py:102: no PackageKit here
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4976336Z SKIPPED [1] tests/test_macnative.py:20: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4976511Z SKIPPED [1] tests/test_macnative.py:29: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4976734Z SKIPPED [1] tests/test_macnative.py:63: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4976927Z SKIPPED [1] tests/test_macnative.py:97: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4977100Z SKIPPED [1] tests/test_macnative.py:125: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4977277Z SKIPPED [1] tests/test_macnative.py:143: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4977492Z SKIPPED [1] tests/test_macnative.py:171: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4977701Z SKIPPED [1] tests/test_macnative.py:179: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4977972Z SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4978419Z SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4978783Z SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4979425Z SKIPPED [1] tests/test_packaging.py:141: Qt's own translations aren't installed (a separate package on some distributions)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4979747Z SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4980120Z SKIPPED [1] tests/test_platform_events.py:104: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4980325Z SKIPPED [1] tests/test_platform_events.py:119: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4980522Z SKIPPED [1] tests/test_platform_events.py:127: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4980719Z SKIPPED [1] tests/test_platform_events.py:181: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4980927Z SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4981299Z SKIPPED [1] tests/test_portowner.py:54: no other account listens on anything here
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4981527Z SKIPPED [1] tests/test_presence.py:18: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4981703Z SKIPPED [1] tests/test_presence.py:33: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4981881Z SKIPPED [1] tests/test_presence.py:55: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4982055Z SKIPPED [1] tests/test_presence.py:74: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4982246Z SKIPPED [1] tests/test_presence.py:143: no GNOME session here
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4982439Z SKIPPED [1] tests/test_presence.py:220: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4982683Z SKIPPED [1] tests/test_presence.py:245: Qt 6.4.2 is before 6.10: no contrast preference to follow
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4982946Z SKIPPED [1] tests/test_presence.py:364: Linux with an X display
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4983176Z SKIPPED [1] tests/test_releasecheck.py:59: needs OpenSSL to compare with
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4983463Z SKIPPED [1] tests/test_screen_readers.py:200: AT-SPI's bus launcher isn't installed (at-spi2-core)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4983848Z SKIPPED [1] tests/test_screen_readers.py:254: gsettings with GNOME's accessibility schema (gsettings-desktop-schemas) isn't installed
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4984205Z SKIPPED [1] tests/test_sound.py:185: no QtMultimedia, or no audio device to play to
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4984434Z SKIPPED [1] tests/test_sound.py:210: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4984606Z SKIPPED [1] tests/test_sound.py:261: macOS only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4984822Z SKIPPED [1] tests/test_sound.py:334: no QtMultimedia, or no audio device to play to
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4985075Z SKIPPED [1] tests/test_sway.py:111: wlr-protocols isn't installed
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4985346Z SKIPPED [1] tests/test_sway.py:125: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4985665Z SKIPPED [1] tests/test_sway.py:141: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4985979Z SKIPPED [1] tests/test_sway.py:152: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4986291Z SKIPPED [1] tests/test_sway.py:171: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4986601Z SKIPPED [1] tests/test_sway.py:195: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4986914Z SKIPPED [1] tests/test_sway.py:221: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4987224Z SKIPPED [1] tests/test_sway.py:234: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4987535Z SKIPPED [4] tests/test_sway.py:56: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4987849Z SKIPPED [1] tests/test_sway.py:279: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4988159Z SKIPPED [1] tests/test_sway.py:322: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4988469Z SKIPPED [1] tests/test_sway.py:349: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4988779Z SKIPPED [1] tests/test_sway.py:376: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4989091Z SKIPPED [1] tests/test_sway.py:402: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4989493Z SKIPPED [2] tests/test_sway.py:430: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4989803Z SKIPPED [1] tests/test_sway.py:456: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4990180Z SKIPPED [1] tests/test_updates.py:648: holding a file open against changes: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4990411Z SKIPPED [1] tests/test_wincaret.py:52: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4990586Z SKIPPED [1] tests/test_wincaret.py:87: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4990760Z SKIPPED [1] tests/test_windows.py:77: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4990935Z SKIPPED [1] tests/test_windows.py:87: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4991106Z SKIPPED [1] tests/test_windows.py:98: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4991440Z SKIPPED [1] tests/test_windows.py:102: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4991614Z SKIPPED [1] tests/test_windows.py:107: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4991791Z SKIPPED [1] tests/test_windows.py:127: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4991964Z SKIPPED [1] tests/test_windows.py:138: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4992135Z SKIPPED [1] tests/test_windows.py:153: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4992306Z SKIPPED [1] tests/test_windows.py:164: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4992475Z SKIPPED [1] tests/test_windows.py:197: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4992649Z SKIPPED [1] tests/test_windows.py:210: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4992819Z SKIPPED [1] tests/test_windows.py:224: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4992988Z SKIPPED [1] tests/test_windows.py:261: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4993158Z SKIPPED [1] tests/test_windows.py:279: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4993328Z SKIPPED [1] tests/test_windows.py:292: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4993498Z SKIPPED [1] tests/test_windows.py:315: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4993669Z SKIPPED [1] tests/test_windows.py:339: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4993838Z SKIPPED [1] tests/test_windows.py:366: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4994010Z SKIPPED [1] tests/test_windows.py:408: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4994180Z SKIPPED [1] tests/test_windows.py:434: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4994349Z SKIPPED [1] tests/test_windows.py:441: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4994518Z SKIPPED [1] tests/test_windows.py:479: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4994690Z SKIPPED [1] tests/test_windows.py:491: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4994859Z SKIPPED [1] tests/test_windows.py:502: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4995029Z SKIPPED [1] tests/test_windows.py:519: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4995201Z SKIPPED [1] tests/test_windows.py:535: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4995371Z SKIPPED [1] tests/test_windows.py:561: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4995542Z SKIPPED [1] tests/test_windows.py:583: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4995712Z SKIPPED [1] tests/test_windows.py:601: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4995998Z SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4996296Z SKIPPED [1] tests/test_windows.py:684: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4996467Z SKIPPED [1] tests/test_windows.py:699: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4996637Z SKIPPED [1] tests/test_windows.py:739: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4996912Z SKIPPED [1] tests/test_windows.py:795: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4997172Z SKIPPED [1] tests/test_windows.py:818: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4997344Z SKIPPED [1] tests/test_winlock.py:17: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4997529Z SKIPPED [1] tests/test_winlock.py:41: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4997763Z SKIPPED [1] tests/test_winlock.py:78: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4997955Z SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4998160Z SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4998362Z SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4998563Z SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4998857Z SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4999072Z SKIPPED [1] tests/test_wintoast.py:110: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4999257Z SKIPPED [1] tests/test_wintoast.py:124: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4999438Z SKIPPED [1] tests/test_wintoast.py:149: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4999690Z SKIPPED [1] tests/test_wintoast.py:209: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.4999871Z SKIPPED [1] tests/test_wintoast.py:233: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.5000061Z SKIPPED [1] tests/test_wintoast.py:253: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.5000238Z SKIPPED [1] tests/test_wintoast.py:273: Windows only
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.5000457Z SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.5000726Z SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.5000982Z SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.5001399Z SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.5001651Z SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+distro (ubuntu:24.04)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T09:59:42.5001868Z 1280 passed, 154 skipped in 240.92s (0:04:00)
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T09:59:43.9194702Z Post job cleanup.
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:43.9767326Z [command]/usr/bin/git version
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:43.9799383Z git version 2.56.1
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:43.9819648Z Temporarily overriding HOME='/home/runner/work/_temp/5429bb3b-e449-4c3f-88ed-15c37baf54b8' before making global git config changes
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:43.9820366Z Adding repository directory to the temporary git global config as a safe directory
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:43.9823151Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:43.9848763Z Removing SSH command configuration
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:43.9852664Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:43.9879248Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:44.0052482Z Removing HTTP extra header
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:44.0055881Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:44.0080824Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:44.0245068Z Removing includeIf entries pointing to credentials config files
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:44.0248524Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (ubuntu:24.04)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T09:59:44.0273324Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (ubuntu:24.04)	Complete job	﻿2026-11-15T09:59:44.0588395Z Cleaning up orphan processes

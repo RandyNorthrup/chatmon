@@ -193,6 +193,14 @@ def main() -> int:
             task["blocker"] = None
         status_report.append(f"{task['id']}: {task['status']}" + (f" (missing {', '.join(missing)})" if missing else ""))
 
+    next_action = config["next_action"]
+    watch = config.get("watch_paths", [])  # files another worker is changing: which new receipts bind them
+    if watch:
+        hit = [r["id"] for r in added if r["status"] == "pass" and any(i["path"] in watch for i in r["inputs"])]
+        named = sorted({i["path"] for r in added for i in r["inputs"] if i["path"] in watch})
+        next_action += (f" {config.get('watch_who', 'Another branch')} changes {', '.join(named)}: once it merges, these receipts bind "
+                        f"what it changed and need a refresh, {', '.join(hit)} ({len(hit)} of {len(added)}); the others stay fresh."
+                        if hit else f" {config.get('watch_who', 'Another branch')} changes none of the files this plan's receipts bind.")
     _, final = parse_plan(join(prose, ledger, tail).encode("utf-8"), config["plan"])
     active = tuple(a.id for a in final.acceptance if not next(r for r in final.requirements if r.id == a.requirement).superseded_by)
     ledger["checkpoint"] = {
@@ -201,7 +209,7 @@ def main() -> int:
         "environment": ledger["work"]["environment"],
         "verified_tasks": [t["id"] for t in ledger["tasks"] if t["status"] == "verified"],
         "pending_operations": config.get("pending", []),
-        "next_action": config["next_action"],
+        "next_action": next_action,
         "source_revision": config.get("source_revision"),
     }
     candidate = join(prose, ledger, tail).encode("utf-8")

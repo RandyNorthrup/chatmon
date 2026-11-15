@@ -21,6 +21,7 @@ the version becomes 0.10.0 in the final consolidation.
 | 2026-11-14 | The repository's security settings are on: secret scanning, push protection, Dependabot alerts and Dependabot security updates. `main` is protected and requires the 18 CI checks: lint, types (linux, win32, darwin), the nine test legs, distro (ubuntu:24.04, debian:trixie, fedora:44), gnome and coverage. Observed in [reports/wave4/github-settings.txt](reports/wave4/github-settings.txt). |
 | 2026-11-14 | The sound cues are accepted as they are (M9's files in `chatmon/sounds/`). |
 | 2026-11-14 | The cap of five agents: at most five agents work on this delivery at once. |
+| 2026-11-15 | The `sway` job (a headless sway of the tests' own running `tests/test_sway.py` and `tests/test_wayland.py`) is one of `main`'s required checks, 19 in all. Observed in [reports/wave4b/github-settings.txt](reports/wave4b/github-settings.txt). |
 
 ## Waves
 
@@ -149,6 +150,10 @@ somewhere else are recorded under that profile, with the method saying where the
   step.
 - **Versions.** The run's own platform and versions are in its log. Earlier receipts recorded under a Linux or "CI"
   profile were flagged by closure for exactly that reason (M4A, M4B).
+- **Round two** (2026-11-15, bf9d8ac) works the same way, in `reports/<id>/wave4b/` and
+  [reports/wave4b/](reports/wave4b/): CI run 43701523023 and Packages run 43701523037, both PR #18's own runs, whose
+  test merge has bf9d8ac's tree, read with [reports/wave4/observe_bf9d8ac.py](reports/wave4/observe_bf9d8ac.py).
+  The scripts it binds with are `reports/wave4/mkbind2.py` and `bind.py`.
 
 ## Rule amendments
 
@@ -156,43 +161,50 @@ somewhere else are recorded under that profile, with the method saying where the
 |---|---|---|---|---|---|---|
 | 2026-11-14 | `docs/delivery/ROADMAP.md` | `5346385` and later labels (`4fdf790`, `78853bf`, `81af7c7`, `cac0047`) | `fb19cb9+wave4` | The three owner decisions above, *Evidence rules*, this table, and *Outcome* | The owner's decisions; the coordinator's wave-4 instructions to reconcile the plans with the CI runs and record the canonical bytes. Not to excuse any failure: every stale check was run again, or read from CI's logs. | Every plan's receipts, re-bound in wave 4 (the earlier ones kept as stale history) |
 | 2026-11-14 | `pyproject.toml` | each plan's own label | `fb19cb9` | No edit in wave 4. The plans now name the content their receipts were checked against: M6A's pytest settings, M6B's ruff and mypy settings, the package data | Later merges, by their milestones' owners | Same as above |
+| 2026-11-15 | `docs/delivery/ROADMAP.md` | `fb19cb9+wave4`, M3's `964510f`, M4A's `5c6093e` | `bf9d8ac+wave4b` | The sway decision above, round two's note in *Evidence rules*, this row, and *Outcome* rewritten for bf9d8ac | The coordinator's round-two instructions (re-bind and close against bf9d8ac). Not to excuse any failure: every stale check was run again, or read from CI's logs of bf9d8ac. | All twelve plans but M10's (the followups worker's), re-bound in round two; earlier receipts kept as stale history |
+| 2026-11-15 | `pyproject.toml` | `fb19cb9`, `964510f`, `5c6093e` | `bf9d8ac` | No edit by this work. Since fb19cb9: `fail_under` 72 to 84, comtypes in the test extra and dev pins, ruff's rule exemptions for `docs/delivery/reports/wave4/**` | The followups worker and the coordinator | Same as above |
 
 ## Outcome
 
-Status at **fb19cb9**, after wave 4's reconciliation. CI run 43677128712 (every job green), Packages run 43675230966
-(every build job green, release jobs skipped as designed) and PR #18's own checks on fb19cb9's tree (23 passed, the 5
-release jobs skipped; [reports/wave4/ci/pr18-checks.txt](reports/wave4/ci/pr18-checks.txt)) answered most of the
-pending operations. Every stale check was run again on this tree, or
-read from those runs. Two other workers are changing code now (wayland: the overlay and `ci.yml`, with M3 reopened;
-followups: packaging, the requirements and the mypy settings). Their merges make some of these receipts stale again,
-and each plan's next action says what to re-run.
+Status at **bf9d8ac**, after round two of wave 4's reconciliation (2026-11-15). PR #18's own runs on bf9d8ac were all
+green: CI run 43701523023 passed its 19 jobs, the new `sway` job among them. Packages run 43701523037 passed its five
+build jobs and skipped the five release jobs, as designed for a run that isn't a tag. Their test merge has bf9d8ac's
+tree. Every stale check of the twelve plans was run again on bf9d8ac or read from those runs. Round one's Outcome, at
+fb19cb9, is in this file's history (`git show 35bb93e:docs/delivery/ROADMAP.md`).
+
+wave4/crash, not merged at bf9d8ac, fixes an intermittent Qt crash in `chatmon/app.py`, `chatmon/brains.py`,
+`tests/app_harness.py` and `tests/test_app_smoke.py`. Each plan's checkpoint names the receipts that bind those files.
+Those, and only those, need a refresh when it merges.
 
 | Milestone | State | What's left, why, and who |
 |---|---|---|
-| M0 App core | checkpoint | M0-03.A3's "without copying the chats". `menus.chats_menu` reads the light listing today, but no test would notice it going back to whole chats: drill W4-M0-03-light-copies survived. A worker who may change code adds a menu-level test to `tests/test_app_smoke.py` (the coordinator names who); then the drill must go red. Everything else is verified, CI-posix included. |
-| M1A Security, updates | checkpoint | AC-01-MACOS's red drill needs macOS (`ditto`, BSD `find`, `osascript`), and there is no Mac here or in the test lab. Randy on a Mac, or the coordinator with a throwaway drill branch on CI. CI-MACOS, CI-CONTAINER and MERGE-ISOLATION are resolved. |
-| M1B Brains, stored data | closed | CI-MACOS, CI-LINUX and CI-WINDOWS were observed in CI. M7-WIRING was done by M7. |
-| M2 Bubbles, ask box | closed | P-M2-ci was observed: every M2 test passed on every leg. |
-| M3 Stage, overlay | not reconciled here | Reopened by the wayland worker, who owns its plan and reports. |
-| M4A Platform awareness | closed | CI-macos and CI-linux were observed. AC-04b's Qt 6.12 test ran in WSL, because CI's PyQt6 6.11 skips it. CI-windows-comtypes: CI still skips the UI Automation client test, so comtypes needs adding to the test locks (a follow-up below). |
-| M4B Hotkey, sound, toasts | checkpoint | Four red drills need a place to run. AC-00C, AC-01D and AC-02F need macOS: Randy on a Mac, or the coordinator through CI. AC-03E needs a Windows desktop with notifications on, which this PC's user has off: Randy turns them on for one run, approves a test PC's signed-in desktop, or the coordinator uses CI. All three CI operations are resolved. |
-| M5 Reminders, offline, locale | closed | Its receipts were re-bound. |
-| M6A CI and tooling | checkpoint | M6A-10.A1: two sentences in CONTRIBUTING.md (warnings "all but ResourceWarning", mypy's `ignore_errors` exemptions) are no longer true; the coordinator or the followups worker fixes them. P-RELEASE: the 0.10.0 tag, Randy or the coordinator. P-DEPENDABOT: Dependabot's first run once `.github/dependabot.yml` is on `main`, the coordinator. P-CI-FIRST, P-COVERAGE-FLOOR, P-PACKAGES-PR and P-MYPY-MERGES are resolved. |
-| M6B Static analysis, logging | closed | Integration note 1's CI run happened, every job green. |
-| M7 Integration | checkpoint | WAYLAND-HOSTING: `set_hosting(False)` with Orca on a real Wayland compositor (Hyprland or KDE). It's a person's check, with no compositor or screen reader here or in CI. Randy, before release. CI-ALL-PLATFORMS is resolved. |
-| M8 Translation | closed | The Linux and macOS legs it named passed. |
+| M0 App core | closed | Round one's gap is fixed. `tests/test_app_smoke.py::test_the_chats_menu_lists_chats_without_reading_any_whole` (the coordinator's) fails when the Chats menu reads whole chats, and drill W4-M0-03-light-copies-v2 proves it. |
+| M1A Security, updates | checkpoint | AC-01-MACOS's red drill needs macOS (`ditto`, BSD `find`, `osascript`). Owner: Randy on a Mac, or the coordinator with a throwaway drill branch on CI. Everything else is verified at bf9d8ac. |
+| M1B Brains, stored data | closed | Re-bound at bf9d8ac. |
+| M2 Bubbles, ask box | closed | Re-bound at bf9d8ac. |
+| M3 Stage, overlay | closed | CI-sway-job is answered: the `sway` job passed (49 passed, and 3 skipped because CI has no Orca or wlr-protocols), and it is a required check. The real-Orca tests ran in WSL with Orca 51. |
+| M4A Platform awareness | closed | CI-macos is answered: T-04 and T-09's macOS tests passed on CI's three macOS legs, so both are verified. CI-linux is answered: the screen-reader tests run, or skip with their reason, and pass. CI's Windows legs now run the UI Automation client test (comtypes). |
+| M4B Hotkey, sound, toasts | checkpoint | Four red drills need somewhere to run. AC-00C, AC-01D and AC-02F need macOS: Randy on a Mac, or the coordinator through CI. AC-03E needs a Windows desktop with notifications on: Randy turns them on for one run, approves a test PC's signed-in desktop, or the coordinator uses CI. |
+| M5 Reminders, offline, locale | closed | Re-bound at bf9d8ac. |
+| M6A CI and tooling | checkpoint | M6A-10.A1 passes again: CONTRIBUTING.md's two sentences are fixed, and its new claim that mypy passes with PyQt6 6.12.1's stubs was checked. Two outcomes remain, both pending operations. P-RELEASE: the 0.10.0 tag, Randy or the coordinator. P-DEPENDABOT: Dependabot's first run once `.github/dependabot.yml` is on `main`, the coordinator. |
+| M6B Static analysis, logging | closed | Re-bound at bf9d8ac. |
+| M7 Integration | closed | WAYLAND-HOSTING is answered on a real compositor: sway 1.12 with the real Orca 51.1 (WSL), and sway 1.9 without Orca (CI). The ask box is a window of its own and the penguin's menu works and gives the keyboard back. **Hyprland and KDE themselves were not tested.** |
+| M8 Translation | closed | Re-bound at bf9d8ac. The Windows and macOS builds now carry Qt's own translations (the followups worker), as its closing note asked. |
 | M9 Sounds (coordinator) | done | The owner accepted the cues as they are (2026-11-14). |
-| Consolidation | the coordinator's | The version is 0.10.0, and the README and changelog are written (`d3f6a6e`). PR #18 (`improve/assessment-fixes` to `main`) is open. |
+| M10 Follow-ups | not re-bound here | The followups worker's plan, which this round didn't own. At bf9d8ac its receipts are stale. Ten of its artifacts and most of its inputs were hashed on a CRLF checkout, against *Canonical bytes*, and the a11y and wayland merges changed other inputs since. It also takes the M4A, M6A, M6B and M8 plans as inputs, all re-bound here. Owner: the followups worker, or this work if asked. |
+| Consolidation | the coordinator's | Version 0.10.0, README and changelog (`bf9d8ac`). PR #18 (`improve/assessment-fixes` to `main`) is open. |
 
-**Not covered by any criterion, for a person before release.** Hearing real VoiceOver (macOS) and Narrator (Windows)
-speak Chatmon's announcements. M4A's criteria stop at the post to the accessibility API, and that post is tested.
+**For a person before release, not covered by any criterion.**
+
+- Hearing real VoiceOver (macOS) and Narrator (Windows) speak Chatmon's announcements. M4A's criteria stop at the
+  accessibility API, and the WSL runs drive Orca only as an AT-SPI client.
+- Hyprland and KDE: the overlay and the unhosted ask box have only been tried on sway.
+
 Owner: Randy.
 
-**Follow-ups outside `docs/delivery/`, for their owners.**
+**Round one's follow-ups, all done:**
 
-- CONTRIBUTING.md's two stale sentences (M6A-10.A1 above).
-- Raise `fail_under` from 72 to about 84, now that the three OSes measure 86.2% (`pyproject.toml`, the followups
-  worker).
-- Add comtypes, for Windows, to the test locks, so CI runs the UI Automation client test that only this workstation
-  runs today (`packaging/requirements-test.*`, the followups worker).
-- A menu-level test that fails if the Chats menu goes back to reading whole chats (M0-03.A3 above).
+- CONTRIBUTING.md's two sentences.
+- `fail_under` raised from 72 to 84.
+- comtypes added to the test lock.
+- The M0 menu test.
