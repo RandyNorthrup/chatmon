@@ -1,0 +1,35 @@
+# PR #18 (improve/assessment-fixes into main): head fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0, base main 5d20c55de144b99b3e4204f2ac08017f36396fe8, test merge df725342a3405655e30940839a5d168404170cea, observed 2026-11-15T08:21:54Z
+$ gh api repos/RandyNorthrup/chatmon/git/commits/df725342a3405655e30940839a5d168404170cea --jq .tree.sha
+5d0d6b2895dd2f383234ad45ab4579e7eae13249
+$ git rev-parse fb19cb9^{tree}
+5d0d6b2895dd2f383234ad45ab4579e7eae13249
+# The same tree: main is an ancestor of fb19cb9 (git merge-base --is-ancestor origin/main fb19cb9 exits 0), so the pull_request runs tested fb19cb9's files exactly.
+$ gh pr checks 18 --repo RandyNorthrup/chatmon
+coverage	pass	23s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132702676640	
+distro (debian:trixie)	pass	4m10s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246761	
+distro (fedora:44)	pass	4m13s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246713	
+distro (ubuntu:24.04)	pass	4m33s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246764	
+gnome	pass	43s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246735	
+lint	pass	20s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246763	
+linux	pass	4m45s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132701246294	
+macos (macos-15-intel)	pass	2m48s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132701246264	
+macos (macos-latest)	pass	1m57s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132701246370	
+python	pass	23s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132701246303	
+test (macos-latest, 3.11)	pass	5m11s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246838	
+test (macos-latest, 3.14)	pass	5m45s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246876	
+test (macos-latest, 3.15)	pass	6m32s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246847	
+test (ubuntu-24.04, 3.11)	pass	4m23s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246836	
+test (ubuntu-24.04, 3.15)	pass	4m16s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246880	
+test (ubuntu-24.04-arm, 3.14)	pass	4m28s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701247078	
+test (windows-latest, 3.11)	pass	4m7s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246826	
+test (windows-latest, 3.14)	pass	3m56s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246786	
+types (linux)	pass	21s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246709	
+publish	skipping	0	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132705414104	
+test (windows-latest, 3.15)	pass	4m3s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246867	
+windows	pass	19m37s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132701246110	
+sign-windows	skipping	0	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132705413612	
+types (darwin)	pass	26s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246625	
+types (win32)	pass	32s	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664484/job/132701246779	
+attest	skipping	0	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132705413968	
+checksums	skipping	0	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132705414091	
+test-signed-windows	skipping	0	https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/job/132705414098	

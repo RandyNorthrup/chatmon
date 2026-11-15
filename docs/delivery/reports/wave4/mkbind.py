@@ -51,6 +51,8 @@ for e in L["evidence"]:
         covers.setdefault(hit, set()).update(e["acceptance"])
 for did, acs in extra.get("drill_acceptance", {}).items():  # wave 4's own drills, and corrections
     covers[did] = set(acs)
+for did in extra.get("drill_skip", {}):  # a drill whose file its criterion's tasks don't own: it can't be bound there
+    covers.pop(did, None)
 
 receipts = [{
     "id": "W4-READY", "kind": "readiness", "acceptance": active, "artifact": f"{W4}/readiness.md",
@@ -92,7 +94,7 @@ if extra.get("ci"):
     observe.main()
     tables = {c: dict(observe.cilog.results(observe.collection(coll), observe.cilog.text_lines(observe.CI / log, step)))
               for c, log, step, coll in observe.LEGS}
-    for meta in ("ci-43677128712.json", "packages-43675230966.json"):
+    for meta in ("ci-43677128712.json", "packages-43675230966.json", "packages-43677664360.json", "ci-43677664484.json"):
         shutil.copyfile(ROOT / "docs/delivery/reports/wave4/ci" / meta, ROOT / R / "ci" / meta)
     for ci in extra["ci"]:
         table = tables[ci["leg"]]
@@ -104,7 +106,7 @@ if extra.get("ci"):
                           if (n == t or n.startswith(t + "[") or n.startswith(t + "::")) and r != "passed"})
         print(f"  {ci['id']} ({ci['leg']}): {len(acs)} criteria; their drill tests not passed there: {not_run}")
         shutil.copyfile(ROOT / "docs/delivery/reports/wave4/ci" / ci["log"], ROOT / R / "ci" / ci["log"])
-        run_id = "43675230966" if ci["log"].startswith("pkg-") else "43677128712"
+        run_id = ci.get("run") or ("43675230966" if ci["log"].startswith("pkg-") else "43677128712")
         job = ci["log"].split("-")[1]
         receipts.append({
             "id": ci["id"], "kind": "behavior", "acceptance": acs, "artifact": f"{R}/ci/{ci['log']}",
