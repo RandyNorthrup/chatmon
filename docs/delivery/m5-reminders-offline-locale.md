@@ -350,6 +350,23 @@ requirements were reviewed again against the amended rules ([wave4/readiness.md]
 **Receipts.** Every earlier passing receipt is now marked stale, as history, with its hashes untouched. The W4-
 receipts replace them. Nothing remains open in M5 on fb19cb9.
 
+## Reconciliation, wave 4, round two (2026-11-15)
+
+Round two re-bound this plan at **bf9d8ac**: `improve/assessment-fixes` after the wayland, followups, a11y and
+sway-ci merges, and round one's own. Its earlier receipts went stale, because `pyproject.toml` (a rule) and files they
+were bound to changed. The evidence is for bf9d8ac only. wave4/crash, not merged yet, fixes an intermittent Qt crash
+in `chatmon/app.py`, `chatmon/brains.py`, `tests/app_harness.py` and `tests/test_app_smoke.py`. The checkpoint's next
+action names the receipts that bind those files, and only those need a refresh when it merges.
+
+**What was re-run.** The whole suite on Windows ([wave4b/suite-windows.log](reports/wave4b/suite-windows.log): 1256 passed, 178 skipped), then 24 Windows drills. Every one went green, red and green again. CI run 43701523023 (PR #18 at bf9d8ac, all 19
+jobs green) was read for its Linux and macOS legs ([reports/m5/ci/observed-bf9d8ac.txt](reports/m5/ci/observed-bf9d8ac.txt)). The
+requirements were reviewed again ([wave4b/readiness.md](reports/m5/wave4b/readiness.md)).
+
+Nothing in M5's files or obligations changed.
+
+**Receipts.** Round one's W4- receipts are now stale history, with their hashes untouched. The W4B- receipts replace
+them. M5 is closed on bf9d8ac.
+
 ```quality-ledger
 {
   "schema_version": 1,
@@ -362,11 +379,11 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
     "rules": [
       {
         "path": "docs/delivery/ROADMAP.md",
-        "revision": "fb19cb9+wave4"
+        "revision": "bf9d8ac+wave4b"
       },
       {
         "path": "pyproject.toml",
-        "revision": "fb19cb9"
+        "revision": "bf9d8ac"
       }
     ],
     "inputs": [
@@ -689,7 +706,14 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "W4-BEH-CI-MACOS",
         "W4-RED-M5-05-c-locale-shown",
         "W4-RED-M5-05-loads-qt",
-        "W4-RED-M5-05-qlocale-unused"
+        "W4-RED-M5-05-qlocale-unused",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M5-05-c-locale-shown",
+        "W4B-RED-M5-05-loads-qt",
+        "W4B-RED-M5-05-qlocale-unused"
       ],
       "blocker": null,
       "superseded_by": null
@@ -731,7 +755,15 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "W4-RED-M5-02-bare-hour-am",
         "W4-RED-M5-02-in-by-wall-clock",
         "W4-RED-M5-02-leftovers-guessed",
-        "W4-RED-M5-02-weekday-ignored"
+        "W4-RED-M5-02-weekday-ignored",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M5-02-bare-hour-am",
+        "W4B-RED-M5-02-in-by-wall-clock",
+        "W4B-RED-M5-02-leftovers-guessed",
+        "W4B-RED-M5-02-weekday-ignored"
       ],
       "blocker": null,
       "superseded_by": null
@@ -786,7 +818,21 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "W4-RED-M5-04-blank-edit-accepted",
         "W4-RED-M5-04-no-hour-snooze",
         "W4-RED-M5-04-snooze-stays-fired",
-        "W4-RED-M5-04-tomorrow-by-real-day"
+        "W4-RED-M5-04-tomorrow-by-real-day",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M5-01-fired-not-saved",
+        "W4B-RED-M5-01-old-saves-change",
+        "W4B-RED-M5-01-removed-when-due",
+        "W4B-RED-M5-03-done-repeat-removed",
+        "W4B-RED-M5-03-every-not-read",
+        "W4B-RED-M5-03-repeat-by-real-days",
+        "W4B-RED-M5-04-blank-edit-accepted",
+        "W4B-RED-M5-04-no-hour-snooze",
+        "W4B-RED-M5-04-snooze-stays-fired",
+        "W4B-RED-M5-04-tomorrow-by-real-day"
       ],
       "blocker": null,
       "superseded_by": null
@@ -829,7 +875,14 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "W4-BEH-CI-MACOS",
         "W4-RED-M5-06-english-dropped",
         "W4-RED-M5-06-phrases-not-normalized",
-        "W4-RED-M5-06-help-not-translated"
+        "W4-RED-M5-06-help-not-translated",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M5-06-english-dropped",
+        "W4B-RED-M5-06-phrases-not-normalized",
+        "W4B-RED-M5-06-help-not-translated"
       ],
       "blocker": null,
       "superseded_by": null
@@ -861,7 +914,12 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "W4-BEH-WINDOWS",
         "W4-BEH-CI-LINUX",
         "W4-BEH-CI-MACOS",
-        "W4-RED-M5-08-working-first"
+        "W4-RED-M5-08-working-first",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M5-08-working-first"
       ],
       "blocker": null,
       "superseded_by": null
@@ -905,7 +963,14 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "W4-BEH-CI-MACOS",
         "W4-RED-M5-07-401-digits",
         "W4-RED-M5-07-in-by-wall-clock",
-        "W4-RED-M5-07-past-longest"
+        "W4-RED-M5-07-past-longest",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M5-07-401-digits",
+        "W4B-RED-M5-07-in-by-wall-clock",
+        "W4B-RED-M5-07-past-longest"
       ],
       "blocker": null,
       "superseded_by": null
@@ -4146,7 +4211,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-08.A1"
       ],
       "kind": "readiness",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Requirements review again at fb19cb9 (readiness.md): M5-01 to M5-08 re-read against ASSESSMENT.md, the amended ROADMAP.md (the M0/M5 reminder contract unchanged) and pyproject.toml as they are now; no conflict or gap; five drills whose text moved, and the one criterion left without a drill given a new one.",
       "environment": {
@@ -4193,7 +4258,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
       ],
       "scope_sha256": "fae64b876eee958f4c8f10dbee5c661e40cae2a2df9556f36a971a862526ca27",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-WINDOWS",
@@ -4215,7 +4280,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-08.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -4301,7 +4366,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
       ],
       "scope_sha256": "fae64b876eee958f4c8f10dbee5c661e40cae2a2df9556f36a971a862526ca27",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-CI-LINUX",
@@ -4323,7 +4388,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-08.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -4412,7 +4477,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
       ],
       "scope_sha256": "fae64b876eee958f4c8f10dbee5c661e40cae2a2df9556f36a971a862526ca27",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-CI-MACOS",
@@ -4434,7 +4499,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-08.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -4523,7 +4588,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
       ],
       "scope_sha256": "fae64b876eee958f4c8f10dbee5c661e40cae2a2df9556f36a971a862526ca27",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-01-fired-not-saved",
@@ -4531,7 +4596,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-01.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -4631,7 +4696,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-01-old-saves-change",
@@ -4639,7 +4704,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-01.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -4739,7 +4804,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-01-removed-when-due",
@@ -4747,7 +4812,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -4847,7 +4912,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-02-bare-hour-am",
@@ -4855,7 +4920,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-02.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -4955,7 +5020,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-02-in-by-wall-clock",
@@ -4963,7 +5028,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-02.A4"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5063,7 +5128,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-02-leftovers-guessed",
@@ -5071,7 +5136,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-02.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5171,7 +5236,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-02-weekday-ignored",
@@ -5179,7 +5244,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-02.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5279,7 +5344,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-03-done-repeat-removed",
@@ -5287,7 +5352,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5387,7 +5452,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-03-every-not-read",
@@ -5395,7 +5460,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5495,7 +5560,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-03-repeat-by-real-days",
@@ -5503,7 +5568,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5603,7 +5668,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-04-blank-edit-accepted",
@@ -5611,7 +5676,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-04.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5711,7 +5776,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-04-no-hour-snooze",
@@ -5719,7 +5784,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-04.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5819,7 +5884,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-04-snooze-stays-fired",
@@ -5827,7 +5892,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-04.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -5927,7 +5992,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-04-tomorrow-by-real-day",
@@ -5935,7 +6000,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-04.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6035,7 +6100,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-05-c-locale-shown",
@@ -6043,7 +6108,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-05.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6139,7 +6204,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-05-loads-qt",
@@ -6147,7 +6212,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-05.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6243,7 +6308,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-05-qlocale-unused",
@@ -6251,7 +6316,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-05.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6347,7 +6412,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-06-english-dropped",
@@ -6355,7 +6420,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-06.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6459,7 +6524,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-06-phrases-not-normalized",
@@ -6467,7 +6532,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-06.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6571,7 +6636,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-07-401-digits",
@@ -6579,7 +6644,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-07.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6691,7 +6756,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-07-in-by-wall-clock",
@@ -6699,7 +6764,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-07.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6811,7 +6876,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-07-past-longest",
@@ -6819,7 +6884,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-07.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -6931,7 +6996,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-08-working-first",
@@ -6939,7 +7004,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-08.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -7027,7 +7092,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M5-06-help-not-translated",
@@ -7035,7 +7100,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
         "M5-06.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -7139,11 +7204,3026 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
           }
         ]
       },
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W4B-READY",
+      "acceptance": [
+        "M5-01.A1",
+        "M5-01.A2",
+        "M5-02.A1",
+        "M5-02.A2",
+        "M5-02.A3",
+        "M5-02.A4",
+        "M5-03.A1",
+        "M5-04.A1",
+        "M5-04.A2",
+        "M5-05.A1",
+        "M5-06.A1",
+        "M5-06.A2",
+        "M5-07.A1",
+        "M5-07.A2",
+        "M5-08.A1"
+      ],
+      "kind": "readiness",
+      "status": "pass",
+      "command": [],
+      "method": "Requirements review, round two, at bf9d8ac (readiness.md): M5-01 to M5-08 re-read against ASSESSMENT.md, the amended ROADMAP.md (the M0/M5 reminder contract unchanged) and pyproject.toml as they are now; no conflict or gap; five drills whose text moved, and the one criterion left without a drill given a new one.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/readiness.md",
+        "sha256": "ae008b7e382b6ce7905322b27d404b5880f65483949ce27a837ba153cbfdf1d7"
+      },
+      "inputs": [
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        }
+      ],
+      "scope_sha256": "094259152b63719567a9ae4eb4b952a4682e9bbd38a4116250154c75fec4df05",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-WINDOWS",
+      "acceptance": [
+        "M5-01.A1",
+        "M5-01.A2",
+        "M5-02.A1",
+        "M5-02.A2",
+        "M5-02.A3",
+        "M5-02.A4",
+        "M5-03.A1",
+        "M5-04.A1",
+        "M5-04.A2",
+        "M5-05.A1",
+        "M5-06.A1",
+        "M5-06.A2",
+        "M5-07.A1",
+        "M5-07.A2",
+        "M5-08.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on bf9d8ac's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1256 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/wave4b/suite-windows.log",
+        "sha256": "7f503b5d1a475b727e01e7b972cf58f5c756082c5dabfdcb6be93c57621c00ad"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "094259152b63719567a9ae4eb4b952a4682e9bbd38a4116250154c75fec4df05",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-CI-LINUX",
+      "acceptance": [
+        "M5-01.A1",
+        "M5-01.A2",
+        "M5-02.A1",
+        "M5-02.A2",
+        "M5-02.A3",
+        "M5-02.A4",
+        "M5-03.A1",
+        "M5-04.A1",
+        "M5-04.A2",
+        "M5-05.A1",
+        "M5-06.A1",
+        "M5-06.A2",
+        "M5-07.A1",
+        "M5-07.A2",
+        "M5-08.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43701523023",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132773560297",
+        "--log"
+      ],
+      "method": "CI run 43701523023 on bf9d8ac, job test (ubuntu-24.04, 3.15). Every test these criteria's drills run passed: the reminder book, parse_when (with Hypothesis), the offline answers and phrases, localefmt, and the agents report. They passed on Linux's own time zone data and C library, and also on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the three distro containers. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/ci/ci-132773560297-test-ubuntu-24.04-3.15.log",
+        "sha256": "365e319b53a88e4ac0668fb8af697a801a6334b65195a144a40eecdc2916dadc"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "094259152b63719567a9ae4eb4b952a4682e9bbd38a4116250154c75fec4df05",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-CI-MACOS",
+      "acceptance": [
+        "M5-01.A1",
+        "M5-01.A2",
+        "M5-02.A1",
+        "M5-02.A2",
+        "M5-02.A3",
+        "M5-02.A4",
+        "M5-03.A1",
+        "M5-04.A1",
+        "M5-04.A2",
+        "M5-05.A1",
+        "M5-06.A1",
+        "M5-06.A2",
+        "M5-07.A1",
+        "M5-07.A2",
+        "M5-08.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43701523023",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132773560342",
+        "--log"
+      ],
+      "method": "CI run 43701523023 on bf9d8ac, job test (macos-latest, 3.14). The same tests passed on macOS, as on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/ci/ci-132773560342-test-macos-latest-3.14.log",
+        "sha256": "a1e97fcbcd11b0d99311b71ae95f232afaae0c5fc2f82fd7b711eb7f69580a34"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "094259152b63719567a9ae4eb4b952a4682e9bbd38a4116250154c75fec4df05",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-01-fired-not-saved",
+      "acceptance": [
+        "M5-01.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_unacknowledged_reminders_come_back_at_start"
+      ],
+      "method": "Red drill M5-01-fired-not-saved through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-01-fired-not-saved: in chatmon/reminders.py, 'reminder.fired = entry.get(\"fired\") is True' became 'reminder.fired = False'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_unacknowledged_reminders_come_back_at_start",
+        "observed_diagnostic": "______________ test_unacknowledged_reminders_come_back_at_start _______________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "365f7c6bfe8ba69ba004f53634e23ae62b6fe177ca18b3274fec8ea6a41304d9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-01-old-saves-change",
+      "acceptance": [
+        "M5-01.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_reminders_saved_before_repeats_read_back_unchanged"
+      ],
+      "method": "Red drill M5-01-old-saves-change through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-01-old-saves-change: in chatmon/reminders.py, 'if k not in _LATER_FIELDS or v != _LATER_FIELDS[k]' became 'if k'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_reminders_saved_before_repeats_read_back_unchanged",
+        "observed_diagnostic": "___________ test_reminders_saved_before_repeats_read_back_unchanged ___________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "469fb30bcd7f16a40ce7d2c03bb5dee9efc486545835c81be4f1a7902dbc712f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-01-removed-when-due",
+      "acceptance": [
+        "M5-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_a_fired_reminder_stays_until_done_or_snoozed"
+      ],
+      "method": "Red drill M5-01-removed-when-due through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-01-removed-when-due: in chatmon/reminders.py, '        for r in due:\\n            r.fired = True\\n        return due' became '        self.items = [r for r in self.items if r.due > now]\\n        return due'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_fired_reminder_stays_until_done_or_snoozed",
+        "observed_diagnostic": "______________ test_a_fired_reminder_stays_until_done_or_snoozed ______________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "e30fca442ef9c1f63f096dc449c7d8337bec7908a05d3a8695d63bee7c414dac"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-02-bare-hour-am",
+      "acceptance": [
+        "M5-02.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_a_bare_hour_is_whichever_of_am_and_pm_comes_next"
+      ],
+      "method": "Red drill M5-02-bare-hour-am through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "6e3a2af7aeef8d0ac52ed59df8965619f321029f3c1537fa5282599f6d47b78a",
+      "red": {
+        "mutation": "M5-02-bare-hour-am: in chatmon/reminders.py, 'hours = (h, (h + 12) % 24) if' became 'hours = (h,) if'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_bare_hour_is_whichever_of_am_and_pm_comes_next",
+        "observed_diagnostic": "_ test_a_bare_hour_is_whichever_of_am_and_pm_comes_next[said_at0-remind me at 3 to x-due0] _",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "cbe27e32b7ccf4f2eb925874a8d30f2f00959e331cac60d3085bfcee01988221"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-02-in-by-wall-clock",
+      "acceptance": [
+        "M5-02.A4"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_in_is_real_time_across_daylight_saving"
+      ],
+      "method": "Red drill M5-02-in-by-wall-clock through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "6e3a2af7aeef8d0ac52ed59df8965619f321029f3c1537fa5282599f6d47b78a",
+      "red": {
+        "mutation": "M5-02-in-by-wall-clock: in chatmon/reminders.py, 'return _at(start + seconds, now), None' became 'return now + timedelta(seconds=seconds), None'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_in_is_real_time_across_daylight_saving",
+        "observed_diagnostic": "_________________ test_in_is_real_time_across_daylight_saving _________________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "b34e7240d800167f6ad14cd4d79d36cc5c9847f1e7505e16e3e19add5fd801df"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-02-leftovers-guessed",
+      "acceptance": [
+        "M5-02.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_time_words_that_cant_all_be_placed_are_ambiguous"
+      ],
+      "method": "Red drill M5-02-leftovers-guessed through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "6e3a2af7aeef8d0ac52ed59df8965619f321029f3c1537fa5282599f6d47b78a",
+      "red": {
+        "mutation": "M5-02-leftovers-guessed: in chatmon/reminders.py, 'if bad or leftovers or (seconds and timed)' became 'if bad or (seconds and timed)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_time_words_that_cant_all_be_placed_are_ambiguous",
+        "observed_diagnostic": "_ test_time_words_that_cant_all_be_placed_are_ambiguous[remind me friday tomorrow to x-friday tomorrow] _",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "73bc7f53c854371a859116ec9561e7c9e86eec0b4177e97994e112d050894df3"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-02-weekday-ignored",
+      "acceptance": [
+        "M5-02.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_days_and_dates"
+      ],
+      "method": "Red drill M5-02-weekday-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "6e3a2af7aeef8d0ac52ed59df8965619f321029f3c1537fa5282599f6d47b78a",
+      "red": {
+        "mutation": "M5-02-weekday-ignored: in chatmon/reminders.py, 'return \"weekday\", _DAYS[m.group(\"day\").lower()], (m.group(\"which\") or \"\").lower() == \"next\"' became 'return \"day\", now.date(), False'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_days_and_dates",
+        "observed_diagnostic": "___ test_days_and_dates[remind me friday at 3pm to call Sam-due0-call Sam] ____",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "db52a44c862ab9e816addbbc3f358cd8af2fa19391b5c1d09cf50b5cbd2bc99f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-03-done-repeat-removed",
+      "acceptance": [
+        "M5-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_a_repeating_reminder_moves_on_when_done"
+      ],
+      "method": "Red drill M5-03-done-repeat-removed through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-03-done-repeat-removed: in chatmon/reminders.py, '        if r.repeat:\\n            r.due = next_time(r.repeat, max(' became '        if False:\\n            r.due = next_time(r.repeat, max('",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_repeating_reminder_moves_on_when_done",
+        "observed_diagnostic": "________________ test_a_repeating_reminder_moves_on_when_done _________________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "d3cd9215fc1e5e3a55fbe3171c9462ba2c3f3af6dc905f6087133cc2e42d1ed8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-03-every-not-read",
+      "acceptance": [
+        "M5-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_repeating_reminders"
+      ],
+      "method": "Red drill M5-03-every-not-read through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-03-every-not-read: in chatmon/reminders.py, 'every = words.take(_EVERY_RE)' became 'every = None'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_repeating_reminders",
+        "observed_diagnostic": "_ test_repeating_reminders[remind me every day at 9 to stand up-due0-daily@09:00-stand up] _",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "f53e424ba873f89b5e18d31dc6d993b384ec195fbce5a637bdb9efe8706b8db9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-03-repeat-by-real-days",
+      "acceptance": [
+        "M5-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_a_daily_reminder_keeps_its_hour_across_daylight_saving"
+      ],
+      "method": "Red drill M5-03-repeat-by-real-days through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-03-repeat-by-real-days: in chatmon/reminders.py, 'moment = _on_wall(day, hour, minute, start).timestamp()' became 'moment = start.replace(hour=hour, minute=minute, second=0, microsecond=0).timestamp() + k * DAY'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_daily_reminder_keeps_its_hour_across_daylight_saving",
+        "observed_diagnostic": "_________ test_a_daily_reminder_keeps_its_hour_across_daylight_saving _________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "e653b80fc00656eda100e6b047c5d702fee1b0b3e85b906267c468f0d34ad13c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-04-blank-edit-accepted",
+      "acceptance": [
+        "M5-04.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_a_reminder_can_be_edited"
+      ],
+      "method": "Red drill M5-04-blank-edit-accepted through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-04-blank-edit-accepted: in chatmon/reminders.py, 'if text is not None and not text.strip():' became 'if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_reminder_can_be_edited",
+        "observed_diagnostic": "________________________ test_a_reminder_can_be_edited ________________________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "1296af89d3412442d71483893ed8bc763b58b5b8d909ef8db12120f2eb05aa15"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-04-no-hour-snooze",
+      "acceptance": [
+        "M5-04.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning"
+      ],
+      "method": "Red drill M5-04-no-hour-snooze through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-04-no-hour-snooze: in chatmon/reminders.py, '_SNOOZES = (5, 15, 60)' became '_SNOOZES = (5, 15)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning",
+        "observed_diagnostic": "_ test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning _",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "a490a2b526a28cb69e6885da755690519558d8fa1956841cb37101156675706d"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-04-snooze-stays-fired",
+      "acceptance": [
+        "M5-04.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_a_fired_reminder_stays_until_done_or_snoozed"
+      ],
+      "method": "Red drill M5-04-snooze-stays-fired through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-04-snooze-stays-fired: in chatmon/reminders.py, 'r.due, r.fired = until, False' became 'r.due = until'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_fired_reminder_stays_until_done_or_snoozed",
+        "observed_diagnostic": "______________ test_a_fired_reminder_stays_until_done_or_snoozed ______________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "aff47e5cb88ab7c713ac2515518a2b1ee91ab2312d817909c85980798e0f1a38"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-04-tomorrow-by-real-day",
+      "acceptance": [
+        "M5-04.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving"
+      ],
+      "method": "Red drill M5-04-tomorrow-by-real-day through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "3dec1b96b1795d402c85e315d785c4702a2052b48027d74a1dd6788629d02ef9",
+      "red": {
+        "mutation": "M5-04-tomorrow-by-real-day: in chatmon/reminders.py, 'tomorrow = _on_wall(today.date() + timedelta(days=1), DEFAULT_HOUR, 0, today)' became 'tomorrow = _at(_on_wall(today.date(), DEFAULT_HOUR, 0, today).timestamp() + DAY, today)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving",
+        "observed_diagnostic": "___ test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving ____",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "88acd79fd115f706087716d386012cdc33e7ab28e8c302d39141a933f33abe98"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-05-c-locale-shown",
+      "acceptance": [
+        "M5-05.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_localefmt.py::test_no_locale_at_all_is_plain_english_not_qts_c_look"
+      ],
+      "method": "Red drill M5-05-c-locale-shown through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        }
+      ],
+      "scope_sha256": "52b2db9c9c0e3855507a0ac4fdc1cb76a46533e2f8569645783d6ea803f36137",
+      "red": {
+        "mutation": "M5-05-c-locale-shown: in chatmon/localefmt.py, 'if qtcore is not None and locale.language() == qtcore.QLocale.Language.C:' became 'if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_no_locale_at_all_is_plain_english_not_qts_c_look",
+        "observed_diagnostic": "____________ test_no_locale_at_all_is_plain_english_not_qts_c_look ____________",
+        "before": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "2904bd53b9b973084ca7022ec7ca8aa667bf456f9b839e5cfcd1edc300792ea5"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-05-loads-qt",
+      "acceptance": [
+        "M5-05.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_localefmt.py::test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment"
+      ],
+      "method": "Red drill M5-05-loads-qt through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        }
+      ],
+      "scope_sha256": "52b2db9c9c0e3855507a0ac4fdc1cb76a46533e2f8569645783d6ea803f36137",
+      "red": {
+        "mutation": "M5-05-loads-qt: in chatmon/localefmt.py, '        if qtcore is None:\\n            return None\\n' became '        if qtcore is None:\\n            from PyQt6 import QtCore as qtcore\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment",
+        "observed_diagnostic": "_ test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment _",
+        "before": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "6f33b92bb933cf3ce8420076519a0131a2b0e58a123ace1ca639e7cfac958609"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-05-qlocale-unused",
+      "acceptance": [
+        "M5-05.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_localefmt.py::test_british_english_writes_24_hour_times_and_day_first_dates"
+      ],
+      "method": "Red drill M5-05-qlocale-unused through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        }
+      ],
+      "scope_sha256": "52b2db9c9c0e3855507a0ac4fdc1cb76a46533e2f8569645783d6ea803f36137",
+      "red": {
+        "mutation": "M5-05-qlocale-unused: in chatmon/localefmt.py, '    locale = _locale()\\n    if locale is None:\\n        return f\"{(when.hour % 12)' became '    locale = _locale()\\n    if True:\\n        return f\"{(when.hour % 12)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_british_english_writes_24_hour_times_and_day_first_dates",
+        "observed_diagnostic": "________ test_british_english_writes_24_hour_times_and_day_first_dates ________",
+        "before": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "10589f390b82bde673353f66825c814cdbc02936ff3351c432125fca8d8fc3c7"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/localefmt.py",
+            "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-06-english-dropped",
+      "acceptance": [
+        "M5-06.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood"
+      ],
+      "method": "Red drill M5-06-english-dropped through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        }
+      ],
+      "scope_sha256": "3b4a6fd6370f06a6e8716c8c50e8bb18f919b116585565ddb24c4a220620b0be",
+      "red": {
+        "mutation": "M5-06-english-dropped: in chatmon/offline.py, 'for source in (_table(own, \"commands\"), known):' became 'for source in (_table(own, \"commands\") or known,):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_another_languages_phrases_and_help_with_english_always_understood",
+        "observed_diagnostic": "___ test_another_languages_phrases_and_help_with_english_always_understood ____",
+        "before": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "c02bfd63cf15ab84ab07f0ea369a4a4c62aad8907a1cbf3a70cf7fca456cf884"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-06-phrases-not-normalized",
+      "acceptance": [
+        "M5-06.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_offline.py::test_fixed_commands_are_read_from_the_phrase_data"
+      ],
+      "method": "Red drill M5-06-phrases-not-normalized through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        }
+      ],
+      "scope_sha256": "3b4a6fd6370f06a6e8716c8c50e8bb18f919b116585565ddb24c4a220620b0be",
+      "red": {
+        "mutation": "M5-06-phrases-not-normalized: in chatmon/offline.py, 'return self.commands.get(normal(text))' became 'return self.commands.get(text)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_fixed_commands_are_read_from_the_phrase_data",
+        "observed_diagnostic": "__ test_fixed_commands_are_read_from_the_phrase_data[What can you do?-help] ___",
+        "before": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "40cb0fd0bf218e540ebe0ebbbd1eab19f57b6298b26f6c6450897515e5487a46"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-07-401-digits",
+      "acceptance": [
+        "M5-07.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_parser_properties.py::test_a_sum_is_answered_or_refused_quickly_and_never_too_long"
+      ],
+      "method": "Red drill M5-07-401-digits through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "fe72f616dc6f9331bfdd3ba1574dfecab45a916338088fb15403c44474928223",
+      "red": {
+        "mutation": "M5-07-401-digits: in chatmon/offline.py, 'abs(value) >= _TOO_MANY_DIGITS' became 'abs(value) >= _TOO_MANY_DIGITS * 10'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_sum_is_answered_or_refused_quickly_and_never_too_long",
+        "observed_diagnostic": "________ test_a_sum_is_answered_or_refused_quickly_and_never_too_long _________",
+        "before": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "35b12acf9c65a1093d568b4c1f06fecc43e78ee68967c3b210ce0443244bcfd2"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-07-in-by-wall-clock",
+      "acceptance": [
+        "M5-07.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_parser_properties.py::test_in_is_that_many_seconds_of_real_time"
+      ],
+      "method": "Red drill M5-07-in-by-wall-clock through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "fe72f616dc6f9331bfdd3ba1574dfecab45a916338088fb15403c44474928223",
+      "red": {
+        "mutation": "M5-07-in-by-wall-clock: in chatmon/reminders.py, 'return _at(start + seconds, now), None' became 'return now + timedelta(seconds=seconds), None'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_in_is_that_many_seconds_of_real_time",
+        "observed_diagnostic": "__________________ test_in_is_that_many_seconds_of_real_time __________________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "b34e7240d800167f6ad14cd4d79d36cc5c9847f1e7505e16e3e19add5fd801df"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-07-past-longest",
+      "acceptance": [
+        "M5-07.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_parser_properties.py::test_a_reminders_time_is_always_ahead_and_never_too_far"
+      ],
+      "method": "Red drill M5-07-past-longest through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        }
+      ],
+      "scope_sha256": "fe72f616dc6f9331bfdd3ba1574dfecab45a916338088fb15403c44474928223",
+      "red": {
+        "mutation": "M5-07-past-longest: in chatmon/reminders.py, 'if due is None or not 0 < due.timestamp() - now.timestamp() <= LONGEST:' became 'if due is None:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_reminders_time_is_always_ahead_and_never_too_far",
+        "observed_diagnostic": "___________ test_a_reminders_time_is_always_ahead_and_never_too_far ___________",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "0b97330cb41feee5094c6f022ab44e3170a64e1975e0c2b429faea47b3cc9fea"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-08-working-first",
+      "acceptance": [
+        "M5-08.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_offline.py::test_agents_at_a_glance"
+      ],
+      "method": "Red drill M5-08-working-first through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills.log",
+        "sha256": "ae73b49094a97b080031482ef39f8f608dec3c7f47fd315d067d11f66bf02f6e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        }
+      ],
+      "scope_sha256": "097fcc2c3d09a157db24c53352c49fe5c31d2a814c88193144c3f5f8326f1af9",
+      "red": {
+        "mutation": "M5-08-working-first: in chatmon/offline.py, '_STATE_ORDER = {\"needs-you\": 0, \"working\": 1}' became '_STATE_ORDER = {\"needs-you\": 1, \"working\": 0}'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_agents_at_a_glance",
+        "observed_diagnostic": "___________________________ test_agents_at_a_glance ___________________________",
+        "before": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "2635bbdff9529965c02cbb82a8316290cb7d60014a5f2efbbd7e4d4c1a3b0f4f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M5-06-help-not-translated",
+      "acceptance": [
+        "M5-06.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood"
+      ],
+      "method": "Red drill W4-M5-06-help-not-translated through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "ruff": "0.17.4",
+          "hypothesis": "6.170.15",
+          "tzdata": "2026.6"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m5/wave4b/drills-new.log",
+        "sha256": "99a8bed9dc11b7335a01f958c990f20d95b3e3b70c807186d5237fb5160c8f9f"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/localefmt.py",
+          "sha256": "41b1abd96da504e3512cd8c0de157eea96e5e78481e6d01ecc03793d6340d820"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/phrases/en.json",
+          "sha256": "46ec622890b2cb8fd03d28b24f54e56bb3356c6f30bd0f3b217db6e747c7e200"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_localefmt.py",
+          "sha256": "d7ee1f223fdaf0051522b0fb024e3a66e3d706e2e53142e861a3f0401fdd0a5d"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        }
+      ],
+      "scope_sha256": "3b4a6fd6370f06a6e8716c8c50e8bb18f919b116585565ddb24c4a220620b0be",
+      "red": {
+        "mutation": "W4-M5-06-help-not-translated: in chatmon/offline.py, 'name = mine[\"name\"] if isinstance(mine.get(\"name\"), str) else section[\"name\"]' became 'name = section[\"name\"]'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_another_languages_phrases_and_help_with_english_always_understood",
+        "observed_diagnostic": "___ test_another_languages_phrases_and_help_with_english_always_understood ____",
+        "before": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "40a8045b7b93cd78b72171e66b085b1c2fa7a617926861a1ff5788a81b426f47"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ]
+      },
       "reason": null
     }
   ],
   "checkpoint": {
-    "scope_sha256": "fae64b876eee958f4c8f10dbee5c661e40cae2a2df9556f36a971a862526ca27",
+    "scope_sha256": "094259152b63719567a9ae4eb4b952a4682e9bbd38a4116250154c75fec4df05",
     "inputs": [
       {
         "path": "chatmon/localefmt.py",
@@ -7167,7 +10247,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
       },
       {
         "path": "docs/delivery/ROADMAP.md",
-        "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
       },
       {
         "path": "docs/delivery/reports/wave4/cilog.py",
@@ -7175,7 +10255,7 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
       },
       {
         "path": "pyproject.toml",
-        "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
       },
       {
         "path": "tests/conftest.py",
@@ -7222,8 +10302,8 @@ receipts replace them. Nothing remains open in M5 on fb19cb9.
       "T6-properties"
     ],
     "pending_operations": [],
-    "next_action": "None in M5 on fb19cb9. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree.",
-    "source_revision": "fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0"
+    "next_action": "None in M5 on bf9d8ac. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
+    "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545"
   }
 }
 ```
