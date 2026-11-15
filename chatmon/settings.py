@@ -285,7 +285,7 @@ def write_private(path: Path, text: str) -> None:
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
     fd = os.open(tmp, flags, 0o600)
     try:
-        if sys.platform != "win32":  # POSIX, said the way mypy knows os.fchmod is there
+        if sys.platform != "win32" and hasattr(os, "fchmod"):  # POSIX (mypy reads the platform; a test pretending to be Linux on Windows has no fchmod before 3.13)
             os.fchmod(fd, 0o600)  # the umask can take bits away from 0600, never add them; this puts back any it took
         data = memoryview(text.encode("utf-8"))
         while data:

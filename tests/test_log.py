@@ -15,6 +15,7 @@ def state(tmp_path, monkeypatch):
     """A state folder of the test's own, and the log set up afresh in it, then taken down again."""
     monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "state"))
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "state"))
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))  # macOS keeps state under the home folder: never the real one
     monkeypatch.delenv(log.DEBUG_ENV, raising=False)
     yield paths.state_dir()
     log.reset()
