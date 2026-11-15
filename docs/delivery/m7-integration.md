@@ -193,8 +193,8 @@ already run off the screen's thread (`Background`), which M4A's notes allow.
   passes or names the reason.
 - Results on the final source (`3c85918`): the whole suite, 1171 passed and 145 skipped
   ([final-pytest.log](reports/m7/final-pytest.log); 959 and 101 on the base before M7, with M3, M4A, M4B and M6A's
-  tests since); ruff clean ([final-ruff.log](reports/m7/final-ruff.log)); mypy on win32, linux and darwin with errors
-  only in M4A's `winuia.py` ([final-mypy.log](reports/m7/final-mypy.log)). 78 red drills, every one green, red and
+  tests since); ruff clean ([final-ruff.log](reports/m7/final-ruff.log)); mypy clean on win32, linux and darwin, with
+  M4A's `winuia.py` exempted by the coordinator (`cac0047`) ([final-mypy.log](reports/m7/final-mypy.log)). 78 red drills, every one green, red and
   green again: 76 in [drills.log](reports/m7/drills.log) ([drills-results.json](reports/m7/drills-results.json)) and
   two re-run in [drills-rerun.log](reports/m7/drills-rerun.log), whose first baselines timed out (120 s) inside
   M1B's `brains.remove_stale_folders()`, which lists `%TEMP%` (34,507 entries on this machine, with several workers'
@@ -236,8 +236,8 @@ For others:
 - **M4B.** `sound.CommandPlayer.close()` reaps Linux players at quit, but the module's players are private
   (`sound._sounds._players`): a public `sound.close()` would let the app call it. Not called: a player runs in a
   session of its own and finishes by itself as Chatmon exits.
-- **M6B.** `chatmon.winuia` (M4A's) fails mypy on all three platforms here; the coordinator's pending commit adds it to
-  the exemptions. M7's own new module (`chatswin.py`) and changed checked modules pass.
+- **M6B.** `chatmon.winuia` (M4A's) failed mypy on all three platforms until the coordinator exempted it (`cac0047`).
+  M7's own new module (`chatswin.py`) and changed checked modules pass.
 - **Coordinator.** `set_hosting(False)` and the penguin's menu kept on the stage are untried on a real Wayland
   compositor (none here): try the ask box with Orca running on Hyprland or KDE before release. Showing the
   desktop's own wording for the hotkey on Wayland (`Hotkey.bound`) in Settings needs the module's `Hotkey` object,
@@ -2138,7 +2138,7 @@ For others:
           "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
         }
       ],
-      "scope_sha256": "7700962aa8cb941ebe74ae9bce0262ddb5f49ecead8673285120673b9d528b04",
+      "scope_sha256": "6b91484a874ddda585fcf22be4e8f871548dddf8ac80a8f6e44045345fea1d91",
       "red": null,
       "reason": null
     },
@@ -2368,7 +2368,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7700962aa8cb941ebe74ae9bce0262ddb5f49ecead8673285120673b9d528b04",
+      "scope_sha256": "6b91484a874ddda585fcf22be4e8f871548dddf8ac80a8f6e44045345fea1d91",
       "red": null,
       "reason": null
     },
@@ -2453,7 +2453,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "a02d66cd91784a17cb3a92b6e4aa2917c3e80174db0e4d4d9e2314e43b6433a3",
+      "scope_sha256": "b1eb60087c89ba4a3fea5a56b05b1d9fb92eb1947961c87cfc81eac09d3915f7",
       "red": {
         "mutation": "CI-01-host-desk-read: in tests/app_harness.py, '    c.desk = PretendDesk()' became \"    pass  # the computer's own desk, as before\"",
         "baseline_exit": 0,
@@ -2560,7 +2560,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b10aca3e5400791bcaf351e18b5aa5a38001bf4cfb33326b232a05f02e255242",
+      "scope_sha256": "cc7e9c164823c32883ac05a3464dfac759ba21c6dbc10750301f865408170807",
       "red": {
         "mutation": "CI-02-queue-best-only: in chatmon/messages.py, 'best = next((m for m in self._ready() if self._takes_over(m, now)), None)' became 'best = next((m for m in self._ready()[:1] if self._takes_over(m, now)), None)'",
         "baseline_exit": 0,
@@ -2666,7 +2666,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b10aca3e5400791bcaf351e18b5aa5a38001bf4cfb33326b232a05f02e255242",
+      "scope_sha256": "cc7e9c164823c32883ac05a3464dfac759ba21c6dbc10750301f865408170807",
       "red": {
         "mutation": "CI-03-wake-best-only: in chatmon/messages.py, 'times = [at for m in self._ready() if' became 'times = [at for m in self._ready()[:1] if'",
         "baseline_exit": 0,
@@ -2772,7 +2772,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b10aca3e5400791bcaf351e18b5aa5a38001bf4cfb33326b232a05f02e255242",
+      "scope_sha256": "cc7e9c164823c32883ac05a3464dfac759ba21c6dbc10750301f865408170807",
       "red": {
         "mutation": "CI-04-askbox-wakes-by-strength: in chatmon/bubble.py, '        if drawn_here and self._moving(time.monotonic()):' became '        if drawn_here and self.effects(time.monotonic()) > 0.0:'",
         "baseline_exit": 0,
@@ -2878,7 +2878,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b10aca3e5400791bcaf351e18b5aa5a38001bf4cfb33326b232a05f02e255242",
+      "scope_sha256": "cc7e9c164823c32883ac05a3464dfac759ba21c6dbc10750301f865408170807",
       "red": {
         "mutation": "CI-05-askbox-frame-stops-at-zero: in chatmon/bubble.py, '        if not self._moving(time.monotonic()):' became '        if self.effects(time.monotonic()) <= 0.0:'",
         "baseline_exit": 0,
@@ -3004,7 +3004,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "93ffdff40f4108eb84207f2e55f10fec29608e888e7278e2c3b0f5b58309a3c1",
+      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
       "red": {
         "mutation": "M7-01-only-newest-piece: in chatmon/app.py, 'first, q.partial = not q.partial, q.partial + text' became 'first, q.partial = not q.partial, text'",
         "baseline_exit": 0,
@@ -3130,7 +3130,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "93ffdff40f4108eb84207f2e55f10fec29608e888e7278e2c3b0f5b58309a3c1",
+      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
       "red": {
         "mutation": "M7-01-closing-drops: in chatmon/app.py, '        # A question on its way carries on: its answer is kept in the chat, and a bubble says it came (_answered).' became '        self.asker.cancel()\\r\\n        self.questions.drop()'",
         "baseline_exit": 0,
@@ -3256,7 +3256,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "93ffdff40f4108eb84207f2e55f10fec29608e888e7278e2c3b0f5b58309a3c1",
+      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
       "red": {
         "mutation": "M7-01-answered-unsaid: in chatmon/app.py, 'self.say(f\"{label or \\'The AI\\'} answered\", buttons=[(\"Read\", self._read_answer)]' became 'self._read_aloud(f\"{label or \\'The AI\\'} answered\", buttons=[(\"Read\", self._read_answer)]'",
         "baseline_exit": 0,
@@ -3382,7 +3382,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "93ffdff40f4108eb84207f2e55f10fec29608e888e7278e2c3b0f5b58309a3c1",
+      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
       "red": {
         "mutation": "M7-01-stop-loses-what-came: in chatmon/app.py, '        if q.partial.strip():\\r\\n' became '        if False:\\r\\n'",
         "baseline_exit": 0,
@@ -3508,7 +3508,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "93ffdff40f4108eb84207f2e55f10fec29608e888e7278e2c3b0f5b58309a3c1",
+      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
       "red": {
         "mutation": "M7-01-no-busy: in chatmon/app.py, '        self.ask_box.set_busy(brain.label, q.started)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -3634,7 +3634,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "34b9c11bb8345a18d9ae3fc2cd4c98208eb337b3d31d08270675c440ba56b48f",
+      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
       "red": {
         "mutation": "M7-02-no-next-brain: in chatmon/app.py, '        if other is not None:\\r\\n            buttons.append' became '        if False:\\r\\n            buttons.append'",
         "baseline_exit": 0,
@@ -3760,7 +3760,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "34b9c11bb8345a18d9ae3fc2cd4c98208eb337b3d31d08270675c440ba56b48f",
+      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
       "red": {
         "mutation": "M7-02-fallback-every-time: in chatmon/app.py, '        if self._fallback_told == picked:\\r\\n' became '        if False:\\r\\n'",
         "baseline_exit": 0,
@@ -3886,7 +3886,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "34b9c11bb8345a18d9ae3fc2cd4c98208eb337b3d31d08270675c440ba56b48f",
+      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
       "red": {
         "mutation": "M7-02-welcome-without-brain: in chatmon/app.py, 'line = f\"Your questions go to **{brain.label}**; **Brain** in my menu picks another.\"' became 'line = \"\"'",
         "baseline_exit": 0,
@@ -4012,7 +4012,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "34b9c11bb8345a18d9ae3fc2cd4c98208eb337b3d31d08270675c440ba56b48f",
+      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
       "red": {
         "mutation": "M7-02-server-not-kept: in chatmon/app.py, '        self.state.set(\"trusted_servers\", brains.confirmed_servers())\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -4142,7 +4142,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-key-not-saved: in chatmon/app.py, '            problem = keychain.set(name, key)\\r\\n' became '            problem = None\\r\\n'",
         "baseline_exit": 0,
@@ -4272,7 +4272,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-key-not-handed-back: in chatmon/settingswin.py, '\"api_key\": (self._brain_name(), key) if key and self._brain_name() in self._keys else None,' became '\"api_key\": None,'",
         "baseline_exit": 0,
@@ -4402,7 +4402,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-test-without-typed-key: in chatmon/settingswin.py, 'self.test_requested.emit(name, self.key.text().strip() if name in self._keys else \"\")' became 'self.test_requested.emit(name, \"\")'",
         "baseline_exit": 0,
@@ -4532,7 +4532,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-text-scale-unapplied: in chatmon/app.py, '        self.stage.bubble.set_text_scale(scale)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -4662,7 +4662,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-cues-not-handed-back: in chatmon/settingswin.py, '\"cues\": {name: box.isChecked() for name, box in self.cues.items()},' became '\"cues\": {},'",
         "baseline_exit": 0,
@@ -4792,7 +4792,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-snooze-from-breaks: in chatmon/app.py, '        return float(self.config[\"reminders\"][\"snooze_minutes\"])' became '        return float(self.config[\"breaks\"][\"snooze_minutes\"])'",
         "baseline_exit": 0,
@@ -4922,7 +4922,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-interval-needs-restart: in chatmon/app.py, '        self._updates_timer.setInterval(' became '        (lambda ms: None)('",
         "baseline_exit": 0,
@@ -5052,7 +5052,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-battery-order-window: in chatmon/settingswin.py, 'self.battery_critical.setMaximum(max(1, low - 1) if low else 50)' became 'self.battery_critical.setMaximum(50)'",
         "baseline_exit": 0,
@@ -5182,7 +5182,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "1d35576859efe69977f2b16469b4a8d2d7fc7c449aec53e099ba936be053fe49",
+      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
       "red": {
         "mutation": "M7-03-battery-order-file: in chatmon/settings.py, '0 < heads_up.get(\"battery_low\", 0) <= heads_up.get(\"battery_critical\", 0)' became 'False'",
         "baseline_exit": 0,
@@ -5340,7 +5340,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9b7d572dffeb36cb3378c69a9d0ebf59388be5611c9a9a4c9daaeff1f74ec2e4",
+      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
       "red": {
         "mutation": "M7-04-done-keeps-it: in chatmon/app.py, '        if self.reminders.acknowledge(rid, time.time()):' became '        if self.reminders.get(rid):'",
         "baseline_exit": 0,
@@ -5498,7 +5498,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9b7d572dffeb36cb3378c69a9d0ebf59388be5611c9a9a4c9daaeff1f74ec2e4",
+      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
       "red": {
         "mutation": "M7-04-later-missing: in chatmon/app.py, '            (\"Later…\", partial(self._offer_snoozes, r.id)),\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -5656,7 +5656,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9b7d572dffeb36cb3378c69a9d0ebf59388be5611c9a9a4c9daaeff1f74ec2e4",
+      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
       "red": {
         "mutation": "M7-04-not-restored: in chatmon/app.py, '        self._show_due_reminders()  # fired and not yet done or snoozed' became '        pass  # fired and not yet done or snoozed'",
         "baseline_exit": 0,
@@ -5814,7 +5814,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9b7d572dffeb36cb3378c69a9d0ebf59388be5611c9a9a4c9daaeff1f74ec2e4",
+      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
       "red": {
         "mutation": "M7-04-focus-held-forever: in chatmon/app.py, '        for r in [r for r in due if r.kind == \"focus\"]:\\r\\n' became '        for r in []:\\r\\n'",
         "baseline_exit": 0,
@@ -5972,7 +5972,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9b7d572dffeb36cb3378c69a9d0ebf59388be5611c9a9a4c9daaeff1f74ec2e4",
+      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
       "red": {
         "mutation": "M7-04-edit-ignores-time: in chatmon/app.py, '            changes[\"when\"] = when.due.timestamp()\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -6130,7 +6130,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9b7d572dffeb36cb3378c69a9d0ebf59388be5611c9a9a4c9daaeff1f74ec2e4",
+      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
       "red": {
         "mutation": "M7-04-repeat-dropped: in chatmon/commands.py, 'command.kind, repeat=command.repeat)' became 'command.kind, repeat=None)'",
         "baseline_exit": 0,
@@ -6288,7 +6288,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9b7d572dffeb36cb3378c69a9d0ebf59388be5611c9a9a4c9daaeff1f74ec2e4",
+      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
       "red": {
         "mutation": "M7-04-cli-no-explanation: in chatmon/cli.py, 'why = reminders.explain(command, markdown=False) if command is not None and command.kind == \"unclear\" else \"\"' became 'why = \"\"'",
         "baseline_exit": 0,
@@ -6446,7 +6446,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0f0174f034aea93edc8ada335ac77ee74d1853c30bc8555dfe06b6e8fa787e21",
+      "scope_sha256": "f09b6606de5e1cf21fa2bef10aead9d9621b10f56324af809cd5982731dcfee5",
       "red": {
         "mutation": "M7-05-no-summary: in chatmon/app.py, '        return self.messages.take(lambda m: m in held and not m.buttons)' became '        return []'",
         "baseline_exit": 0,
@@ -6568,7 +6568,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "f21c4618343eb41ec08e32eec6950d218fd885628062c5334d9b55623ee1c566",
+      "scope_sha256": "0849df8caf5d01cbf79989317ec4821f63cb35d8cae48086a108f95445929a84",
       "red": {
         "mutation": "M7-06-not-recent: in chatmon/app.py, '        self._recent.append((time.time(), message))\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -6690,7 +6690,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "f21c4618343eb41ec08e32eec6950d218fd885628062c5334d9b55623ee1c566",
+      "scope_sha256": "0849df8caf5d01cbf79989317ec4821f63cb35d8cae48086a108f95445929a84",
       "red": {
         "mutation": "M7-06-click-ignores-missed: in chatmon/app.py, '        elif self._missed and not self.stage.message_visible():' became '        elif False:'",
         "baseline_exit": 0,
@@ -6812,7 +6812,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "f21c4618343eb41ec08e32eec6950d218fd885628062c5334d9b55623ee1c566",
+      "scope_sha256": "0849df8caf5d01cbf79989317ec4821f63cb35d8cae48086a108f95445929a84",
       "red": {
         "mutation": "M7-06-dropped-not-missed: in chatmon/app.py, 'self._missed += [m for m in self.messages.add(message) if m is not message]' became 'self.messages.add(message)'",
         "baseline_exit": 0,
@@ -6974,7 +6974,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-07-no-tooltip: in chatmon/app.py, '        self.tray.setToolTip(f\"Chatmon\\\\n{states}\" if states else \"Chatmon\")' became '        self.tray.setToolTip(\"Chatmon\")'",
         "baseline_exit": 0,
@@ -7136,7 +7136,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-07-no-badge: in chatmon/app.py, '            return QIcon(_with_badge(frame.pixmap) if self._tray_badge else frame.pixmap)' became '            return QIcon(frame.pixmap)'",
         "baseline_exit": 0,
@@ -7278,7 +7278,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "af06f018a4ea2ccb9d5b9ac151632cad5eacf14ce9e1f3a9ff755f1d2ba4411a",
+      "scope_sha256": "a637278dfa2b2d4212f534116263ca45f701efdf4770559e084af4fdf1611eaf",
       "red": {
         "mutation": "M7-07-agents-command-is-help: in chatmon/commands.py, '\"agents\": _agents,' became '\"agents\": _help,'",
         "baseline_exit": 0,
@@ -7420,7 +7420,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "af06f018a4ea2ccb9d5b9ac151632cad5eacf14ce9e1f3a9ff755f1d2ba4411a",
+      "scope_sha256": "a637278dfa2b2d4212f534116263ca45f701efdf4770559e084af4fdf1611eaf",
       "red": {
         "mutation": "M7-07-no-reply: in chatmon/app.py, '                            sock.write(events.reply_line(reply))' became '                            pass'",
         "baseline_exit": 0,
@@ -7562,7 +7562,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "af06f018a4ea2ccb9d5b9ac151632cad5eacf14ce9e1f3a9ff755f1d2ba4411a",
+      "scope_sha256": "a637278dfa2b2d4212f534116263ca45f701efdf4770559e084af4fdf1611eaf",
       "red": {
         "mutation": "M7-07-cli-ignores-live: in chatmon/cli.py, '    if live is not None:\\r\\n' became '    if False:\\r\\n'",
         "baseline_exit": 0,
@@ -7684,7 +7684,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "114a3eb93f7bc50d992e3f2a41e25ed6850acdf5cb6663054c1e5d54a9bb912b",
+      "scope_sha256": "0ae4650d3149a036c2f93e1579b08041bb8351b2f9303ce598e931d7a43225dc",
       "red": {
         "mutation": "M7-08-text-not-attached: in chatmon/app.py, '            self._attach(lambda: attachments.from_text(payload))  # attached, however short' became '            pass  # attached, however short'",
         "baseline_exit": 0,
@@ -7842,7 +7842,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "4f5f3d2008eb8f362afb058af62a10ff5d0a55f25354ee743eb6c0b1739889ac",
+      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
       "red": {
         "mutation": "M7-09-no-search-inside: in chatmon/chatswin.py, '                inside.add(listed.id)\\n' became '                pass\\n'",
         "baseline_exit": 0,
@@ -8000,7 +8000,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "4f5f3d2008eb8f362afb058af62a10ff5d0a55f25354ee743eb6c0b1739889ac",
+      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
       "red": {
         "mutation": "M7-09-no-all-chats: in chatmon/menus.py, '    sub.addAction(\"All chats…\", c.open_chats)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -8130,7 +8130,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0582cf229525c4bdad612115203c3ba1b2c7ceade20400a155de28d3673a023f",
+      "scope_sha256": "35794591979efdae3ac06f56e083bfdbe0023cb33429cf38cf4238450f2a3de9",
       "red": {
         "mutation": "M7-09-answer-not-by: in chatmon/app.py, 'self.chat.add(chats.Message(\"assistant\", answer, brain=label, by=name))' became 'self.chat.add(chats.Message(\"assistant\", answer, brain=label))'",
         "baseline_exit": 0,
@@ -8260,7 +8260,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0582cf229525c4bdad612115203c3ba1b2c7ceade20400a155de28d3673a023f",
+      "scope_sha256": "35794591979efdae3ac06f56e083bfdbe0023cb33429cf38cf4238450f2a3de9",
       "red": {
         "mutation": "M7-09-chat-brain-ignored: in chatmon/app.py, 'picked, prefer = self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), self.chat.brain or None' became 'picked, prefer = self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), None'",
         "baseline_exit": 0,
@@ -8418,7 +8418,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "4f5f3d2008eb8f362afb058af62a10ff5d0a55f25354ee743eb6c0b1739889ac",
+      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
       "red": {
         "mutation": "M7-09-restore-not-reread: in chatmon/app.py, '        self.reminders = reminders.ReminderBook.from_list(self.state.get(\"reminders\", []))\\r\\n        self._sync_focus_hold()\\r\\n        self.reload(quietly=True)' became '        self.reload(quietly=True)'",
         "baseline_exit": 0,
@@ -8576,7 +8576,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "4f5f3d2008eb8f362afb058af62a10ff5d0a55f25354ee743eb6c0b1739889ac",
+      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
       "red": {
         "mutation": "M7-09-listing-rereads: in chatmon/chats.py, '            if seen is None or seen[:2] != (info.st_mtime_ns, info.st_size):' became '            if True:'",
         "baseline_exit": 0,
@@ -8694,7 +8694,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "600d5ae63e76268203c3a0810a37dc86fdcc95e5407cb416e348a449f4349b43",
+      "scope_sha256": "8390ae35c685db3694369736fb2f72d6eb5378a2b5b10527aee986b00f909cb5",
       "red": {
         "mutation": "M7-10-copy-unwired: in chatmon/app.py, '        self.ask_box.copy_requested.connect(self._copy)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -8812,7 +8812,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "600d5ae63e76268203c3a0810a37dc86fdcc95e5407cb416e348a449f4349b43",
+      "scope_sha256": "8390ae35c685db3694369736fb2f72d6eb5378a2b5b10527aee986b00f909cb5",
       "red": {
         "mutation": "M7-10-ctrl-number-ignored: in chatmon/app.py, '                return self._press_bubble_button(key - Qt.Key.Key_1.value)' became '                return False'",
         "baseline_exit": 0,
@@ -8930,7 +8930,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "600d5ae63e76268203c3a0810a37dc86fdcc95e5407cb416e348a449f4349b43",
+      "scope_sha256": "8390ae35c685db3694369736fb2f72d6eb5378a2b5b10527aee986b00f909cb5",
       "red": {
         "mutation": "M7-10-expired-unanswerable: in chatmon/app.py, '            self._answerable = (now, list(message.buttons))\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -9064,7 +9064,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7a73ac14ab5721cf953ad3c04e27fe50f368290afb1a1a58ef254d6d73dd00a0",
+      "scope_sha256": "8913caaf56491b864ff7c79dac4fe7b8a2032060969ca81dc18769863d1fa9d1",
       "red": {
         "mutation": "M7-11-lock-keeps-drawing: in chatmon/app.py, '            self.stage.set_drawing(not locked)  # nothing is drawn while nobody can see it' became '            pass'",
         "baseline_exit": 0,
@@ -9198,7 +9198,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7a73ac14ab5721cf953ad3c04e27fe50f368290afb1a1a58ef254d6d73dd00a0",
+      "scope_sha256": "8913caaf56491b864ff7c79dac4fe7b8a2032060969ca81dc18769863d1fa9d1",
       "red": {
         "mutation": "M7-11-box-ignores-saver: in chatmon/app.py, '        self.ask_box.set_power_saving(on)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -9332,7 +9332,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7a73ac14ab5721cf953ad3c04e27fe50f368290afb1a1a58ef254d6d73dd00a0",
+      "scope_sha256": "8913caaf56491b864ff7c79dac4fe7b8a2032060969ca81dc18769863d1fa9d1",
       "red": {
         "mutation": "M7-11-palette-ignored: in chatmon/app.py, '            QTimer.singleShot(0, self._palette_changed)\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -9494,7 +9494,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-11-sound-in-quiet: in chatmon/app.py, '        if self._quiet or self.reminders.focus() is not None:\\r\\n            return False\\r\\n        return self._play(name)' became '        return self._play(name)'",
         "baseline_exit": 0,
@@ -9624,7 +9624,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "610628884dca389a63c6004b897ad1997e7f29403fc82a2592b32435fa8b06ce",
+      "scope_sha256": "6f89b1f20875367f6cdf060c19517d59f4684ca12080f0fcdaddac270292f496",
       "red": {
         "mutation": "M7-12-carry-on-forgotten: in chatmon/app.py, '            self._set_aside = set_aside\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -9754,7 +9754,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "610628884dca389a63c6004b897ad1997e7f29403fc82a2592b32435fa8b06ce",
+      "scope_sha256": "6f89b1f20875367f6cdf060c19517d59f4684ca12080f0fcdaddac270292f496",
       "red": {
         "mutation": "M7-12-drops-question: in chatmon/app.py, 'and bool(self.chat.messages) and self.questions.current is None and' became 'and bool(self.chat.messages) and'",
         "baseline_exit": 0,
@@ -9916,7 +9916,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "743dbcb73b442598493673b32c5b002e0cc1e69485f9140241d396354b999540",
+      "scope_sha256": "ea8c49fb583e2e591400f5143e23d99435dad98f16c80181f1262f7bf47de747",
       "red": {
         "mutation": "M7-13-hello-every-unlock: in chatmon/app.py, '        if self.state.get(\"hello_day\") == today.isoformat():\\r\\n            return False\\r\\n' became ''",
         "baseline_exit": 0,
@@ -10034,7 +10034,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "f90bfce439338ee9ddeb672c2d84cf39f33d69fb98e4de32b089c78f409749e3",
+      "scope_sha256": "d58fbad5edf94e483bcc0462d58102206a8db3e68ec924c3cf44c9192981eca6",
       "red": {
         "mutation": "M0-06-table-unfiltered: in chatmon/commands.py, '        return command if command in COMMANDS else None' became '        return command'",
         "baseline_exit": 0,
@@ -10160,7 +10160,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "34b9c11bb8345a18d9ae3fc2cd4c98208eb337b3d31d08270675c440ba56b48f",
+      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
       "red": {
         "mutation": "M0-07-waits-for-brain: in chatmon/app.py, 'quick = brains.choose(self.brains, configured, picked, wait=False, prefer=prefer)' became 'quick = brains.choose(self.brains, configured, picked, wait=True, prefer=prefer)'",
         "baseline_exit": 0,
@@ -10302,7 +10302,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "922736723ddc4f6581a5edb7e5a812489e24b349209d0d31fb2f0d093659d320",
+      "scope_sha256": "ccd219ef58ffd0f6c6ff64e27721e2fa3b8308826b5d5d48e2999426bb9d35b3",
       "red": {
         "mutation": "M0-08-connections-unchecked: in chatmon/app.py, '            if sys.platform == \"win32\" and not _client_is_me(sock):' became '            if False:'",
         "baseline_exit": 0,
@@ -10444,7 +10444,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "922736723ddc4f6581a5edb7e5a812489e24b349209d0d31fb2f0d093659d320",
+      "scope_sha256": "ccd219ef58ffd0f6c6ff64e27721e2fa3b8308826b5d5d48e2999426bb9d35b3",
       "red": {
         "mutation": "M0-10-any-process-forward: in chatmon/cli.py, '    target = pid if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0 else ASFW_ANY' became '    target = ASFW_ANY'",
         "baseline_exit": 0,
@@ -10574,7 +10574,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0582cf229525c4bdad612115203c3ba1b2c7ceade20400a155de28d3673a023f",
+      "scope_sha256": "35794591979efdae3ac06f56e083bfdbe0023cb33429cf38cf4238450f2a3de9",
       "red": {
         "mutation": "M1B-07-files-brain-sees-all: in chatmon/app.py, 'pairs = chat.history(brain.label, name=brain.name, own_only=guard, before=q.before)' became 'pairs = chat.history(brain.label, name=brain.name, own_only=False, before=q.before)'",
         "baseline_exit": 0,
@@ -10708,7 +10708,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "315f9a9a8700c59dfa08e2cc9ecc92d4a2eb5971dea7372999449e9b4350195d",
+      "scope_sha256": "8ad9fc576a70ecf0aee6eb9e0e2e3d5eaa002e7527961e0e29d7c30150ab560a",
       "red": {
         "mutation": "M1B-09-overrides-unchecked: in chatmon/app.py, '            config, more = coerce(merge(config, overrides))' became '            config, more = merge(config, overrides), []'",
         "baseline_exit": 0,
@@ -10842,7 +10842,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "315f9a9a8700c59dfa08e2cc9ecc92d4a2eb5971dea7372999449e9b4350195d",
+      "scope_sha256": "8ad9fc576a70ecf0aee6eb9e0e2e3d5eaa002e7527961e0e29d7c30150ab560a",
       "red": {
         "mutation": "M1B-10-damage-unsaid: in chatmon/app.py, '        for problem in (self.state.problem, self.memory.problem):' became '        for problem in ():'",
         "baseline_exit": 0,
@@ -10972,7 +10972,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "11e26204b45453394eca82bd544ac3306e2f4e2eee00b20d46db869007e0ae63",
+      "scope_sha256": "e686568c5c66f52519549b4eefcf00cfca1113d81ca31ad79dfa758ed16561bd",
       "red": {
         "mutation": "M2-more-unwired: in chatmon/app.py, '        self.stage.bubble.on_more = self._show_more' became '        pass'",
         "baseline_exit": 0,
@@ -11130,7 +11130,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "4f5f3d2008eb8f362afb058af62a10ff5d0a55f25354ee743eb6c0b1739889ac",
+      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
       "red": {
         "mutation": "M5-chat-times-12h: in chatmon/chats.py, '        return f\"today {localefmt.time_of_day(d)}\"' became '        return f\"today {(d.hour % 12) or 12}:{d.minute:02d} {\\'AM\\' if d.hour < 12 else \\'PM\\'}\"'",
         "baseline_exit": 0,
@@ -11292,7 +11292,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-07-no-stage-badge: in chatmon/app.py, '        self.stage.set_badge(sum(1 for state, _ in self.agents.values() if state == \"working\"), waiting)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -11454,7 +11454,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-11-player-never-quiet: in chatmon/app.py, 'quiet=lambda: self._quiet or self.reminders.focus() is not None)' became 'quiet=lambda: False)'",
         "baseline_exit": 0,
@@ -11616,7 +11616,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-11-hotkey-unregistered: in chatmon/app.py, '        error = hotkey.register(sequence, self._hotkey_pressed, failed=self._hotkey_failed)' became '        error = None'",
         "baseline_exit": 0,
@@ -11778,7 +11778,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-11-balloon-not-toast: in chatmon/app.py, '            if tag is None:  # no toast here' became '            if True:  # no toast here'",
         "baseline_exit": 0,
@@ -11940,7 +11940,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-11-refused-toast-unsaid: in chatmon/app.py, '            self._balloon(*notice)\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -12102,7 +12102,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-11-box-always-hosted: in chatmon/app.py, '            self.stage.set_hosting(not self._ask_box_as_window())' became '            pass'",
         "baseline_exit": 0,
@@ -12264,7 +12264,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0a81e28ba095c0f03b13c1527afbf82be9456fece26519af33d585c12921875c",
+      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
       "red": {
         "mutation": "M4A-reader-not-looked-again: in chatmon/app.py, '        self._reader_seen = float(\"-inf\")\\r\\n        self._check_hosting()' became '        self._check_hosting()'",
         "baseline_exit": 0,
@@ -12426,7 +12426,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0a81e28ba095c0f03b13c1527afbf82be9456fece26519af33d585c12921875c",
+      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
       "red": {
         "mutation": "M4A-mac-sleep-unheard: in chatmon/app.py, '            watcher.slept.connect(self._sleeping)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -12588,7 +12588,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0a81e28ba095c0f03b13c1527afbf82be9456fece26519af33d585c12921875c",
+      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
       "red": {
         "mutation": "M4A-low-power-not-read: in chatmon/app.py, '            self._power_saving(bool(macnative.low_power_mode()))\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -12750,7 +12750,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0a81e28ba095c0f03b13c1527afbf82be9456fece26519af33d585c12921875c",
+      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
       "red": {
         "mutation": "M4A-urgent-through-dnd: in chatmon/app.py, 'urgency = sysnotify.URGENCY_NORMAL if self._quiet == \"Do Not Disturb\" else sysnotify.URGENCY_CRITICAL' became 'urgency = sysnotify.URGENCY_CRITICAL'",
         "baseline_exit": 0,
@@ -12912,7 +12912,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-11-magnifier-not-placed: in chatmon/app.py, '        wincaret.place(self.stage.native_window(),' became '        (lambda *a: None)(self.stage.native_window(),'",
         "baseline_exit": 0,
@@ -13074,7 +13074,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b0ea60f55cea1f411308f0a50d20d0043589c6e1955de09447cf0bf9f7cfdd82",
+      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
       "red": {
         "mutation": "M7-11-follow-ignored: in chatmon/app.py, '        self.stage.follow_pointer_screen(bool(self.config[\"follow_screen\"]))' became '        self.stage.follow_pointer_screen(False)'",
         "baseline_exit": 0,
@@ -13236,7 +13236,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0a81e28ba095c0f03b13c1527afbf82be9456fece26519af33d585c12921875c",
+      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
       "red": {
         "mutation": "M4A-desk-changes-unheard: in chatmon/app.py, '        desk.settings_changed.connect(self._check_accessibility)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -13267,7 +13267,7 @@ For others:
     }
   ],
   "checkpoint": {
-    "scope_sha256": "7700962aa8cb941ebe74ae9bce0262ddb5f49ecead8673285120673b9d528b04",
+    "scope_sha256": "6b91484a874ddda585fcf22be4e8f871548dddf8ac80a8f6e44045345fea1d91",
     "inputs": [
       {
         "path": "chatmon/app.py",
@@ -13460,7 +13460,7 @@ For others:
       }
     ],
     "next_action": "Wire M4A's sleep and live accessibility events once it is merged into improve/assessment-fixes; read the Linux and macOS CI results.",
-    "source_revision": "3c85918d3db960fad92be3028e42b259dcd6365d"
+    "source_revision": "d668220538741d05567ee93f882a140309f761b1"
   }
 }
 ```

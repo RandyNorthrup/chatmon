@@ -1,23 +1,6 @@
 == mypy --platform win32
-chatmon\winuia.py:204: error: Item "None" of "Announcer | None" has no attribute "say"  [union-attr]
-Found 1 error in 1 file (checked 67 source files)
+Success: no issues found in 67 source files
 == mypy --platform linux
-chatmon\winuia.py:53: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:54: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:55: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:56: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:57: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:58: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:204: error: Item "None" of "Announcer | None" has no attribute "say"  [union-attr]
-chatmon\winuia.py:210: error: Module has no attribute "windll"  [attr-defined]
-Found 8 errors in 1 file (checked 67 source files)
+Success: no issues found in 67 source files
 == mypy --platform darwin
-chatmon\winuia.py:53: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:54: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:55: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:56: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:57: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:58: error: Module has no attribute "WINFUNCTYPE"; maybe "PYFUNCTYPE"?  [attr-defined]
-chatmon\winuia.py:204: error: Item "None" of "Announcer | None" has no attribute "say"  [union-attr]
-chatmon\winuia.py:210: error: Module has no attribute "windll"  [attr-defined]
-Found 8 errors in 1 file (checked 67 source files)
+Success: no issues found in 67 source files
