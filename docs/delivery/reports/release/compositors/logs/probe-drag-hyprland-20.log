@@ -1,0 +1,12 @@
+$ python docs/delivery/reports/release/compositors/probes/drag_events.py hyprland /var/tmp/compositors-probes/drag-hyprland-20 20 0.016
+# WSL Arch Linux, kernel 6.18.58.1-microsoft-standard-WSL2; worktree HEAD 65ed989; CHATMON_INSTANCE=compositors-216643-1794778275
+# kwin 6.8.2; Hyprland 0.57.0; sway 1.12
+# packages: kwin 6.8.2-2 hyprland 0.57.0-1 aquamarine 0.15.1-1 sway 1:1.12-4 wlroots0.20 0.20.2-1 grim 1.5.0-2 wl-clipboard 1:2.3.0-1 orca 51.1-1 at-spi2-core 2.62.1-1 mesa 1:26.2.6-1 qt6-base 6.12.0-3 qt6-wayland 6.12.0-1 
+# venv /var/tmp/plans-venv Python 3.14.9 PyQt6 6.11.0 Qt 6.11.2
+hyprland: pressed on the chatmon at (542.0, 680.0, 116.0, 120.0); the overlay heard ['enter', 'motion', 'button']
+  step 1: pointer at x=580: {'seen': ['motion'], 'held': 1, 'chatmon': [517.0, 664.0, 127.0, 136.0], 'box': False}
+  step 2: pointer at x=560: {'seen': ['motion'], 'held': 1, 'chatmon': [497.0, 664.0, 127.0, 136.0], 'box': False}
+  step 3: pointer at x=540: {'seen': ['motion'], 'held': 1, 'chatmon': [477.0, 664.0, 127.0, 136.0], 'box': False}
+  step 16: pointer at x=280: {'seen': ['motion'], 'held': 1, 'chatmon': [217.0, 664.0, 127.0, 136.0], 'box': False}
+released: {'seen': ['button'], 'held': 0, 'chatmon': [222.0, 680.0, 116.0, 120.0], 'box': False}
+exit=0

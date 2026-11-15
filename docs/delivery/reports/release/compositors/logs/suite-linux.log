@@ -1,0 +1,146 @@
+$ python -m pytest -p no:cacheprovider -q -rs --basetemp=/var/tmp/compositors-tmp/suite
+# WSL Arch Linux, kernel 6.18.58.1-microsoft-standard-WSL2; worktree HEAD 04112b9+fixes; CHATMON_INSTANCE=compositors-230992-1794780210
+# kwin 6.8.2; Hyprland 0.57.0; sway 1.12
+# packages: kwin 6.8.2-2 hyprland 0.57.0-1 aquamarine 0.15.1-1 sway 1:1.12-4 wlroots0.20 0.20.2-1 grim 1.5.0-2 wl-clipboard 1:2.3.0-1 orca 51.1-1 at-spi2-core 2.62.1-1 mesa 1:26.2.6-1 qt6-base 6.12.0-3 qt6-wayland 6.12.0-1 
+# venv /var/tmp/plans-venv Python 3.14.9 PyQt6 6.11.0 Qt 6.11.2
+...ss................................................................... [  4%]
+................s.............ss........................................ [  9%]
+........................................................................ [ 14%]
+.....................................................sss..s............. [ 19%]
+........................................................................ [ 24%]
+.....s...s.............................................................. [ 29%]
+..........................s............s.......ssss..................... [ 33%]
+........................................................................ [ 38%]
+........................................s.......................s....... [ 43%]
+.........................sssss.......................................... [ 48%]
+................ssssssssss...........s..........................ssssssss [ 53%]
+........................................................................ [ 58%]
+........................................................................ [ 62%]
+......sss...................s......ssss..................s..ssss....s... [ 67%]
+s.s..................................................................... [ 72%]
+........................................................................ [ 77%]
+..................................................................s.s... [ 82%]
+........................................................................ [ 87%]
+........................................................................ [ 92%]
+.s.....................................ss.ssssssssssssssssssssssssssssss [ 96%]
+sssss...ssssssss......sssssssssssssss.........                           [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_a11y.py:65: Windows
+SKIPPED [1] tests/test_a11y.py:73: macOS
+SKIPPED [1] tests/test_app_m7.py:149: Windows pipes: the access list keeps other users out, and each connection is checked too
+SKIPPED [1] tests/test_app_m7.py:423: Windows' toasts
+SKIPPED [1] tests/test_app_m7.py:468: Windows' Magnifier
+SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:125: Windows links
+SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+SKIPPED [1] tests/test_brains.py:592: cmd.exe and the tools npm installs as .cmd files are Windows'
+SKIPPED [1] tests/test_brains.py:681: Windows' process tree
+SKIPPED [1] tests/test_chats.py:373: the roaming app-data folder is Windows'
+SKIPPED [1] tests/test_cli.py:94: only Windows keeps a program you're not using from coming to the front
+SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+SKIPPED [1] tests/test_events.py:121: macOS's temporary folder of your own
+SKIPPED [1] tests/test_heads_up.py:135: macOS only
+SKIPPED [1] tests/test_hotkey.py:157: Windows only
+SKIPPED [1] tests/test_hotkey.py:183: Windows only
+SKIPPED [1] tests/test_hotkey.py:200: Windows only
+SKIPPED [1] tests/test_hotkey.py:254: macOS only
+SKIPPED [1] tests/test_hotkey.py:271: macOS only
+SKIPPED [1] tests/test_install_update.py:269: macOS's root code: ditto, BSD find, osascript
+SKIPPED [3] tests/test_install_update.py:280: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:295: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:309: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:323: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+SKIPPED [1] tests/test_linuxsession.py:102: no PackageKit here
+SKIPPED [1] tests/test_macnative.py:20: macOS only
+SKIPPED [1] tests/test_macnative.py:29: macOS only
+SKIPPED [1] tests/test_macnative.py:63: macOS only
+SKIPPED [1] tests/test_macnative.py:97: macOS only
+SKIPPED [1] tests/test_macnative.py:125: macOS only
+SKIPPED [1] tests/test_macnative.py:143: macOS only
+SKIPPED [1] tests/test_macnative.py:171: macOS only
+SKIPPED [1] tests/test_macnative.py:179: macOS only
+SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+SKIPPED [1] tests/test_platform_events.py:104: Windows only
+SKIPPED [1] tests/test_platform_events.py:119: Windows only
+SKIPPED [1] tests/test_platform_events.py:127: Windows only
+SKIPPED [1] tests/test_platform_events.py:181: Windows only
+SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+SKIPPED [1] tests/test_presence.py:18: Windows only
+SKIPPED [1] tests/test_presence.py:33: Windows only
+SKIPPED [1] tests/test_presence.py:55: Windows only
+SKIPPED [1] tests/test_presence.py:74: macOS only
+SKIPPED [1] tests/test_presence.py:143: no GNOME session here
+SKIPPED [1] tests/test_presence.py:220: macOS only
+SKIPPED [1] tests/test_presence.py:248: PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal
+SKIPPED [1] tests/test_sound.py:210: Windows only
+SKIPPED [1] tests/test_sound.py:261: macOS only
+SKIPPED [1] tests/test_updates.py:648: holding a file open against changes: Windows
+SKIPPED [1] tests/test_wincaret.py:52: Windows only
+SKIPPED [1] tests/test_wincaret.py:87: Windows only
+SKIPPED [1] tests/test_windows.py:77: Windows only
+SKIPPED [1] tests/test_windows.py:87: Windows only
+SKIPPED [1] tests/test_windows.py:98: Windows only
+SKIPPED [1] tests/test_windows.py:102: Windows only
+SKIPPED [1] tests/test_windows.py:107: Windows only
+SKIPPED [1] tests/test_windows.py:127: Windows only
+SKIPPED [1] tests/test_windows.py:138: Windows only
+SKIPPED [1] tests/test_windows.py:153: Windows only
+SKIPPED [1] tests/test_windows.py:164: Windows only
+SKIPPED [1] tests/test_windows.py:197: Windows only
+SKIPPED [1] tests/test_windows.py:210: Windows only
+SKIPPED [1] tests/test_windows.py:224: Windows only
+SKIPPED [1] tests/test_windows.py:261: Windows only
+SKIPPED [1] tests/test_windows.py:279: Windows only
+SKIPPED [1] tests/test_windows.py:292: Windows only
+SKIPPED [1] tests/test_windows.py:315: Windows only
+SKIPPED [1] tests/test_windows.py:339: Windows only
+SKIPPED [1] tests/test_windows.py:366: Windows only
+SKIPPED [1] tests/test_windows.py:408: Windows only
+SKIPPED [1] tests/test_windows.py:434: Windows only
+SKIPPED [1] tests/test_windows.py:441: Windows only
+SKIPPED [1] tests/test_windows.py:479: Windows only
+SKIPPED [1] tests/test_windows.py:491: Windows only
+SKIPPED [1] tests/test_windows.py:502: Windows only
+SKIPPED [1] tests/test_windows.py:519: Windows only
+SKIPPED [1] tests/test_windows.py:535: Windows only
+SKIPPED [1] tests/test_windows.py:561: Windows only
+SKIPPED [1] tests/test_windows.py:583: Windows only
+SKIPPED [1] tests/test_windows.py:601: Windows only
+SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+SKIPPED [1] tests/test_windows.py:684: Windows only
+SKIPPED [1] tests/test_windows.py:699: Windows only
+SKIPPED [1] tests/test_windows.py:739: Windows only
+SKIPPED [1] tests/test_windows.py:795: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+SKIPPED [1] tests/test_windows.py:818: Windows only
+SKIPPED [1] tests/test_winlock.py:17: Windows only
+SKIPPED [1] tests/test_winlock.py:41: Windows only
+SKIPPED [1] tests/test_winlock.py:78: Windows only
+SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+SKIPPED [1] tests/test_wintoast.py:110: Windows only
+SKIPPED [1] tests/test_wintoast.py:126: Windows only
+SKIPPED [1] tests/test_wintoast.py:151: Windows only
+SKIPPED [1] tests/test_wintoast.py:211: Windows only
+SKIPPED [1] tests/test_wintoast.py:235: Windows only
+SKIPPED [1] tests/test_wintoast.py:255: Windows only
+SKIPPED [1] tests/test_wintoast.py:275: Windows only
+SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+1364 passed, 122 skipped in 934.90s (0:15:34)
+exit=0

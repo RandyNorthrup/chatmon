@@ -29,6 +29,8 @@ import logging
 import math
 import threading
 import time
+import weakref
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from functools import partial
 import mmap
@@ -37,7 +39,7 @@ import sys
 
 from PyQt6 import sip
 from PyQt6.QtCore import QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer
-from PyQt6.QtGui import QGuiApplication, QImage, QPainter, QRegion, QScreen
+from PyQt6.QtGui import QGuiApplication, QImage, QPainter, QRegion, QScreen, QWindow
 
 from . import wayland, xkb
 from .qtsignal import pyqtSignal
@@ -122,6 +124,7 @@ IDLE_AFTER_MS = 300_000
 ANCHOR_ALL = 1 | 2 | 4 | 8  # top, bottom, left, right: the whole output
 KEYBOARD_NONE, KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND = 0, 1, 2  # on_demand: layer-shell version 4
 HANDOVER_GRACE = 0.5  # s: the keyboard gone this soon after a handover to on_demand was the compositor's doing
+KEPT_GRACE = 0.3  # s: the keyboard still here this long after the overlay let it go: the compositor kept it (KWin)
 KEYMAP_XKB_V1 = 1
 SHM_ARGB8888 = 0  # premultiplied, byte order B G R A: QImage's ARGB32_Premultiplied on little-endian
 CAP_POINTER, CAP_KEYBOARD = 1, 2
@@ -635,6 +638,8 @@ class LayerSurface(QObject):
             "primary": Selection(self, PRIMARY),
         }
         self._text_state: TextState | None = None  # the focused text field, as the stage last said
+        self._qt_clipboard: str | None = None  # copied on the overlay, for Qt's clipboard once one of Qt's windows has the keyboard
+        self._focus_watch = self._watch_qt_focus()
         self._seat_versions: dict[int, int] = {}
         self._registry = conn.new_id(self._registry_event)
         conn.request(DISPLAY_ID, 1, "n", self._registry)  # wl_display.get_registry
@@ -692,6 +697,10 @@ class LayerSurface(QObject):
         self._trim_timer = QTimer(self)
         self._trim_timer.setSingleShot(True)
         self._trim_timer.timeout.connect(self._trim)
+        self._kept_timer = QTimer(self)  # the keyboard let go: still here after KEPT_GRACE? (_keyboard_kept)
+        self._kept_timer.setSingleShot(True)
+        self._kept_timer.setInterval(round(KEPT_GRACE * 1000))
+        self._kept_timer.timeout.connect(self._keyboard_kept)
         self._shown: Buffer | None = None  # the buffer last attached: what the compositor shows
 
     @classmethod
@@ -804,6 +813,38 @@ class LayerSurface(QObject):
         board = QGuiApplication.clipboard() if which == "clipboard" and text else None
         if board is not None:
             board.setText(text)
+            # KWin takes a selection only from the client with the keyboard, which is the overlay's connection now,
+            # not Qt's: there Qt's copy is refused, and Chatmon's windows would read the overlay's (the freeze
+            # above). So Qt's copy again once one of its windows has the keyboard (_qt_window_focused).
+            self._qt_clipboard = text
+
+    def _watch_qt_focus(self) -> Callable[[QWindow | None], None] | None:
+        """Hear when one of Qt's windows gets the keyboard, holding this surface only weakly: a late signal, after
+        the surface closed or went, does nothing. Returns the slot, for close() to disconnect."""
+        app = QGuiApplication.instance()
+        if not isinstance(app, QGuiApplication):  # always one: the stage needs Qt's GUI
+            return None
+        me = weakref.ref(self)
+
+        def focused(window: QWindow | None) -> None:
+            surface = me()
+            if surface is not None:
+                surface._qt_window_focused(window)
+
+        app.focusWindowChanged.connect(focused)
+        return focused
+
+    def _qt_window_focused(self, window: QWindow | None) -> None:
+        """One of Qt's windows has the keyboard: what was copied on the overlay goes on Qt's clipboard again, if
+        it's still the clipboard (no app has copied since), where the compositor now takes it from Qt."""
+        if window is None or self._qt_clipboard is None:  # no window has it (yet): kept for the one that will
+            return
+        text, self._qt_clipboard = self._qt_clipboard, None
+        if self._closing or self.selections["clipboard"].source is None:
+            return
+        board = QGuiApplication.clipboard()
+        if board is not None:
+            board.setText(text)
 
     def set_text_input(self, state: TextState | None) -> None:
         """The text field that has the focus on the stage (None: none does),
@@ -872,6 +913,14 @@ class LayerSurface(QObject):
         self._closing = True
         self._present_timer.stop()
         self._trim_timer.stop()
+        self._kept_timer.stop()
+        app = QGuiApplication.instance()
+        if self._focus_watch is not None and isinstance(app, QGuiApplication):
+            try:
+                app.focusWindowChanged.disconnect(self._focus_watch)
+            except (TypeError, RuntimeError):  # not connected, or Qt's application already gone
+                pass
+            self._focus_watch = None
         self._stop_repeat()
         self._destroy_surface()
         for _pointer, device in self.pointers.values():
@@ -1146,6 +1195,27 @@ class LayerSurface(QObject):
         self.conn.request(self._layer, LAYER_SURFACE_SET_KEYBOARD_INTERACTIVITY, "u", mode)
         self.conn.request(self._surface, SURFACE_COMMIT)
         self._flush()
+        if mode == KEYBOARD_NONE and self._kb_focus:
+            self._kept_timer.start()  # the compositor should take it away now; _keyboard_kept, if it doesn't
+        else:
+            self._kept_timer.stop()
+
+    def _keyboard_kept(self) -> None:
+        """KWin (6.8) leaves the keyboard on a layer surface that has let it go, and gives it to no window: what you
+        type next goes nowhere, and a full-screen window, no longer the active one, stays under the chatmon. An
+        unmapped layer surface loses the keyboard, and KWin gives it back to the window it came from: so the
+        surface is made again, as for a new screen; the chatmon is back a frame later."""
+        if self._closing or self._kb_wanted or not self._kb_focus or self._surface is None:
+            return  # closed, wanted again, or let go after all
+        if self._held:  # moving the surface would drop the drag: once the button is up
+            self._kept_timer.start()
+            return
+        logger.debug("the compositor kept the keyboard on the overlay after it was let go; making the surface again")
+        self._kb_focus = False
+        self._stop_repeat()
+        self.stage.keyboard_focus(False)
+        self._destroy_surface()
+        self._create_surface()
 
 
     # -- away from the desk (ext-idle-notify-v1)

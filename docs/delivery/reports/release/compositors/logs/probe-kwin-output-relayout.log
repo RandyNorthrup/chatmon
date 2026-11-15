@@ -1,0 +1,12 @@
+$ python docs/delivery/reports/release/compositors/probes/kwin_output_relayout.py /var/tmp/compositors-probes/kwin-relayout
+# WSL Arch Linux, kernel 6.18.58.1-microsoft-standard-WSL2; worktree HEAD 65ed989; CHATMON_INSTANCE=compositors-215430-1794778224
+# kwin 6.8.2; Hyprland 0.57.0; sway 1.12
+# packages: kwin 6.8.2-2 hyprland 0.57.0-1 aquamarine 0.15.1-1 sway 1:1.12-4 wlroots0.20 0.20.2-1 grim 1.5.0-2 wl-clipboard 1:2.3.0-1 orca 51.1-1 at-spi2-core 2.62.1-1 mesa 1:26.2.6-1 qt6-base 6.12.0-3 qt6-wayland 6.12.0-1 
+# venv /var/tmp/plans-venv Python 3.14.9 PyQt6 6.11.0 Qt 6.11.2
+plugged in: [{'name': 'Virtual-0', 'active': True, 'scale': 1, 'rect': {'x': 0, 'y': 0, 'width': 1280, 'height': 800}}, {'name': 'Virtual-1', 'active': True, 'scale': 1, 'rect': {'x': 1280, 'y': 0, 'width': 1280, 'height': 800}}]
+stage: {'screen': 'Virtual-0', 'qt_screen': [0, 0, 1280, 800], 'stage_origin': [0, 0], 'chatmon': [542.0, 680.0, 116.0, 120.0], 'behavior_x': 600.0}
+unplugged the first: [{'name': 'Virtual-1', 'active': True, 'scale': 1, 'rect': {'x': 0, 'y': 0, 'width': 1280, 'height': 800}}]
+stage at once: {'screen': 'Virtual-1', 'qt_screen': [0, 0, 1280, 800], 'stage_origin': [1280, 0], 'chatmon': [542.0, 680.0, 116.0, 120.0], 'behavior_x': 1330}
+stage 1 s later: {'screen': 'Virtual-1', 'qt_screen': [0, 0, 1280, 800], 'stage_origin': [1280, 0], 'chatmon': [-108.0, 680.0, 116.0, 120.0], 'behavior_x': 1230}
+drawn at y=740 on the output left: (1189, 1270)
+exit=0

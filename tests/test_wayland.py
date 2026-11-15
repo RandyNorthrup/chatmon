@@ -1194,3 +1194,144 @@ def test_qt_runs_on_wayland_itself_only_where_the_overlay_can_be(monkeypatch):
     _compositor_offering([("wl_compositor", 6), ("wl_shm", 1)], monkeypatch)
     assert not layer.offered({})  # GNOME: the stage is an X window, so Qt goes through XWayland
     assert not layer.offered({layer.STAGE_ENV: "window"})  # asked for a window
+
+
+# -- what KWin and Hyprland do their own way (tests/test_compositors.py sees each on the real one)
+
+
+def _box_open_with_the_keyboard(conn, server, surf, ids):
+    """The ask box open on the overlay, with the keyboard, the pointer on it (on_demand, as KWin and Hyprland let it)."""
+    surf.set_input([QRect(100, 100, 200, 100)])
+    surf._present()
+    surf.focus_keyboard(True)
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 1, ids["surface"], b"")
+    server.send(ids["pointer"], layer.EV_POINTER_ENTER, "uoff", 2, ids["surface"], 150.0, 150.0)
+    conn.read()
+    conn.flush()
+    server.requests()
+
+
+def _events_for(qapp, seconds: float) -> None:
+    deadline = time.monotonic() + seconds
+    while time.monotonic() < deadline:
+        qapp.processEvents()
+        time.sleep(0.01)
+
+
+def _layer_surfaces_made(reqs, ids) -> list[int]:
+    return [wayland.decode("noous", p)[0] for p in named(reqs, ids["bound"]["zwlr_layer_shell_v1"], layer.LAYER_SHELL_GET_LAYER_SURFACE)]
+
+
+@linux_only
+def test_a_compositor_that_keeps_the_keyboard_after_its_let_go_gets_the_surface_made_again(qapp):
+    """KWin 6.8 leaves the keyboard on a layer surface set to keyboard interactivity none, and gives it to no window:
+    what you type after closing the box goes nowhere. Still here KEPT_GRACE later, the surface is made again (an
+    unmapped one loses the keyboard, and KWin gives it back), and the stage told the keyboard has gone."""
+    conn, server, stage, surf, ids = _configured(qapp)
+    _box_open_with_the_keyboard(conn, server, surf, ids)
+    surf.focus_keyboard(False)  # the box closed
+    assert interactivity(server.requests(), ids) == [layer.KEYBOARD_NONE]
+    _events_for(qapp, layer.KEPT_GRACE + 0.3)  # and no leave comes
+    conn.flush()
+    reqs = server.requests()
+    assert named(reqs, ids["layer"], layer.LAYER_SURFACE_DESTROY)  # the surface that kept it, gone
+    (made,) = _layer_surfaces_made(reqs, ids)  # a new one, that never asks for the keyboard
+    assert interactivity(reqs, {"layer": made}) == [layer.KEYBOARD_NONE]
+    assert ("keyboard", False) in stage.calls and not surf._kb_focus
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_a_compositor_that_takes_the_keyboard_away_keeps_its_surface(qapp):
+    """sway and Hyprland send the leave as the overlay lets the keyboard go: nothing more to do."""
+    conn, server, stage, surf, ids = _configured(qapp)
+    _box_open_with_the_keyboard(conn, server, surf, ids)
+    surf.focus_keyboard(False)
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_LEAVE, "uo", 3, ids["surface"])
+    conn.read()
+    _events_for(qapp, layer.KEPT_GRACE + 0.3)
+    conn.flush()
+    reqs = server.requests()
+    assert not named(reqs, ids["layer"], layer.LAYER_SURFACE_DESTROY) and not _layer_surfaces_made(reqs, ids)
+    assert stage.calls.count(("keyboard", False)) == 1
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_once_closed_the_overlay_makes_no_surface_for_a_keyboard_it_let_go(qapp):
+    """Quitting with the keyboard let go and still here: the wait for it stops with the surface, and nothing is made."""
+    conn, server, stage, surf, ids = _configured(qapp)
+    _box_open_with_the_keyboard(conn, server, surf, ids)
+    surf.focus_keyboard(False)
+    surf.close()
+    assert not surf._kept_timer.isActive()
+    _events_for(qapp, layer.KEPT_GRACE + 0.3)
+    assert not _layer_surfaces_made(server.requests(), ids) and ("keyboard", False) not in stage.calls
+    server.sock.close()
+
+
+def _copied_on_the_overlay(conn, server, surf, ids, qapp, text: str) -> int:
+    """`text` copied in the box on the overlay, and Qt's copy refused, as KWin refuses it while the overlay's
+    connection has the keyboard (Qt keeps nothing). The overlay's data source."""
+    surf.copy(text)
+    reqs = server.requests()
+    (create,) = named(reqs, ids["data_device_manager"], layer.DATA_DEVICE_MANAGER_CREATE_SOURCE)
+    qapp.clipboard().clear()
+    return wayland.decode("n", create)[0]
+
+
+@linux_only
+def test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard(qapp):
+    """KWin takes a selection only from the client with the keyboard: when the box copies, that's the overlay's
+    connection, and Qt's copy is refused, so Chatmon's own windows read the overlay's (a 2 s freeze, and nothing).
+    Once one of Qt's windows has the keyboard, the text goes on Qt's clipboard again, if it's still the clipboard."""
+    from PyQt6.QtGui import QWindow
+
+    conn, server, _stage, surf, ids = _configured(qapp)
+    window = QWindow()
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")  # copying needs an input serial
+    conn.read()
+    _copied_on_the_overlay(conn, server, surf, ids, qapp, "copied in the box")
+    qapp.focusWindowChanged.emit(None)  # no window: nothing yet
+    assert qapp.clipboard().text() == ""
+    qapp.focusWindowChanged.emit(window)  # Settings, say, gets the keyboard
+    assert qapp.clipboard().text() == "copied in the box"
+    qapp.clipboard().clear()
+    qapp.focusWindowChanged.emit(window)  # once only
+    assert qapp.clipboard().text() == ""
+
+    source = _copied_on_the_overlay(conn, server, surf, ids, qapp, "copied again")
+    server.send(source, layer.EV_DATA_SOURCE_CANCELLED)  # another app copied since: it's theirs now
+    conn.read()
+    conn.flush()
+    qapp.focusWindowChanged.emit(window)
+    assert qapp.clipboard().text() == ""
+    surf.close()
+    server.sock.close()
+    window.deleteLater()
+
+
+@linux_only
+def test_a_closed_overlay_puts_nothing_on_qts_clipboard(qapp):
+    """A Qt window getting the keyboard after the overlay closed (as Chatmon quits) does nothing: close() stops
+    listening, and a call already on its way finds the surface closed."""
+    from PyQt6.QtGui import QWindow
+
+    conn, server, _stage, surf, ids = _configured(qapp)
+    window = QWindow()
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")
+    conn.read()
+    _copied_on_the_overlay(conn, server, surf, ids, qapp, "copied in the box")
+    watch = surf._focus_watch
+    surf.close()
+    assert surf._focus_watch is None
+    qapp.focusWindowChanged.emit(window)  # no longer heard
+    assert qapp.clipboard().text() == ""
+    with pytest.raises(TypeError):
+        qapp.focusWindowChanged.disconnect(watch)  # not connected any more
+    watch(window)  # a call already on its way when it closed
+    assert qapp.clipboard().text() == ""
+    server.sock.close()
+    window.deleteLater()

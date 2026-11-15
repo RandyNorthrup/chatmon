@@ -1,0 +1,122 @@
+[
+  {
+    "id": "FIX2-held-press",
+    "requirement": "fix 2 (Hyprland)",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            (self._geo.width(), self._geo.height()) if self.menu.is_open() or self._press is not None else None,\n",
+      "replace": "            (self._geo.width(), self._geo.height()) if self.menu.is_open() else None,\n"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer"
+    ],
+    "expected": [
+      "test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "786c11b8c16c08d8c7c89ec4f1c6d3ba1bbc5780d5b1ff6ad13fc02bf45e6ed2",
+    "mutated_exit": 1,
+    "observed": "_ test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer _",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "FIX4-own-screen-moved",
+    "requirement": "screen moved",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            if here is None:  # its place is on no screen: its own screen moved (another was unplugged), or a gap\n                here = self._screen\n",
+      "replace": "            pass  # drill: a screen that moved under it is left where it was\n"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_screens.py::test_a_screen_that_moves_under_it_is_covered_where_it_is_now"
+    ],
+    "expected": [
+      "test_a_screen_that_moves_under_it_is_covered_where_it_is_now"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "5d7db820ec3649710f65e379802a59b5dcb2bbdb7408d2b9f5ecbb837b2396a4",
+    "mutated_exit": 1,
+    "observed": "________ test_a_screen_that_moves_under_it_is_covered_where_it_is_now _________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "FIX4-woken-by-the-move",
+    "requirement": "screen moved",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        screen.geometryChanged.connect(self._screen_moved)\n",
+      "replace": "        pass  # drill: deaf to its screen moving\n"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_screens.py::test_a_screen_that_moves_wakes_the_stage_within_a_frame"
+    ],
+    "expected": [
+      "test_a_screen_that_moves_wakes_the_stage_within_a_frame"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "d0bf1010aa7850c5575a89edea803f197995d13e0725f886b3d75c53091bf9f2",
+    "mutated_exit": 1,
+    "observed": "___________ test_a_screen_that_moves_wakes_the_stage_within_a_frame ___________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "FIX4-deaf-once-closed",
+    "requirement": "screen moved",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        self._pointer_timer.stop()\n        self._unwatch_screen()\n",
+      "replace": "        self._pointer_timer.stop()  # drill: still listening to its screen once closed\n"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_screens.py::test_a_closed_stage_hears_no_more_of_its_screen"
+    ],
+    "expected": [
+      "test_a_closed_stage_hears_no_more_of_its_screen"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "b0602568dcb7597b940c01c6e2ec58a08a338e9c88cec1ba37dadb278bd8d16d",
+    "mutated_exit": 1,
+    "observed": "_______________ test_a_closed_stage_hears_no_more_of_its_screen _______________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  }
+]
