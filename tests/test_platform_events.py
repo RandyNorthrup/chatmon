@@ -208,11 +208,19 @@ def test_a_ui_automation_client_hears_the_announcement(tmp_path):
     assert heard and all(h == {"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"} for h in heard), heard  # Other, ImportantAll
 
 
+def _pump(qapp, seconds: float) -> None:
+    end = time.monotonic() + seconds
+    while time.monotonic() < end:
+        qapp.processEvents()
+        time.sleep(0.01)
+
+
 def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypatch):
     from PyQt6.QtCore import Qt
 
     from chatmon import a11y
 
+    monkeypatch.setattr(a11y.VoiceOver, "SETTLE_MS", 300, raising=False)
     active, posted, spoken = [False], [], []
     queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=spoken.append)
     for i in range(7):
@@ -222,11 +230,48 @@ def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypat
     assert posted == []
     active[0] = True
     queue.state_changed(Qt.ApplicationState.ApplicationActive)  # you came to Chatmon
+    _pump(qapp, 0.1)
+    assert posted == []  # VoiceOver is still moving to Chatmon, and would drop it
+    _pump(qapp, 0.4)
     assert posted == [("Message 2. Message 3. Message 4. Message 5. Message 6.", True)] and queue.held == []
-    queue.say("Now.", False)  # in front: said at once
+    queue.say("Now.", False)  # in front, and settled: said at once
     assert posted[-1] == ("Now.", False)
     queue.state_changed(Qt.ApplicationState.ApplicationActive)  # nothing held: nothing again
+    _pump(qapp, 0.5)
     assert len(posted) == 2 and spoken == []
+
+
+def test_voiceover_is_given_the_time_it_was_measured_to_need():
+    """Posted as Chatmon became active, or a second after, VoiceOver dropped every announcement; 2.5 s after, it said
+    each one (macOS 26.7, the screen-reader probe before 0.10.0). Shorter is what it dropped."""
+    from chatmon import a11y
+
+    assert a11y.VoiceOver.SETTLE_MS >= 2500
+
+
+def test_voiceover_waits_after_chatmon_comes_in_front(qapp, monkeypatch):
+    """What's said just as Chatmon becomes active (or starts active) waits until VoiceOver has moved to it; going
+    behind again meanwhile keeps it held."""
+    from PyQt6.QtCore import Qt
+
+    from chatmon import a11y
+
+    monkeypatch.setattr(a11y.VoiceOver, "SETTLE_MS", 300, raising=False)
+    active, posted = [True], []
+    queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=lambda _: None)
+    queue.say("Hi.")  # made while active, as at the start: not yet
+    assert posted == [] and queue.held == [("Hi.", False)]
+    _pump(qapp, 0.5)
+    assert posted == [("Hi.", False)]
+    active[0] = False
+    queue.state_changed(Qt.ApplicationState.ApplicationInactive)
+    active[0] = True
+    queue.state_changed(Qt.ApplicationState.ApplicationActive)
+    queue.say("Agent done.", True)
+    active[0] = False
+    queue.state_changed(Qt.ApplicationState.ApplicationInactive)  # gone again before VoiceOver got there
+    _pump(qapp, 0.5)
+    assert posted == [("Hi.", False)] and queue.held == [("Agent done.", True)]
 
 
 def test_the_speech_fallback_says_it_at_once_instead(qapp, monkeypatch):
