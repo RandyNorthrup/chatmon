@@ -1047,6 +1047,9 @@ class Stage(QObject):
         )
         if key != self._key:
             self._damage(key, penguin, zs, bubble_box, menu_rects, badges, pulse, origin)
+        set_extent = getattr(self.surface, "set_extent", None)  # the overlay: buffers only as big as this
+        if set_extent is not None:
+            set_extent(self._extent(penguin, zs, bubble_box, menu_rects, badges, origin))
         hosted_rects = self._follow_hosted(self.hosted, origin) if self.hosted is not None else ()
         # Where it takes clicks: built again only when something in it changed, and as plain numbers.
         bubble_rect = bubble_box.toAlignedRect() if self.bubble.visible() else None
@@ -1102,6 +1105,25 @@ class Stage(QObject):
         self._key = key
         self._penguin, self._bubble_box = penguin, bubble_box
         self.surface.damage(dirty)
+
+    def _extent(self, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: tuple, origin: QPoint) -> QRect:
+        """Where everything drawn this frame is, all of it (local coordinates), each part with the margin its
+        drawing reaches past it (as _damage has them): the overlay's buffers need cover no more."""
+        parts = [r.adjusted(-3, -3, 3, 3) for r in menu_rects] if self.menu.is_open() else []
+        if not penguin.isNull():
+            parts.append(penguin.toAlignedRect().adjusted(-2, -2, 2, 2))
+        if zs.isValid():
+            parts.append(zs)
+        if self.bubble.drawn() and not bubble_box.isNull():
+            parts.append(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3))
+        if self.hosted is not None and self.hosted.visible():
+            parts.append(self.hosted.rect().translated(-origin).adjusted(-2, -2, 2, 2))
+        reach = PULSE_REACH + 2
+        parts += [r.toAlignedRect().adjusted(-reach, -reach, reach, reach) for _state, r, _figure in badges]
+        extent = QRect()
+        for part in parts:
+            extent = extent.united(part)
+        return extent
 
     def _follow_hosted(self, hosted: Hosted, origin: QPoint) -> tuple:
         """Keep the keyboard, the primary selection and the input method up with the hosted scene, and say where on

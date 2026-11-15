@@ -71,6 +71,9 @@ CHECKS = {  # constant: (interface, "request" or "event", name)
     "EV_REGISTRY_GLOBAL_REMOVE": ("wl_registry", "event", "global_remove"),
     "COMPOSITOR_CREATE_SURFACE": ("wl_compositor", "request", "create_surface"),
     "COMPOSITOR_CREATE_REGION": ("wl_compositor", "request", "create_region"),
+    "SUBCOMPOSITOR_GET_SUBSURFACE": ("wl_subcompositor", "request", "get_subsurface"),
+    "SUBSURFACE_DESTROY": ("wl_subsurface", "request", "destroy"),
+    "SUBSURFACE_SET_POSITION": ("wl_subsurface", "request", "set_position"),
     "SHM_CREATE_POOL": ("wl_shm", "request", "create_pool"),
     "SHM_POOL_CREATE_BUFFER": ("wl_shm_pool", "request", "create_buffer"),
     "SHM_POOL_DESTROY": ("wl_shm_pool", "request", "destroy"),
@@ -462,6 +465,142 @@ def test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still(qapp):
     server.sock.close()
 
 
+CONTENT = [("wl_subcompositor", 1), ("wp_viewporter", 1)]
+
+
+def _pixel(fd, size, width, x, y):
+    """(r, g, b, a) of a buffer pixel, as the compositor would read it."""
+    pixels = mmap.mmap(fd, size, prot=mmap.PROT_READ)
+    b, g, r, a = pixels[(y * width + x) * 4 : (y * width + x) * 4 + 4]
+    pixels.close()
+    return r, g, b, a
+
+
+@linux_only
+def test_with_subsurfaces_the_buffers_are_the_size_of_what_is_shown(qapp):
+    """M3-04: the layer surface shows a see-through pixel stretched over the output, and what's drawn is on a
+    subsurface the size of what the stage says it draws, plus a margin; moving it moves the subsurface, its new
+    place and pixels in the same commit; the pointer stays the layer surface's."""
+
+    def scale_2_and_a_penguin(surf, server, ids):
+        server.send(ids["surface"], layer.EV_SURFACE_PREFERRED_BUFFER_SCALE, "i", 2)
+        surf.conn.read()
+        surf.set_extent(QRect(10, 10, 50, 50))  # FakeStage paints red there
+        surf.set_input([QRect(10, 10, 50, 50)])
+
+    conn, server, _stage, surf, ids = _configured(qapp, extra=CONTENT, before_configure=scale_2_and_a_penguin)
+    bound, setup, surface = ids["bound"], ids["setup"], ids["surface"]
+    (get_sub,) = named(setup, bound["wl_subcompositor"], layer.SUBCOMPOSITOR_GET_SUBSURFACE)
+    subsurface, sub, parent = wayland.decode("noo", get_sub)
+    assert parent == surface
+    regions = {wayland.decode("n", p)[0] for p in named(setup, bound["wl_compositor"], layer.COMPOSITOR_CREATE_REGION)}
+    (sub_region,) = [wayland.decode("o", p)[0] for p in named(setup, sub, layer.SURFACE_SET_INPUT_REGION)]
+    assert sub_region in regions and not [o for o, op, _ in setup if o == sub_region and op == layer.REGION_ADD]  # takes no clicks
+    viewport_of = {s: v for v, s in (wayland.decode("no", p) for p in named(setup, bound["wp_viewporter"], layer.VIEWPORTER_GET_VIEWPORT))}
+
+    # Configured: the layer surface gets its pixel, stretched to 1280x800, and the subsurface what's drawn.
+    reqs = ids["first"]
+    assert named(reqs, viewport_of[surface], layer.VIEWPORT_SET_DESTINATION) == [struct.pack("<ii", 1280, 800)]
+    assert not named(reqs, surface, layer.SURFACE_SET_BUFFER_SCALE)  # a 1x1 buffer stays at scale 1, as the protocol wants
+    pools = {wayland.decode("ni", p)[0]: wayland.decode("ni", p)[1] for p in named(reqs, bound["wl_shm"], layer.SHM_CREATE_POOL)}
+    made = {wayland.decode("niiiiu", p)[0]: wayland.decode("niiiiu", p)[2:4] for o, op, p in reqs if o in pools and op == layer.SHM_POOL_CREATE_BUFFER}
+    (backdrop,) = [wayland.decode("oii", p)[0] for p in named(reqs, surface, layer.SURFACE_ATTACH)]
+    (content,) = [wayland.decode("oii", p)[0] for p in named(reqs, sub, layer.SURFACE_ATTACH)]
+    assert made[backdrop] == [1, 1] and sorted(pools.values()) == [4, 256 * 256 * 4]  # not 2560x1600 (16 MB)
+    assert made[content] == [256, 256]  # 50 px and a 32 px margin each side, in 32 px steps: 128, at a scale of 2
+    assert named(reqs, subsurface, layer.SUBSURFACE_SET_POSITION) == [struct.pack("<ii", 0, 0)]  # held inside the output
+    assert named(reqs, viewport_of[sub], layer.VIEWPORT_SET_DESTINATION) == [struct.pack("<ii", 128, 128)]
+    assert wayland.decode("iiii", named(reqs, sub, layer.SURFACE_DAMAGE_BUFFER)[0]) == [0, 0, 256, 256]  # all of a new buffer
+    region = [wayland.decode("o", p)[0] for p in named(reqs, surface, layer.SURFACE_SET_INPUT_REGION)][-1]
+    assert [wayland.decode("iiii", p) for o, op, p in reqs if o == region and op == layer.REGION_ADD] == [[10, 10, 50, 50]]
+    order = [(o, op) for o, op, _ in reqs if (o, op) in ((sub, layer.SURFACE_COMMIT), (surface, layer.SURFACE_COMMIT))]
+    assert order[-2:] == [(sub, layer.SURFACE_COMMIT), (surface, layer.SURFACE_COMMIT)]  # the parent's commit shows the sub's
+    assert _pixel(server.fds[-1], 256 * 256 * 4, 256, 40, 40) == (255, 0, 0, 255)  # red at stage (20, 20), at 2x
+    assert _pixel(server.fds[-1], 256 * 256 * 4, 256, 200, 200)[3] == 0
+
+    # The penguin walks a little: drawn again inside the same subsurface, which stays put, in the same buffer.
+    (callback,) = [wayland.decode("n", p)[0] for p in named(reqs, sub, layer.SURFACE_FRAME)]
+    server.send(callback, 0, "u", 0)
+    server.send(content, layer.EV_BUFFER_RELEASE)
+    conn.read()
+    surf.set_extent(QRect(20, 10, 50, 50))
+    surf.damage(QRegion(10, 10, 60, 50))
+    surf._present()
+    reqs = server.requests()
+    assert not named(reqs, subsurface, layer.SUBSURFACE_SET_POSITION) and not named(reqs, bound["wl_shm"], layer.SHM_CREATE_POOL)
+    assert wayland.decode("iiii", named(reqs, sub, layer.SURFACE_DAMAGE_BUFFER)[0]) == [20, 20, 120, 100]
+
+    # It walks off across the screen: the subsurface goes with it, drawn in full there, in the same commit.
+    (callback,) = [wayland.decode("n", p)[0] for p in named(reqs, sub, layer.SURFACE_FRAME)]
+    server.send(callback, 0, "u", 0)
+    for buf in made:
+        server.send(buf, layer.EV_BUFFER_RELEASE)
+    conn.read()
+    surf.set_extent(QRect(600, 400, 50, 50))
+    surf.damage(QRegion(600, 400, 50, 50))
+    surf._present()
+    reqs = server.requests()
+    assert named(reqs, subsurface, layer.SUBSURFACE_SET_POSITION) == [struct.pack("<ii", 561, 361)]  # centred on it
+    assert not named(reqs, bound["wl_shm"], layer.SHM_CREATE_POOL)  # the same size: the same buffers
+    assert wayland.decode("iiii", named(reqs, sub, layer.SURFACE_DAMAGE_BUFFER)[0]) == [0, 0, 256, 256]
+    moves = ((subsurface, layer.SUBSURFACE_SET_POSITION), (sub, layer.SURFACE_COMMIT), (surface, layer.SURFACE_COMMIT))
+    assert [(o, op) for o, op, _ in reqs if (o, op) in moves] == list(moves)
+    assert len(surf._buffers) <= layer.MAX_BUFFERS
+
+    # Nothing drawn at all: no subsurface shown.
+    (callback,) = [wayland.decode("n", p)[0] for p in named(reqs, sub, layer.SURFACE_FRAME)]
+    server.send(callback, 0, "u", 0)
+    conn.read()
+    surf.set_extent(QRect())
+    surf._present()
+    reqs = server.requests()
+    assert named(reqs, sub, layer.SURFACE_ATTACH) == [struct.pack("<Iii", 0, 0, 0)] and reqs[-1][:2] == (surface, layer.SURFACE_COMMIT)
+    surf.close()
+    reqs = server.requests()
+    gone = [o for o, op, _ in reqs if (o, op) in ((subsurface, layer.SUBSURFACE_DESTROY), (sub, layer.SURFACE_DESTROY))]
+    assert gone == [subsurface, sub]  # the subsurface first, then its surface
+    for fd in server.fds:
+        os.close(fd)
+    server.sock.close()
+
+
+@linux_only
+def test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place(qapp):
+    conn, server, _stage, surf, ids = _configured(qapp, extra=CONTENT, before_configure=lambda s, _sv, _i: s.set_extent(QRect(10, 10, 50, 50)))
+    subsurface, sub, _parent = wayland.decode("noo", named(ids["setup"], ids["bound"]["wl_subcompositor"], layer.SUBCOMPOSITOR_GET_SUBSURFACE)[0])
+    callbacks = [wayland.decode("n", p)[0] for p in named(ids["first"], sub, layer.SURFACE_FRAME)]
+
+    def frame():
+        server.send(callbacks[-1], 0, "u", 0)
+        conn.read()
+
+    frame()
+    surf.damage(QRegion(10, 10, 50, 50))
+    surf._present()  # the first is still the compositor's: a second
+    callbacks.extend(wayland.decode("n", p)[0] for p in named(server.requests(), sub, layer.SURFACE_FRAME))
+    frame()
+    assert len(surf._buffers) == 2 and all(b.busy for b in surf._buffers)
+    surf.set_extent(QRect(700, 500, 50, 50))  # both held by the compositor
+    surf._present()
+    reqs = server.requests()
+    assert not named(reqs, subsurface, layer.SUBSURFACE_SET_POSITION) and not named(reqs, sub, layer.SURFACE_COMMIT)
+    server.send(surf._buffers[0].id, layer.EV_BUFFER_RELEASE)
+    conn.read()  # a buffer back: the move goes now, with its pixels
+    assert surf._present_timer.isActive()
+    surf._present()
+    reqs = server.requests()
+    assert named(reqs, subsurface, layer.SUBSURFACE_SET_POSITION) and named(reqs, sub, layer.SURFACE_ATTACH)
+    surf.close()
+    for fd in server.fds:
+        os.close(fd)
+    server.sock.close()
+
+
+@linux_only
+def test_the_subsurface_sits_on_whole_device_pixels_at_fractional_scales():
+    assert [layer._grid(s) for s in (1, 2, 3, 1.5, 1.25, 1.75, 180 / 120, 160 / 120)] == [1, 1, 1, 2, 4, 4, 2, 3]
+
+
 @linux_only
 def test_a_protocol_error_closes_the_connection():
     client, server_sock = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -517,8 +656,9 @@ def _xkb():
     return xkb, lib
 
 
-def _configured(qapp, layer_version=4):
-    """A layer surface past setup, configured, with a pointer and a keyboard."""
+def _configured(qapp, layer_version=4, extra=(), before_configure=None):
+    """A layer surface past setup, configured, with a pointer and a keyboard. `extra`: more globals offered
+    ((interface, version) pairs); `before_configure(surf, server, ids)` runs just before the configure."""
     client, server_sock = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
     server = Server(server_sock)
     conn = wayland.Connection(client)
@@ -530,7 +670,7 @@ def _configured(qapp, layer_version=4):
         [
             ("wl_compositor", 6), ("wl_shm", 1), ("wl_seat", 7), ("wl_output", 4), ("zwlr_layer_shell_v1", layer_version),
             ("zwp_text_input_manager_v3", 1), ("wl_data_device_manager", 3), ("zwp_primary_selection_device_manager_v1", 1),
-            ("ext_idle_notifier_v1", 2), ("hyprland_lock_notifier_v1", 1),
+            ("ext_idle_notifier_v1", 2), ("hyprland_lock_notifier_v1", 1), *extra,
         ],
         start=1,
     ):
@@ -562,10 +702,14 @@ def _configured(qapp, layer_version=4):
     }
     (get,) = named(reqs, bound["zwlr_layer_shell_v1"], layer.LAYER_SHELL_GET_LAYER_SURFACE)
     ids["layer"], ids["surface"] = wayland.decode("noous", get)[:2]
+    ids["bound"], ids["setup"] = bound, reqs
+    if before_configure is not None:
+        before_configure(surf, server, ids)
     server.send(ids["layer"], layer.EV_LAYER_SURFACE_CONFIGURE, "uuu", 1, 1280, 800)
     conn.read()
     surf._present()
     reqs = server.requests()
+    ids["first"] = reqs  # the first paint's requests
     ids["frames"] = [wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME)]  # the first paint's
     ids["buffers"] = new_buffers(reqs, surf.globals["wl_shm"][0])
     return conn, server, stage, surf, ids
