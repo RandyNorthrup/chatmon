@@ -1449,7 +1449,8 @@ class LayerSurface(QObject):
             self._input_dirty = False
             commit = True
         if self._sub is not None:
-            commit = self._present_content() or self._backdrop_waiting() or commit
+            content, backdrop = self._present_content(), self._backdrop_waiting()  # both asked: each notes what it sent
+            commit = content or backdrop or commit
         elif not self._pending.isEmpty() and not self._frame_pending:
             buf = self._free_buffer(*self._buffer_size(self._size), QRect(0, 0, self._qt_width, math.ceil(self._size[1] / self._k())))
             if buf is not None:
