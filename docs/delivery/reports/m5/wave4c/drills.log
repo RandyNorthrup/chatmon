@@ -1,0 +1,998 @@
+red drills from docs\delivery\reports\m5\wave4c\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-x38k2j8w
+copied 310 files
+
+=== drill M5-01-removed-when-due (M5-01) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_a_fired_reminder_stays_until_done_or_snoozed
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_a_fired_reminder_stays_until_done_or_snoozed ______________
+
+    def test_a_fired_reminder_stays_until_done_or_snoozed():
+        book = ReminderBook()
+        r = book.add(100, "call Sam")
+        later = book.add(900, "later")
+        assert book.due(50) == [] and book.fire(50) == []
+        assert book.fire(150) == [r]
+        assert book.fire(160) == []  # told about once
+>       assert book.due(170) == [r] and r.fired  # and still there, marked fired
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ([] == [Reminder(due... fired=False)]
+E         
+E         Right contains one more item: Reminder(due=100, text='call Sam', kind='reminder', id='d2c2c3b1', repeat=None, fired=False)
+E         Use -v to get more diff)
+
+tests\test_reminders.py:361: AssertionError
+1 failed in 0.29s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+
+=== drill M5-01-fired-not-saved (M5-01) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_unacknowledged_reminders_come_back_at_start
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.25s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_unacknowledged_reminders_come_back_at_start _______________
+
+    def test_unacknowledged_reminders_come_back_at_start():
+        book = ReminderBook()
+        r = book.add(100, "call Sam")
+        book.add(10**9, "later")
+        book.fire(200)
+        again = ReminderBook.from_list(json.loads(json.dumps(book.to_list())))  # as state.json keeps it
+>       assert again.fire(300) == []  # told about before the restart: not news again...
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert [Reminder(due..., fired=True)] == []
+E         
+E         Left contains one more item: Reminder(due=100.0, text='call Sam', kind='reminder', id='28e28518', repeat=None, fired=True)
+E         Use -v to get more diff
+
+tests\test_reminders.py:376: AssertionError
+1 failed in 0.34s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.25s
+
+=== drill M5-01-old-saves-change (M5-01) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_reminders_saved_before_repeats_read_back_unchanged
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.25s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_reminders_saved_before_repeats_read_back_unchanged ___________
+
+    def test_reminders_saved_before_repeats_read_back_unchanged():
+        saved = [
+            {"due": 1800000000.0, "text": "call Sam", "kind": "reminder", "id": "ab12cd34"},
+            {"due": 1800000600.0, "text": "pasta", "kind": "timer", "id": "ef56ab78"},
+        ]
+        book = ReminderBook.from_list(saved)
+>       assert book.to_list() == saved
+E       AssertionError: assert [{'due': 1800...56ab78', ...}] == [{'due': 1800...: 'ef56ab78'}]
+E         
+E         At index 0 diff: {'due': 1800000000.0, 'text': 'call Sam', 'kind': 'reminder', 'id': 'ab12cd34', 'repeat': None, 'fired': False} != {'due': 1800000000.0, 'text': 'call Sam', 'kind': 'reminder', 'id': 'ab12cd34'}
+E         Use -v to get more diff
+
+tests\test_reminders.py:386: AssertionError
+1 failed in 0.30s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+
+=== drill M5-02-weekday-ignored (M5-02) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_days_and_dates
+-- green: exit 0, 23 passed
+.......................                                                  [100%]
+23 passed in 0.30s
+-- red: exit 1
+            ("remind me to prepare for tomorrow's meeting at 3pm", datetime(2026, 10, 28, 15, 0), "prepare for tomorrow's meeting"),
+            ("remind me to put on sun cream at 2pm", datetime(2026, 10, 28, 14, 0), "put on sun cream"),
+            ("remind me on sun at 2pm to x", datetime(2026, 11, 1, 14, 0), "x"),
+            ("remind me to water every plant at 9am", datetime(2026, 10, 29, 9, 0), "water every plant"),
+            ("remind me to take 1/2 a pill at 9pm", datetime(2026, 10, 28, 21, 0), "take 1/2 a pill"),
+            ("remind me to march at 4pm", datetime(2026, 10, 28, 16, 0), "march"),
+        ],
+    )
+    def test_days_and_dates(text, due, what):
+        cmd = parse_command(text, WEDNESDAY)
+>       assert (cmd.kind, cmd.due, cmd.text, cmd.repeat, cmd.ambiguous) == ("reminder", due, what, None, "")
+E       AssertionError: assert ('reminder', ...'x', None, '') == ('reminder', ...'x', None, '')
+E         
+E         At index 1 diff: datetime.datetime(2026, 10, 28, 15, 0) != datetime.datetime(2026, 10, 30, 15, 0)
+E         Use -v to get more diff
+
+tests\test_reminders.py:200: AssertionError
+__________ test_days_and_dates[remind me on sun at 2pm to x-due19-x] __________
+
+text = 'remind me on sun at 2pm to x'
+due = datetime.datetime(2026, 11, 1, 14, 0), what = 'x'
+
+    @pytest.mark.parametrize(
+        "text, due, what",
+        [
+            ("remind me friday at 3pm to call Sam", datetime(2026, 10, 30, 15, 0), "call Sam"),
+            ("remind me to call Sam on Friday at 3pm", datetime(2026, 10, 30, 15, 0), "call Sam"),
+            ("remind me wednesday at 4pm to x", datetime(2026, 10, 28, 16, 0), "x"),  # later today
+            ("remind me wednesday at 9am to water plants", datetime(2026, 11, 4, 9, 0), "water plants"),  # today's has gone
+            ("remind me next wed to pay rent", datetime(2026, 11, 4, 9, 0), "pay rent"),
+            ("remind me next mon to pay rent", datetime(2026, 11, 2, 9, 0), "pay rent"),
+            ("remind me on thursday to x", datetime(2026, 10, 29, 9, 0), "x"),
+            ("remind me friday at 3 to x", datetime(2026, 10, 30, 15, 0), "x"),  # a bare hour on a day to come: in the day
+            ("remind me dec 3 to renew the domain", datetime(2026, 12, 3, 9, 0), "renew the domain"),
+            ("remind me on the 3rd of december at 9:30am to x", datetime(2026, 12, 3, 9, 30), "x"),
+            ("remind me oct 1 to x", datetime(2027, 10, 1, 9, 0), "x"),  # this year's has gone
+            ("remind me on 2026-12-03 at 15:30 to deploy", datetime(2026, 12, 3, 15, 30), "deploy"),
+            ("remind me 2027-01-15 to file taxes", datetime(2027, 1, 15, 9, 0), "file taxes"),
+            ("remind me tonight at 8 to x", datetime(2026, 10, 28, 20, 0), "x"),
+            ("remind me tomorrow morning to x", datetime(2026, 10, 29, 9, 0), "x"),
+            ("remind me to call Sam at 3 in the afternoon", datetime(2026, 10, 28, 15, 0), "call Sam"),
+            ("remind me in 2 days at 3pm to x", datetime(2026, 10, 30, 15, 0), "x"),
+            ("remind me to prepare for tomorrow's meeting at 3pm", datetime(2026, 10, 28, 15, 0), "prepare for tomorrow's meeting"),
+            ("remind me to put on sun cream at 2pm", datetime(2026, 10, 28, 14, 0), "put on sun cream"),
+            ("remind me on sun at 2pm to x", datetime(2026, 11, 1, 14, 0), "x"),
+            ("remind me to water every plant at 9am", datetime(2026, 10, 29, 9, 0), "water every plant"),
+            ("remind me to take 1/2 a pill at 9pm", datetime(2026, 10, 28, 21, 0), "take 1/2 a pill"),
+            ("remind me to march at 4pm", datetime(2026, 10, 28, 16, 0), "march"),
+        ],
+    )
+    def test_days_and_dates(text, due, what):
+        cmd = parse_command(text, WEDNESDAY)
+>       assert (cmd.kind, cmd.due, cmd.text, cmd.repeat, cmd.ambiguous) == ("reminder", due, what, None, "")
+E       AssertionError: assert ('reminder', ...'x', None, '') == ('reminder', ...'x', None, '')
+E         
+E         At index 1 diff: datetime.datetime(2026, 10, 28, 14, 0) != datetime.datetime(2026, 11, 1, 14, 0)
+E         Use -v to get more diff
+
+tests\test_reminders.py:200: AssertionError
+8 failed, 15 passed in 0.43s
+-- restored green: exit 0, 23 passed
+.......................                                                  [100%]
+23 passed in 0.29s
+
+=== drill M5-02-bare-hour-am (M5-02) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_a_bare_hour_is_whichever_of_am_and_pm_comes_next
+-- green: exit 0, 9 passed
+.........                                                                [100%]
+9 passed in 0.27s
+-- red: exit 1
+    def test_a_bare_hour_is_whichever_of_am_and_pm_comes_next(said_at, text, due):
+>       assert parse_command(text, said_at).due == due
+E       AssertionError: assert datetime.datetime(2026, 10, 29, 3, 0) == datetime.datetime(2026, 10, 28, 15, 0)
+E        +  where datetime.datetime(2026, 10, 29, 3, 0) = Command(kind='reminder', due=datetime.datetime(2026, 10, 29, 3, 0), text='x', minutes=None, repeat=None, ambiguous='').due
+E        +    where Command(kind='reminder', due=datetime.datetime(2026, 10, 29, 3, 0), text='x', minutes=None, repeat=None, ambiguous='') = parse_command('remind me at 3 to x', datetime.datetime(2026, 10, 28, 14, 0))
+
+tests\test_reminders.py:218: AssertionError
+_ test_a_bare_hour_is_whichever_of_am_and_pm_comes_next[said_at5-remind me at 12 to x-due5] _
+
+said_at = datetime.datetime(2026, 10, 28, 13, 0), text = 'remind me at 12 to x'
+due = datetime.datetime(2026, 10, 29, 0, 0)
+
+    @pytest.mark.parametrize(
+        "said_at, text, due",
+        [
+            (datetime(2026, 10, 28, 14, 0), "remind me at 3 to x", datetime(2026, 10, 28, 15, 0)),  # 3 PM comes first
+            (datetime(2026, 10, 28, 16, 0), "remind me at 3 to x", datetime(2026, 10, 29, 3, 0)),  # both gone today: 3 AM
+            (datetime(2026, 10, 28, 1, 0), "remind me at 3 to x", datetime(2026, 10, 28, 3, 0)),
+            (datetime(2026, 10, 28, 14, 0), "remind me at 1 to x", datetime(2026, 10, 29, 1, 0)),
+            (datetime(2026, 10, 28, 11, 0), "remind me at 12 to x", datetime(2026, 10, 28, 12, 0)),
+            (datetime(2026, 10, 28, 13, 0), "remind me at 12 to x", datetime(2026, 10, 29, 0, 0)),
+            (datetime(2026, 10, 28, 14, 0), "remind me at 3:30 to x", datetime(2026, 10, 28, 15, 30)),
+            (datetime(2026, 10, 28, 14, 0), "remind me at 03:30 to x", datetime(2026, 10, 29, 3, 30)),  # a leading zero: 24-hour
+            (datetime(2026, 10, 28, 14, 0), "remind me at 15 to x", datetime(2026, 10, 28, 15, 0)),
+        ],
+    )
+    def test_a_bare_hour_is_whichever_of_am_and_pm_comes_next(said_at, text, due):
+>       assert parse_command(text, said_at).due == due
+E       AssertionError: assert datetime.datetime(2026, 10, 29, 12, 0) == datetime.datetime(2026, 10, 29, 0, 0)
+E        +  where datetime.datetime(2026, 10, 29, 12, 0) = Command(kind='reminder', due=datetime.datetime(2026, 10, 29, 12, 0), text='x', minutes=None, repeat=None, ambiguous='').due
+E        +    where Command(kind='reminder', due=datetime.datetime(2026, 10, 29, 12, 0), text='x', minutes=None, repeat=None, ambiguous='') = parse_command('remind me at 12 to x', datetime.datetime(2026, 10, 28, 13, 0))
+
+tests\test_reminders.py:218: AssertionError
+_ test_a_bare_hour_is_whichever_of_am_and_pm_comes_next[said_at6-remind me at 3:30 to x-due6] _
+
+said_at = datetime.datetime(2026, 10, 28, 14, 0)
+text = 'remind me at 3:30 to x', due = datetime.datetime(2026, 10, 28, 15, 30)
+
+    @pytest.mark.parametrize(
+        "said_at, text, due",
+        [
+            (datetime(2026, 10, 28, 14, 0), "remind me at 3 to x", datetime(2026, 10, 28, 15, 0)),  # 3 PM comes first
+            (datetime(2026, 10, 28, 16, 0), "remind me at 3 to x", datetime(2026, 10, 29, 3, 0)),  # both gone today: 3 AM
+            (datetime(2026, 10, 28, 1, 0), "remind me at 3 to x", datetime(2026, 10, 28, 3, 0)),
+            (datetime(2026, 10, 28, 14, 0), "remind me at 1 to x", datetime(2026, 10, 29, 1, 0)),
+            (datetime(2026, 10, 28, 11, 0), "remind me at 12 to x", datetime(2026, 10, 28, 12, 0)),
+            (datetime(2026, 10, 28, 13, 0), "remind me at 12 to x", datetime(2026, 10, 29, 0, 0)),
+            (datetime(2026, 10, 28, 14, 0), "remind me at 3:30 to x", datetime(2026, 10, 28, 15, 30)),
+            (datetime(2026, 10, 28, 14, 0), "remind me at 03:30 to x", datetime(2026, 10, 29, 3, 30)),  # a leading zero: 24-hour
+            (datetime(2026, 10, 28, 14, 0), "remind me at 15 to x", datetime(2026, 10, 28, 15, 0)),
+        ],
+    )
+    def test_a_bare_hour_is_whichever_of_am_and_pm_comes_next(said_at, text, due):
+>       assert parse_command(text, said_at).due == due
+E       AssertionError: assert datetime.datetime(2026, 10, 29, 3, 30) == datetime.datetime(2026, 10, 28, 15, 30)
+E        +  where datetime.datetime(2026, 10, 29, 3, 30) = Command(kind='reminder', due=datetime.datetime(2026, 10, 29, 3, 30), text='x', minutes=None, repeat=None, ambiguous='').due
+E        +    where Command(kind='reminder', due=datetime.datetime(2026, 10, 29, 3, 30), text='x', minutes=None, repeat=None, ambiguous='') = parse_command('remind me at 3:30 to x', datetime.datetime(2026, 10, 28, 14, 0))
+
+tests\test_reminders.py:218: AssertionError
+3 failed, 6 passed in 0.34s
+-- restored green: exit 0, 9 passed
+.........                                                                [100%]
+9 passed in 0.31s
+
+=== drill M5-02-leftovers-guessed (M5-02) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_time_words_that_cant_all_be_placed_are_ambiguous
+-- green: exit 0, 13 passed
+.............                                                            [100%]
+13 passed in 0.29s
+-- red: exit 1
+
+    @pytest.mark.parametrize(
+        "text, words",
+        [
+            ("remind me friday tomorrow to x", "friday tomorrow"),
+            ("remind me tomorrow at 3pm next mon to x", "tomorrow at 3pm next mon"),
+            ("remind me at 3pm next week to x", "at 3pm next week"),
+            ("remind me on 3/4 to pay rent", "on 3/4"),
+            ("remind me every 2 hours to drink water", "every 2 hours"),
+            ("remind me in 3 months to x", "in 3 months"),
+            ("remind me in 2 hours at 3pm to x", "in 2 hours at 3pm"),
+            ("remind me every monday tomorrow to x", "every monday tomorrow"),
+            ("remind me on feb 30 to x", "on feb 30"),
+            ("remind me today at 9am to x", "today at 9am"),  # gone already
+            ("remind me on 2025-01-01 to x", "on 2025-01-01"),
+            ("remind me at 3pm and at 5pm to x", "at 3pm at 5pm"),
+            ("remind me at 25:00 to x", "at 25:00"),
+        ],
+    )
+    def test_time_words_that_cant_all_be_placed_are_ambiguous(text, words):
+        when = parse_when(text.removeprefix("remind me "), WEDNESDAY)
+>       assert (when.due, when.ambiguous) == (None, words)
+E       AssertionError: assert (datetime.dat...29, 9, 0), '') == (None, 'in 3 months')
+E         
+E         At index 0 diff: datetime.datetime(2026, 10, 29, 9, 0) != None
+E         Use -v to get more diff
+
+tests\test_reminders.py:241: AssertionError
+_ test_time_words_that_cant_all_be_placed_are_ambiguous[remind me at 3pm and at 5pm to x-at 3pm at 5pm] _
+
+text = 'remind me at 3pm and at 5pm to x', words = 'at 3pm at 5pm'
+
+    @pytest.mark.parametrize(
+        "text, words",
+        [
+            ("remind me friday tomorrow to x", "friday tomorrow"),
+            ("remind me tomorrow at 3pm next mon to x", "tomorrow at 3pm next mon"),
+            ("remind me at 3pm next week to x", "at 3pm next week"),
+            ("remind me on 3/4 to pay rent", "on 3/4"),
+            ("remind me every 2 hours to drink water", "every 2 hours"),
+            ("remind me in 3 months to x", "in 3 months"),
+            ("remind me in 2 hours at 3pm to x", "in 2 hours at 3pm"),
+            ("remind me every monday tomorrow to x", "every monday tomorrow"),
+            ("remind me on feb 30 to x", "on feb 30"),
+            ("remind me today at 9am to x", "today at 9am"),  # gone already
+            ("remind me on 2025-01-01 to x", "on 2025-01-01"),
+            ("remind me at 3pm and at 5pm to x", "at 3pm at 5pm"),
+            ("remind me at 25:00 to x", "at 25:00"),
+        ],
+    )
+    def test_time_words_that_cant_all_be_placed_are_ambiguous(text, words):
+        when = parse_when(text.removeprefix("remind me "), WEDNESDAY)
+>       assert (when.due, when.ambiguous) == (None, words)
+E       AssertionError: assert (datetime.dat...8, 15, 0), '') == (None, 'at 3pm at 5pm')
+E         
+E         At index 0 diff: datetime.datetime(2026, 10, 28, 15, 0) != None
+E         Use -v to get more diff
+
+tests\test_reminders.py:241: AssertionError
+7 failed, 6 passed in 0.40s
+-- restored green: exit 0, 13 passed
+.............                                                            [100%]
+13 passed in 0.31s
+
+=== drill M5-02-in-by-wall-clock (M5-02) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_in_is_real_time_across_daylight_saving
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_in_is_real_time_across_daylight_saving _________________
+
+    def test_in_is_real_time_across_daylight_saving():
+        ny = zone("America/New_York")
+        spring = datetime(2026, 3, 8, 1, 30, tzinfo=ny)  # half an hour before the clock jumps to 3:00
+        due = parse_command("remind me in 2 hours to stretch", spring).due
+>       assert due.timestamp() - spring.timestamp() == 7200
+E       AssertionError: assert (1772955000.0 - 1772951400.0) == 7200
+E        +  where 1772955000.0 = <built-in method timestamp of datetime.datetime object at 0x000001FB750640C0>()
+E        +    where <built-in method timestamp of datetime.datetime object at 0x000001FB750640C0> = datetime.datetime(2026, 3, 8, 3, 30, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')).timestamp
+E        +  and   1772951400.0 = <built-in method timestamp of datetime.datetime object at 0x000001FB7503FC60>()
+E        +    where <built-in method timestamp of datetime.datetime object at 0x000001FB7503FC60> = datetime.datetime(2026, 3, 8, 1, 30, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')).timestamp
+
+tests\test_reminders.py:261: AssertionError
+1 failed in 0.32s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+
+=== drill M5-03-every-not-read (M5-03) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_repeating_reminders
+-- green: exit 0, 7 passed
+.......                                                                  [100%]
+7 passed in 0.30s
+-- red: exit 1
+E         
+E         At index 2 diff: None != 'fri@09:00'
+E         Use -v to get more diff
+
+tests\test_reminders.py:316: AssertionError
+_ test_repeating_reminders[remind me every morning to stretch-due5-daily@09:00-stretch] _
+
+text = 'remind me every morning to stretch'
+due = datetime.datetime(2026, 10, 29, 9, 0), rule = 'daily@09:00'
+what = 'stretch'
+
+    @pytest.mark.parametrize(
+        "text, due, rule, what",
+        [
+            ("remind me every day at 9 to stand up", datetime(2026, 10, 29, 9, 0), "daily@09:00", "stand up"),
+            ("remind me daily at 6pm to walk", datetime(2026, 10, 28, 18, 0), "daily@18:00", "walk"),
+            ("remind me every weekday at 9 to stand up", datetime(2026, 10, 29, 9, 0), "weekdays@09:00", "stand up"),
+            ("remind me every monday at 9 to take out the bins", datetime(2026, 11, 2, 9, 0), "mon@09:00", "take out the bins"),
+            ("remind me every friday to send the report", datetime(2026, 10, 30, 9, 0), "fri@09:00", "send the report"),
+            ("remind me every morning to stretch", datetime(2026, 10, 29, 9, 0), "daily@09:00", "stretch"),
+            ("remind me on weekdays at 5:30pm to stop working", datetime(2026, 10, 28, 17, 30), "weekdays@17:30", "stop working"),
+        ],
+    )
+    def test_repeating_reminders(text, due, rule, what):
+        cmd = parse_command(text, WEDNESDAY)
+>       assert (cmd.kind, cmd.due, cmd.repeat, cmd.text) == ("reminder", due, rule, what)
+E       AssertionError: assert ('reminder', ...y to stretch') == ('reminder', ...0', 'stretch')
+E         
+E         At index 2 diff: None != 'daily@09:00'
+E         Use -v to get more diff
+
+tests\test_reminders.py:316: AssertionError
+_ test_repeating_reminders[remind me on weekdays at 5:30pm to stop working-due6-weekdays@17:30-stop working] _
+
+text = 'remind me on weekdays at 5:30pm to stop working'
+due = datetime.datetime(2026, 10, 28, 17, 30), rule = 'weekdays@17:30'
+what = 'stop working'
+
+    @pytest.mark.parametrize(
+        "text, due, rule, what",
+        [
+            ("remind me every day at 9 to stand up", datetime(2026, 10, 29, 9, 0), "daily@09:00", "stand up"),
+            ("remind me daily at 6pm to walk", datetime(2026, 10, 28, 18, 0), "daily@18:00", "walk"),
+            ("remind me every weekday at 9 to stand up", datetime(2026, 10, 29, 9, 0), "weekdays@09:00", "stand up"),
+            ("remind me every monday at 9 to take out the bins", datetime(2026, 11, 2, 9, 0), "mon@09:00", "take out the bins"),
+            ("remind me every friday to send the report", datetime(2026, 10, 30, 9, 0), "fri@09:00", "send the report"),
+            ("remind me every morning to stretch", datetime(2026, 10, 29, 9, 0), "daily@09:00", "stretch"),
+            ("remind me on weekdays at 5:30pm to stop working", datetime(2026, 10, 28, 17, 30), "weekdays@17:30", "stop working"),
+        ],
+    )
+    def test_repeating_reminders(text, due, rule, what):
+        cmd = parse_command(text, WEDNESDAY)
+>       assert (cmd.kind, cmd.due, cmd.repeat, cmd.text) == ("reminder", due, rule, what)
+E       AssertionError: assert ('reminder', ...stop working') == ('reminder', ...stop working')
+E         
+E         At index 2 diff: None != 'weekdays@17:30'
+E         Use -v to get more diff
+
+tests\test_reminders.py:316: AssertionError
+7 failed in 0.38s
+-- restored green: exit 0, 7 passed
+.......                                                                  [100%]
+7 passed in 0.27s
+
+=== drill M5-03-done-repeat-removed (M5-03) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_a_repeating_reminder_moves_on_when_done
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_a_repeating_reminder_moves_on_when_done _________________
+
+    def test_a_repeating_reminder_moves_on_when_done():
+        book = ReminderBook()
+        tuesday = datetime(2026, 10, 27, 9, 0).timestamp()
+        r = book.add(tuesday, "stand up", repeat="weekdays@09:00")
+        assert book.fire(tuesday + 60) == [r]
+        friday = datetime(2026, 10, 30, 12, 0).timestamp()  # not done until Friday: still once, and still fired
+        assert book.due(friday) == [r] and r.fired
+        assert book.acknowledge(r.id, now=friday)
+>       assert datetime.fromtimestamp(r.due) == datetime(2026, 11, 2, 9, 0) and not r.fired
+E       AssertionError: assert (datetime.datetime(2026, 10, 27, 9, 0) == datetime.datetime(2026, 11, 2, 9, 0))
+E        +  where datetime.datetime(2026, 10, 27, 9, 0) = <built-in method fromtimestamp of type object at 0x00007FFEAE4D02A0>(1793116800.0)
+E        +    where <built-in method fromtimestamp of type object at 0x00007FFEAE4D02A0> = datetime.fromtimestamp
+E        +    and   1793116800.0 = Reminder(due=1793116800.0, text='stand up', kind='reminder', id='cf3cc53c', repeat='weekdays@09:00', fired=True).due
+E        +  and   datetime.datetime(2026, 11, 2, 9, 0) = datetime(2026, 11, 2, 9, 0)
+
+tests\test_reminders.py:336: AssertionError
+1 failed in 0.29s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+
+=== drill M5-03-repeat-by-real-days (M5-03) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_a_daily_reminder_keeps_its_hour_across_daylight_saving
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.24s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_a_daily_reminder_keeps_its_hour_across_daylight_saving _________
+
+    def test_a_daily_reminder_keeps_its_hour_across_daylight_saving():
+        ny = zone("America/New_York")
+        book = ReminderBook(tz=ny)
+        saturday = datetime(2026, 3, 7, 9, 0, tzinfo=ny).timestamp()
+        r = book.add(saturday, "pills", repeat="daily@09:00")
+        book.fire(saturday)
+        book.acknowledge(r.id, now=saturday + 60)
+>       assert datetime.fromtimestamp(r.due, ny) == datetime(2026, 3, 8, 9, 0, tzinfo=ny)
+E       AssertionError: assert datetime.datetime(2026, 3, 8, 10, 0, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')) == datetime.datetime(2026, 3, 8, 9, 0, tzinfo=zoneinfo.ZoneInfo(key='America/New_York'))
+E        +  where datetime.datetime(2026, 3, 8, 10, 0, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')) = <built-in method fromtimestamp of type object at 0x00007FFEAE4D02A0>(1772978400.0, zoneinfo.ZoneInfo(key='America/New_York'))
+E        +    where <built-in method fromtimestamp of type object at 0x00007FFEAE4D02A0> = datetime.fromtimestamp
+E        +    and   1772978400.0 = Reminder(due=1772978400.0, text='pills', kind='reminder', id='1555a01b', repeat='daily@09:00', fired=False).due
+E        +  and   datetime.datetime(2026, 3, 8, 9, 0, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')) = datetime(2026, 3, 8, 9, 0, tzinfo=zoneinfo.ZoneInfo(key='America/New_York'))
+
+tests\test_reminders.py:347: AssertionError
+1 failed in 0.33s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.25s
+
+=== drill M5-04-no-hour-snooze (M5-04) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning _
+
+    def test_snooze_offers_its_own_setting_then_5_15_60_minutes_and_tomorrow_morning():
+        now = datetime(2026, 10, 28, 16, 20).timestamp()
+        choices = snooze_choices(now)
+>       assert [label for label, _ in choices] == ["10 min", "5 min", "15 min", "1 hour", "Tomorrow at 9:00 AM"]
+E       AssertionError: assert ['10 min', '5...w at 9:00 AM'] == ['10 min', '5...w at 9:00 AM']
+E         
+E         At index 3 diff: 'Tomorrow at 9:00 AM' != '1 hour'
+E         Right contains one more item: 'Tomorrow at 9:00 AM'
+E         Use -v to get more diff
+
+tests\test_reminders.py:414: AssertionError
+1 failed in 0.30s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+
+=== drill M5-04-tomorrow-by-real-day (M5-04) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving ____
+
+    def test_snoozing_until_tomorrow_morning_keeps_9_am_across_daylight_saving():
+        ny = zone("America/New_York")
+        evening = datetime(2026, 3, 7, 22, 0, tzinfo=ny).timestamp()
+        label, until = snooze_choices(evening, tz=ny)[-1]
+>       assert label == "Tomorrow at 9:00 AM"
+E       AssertionError: assert 'Tomorrow at 10:00 AM' == 'Tomorrow at 9:00 AM'
+E         
+E         - Tomorrow at 9:00 AM
+E         ?             ^
+E         + Tomorrow at 10:00 AM
+E         ?             ^^
+
+tests\test_reminders.py:425: AssertionError
+1 failed in 0.30s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+
+=== drill M5-04-snooze-stays-fired (M5-04) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_a_fired_reminder_stays_until_done_or_snoozed
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_a_fired_reminder_stays_until_done_or_snoozed ______________
+
+    def test_a_fired_reminder_stays_until_done_or_snoozed():
+        book = ReminderBook()
+        r = book.add(100, "call Sam")
+        later = book.add(900, "later")
+        assert book.due(50) == [] and book.fire(50) == []
+        assert book.fire(150) == [r]
+        assert book.fire(160) == []  # told about once
+        assert book.due(170) == [r] and r.fired  # and still there, marked fired
+        assert book.upcoming() == [r, later]
+>       assert book.snooze(r.id, 500) and not r.fired and book.due(400) == []
+E       AssertionError: assert (True and not True)
+E        +  where True = snooze('a30f57a4', 500)
+E        +    where snooze = <chatmon.reminders.ReminderBook object at 0x000002E5FB365BE0>.snooze
+E        +    and   'a30f57a4' = Reminder(due=500, text='call Sam', kind='reminder', id='a30f57a4', repeat=None, fired=True).id
+E        +  and   True = Reminder(due=500, text='call Sam', kind='reminder', id='a30f57a4', repeat=None, fired=True).fired
+
+tests\test_reminders.py:363: AssertionError
+1 failed in 0.31s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.30s
+
+=== drill M5-04-blank-edit-accepted (M5-04) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_reminders.py::test_a_reminder_can_be_edited
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________________ test_a_reminder_can_be_edited ________________________
+
+    def test_a_reminder_can_be_edited():
+        book = ReminderBook()
+        r = book.add(100, "call Sam")
+        book.fire(200)
+        assert book.update(r.id, text="  call Sam back ")
+        assert r.text == "call Sam back" and r.fired  # new words alone leave it fired
+        assert book.update(r.id, when=5000) and r.due == 5000 and not r.fired
+        assert book.update(r.id, repeat="mon@09:00") and r.repeat == "mon@09:00"
+        assert book.update(r.id, repeat=None) and r.repeat is None
+        assert book.update(r.id) and (r.text, r.due) == ("call Sam back", 5000)
+        assert not book.update("nope", text="x")
+        for bad in ({"text": "  "}, {"when": float("nan")}, {"repeat": "every day"}, {"text": "fine", "when": float("inf")}):
+>           with pytest.raises(ValueError):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE ValueError
+
+tests\test_reminders.py:442: Failed
+1 failed in 0.34s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.30s
+
+=== drill M5-05-qlocale-unused (M5-05) on chatmon/localefmt.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_localefmt.py::test_british_english_writes_24_hour_times_and_day_first_dates
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.23s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_british_english_writes_24_hour_times_and_day_first_dates ________
+
+    def test_british_english_writes_24_hour_times_and_day_first_dates():
+        with pinned(GB):
+>           assert localefmt.time_of_day(TEA) == "15:04"
+E           AssertionError: assert '3:04 PM' == '15:04'
+E             
+E             - 15:04
+E             + 3:04 PM
+
+tests\test_localefmt.py:40: AssertionError
+1 failed in 0.27s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.22s
+
+=== drill M5-05-loads-qt (M5-05) on chatmon/localefmt.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_localefmt.py::test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment _
+
+    def test_without_qt_it_writes_plain_english_and_reads_the_language_from_the_environment():
+        """The command line doesn't load Qt to write a time; nor does a parser's test."""
+        script = (
+            "import sys\n"
+            "from datetime import date, datetime\n"
+            "from chatmon import localefmt\n"
+            "print(localefmt.time_of_day(datetime(2026, 12, 25, 15, 4)))\n"
+            "print(localefmt.long_date(date(2026, 12, 25)))\n"
+            "print(localefmt.short_day(date(2026, 12, 25)))\n"
+            "print(localefmt.language())\n"
+            "print('PyQt6.QtCore' in sys.modules)\n"
+        )
+        env = {k: v for k, v in os.environ.items() if k not in ("LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG")}
+        env.update(PYTHONPATH=str(ROOT), LANG="pt_BR.UTF-8")
+        out = subprocess.run([sys.executable, "-c", script], cwd=ROOT, env=env, capture_output=True, text=True, timeout=60, check=True)
+>       assert out.stdout.splitlines() == ["3:04 PM", "Friday, December 25, 2026", "Fri Dec 25", "pt_BR", "False"]
+E       AssertionError: assert ['3:04 PM', '...t_BR', 'True'] == ['3:04 PM', '..._BR', 'False']
+E         
+E         At index 2 diff: 'Fri, Dec 25' != 'Fri Dec 25'
+E         Use -v to get more diff
+
+tests\test_localefmt.py:95: AssertionError
+1 failed in 0.33s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+
+=== drill M5-05-c-locale-shown (M5-05) on chatmon/localefmt.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_localefmt.py::test_no_locale_at_all_is_plain_english_not_qts_c_look
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.24s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_no_locale_at_all_is_plain_english_not_qts_c_look ____________
+
+    def test_no_locale_at_all_is_plain_english_not_qts_c_look():
+        with pinned(QLocale.c()):
+>           assert localefmt.time_of_day(TEA) == "3:04 PM"
+E           AssertionError: assert '15:04' == '3:04 PM'
+E             
+E             - 3:04 PM
+E             + 15:04
+
+tests\test_localefmt.py:63: AssertionError
+1 failed in 0.27s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+
+=== drill M5-06-english-dropped (M5-06) on chatmon/offline.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_another_languages_phrases_and_help_with_english_always_understood ____
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-6946/test_another_languages_phrases0')
+
+    def test_another_languages_phrases_and_help_with_english_always_understood(tmp_path):
+        shutil.copy(offline.PHRASES / "en.json", tmp_path / "en.json")
+        (tmp_path / "fr.json").write_text(json.dumps({
+            "commands": {"help": ["aide", "Que sais-tu faire"], "notes": ["mes notes"], "made up": ["bidule"], "hide": ["help"]},
+            "templates": {"note": ["note : {text}"], "delete note": ["supprimer la note {n}"], "nonsense": ["x {n}"], "clear notes": ["{n} {text}"]},
+            "question_words": ["pourquoi"],
+            "help": {
+                "title": "**Sans IA** :",
+                "sections": [{"id": "notes", "name": "Notes", "examples": ["note : acheter du lait", "mes notes"]}, {"id": "me", "name": "Moi"}],
+                "footer": "Le reste va à l'IA.",
+            },
+        }), encoding="utf-8")
+        fr = offline.load_phrases("fr_CA", tmp_path)
+        assert fr.language == "fr"
+        assert fr.command("Aide") == fr.command("que sais-tu faire ?") == "help"
+>       assert fr.command("help") == "help"  # English is always understood, and means what it means in English
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'hide' == 'help'
+E         
+E         - help
+E         + hide
+
+tests\test_offline.py:308: AssertionError
+1 failed in 0.33s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+
+=== drill M5-06-phrases-not-normalized (M5-06) on chatmon/offline.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_offline.py::test_fixed_commands_are_read_from_the_phrase_data
+-- green: exit 0, 11 passed
+...........                                                              [100%]
+11 passed in 0.32s
+-- red: exit 1
+E       AssertionError: assert None == 'hide'
+E        +  where None = <function command at 0x00000201325E9850>('  GO   away! ', 'en')
+E        +    where <function command at 0x00000201325E9850> = offline.command
+
+tests\test_offline.py:284: AssertionError
+_ test_fixed_commands_are_read_from_the_phrase_data[Release notes.-what's new] _
+
+said = 'Release notes.', command = "what's new"
+
+    @pytest.mark.parametrize(
+        "said, command",
+        [
+            ("What can you do?", "help"),
+            ("How’s my computer", "status"),
+            ("  GO   away! ", "hide"),
+            ("/new", "new chat"),
+            ("stop break reminders", "breaks off"),
+            ("focus notifications on", "focus alerts on"),
+            ("Release notes.", "what's new"),
+            ("what are my agents doing?", "agents"),
+            ("report a bug", "report a problem"),
+            ("which version", "version"),
+            ("what is love", None),
+        ],
+    )
+    def test_fixed_commands_are_read_from_the_phrase_data(said, command):
+>       assert offline.command(said, "en") == command
+E       assert None == "what's new"
+E        +  where None = <function command at 0x00000201325E9850>('Release notes.', 'en')
+E        +    where <function command at 0x00000201325E9850> = offline.command
+
+tests\test_offline.py:284: AssertionError
+_ test_fixed_commands_are_read_from_the_phrase_data[what are my agents doing?-agents] _
+
+said = 'what are my agents doing?', command = 'agents'
+
+    @pytest.mark.parametrize(
+        "said, command",
+        [
+            ("What can you do?", "help"),
+            ("How’s my computer", "status"),
+            ("  GO   away! ", "hide"),
+            ("/new", "new chat"),
+            ("stop break reminders", "breaks off"),
+            ("focus notifications on", "focus alerts on"),
+            ("Release notes.", "what's new"),
+            ("what are my agents doing?", "agents"),
+            ("report a bug", "report a problem"),
+            ("which version", "version"),
+            ("what is love", None),
+        ],
+    )
+    def test_fixed_commands_are_read_from_the_phrase_data(said, command):
+>       assert offline.command(said, "en") == command
+E       AssertionError: assert None == 'agents'
+E        +  where None = <function command at 0x00000201325E9850>('what are my agents doing?', 'en')
+E        +    where <function command at 0x00000201325E9850> = offline.command
+
+tests\test_offline.py:284: AssertionError
+5 failed, 6 passed in 0.36s
+-- restored green: exit 0, 11 passed
+...........                                                              [100%]
+11 passed in 0.30s
+
+=== drill M5-07-401-digits (M5-07) on chatmon/offline.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_parser_properties.py::test_a_sum_is_answered_or_refused_quickly_and_never_too_long
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.48s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_a_sum_is_answered_or_refused_quickly_and_never_too_long _________
+
+    @PROFILE
+>   @given(SUMS)
+                 
+
+tests\test_parser_properties.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\hypothesis\core.py:1730: in _raise_to_user
+    raise the_error_hypothesis_found
+tests\test_parser_properties.py:88: in test_a_sum_is_answered_or_refused_quickly_and_never_too_long
+    _calculates_or_says_it_cant(text)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = '10**400'
+
+    def _calculates_or_says_it_cant(text: str) -> None:
+        started = time.perf_counter()
+        try:
+            value = offline.calculate(text)
+        except (ValueError, OverflowError):  # can't be worked out, or too big: what it may say
+            value = None
+        assert time.perf_counter() - started < 0.5
+        if value is not None:
+            assert type(value) in (int, float)
+            if isinstance(value, int):
+>               assert len(str(abs(value))) <= offline._MAX_DIGITS
+E               AssertionError: assert 401 <= 400
+E                +  where 401 = len('100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000...0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000')
+E                +    where '100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000...0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' = str(100000000000000000...0000000000000000000)
+E                +      where 100000000000000000...0000000000000000000 = abs(100000000000000000...0000000000000000000)
+E                +  and   400 = offline._MAX_DIGITS
+E               (note: 1 other explicit example also failed with this error; use Verbosity.verbose to view)
+E               Failing explicit example: test_a_sum_is_answered_or_refused_quickly_and_never_too_long(
+E                   text='10**400',
+E               )
+
+tests\test_parser_properties.py:71: AssertionError
+1 failed in 0.43s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== drill M5-07-past-longest (M5-07) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_parser_properties.py::test_a_reminders_time_is_always_ahead_and_never_too_far
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.52s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_a_reminders_time_is_always_ahead_and_never_too_far ___________
+
+    @needs_zones
+>   @PROFILE
+             
+
+tests\test_parser_properties.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\hypothesis\core.py:1730: in _raise_to_user
+    raise the_error_hypothesis_found
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+zone_name = 'Asia/Kolkata', wall = datetime.datetime(2017, 1, 1, 12, 0)
+text = '2027-03-14'
+
+    @needs_zones
+    @PROFILE
+    @given(ZONE_NAMES, WALLS, PHRASES)
+    @example("America/New_York", datetime(2026, 3, 8, 1, 30), "in 2 hours")
+    @example("America/New_York", datetime(2026, 11, 1, 1, 10), "at 1:30")
+    @example("America/New_York", datetime(2026, 3, 7, 23, 0), "tomorrow at 2:30am")
+    @example("America/Santiago", datetime(2026, 9, 5, 23, 30), "at midnight")  # Santiago skips its midnight in September
+    @example("Australia/Lord_Howe", datetime(2026, 10, 4, 1, 50), "in 30 minutes")  # a half-hour change
+    @example("Europe/London", datetime(2026, 10, 25, 1, 59), "every day at 1:30")
+    @example("Asia/Kolkata", datetime(2040, 12, 31, 23, 59), "in 3650 days")
+    @example("Asia/Kolkata", datetime(2017, 1, 1, 12, 0), "2027-03-14")  # ten years on by the year, but past LONGEST
+    def test_a_reminders_time_is_always_ahead_and_never_too_far(zone_name, wall, text):
+        now = _real(zone_name, wall)
+        when = parse_when(text, now)
+        if when is not None and when.due is not None:
+            assert when.due.tzinfo is now.tzinfo
+>           assert 0 < when.due.timestamp() - now.timestamp() <= LONGEST
+E           AssertionError: assert (1804995000.0 - 1483252200.0) <= 316224000
+E            +  where 1804995000.0 = <built-in method timestamp of datetime.datetime object at 0x0000022DAFD85B60>()
+E            +    where <built-in method timestamp of datetime.datetime object at 0x0000022DAFD85B60> = datetime.datetime(2027, 3, 14, 9, 0, tzinfo=zoneinfo.ZoneInfo(key='Asia/Kolkata')).timestamp
+E            +      where datetime.datetime(2027, 3, 14, 9, 0, tzinfo=zoneinfo.ZoneInfo(key='Asia/Kolkata')) = When(due=datetime.datetime(2027, 3, 14, 9, 0, tzinfo=zoneinfo.ZoneInfo(key='Asia/Kolkata')), rest='', repeat=None, ambiguous='').due
+E            +  and   1483252200.0 = <built-in method timestamp of datetime.datetime object at 0x0000022DAFD87570>()
+E            +    where <built-in method timestamp of datetime.datetime object at 0x0000022DAFD87570> = datetime.datetime(2017, 1, 1, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='Asia/Kolkata')).timestamp
+E           Failing explicit example: test_a_reminders_time_is_always_ahead_and_never_too_far(
+E               zone_name='Asia/Kolkata',
+E               wall=datetime.datetime(2017, 1, 1, 12, 0),
+E               text='2027-03-14',
+E           )
+
+tests\test_parser_properties.py:150: AssertionError
+1 failed in 0.40s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+
+=== drill M5-07-in-by-wall-clock (M5-07) on chatmon/reminders.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_parser_properties.py::test_in_is_that_many_seconds_of_real_time
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.40s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_in_is_that_many_seconds_of_real_time __________________
+
+    @needs_zones
+>   @PROFILE
+             
+
+tests\test_parser_properties.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\hypothesis\core.py:1730: in _raise_to_user
+    raise the_error_hypothesis_found
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+zone_name = 'America/New_York', wall = datetime.datetime(2026, 3, 8, 1, 30)
+n = 2, unit = 'hours'
+
+    @needs_zones
+    @PROFILE
+    @given(ZONE_NAMES, WALLS, st.integers(1, 6000), st.sampled_from(sorted(_UNITS)))
+    @example("America/New_York", datetime(2026, 3, 8, 1, 30), 2, "hours")
+    @example("America/New_York", datetime(2026, 10, 31, 12, 0), 1, "days")  # a day of 25 hours: still 24 of them
+    def test_in_is_that_many_seconds_of_real_time(zone_name, wall, n, unit):
+        now = _real(zone_name, wall)
+        when = parse_when(f"in {n} {unit}", now)
+        seconds = n * _UNITS[unit]
+        if seconds > LONGEST:
+            assert when is None
+        else:
+>           assert abs(when.due.timestamp() - now.timestamp() - seconds) < 1e-3
+E           AssertionError: assert 3600.0 < 0.001
+E            +  where 3600.0 = abs(((1772955000.0 - 1772951400.0) - 7200))
+E            +    where 1772955000.0 = <built-in method timestamp of datetime.datetime object at 0x000001E1C5ECC7E0>()
+E            +      where <built-in method timestamp of datetime.datetime object at 0x000001E1C5ECC7E0> = datetime.datetime(2026, 3, 8, 3, 30, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')).timestamp
+E            +        where datetime.datetime(2026, 3, 8, 3, 30, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')) = When(due=datetime.datetime(2026, 3, 8, 3, 30, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')), rest='', repeat=None, ambiguous='').due
+E            +    and   1772951400.0 = <built-in method timestamp of datetime.datetime object at 0x000001E1C1E9BC30>()
+E            +      where <built-in method timestamp of datetime.datetime object at 0x000001E1C1E9BC30> = datetime.datetime(2026, 3, 8, 1, 30, tzinfo=zoneinfo.ZoneInfo(key='America/New_York')).timestamp
+E           (note: 1 other explicit example also failed with this error; use Verbosity.verbose to view)
+E           Failing explicit example: test_in_is_that_many_seconds_of_real_time(
+E               zone_name='America/New_York',
+E               wall=datetime.datetime(2026, 3, 8, 1, 30),
+E               n=2,
+E               unit='hours',
+E           )
+
+tests\test_parser_properties.py:165: AssertionError
+1 failed in 0.42s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.41s
+
+=== drill M5-08-working-first (M5-08) on chatmon/offline.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_offline.py::test_agents_at_a_glance
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________________________ test_agents_at_a_glance ___________________________
+
+    def test_agents_at_a_glance():
+        agents = {"claude": ("needs-you", 1000.0), "codex": ("working", 400.0), "gemini": ("needs-you", 700.0), "muse": ("working", 3500.0)}
+>       assert offline.agents_report(agents, 3600.0) == (
+            "- **Gemini** needs you (waiting 48 min)\n"
+            "- **Claude** needs you (waiting 43 min)\n"
+            "- **Codex** is working (53 min so far)\n"
+            "- **Muse** is working (1 min so far)"
+        )
+E       AssertionError: assert '- **Codex** ...iting 43 min)' == '- **Gemini**...1 min so far)'
+E         
+E         + - **Codex** is working (53 min so far)
+E         + - **Muse** is working (1 min so far)
+E           - **Gemini** needs you (waiting 48 min)
+E         - - **Claude** needs you (waiting 43 min)
+E         ?                                        -
+E         + - **Claude** needs you (waiting 43 min)
+E         - - **Codex** is working (53 min so far)
+E         - - **Muse** is working (1 min so far)
+
+tests\test_offline.py:353: AssertionError
+1 failed in 0.30s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+
+=== summary
+PASS M5-01-removed-when-due
+PASS M5-01-fired-not-saved
+PASS M5-01-old-saves-change
+PASS M5-02-weekday-ignored
+PASS M5-02-bare-hour-am
+PASS M5-02-leftovers-guessed
+PASS M5-02-in-by-wall-clock
+PASS M5-03-every-not-read
+PASS M5-03-done-repeat-removed
+PASS M5-03-repeat-by-real-days
+PASS M5-04-no-hour-snooze
+PASS M5-04-tomorrow-by-real-day
+PASS M5-04-snooze-stays-fired
+PASS M5-04-blank-edit-accepted
+PASS M5-05-qlocale-unused
+PASS M5-05-loads-qt
+PASS M5-05-c-locale-shown
+PASS M5-06-english-dropped
+PASS M5-06-phrases-not-normalized
+PASS M5-07-401-digits
+PASS M5-07-past-longest
+PASS M5-07-in-by-wall-clock
+PASS M5-08-working-first
