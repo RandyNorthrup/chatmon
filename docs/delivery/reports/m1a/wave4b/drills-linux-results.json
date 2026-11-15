@@ -1,0 +1,245 @@
+[
+  {
+    "id": "AC-01-LINUX-launcher-owner",
+    "requirement": "M1A-01",
+    "file": "packaging/linux/verify-update",
+    "mutation": {
+      "find": "    return info.st_uid == OWNER and not stat.S_ISLNK(info.st_mode) and not info.st_mode & (stat.S_IWGRP | stat.S_IWOTH)",
+      "replace": "    return True"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own"
+    ],
+    "expected": [
+      "test_the_check_isnt_loaded_from_anything_but_roots_own"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "46d526f4116846523da302f83cd94f1c2a2f0a3ca410b4893cd501526230b5bd",
+    "baseline_exit": 0,
+    "mutated_sha256": "c4827c01ab14404cc4239f815b0bda683ed1d820a493f7effceb84ce26b40117",
+    "mutated_exit": 1,
+    "observed": "_ test_the_check_isnt_loaded_from_anything_but_roots_own[group-writable module] _",
+    "after_sha256": "46d526f4116846523da302f83cd94f1c2a2f0a3ca410b4893cd501526230b5bd",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01-LINUX-refusal-stops",
+    "requirement": "M1A-01",
+    "file": "packaging/linux/install-update",
+    "mutation": {
+      "find": "\"$dir/SHA256SUMS.txt.sig\" >/dev/null || exit 3",
+      "replace": "\"$dir/SHA256SUMS.txt.sig\" >/dev/null || true"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_install_update.py::test_a_tampered_list_is_refused_by_root",
+      "tests/test_install_update.py::test_an_older_release_is_refused_by_root"
+    ],
+    "expected": [
+      "test_a_tampered_list_is_refused_by_root",
+      "test_an_older_release_is_refused_by_root"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe",
+    "baseline_exit": 0,
+    "mutated_sha256": "72d07c5aaef28531b053ec8e5396b9a5f0449f5c58b6754f0d2e4d9989187e56",
+    "mutated_exit": 1,
+    "observed": "___________________ test_a_tampered_list_is_refused_by_root ____________________",
+    "after_sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01-LINUX-installs-the-copy",
+    "requirement": "M1A-01",
+    "file": "packaging/linux/install-update",
+    "mutation": {
+      "find": "    apt-get install -y \"$dir/update.deb\"",
+      "replace": "    apt-get install -y \"$file\""
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_install_update.py::test_a_signed_newer_package_is_installed_from_roots_own_copy"
+    ],
+    "expected": [
+      "test_a_signed_newer_package_is_installed_from_roots_own_copy"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe",
+    "baseline_exit": 0,
+    "mutated_sha256": "865132b13b559696bafc15ae2378d35d48a64053c5b3c634496e306dfd73390a",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_signed_newer_package_is_installed_from_roots_own_copy _________",
+    "after_sha256": "e12260b41f46456b9872461785647aa413474605dc1e02ae65cc389e99e1d2fe",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-02-owner",
+    "requirement": "M1A-02",
+    "file": "packaging/macos/scripts/postinstall",
+    "mutation": {
+      "find": "    [ \"$3\" = \"$OWNER\" ]",
+      "replace": "    [ -n \"$3\" ]"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing"
+    ],
+    "expected": [
+      "test_a_folder_not_roots_alone_gets_nothing[someone else's]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "07b9f717e770966a800226cd485a80f8c4f7f76a853fc5ad5e6a3ee3975aa278",
+    "baseline_exit": 0,
+    "mutated_sha256": "aa6892a51c9f78e6fd1bd32e290cb79df45914b8ae610f6223f599fbe5ef1d10",
+    "mutated_exit": 1,
+    "observed": "__________ test_a_folder_not_roots_alone_gets_nothing[someone else's] __________",
+    "after_sha256": "07b9f717e770966a800226cd485a80f8c4f7f76a853fc5ad5e6a3ee3975aa278",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-02-writable",
+    "requirement": "M1A-02",
+    "file": "packaging/macos/scripts/postinstall",
+    "mutation": {
+      "find": "        d????-??-*) ;;",
+      "replace": "        d*) ;;"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing"
+    ],
+    "expected": [
+      "test_a_folder_not_roots_alone_gets_nothing[others can write]",
+      "test_a_folder_not_roots_alone_gets_nothing[group can write]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "07b9f717e770966a800226cd485a80f8c4f7f76a853fc5ad5e6a3ee3975aa278",
+    "baseline_exit": 0,
+    "mutated_sha256": "9003afd8f52c522942229a199613ede78c3ee983153adb6c427aad68b9d8eaec",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_folder_not_roots_alone_gets_nothing[others can write] _________",
+    "after_sha256": "07b9f717e770966a800226cd485a80f8c4f7f76a853fc5ad5e6a3ee3975aa278",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-07-private",
+    "requirement": "M1A-07",
+    "file": "chatmon/agents.py",
+    "mutation": {
+      "find": "            fd = os.open(copy, flags, 0o600)",
+      "replace": "            fd = os.open(copy, flags, 0o644)"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_agents.py::test_backups_are_private_new_files_and_only_the_newest_five_are_kept"
+    ],
+    "expected": [
+      "test_backups_are_private_new_files_and_only_the_newest_five_are_kept"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3",
+    "baseline_exit": 0,
+    "mutated_sha256": "b830663bbbade9395fd053da64f3dbf26c535b6bbc4dec39517be3a0307b864b",
+    "mutated_exit": 1,
+    "observed": "_____ test_backups_are_private_new_files_and_only_the_newest_five_are_kept _____",
+    "after_sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09-REMOTE-linux",
+    "requirement": "M1A-09",
+    "file": "chatmon/attachments.py",
+    "mutation": {
+      "find": "            kind = LINUX_REMOTE.get(_statfs_type(path) or 0)",
+      "replace": "            kind = None"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_attachments.py::test_linux_network_and_fuse_mounts_are_refused_but_not_fuseblk"
+    ],
+    "expected": [
+      "DID NOT RAISE"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb",
+    "baseline_exit": 0,
+    "mutated_sha256": "f54f8d13d71363b7ff5700601047dc3da665806d32f41d36768eb8ca55cfc4ee",
+    "mutated_exit": 1,
+    "observed": "E           Failed: DID NOT RAISE AttachError",
+    "after_sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09-ORDER-pipe",
+    "requirement": "M1A-09",
+    "file": "chatmon/attachments.py",
+    "mutation": {
+      "find": "    if not stat.S_ISREG(looked.st_mode):",
+      "replace": "    if False:"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_attachments.py::test_a_pipe_or_a_device_is_refused_without_being_opened"
+    ],
+    "expected": [
+      "test_a_pipe_or_a_device_is_refused_without_being_opened"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb",
+    "baseline_exit": 0,
+    "mutated_sha256": "b3a2b6d60a6cb721ad98f1359ac27a0eda0b483fd31dc37be3372dc982554860",
+    "mutated_exit": 1,
+    "observed": "___________ test_a_pipe_or_a_device_is_refused_without_being_opened ____________",
+    "after_sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb",
+    "restored_exit": 0
+  }
+]
