@@ -1,0 +1,73 @@
+{
+ "drills": [
+  {
+   "id": "M3-04-buffers",
+   "requirement": "M3-04",
+   "file": "chatmon/layer.py",
+   "find": "MAX_BUFFERS = 2",
+   "replace": "MAX_BUFFERS = 3",
+   "test": [
+    "tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+   ],
+   "expect": [
+    "test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+   ]
+  },
+  {
+   "id": "M3-04-trim",
+   "requirement": "M3-04",
+   "file": "chatmon/layer.py",
+   "find": "                self._buffers.remove(buf)",
+   "replace": "                pass  # drill: destroyed but still counted",
+   "test": [
+    "tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+   ],
+   "expect": [
+    "assert len(surf._buffers) == 1"
+   ]
+  },
+  {
+   "id": "M3-09-latin",
+   "requirement": "M3-09",
+   "file": "chatmon/xkb.py",
+   "find": "            sym = self._latin_sym(xkb_code) or sym",
+   "replace": "            sym = 0 or sym",
+   "test": [
+    "tests/test_xkb.py::test_shortcuts_on_a_russian_layout_are_the_latin_keys",
+    "tests/test_xkb.py::test_the_latin_symbol_comes_from_the_first_layout_that_has_one"
+   ],
+   "expect": [
+    "test_shortcuts_on_a_russian_layout_are_the_latin_keys",
+    "test_the_latin_symbol_comes_from_the_first_layout_that_has_one"
+   ]
+  },
+  {
+   "id": "M3-09-overlay",
+   "requirement": "M3-09",
+   "file": "chatmon/xkb.py",
+   "find": "            sym = self._latin_sym(xkb_code) or sym",
+   "replace": "            sym = 0 or sym",
+   "test": [
+    "tests/test_wayland.py::test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout",
+    "tests/test_overlay_stage.py::test_ctrl_v_pastes_under_a_russian_layout"
+   ],
+   "expect": [
+    "test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout",
+    "test_ctrl_v_pastes_under_a_russian_layout"
+   ]
+  },
+  {
+   "id": "M3-10-xserver",
+   "requirement": "M3-10",
+   "file": "chatmon/clickthrough.py",
+   "find": "        shape = device_rects(key[0], ratio)",
+   "replace": "        shape = key[0]",
+   "test": [
+    "tests/test_clickthrough.py::test_the_x_server_gets_the_shape_in_device_pixels"
+   ],
+   "expect": [
+    "test_the_x_server_gets_the_shape_in_device_pixels"
+   ]
+  }
+ ]
+}

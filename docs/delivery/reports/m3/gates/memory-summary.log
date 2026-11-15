@@ -1,0 +1,28 @@
+memory-before.json window under it: False
+  its greeting bubble showing                buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem   31.6 MB  frames/2 s  26
+  nothing showing but the chatmon, 5 s on    buffers [[3840, 2160]]              31.6 MB  Chatmon resident  31.6 MB  sway shmem   31.6 MB  frames/2 s   1
+  a bubble just shown                        buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem   31.6 MB  frames/2 s  14
+  the ask box open on the overlay            buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem   31.6 MB  frames/2 s  44
+  the penguin's menu open over the ask box   buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem   31.6 MB  frames/2 s  65
+  everything closed, 5 s on                  buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem   31.6 MB  frames/2 s   4
+memory-after.json window under it: False
+  its greeting bubble showing                buffers [[640, 640], [640, 640]]     3.1 MB  Chatmon resident   3.1 MB  sway shmem   33.9 MB  frames/2 s  24
+  nothing showing but the chatmon, 5 s on    buffers [[640, 640]]                 1.6 MB  Chatmon resident   1.6 MB  sway shmem   33.2 MB  frames/2 s   0
+  a bubble just shown                        buffers [[896, 768], [896, 768]]     5.2 MB  Chatmon resident   5.2 MB  sway shmem   35.6 MB  frames/2 s  14
+  the ask box open on the overlay            buffers [[896, 1088], [896, 1088]]   7.4 MB  Chatmon resident   7.4 MB  sway shmem   38.7 MB  frames/2 s  44
+  the penguin's menu open over the ask box   buffers [[896, 1088], [896, 1088]]   7.4 MB  Chatmon resident   7.4 MB  sway shmem   39.1 MB  frames/2 s  64
+  everything closed, 5 s on                  buffers [[384, 384], [384, 384]]     1.1 MB  Chatmon resident   1.1 MB  sway shmem   32.7 MB  frames/2 s   4
+memory-before--window.json window under it: True
+  its greeting bubble showing                buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem  156.5 MB  frames/2 s  21
+  nothing showing but the chatmon, 5 s on    buffers [[3840, 2160]]              31.6 MB  Chatmon resident  31.6 MB  sway shmem  124.9 MB  frames/2 s   0
+  a bubble just shown                        buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem  156.5 MB  frames/2 s  16
+  the ask box open on the overlay            buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem  156.5 MB  frames/2 s  45
+  the penguin's menu open over the ask box   buffers [[3840, 2160], [3840, 2160]]  63.3 MB  Chatmon resident  63.3 MB  sway shmem  156.5 MB  frames/2 s  64
+  everything closed, 5 s on                  buffers [[3840, 2160]]              31.6 MB  Chatmon resident  31.6 MB  sway shmem  124.9 MB  frames/2 s   0
+memory-after--window.json window under it: True
+  its greeting bubble showing                buffers [[640, 640], [640, 640]]     3.1 MB  Chatmon resident   3.1 MB  sway shmem   95.5 MB  frames/2 s  15
+  nothing showing but the chatmon, 5 s on    buffers [[640, 640]]                 1.6 MB  Chatmon resident   1.6 MB  sway shmem   94.8 MB  frames/2 s   0
+  a bubble just shown                        buffers [[896, 768], [896, 768]]     5.2 MB  Chatmon resident   5.2 MB  sway shmem   97.2 MB  frames/2 s  14
+  the ask box open on the overlay            buffers [[896, 1088], [896, 1088]]   7.4 MB  Chatmon resident   7.4 MB  sway shmem  100.2 MB  frames/2 s  44
+  the penguin's menu open over the ask box   buffers [[896, 1088], [896, 1088]]   7.4 MB  Chatmon resident   7.4 MB  sway shmem  100.7 MB  frames/2 s  61
+  everything closed, 5 s on                  buffers [[384, 384], [384, 384]]     1.1 MB  Chatmon resident   1.1 MB  sway shmem   94.2 MB  frames/2 s   3

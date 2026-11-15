@@ -27,7 +27,7 @@ import sys
 import time
 from typing import Any, cast
 
-from PyQt6.QtCore import QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QCoreApplication, QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer
 from PyQt6.QtGui import (
     QColor,
     QContextMenuEvent,
@@ -56,6 +56,7 @@ from .behavior import Behavior, Frame
 from .i18n import _, ngettext
 from .bubble import SpeechBubble
 from .bubbleart import device_ratio
+from .qtsignal import pyqtSignal
 from .sprites import Sprites
 from .stagemenu import StageMenu
 
@@ -96,7 +97,7 @@ class StageWindow(QWidget):
         # On X11 the stage skips the window manager, so it stays above
         # everything, panels included, and never shows in the taskbar.
         flags |= Qt.WindowType.X11BypassWindowManagerHint if xcb else Qt.WindowType.Tool
-        super().__init__(None, flags)
+        super().__init__(None, flags)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type a widget's parent as Self, and never None
         self.stage = stage
         self.setAccessibleName("Chatmon")  # what a screen reader calls it; its bubble is its description
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -198,7 +199,7 @@ class Hosted(QObject):
     mouse events into scene events, as it would for one on screen."""
 
     def __init__(self, stage: Stage, widget: QWidget):
-        super().__init__(stage)
+        super().__init__(stage)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.stage, self.widget = stage, widget
         self.scene = QGraphicsScene(self)
         shown = widget.isVisible()
@@ -347,7 +348,7 @@ class Hosted(QObject):
         QApplication.sendEvent(viewport, event)
 
     def cursor_at(self, gpos: QPointF) -> str:
-        child = self.widget.childAt((gpos - QPointF(self.rect().topLeft())).toPoint())
+        child: QWidget | None = self.widget.childAt((gpos - QPointF(self.rect().topLeft())).toPoint())  # PyQt6 6.12.1's stubs say never None
         while child is not None and not child.testAttribute(Qt.WidgetAttribute.WA_SetCursor):
             child = child.parentWidget()
         if child is None:
@@ -526,7 +527,7 @@ class Stage(QObject):
         first = self._screen_at(QPoint(int(behavior.x), 0)) or QGuiApplication.primaryScreen()
         if first is not None:  # none at all: no screen to cover until one comes (_tick)
             self._use_screen(first)
-        app = QGuiApplication.instance()
+        app: QCoreApplication | None = QGuiApplication.instance()  # typed: PyQt6 6.12.1's stubs give instance() an unbound Self
         if isinstance(app, QGuiApplication):  # always: a stage needs Qt's GUI
             app.screenRemoved.connect(self._screen_removed)
         # One shot at a time, set each tick to the next change (see _next_tick); anything that happens wakes it.
@@ -873,9 +874,12 @@ class Stage(QObject):
 
     def _menu_keyboard(self, on: bool) -> None:
         """The overlay takes the keyboard while its menu is open, as any popup menu does, and gives it back as
-        the menu closes; while the ask box is open the keyboard is already the overlay's, and stays."""
+        the menu closes; while the ask box is open on it the keyboard is already the overlay's, and stays. With the
+        ask box a window of its own (set_hosting(False)) the penguin's menu is still drawn here, so it takes the
+        keyboard from the box too, and the compositor gives it back to the box as the menu closes."""
         focus = getattr(self.surface, "focus_keyboard", None)
-        if focus is not None and self.draws_menus() and not (self.hosted is not None and self.hosted.visible()):
+        drawn_here = bool(getattr(self.surface, "draws_menus", False))  # whatever the hosting: this menu is the overlay's
+        if focus is not None and drawn_here and not (self.hosted is not None and self.hosted.visible()):
             focus(on, on)
 
     def _close_owned(self) -> None:
@@ -1047,6 +1051,9 @@ class Stage(QObject):
         )
         if key != self._key:
             self._damage(key, penguin, zs, bubble_box, menu_rects, badges, pulse, origin)
+        set_extent = getattr(self.surface, "set_extent", None)  # the overlay: buffers only as big as this
+        if set_extent is not None:
+            set_extent(self._extent(penguin, zs, bubble_box, menu_rects, badges, origin))
         hosted_rects = self._follow_hosted(self.hosted, origin) if self.hosted is not None else ()
         # Where it takes clicks: built again only when something in it changed, and as plain numbers.
         bubble_rect = bubble_box.toAlignedRect() if self.bubble.visible() else None
@@ -1071,13 +1078,21 @@ class Stage(QObject):
         size = self.bubble.size
         x = min(max(head.x() - size.width() / 2, 4), self._geo.width() - size.width() - 4)
         top = head.y()
-        if self._clear_of is not None and self._clear_of.isVisible():
+        if self._clear_of is not None and self._clear_of.isVisible() and self._placed_as_asked(self._clear_of):
             top = min(top, self._clear_of.geometry().top() - origin.y())
         y = max(top - size.height(), 4)
         # On whole device pixels: off them, every pixmap of an animated bubble is resampled each frame,
         # which is slow and blurs it by half a pixel.
         x, y = round(x * k) / k, math.floor(y * k) / k  # down, never up: it stays clear of what is below it
         return QRectF(x, y, size.width(), size.height())
+
+    @staticmethod
+    def _placed_as_asked(widget: QWidget) -> bool:
+        """Whether `widget` is where its geometry says: drawn on the stage (hosted), or a window where windows go
+        where they're asked (X11, Windows, macOS). On Wayland the compositor places a window and never says where
+        (sway centres the ask box, floating): its geometry there is only what was asked for, and a bubble kept
+        above that lands on the box itself."""
+        return widget.graphicsProxyWidget() is not None or not QGuiApplication.platformName().startswith("wayland")
 
     def _damage(self, key: tuple, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: tuple, pulse: int, origin: QPoint) -> None:
         """Draw again only the parts whose look (their part of `key`) changed since the last frame drawn."""
@@ -1102,6 +1117,25 @@ class Stage(QObject):
         self._key = key
         self._penguin, self._bubble_box = penguin, bubble_box
         self.surface.damage(dirty)
+
+    def _extent(self, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: tuple, origin: QPoint) -> QRect:
+        """Where everything drawn this frame is, all of it (local coordinates), each part with the margin its
+        drawing reaches past it (as _damage has them): the overlay's buffers need cover no more."""
+        parts = [r.adjusted(-3, -3, 3, 3) for r in menu_rects] if self.menu.is_open() else []
+        if not penguin.isNull():
+            parts.append(penguin.toAlignedRect().adjusted(-2, -2, 2, 2))
+        if zs.isValid():
+            parts.append(zs)
+        if self.bubble.drawn() and not bubble_box.isNull():
+            parts.append(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3))
+        if self.hosted is not None and self.hosted.visible():
+            parts.append(self.hosted.rect().translated(-origin).adjusted(-2, -2, 2, 2))
+        reach = PULSE_REACH + 2
+        parts += [r.toAlignedRect().adjusted(-reach, -reach, reach, reach) for _state, r, _figure in badges]
+        extent = QRect()
+        for part in parts:
+            extent = extent.united(part)
+        return extent
 
     def _follow_hosted(self, hosted: Hosted, origin: QPoint) -> tuple:
         """Keep the keyboard, the primary selection and the input method up with the hosted scene, and say where on

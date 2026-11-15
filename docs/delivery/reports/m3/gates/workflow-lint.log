@@ -1,0 +1,8 @@
+$ zizmor --no-online-audits .github
+ INFO zizmor: 🌈 zizmor v1.31.1
+ WARN audit: zizmor: zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+ WARN audit: zizmor: one or more inputs contains YAML anchors; see https://docs.zizmor.sh/usage/#yaml-anchors for details
+No findings to report. Good job! (14 suppressed)
+exit=0
+$ actionlint -color=false   (1.7.x from /var/tmp/m6a, with shellcheck version: 0.11.0)
+exit=0

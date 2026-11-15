@@ -1,0 +1,11 @@
+$ python verify-delivery.py --observe-context
+{
+  "platform": "windows",
+  "tools": {
+    "python": "3.14.10"
+  }
+}
+$ python -c "import PyQt6.QtCore, pytest; ..."
+pyqt6 6.11.0 pytest 9.2.0
+$ python -m ruff --version
+ruff 0.17.4

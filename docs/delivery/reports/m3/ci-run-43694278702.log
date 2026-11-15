@@ -1,0 +1,50 @@
+# gh run view 43694278702 --log (CI on improve/assessment-fixes f9e60d9, merged into wave4/wayland at 5d98d0d), excerpt:
+# every test leg's summary, and test_clickthrough.py's skips on the Linux and macOS legs (line 156 is the X server shape test)
+test (macos-latest, 3.11)	Every test	2026-11-15T08:26:45.0566680Z tests/test_clickthrough.py .ssss..s                                      [ 34%]
+test (macos-latest, 3.11)	Every test	2026-11-15T08:28:38.6142110Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+test (macos-latest, 3.11)	Every test	2026-11-15T08:28:38.6147300Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+test (macos-latest, 3.11)	Every test	2026-11-15T08:28:38.6147810Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+test (macos-latest, 3.11)	Every test	2026-11-15T08:28:38.6148320Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+test (macos-latest, 3.11)	Every test	2026-11-15T08:28:38.6148760Z SKIPPED [1] tests/test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+test (macos-latest, 3.11)	Every test	2026-11-15T08:28:38.6263760Z ================ 1221 passed, 171 skipped in 291.17s (0:04:51) =================
+test (windows-latest, 3.15)	Every test	2026-11-15T08:26:41.3030368Z tests\test_clickthrough.py .......s                                      [ 34%]
+test (windows-latest, 3.15)	Every test	2026-11-15T08:27:33.5251235Z SKIPPED [1] tests\test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+test (windows-latest, 3.15)	Every test	2026-11-15T08:27:33.5338978Z ================ 1242 passed, 150 skipped in 208.92s (0:03:28) ================
+test (macos-latest, 3.15)	Every test	2026-11-15T08:27:43.7379730Z tests/test_clickthrough.py .ssss..s                                      [ 34%]
+test (macos-latest, 3.15)	Every test	2026-11-15T08:29:41.0863550Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T08:29:41.0863990Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T08:29:41.0864440Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T08:29:41.0865390Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+test (macos-latest, 3.15)	Every test	2026-11-15T08:29:41.0967020Z SKIPPED [1] tests/test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+test (macos-latest, 3.15)	Every test	2026-11-15T08:29:41.1106240Z ================ 1221 passed, 171 skipped in 297.18s (0:04:57) =================
+test (macos-latest, 3.14)	Every test	2026-11-15T08:26:31.3375430Z tests/test_clickthrough.py .ssss..s                                      [ 34%]
+test (macos-latest, 3.14)	Every test	2026-11-15T08:28:18.1007740Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+test (macos-latest, 3.14)	Every test	2026-11-15T08:28:18.1008000Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+test (macos-latest, 3.14)	Every test	2026-11-15T08:28:18.1008260Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+test (macos-latest, 3.14)	Every test	2026-11-15T08:28:18.1008600Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+test (macos-latest, 3.14)	Every test	2026-11-15T08:28:18.1008940Z SKIPPED [1] tests/test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+test (macos-latest, 3.14)	Every test	2026-11-15T08:28:18.1064260Z ================ 1221 passed, 171 skipped in 274.07s (0:04:34) =================
+test (windows-latest, 3.11)	Every test	2026-11-15T08:26:40.3846139Z tests\test_clickthrough.py .......s                                      [ 34%]
+test (windows-latest, 3.11)	Every test	2026-11-15T08:27:31.6257472Z SKIPPED [1] tests\test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+test (windows-latest, 3.11)	Every test	2026-11-15T08:27:31.6314542Z ================ 1242 passed, 150 skipped in 205.61s (0:03:25) ================
+test (ubuntu-24.04, 3.15)	Every test	2026-11-15T08:26:24.3797755Z tests/test_clickthrough.py .ssss...                                      [ 34%]
+test (ubuntu-24.04, 3.15)	Every test	2026-11-15T08:27:55.9681789Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+test (ubuntu-24.04, 3.15)	Every test	2026-11-15T08:27:55.9682341Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+test (ubuntu-24.04, 3.15)	Every test	2026-11-15T08:27:55.9682722Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+test (ubuntu-24.04, 3.15)	Every test	2026-11-15T08:27:55.9683161Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+test (ubuntu-24.04, 3.15)	Every test	2026-11-15T08:27:55.9739457Z ================ 1269 passed, 123 skipped in 219.63s (0:03:39) =================
+test (ubuntu-24.04-arm, 3.14)	Every test	2026-11-15T08:26:28.7657999Z tests/test_clickthrough.py .ssss...                                      [ 34%]
+test (ubuntu-24.04-arm, 3.14)	Every test	2026-11-15T08:28:03.1716926Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+test (ubuntu-24.04-arm, 3.14)	Every test	2026-11-15T08:28:03.1717315Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+test (ubuntu-24.04-arm, 3.14)	Every test	2026-11-15T08:28:03.1717819Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+test (ubuntu-24.04-arm, 3.14)	Every test	2026-11-15T08:28:03.1718222Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+test (ubuntu-24.04-arm, 3.14)	Every test	2026-11-15T08:28:03.1767685Z ================ 1269 passed, 123 skipped in 228.92s (0:03:48) =================
+test (windows-latest, 3.14)	Every test	2026-11-15T08:26:50.9418653Z tests\test_clickthrough.py .......s                                      [ 34%]
+test (windows-latest, 3.14)	Every test	2026-11-15T08:27:45.2717519Z SKIPPED [1] tests\test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+test (windows-latest, 3.14)	Every test	2026-11-15T08:27:45.2777726Z ================ 1242 passed, 150 skipped in 207.54s (0:03:27) ================
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T08:26:26.0120920Z tests/test_clickthrough.py .ssss...                                      [ 34%]
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T08:27:57.8006314Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T08:27:57.8006772Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T08:27:57.8007076Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T08:27:57.8007428Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+test (ubuntu-24.04, 3.11)	Every test	2026-11-15T08:27:57.8044479Z ================ 1269 passed, 123 skipped in 220.63s (0:03:40) =================
