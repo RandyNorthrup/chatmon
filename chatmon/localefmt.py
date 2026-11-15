@@ -22,6 +22,7 @@ MONTHS = ("January", "February", "March", "April", "May", "June", "July", "Augus
 
 _SYSTEM = object()  # follow Qt's default locale whenever Qt is loaded
 _chosen: object = _SYSTEM
+_shown_in: str | None = None  # the language Chatmon's words are shown in, once i18n.setup has chosen it
 
 
 def set_locale(locale: object = _SYSTEM) -> None:
@@ -29,6 +30,13 @@ def set_locale(locale: object = _SYSTEM) -> None:
     Tests pin one, so what they expect doesn't depend on the machine they run on."""
     global _chosen
     _chosen = locale
+
+
+def follow(shown_in: str | None) -> None:
+    """The language Chatmon's words are shown in ("de", "pt_BR"), which `language()` answers with from now on,
+    so the offline phrases match the rest; None goes back to the locale's. i18n.setup calls it."""
+    global _shown_in
+    _shown_in = shown_in
 
 
 def _locale():
@@ -48,10 +56,13 @@ def _locale():
 
 
 def language() -> str:
-    """The language to answer in, as "en", "de_DE" or the like: Qt's when it's loaded, otherwise the
-    environment's (LANGUAGE, LC_ALL, LC_MESSAGES, LANG), otherwise English."""
+    """The language to answer in, as "en", "de_DE" or the like: the one Chatmon's words are shown in once that's
+    chosen (i18n.setup), otherwise Qt's when it's loaded, otherwise the environment's (LANGUAGE, LC_ALL,
+    LC_MESSAGES, LANG), otherwise English."""
     if _chosen is None:
         return "en"
+    if _shown_in is not None:
+        return _shown_in
     locale = _locale()
     if locale is not None:
         return locale.name()

@@ -76,6 +76,27 @@ once it passes on all three platforms, is always welcome.
 - **Tests use the real thing:** real Qt objects (the `qapp` fixture), and no mock that skips the behaviour
   under test.
 
+## Words people see, and translations
+
+Every string Chatmon shows goes through `chatmon/i18n.py`, so it can be translated (only English ships so far):
+
+- `_("Couldn't open {file}.").format(file=name)`: a whole sentence, its values in named placeholders. Never build
+  one from pieces, so a translator can put the words in their language's order.
+- `ngettext("{n} reminder", "{n} reminders", n).format(n=n)` for anything with a count, never `"s" if n != 1`;
+  `join(items)` for "a, b and c".
+- `N_("…")` marks a string in a table built as its module loads; translate it where it's shown, with `_()`.
+- Logs, config keys, command-line flags, protocol strings, product and model names, the offline commands'
+  phrases (`chatmon/phrases/`) and anything sent to a brain stay as they are.
+
+After adding or changing a string, bring the template up to date with `python packaging/extract_strings.py`
+(`tests/test_i18n.py` fails until you do). It also refuses a string that couldn't be translated, such as an
+f-string inside `_()`.
+
+A translation is one file: copy `chatmon/locale/chatmon.pot` to `chatmon/locale/<language>.po` (`de.po`,
+`pt_BR.po`), fill in each `msgstr` and set its `Plural-Forms` line, with any gettext editor (Poedit, Lokalize) or
+by hand. Chatmon reads it as it is; there's nothing to compile. An entry left empty or marked fuzzy shows in
+English. The offline commands' phrases and help are translated separately, in `chatmon/phrases/<language>.json`.
+
 ## Dependencies
 
 `packaging/requirements*.in` name the versions; each `requirements*.txt` beside them locks those, and every

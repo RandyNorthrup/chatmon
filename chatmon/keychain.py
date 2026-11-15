@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import sys
 
+from .i18n import N_, _
+
 SERVICE = "chatmon"  # what each entry is filed under, with the brain's name
 
 
@@ -24,7 +26,7 @@ class KeychainError(Exception):
 class InMemory:
     """A keychain held in memory only (tests, and a computer with no keychain at all)."""
 
-    name = "memory only"
+    name = N_("memory only")
 
     def __init__(self):
         self.keys: dict[str, str] = {}
@@ -69,8 +71,8 @@ def _the_store():
 
 
 def where() -> str:
-    """Where keys are kept on this computer, for Settings to say."""
-    return _the_store().name
+    """Where keys are kept on this computer, for Settings to say, in the person's language."""
+    return _(_the_store().name)
 
 
 def has(name: str) -> bool:
@@ -109,7 +111,7 @@ def set(name: str, secret: str) -> str | None:
     except (KeychainError, OSError) as exc:
         _cache.pop(name, None)
         _present.pop(name, None)
-        return str(exc) or "the keychain couldn't save it"
+        return str(exc) or _("the keychain couldn't save it")
     _cache[name], _present[name] = secret, True
     return None
 
@@ -121,7 +123,7 @@ def delete(name: str) -> str | None:
     except (KeychainError, OSError) as exc:
         _cache.pop(name, None)
         _present.pop(name, None)
-        return str(exc) or "the keychain couldn't remove it"
+        return str(exc) or _("the keychain couldn't remove it")
     _cache[name], _present[name] = None, False
     return None
 
@@ -130,7 +132,8 @@ def delete(name: str) -> str | None:
 
 
 class _Windows:
-    name = "Windows Credential Manager"
+    # Translators: use the name Windows itself gives the Credential Manager in your language.
+    name = N_("Windows Credential Manager")
     TYPE_GENERIC = 1
     PERSIST_LOCAL_MACHINE = 2  # this computer, for you; never the domain's roaming copy
     ERROR_NOT_FOUND = 1168
@@ -175,7 +178,7 @@ class _Windows:
         if not self.read(self.target(name), self.TYPE_GENERIC, 0, ctypes.byref(found)):
             if ctypes.get_last_error() == self.ERROR_NOT_FOUND:
                 return None
-            raise KeychainError(f"the Credential Manager couldn't be read (error {ctypes.get_last_error()})")
+            raise KeychainError(_("the Credential Manager couldn't be read (error {error})").format(error=ctypes.get_last_error()))
         try:
             blob = ctypes.string_at(found.contents.CredentialBlob, found.contents.CredentialBlobSize)
         finally:
@@ -189,7 +192,7 @@ class _Windows:
         ctypes = self.ctypes
         blob = secret.encode("utf-16-le")  # how Windows' own tools (cmdkey, the control panel) keep a password
         if len(blob) > self.MAX_BLOB:
-            raise KeychainError(f"that key is too long for the Credential Manager ({self.MAX_BLOB // 2} characters at most)")
+            raise KeychainError(_("that key is too long for the Credential Manager ({count} characters at most)").format(count=self.MAX_BLOB // 2))
         data = (ctypes.c_ubyte * len(blob)).from_buffer_copy(blob)
         credential = self.Credential()
         credential.Type = self.TYPE_GENERIC
@@ -200,20 +203,21 @@ class _Windows:
         credential.Persist = self.PERSIST_LOCAL_MACHINE
         credential.UserName = name
         if not self.write(ctypes.byref(credential), 0):
-            raise KeychainError(f"the Credential Manager couldn't save it (error {ctypes.get_last_error()})")
+            raise KeychainError(_("the Credential Manager couldn't save it (error {error})").format(error=ctypes.get_last_error()))
 
     def delete(self, name: str) -> None:
         if not self.remove(self.target(name), self.TYPE_GENERIC, 0):
             error = self.ctypes.get_last_error()
             if error != self.ERROR_NOT_FOUND:
-                raise KeychainError(f"the Credential Manager couldn't remove it (error {error})")
+                raise KeychainError(_("the Credential Manager couldn't remove it (error {error})").format(error=error))
 
 
 # -- macOS: the Keychain, through Security.framework
 
 
 class _Mac:
-    name = "macOS Keychain"
+    # Translators: use the name macOS itself gives the Keychain in your language.
+    name = N_("macOS Keychain")
     NOT_FOUND = -25300  # errSecItemNotFound
     DUPLICATE = -25299  # errSecDuplicateItem
     UTF8 = 0x08000100  # kCFStringEncodingUTF8
@@ -290,7 +294,7 @@ class _Mac:
         if status == self.NOT_FOUND:
             return None
         if status != 0:
-            raise KeychainError(f"the Keychain couldn't be read (error {status})")
+            raise KeychainError(_("the Keychain couldn't be read (error {error})").format(error=status))
         try:
             length = self.cf.CFDataGetLength(result)
             data = ctypes.string_at(self.cf.CFDataGetBytePtr(result), length)
@@ -305,7 +309,7 @@ class _Mac:
         finally:
             self._release(query, *made)
         if status not in (0, self.NOT_FOUND):
-            raise KeychainError(f"the Keychain couldn't be read (error {status})")
+            raise KeychainError(_("the Keychain couldn't be read (error {error})").format(error=status))
         return status == 0
 
     def set(self, name: str, secret: str) -> None:
@@ -328,7 +332,7 @@ class _Mac:
         finally:
             self._release(data, label)
         if status != 0:
-            raise KeychainError(f"the Keychain couldn't save it (error {status})")
+            raise KeychainError(_("the Keychain couldn't save it (error {error})").format(error=status))
 
     def delete(self, name: str) -> None:
         query, made = self._query(name)
@@ -337,7 +341,7 @@ class _Mac:
         finally:
             self._release(query, *made)
         if status not in (0, self.NOT_FOUND):
-            raise KeychainError(f"the Keychain couldn't remove it (error {status})")
+            raise KeychainError(_("the Keychain couldn't remove it (error {error})").format(error=status))
 
 
 # -- Linux and the BSDs: the Secret Service, over D-Bus
@@ -346,7 +350,7 @@ class _Mac:
 class _SecretService:
     """The freedesktop.org Secret Service API (https://specifications.freedesktop.org/secret-service/)."""
 
-    name = "your desktop's keyring (Secret Service)"
+    name = N_("your desktop's keyring (Secret Service)")
     BUS = "org.freedesktop.secrets"
     ROOT = "/org/freedesktop/secrets"
     SERVICE_IFACE = "org.freedesktop.Secret.Service"
@@ -358,14 +362,14 @@ class _SecretService:
 
         bus = QDBusConnection.sessionBus()
         if not bus.isConnected():
-            raise KeychainError("there's no desktop session bus to reach a keyring over")
+            raise KeychainError(_("there's no desktop session bus to reach a keyring over"))
         message = QDBusMessage.createMethodCall(self.BUS, path, interface, method)
         message.setArguments(list(args))
         reply = bus.call(message, QDBus.CallMode.Block, self.TIMEOUT_MS)
         if reply.type() != QDBusMessage.MessageType.ReplyMessage:
             if reply.errorName() == "org.freedesktop.DBus.Error.ServiceUnknown":
-                raise KeychainError("no keyring is running (GNOME Keyring, KWallet or KeePassXC can be one)")
-            raise KeychainError(f"the keyring said no ({reply.errorName() or 'no answer'})")
+                raise KeychainError(_("no keyring is running (GNOME Keyring, KWallet or KeePassXC can be one)"))
+            raise KeychainError(_("the keyring said no ({error})").format(error=reply.errorName() or _("no answer")))
         return reply.arguments()
 
     @staticmethod
@@ -431,7 +435,7 @@ class _SecretService:
 
         collection = str(self._call(self.ROOT, self.SERVICE_IFACE, "ReadAlias", "default")[0])
         if collection in ("", "/"):
-            raise KeychainError("your keyring has no default collection to keep it in")
+            raise KeychainError(_("your keyring has no default collection to keep it in"))
         self._unlock([collection])
         session = self._session()
         try:
@@ -451,7 +455,7 @@ class _SecretService:
             self._close(session)
         if str(prompt) not in ("", "/"):
             self._prompt(str(prompt))
-            raise KeychainError("your keyring asked to confirm: answer it, then save again")
+            raise KeychainError(_("your keyring asked to confirm: answer it, then save again"))
 
     def delete(self, name: str) -> None:
         unlocked, locked = self._items(name)
@@ -461,13 +465,13 @@ class _SecretService:
             prompt = self._call(path, self.ITEM_IFACE, "Delete")[0]
             if str(prompt) not in ("", "/"):
                 self._prompt(str(prompt))
-                raise KeychainError("your keyring asked to confirm: answer it, then remove it again")
+                raise KeychainError(_("your keyring asked to confirm: answer it, then remove it again"))
 
     def _unlock(self, paths: list[str]) -> None:
         _done, prompt = self._call(self.ROOT, self.SERVICE_IFACE, "Unlock", self._paths(paths))
         if str(prompt) not in ("", "/"):
             self._prompt(str(prompt))
-            raise KeychainError("your keyring is locked: unlock it in the window it opened, then try again")
+            raise KeychainError(_("your keyring is locked: unlock it in the window it opened, then try again"))
 
     def _prompt(self, path: str) -> None:
         """Show the keyring's own window (unlock, confirm) and leave it to you: nothing here waits for it."""

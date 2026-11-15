@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 from . import paths
+from .i18n import _
 
 _RUN_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
 _NAME = "Chatmon"
@@ -67,7 +68,8 @@ def where() -> str:
     if sys.platform == "win32":
         return f"HKEY_CURRENT_USER\\{_RUN_KEY}\\{_NAME}"
     if _login_item() is not None:
-        return "Login Items, in System Settings › General"
+        # Translators: where macOS lists the apps that start at login; use Apple's own names for them.
+        return _("Login Items, in System Settings › General")
     return str(_launch_agent() if sys.platform == "darwin" else _desktop_file())
 
 

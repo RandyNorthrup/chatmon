@@ -33,6 +33,7 @@ from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QTimer, QUrl, p
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
 from . import __version__, changelog, paths, releasecheck
+from .i18n import _
 from .releasecheck import DEB, MACOS, MANUAL, PIPX, RPM, SUMS, SUMS_SIG, WINDOWS, sha256, signed_sums
 
 REPO = "RandyNorthrup/chatmon"
@@ -127,12 +128,13 @@ def asset_name(kind: str, version: str, machine: str | None = None) -> str | Non
 def how_to_update(kind: str, version: str) -> str:
     """For a Chatmon that can't update itself: how to get the new one."""
     if kind != MANUAL or paths.frozen():
-        return "Download its installer from the release page, and run it."
+        return _("Download its installer from the release page, and run it.")
     if _editable():
-        return "This Chatmon runs from a folder you installed it from: `git pull` there to update."
+        return _("This Chatmon runs from a folder you installed it from: `{command}` there to update.").format(command="git pull")
     if "pipx" in Path(sys.prefix).parts:
-        return f"Quit Chatmon, then run `pipx install --force git+https://github.com/{REPO}@v{version}`."
-    return f"Update with `pip install --upgrade git+https://github.com/{REPO}@v{version}`, or download an installer from the release page."
+        return _("Quit Chatmon, then run `{command}`.").format(command=f"pipx install --force git+https://github.com/{REPO}@v{version}")
+    return _("Update with `{command}`, or download an installer from the release page.").format(
+        command=f"pip install --upgrade git+https://github.com/{REPO}@v{version}")
 
 
 @dataclass
@@ -189,15 +191,20 @@ def verify(path: Path, expected: str, kind: str) -> str | None:
     on Windows, signed by Randy Northrup, with a certificate that hasn't been revoked). A TryLater says why not
     yet. Slow: off the screen's thread."""
     if sha256(path) != expected:
-        return "the download doesn't match the release's checksum"
+        return _("the download doesn't match the release's checksum")
     if kind == WINDOWS:
         status, signer, issuer, usages = windows_signer(path)
         if status == "Revoked":
-            return f"its signing certificate has been revoked{' (' + signer + ')' if signer else ''}"
+            if signer:
+                return _("its signing certificate has been revoked ({signer})").format(signer=signer)
+            return _("its signing certificate has been revoked")
         if status == "RevocationUnknown":
-            return TryLater("Windows couldn't check that its signing certificate hasn't been revoked (are you offline?)")
+            return TryLater(_("Windows couldn't check that its signing certificate hasn't been revoked (are you offline?)"))
         if status != "Valid" or not SIGNER.fullmatch(signer) or not ISSUER.fullmatch(issuer) or IDENTITY not in usages:
-            return f"its signature isn't Randy Northrup's ({status}{', ' + signer if signer else ''})"
+            # Translators: {status} is Windows' own name for what's wrong with the signature, such as NotTrusted.
+            if signer:
+                return _("its signature isn't Randy Northrup's ({status}, {signer})").format(status=status, signer=signer)
+            return _("its signature isn't Randy Northrup's ({status})").format(status=status)
     return None
 
 
@@ -229,7 +236,7 @@ def prepare(download: Path, expected: str, kind: str) -> Prepared | str:
             hold = wintrust.hold(copy)
         why = verify(copy, expected, kind)
     except OSError as exc:
-        why = f"it couldn't be copied to be installed ({exc.strerror or exc})"
+        why = _("it couldn't be copied to be installed ({error})").format(error=exc.strerror or exc)
     if why is None:
         return Prepared(copy, hold)
     if hold is not None:
@@ -402,10 +409,10 @@ class Updater(QObject):
         self._reply = None
         reply.deleteLater()
         if reply.error() != QNetworkReply.NetworkError.NoError:
-            return self._fail(f"couldn't reach GitHub ({reply.errorString()})")
+            return self._fail(_("couldn't reach GitHub ({error})").format(error=reply.errorString()))
         raw = bytes(reply.readAll())
         if len(raw) > MAX_REPLY:
-            return self._fail("GitHub's answer was far bigger than it should be")
+            return self._fail(_("GitHub's answer was far bigger than it should be"))
         then(raw)
 
     def _latest(self, raw: bytes) -> None:
@@ -414,7 +421,7 @@ class Updater(QObject):
         except (ValueError, RecursionError):
             release = None
         if release is None:
-            return self._fail("GitHub's answer about the latest release wasn't readable")
+            return self._fail(_("GitHub's answer about the latest release wasn't readable"))
         if not newer(release.version):
             self.busy = False
             self.up_to_date.emit()
@@ -429,7 +436,7 @@ class Updater(QObject):
             self.available.emit(release)
             return
         if not self._by_hand and metered():
-            return self._only_tell("You're on a metered connection, so I haven't downloaded it. **Check for updates now** in my menu downloads it anyway.")
+            return self._only_tell(_("You're on a metered connection, so I haven't downloaded it. **Check for updates now** in my menu downloads it anyway."))
         self._get(release.assets[SUMS_SIG], lambda sig: self._get(release.assets[SUMS], lambda text: self._sums(text, sig, name)))
 
     def _only_tell(self, how: str) -> None:
@@ -441,10 +448,10 @@ class Updater(QObject):
     def _sums(self, text: bytes, signature: bytes, name: str) -> None:
         sums = signed_sums(text, signature)
         if sums is None:
-            return self._fail("its list of checksums isn't signed with Chatmon's release key")
+            return self._fail(_("its list of checksums isn't signed with Chatmon's release key"))
         expected = sums.get(name)
         if expected is None:
-            return self._fail(f"the release's signed list has no checksum for {name}")
+            return self._fail(_("the release's signed list has no checksum for {file}").format(file=name))
         self._signed = (text, signature)
         part = folder() / (name + ".part")
         try:
@@ -455,7 +462,7 @@ class Updater(QObject):
                     shutil.rmtree(old, ignore_errors=True)
             self._file = open(part, "wb")
         except OSError as exc:
-            return self._fail(f"couldn't save the download ({exc.strerror or exc})")
+            return self._fail(_("couldn't save the download ({error})").format(error=exc.strerror or exc))
         self._got = 0
         reply = self._nam.get(self._request(self.release.assets[name]))
         self._reply = reply
@@ -484,26 +491,26 @@ class Updater(QObject):
         url = reply.url().toString()
         if reply.error() != QNetworkReply.NetworkError.NoError or self._got > MAX_DOWNLOAD or not url.startswith(SECURE):
             part.unlink(missing_ok=True)
-            return self._fail(f"the download didn't finish ({reply.errorString()})")
+            return self._fail(_("the download didn't finish ({error})").format(error=reply.errorString()))
         kind = self.kind
         self._background.run(lambda: verify(part, expected, kind), lambda why: self._verified(why, part, folder() / name, expected))
 
     def _verified(self, why, part: Path, done: Path, expected: str) -> None:
         if isinstance(why, TryLater):
             part.unlink(missing_ok=True)
-            self._fail(f"{why}; I'll look again in an hour")
+            self._fail(_("{why}; I'll look again in an hour").format(why=why))
             self.retry.start()
             return
         if why is not None:
             part.unlink(missing_ok=True)
-            return self._fail(str(why) if not isinstance(why, Exception) else f"couldn't check the download ({why})")
+            return self._fail(str(why) if not isinstance(why, Exception) else _("couldn't check the download ({error})").format(error=why))
         try:
             for path, data in zip(sums_for(done), self._signed, strict=True):
                 path.write_bytes(data)
             os.replace(part, done)
         except OSError as exc:
             part.unlink(missing_ok=True)
-            return self._fail(f"couldn't keep the download ({exc.strerror or exc})")
+            return self._fail(_("couldn't keep the download ({error})").format(error=exc.strerror or exc))
         self.ready, self._expected = done, expected
         self.busy = False
         self.available.emit(self.release)
@@ -514,9 +521,9 @@ class Updater(QObject):
         """Install the verified download. Windows' installer takes over (it asks Chatmon to quit when it's
         ready, and starts it again); elsewhere the system asks for your password, then Chatmon starts again."""
         if self.ready is None or self.release is None or not self.ready.exists() or self.busy:
-            return self.failed.emit("There's no update ready to install.")
+            return self.failed.emit(_("There's no update ready to install."))
         if installer_command(self.kind, self.ready) is None:
-            return self.failed.emit("This Chatmon can't install updates itself.")
+            return self.failed.emit(_("This Chatmon can't install updates itself."))
         self.busy = True
         # Checked again, just before: it may have waited days for you to say yes.
         ready, expected, kind = self.ready, self._expected, self.kind
@@ -525,12 +532,13 @@ class Updater(QObject):
     def _install_checked(self, prepared) -> None:
         if isinstance(prepared, TryLater):  # not known bad: kept, to try again
             self.busy = False
-            return self.failed.emit(f"The update wasn't installed yet: {prepared}. Try again once you're online.")
+            return self.failed.emit(_("The update wasn't installed yet: {why}. Try again once you're online.").format(why=prepared))
         if not isinstance(prepared, Prepared):
             self.busy = False
             self.ready.unlink(missing_ok=True)
             self.ready = None
-            return self.failed.emit(f"The update wasn't installed: {prepared if not isinstance(prepared, Exception) else 'it could not be checked'}.")
+            why = prepared if not isinstance(prepared, Exception) else _("it could not be checked")
+            return self.failed.emit(_("The update wasn't installed: {why}.").format(why=why))
         program, args, env = installer_command(self.kind, prepared.path)
         if self.kind == WINDOWS:
             # Chatmon stays: the installer asks it to quit (`chatmon quit`) once it's going ahead, and starts it
@@ -543,7 +551,7 @@ class Updater(QObject):
                 wintrust.release(self._held.hold)  # a copy from an install that was turned down
             self._held = prepared
             if not QProcess.startDetached(program, args, str(prepared.path.parent))[0]:
-                return self.failed.emit("The update wasn't installed: its installer couldn't start.")
+                return self.failed.emit(_("The update wasn't installed: its installer couldn't start."))
             self.handed_over.emit()
             return
         proc = QProcess(self)
@@ -561,7 +569,7 @@ class Updater(QObject):
         if error == QProcess.ProcessError.FailedToStart:
             proc.deleteLater()
             self.busy = False
-            self.failed.emit(f"The update wasn't installed: {Path(proc.program()).name} couldn't start.")
+            self.failed.emit(_("The update wasn't installed: {program} couldn't start.").format(program=Path(proc.program()).name))
 
     def _installed(self, proc: QProcess, code: int) -> None:
         if sip.isdeleted(proc):  # Chatmon quitting while it ran
@@ -571,16 +579,19 @@ class Updater(QObject):
         self.busy = False
         if code != 0:
             if self.kind in (DEB, RPM) and code == 126:  # pkexec: the password prompt was dismissed
-                return self.failed.emit("The update wasn't installed: the password prompt was closed.")
+                return self.failed.emit(_("The update wasn't installed: the password prompt was closed."))
             if self.kind in (DEB, RPM) and code == 127:  # pkexec: no prompt to ask with, or not allowed
+                command = f"sudo {shlex.join([HELPER, str(self.ready), *map(str, sums_for(self.ready))])}"
                 return self.failed.emit(
-                    "The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
-                    f"In a terminal: `sudo {shlex.join([HELPER, str(self.ready), *map(str, sums_for(self.ready))])}`"
+                    _("The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
+                      "In a terminal: `{command}`").format(command=command)
                 )
-            detail = err.splitlines()[-1] if err else f"exit code {code}"
-            if detail.startswith("The update wasn't installed"):  # root's own check said why, in a sentence
+            detail = err.splitlines()[-1] if err else _("exit code {code}").format(code=code)
+            # Root's own check (releasecheck.py, which loads nothing it needn't, translations included) said why,
+            # in an English sentence that starts so.
+            if detail.startswith("The update wasn't installed"):
                 return self.failed.emit(detail)
-            return self.failed.emit(f"The update wasn't installed ({detail}).")
+            return self.failed.emit(_("The update wasn't installed ({detail}).").format(detail=detail))
         relaunch = relaunch_command(self.kind)
         if relaunch is not None:
             QProcess.startDetached(*relaunch)
@@ -592,7 +603,7 @@ class Updater(QObject):
         if self._file is not None:
             self._file.close()
             self._file = None
-        self.failed.emit(f"Couldn't check for updates: {why}.")
+        self.failed.emit(_("Couldn't check for updates: {why}.").format(why=why))
 
     def cancel(self) -> None:
         if self._reply is not None:

@@ -27,6 +27,8 @@ from ctypes import wintypes
 from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, Qt
 from PyQt6.QtGui import QGuiApplication
 
+from .i18n import N_, _
+
 WM_GETOBJECT = 0x003D
 UIA_ROOT_OBJECT_ID = -25  # UiaRootObjectId: WM_GETOBJECT's lParam when UI Automation asks for a window's provider
 SERVER_SIDE_PROVIDER = 0x1 << 1  # ProviderOptions_ServerSideProvider: the app's own (client-side ones are dropped)
@@ -37,7 +39,7 @@ VT_EMPTY, VT_BSTR = 0, 8
 S_OK, E_NOINTERFACE = 0, -2147467262  # 0x80004002
 IID_IUNKNOWN = uuid.UUID("00000000-0000-0000-c000-000000000046")
 IID_IRAW_ELEMENT_PROVIDER_SIMPLE = uuid.UUID("d6dd68d1-86fd-4332-8666-9abedea2d24c")
-NAME = "Chatmon announcements"  # what a screen reader exploring the desktop finds the window called
+NAME = N_("Chatmon announcements")  # what a screen reader exploring the desktop finds the window called
 READY_AFTER = 3.0  # seconds from showing the window to its first notification: UI Automation loses one raised at once
 
 
@@ -126,7 +128,7 @@ class Provider:
         value = out.contents
         value.vt = VT_EMPTY
         if prop == UIA_NAME:
-            value.vt, value.value.bstrVal = VT_BSTR, self._oleaut.SysAllocString(NAME)  # the caller frees it
+            value.vt, value.value.bstrVal = VT_BSTR, self._oleaut.SysAllocString(_(NAME))  # the caller frees it
         return S_OK
 
     def _host(self, this, out) -> int:

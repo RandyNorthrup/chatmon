@@ -28,6 +28,8 @@ from typing import Callable
 
 from PyQt6.QtCore import QObject, QProcess, Qt
 
+from .i18n import _, either
+
 ORCA = (("org.gnome.Orca1.Service", "/org/gnome/Orca1/Service"), ("org.gnome.Orca.Service", "/org/gnome/Orca/Service"))
 SPI_GETSCREENREADER = 0x0046  # set by NVDA, JAWS and others; Narrator doesn't set it
 PRIORITY_MEDIUM, PRIORITY_HIGH = 50, 90  # NSAccessibilityPriorityLevel
@@ -82,7 +84,9 @@ def spoken(title: str, text: str = "", buttons: list[str] | None = None) -> str:
     """A bubble as it's read out: plain words, and what to type to press its buttons."""
     parts = [plain(title), plain(text)]
     if buttons:
-        parts.append("To answer, type " + " or ".join(f"“{b}”" for b in buttons) + " in the chat.")
+        # Translators: a button's label, quoted, in the sentence that says what to type to press it.
+        quoted = [_("“{label}”").format(label=b) for b in buttons]
+        parts.append(_("To answer, type {buttons} in the chat.").format(buttons=either(quoted)))
     return " ".join(p if p.endswith((".", "!", "?", "…", ":")) else p + "." for p in parts if p)
 
 
