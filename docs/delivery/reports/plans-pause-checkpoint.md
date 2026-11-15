@@ -1,3 +1,8 @@
+> **Resumed 2026-11-15 at 00:20 PST, and finished.** The remaining WSL checks passed: M4A's 10 Linux drills and its Qt 6.12
+> drill and run, M4B's 7, M6B's 5, and M6A's distro drill. ROADMAP.md gained its evidence rules and Outcome, and all 11
+> plans were bound in the order below. Each plan's state is in ROADMAP.md's *Outcome*, and its validation in
+> `reports/<id>/wave4/validate-*.txt`. This note is kept as the record of the pause.
+
 # Wave 4 plans reconciliation: paused 2026-11-14 (about 22:15 PST, 06:15Z)
 
 The pause was the owner's request. This file is a pause note, not a delivery plan, and it is not bound by any receipt.
