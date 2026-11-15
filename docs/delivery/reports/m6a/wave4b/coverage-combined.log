@@ -1,0 +1,9 @@
+# CI run 43701523023's coverage data (bf9d8ac): coverage-windows-latest-3.14, coverage-macos-latest-3.14 and coverage-ubuntu-24.04-arm-3.14, from gh run download 43701523023 -p 'coverage-*', combined here as CI's coverage job combines them
+$ python -m coverage combine --keep --data-file build/wave4b-coverage/.coverage.combined <the data files>
+Combined 5 files
+# exit 0
+$ python -m coverage report --data-file build/wave4b-coverage/.coverage.combined (pyproject.toml: fail_under = 84)
+chatmon\xkb.py                166     23     58     11  83.0%
+-------------------------------------------------------------
+TOTAL                       20758   2261   6346    926  86.5%
+# exit 0

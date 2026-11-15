@@ -1,0 +1,12 @@
+
+=== summary
+PASS G-zizmor-unpinned
+PASS G-actionlint-expression
+PASS G-mypy-gated
+PASS G-pytest-strict-markers
+PASS G-pip-hashes
+PASS G-checksums-key
+PASS G-coverage-floor
+PASS W-wheel-sounds
+PASS W-entry-points
+PASS W-twine-markup
