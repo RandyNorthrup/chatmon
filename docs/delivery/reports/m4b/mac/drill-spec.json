@@ -1,17 +1,18 @@
 {
   "drills": [
     {
-      "id": "MAC-00C-linux-import",
+      "id": "MAC-00C-linux-import-sound",
       "requirement": "AC-00C",
-      "file": "chatmon/libdbus.py",
-      "find": "import ctypes.util\nfrom typing import Any\n",
-      "replace": "import ctypes.util\nfrom select import epoll  # Linux's alone\nfrom typing import Any\n",
+      "file": "chatmon/sound.py",
+      "find": "import wave\nfrom collections.abc import Callable, Mapping, Sequence\n",
+      "replace": "import wave\nfrom select import epoll  # Linux's alone\nfrom collections.abc import Callable, Mapping, Sequence\n",
       "test": [
         "tests/test_m4b_imports.py::test_it_imports_here"
       ],
       "expect": [
-        "test_it_imports_here[libdbus]",
-        "cannot import name 'epoll' from 'select'"
+        "test_it_imports_here[sound]",
+        "cannot import name 'epoll' from 'select'",
+        "1 failed, 7 passed"
       ]
     },
     {

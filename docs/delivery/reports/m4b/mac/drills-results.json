@@ -1,11 +1,11 @@
 [
   {
-    "id": "MAC-00C-linux-import",
+    "id": "MAC-00C-linux-import-sound",
     "requirement": "AC-00C",
-    "file": "chatmon/libdbus.py",
+    "file": "chatmon/sound.py",
     "mutation": {
-      "find": "import ctypes.util\nfrom typing import Any\n",
-      "replace": "import ctypes.util\nfrom select import epoll  # Linux's alone\nfrom typing import Any\n"
+      "find": "import wave\nfrom collections.abc import Callable, Mapping, Sequence\n",
+      "replace": "import wave\nfrom select import epoll  # Linux's alone\nfrom collections.abc import Callable, Mapping, Sequence\n"
     },
     "command": [
       "/Users/user/chatmon-drills-tmp/venv/bin/python",
@@ -17,17 +17,18 @@
       "tests/test_m4b_imports.py::test_it_imports_here"
     ],
     "expected": [
-      "test_it_imports_here[libdbus]",
-      "cannot import name 'epoll' from 'select'"
+      "test_it_imports_here[sound]",
+      "cannot import name 'epoll' from 'select'",
+      "1 failed, 7 passed"
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953",
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
     "baseline_exit": 0,
-    "mutated_sha256": "86cea530151d29fec1ff288f08ff915013f674c35384331a6aedcf1da04fe8c5",
+    "mutated_sha256": "e01e025abb7f353ffa30ad974dad41da33ede43ae02ca12f5fbfb7a0c0ef326e",
     "mutated_exit": 1,
-    "observed": "________________________ test_it_imports_here[libdbus] _________________________",
-    "after_sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953",
+    "observed": "_________________________ test_it_imports_here[sound] __________________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
     "restored_exit": 0
   },
   {

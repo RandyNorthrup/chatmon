@@ -14,7 +14,7 @@ in when they're bound, after that branch merges.
 - macOS 15.7.9 (24G830), Intel x86_64, with the owner signed in at the console.
 - Homebrew's Python 3.13.7, already installed, in a venv of its own with `packaging/requirements-test.txt`
   (`--require-hashes`): PyQt6 6.11.0 (Qt 6.11.2's wheels), pytest 9.2.0. The versions, read inside the Aqua session
-  as the drills ran, are in [context-observed-aqua.txt](context-observed-aqua.txt).
+  are in [context-observed-aqua.txt](context-observed-aqua.txt).
 - The code: `git archive --format=tar.gz HEAD` of 3586a0d, unpacked into `~/chatmon-drills-tmp/src`, with every
   file in a git index of its own (no commit).
 - The scripts are M1A's, in [../../m1a/mac/](../../m1a/mac/README.md). [job.sh](../../m1a/mac/job.sh) runs each step
@@ -22,8 +22,9 @@ in when they're bound, after that branch merges.
   owner's Aqua session, where the window server is. A process started over ssh isn't there, and `launchctl asuser`
   needs root. The step runs as a one-shot launchd job in `gui/503`, from a plist in that folder, not in
   `~/Library/LaunchAgents`. It is booted out once it ends.
-- The drills and the offscreen suite ran with the job.sh before its observe step also printed the Qt version that
-  runs. Nothing else in it changed.
+- The offscreen suite and the first two drill runs (see *Earlier runs*) used the job.sh from before its observe
+  step also printed the Qt version that runs. Nothing else in it changed. The drills' third run, the cocoa run and
+  the observations used the job.sh that's here.
 
 ## The drills
 
@@ -32,14 +33,22 @@ in when they're bound, after that branch merges.
 
 | Drill | Mutation | Red (pytest's exit 1) |
 |---|---|---|
-| MAC-00C-linux-import (AC-00C) | `chatmon/libdbus.py` gets a top-level `from select import epoll`, a name only Linux's `select` has | `test_it_imports_here[libdbus]` and `[shortcutportal]` (which imports it) fail: `ImportError: cannot import name 'epoll' from 'select'` in the fresh interpreter. The other six pass. |
+| MAC-00C-linux-import-sound (AC-00C) | `chatmon/sound.py` gets a top-level `from select import epoll`, a name only Linux's `select` has | `test_it_imports_here[sound]` fails: `ImportError: cannot import name 'epoll' from 'select'` in the fresh interpreter. The other seven pass. |
 | MAC-01D-conflict-unreported (AC-01D) | In `_Carbon.grab`, the `eventHotKeyExistsErr` branch returns `None` instead of the conflict | `test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had` fails at `tests/test_hotkey.py:281`: `assert None == 'Ctrl+Alt+Shift+F18 is already used by another app. Pick another shortcut.'` |
 | MAC-02F-volume-unset (AC-02F) | `MacPlayer.play` leaves out `setVolume:` on the NSSound | `test_nssound_plays_at_the_volume` fails at `tests/test_sound.py:267`: `assert 1.0 == 0.5 ± 5.0e-07`. That's NSSound's own volume, not the one asked for. |
 
-The SHA-256 of each file was checked after it was put back: libdbus.py 625148fb…, hotkey.py cc781737…, sound.py
-17a6ab89…, as committed. The drills ran twice, before and after the setup put `src/` in a git index (see *The
-suite*), and both runs passed. The harness copies files without `.git`, so the index made no difference to them.
-These logs are the second run.
+The SHA-256 of each file was checked after it was put back: hotkey.py cc781737… and sound.py 17a6ab89…, as
+committed.
+
+**Earlier runs.** The first two runs put the Linux-only import in `chatmon/libdbus.py` instead
+([drill-spec-first.json](drill-spec-first.json)). The second run's logs are kept: [drills-first.log](drills-first.log),
+[drills-first-results.json](drills-first-results.json) and [drills-first-run.txt](drills-first-run.txt). There,
+`test_it_imports_here[libdbus]` and `[shortcutportal]` (which imports it) failed with the same `ImportError`, and
+every drill went green, red and green. But `libdbus.py` belongs to the portal's task, not to AC-00C's task or the
+tasks it depends on. So the validator wouldn't take that drill as AC-00C's red, and the drill moved to `sound.py`.
+Those two runs were before and after the setup put `src/` in a git index (see *The suite*). The harness copies
+files without `.git`, so the index made no difference to them. The logs above are the third run. It was set up
+again on the same commit's code, while Homebrew was building Python 3.15 (see the end).
 
 The hot keys the tests use are Command+Option+Shift with F17, F18 and F19. They're held only while each test runs.
 Afterwards, a separate process could register each of the three exclusively, so none was still held

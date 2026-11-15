@@ -13,9 +13,9 @@
         "AC-00C"
       ],
       "results": "docs/delivery/reports/m4b/mac/drills-results.json",
-      "drill": "MAC-00C-linux-import",
+      "drill": "MAC-00C-linux-import-sound",
       "artifact": "docs/delivery/reports/m4b/mac/drills.log",
-      "method": "Red drill MAC-00C-linux-import on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), launched from here over ssh and run in his signed-in Aqua session by docs/delivery/reports/m1a/mac/aqua.sh (a one-shot launchd job in gui/503) with job.sh's drills step: tests/drills/run.py, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; reports/m4b/mac/context-observed-aqua.txt), in a temporary copy of 3586a0d's files (git archive). Green (8 imports); then chatmon/libdbus.py got a top-level 'from select import epoll', a name only Linux's select has, and test_it_imports_here failed for libdbus and shortcutportal (which imports it) with \"ImportError: cannot import name 'epoll' from 'select'\" in the fresh interpreter's stderr; the file's bytes were put back (SHA-256 checked) and all 8 passed again."
+      "method": "Red drill MAC-00C-linux-import-sound on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), launched from here over ssh and run in his signed-in Aqua session by docs/delivery/reports/m1a/mac/aqua.sh (a one-shot launchd job in gui/503) with job.sh's drills step: tests/drills/run.py, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; reports/m4b/mac/context-observed-aqua.txt), in a temporary copy of 3586a0d's files (git archive). Green (all 8 modules import); then chatmon/sound.py got a top-level 'from select import epoll', a name only Linux's select has, and test_it_imports_here[sound] failed (1 failed, 7 passed) with \"ImportError: cannot import name 'epoll' from 'select'\" in the fresh interpreter's stderr; the file's bytes were put back (SHA-256 checked) and all 8 passed again. The same drill on chatmon/libdbus.py (reports/m4b/mac/drills-first.log) went green, red and green too, but libdbus.py isn't among AC-00C's task's files, so this receipt drills sound.py, which is."
     },
     {
       "id": "MAC-RED-AC-01D",
