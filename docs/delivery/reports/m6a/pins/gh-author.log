@@ -1,0 +1,21 @@
+# What gh calls the author of an issue the Actions token opened: read-only queries of a public repository's existing issues, 2026-11-15T20:58:23Z
+$ gh --version
+gh version 2.87.3 (2026-02-23)
+https://github.com/cli/cli/releases/tag/v2.87.3
+$ gh search issues --author app/github-actions --state open --limit 1 --json repository,number,author   (REST search: any public repository)
+[{"author":{"id":"MDM6Qm90NDE4OTgyODI=","is_bot":false,"login":"github-actions[bot]","type":"Bot","url":"https://github.com/apps/github-actions"},"number":4923,"repository":{"name":"awesome-opencode-market","nameWithOwner":"awesome-market/awesome-opencode-market"}}]
+
+$ gh issue view 4878 --repo awesome-market/awesome-opencode-market --json author   (one of the same repository's github-actions issues, through GraphQL as gh issue list reads it)
+{"author":{"is_bot":true,"login":"app/github-actions"}}
+
+$ gh issue list --repo awesome-market/awesome-opencode-market --state open --limit 2 --json number,author   (what pins.yml runs)
+[{"author":{"is_bot":true,"login":"app/github-actions"},"number":4928},{"author":{"is_bot":true,"login":"app/github-actions"},"number":4927}]
+
+# gh issue list gives app/github-actions; gh's REST search gives github-actions[bot]. pins.yml matches app/github-actions, github-actions and github-actions[bot], so a gh on the runner that names the bot another way still finds the open issue instead of opening a second.
+
+# pins.yml's own filter, through gh's jq, on that repository's open issues: a title one of them has finds its number; the report's title finds none
+$ TITLE='[review] @openhax/codex@0.4.4' gh issue list --repo awesome-market/awesome-opencode-market --state open --limit 200 --json number,title,author --jq '<pins.yml's filter>'
+4929
+exit 0
+$ TITLE='Python pins ready to move' gh issue list --repo awesome-market/awesome-opencode-market --state open --limit 200 --json number,title,author --jq '<pins.yml's filter>'
+exit 0

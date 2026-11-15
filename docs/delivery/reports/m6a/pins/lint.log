@@ -1,0 +1,26 @@
+# Lint and types at b85ec7e (pyproject.toml as main has it), Windows 11 workstation, 2026-11-15T21:00:12Z
+$ ruff --version
+ruff 0.17.4
+$ ruff check .
+All checks passed!
+# exit 0
+$ mypy --version
+mypy 2.4.1 (compiled: yes)
+$ mypy --platform linux   (pyproject.toml's files: chatmon, unchanged)
+Success: no issues found in 70 source files
+# exit 0 (mypy's annotation-unchecked notes on chatmon/bubble.py left out)
+$ mypy --platform win32   (pyproject.toml's files: chatmon, unchanged)
+Success: no issues found in 70 source files
+# exit 0 (mypy's annotation-unchecked notes on chatmon/bubble.py left out)
+$ mypy --platform darwin   (pyproject.toml's files: chatmon, unchanged)
+Success: no issues found in 70 source files
+# exit 0 (mypy's annotation-unchecked notes on chatmon/bubble.py left out)
+$ mypy --strict --platform linux packaging/pins.py   (what pins.yml's types job runs)
+Success: no issues found in 1 source file
+# exit 0
+$ mypy --strict --platform win32 packaging/pins.py   (what pins.yml's types job runs)
+Success: no issues found in 1 source file
+# exit 0
+$ mypy --strict --platform darwin packaging/pins.py   (what pins.yml's types job runs)
+Success: no issues found in 1 source file
+# exit 0

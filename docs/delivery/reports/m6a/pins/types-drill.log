@@ -1,0 +1,36 @@
+# HEAD b85ec7e985cd43a8edf5cee7780c2e8925c5fe9f; mypy mypy 2.4.1 (compiled: yes)
+## the step, as pins.yml's types job runs it (bash -eo pipefail, as Actions does)
+status=0
+for platform in linux win32 darwin; do
+  echo "mypy --strict --platform $platform packaging/pins.py"
+  mypy --strict --platform "$platform" packaging/pins.py || status=1
+done
+exit "$status"
+## green: packaging/pins.py at sha256 0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1
+mypy --strict --platform linux packaging/pins.py
+Success: no issues found in 1 source file
+mypy --strict --platform win32 packaging/pins.py
+Success: no issues found in 1 source file
+mypy --strict --platform darwin packaging/pins.py
+Success: no issues found in 1 source file
+exit 0
+## red: '    return parts[0], parts[1]' -> '    return parts[0], str(parts[1])' (sha256 74c54c8489fe3ddfd23d178d2e26eacae4fa93855477b8499717152c470ee3d5)
+mypy --strict --platform linux packaging/pins.py
+packaging\pins.py:114: error: Incompatible return value type (got "tuple[int, str]", expected "tuple[int, int]")  [return-value]
+Found 1 error in 1 file (checked 1 source file)
+mypy --strict --platform win32 packaging/pins.py
+packaging\pins.py:114: error: Incompatible return value type (got "tuple[int, str]", expected "tuple[int, int]")  [return-value]
+Found 1 error in 1 file (checked 1 source file)
+mypy --strict --platform darwin packaging/pins.py
+packaging\pins.py:114: error: Incompatible return value type (got "tuple[int, str]", expected "tuple[int, int]")  [return-value]
+Found 1 error in 1 file (checked 1 source file)
+exit 1
+## restored: sha256 0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1 (same as before)
+mypy --strict --platform linux packaging/pins.py
+Success: no issues found in 1 source file
+mypy --strict --platform win32 packaging/pins.py
+Success: no issues found in 1 source file
+mypy --strict --platform darwin packaging/pins.py
+Success: no issues found in 1 source file
+exit 0
+PASS: green, red on each of linux, win32 and darwin (3 errors), green again
