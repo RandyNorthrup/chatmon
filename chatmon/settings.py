@@ -7,6 +7,7 @@ import copy
 import json
 import math
 import os
+import sys
 import time
 import tomllib
 from collections.abc import Callable
@@ -18,19 +19,31 @@ from . import paths
 
 DEFAULTS: dict[str, Any] = {
     "name": "",
+    "language": "",  # i18n.SETTING: a language code ("de", "pt_BR"); empty follows the system
     "size": 120,
     "walk": True,
     "sleep_after_minutes": 10,
     "companion": "penguin",
     "bubble_style": "match",
     "bubble_effects": True,
+    # Opens the ask box from anywhere. On macOS Qt's Ctrl is Command, and Command+Option+Space is Finder's search.
+    "hotkey": "Ctrl+Shift+Space" if sys.platform == "darwin" else "Ctrl+Alt+Space",
+    "follow_screen": False,
     "ai": {"brain": "auto", "timeout_seconds": 180, "brains": {}},
     "agents": {"show_replies": False},
     "updates": {"check": True},
     "chats": {"keep": True, "context_tokens": 48000, "instructions": ""},
     "breaks": {"remind": True, "every_minutes": 60, "snooze_minutes": 10},
+    "reminders": {"snooze_minutes": 10},
     "focus": {"minutes": 25, "tell_when_done": True},
-    "accessibility": {"read_aloud": True},
+    "accessibility": {"read_aloud": True, "text_scale": 100, "bubble_time": "normal", "reduced_motion": "system", "accessible_ask_box": "auto",
+                      "magnifier_follows": True, "speech_fallback": False},
+    # Sounds for alerts only, until you turn others on; one switch turns them all off (owner, 2026-11-14).
+    "sound": {
+        "enabled": True,
+        "volume": 70,
+        "cues": {"needs-you": True, "reminder": True, "focus-done": True, "done": False, "success": False, "error": False, "pop": False},
+    },
     "heads_up": {
         "battery_low": 20,
         "battery_critical": 10,
@@ -48,6 +61,9 @@ TEMPLATE = """\
 
 # What your companion is called. Empty: it asks the first time it runs.
 name = ""
+
+# The language Chatmon speaks: a code such as "de" or "pt_BR". Empty: your system's.
+language = ""
 
 # Height of your chatmon on screen, in pixels.
 size = 120
@@ -72,6 +88,13 @@ bubble_style = "match"
 
 # Animate the bubbles' edges. false keeps the style but holds it still.
 bubble_effects = true
+
+# A key combination that opens the ask box from anywhere. Left out, it's
+# "Ctrl+Alt+Space" ("Ctrl+Shift+Space" on macOS, where Ctrl is Command); "" for none.
+# hotkey = "Ctrl+Alt+Space"
+
+# Follow the pointer to another monitor.
+follow_screen = false
 
 [ai]
 # Which brain answers your questions. "auto" uses the first AI command-line
@@ -180,6 +203,10 @@ remind = true
 every_minutes = 60
 snooze_minutes = 10
 
+[reminders]
+# How long a reminder's own Snooze puts it off, in minutes (breaks have theirs).
+snooze_minutes = 10
+
 [focus]
 minutes = 25
 # Say when a focus session ends.
@@ -189,6 +216,37 @@ tell_when_done = true
 # With a screen reader running (Orca, VoiceOver, NVDA, JAWS, Narrator), have it
 # read out each bubble and answer, and what to type to press a bubble's buttons.
 read_aloud = true
+# Text size in bubbles and the ask box, in percent (75 to 300), on top of your
+# desktop's own font size.
+text_scale = 100
+# How long bubbles stay: "normal", "longer", "much longer" or "until closed".
+bubble_time = "normal"
+# Less movement (no walking, no animated edges, no fades): "system" follows
+# your desktop's setting, "on" or "off" decide.
+reduced_motion = "system"
+# The ask box as a window of its own, which screen readers find, where Chatmon
+# draws its own overlay (Wayland): "auto" (when a screen reader runs), "on", "off".
+accessible_ask_box = "auto"
+# Windows: Magnifier, when it's running, goes to each bubble as it shows.
+magnifier_follows = true
+# macOS: say announcements in macOS's own voice while Chatmon is in the background
+# (VoiceOver would otherwise hold them until you come back to Chatmon).
+speech_fallback = false
+
+[sound]
+# One switch for every sound.
+enabled = true
+volume = 70               # percent
+# Which sounds play. Alerts are on; the rest are off until you turn them on.
+# None play during Do Not Disturb, Focus, a full-screen app or a focus session.
+[sound.cues]
+needs-you = true
+reminder = true
+focus-done = true
+done = false
+success = false
+error = false
+pop = false               # every other bubble
 
 [heads_up]
 battery_low = 20          # percent; 0 turns battery warnings off
@@ -329,11 +387,20 @@ RANGES: dict[str, tuple[int, int]] = {
     "chats.context_tokens": (2_000, 2_000_000),
     "breaks.every_minutes": (5, 480),
     "breaks.snooze_minutes": (1, 120),
+    "reminders.snooze_minutes": (1, 120),
     "focus.minutes": (1, 240),
+    "accessibility.text_scale": (75, 300),
+    "sound.volume": (0, 100),
     "heads_up.battery_low": (0, 90),
     "heads_up.battery_critical": (0, 90),
     "heads_up.disk_full_percent": (0, 99),
     "heads_up.updates_every_hours": (1, 168),
+}
+# The words a setting may be (anything else is the default, and said).
+CHOICES: dict[str, tuple[str, ...]] = {
+    "accessibility.bubble_time": ("normal", "longer", "much longer", "until closed"),
+    "accessibility.reduced_motion": ("system", "on", "off"),
+    "accessibility.accessible_ask_box": ("auto", "on", "off"),
 }
 _TRUE = {"true", "yes", "on", "1"}
 _FALSE = {"false", "no", "off", "0"}
@@ -345,6 +412,10 @@ def coerce(config: dict, defaults: dict | None = None) -> tuple[dict, list[str]]
     keys of (your own brains) are passed on as they are, each brain checked to be a table."""
     problems: list[str] = []
     out = _coerce(config, DEFAULTS if defaults is None else defaults, "", problems)
+    heads_up = out.get("heads_up")
+    if isinstance(heads_up, dict) and 0 < heads_up.get("battery_low", 0) <= heads_up.get("battery_critical", 0):
+        heads_up["battery_critical"] = heads_up["battery_low"] - 1  # "almost empty" stays below "low"
+        problems.append(f"heads_up.battery_critical should be below battery_low, so it's {heads_up['battery_critical']} for now")
     brains = out.get("ai", {}).get("brains")
     if isinstance(brains, dict):
         for name in [n for n, spec in brains.items() if not isinstance(spec, dict)]:
@@ -392,9 +463,12 @@ def _value(name: str, value: Any, default: Any, problems: list[str]) -> Any:
             return kept
         return number
     if isinstance(default, str):
-        if isinstance(value, str):
+        if isinstance(value, str) and (name not in CHOICES or value in CHOICES[name]):
             return value
-        problems.append(f"{name} should be text in quotes, so it's the default for now")
+        if isinstance(value, str):
+            problems.append(f"{name} should be {', '.join(repr(c) for c in CHOICES[name])}, so it's {default!r} for now")
+        else:
+            problems.append(f"{name} should be text in quotes, so it's the default for now")
         return default
     return value
 
@@ -415,8 +489,9 @@ def _number(value: Any) -> int | None:
     return None
 
 
-def load_config(path: Path | None = None) -> tuple[dict, str | None]:
-    """The settings, and a message if the file could not be read or some of its values were wrong."""
+def read_config(path: Path | None = None) -> tuple[dict, list[str], str | None]:
+    """The settings; a sentence for each value that was wrong (that setting is its default, the rest apply); and why
+    the file couldn't be read at all (then every setting is its default), or None."""
     path = path or paths.config_file()
     private_dir(path.parent)
     if not path.exists():
@@ -424,9 +499,17 @@ def load_config(path: Path | None = None) -> tuple[dict, str | None]:
     try:
         user = tomllib.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
-        return copy.deepcopy(DEFAULTS), f"{path.name}: {exc}"
+        return copy.deepcopy(DEFAULTS), [], f"{path.name}: {exc}"
     config, problems = coerce(merge(DEFAULTS, user))
-    return config, (f"{path.name}: " + "; ".join(problems) + ".") if problems else None
+    return config, problems, None
+
+
+def load_config(path: Path | None = None) -> tuple[dict, str | None]:
+    """The settings, and a message if the file could not be read or some of its values were wrong."""
+    config, problems, unreadable = read_config(path)
+    if unreadable:
+        return config, unreadable
+    return config, (f"{(path or paths.config_file()).name}: " + "; ".join(problems) + ".") if problems else None
 
 
 class State:

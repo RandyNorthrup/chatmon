@@ -1,0 +1,154 @@
+[
+  {
+    "id": "CI-01-host-desk-read",
+    "requirement": "M7-CI",
+    "file": "tests/test_app_smoke.py",
+    "mutation": {
+      "find": "    c.desk = PretendDesk()",
+      "replace": "    pass  # the computer's own desk, as before"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_the_computer_the_tests_run_on_holds_nothing_back"
+    ],
+    "expected": [
+      "test_the_computer_the_tests_run_on_holds_nothing_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "bb61a94051ac5c8eae382664780ab12be125679cccba6844a286af94e90f3402",
+    "baseline_exit": 0,
+    "mutated_sha256": "0b85c08903f87c46f19a5cce823a15425049b98c930fcc7be9c2994f5842512c",
+    "mutated_exit": 1,
+    "observed": "____________ test_the_computer_the_tests_run_on_holds_nothing_back ____________",
+    "after_sha256": "bb61a94051ac5c8eae382664780ab12be125679cccba6844a286af94e90f3402",
+    "restored_exit": 0
+  },
+  {
+    "id": "CI-02-queue-best-only",
+    "requirement": "M7-CI",
+    "file": "chatmon/messages.py",
+    "mutation": {
+      "find": "best = next((m for m in self._ready() if self._takes_over(m, now)), None)",
+      "replace": "best = next((m for m in self._ready()[:1] if self._takes_over(m, now)), None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over",
+      "tests/test_messages.py::test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum"
+    ],
+    "expected": [
+      "test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over",
+      "test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f18a7799b3d4412b77e373437d64e553e7c41fb351cbeb64bf89b2ed896385c5",
+    "baseline_exit": 0,
+    "mutated_sha256": "8880f0a4684b6aec3990d4951ee148e5bf1dcf1907ee632b05dbef15026d018a",
+    "mutated_exit": 1,
+    "observed": "___ test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over ____",
+    "after_sha256": "f18a7799b3d4412b77e373437d64e553e7c41fb351cbeb64bf89b2ed896385c5",
+    "restored_exit": 0
+  },
+  {
+    "id": "CI-03-wake-best-only",
+    "requirement": "M7-CI",
+    "file": "chatmon/messages.py",
+    "mutation": {
+      "find": "times = [at for m in self._ready() if",
+      "replace": "times = [at for m in self._ready()[:1] if"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over"
+    ],
+    "expected": [
+      "test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f18a7799b3d4412b77e373437d64e553e7c41fb351cbeb64bf89b2ed896385c5",
+    "baseline_exit": 0,
+    "mutated_sha256": "04bd8ff9c1b924f8308514836bb47db91674079cd196b98f3325ffd7ba13fdc2",
+    "mutated_exit": 1,
+    "observed": "___ test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over ____",
+    "after_sha256": "f18a7799b3d4412b77e373437d64e553e7c41fb351cbeb64bf89b2ed896385c5",
+    "restored_exit": 0
+  },
+  {
+    "id": "CI-04-askbox-wakes-by-strength",
+    "requirement": "M7-CI",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        if drawn_here and self._moving(time.monotonic()):",
+      "replace": "        if drawn_here and self.effects(time.monotonic()) > 0.0:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since"
+    ],
+    "expected": [
+      "new words: it moves again"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "44f01c0de6e427c0bcf8018248d1c47455fad794fcfb799dcf72cfb9e728b531",
+    "baseline_exit": 0,
+    "mutated_sha256": "da9005b90f05f8f33b79e1b59ca462b507e836fd422da5b892166afeacc7d5a1",
+    "mutated_exit": 1,
+    "observed": ">       assert box._frames.isActive() and box.anim_key(now) != -1, \"new words: it moves again\"",
+    "after_sha256": "44f01c0de6e427c0bcf8018248d1c47455fad794fcfb799dcf72cfb9e728b531",
+    "restored_exit": 0
+  },
+  {
+    "id": "CI-05-askbox-frame-stops-at-zero",
+    "requirement": "M7-CI",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        if not self._moving(time.monotonic()):",
+      "replace": "        if self.effects(time.monotonic()) <= 0.0:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since"
+    ],
+    "expected": [
+      "a frame drawn at strength 0 is the start of the rise"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "44f01c0de6e427c0bcf8018248d1c47455fad794fcfb799dcf72cfb9e728b531",
+    "baseline_exit": 0,
+    "mutated_sha256": "15c650abbecc19fded2b361a6418110a83190301564a9564f6c0a7962ed792da",
+    "mutated_exit": 1,
+    "observed": ">       assert box._frames.isActive(), \"a frame drawn at strength 0 is the start of the rise, not the end of it\"",
+    "after_sha256": "44f01c0de6e427c0bcf8018248d1c47455fad794fcfb799dcf72cfb9e728b531",
+    "restored_exit": 0
+  }
+]

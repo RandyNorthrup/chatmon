@@ -89,6 +89,49 @@ def send(message: dict[str, Any], timeout: float = 0.5) -> bool:
     return deliver(message, timeout) == SENT
 
 
+def reply_line(reply: dict[str, Any]) -> bytes:
+    """The companion's answer to a message that asks for one (`status`): one JSON line, written before its ok."""
+    return (json.dumps(reply) + "\n").encode("utf-8")
+
+
+def request(message: dict[str, Any], timeout: float = 2.0) -> dict[str, Any] | None:
+    """Ask the running companion something it answers (`{"type": "status"}`), with the same checks as `deliver`:
+    the one JSON line it writes before its ok, or None (not running, someone else's, a Chatmon too old to answer,
+    or no answer in `timeout` seconds)."""
+    data = (json.dumps(message) + "\n").encode("utf-8")
+    got = bytearray()
+    if sys.platform == "win32":
+        from . import winpipe
+
+        if winpipe.deliver(paths.server_name(), data, int(timeout * 1000), got) != SENT:
+            return None
+        return _reply(bytes(got))
+    name = paths.server_name()
+    deadline = time.monotonic() + timeout
+    try:
+        if os.stat(name).st_uid != os.getuid():
+            return None  # someone else's socket: it's told nothing
+        with _connect(name, timeout) as sock:
+            sock.sendall(data)
+            while not got.endswith(ACK) and len(got) <= MAX_MESSAGE and time.monotonic() < deadline:
+                sock.settimeout(max(0.01, deadline - time.monotonic()))
+                chunk = sock.recv(4096)
+                if not chunk:
+                    break
+                got.extend(chunk)
+    except OSError:
+        return None
+    return _reply(bytes(got))
+
+
+def _reply(data: bytes) -> dict[str, Any] | None:
+    """The answer in what came back: the JSON line before the ok, if the ok came and a line came before it."""
+    if not data.endswith(ACK):
+        return None
+    lines = parse_lines(data[: -len(ACK)])
+    return lines[-1] if lines else None
+
+
 def deliver(message: dict[str, Any], timeout: float = 0.5) -> str:
     """Like `send`, but says what it found: SENT, ABSENT or FOREIGN."""
     data = (json.dumps(message) + "\n").encode("utf-8")

@@ -45,6 +45,7 @@ SECURITY_SQOS_PRESENT = 0x00100000
 SECURITY_IDENTIFICATION = 0x00010000  # SecurityIdentification << 16
 ERROR_IO_PENDING = 997
 WAIT_OBJECT_0 = 0
+REPLY_MAX = 64 * 1024  # bytes of an answer read at most (events.MAX_MESSAGE)
 
 _kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
 _advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
@@ -176,9 +177,10 @@ def release(handle: int) -> None:
     _CloseHandle(handle)
 
 
-def deliver(name: str, data: bytes, timeout_ms: int) -> str:
+def deliver(name: str, data: bytes, timeout_ms: int, reply: bytearray | None = None) -> str:
     """Tell the Chatmon serving the pipe `name` `data`, and wait (up to `timeout_ms` in all) for its answer:
-    SENT, ABSENT (nobody serves it) or FOREIGN (someone else does, and was told nothing).
+    SENT, ABSENT (nobody serves it) or FOREIGN (someone else does, and was told nothing). `reply`: everything it
+    sends back is added to it, up to and including its ok (events.request reads an answer from it).
 
     The pipe is opened for identification only, and its server is checked on that very handle before a byte
     is written: what this says can only reach your own Chatmon, and nothing serving the name can act as you."""
@@ -208,9 +210,14 @@ def deliver(name: str, data: bytes, timeout_ms: int) -> str:
                 return ABSENT  # it went away, or stopped reading
             written += done
         # Its answer: hanging up before it has read the message can lose it. A slow answer isn't a failure.
-        answer = ctypes.create_string_buffer(16)
-        _transfer(handle, _ReadFile, ctypes.addressof(answer), len(answer), deadline)
-        return SENT
+        answer = ctypes.create_string_buffer(16 if reply is None else 4096)
+        while True:
+            got = _transfer(handle, _ReadFile, ctypes.addressof(answer), len(answer), deadline)
+            if reply is None or not got:
+                return SENT
+            reply.extend(answer.raw[:got])
+            if reply.endswith(b"ok\n") or len(reply) > REPLY_MAX:
+                return SENT
     finally:
         _CloseHandle(handle)
 

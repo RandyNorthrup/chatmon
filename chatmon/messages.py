@@ -34,7 +34,8 @@ class Message:
     """A bubble to show. `buttons` are (label, action or None). `key` names what it's about, so newer news of the
     same thing replaces it. `alert`: shown as one (waving, above full-screen windows, until answered). `yours`:
     it came while you were using Chatmon. `background`: it came on its own (an agent, a script, a heads-up), not
-    from something you did. `priority`, left out, is PROMPT for a bubble with buttons or no timeout, else PLAIN."""
+    from something you did. `priority`, left out, is PROMPT for a bubble with buttons or no timeout, else PLAIN.
+    `cue`: the sound it may make as it shows (the app decides whether it does)."""
 
     title: str
     text: str = ""
@@ -45,6 +46,7 @@ class Message:
     alert: bool = False
     yours: bool = False
     background: bool = False
+    cue: str | None = None
     seq: int = field(default_factory=lambda: next(_order))
 
     def __post_init__(self) -> None:
@@ -91,14 +93,24 @@ class MessageQueue:
 
     # -- in and out
 
-    def add(self, message: Message) -> None:
-        """Queue it. Waiting news of the same thing is replaced by it; past the limit, the oldest plain bubble goes."""
+    def add(self, message: Message) -> list[Message]:
+        """Queue it. Waiting news of the same thing is replaced by it; past the limit, the oldest plain bubble goes.
+        Returns the plain bubbles that went that way, never shown (the app can still offer them)."""
         if message.key is not None:
             self.waiting = [m for m in self.waiting if m.key != message.key]
         self.waiting.append(message)
         plain = [m for m in self.waiting if m.priority == PLAIN]
-        for gone in plain[: max(0, len(plain) - PLAIN_LIMIT)]:
+        dropped = plain[: max(0, len(plain) - PLAIN_LIMIT)]
+        for gone in dropped:
             self.waiting.remove(gone)
+        return dropped
+
+    def take(self, which: Callable[[Message], bool]) -> list[Message]:
+        """Take out of the queue every waiting message `which` says yes to, in the order they came: the app says
+        them some other way (a focus session's summary)."""
+        taken = sorted((m for m in self.waiting if which(m)), key=lambda m: m.seq)
+        self.waiting = [m for m in self.waiting if m not in taken]
+        return taken
 
     def withdraw(self, key: str) -> None:
         """What's waiting about `key` no longer stands (the agent got going again): it never shows."""
@@ -108,9 +120,14 @@ class MessageQueue:
         """The bubble on screen was closed, answered or timed out."""
         self.showing = None
 
-    def _best(self) -> Message | None:
-        ready = [m for m in self.waiting if self.passes(m)]
-        return min(ready, key=lambda m: (m.priority, m.background, m.seq)) if ready else None
+    def _ready(self) -> list[Message]:
+        """What no hold keeps back, best placed first. The best-placed one may not be able to show yet (the bubble
+        on screen matters as much); one further down still may: newer news of what's showing, or what you did."""
+        return sorted((m for m in self.waiting if self.passes(m)), key=lambda m: (m.priority, m.background, m.seq))
+
+    def _earliest(self, message: Message, now: float) -> float:
+        """The soonest `message` could take over: now, or once the bubble showing has been up MIN_SHOWN."""
+        return max(now, self.shown_at + MIN_SHOWN) if message.background and self.showing is not None else now
 
     def _takes_over(self, best: Message, now: float) -> bool:
         showing = self.showing
@@ -127,8 +144,8 @@ class MessageQueue:
         thinks is showing is still on screen (one closed without `closed()` is forgotten)."""
         if not visible:
             self.showing = None
-        best = self._best()
-        if best is None or not self._takes_over(best, now):
+        best = next((m for m in self._ready() if self._takes_over(m, now)), None)
+        if best is None:
             return None
         pushed = self.showing
         if pushed is not None and pushed.priority != PLAIN and not _same(best, pushed):
@@ -140,10 +157,5 @@ class MessageQueue:
     def wake_at(self, now: float) -> float | None:
         """When to call `next()` again for something waiting to show (None: not until a bubble closes, a message
         comes, or a hold changes)."""
-        best = self._best()
-        if best is None:
-            return None
-        if self.showing is None:
-            return now
-        at = max(now, self.shown_at + MIN_SHOWN) if best.background else now
-        return at if self._takes_over(best, at) else None
+        times = [at for m in self._ready() if self._takes_over(m, at := self._earliest(m, now))]
+        return min(times) if times else None

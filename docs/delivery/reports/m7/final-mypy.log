@@ -1,0 +1,6 @@
+== mypy --platform win32
+Success: no issues found in 68 source files
+== mypy --platform linux
+Success: no issues found in 68 source files
+== mypy --platform darwin
+Success: no issues found in 68 source files

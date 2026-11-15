@@ -106,12 +106,13 @@ def test_questions_are_not_commands():
     assert parse_command("focused reading tips?", NOW) is None
 
 
-def test_book_pops_due_in_order_and_round_trips():
+def test_book_fires_due_in_order_and_round_trips():
     book = ReminderBook()
     b = book.add(200, "second")
     a = book.add(100, "first")
     book.add(900, "later", "focus")
-    assert [r.text for r in book.pop_due(250)] == ["first", "second"]
+    assert [r.text for r in book.fire(250)] == ["first", "second"]
+    assert book.acknowledge(a.id) and book.acknowledge(b.id)  # done with: one-offs go
     assert book.focus().text == "later"
     again = ReminderBook.from_list(book.to_list() + [{"bad": 1}])
     assert [r.text for r in again.upcoming()] == ["later"]
@@ -344,15 +345,6 @@ def test_a_daily_reminder_keeps_its_hour_across_daylight_saving():
     book.acknowledge(r.id, now=saturday + 60)
     assert datetime.fromtimestamp(r.due, ny) == datetime(2026, 3, 8, 9, 0, tzinfo=ny)
     assert r.due - saturday == 23 * 3600
-
-
-def test_the_old_pop_due_moves_a_repeating_reminder_on_and_takes_a_one_off_out():
-    book = ReminderBook()
-    t = datetime(2026, 10, 28, 9, 0).timestamp()
-    rep = book.add(t, "stand up", repeat="daily@09:00")
-    book.add(t + 1, "once")
-    assert [(f.text, f.due) for f in book.pop_due(t + 60)] == [("stand up", t), ("once", t + 1)]
-    assert book.items == [rep] and datetime.fromtimestamp(rep.due) == datetime(2026, 10, 29, 9, 0)
 
 
 # -- a fired reminder stays until it's seen to (M5-01)

@@ -627,6 +627,11 @@ class Stage(QObject):
     def message_visible(self) -> bool:
         return self.bubble.visible()
 
+    def bubble_rect(self) -> QRect:
+        """Where the bubble is drawn, in the stage window's own coordinates (empty when none is): for a screen
+        magnifier to go to (the app's wincaret wiring)."""
+        return self._bubble_box.toAlignedRect() if self.bubble.drawn() else QRect()
+
     def press_button(self, typed: str) -> bool:
         """The bubble's button whose label was typed (or the start of it, if that's one button's alone),
         pressed as a click would: the keyboard's and a screen reader's way to answer a bubble."""

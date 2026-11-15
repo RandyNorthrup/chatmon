@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
+from datetime import datetime
 from functools import partial
 
 from PyQt6.QtCore import Qt, QTimer
@@ -21,7 +22,7 @@ from PyQt6.QtWidgets import QMenu
 
 from . import __version__, agents, autostart, brains, chats, commands, companions, offline, reminders, report, styles
 
-RECENT_CHATS = 12  # in the Chats menu itself; the rest under "Older chats"
+RECENT_CHATS = 8  # in the Chats menu itself; every chat is in the Chats window (All chats…)
 AGENTS_FRESH = 30  # seconds a look at how the agents stand holds good when the menu opens
 THINKING = {"auto": "Automatic (the model's own choice)", "on": "On", "off": "Off"}
 
@@ -85,6 +86,7 @@ class Menus:
         m.clear()
         # What you do with it first; then the brain and the agents; how it looks; and Chatmon itself.
         m.addAction(f"Ask {c.name}…", c.open_ask)
+        clipboard_menu(c, m.addMenu("Clipboard"))
         chats_menu(c, m.addMenu("Chats"))
         upcoming = [r for r in c.reminders.upcoming() if r.kind != "focus"]
         if upcoming:
@@ -92,10 +94,15 @@ class Menus:
             sub.addAction("Remind me…", partial(c.open_ask, "remind me in "))
             sub.addSeparator()
             for r in upcoming:
-                self._clock(sub.addAction(_reminder(r), partial(c._cancel, r.id)), partial(_reminder, r))
+                item = sub.addMenu(_reminder(r))
+                self._clock(item.menuAction(), partial(_reminder, r))
+                reminder_menu(c, item, r)
         else:
             m.addAction("Remind me…", partial(c.open_ask, "remind me in "))
         self._focus_and_notes(m)
+        recent = c.recent_messages()
+        if recent:
+            recent_menu(c, m.addMenu("Recent messages"), recent)
         m.addSeparator()
         brain_menu(c, m.addMenu("Brain"))
         agents_menu(c, m.addMenu("AI agents"))
@@ -152,47 +159,86 @@ def _stopwatch(c) -> str:
 
 
 def _reminder(r: reminders.Reminder) -> str:
-    return f"✕  {reminders.describe(r.due, time.time())}: {r.text}"
+    again = "  ↻" if r.repeat else ""
+    return f"{reminders.describe(r.due, time.time())}: {r.text}{again}"
+
+
+def reminder_menu(c, sub: QMenu, r: reminders.Reminder) -> None:
+    """One reminder: Done and snoozes once it has come due; change its words or time, how it repeats, or cancel it."""
+    if r.fired:
+        sub.addAction("Done", partial(c._reminder_done, r.id))
+        later = sub.addMenu("Snooze")
+        for label, until in reminders.snooze_choices(time.time(), c._snooze_minutes()):
+            later.addAction(label, partial(c._snooze_reminder, r.id, until))
+        sub.addSeparator()
+    sub.addAction("Edit…", partial(c._edit_reminder, r.id))
+    repeat = sub.addMenu("Repeat")
+    group = QActionGroup(repeat)
+    for rule, label in [(None, "Never"), *((rule, reminders.describe_repeat(rule).capitalize()) for rule in repeat_rules(r.due))]:
+        action = repeat.addAction(label)
+        action.setCheckable(True)
+        action.setChecked(r.repeat == rule)
+        action.triggered.connect(partial(c._set_repeat, r.id, rule))
+        group.addAction(action)
+    if r.repeat and r.repeat not in repeat_rules(r.due):  # one set another way ("every monday at 9" said in the box)
+        current = repeat.addAction(reminders.describe_repeat(r.repeat).capitalize())
+        current.setCheckable(True)
+        current.setChecked(True)
+        group.addAction(current)
+    sub.addAction("Cancel it", partial(c._cancel, r.id))
+
+
+def repeat_rules(due: float) -> list[str]:
+    """The repeats a reminder due at `due` can take: every day, every weekday, or every week on its day, at its time."""
+    when = datetime.fromtimestamp(due)
+    at = f"{when.hour:02d}:{when.minute:02d}"
+    return [f"daily@{at}", f"weekdays@{at}", f"{('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')[when.weekday()]}@{at}"]
+
+
+def recent_menu(c, sub: QMenu, recent: list) -> None:
+    """The bubbles shown lately, newest first: picking one shows it again."""
+    for shown_at, message in recent:
+        title = " ".join(message.title.split())
+        sub.addAction(f"{title[:48] + '…' if len(title) > 48 else title}   ·   {chats.when(shown_at)}", partial(c._show_again, message))
+
+
+def clipboard_menu(c, sub: QMenu) -> None:
+    """What to ask about what's on the clipboard: it's attached only when one of these is chosen."""
+    from .app import QUICK_ACTIONS
+
+    for name in QUICK_ACTIONS:
+        sub.addAction(f"{name} the clipboard…", partial(c._quick_action, name))
 
 
 def chats_menu(c, sub: QMenu, in_box: bool = False) -> None:
-    """Your chats, each with what can be done with it, and keeping or clearing them all. Only each chat's id,
-    title, when it was last talked in and whether it's pinned are read."""
+    """New chat, this chat's own (rename, another brain), the most recent chats (carry on) and All chats (the window,
+    with search), and keeping or clearing them all. Only each chat's id, title, time and pin are read."""
     sub.addAction("New chat", c._new_chat if in_box else c._open_new_chat)
     if c.chat.messages:
         sub.addAction("Rename this chat…", partial(c._ask_new_name, c.chat.id))
-    recent = c.chat_book.recent() if c._keeps_chats() else []
-    if recent:
+    if c.chat.last_question() is not None:
+        others = [b for b in c.brains.values() if b.name != c.chat.brain and b.available(wait=False)]
+        if others:
+            other = sub.addMenu("Ask another brain")
+            for brain in others:
+                other.addAction(brain.label, partial(c._ask_other, brain.name))
+    listed = c.chat_book.listing(RECENT_CHATS) if c._keeps_chats() else []
+    if listed:
         sub.addSection("Your chats")
-        for chat in recent[:RECENT_CHATS]:
-            _chat_item(c, sub, chat)
-        if len(recent) > RECENT_CHATS:
-            older = sub.addMenu(f"Older chats ({len(recent) - RECENT_CHATS})")
-            for chat in recent[RECENT_CHATS:]:
-                _chat_item(c, older, chat)
+        for chat in listed:
+            mark = "★ " if chat.pinned else ""
+            here = "  (this one)" if chat.id == c.chat.id else ""
+            sub.addAction(f"{mark}{chat.title or 'A chat'}   ·   {chats.when(chat.updated)}{here}", partial(c._resume_chat, chat.id))
     else:
         empty = sub.addAction("No saved chats yet" if c._keeps_chats() else "Chats aren't being kept")
         empty.setEnabled(False)
+    sub.addAction("All chats…", c.open_chats)
     sub.addSeparator()
     keep = sub.addAction("Keep chat history")
     keep.setCheckable(True)
     keep.setChecked(c._keeps_chats())
     keep.toggled.connect(c._set_keep_chats)
     sub.addAction("Clear chat history…", c._ask_to_clear_chats)
-
-
-def _chat_item(c, menu: QMenu, chat: chats.Chat) -> None:
-    """One chat: carry on with it, rename, pin, save or delete it."""
-    mark = "★ " if chat.pinned else ""
-    here = "  (this one)" if chat.id == c.chat.id else ""
-    item = menu.addMenu(f"{mark}{chat.title or 'A chat'}   ·   {chats.when(chat.updated)}{here}")
-    item.addAction("Carry on", partial(c._resume_chat, chat.id))
-    item.addAction("Rename…", partial(c._ask_new_name, chat.id))
-    item.addAction("Instructions for this chat…", partial(c._ask_chat_instructions, chat.id))
-    item.addAction("Unpin" if chat.pinned else "Pin to the top", partial(c._pin_chat, chat.id, not chat.pinned))
-    item.addAction("Save as Markdown…", partial(c._export_chat, chat.id))
-    item.addSeparator()
-    item.addAction("Delete…", partial(c._ask_to_delete_chat, chat.id))
 
 
 def notes_menu(c, sub: QMenu) -> None:

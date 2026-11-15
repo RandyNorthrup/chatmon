@@ -200,12 +200,23 @@ def to_json(chat: Chat) -> dict:
     return data
 
 
+@dataclass(frozen=True)
+class Listed:
+    """A chat as a list of them shows it: never its messages."""
+
+    id: str
+    title: str
+    updated: float
+    pinned: bool
+
+
 class ChatBook:
     """The chats kept on this computer."""
 
     def __init__(self, root: Path | None = None):
         self._root = root
         self._read: dict[str, tuple[int, int, Chat | None]] = {}  # chat id: (mtime, size, as read): read once
+        self._listed: dict[str, tuple[int, int, Listed | None]] = {}  # chat id: (mtime, size, its listing): read once
 
     def root(self) -> Path:
         return self._root or folder()
@@ -249,6 +260,38 @@ class ChatBook:
             if len(chats) >= limit:
                 break
         return sorted(chats, key=lambda c: (c.pinned, c.updated), reverse=True)
+
+    def listing(self, limit: int = 200) -> list[Listed]:
+        """Pinned chats, then the most recently talked in, newest first: each one's id, title, time and pin only. A
+        file is read once for as long as it doesn't change, and only those few things are kept of it (a menu or the
+        Chats window lists them; `load` reads one whole)."""
+        try:
+            files = [(p, p.stat()) for p in self.root().glob("*.json") if _ID.fullmatch(p.stem)]
+        except OSError:
+            return []
+        files.sort(key=lambda f: f[1].st_mtime, reverse=True)
+        found: list[Listed] = []
+        for path, info in files:
+            seen = self._listed.get(path.stem)
+            if seen is None or seen[:2] != (info.st_mtime_ns, info.st_size):
+                seen = (info.st_mtime_ns, info.st_size, self._list(path, info.st_size))
+                self._listed[path.stem] = seen
+            if seen[2] is not None:
+                found.append(seen[2])
+            if len(found) >= limit:
+                break
+        return sorted(found, key=lambda c: (c.pinned, c.updated), reverse=True)
+
+    @staticmethod
+    def _list(path: Path, size: int) -> Listed | None:
+        """A chat file's listing, or None if it isn't a chat with something said in it."""
+        if size > MAX_FILE:
+            return None
+        try:
+            chat = from_json(json.loads(path.read_text(encoding="utf-8")))
+        except (OSError, ValueError, RecursionError):
+            return None
+        return Listed(chat.id, chat.title, chat.updated, chat.pinned) if chat is not None and chat.messages else None
 
     def delete(self, chat_id: str) -> None:
         try:

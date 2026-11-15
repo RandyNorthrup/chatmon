@@ -21,7 +21,7 @@ import math
 import re
 import time as _time
 import uuid
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import asdict, dataclass, field
 from datetime import date, datetime, time, timedelta, tzinfo
 
 from . import localefmt
@@ -593,18 +593,6 @@ class ReminderBook:
         if repeat is not _KEEP:
             r.repeat = repeat
         return True
-
-    def pop_due(self, now: float) -> list[Reminder]:
-        """The reminders due, taken out of the book: what the app used before `due` and `acknowledge`. A
-        repeating one stays, moved on to its next time, and a copy of the one that fired is returned."""
-        due = sorted((r for r in self.items if r.due <= now), key=lambda r: r.due)
-        fired = [replace(r) for r in due]
-        for r in due:
-            if r.repeat:
-                r.due, r.fired = next_time(r.repeat, now, self.tz), False
-            else:
-                self.items.remove(r)
-        return fired
 
     def upcoming(self) -> list[Reminder]:
         return sorted(self.items, key=lambda r: r.due)

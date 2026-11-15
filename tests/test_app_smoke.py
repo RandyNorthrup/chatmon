@@ -3,56 +3,21 @@
 import os
 import subprocess
 import sys
-import tempfile
 import time
 
 import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QEventLoop, QTimer  # noqa: E402
 from PyQt6.QtNetwork import QLocalServer  # noqa: E402
 from PyQt6.QtWidgets import QApplication, QMenu  # noqa: E402
 
-
-def spin(seconds: float) -> None:
-    loop = QEventLoop()
-    QTimer.singleShot(int(seconds * 1000), loop.quit)
-    loop.exec()
+from app_harness import PretendBrain, PretendDesk, make_companion, spin, until  # noqa: E402
 
 
 @pytest.fixture
 def companion(tmp_path, monkeypatch):
-    for var in ("XDG_CONFIG_HOME", "XDG_STATE_HOME", "APPDATA"):
-        monkeypatch.setenv(var, str(tmp_path / var))
-    monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setenv("USERPROFILE", str(tmp_path))
-    # socket paths are limited to ~100 characters, so keep this one short
-    run = tempfile.mkdtemp(prefix="pc-", dir=None if sys.platform == "win32" else "/tmp")
-    monkeypatch.setenv("XDG_RUNTIME_DIR", run)
-    from chatmon import agents, app as appmod, paths
-    from chatmon.settings import State
-
-    monkeypatch.setattr(agents, "_run_json", lambda argv, what: [])  # never run a real agent's command line
-
-    from chatmon import __version__
-
-    # Seen this version already (no what's new), asked about every agent already (no offer to connect them),
-    # and never looking for updates (no network in tests).
-    seen = {"name": "Sparky", "x": 600, "seen_version": __version__, "check_updates": False, "agent_status": {a.name: "found" for a in agents.AGENTS}}
-    State(paths.state_file(), seen).save()
-    qapp = QApplication.instance() or QApplication([])
-    qapp.setQuitOnLastWindowClosed(False)
-    server = QLocalServer()
-    server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)
-    QLocalServer.removeServer(paths.server_name())
-    assert server.listen(paths.server_name()), server.errorString()
-    c = appmod.Companion(qapp, server)
-    c._file_chooser = None  # Qt's dialogs, which the tests stand in for: never the desktop's portal
-    c._reader_seen = float("inf")  # no screen reader, never looked for: tests never talk to the desktop's
-    yield c
-    c.quit()
-    server.close()
+    yield from make_companion(tmp_path, monkeypatch)
 
 
 def test_greets_and_reacts_to_agents(companion):
@@ -138,7 +103,7 @@ def test_hide_menu_and_reload(companion):
     c.set_hidden(False)
     c.menus.fill()
     labels = [a.text() for a in c.menu.actions() if a.text()]
-    assert labels == ["Ask Sparky…", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
+    assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
                       "Hide (peek now and then)", "Settings…", "Help & updates", "Quit"]
     submenu = {a.text(): a.menu() for a in c.menu.actions() if a.menu()}
     appearance = [a.text() for a in submenu["Appearance"].actions()]
@@ -183,7 +148,7 @@ def test_a_clock_tick_changes_only_the_times_in_the_menu(companion):
     spin(0.1)
     items = list(all_actions(c.menu))
     texts = [a.text() for a in items]
-    assert any(t.startswith("Stop focus (25 min left)") for t in texts) and any(t.startswith("✕  in 30 min: stretch") for t in texts)
+    assert any(t.startswith("Stop focus (25 min left)") for t in texts) and any(t.startswith("in 30 min: stretch") for t in texts)
     assert any(t == "Stop the stopwatch (0 min)" for t in texts)
     c.reminders.focus().due -= 10 * 60  # ten minutes go by
     next(r for r in c.reminders.upcoming() if r.text == "stretch").due -= 10 * 60
@@ -192,7 +157,7 @@ def test_a_clock_tick_changes_only_the_times_in_the_menu(companion):
     spin(0.1)
     assert not any(sip.isdeleted(a) for a in items) and list(all_actions(c.menu)) == items  # the same items, not built again
     texts = [a.text() for a in items]
-    assert "Stop focus (15 min left)" in texts and "✕  in 20 min: stretch" in texts and "Stop the stopwatch (2 min)" in texts
+    assert "Stop focus (15 min left)" in texts and "in 20 min: stretch" in texts and "Stop the stopwatch (2 min)" in texts
     assert "Focus and notes (15 min left)" in texts
 
 
@@ -641,13 +606,20 @@ def test_asks_for_no_session_bus_on_macos(monkeypatch):
     pytest.importorskip("PyQt6.QtDBus")  # not in PyQt's Windows build
     from chatmon import app as appmod, linuxsession
 
-    watched = []
-    monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept: watched.append(True))
-    monkeypatch.setattr(linuxsession, "PowerProfile", lambda saving: None)
-    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=None)
+    from chatmon import macnative
+
+    watched, workspace = [], []
+    monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept, seen=None, parent=None: watched.append(True))
+    monkeypatch.setattr(linuxsession, "PowerProfile", lambda saving, parent=None: None)
+    signal = types.SimpleNamespace(connect=lambda handler: None)
+    # macOS hears sleep, the displays, accessibility and Low Power Mode from NSWorkspace instead (M4A's macnative).
+    monkeypatch.setattr(macnative, "WorkspaceWatcher", lambda: workspace.append(True) or types.SimpleNamespace(
+        slept=signal, screens_slept=signal, accessibility_changed=signal, low_power_changed=signal))
+    monkeypatch.setattr(macnative, "low_power_mode", lambda: False)
+    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=lambda on: None, _seen=None, _check_accessibility=None)
     monkeypatch.setattr(sys, "platform", "darwin")
     appmod.Companion._watch_screen_lock(me)
-    assert watched == []
+    assert watched == [] and workspace == [True]
     monkeypatch.setattr(sys, "platform", "linux")
     appmod.Companion._watch_screen_lock(me)
     assert watched == [True]  # where there is one, it still listens
@@ -749,31 +721,6 @@ def test_a_problem_inside_chatmon_offers_to_report_it_once(companion):
     appmod._log_exception(ValueError, ValueError("again"), None)
     spin(0.1)
     assert not c.stage.message_visible()  # once a run
-
-
-def until(condition, seconds=5.0):
-    deadline = time.monotonic() + seconds
-    while not condition() and time.monotonic() < deadline:
-        spin(0.02)
-    return condition()
-
-
-class PretendBrain:
-    """Stands in for asking a brain: records each question, and answers when told to."""
-
-    def __init__(self, c, monkeypatch, kind="anthropic", tools_off=True):
-        from chatmon import brains
-
-        self.c, self.asked = c, []
-        self.brain = brains.Brain(
-            "pretend", kind, label="Pretend API", model="m", api_key="k", command=["pretend"] if kind == "command" else [], tools_off=tools_off
-        )
-        monkeypatch.setattr(c, "_brain", lambda wait=True: self.brain)
-        monkeypatch.setitem(c.brains, "pretend", self.brain)
-        monkeypatch.setattr(c.asker, "ask", lambda brain, system, history, question, timeout, attached=(): self.asked.append((history, question, list(attached))))
-
-    def answer(self, text):
-        self.c._answered(text)
 
 
 def test_a_chat_is_kept_and_can_be_carried_on(companion, monkeypatch):
@@ -886,8 +833,8 @@ def test_chats_can_be_renamed_pinned_saved_and_deleted(companion, monkeypatch, t
     assert [ch.title for ch in c.chat_book.recent()] == ["Cat names", "second question"]  # pinned first, though older
     c.menus.fill()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
-    item = next(a.menu() for a in chats_menu.actions() if a.text().startswith("★ Cat names"))
-    assert [a.text() for a in item.actions() if a.text()] == ["Carry on", "Rename…", "Instructions for this chat…", "Unpin", "Save as Markdown…", "Delete…"]
+    item = next(a for a in chats_menu.actions() if a.text().startswith("★ Cat names"))
+    assert item.menu() is None  # one item a chat, which carries it on: the rest is in the Chats window (M7-09)
 
     out = tmp_path / "saved.md"
     monkeypatch.setattr(appmod.QFileDialog, "getSaveFileName", lambda *a: (str(out), "Markdown (*.md)"))
@@ -901,20 +848,22 @@ def test_chats_can_be_renamed_pinned_saved_and_deleted(companion, monkeypatch, t
     assert [ch.title for ch in c.chat_book.recent()] == ["second question"]
 
 
-def test_older_chats_are_one_menu_further(companion):
-    from chatmon import chats
+def test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window(companion):
+    from chatmon import chats, menus
 
     c = companion
-    from chatmon import menus
-
     for i in range(menus.RECENT_CHATS + 3):
         chat = chats.Chat()
         chat.add(chats.Message("user", f"chat {i}", at=1000.0 + i))
         c.chat_book.save(chat)
     c.menus.fill()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
-    older = next(a.menu() for a in chats_menu.actions() if a.text() == "Older chats (3)")
-    assert [a.text().split("   ·")[0] for a in older.actions()] == ["chat 2", "chat 1", "chat 0"]
+    listed = [a.text().split("   ·")[0] for a in chats_menu.actions() if "   ·" in a.text()]
+    assert listed == [f"chat {i}" for i in range(menus.RECENT_CHATS + 2, 2, -1)]  # the newest, newest first
+    next(a for a in chats_menu.actions() if a.text() == "All chats…").trigger()
+    window = c._chats_window
+    assert window.isVisible() and len(window.shown_ids()) == menus.RECENT_CHATS + 3  # every one
+    window.close()
 
 
 def test_a_command_line_tool_that_can_read_files_gets_no_attachments(companion, monkeypatch):
@@ -1018,7 +967,7 @@ def test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat(
     assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?"]  # asked once: the first isn't dropped
     shown = c.ask_box.answer.toPlainText()
     assert "What's a good name for a cat?" in shown and "Pretend API is thinking" in shown
-    assert "And for a dog?" in shown and "Still answering, Esc to stop" in shown
+    assert "And for a dog?" in shown and "this one goes next" in shown
     c.submit("5 km in miles")  # Chatmon's own answers don't wait
     shown = c.ask_box.answer.toPlainText()
     assert "3.107 miles" in shown and "What's a good name for a cat?" in shown and "And for a dog?" in shown  # nothing vanished
@@ -1034,20 +983,6 @@ def test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat(
     ]
     shown = c.ask_box.answer.toPlainText()
     assert shown.index("Mochi.") < shown.index("And for a dog?") < shown.index("Biscuit.") and "thinking" not in shown
-
-
-def test_closing_the_box_stops_the_answer_and_the_question_waiting(companion, monkeypatch):
-    c = companion
-    brain = PretendBrain(c, monkeypatch)
-    c.open_ask()
-    c.submit("first")
-    c.submit("second")
-    c.ask_box.dismiss()  # Esc
-    brain.answer("late")
-    assert c.chat.messages == [] and c.questions.current is None and len(brain.asked) == 1
-    c.open_ask()
-    c.submit("third")
-    assert brain.asked[-1][1] == "third"  # nothing left waiting in front of it
 
 
 def test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes(companion, monkeypatch):
@@ -1147,33 +1082,26 @@ def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
     assert [r.text for r in c.reminders.upcoming()] == ["stretch"]
 
 
-class PretendDesk:
-    """The platform's readings, set by the test."""
+@pytest.fixture
+def quiet_desktop(monkeypatch):
+    """The computer the tests run on is in a presentation, with a full-screen window in front: as a CI runner's
+    desktop says it is."""
+    from chatmon import presence
 
-    def __init__(self):
-        self.idle, self.why_quiet, self.is_covered, self.motion, self.contrast, self.notice = 0.0, None, False, False, False, None
-        self.overlay_idle_since = None
+    monkeypatch.setattr(presence.Desk, "quiet", lambda self, stage_window=0: "a presentation")
+    monkeypatch.setattr(presence.Desk, "covered", lambda self, stage_window: True)
+    monkeypatch.setattr(presence.Desk, "reduce_motion", lambda self: True)
 
-    def idle_seconds(self):
-        return self.idle
 
-    def quiet(self, _window=0):
-        return self.why_quiet
-
-    def covered(self, _window):
-        return self.is_covered
-
-    def reduce_motion(self):
-        return self.motion
-
-    def high_contrast(self):
-        return self.contrast
-
-    def notice_seconds(self):
-        return self.notice
-
-    def close(self):
-        pass
+def test_the_computer_the_tests_run_on_holds_nothing_back(quiet_desktop, companion):
+    """Windows CI failed three smoke tests that passed here: its desktop said "quiet", and from the first look (five
+    seconds in) every bubble from the background waited. The companion's desk is the test's own."""
+    c = companion
+    c._check_quiet()
+    assert not c.messages.holding("quiet")
+    c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+    assert until(lambda: c.stage.bubble.title == "Claude finished")
+    assert c.behavior.walk_enabled  # the desktop's reduced motion didn't stop it either
 
 
 def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
@@ -1216,7 +1144,7 @@ def test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert(
     assert until(lambda: c.stage.bubble.title == "Codex finished")  # and only then the news
 
 
-def test_a_focus_session_holds_what_comes_on_its_own_until_its_over(companion):
+def test_a_focus_session_holds_what_comes_on_its_own_until_its_over_then_sums_it_up(companion):
     c = companion
     spin(1.8)  # the greeting, out of the way
     c.stage.dismiss_message()
@@ -1231,10 +1159,9 @@ def test_a_focus_session_holds_what_comes_on_its_own_until_its_over(companion):
     assert c.stage.bubble.title == "Codex needs you"  # what needs you doesn't wait for focus
     c.stage.dismiss_message()
     c.stop_focus()
-    assert until(lambda: c.stage.bubble.title == "Focus stopped")
-    c.stage.dismiss_message()
-    assert until(lambda: c.stage.bubble.title == "Claude finished") and not c.messages.holding("focus")
-    assert until(lambda: c.stage.bubble.title == "Sparky" and "Backup finished." in c.stage.bubble.doc.toPlainText())  # in turn
+    assert until(lambda: c.stage.bubble.title == "Focus stopped") and not c.messages.holding("focus")
+    said = c.stage.bubble.doc.toPlainText()  # what waited, in the one bubble (M7-05)
+    assert "While you focused" in said and "Claude finished" in said and "Backup finished." in said and c.messages.waiting == []
 
 
 def test_on_macos_an_ask_box_left_open_under_a_full_screen_app_holds_nothing_back(companion, monkeypatch):
@@ -1263,9 +1190,8 @@ def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(com
     shown = []
     monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
     monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: shown.append((title, text)))
-    from chatmon import sysnotify
-
-    monkeypatch.setattr(sysnotify, "send", lambda title, text: shown.append((title, text)) or True)  # Linux: tray or not
+    if c._notifier is not None:  # Linux: the desktop's notification server, tray or not
+        monkeypatch.setattr(c._notifier, "alert", lambda title, text, buttons=None, pressed=None, urgency=2: shown.append((title, text)) or True)
     desk.why_quiet, desk.is_covered = "a full-screen game", True
     c._check_quiet()
     c.alert("reminder:x", "Reminder", "**Stretch**")
@@ -1727,7 +1653,7 @@ def test_saving_settings_never_sets_it_walking_against_reduced_motion(companion,
     c = companion
     monkeypatch.setattr(autostart, "set_enabled", lambda on: None)
     c._walk_picked = False
-    c._reduce_motion = True  # the system asks for less movement
+    c.desk.motion = c._reduce_motion = True  # the system asks for less movement
     c.behavior.set_walk(c._walks(), c._now())
     assert not c.behavior.walk_enabled
     c.open_settings()
@@ -1789,15 +1715,15 @@ def test_a_screen_reader_hears_bubbles_alerts_and_answers(companion, monkeypatch
 
 
 def test_without_a_way_to_speak_linux_reads_it_through_a_notification(companion, monkeypatch):
-    from chatmon import sysnotify
+    from app_harness import PretendNotifier
 
     c = companion
     PretendReader(c, speaks=False)
-    sent = []
-    monkeypatch.setattr(sysnotify, "send", lambda title, text: sent.append((title, text)) or True)
+    c._notifier = PretendNotifier()  # sysnotify.Notifier, as Linux makes it
     monkeypatch.setattr(sys, "platform", "linux")
-    c.say("Reminder", "Stretch")
-    assert sent == [("Reminder", "Reminder. Stretch.")]
+    c.say("Reminder", "Stretch", [("Done", None)], timeout_s=None)
+    [(title, words, buttons)] = c._notifier.read  # read aloud, its buttons pressable there
+    assert title == "Reminder" and words.startswith("Reminder. Stretch.") and buttons == ["Done"]
 
 
 def test_reading_aloud_can_be_turned_off(companion):

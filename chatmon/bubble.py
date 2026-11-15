@@ -165,6 +165,12 @@ class Effects:
         if current < 1.0:
             self.start(now, current)
 
+    def playing(self, now: float, period: float) -> bool:
+        """Started and not yet settled onto the still picture. Not the same as a strength above 0: woken from the
+        still picture, they rise from 0, and on a clock that hasn't moved since (Windows' moves in steps of about
+        15 ms) that's still 0 at the moment they start."""
+        return self.since is not None and period > 0 and now - self.since < self.run(period) + EFFECTS_SETTLE
+
     @staticmethod
     def run(period: float) -> float:
         """Seconds at full strength: whole loops, so they settle where a loop ends."""
@@ -254,6 +260,7 @@ class SpeechBubble:
         self._shown_at = 0.0
         self._now = 0.0  # the clock as last told (show, tick)
         self._expires: float | None = None
+        self.timed_out = False  # the last one went because its time was up (not closed, nor pressed)
         self._closing_at: float | None = None
         self._hovered = False
         self._paused_at: float | None = None
@@ -317,7 +324,7 @@ class SpeechBubble:
         self._button_specs = list(buttons or [])
         self._shown_at, self._closing_at, self._now = now, None, now
         self._hovered, self._paused_at = False, None
-        self._visible = True
+        self._visible, self.timed_out = True, False
         self._effects.start(now)  # new words: the effects play again (the bubble itself fades in)
         self._layout()
         stay = self.timeout_policy.seconds(timeout_s, self.words())
@@ -478,6 +485,7 @@ class SpeechBubble:
     def tick(self, now: float) -> None:
         self._now = now
         if self._expires is not None and not self._hovered and now >= self._expires:
+            self.timed_out = True  # went by itself, not closed by anyone (on_close can tell)
             self.dismiss(now)
         if self._closing_at is not None and now - self._closing_at >= FADE:
             self._visible, self._closing_at = False, None
@@ -1077,10 +1085,14 @@ class AskBox(QWidget):
             return 0.0
         return self._effects.strength(now, self._period())
 
+    def _moving(self, now: float) -> bool:
+        """Whether its effects are playing (or rising from the still picture): frames to draw."""
+        return self.isVisible() and self.animate and self.art is not None and not self.power_saving and self._effects.playing(now, self._period())
+
     def anim_key(self, now: float) -> int:
         """Changes as often as its animated bubble needs drawing again; -1 when it doesn't (no effects, or
         they've settled)."""
-        if self.effects(now) > 0.0:
+        if self._moving(now):
             return int((now - self._opened_at) * ANIM_FPS)
         return -1
 
@@ -1096,7 +1108,7 @@ class AskBox(QWidget):
 
     def _run_frames(self) -> None:
         drawn_here = self.isVisible() and self.seen and not self.stage_draws_art
-        if drawn_here and self.effects(time.monotonic()) > 0.0:
+        if drawn_here and self._moving(time.monotonic()):
             self._frames.start()
         else:
             self._frames.stop()
@@ -1104,7 +1116,7 @@ class AskBox(QWidget):
     def _next_frame(self) -> None:
         """Draw the border again (only the border: nothing inside it moves), until the effects settle."""
         self.update(self._ring())
-        if self.effects(time.monotonic()) <= 0.0:
+        if not self._moving(time.monotonic()):
             self._frames.stop()  # that was the still picture: nothing more to draw
 
     def _ring(self) -> QRegion:
