@@ -1,0 +1,8 @@
+$ CHATMON_SWAY=1 python -m pytest -p no:cacheprovider -q -rs tests/test_sway.py tests/test_wayland.py   (ubuntu:24.04 container built from this Containerfile: apt sway (swaybg comes with it; the session never asks for a background), Python 3.12)
+sway version 1.9
+s.................ss................................                     [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_sway.py:111: wlr-protocols isn't installed
+SKIPPED [2] tests/test_sway.py:56: Orca isn't installed
+49 passed, 3 skipped in 105.54s (0:01:45)
+exit=0
