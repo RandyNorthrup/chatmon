@@ -122,7 +122,7 @@ PLANS: dict[str, dict[str, str]] = {
         "remains": (
             "**What remains, outside the criteria.** From 2026-11-28, when 6.12.1 can be hash-locked, the `types` job's check\n"
             "against the next stubs (P-CI-NEXT-STUBS, integration note 2): the coordinator. The upstream report on PyQt6's\n"
-            "stubs (note 4): the owner, with his PyQt mailing-list account."
+            "stubs (note 4): the owner, with the owner's PyQt mailing-list account."
         ),
         "closed": "",
     },

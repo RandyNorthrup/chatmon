@@ -59,7 +59,7 @@ operations, which are outcomes of a release, a merge or a date, not criteria
 | M7 Integration | closed | Nothing. |
 | M8 Translation | closed | Nothing. |
 | M9 Sounds (coordinator) | done | The owner accepted the cues as they are (2026-11-14). |
-| M10 Follow-ups | checkpoint | Every task is verified. One pending operation, not a criterion: **P-CI-NEXT-STUBS**, from 2026-11-28, when PyQt6 6.12.1 can be hash-locked, the `types` job's check against the next stubs (integration note 2), the coordinator. And for the owner: the upstream report on PyQt6's stubs (note 4), which needs his PyQt mailing-list account. |
+| M10 Follow-ups | checkpoint | Every task is verified. One pending operation, not a criterion: **P-CI-NEXT-STUBS**, from 2026-11-28, when PyQt6 6.12.1 can be hash-locked, the `types` job's check against the next stubs (integration note 2), the coordinator. And for the owner: the upstream report on PyQt6's stubs (note 4), which needs the owner's PyQt mailing-list account. |
 | Consolidation | the coordinator's | Version 0.10.0, README and changelog. PR #18 (`improve/assessment-fixes` to `main`) is open at 45a17b3. |
 
 ## For a person before release, not covered by any criterion

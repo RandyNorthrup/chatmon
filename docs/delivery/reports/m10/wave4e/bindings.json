@@ -378,6 +378,6 @@
    "next_action": "From 2026-11-28 (the coordinator): packaging/requirements-types-next.in with PyQt6==6.12.1, psutil==7.2.2 and mypy==2.4.1, locked with the documented command; tests/test_requirements.py taught about it; the types job's stubs axis, as the integration note gives it."
   }
  ],
- "next_action": "None in M10's criteria on 45a17b3. From 2026-11-28, the coordinator: the types job's check against PyQt6 6.12.1's stubs (P-CI-NEXT-STUBS, integration note 2). The owner: the upstream report on PyQt6's stubs (note 4), which needs his PyQt mailing-list account.",
+ "next_action": "None in M10's criteria on 45a17b3. From 2026-11-28, the coordinator: the types job's check against PyQt6 6.12.1's stubs (P-CI-NEXT-STUBS, integration note 2). The owner: the upstream report on PyQt6's stubs (note 4), which needs the owner's PyQt mailing-list account.",
  "source_revision": "45a17b37fb25590a62fe3391379f7c8d2870da29"
 }

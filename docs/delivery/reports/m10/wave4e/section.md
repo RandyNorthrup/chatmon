@@ -22,7 +22,7 @@ in the CI-shaped venv and its red drill ran again too, and passed ([wave4e/locks
 
 **What remains, outside the criteria.** From 2026-11-28, when 6.12.1 can be hash-locked, the `types` job's check
 against the next stubs (P-CI-NEXT-STUBS, integration note 2): the coordinator. The upstream report on PyQt6's
-stubs (note 4): the owner, with his PyQt mailing-list account.
+stubs (note 4): the owner, with the owner's PyQt mailing-list account.
 
 **Receipts.** The stale ones are kept as history, with their hashes untouched; the W4E- receipts replace
 them.
