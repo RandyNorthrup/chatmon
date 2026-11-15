@@ -1,0 +1,1761 @@
+# The words Chatmon shows, for translating. A translation is a copy of this file in this folder, named for its
+# language (de.po, pt_BR.po), with each msgstr filled in and the Plural-Forms line set for the language. Leave a
+# {name} placeholder as it is; the words around it can go in any order. Chatmon shows English wherever a msgstr
+# is empty or marked fuzzy.
+#
+# packaging/extract_strings.py writes this file from the code: don't edit it by hand.
+msgid ""
+msgstr ""
+"Project-Id-Version: Chatmon\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#. Translators: a button's label, quoted, in the sentence that says what to type to press it.
+#: chatmon/a11y.py
+#, python-brace-format
+msgid "“{label}”"
+msgstr ""
+
+#: chatmon/a11y.py
+#, python-brace-format
+msgid "To answer, type {buttons} in the chat."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "{file} isn't valid JSON ({error}); not touching it."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "{file} isn't a JSON object; not touching it."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Connected {agent}: {file} (backup: {backup})"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Connected {agent}: {file}"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Disconnected {agent}: {file} (backup: {backup})"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Disconnected {agent}: {file}"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "{agent} wasn't connected."
+msgstr ""
+
+#: chatmon/agents.py
+msgid "connected"
+msgstr ""
+
+#: chatmon/agents.py
+msgid "found"
+msgstr ""
+
+#: chatmon/agents.py
+msgid "not found"
+msgstr ""
+
+#: chatmon/agents.py
+msgid "installed but off"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "\"hooks\" in {file} isn't an object; not touching it."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid ""
+"Merge into {file}:\n"
+"{snippet}"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "{program} isn't installed."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "{command} failed: {error}"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "I don't start {agent}'s command line with administrator rights (it's found in folders you can write to). Run `chatmon hooks` as yourself to change {agent}."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "{app} has to be on your PATH for agent plugins to find it. Install it with `pipx install git+https://github.com/RandyNorthrup/chatmon`, or link the launcher: ln -s <repo>/bin/{app} ~/.local/bin/"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Claude Code's settings are here ({folder}), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Removed Claude Code's {plugin} plugin (it was off)"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "{problem} In Claude Code, run `/plugin marketplace add {folder}`, then `/plugin install {plugin}`."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Connected Claude Code: the {plugin} plugin is installed and on. It takes effect in new Claude Code sessions; a session that's open now can switch it off again when it saves its settings, so connect again after closing those if `chatmon hooks` says it's off."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Disconnected Claude Code: removed the marketplace Chatmon gave it ({folder}), so it drops the {plugin} plugin when it next starts"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Disconnected Claude Code: uninstalled the {plugin} plugin"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid ""
+"In Claude Code, run:\n"
+"  /plugin install chatmon --marketplace RandyNorthrup/chatmon\n"
+"or from a terminal:\n"
+"  claude plugin marketplace add {marketplace}\n"
+"  claude plugin install {plugin}\n"
+"The plugin runs `{app} notify ...`, so {app} has to be on your PATH."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "{file} isn't valid TOML ({error}); not touching it."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Couldn't find Chatmon's notify line in {file} on a line of its own; not touching the file."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Codex already runs {program} when a turn ends, and it takes only one program. Not replacing it; see `chatmon hooks show codex` to do it by hand."
+msgstr ""
+
+#: chatmon/agents.py
+msgid "Couldn't add the notify line cleanly; not touching the file."
+msgstr ""
+
+#: chatmon/agents.py
+msgid "Couldn't take the notify line out cleanly; not touching the file."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid ""
+"Add near the top of {file}, before any [table]:\n"
+"{line}"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Connected Muse Code: installed and approved its {plugin} plugin (from {folder})"
+msgstr ""
+
+#: chatmon/agents.py
+msgid "Only Muse Code's own command line can remove its plugin, and I don't start it with administrator rights. Run `chatmon hooks disconnect muse` as yourself."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Disconnected Muse Code: removed its {plugin} plugin"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid ""
+"Save this as <folder>/.muse-plugin/plugin.json, then run\n"
+"  muse plugins install <folder> --scope user && muse plugins approve {plugin}\n"
+"{manifest}"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Disconnected {agent}: removed {files}"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid ""
+"Save as {file}:\n"
+"{content}"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "You already have Cline hooks for {events}; not replacing them. See `chatmon hooks show cline`."
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Connected Cline: hook scripts in {folder} (Cline's \"Enable Hooks\" setting has to be on)"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "Disconnected Cline: removed {n} hook script"
+msgid_plural "Disconnected Cline: removed {n} hook scripts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid "In {folder}, one executable file per event:"
+msgstr ""
+
+#: chatmon/agents.py
+#, python-brace-format
+msgid ""
+"Any other agent or script: have its hooks run\n"
+"  {command} notify working   --source NAME    # started on something\n"
+"  {command} notify needs-you --source NAME 'Approve the deploy?'\n"
+"  {command} notify done      --source NAME    # finished\n"
+"Add --stdin if the hook hands over a JSON payload on stdin. The command prints nothing\n"
+"and always succeeds, so it can't block or change what the agent does.\n"
+"\n"
+"Aider:  aider --notifications-command '{command} notify done --source aider'\n"
+"Kiro:   add a Shell Command hook on Prompt Submit / Agent Stop that runs the lines above.\n"
+"OpenCode, Amp: these take JavaScript plugins; have one run the lines above on their events."
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{size} MB"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{size} KB"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "cut to its first {size} KB"
+msgstr ""
+
+#: chatmon/attachments.py
+msgid "pasted text"
+msgstr ""
+
+#: chatmon/attachments.py
+msgid "pasted image"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{file} isn't an image Chatmon can read"
+msgstr ""
+
+#: chatmon/attachments.py
+msgid "made smaller"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{file} is too big to send, even made smaller"
+msgstr ""
+
+#. Translators: where a file is, said in "{file} is on {place}: copy it to this computer to attach it".
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "a network drive ({kind})"
+msgstr ""
+
+#. Translators: where a file is, said in "{file} is on {place}: copy it to this computer to attach it".
+#: chatmon/attachments.py
+msgid "a FUSE drive, which may be on the network"
+msgstr ""
+
+#: chatmon/attachments.py
+msgid "a network share"
+msgstr ""
+
+#: chatmon/attachments.py
+msgid "a network drive"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{file} is on {place}: copy it to this computer to attach it"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "couldn't open {file} ({error})"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{file} isn't a file"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{file} changed as it was opened"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "couldn't read {file} ({error})"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{file} is too big ({size} MB)"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{file} is too big ({size} MB at most for a PDF)"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{file} isn't text, an image or a PDF"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "{count} attachments at most"
+msgstr ""
+
+#: chatmon/attachments.py
+#, python-brace-format
+msgid "that's past {size} MB in all"
+msgstr ""
+
+#. Translators: where macOS lists the apps that start at login; use Apple's own names for them.
+#: chatmon/autostart.py
+msgid "Login Items, in System Settings › General"
+msgstr ""
+
+#: chatmon/backup.py
+msgid "your settings"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{n} thing remembered"
+msgid_plural "{n} things remembered"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{n} note"
+msgid_plural "{n} notes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{n} reminder"
+msgid_plural "{n} reminders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{n} chat"
+msgid_plural "{n} chats"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/backup.py
+msgid "nothing"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{file} is too big to be a Chatmon backup"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{file} isn't a Chatmon backup ({error}: it can't be opened as a zip file)"
+msgstr ""
+
+#: chatmon/backup.py
+msgid "a name twice"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{file} holds things a Chatmon backup doesn't ({what}), so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{file} isn't a Chatmon backup (it has no {part})"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{file} holds more chats than Chatmon keeps"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{part} in {file} unpacks far bigger than any Chatmon file, so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{file} unpacks far bigger than any Chatmon backup, so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{part} in {file} is damaged, so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{file} isn't a Chatmon backup"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{file} was made by a newer Chatmon: update this one, then bring it back"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "the settings in {file} aren't in the right shape, so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "what's remembered in {file} isn't in the right shape, so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "the notes in {file} aren't in the right shape, so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "the reminders in {file} aren't in the right shape, so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "{part} in {file} isn't a chat, so nothing was read"
+msgstr ""
+
+#: chatmon/backup.py
+#, python-brace-format
+msgid "Brought back {what}."
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "effort {level}"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "thinking on"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "thinking off"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "thinking {mode}"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "not a model name"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "it has no effort setting"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "this model doesn't take {effort}"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "it has no thinking setting"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "this model can't turn thinking on"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "this model can't turn thinking off"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "this model can't turn thinking {mode}"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{program} not found"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "not running"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{variables} not set"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "not set up"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "this model always thinks; lower its effort instead"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "thinking can be off only at effort high or below"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "not known to be possible on this model"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "text"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "a list of text"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "a table of lists"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "a table of tables"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "a table of text"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "a table"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "true or false"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{setting} should be {kind}, so it's left out"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{variable} isn't a plain name, so it can't go in the URL"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{url} isn't HTTPS; only a server on this computer may use plain HTTP"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain} can read files on this computer, so I don't give it attachments: one could tell it to read your other files. Claude Code, Muse Code, an API or a model server here can take them."
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain} runs here with its tools off, so it can be given text but not pictures or PDFs. For those, pick an API under **Brain** (or a model server here that can see images)."
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain} can't read PDFs this way. The Anthropic and OpenAI APIs can, or attach the text instead."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "the API returned an error"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "it declined to answer that one"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "the answer came back empty"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "the answer wasn't in the expected shape"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "it answered with a redirect, which isn't followed (the key goes only where the settings say)"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "it has no model loaded"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "Check its key in {variable} or the one saved in Settings."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "Check its key in Settings."
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "Check its key in {variable} or the one saved in Settings, and that it may use this model."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "Check its key in Settings, and that it may use this model."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "Check the model's name and the brain's URL in the settings."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "It's rate limited: wait a little, or check your plan's limits."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "The provider is having trouble: try again in a while."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "it refused the question"
+msgstr ""
+
+#. Translators: an HTTP error: the provider's own words (or "it refused the question"), then what to do about it.
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{error} (HTTP {status}). {advice}"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "couldn't find {host}: are you offline?"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "nothing is answering at {host}: is it running?"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{host} refused the connection"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "the connection to {host} failed ({error}): are you offline?"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "the secure connection to {host} failed ({error})"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "it declined to answer that one ({reason})"
+msgstr ""
+
+#: chatmon/brains.py
+msgid "it stopped with an error"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain}: {error}."
+msgstr ""
+
+#. Translators: {option} is "{prompt_file}", a setting's own word, to be written as it is.
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain}: {program} is run by cmd.exe, which can't be handed a question safely; use {option} or stdin."
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain} didn't answer ({reason})."
+msgstr ""
+
+#: chatmon/brains.py chatmon/updates.py
+#, python-brace-format
+msgid "exit code {code}"
+msgstr ""
+
+#: chatmon/brains.py chatmon/keychain.py
+msgid "no answer"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "Couldn't start {program}."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "no model list."
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain}: {error}"
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain}: the answer was too long to read."
+msgstr ""
+
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain} took too long to answer."
+msgstr ""
+
+#: chatmon/brains.py
+msgid "The brain took too long to answer."
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "More"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Undo"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Redo"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Cut"
+msgstr ""
+
+#: chatmon/bubble.py chatmon/richtext.py
+msgid "Copy"
+msgstr ""
+
+#: chatmon/bubble.py chatmon/macnative.py
+msgid "Paste"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Delete"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Select All"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "History"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Your earlier chats: pick one to carry on"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "New chat"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Close (Esc)"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Close"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Conversation"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Stop"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Stop this answer"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Stop the answer"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Attach files, a picture or text (or paste them in)"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Attach"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Files, a picture or text; or paste them in"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Esc to close"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Make the box smaller"
+msgstr ""
+
+#: chatmon/bubble.py
+msgid "Make the box bigger"
+msgstr ""
+
+#: chatmon/bubble.py
+#, python-brace-format
+msgid "{brain} is answering…"
+msgstr ""
+
+#. Translators: "s" is seconds, counting up while an answer is awaited.
+#: chatmon/bubble.py
+#, python-brace-format
+msgid "{brain} is answering… {seconds} s"
+msgstr ""
+
+#: chatmon/bubble.py
+#, python-brace-format
+msgid "{attachment}: click to take it off"
+msgstr ""
+
+#: chatmon/bubble.py
+#, python-brace-format
+msgid "Remove {attachment}"
+msgstr ""
+
+#: chatmon/bubble.py
+#, python-brace-format
+msgid "+{n} more"
+msgid_plural "+{n} more"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/chats.py
+msgid "A chat with Chatmon"
+msgstr ""
+
+#: chatmon/chats.py
+#, python-brace-format
+msgid "**You:** {text}"
+msgstr ""
+
+#: chatmon/chats.py
+msgid "**You:**"
+msgstr ""
+
+#: chatmon/chats.py
+#, python-brace-format
+msgid "*Attached: {files}*"
+msgstr ""
+
+#: chatmon/chats.py
+msgid "just now"
+msgstr ""
+
+#: chatmon/chats.py
+#, python-brace-format
+msgid "{n} min ago"
+msgid_plural "{n} min ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/chats.py
+#, python-brace-format
+msgid "today {time}"
+msgstr ""
+
+#: chatmon/chats.py
+msgid "yesterday"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Electric penguin"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Penguin"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Fire red panda"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Panda"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Ghost rabbit"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Rabbit"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Fairy axolotl"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Axolotl"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Leaf pangolin"
+msgstr ""
+
+#: chatmon/companions.py
+msgid "Pangolin"
+msgstr ""
+
+#: chatmon/heads_up.py
+msgid "Battery almost empty"
+msgstr ""
+
+#: chatmon/heads_up.py
+#, python-brace-format
+msgid "Battery at {percent}%. Plug in now."
+msgstr ""
+
+#: chatmon/heads_up.py
+msgid "Battery low"
+msgstr ""
+
+#: chatmon/heads_up.py
+#, python-brace-format
+msgid "Battery at {percent}%. Time to find the charger."
+msgstr ""
+
+#: chatmon/heads_up.py
+#, python-brace-format
+msgid "The disk holding {folder} is {percent}% full."
+msgstr ""
+
+#: chatmon/heads_up.py
+msgid "Disk almost full"
+msgstr ""
+
+#: chatmon/heads_up.py
+msgid "Restart to finish updating"
+msgstr ""
+
+#: chatmon/heads_up.py
+msgid "Your computer has installed updates that need a restart to finish."
+msgstr ""
+
+#: chatmon/heads_up.py
+#, python-brace-format
+msgid "{n} system update waiting to install."
+msgid_plural "{n} system updates waiting to install."
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/heads_up.py
+msgid "Updates waiting"
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "{combo} is already used by another app. Pick another shortcut."
+msgstr ""
+
+#. Translators: "chatmon ask" is a command to type, as it is.
+#: chatmon/hotkey.py
+msgid "This desktop doesn't let apps have shortcuts of their own (it has no GlobalShortcuts portal). You can set one in your desktop's keyboard settings that runs: chatmon ask"
+msgstr ""
+
+#. Translators: key names in a shortcut are written in English, as Chatmon reads them: Ctrl+Alt+Space.
+#: chatmon/hotkey.py
+msgid "A shortcut needs a key, such as Ctrl+Alt+Space."
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "\"{shortcut}\" isn't a shortcut: write it like Ctrl+Alt+Space."
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "Chatmon doesn't know the key \"{key}\"."
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "A shortcut has one key, not {key} and {other}."
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "\"{shortcut}\" needs a key as well, such as Space."
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "{shortcut} would take that key from every app you type in: add Ctrl, Alt or Meta."
+msgstr ""
+
+#: chatmon/hotkey.py
+msgid "Windows wouldn't make the shortcut's window"
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "Windows wouldn't set up {shortcut} (error {error})."
+msgstr ""
+
+#: chatmon/hotkey.py
+msgid "Carbon wouldn't install the shortcut's handler"
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "Macs have no {key} key."
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "macOS wouldn't set up {shortcut} (error {error})."
+msgstr ""
+
+#: chatmon/hotkey.py
+msgid "There's no X display to set a shortcut on."
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "This keyboard has no {key} key."
+msgstr ""
+
+#: chatmon/hotkey.py
+#, python-brace-format
+msgid "X wouldn't set up {shortcut} (error {error})."
+msgstr ""
+
+#: chatmon/hotkey.py
+msgid "There's no display to set a shortcut on."
+msgstr ""
+
+#: chatmon/hotkey.py
+msgid "Shortcuts can't be set here."
+msgstr ""
+
+#. Translators: a list of three or more, up to its last item: "tacos, sushi" in "tacos, sushi and pizza".
+#: chatmon/i18n.py
+#, python-brace-format
+msgid "{list}, {item}"
+msgstr ""
+
+#. Translators: a list's last item: "tacos and sushi", "tacos, sushi and pizza".
+#: chatmon/i18n.py
+#, python-brace-format
+msgid "{list} and {last}"
+msgstr ""
+
+#. Translators: one more choice: "“Yes” or “No”", "“Yes” or “No” or “Later”".
+#: chatmon/i18n.py
+#, python-brace-format
+msgid "{choices} or {choice}"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "memory only"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "the keychain couldn't save it"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "the keychain couldn't remove it"
+msgstr ""
+
+#. Translators: use the name Windows itself gives the Credential Manager in your language.
+#: chatmon/keychain.py
+msgid "Windows Credential Manager"
+msgstr ""
+
+#: chatmon/keychain.py
+#, python-brace-format
+msgid "the Credential Manager couldn't be read (error {error})"
+msgstr ""
+
+#: chatmon/keychain.py
+#, python-brace-format
+msgid "that key is too long for the Credential Manager ({count} characters at most)"
+msgstr ""
+
+#: chatmon/keychain.py
+#, python-brace-format
+msgid "the Credential Manager couldn't save it (error {error})"
+msgstr ""
+
+#: chatmon/keychain.py
+#, python-brace-format
+msgid "the Credential Manager couldn't remove it (error {error})"
+msgstr ""
+
+#. Translators: use the name macOS itself gives the Keychain in your language.
+#: chatmon/keychain.py
+msgid "macOS Keychain"
+msgstr ""
+
+#: chatmon/keychain.py
+#, python-brace-format
+msgid "the Keychain couldn't be read (error {error})"
+msgstr ""
+
+#: chatmon/keychain.py
+#, python-brace-format
+msgid "the Keychain couldn't save it (error {error})"
+msgstr ""
+
+#: chatmon/keychain.py
+#, python-brace-format
+msgid "the Keychain couldn't remove it (error {error})"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "your desktop's keyring (Secret Service)"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "there's no desktop session bus to reach a keyring over"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "no keyring is running (GNOME Keyring, KWallet or KeePassXC can be one)"
+msgstr ""
+
+#: chatmon/keychain.py
+#, python-brace-format
+msgid "the keyring said no ({error})"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "your keyring has no default collection to keep it in"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "your keyring asked to confirm: answer it, then save again"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "your keyring asked to confirm: answer it, then remove it again"
+msgstr ""
+
+#: chatmon/keychain.py
+msgid "your keyring is locked: unlock it in the window it opened, then try again"
+msgstr ""
+
+#: chatmon/macnative.py
+msgid "Edit"
+msgstr ""
+
+#: chatmon/memory.py
+msgid "There's nothing there to remember."
+msgstr ""
+
+#: chatmon/memory.py
+#, python-brace-format
+msgid "That's a lot to remember at once: up to {count} characters, please."
+msgstr ""
+
+#: chatmon/memory.py
+#, python-brace-format
+msgid "I remember {count} things already. Forget one first (*what do you remember* lists them)."
+msgstr ""
+
+#. Translators: why a sum has no answer, said after "Hmm:" (as are the others like it).
+#: chatmon/offline.py
+msgid "can't divide by zero"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "that can't be worked out"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "that has no real answer"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "length"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "mass"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "volume"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "speed"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "data"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "time"
+msgstr ""
+
+#. Translators: "5 km in kg": "km is a length and kg a mass: one can't be turned into the other."
+#: chatmon/offline.py
+#, python-brace-format
+msgid "{unit} is a {kind} and {other_unit} a {other_kind}: one can't be turned into the other."
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "It's **{time}**."
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "Today is **{date}**."
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "It's week **{week}** of {year}."
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "{day} is **today**!"
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "**{n} day** until {day}."
+msgid_plural "**{n} days** until {day}."
+msgstr[0] ""
+msgstr[1] ""
+
+#. Translators: "**44 days** until Christmas (Fri Dec 25)."
+#: chatmon/offline.py
+#, python-brace-format
+msgid "**{n} day** until {name} ({day})."
+msgid_plural "**{n} days** until {name} ({day})."
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/offline.py
+msgid "Heads"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "Tails"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "I can roll 1 to 100 dice, of 2 to 1000 sides."
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "**{number}**  (from {low} to {high})"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "A password of 8 to 128 characters, please."
+msgstr ""
+
+#: chatmon/offline.py
+msgid "Made here, from your system's own randomness. I don't keep it anywhere: copy it now."
+msgstr ""
+
+#: chatmon/offline.py
+msgid "under a minute"
+msgstr ""
+
+#: chatmon/offline.py chatmon/reminders.py
+#, python-brace-format
+msgid "{minutes} min"
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "{hours} h {minutes} min"
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "{hours} h"
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "{n} day"
+msgid_plural "{n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/offline.py
+msgid "No AI agent is working or waiting for you."
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "{agent} needs you (waiting {time})"
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "{agent} is working ({time} so far)"
+msgstr ""
+
+#: chatmon/offline.py
+msgid "That's too big a number for me."
+msgstr ""
+
+#: chatmon/offline.py
+#, python-brace-format
+msgid "Hmm: {problem}."
+msgstr ""
+
+#: chatmon/penguin.py
+#, python-brace-format
+msgid "{n} agent needs you"
+msgid_plural "{n} agents need you"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/penguin.py
+#, python-brace-format
+msgid "{n} agent working"
+msgid_plural "{n} agents working"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Translators: a badge read out by a screen reader: "1 agent needs you, 2 agents working".
+#: chatmon/penguin.py
+#, python-brace-format
+msgid "{needs_you}, {working}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every Monday at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every Tuesday at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every Wednesday at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every Thursday at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every Friday at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every Saturday at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every Sunday at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every day at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "every weekday at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+msgid "Reminder"
+msgstr ""
+
+#: chatmon/reminders.py
+msgid "Timer"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "I can't tell which day \"{words}\" is: day and month come in either order. Write the month's name (*apr 3*), or the year first (*2027-04-03*)."
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "I couldn't tell when \"{words}\" is. Try one day and one time, like *friday at 3pm*, *dec 3 at 9am*, *in 2 hours* or *every weekday at 9*."
+msgstr ""
+
+#: chatmon/reminders.py
+msgid "When should I remind you? Try *remind me in 20m to stretch* or *remind me at 3pm to call Sam*."
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "in {n} min"
+msgid_plural "in {n} min"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/reminders.py
+msgid "a long way off"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "was due at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "tomorrow at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "was due on {day} at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "on {day} at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: chatmon/reminders.py
+#, python-brace-format
+msgid "Tomorrow at {time}"
+msgstr ""
+
+#: chatmon/reminders.py
+msgid "a snooze needs a time"
+msgstr ""
+
+#: chatmon/reminders.py
+msgid "a reminder needs some words"
+msgstr ""
+
+#: chatmon/reminders.py
+msgid "a reminder needs a time"
+msgstr ""
+
+#: chatmon/richtext.py
+msgid "Copy this code"
+msgstr ""
+
+#: chatmon/richtext.py
+msgid "Copy this answer"
+msgstr ""
+
+#: chatmon/richtext.py
+msgid "Copy code"
+msgstr ""
+
+#: chatmon/shortcutportal.py
+msgid "Open Chatmon's ask box"
+msgstr ""
+
+#: chatmon/shortcutportal.py
+msgid "Your desktop didn't set the shortcut: it was turned down, or those keys are taken."
+msgstr ""
+
+#: chatmon/shortcutportal.py
+msgid "Your desktop couldn't set the shortcut."
+msgstr ""
+
+#: chatmon/shortcutportal.py
+msgid "Your desktop took Chatmon's shortcut away."
+msgstr ""
+
+#: chatmon/shortcutportal.py
+msgid "Chatmon couldn't reach your desktop's session bus."
+msgstr ""
+
+#: chatmon/styles.py
+msgid "Electric"
+msgstr ""
+
+#: chatmon/styles.py
+msgid "Fire"
+msgstr ""
+
+#: chatmon/styles.py
+msgid "Ghost"
+msgstr ""
+
+#: chatmon/styles.py
+msgid "Fairy"
+msgstr ""
+
+#: chatmon/styles.py
+msgid "Leaf"
+msgstr ""
+
+#: chatmon/styles.py
+msgid "Plain (desktop colours)"
+msgstr ""
+
+#: chatmon/updates.py
+msgid "Download its installer from the release page, and run it."
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "This Chatmon runs from a folder you installed it from: `{command}` there to update."
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "Quit Chatmon, then run `{command}`."
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "Update with `{command}`, or download an installer from the release page."
+msgstr ""
+
+#: chatmon/updates.py
+msgid "the download doesn't match the release's checksum"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "its signing certificate has been revoked ({signer})"
+msgstr ""
+
+#: chatmon/updates.py
+msgid "its signing certificate has been revoked"
+msgstr ""
+
+#: chatmon/updates.py
+msgid "Windows couldn't check that its signing certificate hasn't been revoked (are you offline?)"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "its signature isn't Randy Northrup's ({status}, {signer})"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "its signature isn't Randy Northrup's ({status})"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "it couldn't be copied to be installed ({error})"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "couldn't reach GitHub ({error})"
+msgstr ""
+
+#: chatmon/updates.py
+msgid "GitHub's answer was far bigger than it should be"
+msgstr ""
+
+#: chatmon/updates.py
+msgid "GitHub's answer about the latest release wasn't readable"
+msgstr ""
+
+#: chatmon/updates.py
+msgid "You're on a metered connection, so I haven't downloaded it. **Check for updates now** in my menu downloads it anyway."
+msgstr ""
+
+#: chatmon/updates.py
+msgid "its list of checksums isn't signed with Chatmon's release key"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "the release's signed list has no checksum for {file}"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "couldn't save the download ({error})"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "the download didn't finish ({error})"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "{why}; I'll look again in an hour"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "couldn't check the download ({error})"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "couldn't keep the download ({error})"
+msgstr ""
+
+#: chatmon/updates.py
+msgid "There's no update ready to install."
+msgstr ""
+
+#: chatmon/updates.py
+msgid "This Chatmon can't install updates itself."
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "The update wasn't installed yet: {why}. Try again once you're online."
+msgstr ""
+
+#: chatmon/updates.py
+msgid "it could not be checked"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "The update wasn't installed: {why}."
+msgstr ""
+
+#: chatmon/updates.py
+msgid "The update wasn't installed: its installer couldn't start."
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "The update wasn't installed: {program} couldn't start."
+msgstr ""
+
+#: chatmon/updates.py
+msgid "The update wasn't installed: the password prompt was closed."
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "The update wasn't installed: there's no password prompt running to ask you (a polkit agent). In a terminal: `{command}`"
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "The update wasn't installed ({detail})."
+msgstr ""
+
+#: chatmon/updates.py
+#, python-brace-format
+msgid "Couldn't check for updates: {why}."
+msgstr ""
+
+#: chatmon/wintoast.py
+msgid "Notifications from Chatmon are turned off in Windows' settings."
+msgstr ""
+
+#: chatmon/wintoast.py
+msgid "Notifications are turned off in Windows' settings."
+msgstr ""
+
+#: chatmon/wintoast.py
+msgid "Notifications are turned off by your organization."
+msgstr ""
+
+#: chatmon/wintoast.py
+msgid "Toasts are Windows' own."
+msgstr ""
+
+#: chatmon/wintoast.py
+msgid "Chatmon has no app ID for Windows to show its notifications under."
+msgstr ""
+
+#: chatmon/wintoast.py
+msgid "This Windows has no toasts."
+msgstr ""
+
+#: chatmon/wintoast.py
+msgid "Windows couldn't show the notification."
+msgstr ""
+
+#: chatmon/winuia.py
+msgid "Chatmon announcements"
+msgstr ""

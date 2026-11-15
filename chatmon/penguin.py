@@ -52,6 +52,7 @@ from PyQt6.QtWidgets import QApplication, QFrame, QGraphicsScene, QGraphicsView,
 from . import bubble as bubbles
 from . import clickthrough, layer
 from .behavior import Behavior, Frame
+from .i18n import _, ngettext
 from .bubble import SpeechBubble
 from .bubbleart import device_ratio
 from .sprites import Sprites
@@ -711,12 +712,12 @@ class Stage(QObject):
     def badge_description(self) -> str:
         """The badge in words, for a screen reader: "1 agent needs you, 2 agents working"; "" without one."""
         working, waiting = self._badge
-        parts = []
-        if waiting:
-            parts.append(f"{waiting} agent needs you" if waiting == 1 else f"{waiting} agents need you")
-        if working:
-            parts.append(f"{working} agent working" if working == 1 else f"{working} agents working")
-        return ", ".join(parts)
+        needs_you = ngettext("{n} agent needs you", "{n} agents need you", waiting).format(n=waiting)
+        busy = ngettext("{n} agent working", "{n} agents working", working).format(n=working)
+        if waiting and working:
+            # Translators: a badge read out by a screen reader: "1 agent needs you, 2 agents working".
+            return _("{needs_you}, {working}").format(needs_you=needs_you, working=busy)
+        return needs_you if waiting else busy if working else ""
 
     def follow_pointer_screen(self, on: bool) -> bool:
         """Come over to the screen the pointer is on once it has stayed there FOLLOW_AFTER (an option, off by

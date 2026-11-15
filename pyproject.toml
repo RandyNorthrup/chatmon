@@ -81,6 +81,7 @@ chatmon = [
     "integrations/claude/.claude-plugin/marketplace.json",
     "integrations/claude/chatmon/.claude-plugin/plugin.json",
     "integrations/claude/chatmon/hooks/hooks.json",
+    "locale/*",  # the template, and each translation (.po) beside it: adding a language adds a file and nothing here
     "phrases/*.json",
     "sounds/*.wav",
 ]

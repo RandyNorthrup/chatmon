@@ -1,0 +1,34 @@
+# M8-01 re-check on cac0047 (2026-11-14T23:34:04Z)
+$ git grep -n -E "gettext|QTranslator|installTranslator|tr\(" cac0047 -- chatmon
+(no lines: there is no translation layer)
+
+$ git grep -c -E "f\"[^\"]*\{[^}]*\}[^\"]* (s|es)\"|'s' if .* != 1|\"s\" if" cac0047 -- chatmon/*.py
+cac0047:chatmon/agents.py:94:        copy = path.with_name(stamp if n == 1 else f"{stamp}-{n}")  # two in one second: -2, -3...
+cac0047:chatmon/app.py:794:        self.say("Chat history cleared", f"{gone} chat{'s' if gone != 1 else ''} deleted.", timeout_s=5)
+cac0047:chatmon/commands.py:214:    return f"Deleted {n} note{'s' if n != 1 else ''}."
+cac0047:chatmon/commands.py:257:    return f"Cancelled {len(upcoming)} reminder{'s' if len(upcoming) != 1 else ''}."
+cac0047:chatmon/heads_up.py:288:        plural = "s" if count != 1 else ""
+cac0047:chatmon/offline.py:299:        return f"**{days} day{'s' if days != 1 else ''}** until {name}" + (f" ({localefmt.short_day(d)})." if name != _day(d) else ".")
+cac0047:chatmon/offline.py:577:    return f"{days} day{'s' if days != 1 else ''}"
+cac0047:chatmon/penguin.py:716:            parts.append(f"{waiting} agent needs you" if waiting == 1 else f"{waiting} agents need you")
+cac0047:chatmon/penguin.py:718:            parts.append(f"{working} agent working" if working == 1 else f"{working} agents working")
+cac0047:chatmon/reminders.py:456:        return f"{hours} hour{'s' if hours != 1 else ''}"
+
+$ git show cac0047:chatmon/app.py | sed -n "807p;1224p;1251p;98,100p;2041,2046p"  (the fragments the assessment cites)
+        self._high_contrast = self.desk.high_contrast()
+        self._walk_picked = "walk" in (self.state.get("settings") or {})  # turned on or off by you: reduce-motion no longer decides
+        self.brains = brains.load_brains(self.config["ai"])
+        menu = QMenu()
+        try:  # D-Bus: Linux and the BSDs
+        self._screen_locked(going)
+        if "context_tokens" in changed:
+            self.state.set("context_tokens", int(changed["context_tokens"]))
+        if "memory" in changed:
+            self.memory.items = [memory.Item(t, time.time()) for t in changed["memory"]][: memory.MAX_ITEMS]
+            self.memory.save()
+        for key, path in self.SETTINGS_PATHS.items():
+
+The assessment's app.py line numbers (807, 1224, 1251, 98-100, 2041-2046) predate M0's split of app.py into
+messages/asking/menus/commands: on cac0047 they point at other code. The fragment-built sentences they named
+are still there, in app.py, menus.py and commands.py (the plural lines above, among others): all M7-owned files,
+so phase B. Finding confirmed: no translation layer, and sentences built from fragments and "s" plurals.

@@ -19,6 +19,7 @@ from collections.abc import Callable
 
 from . import libdbus
 from .hotkey import KEYS, NO_PORTAL, Combo
+from .i18n import N_, _
 
 SERVICE = "org.freedesktop.portal.Desktop"
 PATH = "/org/freedesktop/portal/desktop"
@@ -26,12 +27,13 @@ SHORTCUTS = "org.freedesktop.portal.GlobalShortcuts"
 REQUEST = "org.freedesktop.portal.Request"
 SESSION = "org.freedesktop.portal.Session"
 SHORTCUT_ID = "chatmon-ask"
-DESCRIPTION = "Open Chatmon's ask box"
+# What the desktop lists the shortcut as, and why it failed: each shown translated, _(DESCRIPTION) and so on.
+DESCRIPTION = N_("Open Chatmon's ask box")
 OK, CANCELLED = 0, 1  # Response codes; 2: it ended some other way
-DECLINED = "Your desktop didn't set the shortcut: it was turned down, or those keys are taken."
-BROKEN = "Your desktop couldn't set the shortcut."
-CLOSED = "Your desktop took Chatmon's shortcut away."
-NO_BUS = "Chatmon couldn't reach your desktop's session bus."
+DECLINED = N_("Your desktop didn't set the shortcut: it was turned down, or those keys are taken.")
+BROKEN = N_("Your desktop couldn't set the shortcut.")
+CLOSED = N_("Your desktop took Chatmon's shortcut away.")
+NO_BUS = N_("Chatmon couldn't reach your desktop's session bus.")
 XDG_MODIFIERS = (("ctrl", "CTRL"), ("alt", "ALT"), ("shift", "SHIFT"), ("meta", "LOGO"))
 WAIT_MS = 200  # how long the thread waits for a message before looking for work from the screen's thread
 
@@ -75,7 +77,7 @@ class PortalShortcut:
         try:
             self._bus = libdbus.Bus()
         except (OSError, libdbus.Failure):
-            self._fail_all(NO_BUS)
+            self._fail_all(_(NO_BUS))
             return
         self._session: str | None = None  # the session bound, or being bound
         self._waiting: dict[str, Callable[[int, dict], None]] = {}  # Request path -> what to do with its Response
@@ -105,12 +107,12 @@ class PortalShortcut:
                     # The portal refused a call, or answered in a shape it shouldn't: this shortcut failed, but the
                     # thread carries on for the next one.
                     self._close_session()
-                    self._tell("failed", BROKEN)
+                    self._tell("failed", _(BROKEN))
                 finally:
                     if message is not None:
                         message.free()
         except (ConnectionError, libdbus.Failure):
-            self._tell("failed", NO_BUS)
+            self._tell("failed", _(NO_BUS))
         finally:
             self._bus.close()
 
@@ -142,10 +144,10 @@ class PortalShortcut:
         try:
             version = self._bus.call(SERVICE, PATH, "org.freedesktop.DBus.Properties", "Get", "ss", [SHORTCUTS, "version"], 2000)
         except libdbus.Failure:  # no portal, or one without GlobalShortcuts
-            self._tell("failed", NO_PORTAL)
+            self._tell("failed", _(NO_PORTAL))
             return
         if not version:
-            self._tell("failed", NO_PORTAL)
+            self._tell("failed", _(NO_PORTAL))
             return
         self._pending = combo
         token = "chatmon_" + secrets.token_hex(8)
@@ -155,22 +157,22 @@ class PortalShortcut:
         combo, self._pending = self._pending, None
         session = _variant_text(results.get("session_handle"))  # typed 's' for old portals' sake; an object path
         if code != OK or not session or combo is None:
-            self._tell("failed", BROKEN)
+            self._tell("failed", _(BROKEN))
             return
         self._session = session
-        shortcut = (SHORTCUT_ID, {"description": libdbus.Variant("s", DESCRIPTION), "preferred_trigger": libdbus.Variant("s", xdg_trigger(combo))})
+        shortcut = (SHORTCUT_ID, {"description": libdbus.Variant("s", _(DESCRIPTION)), "preferred_trigger": libdbus.Variant("s", xdg_trigger(combo))})
         self._request("BindShortcuts", "oa(sa{sv})s", [libdbus.ObjectPath(session), [shortcut], ""], {},
                       lambda code, results: self._bound(combo, code, results))
 
     def _bound(self, combo: Combo, code: int, results: dict) -> None:
         if code != OK:
             self._close_session()
-            self._tell("failed", DECLINED if code == CANCELLED else BROKEN)
+            self._tell("failed", _(DECLINED) if code == CANCELLED else _(BROKEN))
             return
         ours = [props for shortcut_id, props in results.get("shortcuts") or [] if shortcut_id == SHORTCUT_ID]
         if not ours:  # bound, but without Chatmon's: turned down
             self._close_session()
-            self._tell("failed", DECLINED)
+            self._tell("failed", _(DECLINED))
             return
         self._tell("bound", _variant_text(ours[0].get("trigger_description")) or combo.text())
 
@@ -192,7 +194,7 @@ class PortalShortcut:
                         self._tell("bound", props["trigger_description"])
         elif message.interface == SESSION and message.member == "Closed" and self._session and message.path == self._session:
             self._session = None
-            self._tell("failed", CLOSED)
+            self._tell("failed", _(CLOSED))
 
     def _close_session(self) -> None:
         self._waiting.clear()

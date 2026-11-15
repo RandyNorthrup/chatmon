@@ -1,0 +1,151 @@
+# WSL Linux 6.18.58.1-microsoft-standard-WSL2; Python 3.14.9 PyQt6 6.12.1 Qt 6.12.0; 2026-11-14T23:57:06Z
+$ LANG=en_US.UTF-8 QT_QPA_PLATFORM=offscreen python -m pytest -q -p no:cacheprovider -rs tests/test_i18n.py tests/test_offline.py tests/test_reminders.py tests/test_chats.py tests/test_backup.py tests/test_attachments.py tests/test_ask_box.py tests/test_package_data.py tests/test_agents.py tests/test_brains.py tests/test_hotkey.py tests/test_keychain.py tests/test_updates.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+.............................................s........................ss [ 57%]
+s..s.................................sss................................ [ 71%]
+..................................................s...s................. [ 85%]
+.........sssss..sss..................................................... [ 99%]
+s                                                                        [100%]
+=============================== warnings summary ===============================
+tests/test_brains.py::test_a_redirect_never_takes_the_key_anywhere
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/python.py:187: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 38269)>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_brains.py::test_a_redirect_never_takes_the_key_anywhere
+  <frozen importlib._bootstrap_external>:511: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 38087)>
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed
+  /usr/lib/python3.14/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 302: 'Found'>
+    _warnings.warn(self.warn_message, ResourceWarning)
+
+tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/python.py:187: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 34405)>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed file <_io.BufferedReader name=21>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[installed]
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 45385)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[refused]
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 45247)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_newer_release_is_downloaded_checked_and_offered
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 37459)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_tampered_download_is_thrown_away_never_offered
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 46275)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_past_the_limit_is_stopped
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 35347)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_nothing_newer_says_so
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 36529)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_chatmon_that_cant_install_it_is_only_told
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 38977)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_is_checked_again_just_before_its_installed
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 41999)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_installer_that_wont_start_says_so_and_frees_the_updater
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 35205)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_checksums_not_signed_with_the_release_key_are_never_trusted
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 39961)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 34645)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_what_pkexec_said_is_told_plainly[126-password prompt was closed]
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 43785)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_what_pkexec_said_is_told_plainly[127-no password prompt running]
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 39415)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_that_cant_be_checked_yet_is_looked_at_again_within_the_hour
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 43465)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_that_cant_be_checked_at_install_time_is_kept_for_later
+  /var/tmp/chatmon-m4b-venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 40523)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_chats.py:355: the roaming app-data folder is Windows'
+SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:125: Windows links
+SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_brains.py:589: cmd.exe and the tools npm installs as .cmd files are Windows'
+SKIPPED [1] tests/test_brains.py:678: Windows' process tree
+SKIPPED [1] tests/test_hotkey.py:124: Windows only
+SKIPPED [1] tests/test_hotkey.py:150: Windows only
+SKIPPED [1] tests/test_hotkey.py:167: Windows only
+SKIPPED [1] tests/test_hotkey.py:221: macOS only
+SKIPPED [1] tests/test_hotkey.py:238: macOS only
+SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+SKIPPED [1] tests/test_updates.py:599: holding a file open against changes: Windows
+486 passed, 19 skipped, 20 warnings in 32.03s
+exit 0

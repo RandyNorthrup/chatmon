@@ -39,6 +39,7 @@ from PyQt6.QtGui import (
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QMenu, QTextBrowser, QTextEdit, QToolButton, QVBoxLayout, QWidget
 
 from . import bubbleart, highlight, richtext, styles
+from .i18n import N_, _, ngettext
 
 ACCENT = QColor(styles.PLAIN_ACCENT)  # the penguin's glowing cyan nodes (the stage's menus; bubbles take the style's)
 PAD = 14
@@ -230,7 +231,7 @@ class SpeechBubble:
     CLOSE_W = 22
     BUTTON_GAP = 8
     ROW_GAP = 6
-    MORE = "More"
+    MORE = N_("More")  # the button that shows the rest of a long bubble; shown as _(MORE)
 
     def __init__(self):
         self.title = ""
@@ -386,7 +387,7 @@ class SpeechBubble:
         self._clip = None
         if has_text and 6 + text_h + (12 + rows_h if buttons else 0) > room:
             if self.on_more is not None:
-                buttons = self._buttons(self._button_specs + [(self.MORE, self._more)])
+                buttons = self._buttons(self._button_specs + [(_(self.MORE), self._more)])
                 rows_h = self._rows(buttons, inner)
             ellipsis = body_metrics.lineSpacing()
             fits = room - 6 - (12 + rows_h if buttons else 0) - ellipsis
@@ -754,15 +755,15 @@ class Entry(PlainSelection, QTextEdit):
         menu = QMenu(self)
         writable, chosen = not self.isReadOnly(), self.hasSelectedText()
         for entry in (
-            ("Undo", self.undo, writable and self.isUndoAvailable()),
-            ("Redo", self.redo, writable and self.isRedoAvailable()),
+            (_("Undo"), self.undo, writable and self.isUndoAvailable()),
+            (_("Redo"), self.redo, writable and self.isRedoAvailable()),
             None,
-            ("Cut", self.cut, writable and chosen),
-            ("Copy", self.copy, chosen),
-            ("Paste", self.paste_requested.emit, writable),
-            ("Delete", self.del_, writable and chosen),
+            (_("Cut"), self.cut, writable and chosen),
+            (_("Copy"), self.copy, chosen),
+            (_("Paste"), self.paste_requested.emit, writable),
+            (_("Delete"), self.del_, writable and chosen),
             None,
-            ("Select All", self.selectAll, bool(self.text()) and self.selectedText() != self.text()),
+            (_("Select All"), self.selectAll, bool(self.text()) and self.selectedText() != self.text()),
         ):
             if entry is None:
                 menu.addSeparator()
@@ -946,11 +947,11 @@ class AskBox(QWidget):
         self.title.setObjectName("title")
         self.title.setTextFormat(Qt.TextFormat.PlainText)  # a name or a chat's title, never markup that could load a file
         top.addWidget(self.title, 1)
-        self.history_button = QToolButton(text="History", autoRaise=True)
-        self.history_button.setToolTip("Your earlier chats: pick one to carry on")
+        self.history_button = QToolButton(text=_("History"), autoRaise=True)
+        self.history_button.setToolTip(_("Your earlier chats: pick one to carry on"))
         self.history_button.clicked.connect(lambda: self.history_requested.emit(self._below(self.history_button)))
         top.addWidget(self.history_button)
-        self.reset_button = QToolButton(text="New chat", autoRaise=True)
+        self.reset_button = QToolButton(text=_("New chat"), autoRaise=True)
         self.reset_button.clicked.connect(self.reset_requested.emit)
         top.addWidget(self.reset_button)
         self.expand_button = QToolButton(text="⤢", autoRaise=True, checkable=True)
@@ -958,8 +959,8 @@ class AskBox(QWidget):
         self.expand_button.toggled.connect(self.set_expanded)
         top.addWidget(self.expand_button)
         close = QToolButton(text="✕", autoRaise=True)
-        close.setToolTip("Close (Esc)")
-        close.setAccessibleName("Close")
+        close.setToolTip(_("Close (Esc)"))
+        close.setAccessibleName(_("Close"))
         close.clicked.connect(self.dismiss)
         top.addWidget(close)
         layout.addLayout(top)
@@ -969,7 +970,7 @@ class AskBox(QWidget):
         self.answer.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.answer.document().setDocumentMargin(2)
         wrap_anywhere(self.answer.document())
-        self.answer.setAccessibleName("Conversation")
+        self.answer.setAccessibleName(_("Conversation"))
         self._markdown = ""  # what the answer area shows, as given: drawn again from this when the style changes
         self._at_end = False
         self._rendered = richtext.Rendered()
@@ -982,10 +983,10 @@ class AskBox(QWidget):
         self.busy_label.setObjectName("hint")
         self.busy_label.setTextFormat(Qt.TextFormat.PlainText)
         busy_row.addWidget(self.busy_label, 1)
-        self.stop_button = QToolButton(text="Stop", autoRaise=True)
+        self.stop_button = QToolButton(text=_("Stop"), autoRaise=True)
         self.stop_button.setObjectName("stop")
-        self.stop_button.setToolTip("Stop this answer")
-        self.stop_button.setAccessibleName("Stop the answer")
+        self.stop_button.setToolTip(_("Stop this answer"))
+        self.stop_button.setAccessibleName(_("Stop the answer"))
         self.stop_button.clicked.connect(self.stop_requested.emit)
         busy_row.addWidget(self.stop_button)
         self.busy.hide()
@@ -1000,9 +1001,9 @@ class AskBox(QWidget):
         row.setSpacing(6)
         self.attach_button = QToolButton(text="+")
         self.attach_button.setObjectName("attach")
-        self.attach_button.setToolTip("Attach files, a picture or text (or paste them in)")
-        self.attach_button.setAccessibleName("Attach")
-        self.attach_button.setAccessibleDescription("Files, a picture or text; or paste them in")
+        self.attach_button.setToolTip(_("Attach files, a picture or text (or paste them in)"))
+        self.attach_button.setAccessibleName(_("Attach"))
+        self.attach_button.setAccessibleDescription(_("Files, a picture or text; or paste them in"))
         self.attach_button.clicked.connect(lambda: self.attach_requested.emit(self._below(self.attach_button)))
         row.addWidget(self.attach_button, 0, Qt.AlignmentFlag.AlignBottom)
         self.entry = Entry()
@@ -1171,9 +1172,10 @@ class AskBox(QWidget):
         if self._busy is not None:
             self._busy_clock.start()
 
-    def show_notes(self, anchor: QPoint, title: str, markdown: str, hint: str = "Esc to close") -> None:
+    def show_notes(self, anchor: QPoint, title: str, markdown: str, hint: str | None = None) -> None:
         """Something to read, not to answer (what's new in an update): the same bubble, scrolling, with
-        no field to type in."""
+        no field to type in. `hint` goes under it; None: "Esc to close"."""
+        hint = _("Esc to close") if hint is None else hint
         self.open(anchor, title, hint, "", text=markdown)
         self.entry.hide()
         self.attach_button.hide()
@@ -1202,7 +1204,7 @@ class AskBox(QWidget):
         self.expand_changed.emit(on)
 
     def _label_expand(self) -> None:
-        name = "Make the box smaller" if self.expanded else "Make the box bigger"
+        name = _("Make the box smaller") if self.expanded else _("Make the box bigger")
         self.expand_button.setToolTip(name)
         self.expand_button.setAccessibleName(name)
 
@@ -1227,9 +1229,11 @@ class AskBox(QWidget):
             return
         label, since = self._busy
         if since is None:
-            self.busy_label.setText(f"{label} is answering…")
+            self.busy_label.setText(_("{brain} is answering…").format(brain=label))
         else:
-            self.busy_label.setText(f"{label} is answering… {max(0, int(time.monotonic() - since))} s")
+            # Translators: "s" is seconds, counting up while an answer is awaited.
+            text = _("{brain} is answering… {seconds} s").format(brain=label, seconds=max(0, int(time.monotonic() - since)))
+            self.busy_label.setText(text)
 
     def append_partial(self, text: str) -> None:
         """Part of an answer as it streams in, after what came before: shown under the chat."""
@@ -1336,15 +1340,16 @@ class AskBox(QWidget):
             width = metrics.horizontalAdvance(text) + 22
             chip = QToolButton(text=text)
             chip.setObjectName("chip")
-            chip.setToolTip(plain_tip(f"{label}: click to take it off"))
-            chip.setAccessibleName(f"Remove {label}")
+            chip.setToolTip(plain_tip(_("{attachment}: click to take it off").format(attachment=label)))
+            chip.setAccessibleName(_("Remove {attachment}").format(attachment=label))
             chip.clicked.connect(lambda _=False, i=i: self.attachment_removed.emit(i))
             self.chips_layout.addWidget(chip)
             used += width + 4
             shown += 1
         shown = labels[:shown]
         if len(labels) > len(shown):
-            more = QLabel(f"+{len(labels) - len(shown)} more")
+            hidden = len(labels) - len(shown)
+            more = QLabel(ngettext("+{n} more", "+{n} more", hidden).format(n=hidden))
             more.setObjectName("hint")
             self.chips_layout.addWidget(more)
         self.chips_layout.addStretch(1)

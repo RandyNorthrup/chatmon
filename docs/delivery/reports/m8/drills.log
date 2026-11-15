@@ -1,0 +1,977 @@
+red drills from docs\delivery\reports\m8\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-jq495_u0
+copied 294 files
+
+=== drill M8-01-gettext-bypassed (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.95s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002787F8828F0>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2237/test_a_translated_sentence_and0')
+
+    def test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english(qapp, tmp_path):
+        import time
+    
+        from chatmon import backup
+        from chatmon.bubble import AskBox
+    
+        catalog(tmp_path, "de", GERMAN)
+        assert i18n.setup("de", tmp_path) == "de"
+        box = AskBox()
+        try:
+            box.set_busy("Claude", time.monotonic() - 12.2)
+>           assert box.stop_button.text() == "Anhalten"
+E           AssertionError: assert 'Stop' == 'Anhalten'
+E             
+E             - Anhalten
+E             + Stop
+
+tests\test_i18n.py:108: AssertionError
+1 failed in 0.84s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.12s
+
+=== drill M8-01-plural-english-only (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.63s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002D9B9FE28F0>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2242/test_a_translated_sentence_and0')
+
+    def test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english(qapp, tmp_path):
+        import time
+    
+        from chatmon import backup
+        from chatmon.bubble import AskBox
+    
+        catalog(tmp_path, "de", GERMAN)
+        assert i18n.setup("de", tmp_path) == "de"
+        box = AskBox()
+        try:
+            box.set_busy("Claude", time.monotonic() - 12.2)
+            assert box.stop_button.text() == "Anhalten"
+            assert box.busy_label.text() == "Claude antwortet… 12 s"
+            assert box.history_button.text() == "History", "a string the translation leaves out shows in English"
+            assert box.reset_button.text() == "New chat"
+        finally:
+            box.set_busy(None)
+            box.deleteLater()
+        one = backup.Contents(settings={"size": 120}, notes=[{"text": "milk", "at": 0}], reminders=[{"due": 1, "text": "x"}] * 2)
+>       assert one.summary() == "deine Einstellungen, 1 Notiz und 2 Erinnerungen"
+E       AssertionError: assert 'deine Einste...d 2 reminders' == 'deine Einste... Erinnerungen'
+E         
+E         - deine Einstellungen, 1 Notiz und 2 Erinnerungen
+E         ?                        ^  ^^       -   ^  ^^^^^
+E         + deine Einstellungen, 1 note und 2 reminders
+E         ?                        ^  ^        ++  ^  ^
+
+tests\test_i18n.py:116: AssertionError
+1 failed in 0.81s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.79s
+
+=== drill M8-01-list-and-in-english (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.54s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000216B493E850>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2247/test_a_translated_sentence_and0')
+
+    def test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english(qapp, tmp_path):
+        import time
+    
+        from chatmon import backup
+        from chatmon.bubble import AskBox
+    
+        catalog(tmp_path, "de", GERMAN)
+        assert i18n.setup("de", tmp_path) == "de"
+        box = AskBox()
+        try:
+            box.set_busy("Claude", time.monotonic() - 12.2)
+            assert box.stop_button.text() == "Anhalten"
+            assert box.busy_label.text() == "Claude antwortet… 12 s"
+            assert box.history_button.text() == "History", "a string the translation leaves out shows in English"
+            assert box.reset_button.text() == "New chat"
+        finally:
+            box.set_busy(None)
+            box.deleteLater()
+        one = backup.Contents(settings={"size": 120}, notes=[{"text": "milk", "at": 0}], reminders=[{"due": 1, "text": "x"}] * 2)
+>       assert one.summary() == "deine Einstellungen, 1 Notiz und 2 Erinnerungen"
+E       AssertionError: assert 'deine Einste... Erinnerungen' == 'deine Einste... Erinnerungen'
+E         
+E         - deine Einstellungen, 1 Notiz und 2 Erinnerungen
+E         ?                              ^
+E         + deine Einstellungen, 1 Notiz and 2 Erinnerungen
+E         ?                              ^
+
+tests\test_i18n.py:116: AssertionError
+1 failed in 2.89s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.89s
+
+=== drill M8-01-ui-string-not-wrapped (M8-01) on chatmon/bubble.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.81s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000019F9AAA28F0>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2255/test_a_translated_sentence_and0')
+
+    def test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english(qapp, tmp_path):
+        import time
+    
+        from chatmon import backup
+        from chatmon.bubble import AskBox
+    
+        catalog(tmp_path, "de", GERMAN)
+        assert i18n.setup("de", tmp_path) == "de"
+        box = AskBox()
+        try:
+            box.set_busy("Claude", time.monotonic() - 12.2)
+>           assert box.stop_button.text() == "Anhalten"
+E           AssertionError: assert 'Stop' == 'Anhalten'
+E             
+E             - Anhalten
+E             + Stop
+
+tests\test_i18n.py:108: AssertionError
+1 failed in 3.94s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.54s
+
+=== drill M8-01-plural-glued (M8-01) on chatmon/backup.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.32s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000291B40268F0>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2262/test_a_translated_sentence_and0')
+
+    def test_a_translated_sentence_and_its_plurals_reach_the_ask_box_and_whats_missing_stays_english(qapp, tmp_path):
+        import time
+    
+        from chatmon import backup
+        from chatmon.bubble import AskBox
+    
+        catalog(tmp_path, "de", GERMAN)
+        assert i18n.setup("de", tmp_path) == "de"
+        box = AskBox()
+        try:
+            box.set_busy("Claude", time.monotonic() - 12.2)
+            assert box.stop_button.text() == "Anhalten"
+            assert box.busy_label.text() == "Claude antwortet… 12 s"
+            assert box.history_button.text() == "History", "a string the translation leaves out shows in English"
+            assert box.reset_button.text() == "New chat"
+        finally:
+            box.set_busy(None)
+            box.deleteLater()
+        one = backup.Contents(settings={"size": 120}, notes=[{"text": "milk", "at": 0}], reminders=[{"due": 1, "text": "x"}] * 2)
+>       assert one.summary() == "deine Einstellungen, 1 Notiz und 2 Erinnerungen"
+E       AssertionError: assert 'deine Einste... Erinnerungen' == 'deine Einste... Erinnerungen'
+E         
+E         - deine Einstellungen, 1 Notiz und 2 Erinnerungen
+E         ?                        ^  ^^
+E         + deine Einstellungen, 1 note und 2 Erinnerungen
+E         ?                        ^  ^
+
+tests\test_i18n.py:116: AssertionError
+1 failed in 2.11s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.70s
+
+=== drill M8-01-fuzzy-used (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_a_slip_in_a_translation_shows_english_and_never_a_hole
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.30s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_a_slip_in_a_translation_shows_english_and_never_a_hole _________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2269/test_a_slip_in_a_translation_s0')
+
+    def test_a_slip_in_a_translation_shows_english_and_never_a_hole(tmp_path):
+        catalog(tmp_path, "de", """\
+            #, fuzzy
+            msgid "Stop"
+            msgstr "Halt"
+    
+            msgid "Close"
+            msgstr ""
+    
+            #, python-brace-format
+            msgid "Remove {attachment}"
+            msgstr "{datei} entfernen"
+    
+            msgid "{n} note"
+            msgid_plural "{n} notes"
+            msgstr[0] "{n} Notiz"
+    
+            msgid "{n} chat"
+            msgid_plural "{n} chats"
+            msgstr[0] "{n} Chat"
+            msgstr[1] ""
+    
+            #~ msgid "Undo"
+            #~ msgstr "Rückgängig"
+    
+            msgid "Redo"
+            msgstr "Wieder\\nholen"
+        """)
+        i18n.setup("de", tmp_path)
+>       assert i18n._("Stop") == "Stop", "a fuzzy entry isn't a translation yet"
+E       AssertionError: a fuzzy entry isn't a translation yet
+E       assert 'Halt' == 'Stop'
+E         
+E         - Stop
+E         + Halt
+
+tests\test_i18n.py:152: AssertionError
+1 failed in 1.17s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.57s
+
+=== drill M8-01-placeholder-unchecked (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_a_slip_in_a_translation_shows_english_and_never_a_hole
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.59s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_a_slip_in_a_translation_shows_english_and_never_a_hole _________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2276/test_a_slip_in_a_translation_s0')
+
+    def test_a_slip_in_a_translation_shows_english_and_never_a_hole(tmp_path):
+        catalog(tmp_path, "de", """\
+            #, fuzzy
+            msgid "Stop"
+            msgstr "Halt"
+    
+            msgid "Close"
+            msgstr ""
+    
+            #, python-brace-format
+            msgid "Remove {attachment}"
+            msgstr "{datei} entfernen"
+    
+            msgid "{n} note"
+            msgid_plural "{n} notes"
+            msgstr[0] "{n} Notiz"
+    
+            msgid "{n} chat"
+            msgid_plural "{n} chats"
+            msgstr[0] "{n} Chat"
+            msgstr[1] ""
+    
+            #~ msgid "Undo"
+            #~ msgstr "Rückgängig"
+    
+            msgid "Redo"
+            msgstr "Wieder\\nholen"
+        """)
+        i18n.setup("de", tmp_path)
+        assert i18n._("Stop") == "Stop", "a fuzzy entry isn't a translation yet"
+        assert i18n._("Close") == "Close", "an empty one isn't either"
+>       assert i18n._("Remove {attachment}").format(attachment="a.txt") == "Remove a.txt", "a placeholder the English hasn't would raise"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'datei'
+
+tests\test_i18n.py:154: KeyError
+1 failed in 1.44s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.97s
+
+=== drill M8-01-english-not-first (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_language_is_the_persons_choice_else_the_first_preferred_one_with_a_translation
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.50s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_the_language_is_the_persons_choice_else_the_first_preferred_one_with_a_translation _
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2283/test_the_language_is_the_perso0')
+
+    def test_the_language_is_the_persons_choice_else_the_first_preferred_one_with_a_translation(tmp_path):
+        catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+        catalog(tmp_path, "pt_BR", 'msgid "Stop"\nmsgstr "Parar"\n')
+        catalog(tmp_path, "pt", 'msgid "Stop"\nmsgstr "Pare"\n')
+        assert i18n.available(tmp_path) == ["en", "de", "pt", "pt_BR"]
+    
+        def chosen(wanted):
+            return i18n.choose(wanted, tmp_path)[0]
+    
+        assert chosen(["fr_FR", "de_DE", "en_US"]) == "de", "French has none: the next one that has"
+>       assert chosen(["en_GB", "de_DE"]) == "en", "English first: English, the language it's written in"
+E       AssertionError: English first: English, the language it's written in
+E       assert 'de' == 'en'
+E         
+E         - en
+E         + de
+
+tests\test_i18n.py:199: AssertionError
+1 failed in 0.46s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.34s
+
+=== drill M8-01-region-dropped (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_language_is_the_persons_choice_else_the_first_preferred_one_with_a_translation
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_the_language_is_the_persons_choice_else_the_first_preferred_one_with_a_translation _
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2291/test_the_language_is_the_perso0')
+
+    def test_the_language_is_the_persons_choice_else_the_first_preferred_one_with_a_translation(tmp_path):
+        catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+        catalog(tmp_path, "pt_BR", 'msgid "Stop"\nmsgstr "Parar"\n')
+        catalog(tmp_path, "pt", 'msgid "Stop"\nmsgstr "Pare"\n')
+        assert i18n.available(tmp_path) == ["en", "de", "pt", "pt_BR"]
+    
+        def chosen(wanted):
+            return i18n.choose(wanted, tmp_path)[0]
+    
+        assert chosen(["fr_FR", "de_DE", "en_US"]) == "de", "French has none: the next one that has"
+        assert chosen(["en_GB", "de_DE"]) == "en", "English first: English, the language it's written in"
+>       assert chosen(["pt-BR"]) == "pt_BR" and chosen(["pt_PT"]) == "pt" and chosen(["pt-Latn-BR"]) == "pt_BR"
+E       AssertionError: assert ('pt' == 'pt_BR'
+E         
+E         - pt_BR
+E         + pt)
+
+tests\test_i18n.py:200: AssertionError
+1 failed in 0.61s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.48s
+
+=== drill M8-01-windows-languages-unread (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_command_line_reads_the_same_preferred_languages_as_qt
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.65s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_the_command_line_reads_the_same_preferred_languages_as_qt ________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2299/test_the_command_line_reads_th0')
+
+    def test_the_command_line_reads_the_same_preferred_languages_as_qt(tmp_path):
+        """Without Qt (the command line), the system's preferred languages come from Windows itself, or LANGUAGE,
+        LC_ALL, LC_MESSAGES and LANG elsewhere: the same first choice Qt makes."""
+        if sys.platform == "darwin":
+            pytest.skip("macOS: Qt reads the system's language list, a command line reads LANG")
+        code = (
+            "import sys; from chatmon import i18n; plain = i18n.preferred(); assert 'PyQt6.QtCore' not in sys.modules\n"
+            "from PyQt6.QtCore import QLocale; qt = i18n.preferred(); print(plain[:1], qt[:1])\n"
+            "assert i18n.candidates(plain[0])[0] == i18n.candidates(qt[0])[0], (plain, qt)\n"
+        )
+        env = None
+        if sys.platform != "win32":
+            import os
+    
+            env = {**os.environ, "LANGUAGE": "", "LC_ALL": "", "LC_MESSAGES": "", "LANG": "de_DE.UTF-8"}
+        done = subprocess.run([sys.executable, "-c", code], cwd=REPO, env=env, capture_output=True, text=True, timeout=60)
+>       assert done.returncode == 0, done.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 3, in <module>
+E             assert i18n.candidates(plain[0])[0] == i18n.candidates(qt[0])[0], (plain, qt)
+E                                    ~~~~~^^^
+E         IndexError: list index out of range
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe', '-c', "import sys; from chatmo...== i18n.candidates(qt[0])[0], (plain, qt)\n                           ~~~~~^^^\nIndexError: list index out of range\n').returncode
+
+tests\test_i18n.py:223: AssertionError
+1 failed in 0.78s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.54s
+
+=== drill M8-01-localefmt-not-following (M8-01) on chatmon/localefmt.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_localefmt_and_the_offline_phrases_follow_the_language_chosen
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.40s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_localefmt_and_the_offline_phrases_follow_the_language_chosen ______
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2307/test_localefmt_and_the_offline0')
+
+    def test_localefmt_and_the_offline_phrases_follow_the_language_chosen(tmp_path):
+        catalog(tmp_path, "pt_BR", 'msgid "Stop"\nmsgstr "Parar"\n')
+        localefmt.set_locale()
+        before = localefmt.language()
+        i18n.setup("pt_BR", tmp_path)
+>       assert localefmt.language() == "pt_BR"
+E       AssertionError: assert 'en' == 'pt_BR'
+E         
+E         - pt_BR
+E         + en
+
+tests\test_i18n.py:231: AssertionError
+1 failed in 1.85s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.73s
+
+=== drill M8-01-setup-not-telling-localefmt (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_localefmt_and_the_offline_phrases_follow_the_language_chosen
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.48s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_localefmt_and_the_offline_phrases_follow_the_language_chosen ______
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2314/test_localefmt_and_the_offline0')
+
+    def test_localefmt_and_the_offline_phrases_follow_the_language_chosen(tmp_path):
+        catalog(tmp_path, "pt_BR", 'msgid "Stop"\nmsgstr "Parar"\n')
+        localefmt.set_locale()
+        before = localefmt.language()
+        i18n.setup("pt_BR", tmp_path)
+>       assert localefmt.language() == "pt_BR"
+E       AssertionError: assert 'en' == 'pt_BR'
+E         
+E         - pt_BR
+E         + en
+
+tests\test_i18n.py:231: AssertionError
+1 failed in 0.50s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== drill M8-01-qt-translation-not-installed (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_qts_own_words_and_a_chosen_languages_dates_follow_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.48s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_qts_own_words_and_a_chosen_languages_dates_follow_it __________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002A0B24667B0>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2322/test_qts_own_words_and_a_chose0')
+
+    def test_qts_own_words_and_a_chosen_languages_dates_follow_it(qapp, tmp_path):
+        from PyQt6.QtCore import QCoreApplication, QLibraryInfo, QLocale
+    
+        if not (Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)) / "qtbase_de.qm").is_file():
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        before = QLocale()
+        catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+        assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Cancel"
+        localefmt.set_locale()
+        try:
+            i18n.setup("de", tmp_path)
+>           assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Abbrechen"
+E           AssertionError: assert 'Cancel' == 'Abbrechen'
+E             
+E             - Abbrechen
+E             + Cancel
+
+tests\test_i18n.py:249: AssertionError
+1 failed in 0.67s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.51s
+
+=== drill M8-01-chosen-locale-not-default (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_qts_own_words_and_a_chosen_languages_dates_follow_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.59s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_qts_own_words_and_a_chosen_languages_dates_follow_it __________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001FD32EBA710>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2328/test_qts_own_words_and_a_chose0')
+
+    def test_qts_own_words_and_a_chosen_languages_dates_follow_it(qapp, tmp_path):
+        from PyQt6.QtCore import QCoreApplication, QLibraryInfo, QLocale
+    
+        if not (Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)) / "qtbase_de.qm").is_file():
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        before = QLocale()
+        catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+        assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Cancel"
+        localefmt.set_locale()
+        try:
+            i18n.setup("de", tmp_path)
+            assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Abbrechen"
+            if QLocale.system().language() != QLocale.Language.German:
+>               assert QLocale().language() == QLocale.Language.German
+E               AssertionError: assert <Language.English: 75> == <Language.German: 94>
+E                +  where <Language.English: 75> = <built-in method language of QLocale object at 0x000001FD32C85350>()
+E                +    where <built-in method language of QLocale object at 0x000001FD32C85350> = <PyQt6.QtCore.QLocale object at 0x000001FD32C85350>.language
+E                +      where <PyQt6.QtCore.QLocale object at 0x000001FD32C85350> = <class 'PyQt6.QtCore.QLocale'>()
+E                +  and   <Language.German: 94> = <enum 'Language'>.German
+E                +    where <enum 'Language'> = <class 'PyQt6.QtCore.QLocale'>.Language
+
+tests\test_i18n.py:251: AssertionError
+1 failed in 3.10s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+
+=== drill M8-01-default-locale-not-restored (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_qts_own_words_and_a_chosen_languages_dates_follow_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.75s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_qts_own_words_and_a_chosen_languages_dates_follow_it __________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000028A7B90A710>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2335/test_qts_own_words_and_a_chose0')
+
+    def test_qts_own_words_and_a_chosen_languages_dates_follow_it(qapp, tmp_path):
+        from PyQt6.QtCore import QCoreApplication, QLibraryInfo, QLocale
+    
+        if not (Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)) / "qtbase_de.qm").is_file():
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        before = QLocale()
+        catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+        assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Cancel"
+        localefmt.set_locale()
+        try:
+            i18n.setup("de", tmp_path)
+            assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Abbrechen"
+            if QLocale.system().language() != QLocale.Language.German:
+                assert QLocale().language() == QLocale.Language.German
+                from datetime import time
+    
+                assert localefmt.time_of_day(time(15, 4)) == "15:04"
+            i18n.reset()
+            assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Cancel"
+>           assert QLocale() == before, "the default locale is put back"
+E           AssertionError: the default locale is put back
+E           assert <PyQt6.QtCore.QLocale object at 0x0000028A7B6D52D0> == <PyQt6.QtCore.QLocale object at 0x0000028A7B6D6A50>
+E            +  where <PyQt6.QtCore.QLocale object at 0x0000028A7B6D52D0> = <class 'PyQt6.QtCore.QLocale'>()
+
+tests\test_i18n.py:257: AssertionError
+1 failed in 0.60s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.49s
+
+=== drill M8-01-system-language-overrides-region (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_choosing_the_systems_own_language_keeps_its_regional_formats
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_choosing_the_systems_own_language_keeps_its_regional_formats ______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001FEAA402710>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2342/test_choosing_the_systems_own_0')
+
+    def test_choosing_the_systems_own_language_keeps_its_regional_formats(qapp, tmp_path):
+        from PyQt6.QtCore import QLocale
+    
+        before = QLocale()
+        own = QLocale.system().name().split("_")[0]
+        i18n.setup(own, tmp_path)
+>       assert QLocale() == before, "English chosen on a British system keeps its day-month dates"
+E       AssertionError: English chosen on a British system keeps its day-month dates
+E       assert <PyQt6.QtCore.QLocale object at 0x000001FEAA2269D0> == <PyQt6.QtCore.QLocale object at 0x000001FEAA224AD0>
+E        +  where <PyQt6.QtCore.QLocale object at 0x000001FEAA2269D0> = <class 'PyQt6.QtCore.QLocale'>()
+
+tests\test_i18n.py:268: AssertionError
+1 failed in 0.50s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.70s
+
+=== drill M8-01-template-stale (M8-01) on chatmon/memory.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_template_has_every_marked_string_and_reads_as_a_catalog
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.96s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_the_template_has_every_marked_string_and_reads_as_a_catalog _______
+
+    def test_the_template_has_every_marked_string_and_reads_as_a_catalog():
+        pot = REPO / "chatmon" / "locale" / "chatmon.pot"
+>       assert extractor().template(REPO) == pot.read_text(encoding="utf-8"), "run: python packaging/extract_strings.py"
+E       AssertionError: run: python packaging/extract_strings.py
+E       assert '# The words ...\nmsgstr ""\n' == '# The words ...\nmsgstr ""\n'
+E         
+E         Skipping 26874 identical leading characters in diff, use -v to show
+E         Skipping 11474 identical trailing characters in diff, use -v to show
+E         - o remember."
+E         ?           ^
+E         + o remember!"
+E         ?           ^
+E           msgstr
+
+tests\test_i18n.py:276: AssertionError
+1 failed in 1.42s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.46s
+
+=== drill M8-01-check-passes-stale (M8-01) on packaging/extract_strings.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_template_check_fails_when_a_string_is_added_without_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.55s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_the_template_check_fails_when_a_string_is_added_without_it _______
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2360/test_the_template_check_fails_0')
+capsys = <_pytest.capture.CaptureFixture object at 0x00000268F8E72A50>
+
+    def test_the_template_check_fails_when_a_string_is_added_without_it(tmp_path, capsys):
+        module = extractor()
+        module.ROOT = tmp_path  # a little project of its own
+        (tmp_path / "chatmon").mkdir()
+        code = tmp_path / "chatmon" / "a.py"
+        code.write_text('def f():\n    return _("One")\n', encoding="utf-8")
+>       assert module.main(["--check"]) == 1, "no template yet"
+E       AssertionError: no template yet
+E       assert 0 == 1
+E        +  where 0 = <function main at 0x00000268F9140EB0>(['--check'])
+E        +    where <function main at 0x00000268F9140EB0> = <module 'chatmon_extract_strings' from 'C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-drill-jq495_u0\\packaging\\extract_strings.py'>.main
+
+tests\test_i18n.py:363: AssertionError
+---------------------------- Captured stderr call -----------------------------
+chatmon/locale/chatmon.pot is out of date: run python packaging/extract_strings.py
+1 failed in 0.59s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.74s
+
+=== drill M8-01-import-time-allowed (M8-01) on packaging/extract_strings.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_extractor_refuses_a_string_that_couldnt_be_translated
+-- green: exit 0, 14 passed
+..............                                                           [100%]
+14 passed in 3.83s
+-- red: exit 1
+
+    @pytest.mark.parametrize(
+        "source, why",
+        [
+            ('def f(x):\n    return _(f"Hi {x}")\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi " + x)\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi {x}".format(x=x))\n', "plain string literals"),
+            ('def f(n):\n    return ngettext("a", n, 2)\n', "plain string literals"),
+            ('def f():\n    return N_(NAME)\n', "plain string literals"),
+            ('def f():\n    return _("")\n', "header"),
+            ('def f():\n    return _("a", "b")\n', "argument"),
+            ('GREETING = _("Hi")\n', "imported"),
+            ('class A:\n    LABEL = _("Hi")\n', "imported"),
+            ('def f(label=_("Hi")):\n    return label\n', "imported"),
+            ('@register(_("Hi"))\ndef f():\n    pass\n', "imported"),
+            ('ROWS = [ngettext("a", "b", n) for n in range(3)]\n', "imported"),
+            ('def f(pairs):\n    for _, b in pairs:\n        print(_("Hi"))\n', "throwaway"),
+            ('def f(_):\n    return _("Hi")\n', "throwaway"),
+        ],
+    )
+    def test_the_extractor_refuses_a_string_that_couldnt_be_translated(source, why):
+        found, problems = extractor().scan(source, "chatmon/x.py")
+>       assert len(problems) == 1 and why in problems[0] and problems[0].startswith("chatmon/x.py:"), problems
+E       AssertionError: []
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests\test_i18n.py:321: AssertionError
+_ test_the_extractor_refuses_a_string_that_couldnt_be_translated[ROWS = [ngettext("a", "b", n) for n in range(3)]\n-imported] _
+
+source = 'ROWS = [ngettext("a", "b", n) for n in range(3)]\n', why = 'imported'
+
+    @pytest.mark.parametrize(
+        "source, why",
+        [
+            ('def f(x):\n    return _(f"Hi {x}")\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi " + x)\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi {x}".format(x=x))\n', "plain string literals"),
+            ('def f(n):\n    return ngettext("a", n, 2)\n', "plain string literals"),
+            ('def f():\n    return N_(NAME)\n', "plain string literals"),
+            ('def f():\n    return _("")\n', "header"),
+            ('def f():\n    return _("a", "b")\n', "argument"),
+            ('GREETING = _("Hi")\n', "imported"),
+            ('class A:\n    LABEL = _("Hi")\n', "imported"),
+            ('def f(label=_("Hi")):\n    return label\n', "imported"),
+            ('@register(_("Hi"))\ndef f():\n    pass\n', "imported"),
+            ('ROWS = [ngettext("a", "b", n) for n in range(3)]\n', "imported"),
+            ('def f(pairs):\n    for _, b in pairs:\n        print(_("Hi"))\n', "throwaway"),
+            ('def f(_):\n    return _("Hi")\n', "throwaway"),
+        ],
+    )
+    def test_the_extractor_refuses_a_string_that_couldnt_be_translated(source, why):
+        found, problems = extractor().scan(source, "chatmon/x.py")
+>       assert len(problems) == 1 and why in problems[0] and problems[0].startswith("chatmon/x.py:"), problems
+E       AssertionError: []
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests\test_i18n.py:321: AssertionError
+5 failed, 9 passed in 3.26s
+-- restored green: exit 0, 14 passed
+..............                                                           [100%]
+14 passed in 0.80s
+
+=== drill M8-01-throwaway-allowed (M8-01) on packaging/extract_strings.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_extractor_refuses_a_string_that_couldnt_be_translated
+-- green: exit 0, 14 passed
+..............                                                           [100%]
+14 passed in 0.63s
+-- red: exit 1
+
+    @pytest.mark.parametrize(
+        "source, why",
+        [
+            ('def f(x):\n    return _(f"Hi {x}")\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi " + x)\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi {x}".format(x=x))\n', "plain string literals"),
+            ('def f(n):\n    return ngettext("a", n, 2)\n', "plain string literals"),
+            ('def f():\n    return N_(NAME)\n', "plain string literals"),
+            ('def f():\n    return _("")\n', "header"),
+            ('def f():\n    return _("a", "b")\n', "argument"),
+            ('GREETING = _("Hi")\n', "imported"),
+            ('class A:\n    LABEL = _("Hi")\n', "imported"),
+            ('def f(label=_("Hi")):\n    return label\n', "imported"),
+            ('@register(_("Hi"))\ndef f():\n    pass\n', "imported"),
+            ('ROWS = [ngettext("a", "b", n) for n in range(3)]\n', "imported"),
+            ('def f(pairs):\n    for _, b in pairs:\n        print(_("Hi"))\n', "throwaway"),
+            ('def f(_):\n    return _("Hi")\n', "throwaway"),
+        ],
+    )
+    def test_the_extractor_refuses_a_string_that_couldnt_be_translated(source, why):
+        found, problems = extractor().scan(source, "chatmon/x.py")
+>       assert len(problems) == 1 and why in problems[0] and problems[0].startswith("chatmon/x.py:"), problems
+E       AssertionError: []
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests\test_i18n.py:321: AssertionError
+_ test_the_extractor_refuses_a_string_that_couldnt_be_translated[def f(_):\n    return _("Hi")\n-throwaway] _
+
+source = 'def f(_):\n    return _("Hi")\n', why = 'throwaway'
+
+    @pytest.mark.parametrize(
+        "source, why",
+        [
+            ('def f(x):\n    return _(f"Hi {x}")\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi " + x)\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi {x}".format(x=x))\n', "plain string literals"),
+            ('def f(n):\n    return ngettext("a", n, 2)\n', "plain string literals"),
+            ('def f():\n    return N_(NAME)\n', "plain string literals"),
+            ('def f():\n    return _("")\n', "header"),
+            ('def f():\n    return _("a", "b")\n', "argument"),
+            ('GREETING = _("Hi")\n', "imported"),
+            ('class A:\n    LABEL = _("Hi")\n', "imported"),
+            ('def f(label=_("Hi")):\n    return label\n', "imported"),
+            ('@register(_("Hi"))\ndef f():\n    pass\n', "imported"),
+            ('ROWS = [ngettext("a", "b", n) for n in range(3)]\n', "imported"),
+            ('def f(pairs):\n    for _, b in pairs:\n        print(_("Hi"))\n', "throwaway"),
+            ('def f(_):\n    return _("Hi")\n', "throwaway"),
+        ],
+    )
+    def test_the_extractor_refuses_a_string_that_couldnt_be_translated(source, why):
+        found, problems = extractor().scan(source, "chatmon/x.py")
+>       assert len(problems) == 1 and why in problems[0] and problems[0].startswith("chatmon/x.py:"), problems
+E       AssertionError: []
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests\test_i18n.py:321: AssertionError
+2 failed, 12 passed in 3.10s
+-- restored green: exit 0, 14 passed
+..............                                                           [100%]
+14 passed in 0.93s
+
+=== drill M8-01-fstring-allowed (M8-01) on packaging/extract_strings.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_extractor_refuses_a_string_that_couldnt_be_translated
+-- green: exit 0, 14 passed
+..............                                                           [100%]
+14 passed in 2.22s
+-- red: exit 1
+F.............                                                           [100%]
+================================== FAILURES ===================================
+_ test_the_extractor_refuses_a_string_that_couldnt_be_translated[def f(x):\n    return _(f"Hi {x}")\n-plain string literals] _
+
+source = 'def f(x):\n    return _(f"Hi {x}")\n', why = 'plain string literals'
+
+    @pytest.mark.parametrize(
+        "source, why",
+        [
+            ('def f(x):\n    return _(f"Hi {x}")\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi " + x)\n', "plain string literals"),
+            ('def f(x):\n    return _("Hi {x}".format(x=x))\n', "plain string literals"),
+            ('def f(n):\n    return ngettext("a", n, 2)\n', "plain string literals"),
+            ('def f():\n    return N_(NAME)\n', "plain string literals"),
+            ('def f():\n    return _("")\n', "header"),
+            ('def f():\n    return _("a", "b")\n', "argument"),
+            ('GREETING = _("Hi")\n', "imported"),
+            ('class A:\n    LABEL = _("Hi")\n', "imported"),
+            ('def f(label=_("Hi")):\n    return label\n', "imported"),
+            ('@register(_("Hi"))\ndef f():\n    pass\n', "imported"),
+            ('ROWS = [ngettext("a", "b", n) for n in range(3)]\n', "imported"),
+            ('def f(pairs):\n    for _, b in pairs:\n        print(_("Hi"))\n', "throwaway"),
+            ('def f(_):\n    return _("Hi")\n', "throwaway"),
+        ],
+    )
+    def test_the_extractor_refuses_a_string_that_couldnt_be_translated(source, why):
+        found, problems = extractor().scan(source, "chatmon/x.py")
+>       assert len(problems) == 1 and why in problems[0] and problems[0].startswith("chatmon/x.py:"), problems
+E       AssertionError: []
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests\test_i18n.py:321: AssertionError
+1 failed, 13 passed in 78.51s (0:01:18)
+-- restored green: exit 0, 14 passed
+..............                                                           [100%]
+14 passed in 113.07s (0:01:53)
+
+=== drill M8-01-comprehension-scope-lost (M8-01) on packaging/extract_strings.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_extractor_lets_be_what_runs_later_and_throwaways_elsewhere
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 102.62s (0:01:42)
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_the_extractor_lets_be_what_runs_later_and_throwaways_elsewhere _____
+
+    def test_the_extractor_lets_be_what_runs_later_and_throwaways_elsewhere():
+        source = textwrap.dedent('''
+            class A:
+                def label(self):
+                    return _("Hi")
+    
+            def f(pairs):
+                names = [a for _, a in pairs]  # a comprehension's names are its own
+                return _("Hi"), lambda _=None: names
+    
+            def g():
+                def inner(label=_("Hi")):
+                    return label
+                return inner
+        ''')
+        found, problems = extractor().scan(source, "chatmon/x.py")
+>       assert problems == [] and len(found) == 3
+E       AssertionError: assert (['chatmon/x.p...another name'] == []
+E         
+E         Left contains one more item: 'chatmon/x.py:8: this function uses _ as a name of its own and calls _() too; give the throwaway another name'
+E         Use -v to get more diff)
+
+tests\test_i18n.py:340: AssertionError
+1 failed in 16.76s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 63.74s (0:01:03)
+
+=== drill M8-01-locale-not-shipped (M8-01) on pyproject.toml
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_package_data.py::test_every_tracked_file_of_chatmon_ships
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.01s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_every_tracked_file_of_chatmon_ships ___________________
+
+    def test_every_tracked_file_of_chatmon_ships():
+        tracked = tracked_files()
+        assert {"__init__.py", "changelog.md"} <= tracked, "the listing didn't find the package"
+        taken = set().union(*(taken_by(p) for p in package_data_globs()))
+        left_out = sorted(f for f in tracked if not ships_as_python(f) and f not in taken)
+>       assert not left_out, f"no package-data glob in pyproject.toml takes these, so pip and pipx installs would lack them: {left_out}"
+E       AssertionError: no package-data glob in pyproject.toml takes these, so pip and pipx installs would lack them: ['locale/chatmon.pot']
+E       assert not ['locale/chatmon.pot']
+
+tests\test_package_data.py:62: AssertionError
+1 failed in 3.30s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.35s
+
+=== summary
+PASS M8-01-gettext-bypassed
+PASS M8-01-plural-english-only
+PASS M8-01-list-and-in-english
+PASS M8-01-ui-string-not-wrapped
+PASS M8-01-plural-glued
+PASS M8-01-fuzzy-used
+PASS M8-01-placeholder-unchecked
+PASS M8-01-english-not-first
+PASS M8-01-region-dropped
+PASS M8-01-windows-languages-unread
+PASS M8-01-localefmt-not-following
+PASS M8-01-setup-not-telling-localefmt
+PASS M8-01-qt-translation-not-installed
+PASS M8-01-chosen-locale-not-default
+PASS M8-01-default-locale-not-restored
+PASS M8-01-system-language-overrides-region
+PASS M8-01-template-stale
+PASS M8-01-check-passes-stale
+PASS M8-01-import-time-allowed
+PASS M8-01-throwaway-allowed
+PASS M8-01-fstring-allowed
+PASS M8-01-comprehension-scope-lost
+PASS M8-01-locale-not-shipped

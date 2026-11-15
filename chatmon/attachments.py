@@ -24,6 +24,8 @@ from pathlib import Path
 from PyQt6.QtCore import QBuffer, QByteArray, QIODevice, Qt
 from PyQt6.QtGui import QImage
 
+from .i18n import _
+
 MAX_COUNT = 10  # attachments to one question
 MAX_TEXT = 200 * 1024  # bytes of one text file: past this it's cut, and says so
 MAX_IMAGE_FILE = 30 * 2**20  # bytes of an image file to read at all (it's made smaller before sending)
@@ -62,7 +64,7 @@ class Attachment:
 
     def label(self) -> str:
         size = len(self.data)
-        amount = f"{size / 2**20:.1f} MB" if size >= 2**20 else f"{max(1, round(size / 1024))} KB"
+        amount = _("{size} MB").format(size=f"{size / 2**20:.1f}") if size >= 2**20 else _("{size} KB").format(size=max(1, round(size / 1024)))
         return f"{self.name} ({amount})"
 
     def b64(self) -> str:
@@ -98,30 +100,38 @@ def _decode_text(raw: bytes) -> str | None:
         return None
 
 
-def from_text(text: str, name: str = "pasted text") -> Attachment:
+def _cut_note() -> str:
+    return _("cut to its first {size} KB").format(size=MAX_TEXT // 1024)
+
+
+def from_text(text: str, name: str | None = None) -> Attachment:
+    """Text as an attachment; `name` None: "pasted text"."""
+    name = _("pasted text") if name is None else name
     data = text.encode("utf-8")
     note = ""
     if len(data) > MAX_TEXT:
         data = data[:MAX_TEXT].decode("utf-8", errors="ignore").encode("utf-8")
-        note = f"cut to its first {MAX_TEXT // 1024} KB"
+        note = _cut_note()
     return Attachment(name, TEXT, "text/plain", data, note)
 
 
-def from_image(image: QImage, name: str = "pasted image") -> Attachment:
-    """An image as it will be sent: no bigger than LONG_EDGE on its long side, PNG, or JPEG if that's too big."""
+def from_image(image: QImage, name: str | None = None) -> Attachment:
+    """An image as it will be sent: no bigger than LONG_EDGE on its long side, PNG, or JPEG if that's too big.
+    `name` None: "pasted image"."""
+    name = _("pasted image") if name is None else name
     if image.isNull():
-        raise AttachError(f"{name} isn't an image Chatmon can read")
+        raise AttachError(_("{file} isn't an image Chatmon can read").format(file=name))
     note = ""
     if max(image.width(), image.height()) > LONG_EDGE:
         image = image.scaled(LONG_EDGE, LONG_EDGE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        note = "made smaller"
+        note = _("made smaller")
     data, mime = _encode(image, "PNG"), "image/png"
     if len(data) > MAX_IMAGE:
         if image.hasAlphaChannel():
             image = image.convertToFormat(QImage.Format.Format_RGB32)
         data, mime = _encode(image, "JPEG", 85), "image/jpeg"
     if len(data) > MAX_IMAGE:
-        raise AttachError(f"{name} is too big to send, even made smaller")
+        raise AttachError(_("{file} is too big to send, even made smaller").format(file=name))
     return Attachment(name, IMAGE, mime, data, note)
 
 
@@ -154,10 +164,13 @@ def network_location(path: Path) -> str | None:
             kind = LINUX_REMOTE.get(_statfs_type(path) or 0)
             if kind == "FUSE" and _mount_type(path) == "fuseblk":
                 return None
-            return None if kind is None else f"a network drive ({kind})" if kind != "FUSE" else "a FUSE drive, which may be on the network"
+            if kind is None:
+                return None
+            # Translators: where a file is, said in "{file} is on {place}: copy it to this computer to attach it".
+            return _("a network drive ({kind})").format(kind=kind) if kind != "FUSE" else _("a FUSE drive, which may be on the network")
         if sys.platform == "darwin":
             found = _mac_statfs(path)
-            return None if found is None or found[0] & MNT_LOCAL else f"a network drive ({found[1]})"
+            return None if found is None or found[0] & MNT_LOCAL else _("a network drive ({kind})").format(kind=found[1])
     except (OSError, ValueError):
         return None  # can't tell: looking at the file says what's wrong with it
     return None
@@ -167,14 +180,14 @@ def _windows_remote(text: str, depth: int = 0) -> str | None:
     text = text.replace("/", "\\")
     upper = text.upper()
     if upper.startswith("\\\\?\\UNC\\"):
-        return "a network share"
+        return _("a network share")
     if upper.startswith(("\\\\?\\", "\\\\.\\")):
         text = text[4:]  # a path on a drive here, spelled another way
     elif text.startswith("\\\\"):
-        return "a network share"
+        return _("a network share")
     drive = os.path.splitdrive(os.path.abspath(text))[0]
     if len(drive) == 2 and drive[1] == ":" and _drive_type(drive + "\\") == DRIVE_REMOTE:
-        return "a network drive"
+        return _("a network drive")
     if depth < 8 and os.path.islink(text):  # a link to the network is the network
         target = os.readlink(text)
         return _windows_remote(target if os.path.isabs(target) else os.path.join(os.path.dirname(text), target), depth + 1)
@@ -247,45 +260,49 @@ def from_path(path: Path) -> Attachment:
     name = path.name or str(path)
     remote = network_location(path)
     if remote:
-        raise AttachError(f"{name} is on {remote}: copy it to this computer to attach it")
+        raise AttachError(_("{file} is on {place}: copy it to this computer to attach it").format(file=name, place=remote))
     try:
         looked = os.stat(path)
     except OSError as exc:
-        raise AttachError(f"couldn't open {name} ({exc.strerror or exc})") from None
+        raise AttachError(_("couldn't open {file} ({error})").format(file=name, error=exc.strerror or exc)) from None
     if not stat.S_ISREG(looked.st_mode):
-        raise AttachError(f"{name} isn't a file")
+        raise AttachError(_("{file} isn't a file").format(file=name))
     if looked.st_size > MAX_FILE:
-        raise AttachError(f"{name} is too big ({looked.st_size // 2**20} MB)")
+        raise AttachError(_too_big(name, looked.st_size))
     try:
         fd = os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0) | getattr(os, "O_BINARY", 0))
     except OSError as exc:
-        raise AttachError(f"couldn't open {name} ({exc.strerror or exc})") from None
+        raise AttachError(_("couldn't open {file} ({error})").format(file=name, error=exc.strerror or exc)) from None
     try:
         info = os.fstat(fd)
     except OSError as exc:
         os.close(fd)
-        raise AttachError(f"couldn't open {name} ({exc.strerror or exc})") from None
+        raise AttachError(_("couldn't open {file} ({error})").format(file=name, error=exc.strerror or exc)) from None
     if not stat.S_ISREG(info.st_mode) or (info.st_dev, info.st_ino) != (looked.st_dev, looked.st_ino):
         os.close(fd)
-        raise AttachError(f"{name} changed as it was opened")
+        raise AttachError(_("{file} changed as it was opened").format(file=name))
     if info.st_size > MAX_FILE:
         os.close(fd)
-        raise AttachError(f"{name} is too big ({info.st_size // 2**20} MB)")
+        raise AttachError(_too_big(name, info.st_size))
     try:
         with os.fdopen(fd, "rb") as f:
             head = f.read(16)
             mime = _sniff(head)
             raw = head + f.read(_limit(mime) - len(head) + 1)
     except OSError as exc:
-        raise AttachError(f"couldn't read {name} ({exc.strerror or exc})") from None
+        raise AttachError(_("couldn't read {file} ({error})").format(file=name, error=exc.strerror or exc)) from None
     return _judged(raw, name, mime)
+
+
+def _too_big(name: str, size: int) -> str:
+    return _("{file} is too big ({size} MB)").format(file=name, size=size // 2**20)
 
 
 def from_bytes(data: bytes, name: str) -> Attachment:
     """A file's contents that aren't on disk (dragged out of Outlook or a zip), judged as from_path judges a
     file's."""
     if len(data) > MAX_FILE:
-        raise AttachError(f"{name} is too big ({len(data) // 2**20} MB)")
+        raise AttachError(_too_big(name, len(data)))
     mime = _sniff(data[:16])
     return _judged(data[: _limit(mime) + 1], name, mime)
 
@@ -299,24 +316,24 @@ def _judged(raw: bytes, name: str, mime: str | None) -> Attachment:
     """A file's first _limit(mime) + 1 bytes (or all of it, if fewer), as an attachment."""
     if mime == "application/pdf":
         if len(raw) > MAX_PDF:
-            raise AttachError(f"{name} is too big ({MAX_PDF // 2**20} MB at most for a PDF)")
+            raise AttachError(_("{file} is too big ({size} MB at most for a PDF)").format(file=name, size=MAX_PDF // 2**20))
         return Attachment(name, PDF, mime, raw)
     if mime:
         return from_image(QImage.fromData(raw), name)
     text = _decode_text(raw[: MAX_TEXT + 4])
     if text is None:
-        raise AttachError(f"{name} isn't text, an image or a PDF")
+        raise AttachError(_("{file} isn't text, an image or a PDF").format(file=name))
     attachment = from_text(text, name)
     if len(raw) > MAX_TEXT and not attachment.note:
-        attachment = Attachment(attachment.name, TEXT, attachment.mime, attachment.data, f"cut to its first {MAX_TEXT // 1024} KB")
+        attachment = Attachment(attachment.name, TEXT, attachment.mime, attachment.data, _cut_note())
     return attachment
 
 
 def check_total(existing: list[Attachment], new: Attachment) -> None:
     if len(existing) >= MAX_COUNT:
-        raise AttachError(f"{MAX_COUNT} attachments at most")
+        raise AttachError(_("{count} attachments at most").format(count=MAX_COUNT))
     if sum(len(a.data) for a in existing) + len(new.data) > MAX_TOTAL:
-        raise AttachError(f"that's past {MAX_TOTAL // 2**20} MB in all")
+        raise AttachError(_("that's past {size} MB in all").format(size=MAX_TOTAL // 2**20))
 
 
 def long_paste(text: str) -> bool:

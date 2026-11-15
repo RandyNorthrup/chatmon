@@ -26,6 +26,8 @@ from typing import Callable, NamedTuple
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
+from .i18n import _
+
 # NSWindowCollectionBehavior
 CAN_JOIN_ALL_SPACES = 1 << 0
 MOVE_TO_ACTIVE_SPACE = 1 << 1
@@ -421,11 +423,11 @@ def edit_menu(paste: Callable[[], None]) -> bool:
         if menus.index(bar, rt.sel("indexOfItem:"), menus.edit) >= 0:
             return True
         rt.obj(menus.edit, rt.sel("release"))  # the one that was in the menu bar before it was made again
-    edit = menus.new_menu("Edit")
-    item = menus.new_item("Paste", "paste:", "v")  # with Command, a key equivalent's own
+    edit = menus.new_menu(_("Edit"))
+    item = menus.new_item(_("Paste"), "paste:", "v")  # with Command, a key equivalent's own
     menus.put(item, rt.sel("setTarget:"), menus.target)
     menus.put(edit, rt.sel("addItem:"), item)
-    holder = menus.new_item("Edit", None)
+    holder = menus.new_item(_("Edit"), None)
     menus.put(holder, rt.sel("setSubmenu:"), edit)
     menus.put(bar, rt.sel("addItem:"), holder)
     menus.edit = rt.obj(holder, rt.sel("retain"))  # kept, to look for it in the menu bar next time

@@ -30,6 +30,8 @@ from PyQt6.QtGui import (
     QTextLength,
 )
 
+from .i18n import _
+
 # GitHub's markdown (tables, strikethrough, task lists, bare links) with no HTML: no <img>, no CSS
 # backgrounds, no <link> stylesheets, nothing that names a resource but markdown's own images.
 MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub | QTextDocument.MarkdownFeature.MarkdownNoHTML
@@ -281,8 +283,8 @@ def _insert_after(doc: QTextDocument, position: int, kind: str, n: int | None, t
     link.setForeground(colour)
     link.setFontUnderline(True)
     link.setProperty(QTextFormat.Property.FontSizeAdjustment, -1)
-    link.setToolTip("Copy this code" if kind == "copy code" else "Copy this answer")
-    c.insertText("Copy code" if kind == "copy code" else "Copy", link)
+    link.setToolTip(_("Copy this code") if kind == "copy code" else _("Copy this answer"))
+    c.insertText(_("Copy code") if kind == "copy code" else _("Copy"), link)
 
 
 def _frame_code(c: QTextCursor, look: Look) -> None:
