@@ -444,8 +444,41 @@ def test_nothing_newer_says_so(qapp, github, monkeypatch):
 
 def test_a_chatmon_that_cant_install_it_is_only_told(qapp, github):
     github(b"x")
-    _, seen = run_updater(qapp, kind="manual")
-    assert [name for name, _ in seen] == ["newer"]
+    updater, seen = run_updater(qapp, kind="manual")
+    assert [name for name, _ in seen] == ["newer"] and updater.metered is False
+
+
+def test_a_metered_connection_is_said_by_a_flag_not_by_its_words(qapp, github, monkeypatch):
+    """The app offers "Download it" for this one: the words are for people (and may be translated), the flag for it."""
+    github(b"the real installer")
+    monkeypatch.setattr(updates, "metered", lambda: True)
+    updater, seen = run_updater(qapp)
+    assert [name for name, _ in seen] == ["newer"] and updater.metered is True and updater.ready is None
+
+
+def test_each_failure_says_what_it_was_about(qapp, github, monkeypatch):
+    """Looking for an update, installing one that was tried, or nothing ready to install: the app tells them apart by
+    `failure`, never by the sentence."""
+    from PyQt6.QtCore import QEventLoop, QTimer
+
+    github(b"something else", sums_for=b"the real installer")
+    updater, seen = run_updater(qapp)
+    assert [name for name, _ in seen] == ["failed"] and updater.failure == updates.CHECK_FAILED
+    updater.install()  # nothing ready now
+    assert updater.failure == updates.NOT_READY
+
+    github(b"the real installer")
+    updater, seen = run_updater(qapp)
+    assert seen[0][0] == "available"
+    updater.ready.write_bytes(b"swapped while it waited")
+    monkeypatch.setattr(updates.QProcess, "startDetached", lambda *a: (True, 0))
+    failed = []
+    updater.failed.connect(failed.append)
+    updater.install()
+    loop = QEventLoop()
+    QTimer.singleShot(200, loop.quit)
+    loop.exec()
+    assert failed and updater.failure == updates.INSTALL_FAILED
 
 
 def test_an_update_is_checked_again_just_before_its_installed(qapp, github, monkeypatch):

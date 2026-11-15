@@ -760,3 +760,30 @@ def test_chatmon_starts_in_the_language_set_before_any_window(companion, monkeyp
         assert chosen == ["de"] and built == [["de"]]  # chosen before the stage (the first window) was made
     finally:
         again.quit()
+
+
+# -- M8: what the updater says is told apart by its flags, never by its (translatable) words
+
+
+def test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked(companion):
+    from chatmon import updates
+
+    c = companion
+    release = updates.Release("9.0.0", "## New\n- Nine", "https://example.com/releases/9.0.0")
+    c.updater.metered = True
+    c.updater.newer_only.emit(release, "Any words at all, in any language.")
+    assert until(lambda: c.stage.bubble.title == "Chatmon 9.0.0 is out") and labels(c)[0] == "Download it"
+    out_of_the_way(c)
+    c.updater.metered = False
+    c.updater.newer_only.emit(release, "Download it from the release page.")
+    assert until(lambda: c.stage.bubble.title == "Chatmon 9.0.0 is out") and labels(c)[0] == "Release page"
+    out_of_the_way(c)
+
+    c._checking_by_hand, c.updater.ready = False, None
+    c.updater.failure = updates.CHECK_FAILED
+    c.updater.failed.emit("The update server said something.")  # a check you didn't ask for: kept to the log
+    spin(0.5)
+    assert not c.stage.message_visible()
+    c.updater.failure = updates.INSTALL_FAILED
+    c.updater.failed.emit("Words of any shape.")  # an install that was tried: always said
+    assert until(lambda: c.stage.bubble.title == "No update this time")

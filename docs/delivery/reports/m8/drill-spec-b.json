@@ -1,0 +1,130 @@
+{
+  "drills": [
+    {
+      "id": "M8-01B-app-bubble-not-translated",
+      "requirement": "M8-01",
+      "file": "chatmon/app.py",
+      "find": "_(\"New look: {style}.\")",
+      "replace": "\"New look: {style}.\"",
+      "test": ["tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"]
+    },
+    {
+      "id": "M8-01B-prompt-gets-translated-label",
+      "requirement": "M8-01",
+      "file": "chatmon/app.py",
+      "find": "self._companion().label_en.lower()",
+      "replace": "self._companion().label.lower()",
+      "test": ["tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_app_itself_speaks_the_translation_and_english_where_it_has_none", "a small electric penguin desktop companion"]
+    },
+    {
+      "id": "M8-01B-install-failure-flag-ignored",
+      "requirement": "M8-01",
+      "file": "chatmon/app.py",
+      "find": "self.updater.failure == updates.INSTALL_FAILED",
+      "replace": "False",
+      "test": ["tests/test_app_m7.py::test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked"],
+      "expect": ["test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked"]
+    },
+    {
+      "id": "M8-01B-metered-flag-ignored",
+      "requirement": "M8-01",
+      "file": "chatmon/app.py",
+      "find": "if self.updater.metered:",
+      "replace": "if False:",
+      "test": ["tests/test_app_m7.py::test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked"],
+      "expect": ["test_a_metered_release_offers_its_download_and_only_a_tried_install_is_said_unasked"]
+    },
+    {
+      "id": "M8-01B-menu-item-not-wrapped",
+      "requirement": "M8-01",
+      "file": "chatmon/menus.py",
+      "find": "m.addAction(_(\"Settings…\"), c.open_settings)",
+      "replace": "m.addAction(\"Settings…\", c.open_settings)",
+      "test": ["tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"]
+    },
+    {
+      "id": "M8-01B-style-word-english",
+      "requirement": "M8-01",
+      "file": "chatmon/menus.py",
+      "find": "    return _(STYLE_WORDS[name]) if name in STYLE_WORDS else name",
+      "replace": "    return STYLE_WORDS[name] if name in STYLE_WORDS else name",
+      "test": ["tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"]
+    },
+    {
+      "id": "M8-01B-command-plural-glued",
+      "requirement": "M8-01",
+      "file": "chatmon/commands.py",
+      "find": "ngettext(\"Cancelled {n} reminder.\", \"Cancelled {n} reminders.\", len(upcoming)).format(n=len(upcoming))",
+      "replace": "f\"Cancelled {len(upcoming)} reminder{'s' if len(upcoming) != 1 else ''}.\"",
+      "test": ["tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"]
+    },
+    {
+      "id": "M8-01B-reminder-line-untranslated",
+      "requirement": "M8-01",
+      "file": "chatmon/commands.py",
+      "find": "    return _(once).format(**words)",
+      "replace": "    return once.format(**words)",
+      "test": ["tests/test_i18n_app.py::test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_app_itself_speaks_the_translation_and_english_where_it_has_none"]
+    },
+    {
+      "id": "M8-01B-turn-found-by-english",
+      "requirement": "M8-01",
+      "file": "chatmon/richtext.py",
+      "find": "    starts, you = [], you_label()",
+      "replace": "    starts, you = [], \"You:\"",
+      "test": ["tests/test_rich_text.py::test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language"],
+      "expect": ["test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language"]
+    },
+    {
+      "id": "M8-01B-attached-found-by-english",
+      "requirement": "M8-01",
+      "file": "chatmon/richtext.py",
+      "find": "    ranges, attached = [], attached_label()",
+      "replace": "    ranges, attached = [], \"Attached:\"",
+      "test": ["tests/test_rich_text.py::test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language"],
+      "expect": ["test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language"]
+    },
+    {
+      "id": "M8-01B-transcript-drops-attached",
+      "requirement": "M8-01",
+      "file": "chatmon/asking.py",
+      "find": "    return richtext.question_markdown(typed(question.text), [a.name for a in question.attached])",
+      "replace": "    return richtext.question_markdown(typed(question.text))",
+      "test": ["tests/test_asking.py::test_the_transcript_tail_shows_what_is_on_its_way_then_what_waits"],
+      "expect": ["test_the_transcript_tail_shows_what_is_on_its_way_then_what_waits"]
+    },
+    {
+      "id": "M8-01B-dropped-problem-a-fragment",
+      "requirement": "M8-01",
+      "file": "chatmon/winfiles.py",
+      "find": "_(\"{file} couldn't be read\").format(file=item.name)",
+      "replace": "\"couldn't be read\"",
+      "test": ["tests/test_winfiles.py::test_only_what_can_be_attached_is_read"],
+      "expect": ["test_only_what_can_be_attached_is_read"]
+    },
+    {
+      "id": "M8-01B-metered-flag-not-set",
+      "requirement": "M8-01",
+      "file": "chatmon/updates.py",
+      "find": "self.metered = metered",
+      "replace": "self.metered = False",
+      "test": ["tests/test_updates.py::test_a_metered_connection_is_said_by_a_flag_not_by_its_words"],
+      "expect": ["test_a_metered_connection_is_said_by_a_flag_not_by_its_words"]
+    },
+    {
+      "id": "M8-01B-template-stale",
+      "requirement": "M8-01",
+      "file": "chatmon/settingswin.py",
+      "find": "_(\"Hotkey to open the ask box\")",
+      "replace": "_(\"Hotkey that opens the ask box\")",
+      "test": ["tests/test_i18n.py::test_the_template_has_every_marked_string_and_reads_as_a_catalog"],
+      "expect": ["test_the_template_has_every_marked_string_and_reads_as_a_catalog", "run: python packaging/extract_strings.py"]
+    }
+  ]
+}

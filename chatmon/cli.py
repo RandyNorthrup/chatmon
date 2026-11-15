@@ -10,8 +10,10 @@ import time
 from datetime import datetime
 
 from . import __version__, events, i18n, paths
+from .i18n import N_, _
 
-USAGE = """\
+# Translators: the commands and flags stay as they are (they're what to type); the words after them are yours.
+USAGE = N_("""\
 usage: chatmon [command]
 
   (no command)               start Chatmon
@@ -33,7 +35,7 @@ usage: chatmon [command]
   quit                       close the chatmon that's running
   autostart on|off           start it when you log in
   --version
-"""
+""")  # shown as _(USAGE)
 
 STDIN_LIMIT = 256 * 1024  # bytes of hook payload to read at most
 STDIN_WAIT = 0.5  # seconds to wait for it
@@ -50,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         return run()
     command, rest = args[0], args[1:]
     if command in ("-h", "--help", "help"):
-        print(USAGE, end="")
+        print(_(USAGE), end="")
         return 0
     if command == "--version":
         print(__version__)
@@ -73,9 +75,10 @@ def main(argv: list[str] | None = None) -> int:
         from . import autostart
 
         autostart.set_enabled(rest[0] == "on")
-        print(f"Autostart {rest[0]}: {autostart.where()}")
+        said = _("Autostart on: {where}") if rest[0] == "on" else _("Autostart off: {where}")
+        print(said.format(where=autostart.where()))
         return 0
-    print(USAGE, end="", file=sys.stderr)
+    print(_(USAGE), end="", file=sys.stderr)
     return 2
 
 
@@ -102,7 +105,7 @@ def _language_setting() -> str | None:
 def _send(message: dict) -> int:
     if events.send(message):
         return 0
-    print("Chatmon isn't running. Start it with: chatmon", file=sys.stderr)
+    print(_("Chatmon isn't running. Start it with: chatmon"), file=sys.stderr)
     return 1
 
 
@@ -114,8 +117,10 @@ def remind(args: list[str]) -> int:
     command = reminders.parse_command("remind me " + text, datetime.now())
     if command is None or command.kind != "reminder":
         why = reminders.explain(command, markdown=False) if command is not None and command.kind == "unclear" else ""
-        print(f"Couldn't tell when to remind you{f' ({text!r})' if text else ''}. {why}".rstrip(), file=sys.stderr)
-        print("Try: chatmon remind in 20m to stretch", file=sys.stderr)
+        said = _("Couldn't tell when to remind you ({text}).").format(text=repr(text)) if text else _("Couldn't tell when to remind you.")
+        print(f"{said} {why}".rstrip(), file=sys.stderr)
+        # Translators: "chatmon remind in 20m to stretch" is what to type, as it is.
+        print(_("Try: chatmon remind in 20m to stretch"), file=sys.stderr)
         return 2
     return _send({"type": "remind", "text": text})
 
@@ -155,11 +160,11 @@ def status() -> int:
     paths.windows_environment()  # the agents' command lines, found on PATH as you have it now
     live = events.request({"type": "status"})
     running = live is not None or events.deliver({"type": "ping"}) == events.SENT  # a Chatmon too old to answer still runs
-    print("Chatmon is running." if running else "Chatmon isn't running. Start it with: chatmon")
+    print(_("Chatmon is running.") if running else _("Chatmon isn't running. Start it with: chatmon"))
     state = State.load()
     config, problem = load_config()
     if problem:
-        print(f"Couldn't read the settings file ({problem}); using the defaults.", file=sys.stderr)
+        print(_("Couldn't read the settings file ({problem}); using the defaults.").format(problem=problem), file=sys.stderr)
     if isinstance(state.get("settings"), dict):
         config = merge(config, state.get("settings"))  # what you set in Settings wins, as it does in Chatmon
     brain = commands.brain_in_use(brains.load_brains(config["ai"]), config, state)
@@ -168,12 +173,12 @@ def status() -> int:
                                   brain.label if brain else None, brains.describe(brain) if brain else "")
     print("\n".join(lines))
     if live is not None:
-        print("- Agents now:")
+        print(_("- Agents now:"))
         for line in (str(live.get("agents") or "") or offline.agents_report({}, 0, markdown=False)).splitlines():
             print(f"  {line}")
-    print("- Agents:")
+    print(_("- Agents:"))
     for agent in agents.AGENTS:
-        print(f"  {agent.label:<20} {agent.status()}")
+        print(f"  {agent.label:<20} {agents.status_words(agent.status())}")
     return 0
 
 
@@ -252,24 +257,26 @@ def hooks(args: list[str]) -> int:
     target = args[1] if len(args) > 1 else None
     if action == "list":
         for agent in agents.AGENTS:
-            print(f"  {agent.name:<10} {agent.label:<20} {agent.status()}")
-        print("\nConnect one with: chatmon hooks connect NAME   (or: all)")
+            print(f"  {agent.name:<10} {agent.label:<20} {agents.status_words(agent.status())}")
+        # Translators: "chatmon hooks connect NAME" and "all" are what to type, as they are.
+        print("\n" + _("Connect one with: chatmon hooks connect NAME   (or: all)"))
         return 0
     if action == "show":
         agent = agents.find(target or "")
         print(agent.manual() if agent else agents.generic())
         return 0
     if action not in ("connect", "disconnect") or not target:
-        print(USAGE, end="", file=sys.stderr)
+        print(_(USAGE), end="", file=sys.stderr)
         return 2
     if target == "all":  # connecting, every agent found here; disconnecting, only those connected: nobody else's file is touched
         chosen = [a for a in agents.AGENTS if (a.detected() if action == "connect" else a.connected())]
         if not chosen:
-            print("No coding agents found here." if action == "connect" else "No coding agents are connected.")
+            print(_("No coding agents found here.") if action == "connect" else _("No coding agents are connected."))
     else:
         chosen = [agents.find(target)]
     if chosen == [None]:
-        print(f"Unknown agent {target!r}. Known: {', '.join(a.name for a in agents.AGENTS)}", file=sys.stderr)
+        known = ", ".join(a.name for a in agents.AGENTS)
+        print(_("Unknown agent {name}. Known: {known}").format(name=repr(target), known=known), file=sys.stderr)
         return 2
     failed = 0
     for agent in chosen:
@@ -277,5 +284,5 @@ def hooks(args: list[str]) -> int:
             print(agent.connect() if action == "connect" else agent.disconnect())
         except (agents.AgentError, OSError) as exc:
             failed += 1
-            print(f"{agent.label}: {exc}", file=sys.stderr)
+            print(_("{agent}: {error}").format(agent=agent.label, error=exc), file=sys.stderr)
     return 1 if failed else 0

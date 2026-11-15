@@ -41,8 +41,12 @@ def test_only_what_can_be_attached_is_read():
 
     dropped = winfiles.read(offered, fetch)
     assert 1 not in asked and max(asked) == attachments.MAX_COUNT - 1  # never the one said to be too big, nor past the count
-    assert [d.problem for d in dropped[:5]] == ["", "is too big (5120 MB)", "", "couldn't be read", f"is too big (over {attachments.MAX_FILE // 2**20} MB)"]
-    assert dropped[0].data == b"text" and dropped[2].data == b"" and all(d.problem == "is one too many" for d in dropped[attachments.MAX_COUNT:])
+    # Each problem is a whole sentence that names the file (the app shows it as it is: a translation can order it).
+    assert [d.problem for d in dropped[:5]] == [
+        "", "huge.iso is too big (5120 MB)", "", "mail.msg couldn't be read", f"unsaid.bin is too big (over {attachments.MAX_FILE // 2**20} MB)",
+    ]
+    assert dropped[0].data == b"text" and dropped[2].data == b""
+    assert all(d.problem == f"{d.name} is one too many" for d in dropped[attachments.MAX_COUNT:]) and len(dropped) == attachments.MAX_COUNT + 2
 
 
 def test_contents_are_judged_as_a_files_are():

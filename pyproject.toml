@@ -132,6 +132,7 @@ max-complexity = 15
     "S108",  # literal /tmp paths: short socket folders made with mkdtemp, and paths that are only compared
     "S311",  # random shuffles and jitters the tests' own data; nothing secret comes from it
     "S314",  # the XML parsed is the Wayland protocol files and toasts Chatmon itself wrote
+    "S105", "S106",  # made-up tokens and passwords are the tests' own data
     "DTZ001", "DTZ005", "DTZ006",  # reminders and times are the computer's local wall time, as in chatmon/
 ]
 # Recorded scripts of finished milestones: their ledgers bind each file by SHA-256, so they stay as they ran.

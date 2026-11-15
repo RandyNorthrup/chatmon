@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from . import paths
+from .i18n import _
 
 DEFAULTS: dict[str, Any] = {
     "name": "",
@@ -332,15 +333,22 @@ def read_kept(path: Path, valid: Callable[[Any], bool], limit: int = 64 * 2**20)
             pass  # no backup this time: the file itself is fine
         return data, None
     kept = _set_aside(path)
-    where = f"kept it as {kept.name}" if kept else "couldn't even move it aside"
     try:
         good = _parsed(backup.read_bytes(), valid)
         when = datetime.fromtimestamp(backup.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
     except OSError:
         good = None
     if good is not None:
-        return good, f"{path.name} was damaged, so I {where} and went back to the copy from {when}."
-    return None, f"{path.name} was damaged, so I {where} and started it afresh."
+        if kept:
+            said = _("{file} was damaged, so I kept it as {kept} and went back to the copy from {when}.")
+        else:
+            said = _("{file} was damaged, so I couldn't even move it aside and went back to the copy from {when}.")
+        return good, said.format(file=path.name, kept=kept.name if kept else "", when=when)
+    if kept:
+        said = _("{file} was damaged, so I kept it as {kept} and started it afresh.")
+    else:
+        said = _("{file} was damaged, so I couldn't even move it aside and started it afresh.")
+    return None, said.format(file=path.name, kept=kept.name if kept else "")
 
 
 def _parsed(raw: bytes | None, valid: Callable[[Any], bool]) -> Any:
@@ -415,11 +423,13 @@ def coerce(config: dict, defaults: dict | None = None) -> tuple[dict, list[str]]
     heads_up = out.get("heads_up")
     if isinstance(heads_up, dict) and 0 < heads_up.get("battery_low", 0) <= heads_up.get("battery_critical", 0):
         heads_up["battery_critical"] = heads_up["battery_low"] - 1  # "almost empty" stays below "low"
-        problems.append(f"heads_up.battery_critical should be below battery_low, so it's {heads_up['battery_critical']} for now")
+        # Translators: heads_up.battery_critical and battery_low are names in the settings file, as they are.
+        problems.append(_("heads_up.battery_critical should be below battery_low, so it's {value} for now").format(value=heads_up["battery_critical"]))
     brains = out.get("ai", {}).get("brains")
     if isinstance(brains, dict):
         for name in [n for n, spec in brains.items() if not isinstance(spec, dict)]:
-            problems.append(f"ai.brains.{name} isn't a table, so it's left out")
+            # Translators: {setting} is a name in the settings file (ai.brains.my-tool); a table is TOML's [section].
+            problems.append(_("{setting} isn't a table, so it's left out").format(setting=f"ai.brains.{name}"))
             del brains[name]
     return out, problems
 
@@ -435,7 +445,7 @@ def _coerce(config: dict, defaults: dict, prefix: str, problems: list[str]) -> d
             if isinstance(value, dict):
                 out[key] = _coerce(value, default, name + ".", problems)
             else:
-                problems.append(f"{name} should be a table, so it's the default for now")
+                problems.append(_("{setting} should be a table, so it's the default for now").format(setting=name))
                 out[key] = copy.deepcopy(default)
         else:
             out[key] = _value(name, value, default, problems)
@@ -449,26 +459,29 @@ def _value(name: str, value: Any, default: Any, problems: list[str]) -> Any:
         word = str(value).strip().lower() if isinstance(value, (str, int)) else ""
         if word in _TRUE | _FALSE:
             return word in _TRUE
-        problems.append(f"{name} should be true or false, so it's {str(default).lower()} for now")
+        # Translators: "true" and "false" are what to write in the settings file, as they are.
+        problems.append(_("{setting} should be true or false, so it's {value} for now").format(setting=name, value=str(default).lower()))
         return default
     if isinstance(default, int):
         number = _number(value)
         if number is None:
-            problems.append(f"{name} should be a number, so it's {default} for now")
+            problems.append(_("{setting} should be a number, so it's {value} for now").format(setting=name, value=default))
             return default
         low, high = RANGES.get(name, (-(2**31), 2**31 - 1))
         if not low <= number <= high:
             kept = min(max(number, low), high)
-            problems.append(f"{name} can be {low} to {high}, so it's {kept} for now")
+            problems.append(_("{setting} can be {low} to {high}, so it's {value} for now").format(setting=name, low=low, high=high, value=kept))
             return kept
         return number
     if isinstance(default, str):
         if isinstance(value, str) and (name not in CHOICES or value in CHOICES[name]):
             return value
         if isinstance(value, str):
-            problems.append(f"{name} should be {', '.join(repr(c) for c in CHOICES[name])}, so it's {default!r} for now")
+            # Translators: {choices} are the words the settings file takes, quoted, as they are.
+            choices = ", ".join(repr(c) for c in CHOICES[name])
+            problems.append(_("{setting} should be {choices}, so it's {value} for now").format(setting=name, choices=choices, value=repr(default)))
         else:
-            problems.append(f"{name} should be text in quotes, so it's the default for now")
+            problems.append(_("{setting} should be text in quotes, so it's the default for now").format(setting=name))
         return default
     return value
 

@@ -1,0 +1,4 @@
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider -rs tests/test_i18n.py
+..................................                                       [100%]
+34 passed in 3.11s
+exit 0

@@ -16,6 +16,7 @@ from collections.abc import Callable
 from datetime import datetime
 
 from . import __version__, memory, offline, reminders
+from .i18n import N_, _, ngettext
 
 
 class Table:
@@ -33,7 +34,7 @@ class Table:
 
 
 # What a screen reader hears of a password made: never the password, which a system notification would keep.
-PASSWORD_MADE = "Password made; it's in the box."
+PASSWORD_MADE = N_("Password made; it's in the box.")  # said as _(PASSWORD_MADE)
 
 
 def run(c, text: str, table: Table | None = None) -> bool:
@@ -57,7 +58,7 @@ def run(c, text: str, table: Table | None = None) -> bool:
         return True
     made = offline.password(text)
     if made is not None:  # shown in the box once; a screen reader is told only that it's there
-        c._offline(text, made, spoken=PASSWORD_MADE if "`" in made else None)
+        c._offline(text, made, spoken=_(PASSWORD_MADE) if "`" in made else None)
         return True
     reply = offline.answer(text, datetime.now())
     if reply is not None:
@@ -78,34 +79,37 @@ def _remind(c, text: str, command: reminders.Command) -> None:
         c.save()
         when = reminders.describe(r.due, time.time())
         if r.kind == "timer":
-            c._offline(text, f"Timer set: **{r.text}**, done {when}.")
+            c._offline(text, _("Timer set: **{text}**, done {when}.").format(text=r.text, when=when))
         elif r.repeat:
-            c._offline(text, f"I'll remind you {reminders.describe_repeat(r.repeat)}, first {when}: **{r.text}**")
+            said = _("I'll remind you {repeat}, first {when}: **{text}**").format(repeat=reminders.describe_repeat(r.repeat), when=when, text=r.text)
+            c._offline(text, said)
         else:
-            c._offline(text, f"I'll remind you {when}: **{r.text}**")
+            c._offline(text, _("I'll remind you {when}: **{text}**").format(when=when, text=r.text))
         c.behavior.react("hop", c._now())
 
 
 # -- memory: remembered for every chat, as you asked, and forgotten again (memory.py)
 
 
+# Translators (for the replies below): the words between asterisks are what to type, as Chatmon reads them; use
+# your language's phrase only where chatmon/phrases/ has one for it.
 def memory_reply(mind: memory.Memory, kind: str, what: str) -> str:
     if kind == "remember":
         refused = mind.add(what)
-        return refused or f"I'll remember that: *{what.strip(' .')}*. Every brain you ask gets it with each question."
+        return refused or _("I'll remember that: *{thing}*. Every brain you ask gets it with each question.").format(thing=what.strip(" ."))
     if kind == "forget":
         gone = mind.forget(what)
         if not gone:
-            return "I don't remember anything like that. *What do you remember* lists it all."
-        return "Forgotten: " + "; ".join(f"*{g}*" for g in gone) + "."
+            return _("I don't remember anything like that. *What do you remember* lists it all.")
+        return _("Forgotten: {things}.").format(things="; ".join(f"*{g}*" for g in gone))
     if kind == "forget-all":
         n = len(mind.items)
         mind.clear()
-        return f"Forgotten, all {n} of them." if n else "There was nothing to forget."
+        return ngettext("Forgotten, all {n} of them.", "Forgotten, all {n} of them.", n).format(n=n) if n else _("There was nothing to forget.")
     if not mind.items:
-        return "Nothing yet. Tell me *remember that …* and I'll keep it for every chat."
+        return _("Nothing yet. Tell me *remember that …* and I'll keep it for every chat.")
     listed = "\n".join(f"- {i.text}" for i in mind.items)
-    return f"What I remember, for every chat:\n\n{listed}\n\n*Forget that …* takes one out."
+    return _("What I remember, for every chat:\n\n{things}\n\n*Forget that …* takes one out.").format(things=listed)
 
 
 # -- notes, the stopwatch, and reminders by number: what Chatmon keeps
@@ -119,7 +123,7 @@ def offline_clock(elapsed: float, seconds: bool = True) -> str:
     s = int(max(0, elapsed))
     h, m, sec = s // 3600, s // 60 % 60, s % 60
     if not seconds:
-        return f"{h}:{m:02d} h" if h else f"{m} min"
+        return _("{hours}:{minutes} h").format(hours=h, minutes=f"{m:02d}") if h else _("{minutes} min").format(minutes=m)
     return f"{h}:{m:02d}:{sec:02d}" if h else f"{m}:{sec:02d}"
 
 
@@ -138,53 +142,55 @@ def _set_notes(c, new: list[dict]) -> None:
 def kept(c, asked: offline.Asked) -> str:
     """Notes, the stopwatch and reminders: do what's asked, say what was done."""
     handler = _KEPT.get(asked.kind)
-    return handler(c, asked.arg) if handler else "Hmm."
+    return handler(c, asked.arg) if handler else _("Hmm.")
 
 
 def _note(c, arg: str) -> str:
     current = notes(c.state)
     if len(current) >= MAX_NOTES:
-        return f"I keep {MAX_NOTES} notes at most: *delete note 1* makes room."
+        return _("I keep {count} notes at most: *delete note 1* makes room.").format(count=MAX_NOTES)
     current.append({"text": arg[:MAX_NOTE], "at": time.time()})
     _set_notes(c, current)
     c.behavior.react("hop", c._now())
-    return f"Noted (note {len(current)}). *delete note {len(current)}* takes it back."
+    return _("Noted (note {n}). *delete note {n}* takes it back.").format(n=len(current))
 
 
 def _list_notes(c, _arg: str) -> str:
     current = notes(c.state)
-    return "\n".join(f"{i}. {n['text']}" for i, n in enumerate(current, 1)) if current else "No notes yet: *note: buy milk* makes one."
+    return "\n".join(f"{i}. {n['text']}" for i, n in enumerate(current, 1)) if current else _("No notes yet: *note: buy milk* makes one.")
 
 
 def _delete_note(c, arg: str) -> str:
     current, i = notes(c.state), int(arg)
     if not 1 <= i <= len(current):
-        return f"There's no note {i}." + (f" You have {len(current)}." if current else "")
+        if current:
+            return ngettext("There's no note {i}. You have {n}.", "There's no note {i}. You have {n}.", len(current)).format(i=i, n=len(current))
+        return _("There's no note {i}.").format(i=i)
     gone = current.pop(i - 1)
     _set_notes(c, current)
-    return f"Deleted note {i}: {gone['text'][:80]}"
+    return _("Deleted note {i}: {text}").format(i=i, text=gone["text"][:80])
 
 
 def _clear_notes(c, _arg: str) -> str:
     n = len(notes(c.state))
     _set_notes(c, [])
-    return f"Deleted {n} note{'s' if n != 1 else ''}."
+    return ngettext("Deleted {n} note.", "Deleted {n} notes.", n).format(n=n)
 
 
 def _stopwatch(c, _arg: str) -> str:
     if c._stopwatch is None:
         c._stopwatch = c._now()
         c._menu_changed()
-        return "Stopwatch started. *stop stopwatch* stops it."
-    return f"Stopwatch: **{offline_clock(c._now() - c._stopwatch)}** and counting."
+        return _("Stopwatch started. *stop stopwatch* stops it.")
+    return _("Stopwatch: **{time}** and counting.").format(time=offline_clock(c._now() - c._stopwatch))
 
 
 def _stop_stopwatch(c, _arg: str) -> str:
     if c._stopwatch is None:
-        return "The stopwatch isn't running: *stopwatch* starts it."
+        return _("The stopwatch isn't running: *stopwatch* starts it.")
     took, c._stopwatch = c._now() - c._stopwatch, None
     c._menu_changed()
-    return f"Stopwatch stopped at **{offline_clock(took)}**."
+    return _("Stopwatch stopped at **{time}**.").format(time=offline_clock(took))
 
 
 def _upcoming(c) -> list[reminders.Reminder]:
@@ -194,22 +200,34 @@ def _upcoming(c) -> list[reminders.Reminder]:
 def _list_reminders(c, _arg: str) -> str:
     upcoming = _upcoming(c)
     if not upcoming:
-        return "No reminders or timers set."
+        return _("No reminders or timers set.")
     return "\n".join(f"{i}. {reminder_line(r, time.time())}" for i, r in enumerate(upcoming, 1))
+
+
+# Each kind's line, once and with how it repeats: whole sentences, never "Reminder" put before a phrase.
+# Translators: {when} is "in 5 min", "at 3:00 PM", "tomorrow at 9:00 AM" or "was due at 9:00 AM"; {repeat} "every weekday at 9:00 AM".
+_LINES = {
+    "reminder": (N_("Reminder {when}: {text}"), N_("Reminder {when}: {text} ({repeat})")),
+    "timer": (N_("Timer {when}: {text}"), N_("Timer {when}: {text} ({repeat})")),
+    "focus": (N_("Focus {when}: {text}"), N_("Focus {when}: {text} ({repeat})")),
+}
 
 
 def reminder_line(r: reminders.Reminder, now: float) -> str:
     """"Reminder in 5 min: stretch", "Reminder was due at 9:00 AM: stand up (every weekday at 9:00 AM)"."""
-    again = f" ({reminders.describe_repeat(r.repeat)})" if r.repeat else ""
-    return f"{r.kind.capitalize()} {reminders.describe(r.due, now)}: {r.text}{again}"
+    once, repeating = _LINES.get(r.kind, _LINES["reminder"])
+    words = {"when": reminders.describe(r.due, now), "text": r.text}
+    if r.repeat:
+        return _(repeating).format(repeat=reminders.describe_repeat(r.repeat), **words)
+    return _(once).format(**words)
 
 
 def _cancel_reminder(c, arg: str) -> str:
     upcoming, i = _upcoming(c), int(arg)
     if not 1 <= i <= len(upcoming):
-        return f"There's no reminder {i}: *reminders* lists them."
+        return _("There's no reminder {i}: *reminders* lists them.").format(i=i)
     c._cancel(upcoming[i - 1].id)
-    return f"Cancelled: {upcoming[i - 1].text}"
+    return _("Cancelled: {text}").format(text=upcoming[i - 1].text)
 
 
 def _clear_reminders(c, _arg: str) -> str:
@@ -217,7 +235,7 @@ def _clear_reminders(c, _arg: str) -> str:
     for r in upcoming:
         c.reminders.cancel(r.id)
     c.save()
-    return f"Cancelled {len(upcoming)} reminder{'s' if len(upcoming) != 1 else ''}."
+    return ngettext("Cancelled {n} reminder.", "Cancelled {n} reminders.", len(upcoming)).format(n=len(upcoming))
 
 
 _KEPT: dict[str, Callable[..., str]] = {
@@ -246,14 +264,20 @@ def status_lines(battery: tuple[float, bool] | None, disks: list[tuple[str, floa
     in use (`brain`: its label, or None for none)."""
     lines = []
     if battery:
-        lines.append(f"- Battery: {battery[0]:.0f}%{' (plugged in)' if battery[1] else ''}")
+        charge = f"{battery[0]:.0f}"
+        lines.append("- " + (_("Battery: {percent}% (plugged in)") if battery[1] else _("Battery: {percent}%")).format(percent=charge))
     for folder, percent in disks:
-        lines.append(f"- Disk for {folder}: {percent:.0f}% full")
+        lines.append("- " + _("Disk for {folder}: {percent}% full").format(folder=folder, percent=f"{percent:.0f}"))
     for r in upcoming[:5]:
         lines.append(f"- {reminder_line(r, now)}")
     if not upcoming:
-        lines.append("- No reminders set")
-    lines.append(f"- Brain: {brain or 'none'}" + (f" ({brain_detail})" if brain and brain_detail else ""))
+        lines.append("- " + _("No reminders set"))
+    if not brain:
+        lines.append("- " + _("Brain: none"))
+    elif brain_detail:
+        lines.append("- " + _("Brain: {brain} ({detail})").format(brain=brain, detail=brain_detail))
+    else:
+        lines.append("- " + _("Brain: {brain}").format(brain=brain))
     return lines
 
 
@@ -274,7 +298,7 @@ def _status(c, text: str) -> None:
 
 def _stop_focus(c, text: str) -> None:
     c.stop_focus()
-    c._offline(text, "Focus stopped.")
+    c._offline(text, _("Focus stopped."))
 
 
 def _hide(c, _text: str) -> None:
@@ -297,14 +321,14 @@ def _set_breaks(c, text: str, on: bool) -> None:
     c._override(("breaks", "remind"), on)
     c.state.save()
     c.config["breaks"]["remind"] = on
-    c._offline(text, "Break reminders are on." if on else "No more break reminders. *Breaks on* brings them back.")
+    c._offline(text, _("Break reminders are on.") if on else _("No more break reminders. *Breaks on* brings them back."))
 
 
 def _set_focus_alerts(c, text: str, on: bool) -> None:
     c._override(("focus", "tell_when_done"), on)
     c.state.save()
     c.config["focus"]["tell_when_done"] = on
-    c._offline(text, "I'll say when a focus session ends." if on else "Focus sessions will end quietly. *Focus alerts on* brings it back.")
+    c._offline(text, _("I'll say when a focus session ends.") if on else _("Focus sessions will end quietly. *Focus alerts on* brings it back."))
 
 
 def _settings(c, _text: str) -> None:
@@ -329,19 +353,19 @@ def _update(c, _text: str) -> None:
 
 
 def _report(c, _text: str) -> None:
-    c.ask_box.set_answer("Opening a problem report in your browser…")
+    c.ask_box.set_answer(_("Opening a problem report in your browser…"))
     c.report_problem()
 
 
 def _idea(c, _text: str) -> None:
     from . import report
 
-    c.ask_box.set_answer("Opening an idea form in your browser…")
+    c.ask_box.set_answer(_("Opening an idea form in your browser…"))
     c.report_problem(report.IDEA)
 
 
 def _version(c, text: str) -> None:
-    c._offline(text, f"I'm Chatmon {__version__}.")
+    c._offline(text, _("I'm Chatmon {version}.").format(version=__version__))
 
 
 def _carry_on(c, _text: str) -> bool:

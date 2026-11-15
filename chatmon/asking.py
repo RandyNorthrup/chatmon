@@ -15,6 +15,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from . import richtext
+from .i18n import _
+
 MAX_WAITING = 1  # questions waiting behind the one being answered
 
 
@@ -88,12 +91,12 @@ def tail(questions: Questions, thinking: str) -> list[str]:
     parts = []
     if questions.failure is not None:
         text, why = questions.failure
-        parts.append(f"**You:** {typed(text)}\n\n*Hmm, that didn't work.* {why}")
+        parts.append(f"{_you_said(text)}\n\n" + _("*Hmm, that didn't work.* {why}").format(why=why))
     if questions.current is not None:
         current = questions.current
         parts.append(_you(current) if current.partial else f"{_you(current)}\n\n*{thinking}*")
     for waiting in questions.waiting:
-        parts.append(f"{_you(waiting)}\n\n*Waiting for the answer on its way: this one goes next (Stop ends that one).*")
+        parts.append(f"{_you(waiting)}\n\n" + _("*Waiting for the answer on its way: this one goes next (Stop ends that one).*"))
     return parts
 
 
@@ -103,7 +106,11 @@ def typed(text: str) -> str:
     return "\\\n".join(text.split("\n"))
 
 
+def _you_said(text: str) -> str:
+    """A question's paragraph in the transcript, "**You:** …", written as richtext finds turns by."""
+    return richtext.question_markdown(typed(text))
+
+
 def _you(question: Question) -> str:
     """The question as the chat shows it once answered: what was attached by name, never its contents."""
-    line = f"**You:** {typed(question.text)}" if question.text else "**You:**"
-    return line + (f"\n\n*Attached: {', '.join(a.name for a in question.attached)}*" if question.attached else "")
+    return richtext.question_markdown(typed(question.text), [a.name for a in question.attached])

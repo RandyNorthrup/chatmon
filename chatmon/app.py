@@ -21,14 +21,15 @@ from PyQt6.QtGui import QColor, QDesktopServices, QFontMetricsF, QGuiApplication
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, a11y, agents, asking, i18n, attachments, autostart, backup, brains, changelog, chats, commands, companions, context, events, heads_up, keychain, memory, menus, messages, offline, paths, presence, reminders, report, styles, sysnotify, updates
+from . import __version__, a11y, agents, asking, i18n, attachments, autostart, backup, brains, changelog, chats, commands, companions, context, events, heads_up, keychain, memory, menus, messages, offline, paths, presence, reminders, report, richtext, styles, sysnotify, updates
 from .behavior import Behavior
 from .bubble import AskBox, TimeoutPolicy, clipboard_contents, overlay_contents
+from .i18n import N_, _, either, join, ngettext
 from .penguin import Stage
 from .settings import State, coerce, merge, read_config
 from .sprites import Sprites, silhouette
 
-PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": "Your agent"}
+PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": N_("Your agent")}  # shown as _(…)
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
 MATCH = "match"  # the bubble style that follows the companion
 MAX_CONNECTIONS = 64  # hook connections open at once (each is a moment's); past that a new one is turned away
@@ -42,22 +43,25 @@ BUBBLE_TIMES = {"normal": 1.0, "longer": 1.5, "much longer": 2.5, "until closed"
 # Sounds (M4B's sound.py plays them): the alerts are on by default, the rest off until turned on (owner, 2026-11-14).
 ALERT_CUES = ("needs-you", "reminder", "focus-done")
 # Quick actions on the clipboard (the menu's Clipboard): what's typed in the box once the clipboard is attached.
+# The menu names each one (menus.QUICK_LABELS), and its words are typed in the box as _(words): your question, in
+# your language, which you send or change.
 QUICK_ACTIONS = {
-    "Explain": "Explain this:",
-    "Summarize": "Summarize this:",
-    "Translate": "Translate this into {language}:",
-    "Fix": "Fix the mistakes in this (spelling, grammar or code), and say what you changed:",
+    "Explain": N_("Explain this:"),
+    "Summarize": N_("Summarize this:"),
+    "Translate": N_("Translate this into {language}:"),
+    "Fix": N_("Fix the mistakes in this (spelling, grammar or code), and say what you changed:"),
 }
 
-HELP = """\
+# Shown as _(HELP), _(NO_AI) and _(ASK_HINT): the language is chosen after this module is imported.
+HELP = N_("""\
 **Click me** to ask anything, **drag me** anywhere, **right-click** for the menu.
 
 I also do plenty without any AI, like *remind me in 20m to stretch*, *timer 10 min*, *note: buy milk*,
 *5 km in miles* or *roll 2d6*. Ask me *help* to see it all.
-"""
+""")
 
-NO_AI = "Answered here, without any AI."
-ASK_HINT = "Enter to ask · Shift+Enter for a new line · Esc to close"
+NO_AI = N_("Answered here, without any AI.")
+ASK_HINT = N_("Enter to ask · Shift+Enter for a new line · Esc to close")
 SILENT = "silent"  # a message's cue that's no sound at all (one shown again)
 
 
@@ -83,12 +87,23 @@ class Background(QObject):
 
 
 def pretty(source: str) -> str:
-    return PRETTY.get(source.lower(), source[:1].upper() + source[1:])
+    return _(PRETTY[source.lower()]) if source.lower() in PRETTY else source[:1].upper() + source[1:]
 
 
-def listed(words: list[str]) -> str:
-    """"A", "A and B", "A, B and C"."""
-    return " and ".join(filter(None, [", ".join(words[:-1]), words[-1]])) if words else ""
+def _reminder_said(r: reminders.Reminder, repeat: bool = False) -> str:
+    """A reminder as a bubble confirms it: "in 5 min: stretch", with how it repeats when `repeat`."""
+    when = reminders.describe(r.due, time.time())
+    if repeat and r.repeat:
+        # Translators: a reminder just set: "tomorrow at 9:00 AM: stand up (every weekday at 9:00 AM)".
+        return _("{when}: {reminder} ({repeat})").format(when=when, reminder=r.text, repeat=reminders.describe_repeat(r.repeat))
+    # Translators: a reminder just set or changed: "in 5 min: stretch", "tomorrow at 9:00 AM: call Sam".
+    return _("{when}: {reminder}").format(when=when, reminder=r.text)
+
+
+def _took_first(room: int) -> str:
+    """Said when more files come than fit: how many were taken, of how many at most."""
+    most = attachments.MAX_COUNT
+    return ngettext("I took the first {n}: {most} attachment at most.", "I took the first {n}: {most} attachments at most.", most).format(n=max(0, room), most=most)
 
 
 class Companion(QObject):
@@ -246,7 +261,7 @@ class Companion(QObject):
         self.updater.up_to_date.connect(self._up_to_date)
         self.updater.failed.connect(self._update_failed)
         self.updater.installing.connect(self.quit)
-        self.updater.handed_over.connect(lambda: self.say("Updating…", "The installer has it from here. I'll be back in a moment.", timeout_s=60))
+        self.updater.handed_over.connect(lambda: self.say(_("Updating…"), _("The installer has it from here. I'll be back in a moment."), timeout_s=60))
         self._checking_by_hand = False  # a check you asked for says what it found, even "nothing new"
         self._install_kind: str | None = None
         self._problem_told = False
@@ -356,7 +371,7 @@ class Companion(QObject):
         """Something needs you: the penguin waves its flippers until you answer. `reminder`: one of yours, which
         waits for an agent's alert but goes before anything else. Either comes on its own."""
         priority = messages.REMINDER if reminder else messages.ALERT
-        message = messages.Message(title, text, buttons or [("OK", None)], None, key=key, priority=priority, alert=True, background=True,
+        message = messages.Message(title, text, buttons or [(_("OK"), None)], None, key=key, priority=priority, alert=True, background=True,
                                    cue="reminder" if reminder else "needs-you")
         if not self._post(message):
             # Under a full-screen app: it waits for you, and the system's own notification says so now
@@ -366,7 +381,7 @@ class Companion(QObject):
             # Only that something's waiting: the system keeps notifications (Action Center, a phone linked
             # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
             # A reminder's notification offers what its bubble does (Done, a snooze), so it can be seen to from there.
-            self._system_notice(title, "Chatmon has something for you.", list(buttons[:2]) if reminder and buttons else [], "reminder" if reminder else None)
+            self._system_notice(title, _("Chatmon has something for you."), list(buttons[:2]) if reminder and buttons else [], "reminder" if reminder else None)
 
     def _system_notice(self, title: str, text: str, buttons=(), scenario: str | None = None, seconds: int = 10, aloud: bool = False) -> None:
         """A notification of the system's own, which keeps a history: Windows' toast (wintoast.py), else the tray's
@@ -721,7 +736,7 @@ class Companion(QObject):
         if len(missed) == 1:
             self._show_again(missed[0])
         else:
-            self.say("While you were away", "\n".join(f"- {_gist(m)}" for m in missed), timeout_s=30)
+            self.say(_("While you were away"), "\n".join(f"- {_gist(m)}" for m in missed), timeout_s=30)
 
     def _show_again(self, message: messages.Message) -> None:
         """A bubble from before (Recent messages, or missed), shown again as something you asked for: no alert, no sound."""
@@ -745,24 +760,24 @@ class Companion(QObject):
             return
         self.state.set("told_no_tray", True)
         self.state.save()
-        self.say("No tray icon here", "My menu is on me: right-click me. After **Hide**, click me when I peek, or open Chatmon from your apps, to bring me back.", timeout_s=20,
+        self.say(_("No tray icon here"), _("My menu is on me: right-click me. After **Hide**, click me when I peek, or open Chatmon from your apps, to bring me back."), timeout_s=20,
                  background=True)
 
     def _greet(self) -> None:
         for problem in (self.state.problem, self.memory.problem):  # a damaged file, kept aside, and what was used instead
             if problem:
-                self.say("One of my files was damaged", problem, timeout_s=30, background=True)
+                self.say(_("One of my files was damaged"), problem, timeout_s=30, background=True)
         if self.config_error:
             self._say_config_problem()
         elif self.server_problem:
-            self.say("Your agents can't reach me", f"{self.server_problem}\n\nEverything else works.", timeout_s=30)
+            self.say(_("Your agents can't reach me"), _("{problem}\n\nEverything else works.").format(problem=self.server_problem), timeout_s=30)
         elif not (self.config["name"] or self.state.get("name")):
             self._asking_name = True
             self.open_ask(focus=False)  # nobody clicked: don't take the keyboard from them
         elif self._whats_new_after_update():
             pass
         elif not self.stage.message_visible() and not self._hello():  # an agent or a script got in first: theirs matters more
-            self.say(f"Hi, I'm {self.name}!", "Click me to ask anything.", timeout_s=5)
+            self.say(_("Hi, I'm {name}!").format(name=self.name), _("Click me to ask anything."), timeout_s=5)
 
     def _hello(self) -> bool:
         """The first unlock (or start) of the day: one bubble naming today's reminders, the agents waiting for you and
@@ -775,18 +790,21 @@ class Companion(QObject):
         lines = []
         todays = [r for r in self.reminders.upcoming() if r.kind != "focus" and _day_of(r.due) == today]
         if todays:
-            lines.append("Today: " + "; ".join(f"{r.text} ({reminders.clock(datetime.fromtimestamp(r.due))})" for r in todays[:5]))
+            # Translators: one of today's reminders in the morning's hello: "stretch (3:00 PM)".
+            each = [_("{reminder} ({time})").format(reminder=r.text, time=reminders.clock(datetime.fromtimestamp(r.due))) for r in todays[:5]]
+            # Translators: the reminders are joined with semicolons: "Today: stretch (3:00 PM); call Sam (5:00 PM)".
+            lines.append(_("Today: {reminders}").format(reminders="; ".join(each)))
         waiting = self._waiting_agents()
         if waiting:
-            lines.append(f"{listed(waiting)} {'is' if len(waiting) == 1 else 'are'} waiting for you.")
+            lines.append(ngettext("{agents} is waiting for you.", "{agents} are waiting for you.", len(waiting)).format(agents=join(waiting)))
         if self.updater.ready is not None and self.updater.release is not None:
-            lines.append(f"Chatmon {self.updater.release.version} is ready to install.")
+            lines.append(_("Chatmon {version} is ready to install.").format(version=self.updater.release.version))
         system = sum(self._update_counts.values())
         if system:
-            lines.append(f"{system} system update{'s are' if system != 1 else ' is'} waiting.")
+            lines.append(ngettext("{n} system update is waiting.", "{n} system updates are waiting.", system).format(n=system))
         if not lines:
             return False
-        self.say("Good morning" if datetime.now().hour < 12 else "Welcome back", "\n".join(f"- {line}" for line in lines), timeout_s=30)
+        self.say(_("Good morning") if datetime.now().hour < 12 else _("Welcome back"), "\n".join(f"- {line}" for line in lines), timeout_s=30)
         return True
 
     # -- clicks and the ask box
@@ -829,25 +847,28 @@ class Companion(QObject):
         if self._asking_name:
             self.ask_box.open(
                 anchor,
-                "Hi! I'm your new desktop companion.",
-                "Enter to save · Esc to decide later",
-                "A name for me",
-                text="What should I be called?",
+                _("Hi! I'm your new desktop companion."),
+                _("Enter to save · Esc to decide later"),
+                _("A name for me"),
+                text=_("What should I be called?"),
                 activate=focus,
             )
             self.ask_box.chatting(False)
         else:
             brain = self._brain(wait=False)  # only for the hint: as far as can be told without holding up the screen
-            via = f"answers from {brain.label}" if brain else "no AI set up yet; reminders and timers still work"
+            if brain:
+                hint = _("{keys} · answers from {brain}").format(keys=_(ASK_HINT), brain=brain.label)
+            else:
+                hint = _("{keys} · no AI set up yet; reminders and timers still work").format(keys=_(ASK_HINT))
             self.ask_box.open(
-                anchor, f"Ask {self.name}", f"{ASK_HINT} · {via}", "Ask anything, or: remind me in 20m to stretch",
+                anchor, _("Ask {name}").format(name=self.name), hint, _("Ask anything, or: remind me in 20m to stretch"),
                 text=self._transcript(), prefill=prefill, activate=focus,
             )
             self.ask_box.chatting(True)
-            self.ask_box.hint.setToolTip(f"{ASK_HINT} · {via}")  # the box shortens it to its width
+            self.ask_box.hint.setToolTip(hint)  # the box shortens it to its width
             self._show_chat()
             if fresh:
-                self.ask_box.set_answer("*New chat* · **carry on** with the last one")
+                self.ask_box.set_answer(_("*New chat* · **carry on** with the last one"))
             self.ask_box.set_attachments([a.label() for a in self.attached])
             self.ask_box.set_resettable(bool(self.chat.messages))
 
@@ -925,7 +946,7 @@ class Companion(QObject):
         self._start_chat()
         self.ask_box.set_attachments([])
         self.ask_box.set_resettable(False)
-        self.ask_box.set_answer("*New chat. Ask away.*")
+        self.ask_box.set_answer(_("*New chat. Ask away.*"))
 
     def _transcript(self, pending: str = "") -> str:
         """The chat as the box shows it: each question and its answer, newest at the bottom, then what's still to
@@ -933,10 +954,7 @@ class Companion(QObject):
         parts = []
         for m in self.chat.messages[-40:]:
             if m.role == "user":
-                line = f"**You:** {asking.typed(m.text)}" if m.text else "**You:**"
-                if m.attached:
-                    line += f"\n\n*Attached: {', '.join(m.attached)}*"
-                parts.append(line)
+                parts.append(richtext.question_markdown(asking.typed(m.text), m.attached))
             else:
                 parts.append(m.text)
         parts += asking.tail(self.questions, self._thinking())
@@ -947,10 +965,12 @@ class Companion(QObject):
     def _thinking(self) -> str:
         """What the brain is doing about the question on its way."""
         question = self.questions.current
-        label = question.brain.label if question is not None and question.brain is not None else "The AI"
+        known = question is not None and question.brain is not None
         if question is not None and question.fold is not None:
-            return f"Catching {label} up on this chat's earlier part…"
-        return f"{label} is thinking…"
+            if known:
+                return _("Catching {brain} up on this chat's earlier part…").format(brain=question.brain.label)
+            return _("Catching the AI up on this chat's earlier part…")
+        return _("{brain} is thinking…").format(brain=question.brain.label) if known else _("The AI is thinking…")
 
     def _save_chat(self) -> None:
         if self._keeps_chats() and self.chat.keep and self.chat.messages:
@@ -975,7 +995,7 @@ class Companion(QObject):
         if chat is None:
             return
         self._renaming = chat_id
-        self.ask_box.open(self.stage.head_point(), "Rename this chat", "Enter to save · Esc to leave it as it is", "A name for the chat", prefill=chat.title)
+        self.ask_box.open(self.stage.head_point(), _("Rename this chat"), _("Enter to save · Esc to leave it as it is"), _("A name for the chat"), prefill=chat.title)
         self.ask_box.chatting(False)
         self.ask_box.set_attachments([])
         self.ask_box.entry.selectAll()
@@ -986,8 +1006,8 @@ class Companion(QObject):
             return
         self._instructing = chat_id
         self.ask_box.open(
-            self.stage.head_point(), "Instructions for this chat", "Sent with each question in this chat · Enter to save · empty to remove",
-            "How to answer in this chat", prefill=chat.instructions,
+            self.stage.head_point(), _("Instructions for this chat"), _("Sent with each question in this chat · Enter to save · empty to remove"),
+            _("How to answer in this chat"), prefill=chat.instructions,
         )
         self.ask_box.chatting(False)
         self.ask_box.set_attachments([])
@@ -1024,14 +1044,15 @@ class Companion(QObject):
             if shown:
                 self.ask_box.pause()  # the save dialog needs the keyboard
             try:
-                name, _ = QFileDialog.getSaveFileName(self.stage.dialog_owner(), "Save the chat", str(Path.home() / f"{safe}.md"), "Markdown (*.md);;Text (*.txt)")
+                name, _kind = QFileDialog.getSaveFileName(self.stage.dialog_owner(), _("Save the chat"), str(Path.home() / f"{safe}.md"),
+                                                          _("Markdown (*.md);;Text (*.txt)"))
             finally:
                 if shown:
                     self.ask_box.resume()
             self._write_chat(chat, name)
 
         if self._chooser() is not None:
-            self._through_portal(lambda then, fallback: self._file_chooser.save_file("Save the chat", Path.home(), f"{safe}.md", then, fallback),
+            self._through_portal(lambda then, fallback: self._file_chooser.save_file(_("Save the chat"), Path.home(), f"{safe}.md", then, fallback),
                                  lambda names: self._write_chat(chat, names[0] if names else ""), with_qt)
         else:
             with_qt()
@@ -1042,14 +1063,15 @@ class Companion(QObject):
         try:
             Path(name).write_text(chat.markdown(), encoding="utf-8")
         except OSError as exc:
-            self.say("Couldn't save the chat", str(exc), timeout_s=10)
+            self.say(_("Couldn't save the chat"), str(exc), timeout_s=10)
             return
-        self.say("Chat saved", f"`{Path(name).name}`", timeout_s=5)
+        self.say(_("Chat saved"), f"`{Path(name).name}`", timeout_s=5)  # a file's name: nothing to translate
 
     def _ask_to_delete_chat(self, chat_id: str) -> None:
         chat = self._chat_by_id(chat_id)
         if chat is not None:
-            self.say(f"Delete “{chat.title or 'this chat'}”?", "It can't be brought back.", [("Delete it", partial(self._delete_chat, chat_id)), ("Keep it", None)], timeout_s=30)
+            title = _("Delete “{title}”?").format(title=chat.title or _("this chat"))
+            self.say(title, _("It can't be brought back."), [(_("Delete it"), partial(self._delete_chat, chat_id)), (_("Keep it"), None)], timeout_s=30)
 
     def _popup(self, menu: QMenu, pos: QPoint) -> None:
         """A menu of the moment, where it can be seen: drawn by the stage on the Wayland overlay, and on macOS a
@@ -1100,7 +1122,7 @@ class Companion(QObject):
         else:
             chat = self.chat_book.load(chat_id)
             if chat is None:
-                self.say("That chat is gone", "It may have been cleared.", timeout_s=6)
+                self.say(_("That chat is gone"), _("It may have been cleared."), timeout_s=6)
                 return
             self._drop_question()
         self.chat = chat
@@ -1124,8 +1146,8 @@ class Companion(QObject):
 
     def _ask_to_clear_chats(self) -> None:
         self.say(
-            "Delete every saved chat?", "They can't be brought back.",
-            [("Delete them", self._clear_chats), ("Keep them", None)], timeout_s=30,
+            _("Delete every saved chat?"), _("They can't be brought back."),
+            [(_("Delete them"), self._clear_chats), (_("Keep them"), None)], timeout_s=30,
         )
 
     def _clear_chats(self) -> None:
@@ -1134,26 +1156,26 @@ class Companion(QObject):
         if self.ask_box.isVisible():
             self.ask_box.set_attachments([])
             self.ask_box.set_resettable(False)
-            self.ask_box.set_answer("*Chat history cleared.*")
+            self.ask_box.set_answer(_("*Chat history cleared.*"))
         self._menu_changed()
-        self.say("Chat history cleared", f"{gone} chat{'s' if gone != 1 else ''} deleted.", timeout_s=5)
+        self.say(_("Chat history cleared"), ngettext("{n} chat deleted.", "{n} chats deleted.", gone).format(n=gone), timeout_s=5)
 
     def _set_keep_chats(self, on: bool) -> None:
         self.state.set("keep_chats", on)
         self.state.save()
         self._menu_changed()
         if on:  # from the next chat: what was said while it was off stays unsaved, as promised
-            self.say("Keeping chats", "Chats from here on are kept, so you can come back to them.", timeout_s=8)
+            self.say(_("Keeping chats"), _("Chats from here on are kept, so you can come back to them."), timeout_s=8)
         else:
             self.chat.keep = False
-            self.say("Not keeping chats", "From now on, chats stay only until I quit. Earlier ones stay until you clear them.", timeout_s=10)
+            self.say(_("Not keeping chats"), _("From now on, chats stay only until I quit. Earlier ones stay until you clear them."), timeout_s=10)
 
     def _show_attach(self, pos: QPoint) -> None:
         menu = QMenu()
-        menu.addAction("Attach files…", self._attach_files)
-        menu.addAction("Paste from the clipboard", self._paste_into_box)
+        menu.addAction(_("Attach files…"), self._attach_files)
+        menu.addAction(_("Paste from the clipboard"), self._paste_into_box)
         if self.attached:
-            menu.addAction("Take them all off", self._clear_attachments)
+            menu.addAction(_("Take them all off"), self._clear_attachments)
         self._popup(menu, pos)
 
     def _paste_into_box(self) -> None:
@@ -1165,7 +1187,7 @@ class Companion(QObject):
 
     def _attach_files(self) -> None:
         if self._chooser() is not None:
-            self._through_portal(lambda then, fallback: self._file_chooser.open_files("Attach to your question", Path.home(), then, fallback),
+            self._through_portal(lambda then, fallback: self._file_chooser.open_files(_("Attach to your question"), Path.home(), then, fallback),
                                  self._attach_files_named, self._attach_files_with_qt)
         else:
             self._attach_files_with_qt()
@@ -1174,7 +1196,7 @@ class Companion(QObject):
         # The system's file dialog needs the keyboard, which the ask box holds on the overlay: out of its way meanwhile.
         self.ask_box.pause()
         try:
-            files, _ = QFileDialog.getOpenFileNames(self.stage.dialog_owner(), "Attach to your question", str(Path.home()))
+            files, _kind = QFileDialog.getOpenFileNames(self.stage.dialog_owner(), _("Attach to your question"), str(Path.home()))
         finally:
             self.ask_box.resume()
         self._attach_files_named(files)
@@ -1211,7 +1233,7 @@ class Companion(QObject):
         # Never a network path (\\server\share): even looking at one would sign in to that server as you.
         local = [n for n in names if n and not n.startswith(("//", "\\\\"))]
         if len(local) > room:
-            self.say("That's a lot of files", f"I took the first {max(0, room)}: {attachments.MAX_COUNT} attachments at most.", timeout_s=8)
+            self.say(_("That's a lot of files"), _took_first(room), timeout_s=8)
         for name in local[: max(0, room)]:
             self._attach(lambda name=name: attachments.from_path(Path(name)))
 
@@ -1219,10 +1241,10 @@ class Companion(QObject):
         """Files that aren't on disk (winfiles.Dropped: out of Outlook or a zip), already read."""
         room = attachments.MAX_COUNT - len(self.attached)
         if len(dropped) > room:
-            self.say("That's a lot of files", f"I took the first {max(0, room)}: {attachments.MAX_COUNT} attachments at most.", timeout_s=8)
+            self.say(_("That's a lot of files"), _took_first(room), timeout_s=8)
         for item in dropped[: max(0, room)]:
             if item.problem:
-                self._attached_one(attachments.AttachError(f"{item.name} {item.problem}"))
+                self._attached_one(attachments.AttachError(item.problem))  # a sentence that names the file
             else:
                 self._attach(lambda item=item: attachments.from_bytes(item.data, item.name))
 
@@ -1246,10 +1268,10 @@ class Companion(QObject):
                 raise result
             attachments.check_total(self.attached, result)
         except attachments.AttachError as exc:
-            self.say("Couldn't attach that", str(exc)[:1].upper() + str(exc)[1:] + ".", timeout_s=8)
+            self.say(_("Couldn't attach that"), str(exc)[:1].upper() + str(exc)[1:] + ".", timeout_s=8)
             return
         except Exception as exc:  # reported, never fatal
-            self.say("Couldn't attach that", str(exc), timeout_s=8)
+            self.say(_("Couldn't attach that"), str(exc), timeout_s=8)
             return
         self.attached.append(result)
         self.ask_box.set_attachments([a.label() for a in self.attached])
@@ -1318,12 +1340,12 @@ class Companion(QObject):
     def _welcome(self, brain: brains.Brain | None) -> None:
         """Named at the first run: hello, what it does, and which brain will answer (or how to set one up)."""
         if brain is None:
-            line = ("No AI is set up yet: sign in to an AI command-line tool (Claude Code, Codex, Gemini CLI...), run a model "
-                    "server here (Ollama, LM Studio...), or add an API key in **Settings › AI**. Reminders, timers and notes "
-                    "work without one.")
+            line = _("No AI is set up yet: sign in to an AI command-line tool (Claude Code, Codex, Gemini CLI...), run a model "
+                     "server here (Ollama, LM Studio...), or add an API key in **Settings › AI**. Reminders, timers and notes "
+                     "work without one.")
         else:
-            line = f"Your questions go to **{brain.label}**; **Brain** in my menu picks another."
-        self.say(f"{self.name}! I love it.", f"{HELP}\n{line}", timeout_s=25)
+            line = _("Your questions go to **{brain}**; **Brain** in my menu picks another.").format(brain=brain.label)
+        self.say(_("{name}! I love it.").format(name=self.name), f"{_(HELP)}\n{line}", timeout_s=25)
 
     def _ask(self, text: str, brain: brains.Brain | None, chat_id: str | None = None) -> None:
         """Send `text` (with what's attached) to `brain`, or have it wait behind the question on its way."""
@@ -1341,7 +1363,7 @@ class Companion(QObject):
             return
         if self.questions.full():  # kept, to send once those are answered
             self.ask_box.entry.setText(text)
-            self._show_chat("*One question is waiting already. Send this once that one goes, or press Stop.*")
+            self._show_chat(_("*One question is waiting already. Send this once that one goes, or press Stop.*"))
             return
         self.attached.clear()
         self.ask_box.set_attachments([])
@@ -1354,10 +1376,10 @@ class Companion(QObject):
     def _no_brain(self) -> None:
         """Nothing to ask: say how to set one up, and offer a model server here that isn't yours, once."""
         self.ask_box.set_answer(
-            "I haven't found an AI to ask yet. Any of these works: an AI command-line tool you're "
-            "signed in to (Claude Code, Codex, Gemini CLI, Muse Code, Grok...), a model server on this "
-            "computer (Ollama, LM Studio, llama.cpp, vLLM), or an API key, picked under **Brain** in my "
-            "menu.\n\n" + HELP
+            _("I haven't found an AI to ask yet. Any of these works: an AI command-line tool you're "
+              "signed in to (Claude Code, Codex, Gemini CLI, Muse Code, Grok...), a model server on this "
+              "computer (Ollama, LM Studio, llama.cpp, vLLM), or an API key, picked under **Brain** in my "
+              "menu.") + "\n\n" + _(HELP)
         )
         self._offer_server()
 
@@ -1373,10 +1395,10 @@ class Companion(QObject):
                 continue
             self._server_offered.add(where)
             self.say(
-                f"Use the model server at {where}?",
-                f"{brain.label} is running here, but not as you: someone else on this computer may have started it, and would "
-                "see your questions. Use it anyway?",
-                [("Use it", partial(self._trust_server, url)), ("Not now", None)], timeout_s=None, key="trust-server",
+                _("Use the model server at {server}?").format(server=where),
+                _("{brain} is running here, but not as you: someone else on this computer may have started it, and would "
+                  "see your questions. Use it anyway?").format(brain=brain.label),
+                [(_("Use it"), partial(self._trust_server, url)), (_("Not now"), None)], timeout_s=None, key="trust-server",
             )
             return True
         return False
@@ -1404,7 +1426,8 @@ class Companion(QObject):
         if self._fallback_told == picked:
             return
         self._fallback_told = picked
-        self.say(f"{chosen.label} isn't available", f"It's {chosen.why_not()}, so {brain.label} answers for now.", timeout_s=12, key="brain-fallback")
+        self.say(_("{brain} isn't available").format(brain=chosen.label),
+                 _("It's {reason}, so {brain} answers for now.").format(reason=chosen.why_not(), brain=brain.label), timeout_s=12, key="brain-fallback")
 
     # -- what a question goes with: the chat, fitted to the brain (context.py), your instructions and memory
 
@@ -1430,7 +1453,7 @@ class Companion(QObject):
             q.started = time.monotonic()
         self.ask_box.set_busy(brain.label, q.started)
         guard = brain.reads_files()  # one that reads files is never handed another brain's answers (one could tell it what to read)
-        base = brains.system_prompt(self.name, self._companion().label.lower())
+        base = brains.system_prompt(self.name, self._companion().label_en.lower())  # sent to the brain: English, as the rest of the prompt
         everywhere, remembered = self._instructions(), self.memory.texts()
         asked_tokens = context.tokens(attachments.in_question(question, attached)) + attachments.media_tokens(attached)
         room = context.budget(brains.context_window(brain), self._context_cap(), context.system_text(base, everywhere, chat.instructions, remembered), asked_tokens)
@@ -1501,10 +1524,11 @@ class Companion(QObject):
         self._next_question(now)
         self._show_chat()
         self.ask_box.set_resettable(True)
+        came = _("{brain} answered").format(brain=label) if label else _("The AI answered")
         if self._box_shows_chat():
-            self._read_aloud(f"{label or 'The AI'} answered", answer)
+            self._read_aloud(came, answer)
         else:  # you closed the box meanwhile: the answer is kept, and this says it came
-            self.say(f"{label or 'The AI'} answered", buttons=[("Read", self._read_answer)], timeout_s=30, key="answered", cue="done")
+            self.say(came, buttons=[(_("Read"), self._read_answer)], timeout_s=30, key="answered", cue="done")
         self.behavior.set_talking(True, now)
         QTimer.singleShot(int(min(max(len(answer) / 18, 2), 10) * 1000), lambda: self.behavior.set_talking(False, self._now()))
 
@@ -1535,7 +1559,7 @@ class Companion(QObject):
             label, name = (q.brain.label, q.brain.name) if q.brain else ("", "")
             sent = attachments.in_question(q.asked(), q.attached)
             self.chat.add(chats.Message("user", q.text, sent=sent if sent != q.text else "", attached=[a.name for a in q.attached], brain=label, by=name))
-            self.chat.add(chats.Message("assistant", q.partial.rstrip() + "\n\n*(Stopped here.)*", brain=label, by=name))
+            self.chat.add(chats.Message("assistant", q.partial.rstrip() + "\n\n" + _("*(Stopped here.)*"), brain=label, by=name))
             self._save_chat()
             self.ask_box.set_resettable(True)
         else:
@@ -1571,13 +1595,14 @@ class Companion(QObject):
 
     def _offer_after_failure(self, q: asking.Question, error: str) -> None:
         """What to do about a failed question: ask the same brain again, the next one, or look at its settings."""
-        label = q.brain.label if q.brain else "The AI"
-        buttons = [("Try again", partial(self._try_again, q, None))]
+        buttons = [(_("Try again"), partial(self._try_again, q, None))]
         other = self._next_brain(q.brain)
         if other is not None:
-            buttons.append((f"Ask {other.label}", partial(self._try_again, q, other)))
-        buttons.append(("Settings", partial(self.open_settings, "ai")))
-        self.say(f"{label} couldn't answer", error, buttons, timeout_s=None, key="answer-failed", cue="error")
+            # Translators: a button that asks another brain the question that failed: "Ask Ollama".
+            buttons.append((_("Ask {brain}").format(brain=other.label), partial(self._try_again, q, other)))
+        buttons.append((_("Settings"), partial(self.open_settings, "ai")))
+        title = _("{brain} couldn't answer").format(brain=q.brain.label) if q.brain else _("The AI couldn't answer")
+        self.say(title, error, buttons, timeout_s=None, key="answer-failed", cue="error")
 
     def _try_again(self, q: asking.Question, brain: brains.Brain | None) -> None:
         """The failed question, asked again (of `brain`, or the one it went to), with what was attached to it."""
@@ -1600,7 +1625,7 @@ class Companion(QObject):
         sees it, and it isn't kept). `spoken`: what a screen reader is told instead, when the answer itself
         mustn't leave the box (it may be read out through a system notification, which keeps a history)."""
         self._offline_shown += 1
-        self._show_chat(f"**You:** {asking.typed(question)}\n\n{reply}\n\n*{NO_AI}*")
+        self._show_chat(f"{richtext.question_markdown(asking.typed(question))}\n\n{reply}\n\n*{_(NO_AI)}*")
         self._read_aloud(spoken or reply)
 
     def _local(self, text: str) -> bool:
@@ -1617,7 +1642,7 @@ class Companion(QObject):
     def _show_status(self, question: str) -> None:
         """The *status* command: battery, disks and which brain would answer are found out off the screen's thread,
         then shown, unless something else has been answered meanwhile."""
-        self._offline(question, "*Looking…*")
+        self._offline(question, _("*Looking…*"))
         shown, upcoming = self._offline_shown, self.reminders.upcoming()
 
         def look() -> str:
@@ -1628,7 +1653,7 @@ class Companion(QObject):
 
         def looked(status) -> None:
             if self._offline_shown == shown and not self._quitting:
-                self._offline(question, status if isinstance(status, str) else f"I couldn't look: {status}")
+                self._offline(question, status if isinstance(status, str) else _("I couldn't look: {problem}").format(problem=status))
 
         self.background.run(look, looked)
 
@@ -1647,10 +1672,12 @@ class Companion(QObject):
         old = self.reminders.focus()
         if old:
             self.reminders.cancel(old.id)
-        self.reminders.add(time.time() + minutes * 60, f"{minutes:g}-minute focus", "focus")
+        # Translators: what a focus session is called in the list of reminders: "25-minute focus".
+        self.reminders.add(time.time() + minutes * 60, _("{minutes}-minute focus").format(minutes=f"{minutes:g}"), "focus")
         self.save()
         self.behavior.react("hop", self._now())
-        self.say("Focus time", f"{minutes:g} minutes. I'll keep quiet until then.", timeout_s=5)
+        quiet = ngettext("{minutes} minute. I'll keep quiet until then.", "{minutes} minutes. I'll keep quiet until then.", round(minutes))
+        self.say(_("Focus time"), quiet.format(minutes=f"{minutes:g}"), timeout_s=5)
 
     def stop_focus(self) -> None:
         focus = self.reminders.focus()
@@ -1659,9 +1686,9 @@ class Companion(QObject):
             self.reminders.cancel(focus.id)
             self.save()
             if held:  # one bubble: stopped, and what waited meanwhile
-                self.say("Focus stopped", "While you focused:\n\n" + _summary(held), timeout_s=30)
+                self.say(_("Focus stopped"), _("While you focused:") + "\n\n" + _summary(held), timeout_s=30)
             else:
-                self.say("Focus stopped", timeout_s=3)
+                self.say(_("Focus stopped"), timeout_s=3)
 
     def _take_focus_held(self) -> list[messages.Message]:
         """The plain bubbles a focus session held, out of the queue (its end sums them up); ones with buttons stay, to
@@ -1671,7 +1698,7 @@ class Companion(QObject):
 
     def _summarize_focus(self, held: list[messages.Message]) -> None:
         if held:
-            self.say("While you focused", _summary(held), timeout_s=30)
+            self.say(_("While you focused"), _summary(held), timeout_s=30)
 
     def _check_reminders(self) -> None:
         """What came due since the last look: one alert each, which waits until it's done or snoozed (the book keeps
@@ -1689,9 +1716,9 @@ class Companion(QObject):
             self.behavior.react("beam", self._now())
             minutes = float(self.config["focus"]["minutes"])
             self.say(
-                "Focus session done!",
-                "Nice work. Take five minutes away from the screen.",
-                [("Another round", partial(self.start_focus, minutes)), ("Done", None)],
+                _("Focus session done!"),
+                _("Nice work. Take five minutes away from the screen."),
+                [(_("Another round"), partial(self.start_focus, minutes)), (_("Done"), None)],
                 timeout_s=None, cue="focus-done",
             )
         self._summarize_focus(held)
@@ -1715,15 +1742,20 @@ class Companion(QObject):
     def _alert_reminder(self, r: reminders.Reminder, now: float) -> None:
         """One reminder's alert, keyed by it (the queue never drops it, nor shows it twice): Done, a snooze of your own
         length, and Later (every snooze)."""
-        late = f" (due at {reminders.clock(datetime.fromtimestamp(r.due))})" if now - r.due > 120 else ""
-        again = f"\n\n*{reminders.describe_repeat(r.repeat).capitalize()}*" if r.repeat else ""
+        text = r.text
+        if now - r.due > 120:
+            text = _("{reminder} (due at {time})").format(reminder=r.text, time=reminders.clock(datetime.fromtimestamp(r.due)))
+        if r.repeat:
+            repeat = reminders.describe_repeat(r.repeat)
+            text += f"\n\n*{repeat[:1].upper()}{repeat[1:]}*"
         own = reminders.snooze_choices(now, self._snooze_minutes())[0][0]
         buttons = [
-            ("Done", partial(self._reminder_done, r.id)),
-            (f"Snooze {own}", partial(self._snooze_reminder, r.id, None)),
-            ("Later…", partial(self._offer_snoozes, r.id)),
+            (_("Done"), partial(self._reminder_done, r.id)),
+            # Translators: a button that puts a reminder off for the person's own snooze: "Snooze 10 min".
+            (_("Snooze {length}").format(length=own), partial(self._snooze_reminder, r.id, None)),
+            (_("Later…"), partial(self._offer_snoozes, r.id)),
         ]
-        self.alert(f"reminder:{r.id}", "Time's up!" if r.kind == "timer" else "Reminder", r.text + late + again, buttons, reminder=True)
+        self.alert(f"reminder:{r.id}", _("Time's up!") if r.kind == "timer" else _("Reminder"), text, buttons, reminder=True)
 
     def _snooze_minutes(self) -> float:
         return float(self.config["reminders"]["snooze_minutes"])
@@ -1743,8 +1775,8 @@ class Companion(QObject):
         if r is None:
             return
         choices = reminders.snooze_choices(time.time(), self._snooze_minutes())
-        buttons = [(label, partial(self._snooze_reminder, rid, until)) for label, until in choices] + [("Done", partial(self._reminder_done, rid))]
-        self.say("Snooze until…", _gist(messages.Message(r.text)), buttons, timeout_s=None, key=f"reminder:{rid}")
+        buttons = [(label, partial(self._snooze_reminder, rid, until)) for label, until in choices] + [(_("Done"), partial(self._reminder_done, rid))]
+        self.say(_("Snooze until…"), _gist(messages.Message(r.text)), buttons, timeout_s=None, key=f"reminder:{rid}")
 
     def _edit_reminder(self, rid: str) -> None:
         """The box, asking for a reminder's new words, a new time, or both ("call Sam friday at 3pm")."""
@@ -1753,8 +1785,9 @@ class Companion(QObject):
             return
         self._editing = rid
         self.ask_box.open(
-            self.stage.head_point(), "Change this reminder", f"Now {reminders.describe(r.due, time.time())} · Enter to save · Esc to leave it",
-            "New words, a new time, or both", prefill=r.text,
+            self.stage.head_point(), _("Change this reminder"),
+            _("Now {when} · Enter to save · Esc to leave it").format(when=reminders.describe(r.due, time.time())),
+            _("New words, a new time, or both"), prefill=r.text,
         )
         self.ask_box.chatting(False)
         self.ask_box.set_attachments([])
@@ -1776,12 +1809,12 @@ class Companion(QObject):
         try:
             changed = self.reminders.update(rid, **changes)
         except ValueError as exc:
-            self.ask_box.set_answer(f"That didn't change it: {exc}.")
+            self.ask_box.set_answer(_("That didn't change it: {problem}.").format(problem=exc))
             return False
         if changed:
             self.save()
             r = self.reminders.get(rid)
-            self.say("Reminder changed", f"{reminders.describe(r.due, time.time())}: {r.text}", timeout_s=6)
+            self.say(_("Reminder changed"), _reminder_said(r), timeout_s=6)
         return True
 
     def _set_repeat(self, rid: str, rule: str | None) -> None:
@@ -1812,9 +1845,11 @@ class Companion(QObject):
             self.breaks.snooze(now, snooze)
             self.behavior.react("wave", mono)
             self.say(
-                "Time for a break?",
-                f"You've been at the screen for {minutes} minutes. Stand up, stretch, and look at something far away.",
-                [("Taking one", partial(self.breaks.took_break, now)), (f"Snooze {snooze:g} min", None)],
+                _("Time for a break?"),
+                ngettext("You've been at the screen for {n} minute. Stand up, stretch, and look at something far away.",
+                         "You've been at the screen for {n} minutes. Stand up, stretch, and look at something far away.", minutes).format(n=minutes),
+                [(_("Taking one"), partial(self.breaks.took_break, now)),
+                 (ngettext("Snooze {minutes} min", "Snooze {minutes} min", round(snooze)).format(minutes=f"{snooze:g}"), None)],
                 timeout_s=120,
             )
 
@@ -1986,9 +2021,9 @@ class Companion(QObject):
             notice = self.watcher.updates(sum(self._update_counts.values()), date.today(), self._restart_needed)
             if notice:  # told once a day: it waits its turn behind a bubble on screen, rather than going unsaid
                 self.behavior.react("wave", self._now())
-                buttons = [("OK", None)]
+                buttons = [(_("OK"), None)]
                 if sys.platform == "win32":
-                    buttons.insert(0, ("Open Windows Update", partial(QDesktopServices.openUrl, QUrl("ms-settings:windowsupdate"))))
+                    buttons.insert(0, (_("Open Windows Update"), partial(QDesktopServices.openUrl, QUrl("ms-settings:windowsupdate"))))
                 self.say(notice.title, notice.text, buttons, timeout_s=60, key="system-updates", background=True)
 
     # -- updating Chatmon, what's new, and reporting problems
@@ -2007,7 +2042,7 @@ class Companion(QObject):
     def check_for_updates(self) -> None:
         """You asked: look now, and say what was found, even if it's nothing."""
         self._checking_by_hand = True
-        self.say("Looking for updates…", timeout_s=10)
+        self.say(_("Looking for updates…"), timeout_s=10)
         self.state.set("update_checked", time.time())
         self.state.save()
         self.updater.check(self._install_kind, by_hand=True)
@@ -2018,40 +2053,42 @@ class Companion(QObject):
         self._menu_changed()
         self.behavior.react("wave", self._now())
         self.say(
-            f"Chatmon {release.version} is ready",
-            "Downloaded and checked. Updating takes a moment, then I'll be right back.",
-            [("Update now", self._update_now), ("What's new", partial(self._show_release_notes, release)), ("Later", None)],
+            _("Chatmon {version} is ready").format(version=release.version),
+            _("Downloaded and checked. Updating takes a moment, then I'll be right back."),
+            [(_("Update now"), self._update_now), (_("What's new"), partial(self._show_release_notes, release)), (_("Later"), None)],
             timeout_s=90, key="chatmon-update", background=not by_hand,
         )
 
     def _update_out(self, release: updates.Release, how: str) -> None:
         by_hand, self._checking_by_hand = self._checking_by_hand, False
         self._install_kind = self.updater.kind
-        first = ("Release page", partial(QDesktopServices.openUrl, QUrl(release.page)))
-        if "metered" in how:
-            first = ("Download it", self.check_for_updates)
-        self.say(f"Chatmon {release.version} is out", how, [first, ("What's new", partial(self._show_release_notes, release)), ("OK", None)], timeout_s=60,
+        first = (_("Release page"), partial(QDesktopServices.openUrl, QUrl(release.page)))
+        if self.updater.metered:  # not downloaded only because the connection is metered: asking downloads it
+            first = (_("Download it"), self.check_for_updates)
+        self.say(_("Chatmon {version} is out").format(version=release.version), how,
+                 [first, (_("What's new"), partial(self._show_release_notes, release)), (_("OK"), None)], timeout_s=60,
                  key="chatmon-update", background=not by_hand)
 
     def _up_to_date(self) -> None:
         self._install_kind = self.updater.kind
         if self._checking_by_hand:
             self._checking_by_hand = False
-            self.say("You're up to date", f"This is the newest Chatmon, {__version__}.", timeout_s=6)
+            self.say(_("You're up to date"), _("This is the newest Chatmon, {version}.").format(version=__version__), timeout_s=6)
 
     def _update_failed(self, why: str) -> None:
         print(f"{paths.APP}: {why}", file=sys.stderr)
-        if self._checking_by_hand or self.updater.ready is not None or why.startswith("The update"):
+        if self._checking_by_hand or self.updater.ready is not None or self.updater.failure == updates.INSTALL_FAILED:
             self._checking_by_hand = False
-            self.say("No update this time", why, [("OK", None)], timeout_s=30)
+            self.say(_("No update this time"), why, [(_("OK"), None)], timeout_s=30)
 
     def _update_now(self) -> None:
         self.save()
-        self.say("Updating…", "The installer may ask for your password. I'll be back in a moment.", timeout_s=None)
+        self.say(_("Updating…"), _("The installer may ask for your password. I'll be back in a moment."), timeout_s=None)
         self.updater.install()
 
     def _show_release_notes(self, release: updates.Release) -> None:
-        self.ask_box.show_notes(self.stage.head_point(), f"What's new in Chatmon {release.version}", release.notes or "No notes for this release.")
+        self.ask_box.show_notes(self.stage.head_point(), _("What's new in Chatmon {version}").format(version=release.version),
+                                release.notes or _("No notes for this release."))
 
     def _whats_new_after_update(self) -> bool:
         """The first start after an update: what changed since the version you last ran. True if shown."""
@@ -2074,9 +2111,11 @@ class Companion(QObject):
 
     def show_whats_new(self, releases: list[changelog.Release] | None = None, updated: bool = False) -> None:
         releases = releases or [r for r in [changelog.find(__version__)] if r]
-        title = f"Updated to Chatmon {__version__}" if updated else f"What's new in Chatmon {__version__}"
-        body = changelog.notes(releases) if releases else "No notes for this version."
-        body += f"\n\nFound a problem? [Report it]({self._report_url()}) · [All changes](https://github.com/{updates.REPO}/releases)"
+        title = (_("Updated to Chatmon {version}") if updated else _("What's new in Chatmon {version}")).format(version=__version__)
+        body = changelog.notes(releases) if releases else _("No notes for this version.")  # the notes themselves are English
+        # Translators: under the release notes; keep the Markdown links' brackets and parentheses as they are.
+        links = _("Found a problem? [Report it]({report}) · [All changes]({changes})")
+        body += "\n\n" + links.format(report=self._report_url(), changes=f"https://github.com/{updates.REPO}/releases")
         self.ask_box.show_notes(self.stage.head_point(), title, body)
 
     def _report_url(self, template: str = report.BUG) -> str:
@@ -2093,17 +2132,17 @@ class Companion(QObject):
         if log.exists():
             QDesktopServices.openUrl(QUrl.fromLocalFile(str(log)))
         else:
-            self.say("No log yet", "I write one when I run without a terminal, and nothing has gone wrong in it so far.", timeout_s=8)
+            self.say(_("No log yet"), _("I write one when I run without a terminal, and nothing has gone wrong in it so far."), timeout_s=8)
 
     def _problem(self) -> None:
         """Something in Chatmon failed (it's in the log): offer to report it, once a run."""
         if self._problem_told:
             return
         self._problem_told = True
-        buttons = [("Report it", self.report_problem)]
+        buttons = [(_("Report it"), self.report_problem)]
         if log_file().exists():
-            buttons.append(("Open the log", self.open_log))
-        self.say("Something went wrong in me", "I kept going, but you can tell my maker what happened.", buttons + [("OK", None)], timeout_s=45, background=True)
+            buttons.append((_("Open the log"), self.open_log))
+        self.say(_("Something went wrong in me"), _("I kept going, but you can tell my maker what happened."), buttons + [(_("OK"), None)], timeout_s=45, background=True)
 
     def _set_check_updates(self, on: bool) -> None:
         self.state.set("check_updates", on)
@@ -2205,10 +2244,9 @@ class Companion(QObject):
             if command and command.kind == "reminder":
                 r = self.reminders.add(command.due.timestamp(), command.text, repeat=command.repeat)
                 self.save()
-                again = f" ({reminders.describe_repeat(r.repeat)})" if r.repeat else ""
-                self.say("Reminder set", f"{reminders.describe(r.due, time.time())}: {r.text}{again}", timeout_s=6)
+                self.say(_("Reminder set"), _reminder_said(r, repeat=True), timeout_s=6)
             elif command and command.kind == "unclear":  # chatmon remind says so itself; a script's own message is told here
-                self.say("Reminder not set", reminders.explain(command), timeout_s=15, background=True)
+                self.say(_("Reminder not set"), reminders.explain(command), timeout_s=15, background=True)
         elif kind == "status":  # chatmon status: how the agents stand, as only the running Chatmon knows
             return {"type": "status", "pid": os.getpid(), "version": __version__, "agents": self.agents_report(markdown=False) if self.agents else ""}
         elif kind == "ask":  # `chatmon ask [TEXT]`: a hotkey, a launcher, a script
@@ -2236,7 +2274,7 @@ class Companion(QObject):
                 self.stage.dismiss_message()
         elif event == "needs-you":
             self.agents[source] = ("needs-you", now)
-            self.alert(key, f"{label} needs you", text or f"{label} is waiting for you.")
+            self.alert(key, _("{agent} needs you").format(agent=label), text or _("{agent} is waiting for you.").format(agent=label))
         else:
             self.agents.pop(source, None)
             self.messages.withdraw(key)
@@ -2248,12 +2286,13 @@ class Companion(QObject):
             if event == "done":
                 self.behavior.react("hop", now)
                 if not self.ask_box.isVisible():
-                    self.say(f"{label} finished", snippet, timeout_s=8, key=key, background=True, cue="done")
+                    self.say(_("{agent} finished").format(agent=label), snippet, timeout_s=8, key=key, background=True, cue="done")
             elif event == "success":
                 self.behavior.react("beam", now)
-                self.say(f"{label}: success!", snippet, timeout_s=8, key=key, background=True, cue="success")
+                self.say(_("{agent}: success!").format(agent=label), snippet, timeout_s=8, key=key, background=True, cue="success")
             elif event == "error":
-                self.say(f"{label} hit a problem", snippet or "Take a look when you can.", timeout_s=20, key=key, background=True, cue="error")
+                self.say(_("{agent} hit a problem").format(agent=label), snippet or _("Take a look when you can."), timeout_s=20, key=key, background=True,
+                         cue="error")
         self._update_working()
 
     def _update_working(self) -> None:
@@ -2274,10 +2313,12 @@ class Companion(QObject):
         if self._quitting:
             return
         states = offline.agents_report(self.agents, self._now(), pretty, markdown=False) if self.agents else ""
-        self.tray.setToolTip(f"Chatmon\n{states}" if states else "Chatmon")
+        # Translators: the tray icon's tooltip while agents are working or waiting, one per line under it.
+        self.tray.setToolTip(_("Chatmon\n{states}").format(states=states) if states else "Chatmon")
         name = getattr(self.stage.surface, "setAccessibleName", None)
         if name is not None:
-            name(f"{self.name}: " + "; ".join(states.splitlines()) if states else self.name)
+            # Translators: what a screen reader calls the companion while agents are working: "Penguin: Claude is working (5 min so far)".
+            name(_("{name}: {states}").format(name=self.name, states="; ".join(states.splitlines())) if states else self.name)
         waiting = len(self._waiting_agents())
         self.stage.set_badge(sum(1 for state, _ in self.agents.values() if state == "working"), waiting)
         if bool(waiting) != self._tray_badge:
@@ -2374,7 +2415,7 @@ class Companion(QObject):
             if unsure:
                 self.say(
                     self.name,
-                    f"I'm Chatmon now. If {' or '.join(unsure)} was connected before, tick it again under **AI agents** in my menu.",
+                    _("I'm Chatmon now. If {agents} was connected before, tick it again under **AI agents** in my menu.").format(agents=either(unsure)),
                     timeout_s=30, background=True,
                 )
         if isinstance(status, dict) and status != self._agent_status:
@@ -2417,22 +2458,23 @@ class Companion(QObject):
             return
         answered = {a.name: status[a.name] for a in shown}
         if off:
-            label = off[0].label if len(off) == 1 else "An agent"
+            title = _("{agent} switched me off").format(agent=off[0].label) if len(off) == 1 else _("An agent switched me off")
             self.say(
-                f"{label} switched me off",
-                f"My plugin in {listed([a.label for a in off])} is off now. A window that was open when you connected it "
-                "may have saved its settings over mine. Switch it back on?",
-                [("Switch on", partial(self._offer_answered, answered, off)), ("Leave it off", partial(self._offer_answered, answered, []))],
+                title,
+                _("My plugin in {agents} is off now. A window that was open when you connected it "
+                  "may have saved its settings over mine. Switch it back on?").format(agents=join([a.label for a in off])),
+                [(_("Switch on"), partial(self._offer_answered, answered, off)), (_("Leave it off"), partial(self._offer_answered, answered, []))],
                 timeout_s=60, key="offer-agents", background=True,
             )
         else:
-            one = len(new) == 1
             self.say(
-                "Shall I watch your coding agents?",
-                f"I found {listed([f'**{a.label}**' for a in new])} here. Connect {'it' if one else 'them'}, and I'll show you "
-                f"when {'it is' if one else 'they are'} working, when {'it needs' if one else 'they need'} you, and when "
-                f"{'it is' if one else 'they are'} done. You can change this any time under **AI agents** in my menu.",
-                [("Connect", partial(self._offer_answered, answered, new)), ("Not now", partial(self._offer_answered, answered, []))],
+                _("Shall I watch your coding agents?"),
+                ngettext("I found {agents} here. Connect it, and I'll show you when it is working, when it needs you, and when it is done. "
+                         "You can change this any time under **AI agents** in my menu.",
+                         "I found {agents} here. Connect them, and I'll show you when they are working, when they need you, and when they are done. "
+                         "You can change this any time under **AI agents** in my menu.",
+                         len(new)).format(agents=join([f"**{a.label}**" for a in new])),
+                [(_("Connect"), partial(self._offer_answered, answered, new)), (_("Not now"), partial(self._offer_answered, answered, []))],
                 timeout_s=60, key="offer-agents", background=True,
             )
 
@@ -2448,7 +2490,7 @@ class Companion(QObject):
         self._offer_agents()
 
     def _connect_agents(self, chosen: list[agents.Agent]) -> None:
-        self.say(f"Connecting {listed([a.label for a in chosen])}…", timeout_s=30)
+        self.say(_("Connecting {agents}…").format(agents=join([a.label for a in chosen])), timeout_s=30)
 
         def connect_each() -> list:
             results = []
@@ -2463,7 +2505,7 @@ class Companion(QObject):
 
     def _agents_connected(self, results) -> None:
         if isinstance(results, Exception):  # not one agent's trouble, which each reports itself: something of ours
-            self.say("Couldn't connect your agents", str(results), [("OK", None)], timeout_s=None)
+            self.say(_("Couldn't connect your agents"), str(results), [(_("OK"), None)], timeout_s=None)
             self._refresh_agents()
             return
         done = [a.label for a, result in results if not isinstance(result, Exception)]
@@ -2471,24 +2513,24 @@ class Companion(QObject):
         if failed:
             text = "\n\n".join(f"**{label}:** {exc}" for label, exc in failed)
             if done:
-                text = f"{listed(done)} {'is' if len(done) == 1 else 'are'} connected.\n\n{text}"
-            self.say(f"Couldn't connect {listed([label for label, _ in failed])}", text, [("OK", None)], timeout_s=None)
+                text = ngettext("{agents} is connected.", "{agents} are connected.", len(done)).format(agents=join(done)) + "\n\n" + text
+            self.say(_("Couldn't connect {agents}").format(agents=join([label for label, _exc in failed])), text, [(_("OK"), None)], timeout_s=None)
         elif done:
             self.behavior.react("hop", self._now())
             self.say(
-                f"Connected {listed(done)}",
-                "I'll show you what each is doing from its next session on: one that's open now has to be started again first.",
+                _("Connected {agents}").format(agents=join(done)),
+                _("I'll show you what each is doing from its next session on: one that's open now has to be started again first."),
                 timeout_s=15,
             )
         self._refresh_agents()
 
     def _set_agent(self, agent: agents.Agent, on: bool) -> None:
-        self.say(f"{'Connecting' if on else 'Disconnecting'} {agent.label}…", timeout_s=20)
+        self.say((_("Connecting {agents}…") if on else _("Disconnecting {agent}…")).format(agents=agent.label, agent=agent.label), timeout_s=20)
         self.background.run(agent.connect if on else agent.disconnect, partial(self._agent_set, agent))
 
     def _agent_set(self, agent: agents.Agent, result) -> None:
         if isinstance(result, Exception):
-            self.say(f"Couldn't change {agent.label}", str(result), [("OK", None)], timeout_s=None)
+            self.say(_("Couldn't change {agent}").format(agent=agent.label), str(result), [(_("OK"), None)], timeout_s=None)
         else:
             self.behavior.react("hop", self._now())
             self.say(agent.label, str(result), timeout_s=12)
@@ -2497,7 +2539,7 @@ class Companion(QObject):
     def _quick_action(self, name: str) -> None:
         """Explain, Summarize, Translate or Fix: what's on the clipboard is attached now (you chose this; Chatmon never
         reads the clipboard otherwise), and the box opens with the prompt typed in, for you to send or change."""
-        prompt = QUICK_ACTIONS[name].format(language=QLocale.languageToString(QLocale().language()))
+        prompt = _(QUICK_ACTIONS[name]).format(language=QLocale.languageToString(QLocale().language()))
         self.open_ask(prompt)
         surface = self.stage.surface
         if self.stage.hosted is not None and hasattr(surface, "paste_rich"):  # the overlay: its own clipboard
@@ -2507,7 +2549,7 @@ class Companion(QObject):
 
     def _attach_clipboard(self, found) -> None:
         if found is None:
-            self.ask_box.set_answer("*The clipboard is empty: copy something first.*")
+            self.ask_box.set_answer(_("*The clipboard is empty: copy something first.*"))
             return
         kind, payload = found
         if kind == "text":
@@ -2545,11 +2587,11 @@ class Companion(QObject):
         if self.state.get("hotkey_told") != sequence:  # said once for this hotkey, not at every start
             self.state.set("hotkey_told", sequence)
             self.state.save()
-            self.say("The hotkey to ask didn't work", f"{why}\n\nSettings › Accessibility picks another.", timeout_s=20, background=True)
+            self.say(_("The hotkey to ask didn't work"), _("{problem}\n\nSettings › Accessibility picks another.").format(problem=why), timeout_s=20, background=True)
 
     def _other_agents(self) -> None:
         self.open_ask()
-        self.ask_box.set_answer("Any agent or script can tell me what it's doing:\n\n```\n" + agents.generic() + "\n```")
+        self.ask_box.set_answer(_("Any agent or script can tell me what it's doing:") + "\n\n```\n" + agents.generic() + "\n```")
 
     # -- which companion, and how its bubbles look
 
@@ -2631,7 +2673,7 @@ class Companion(QObject):
         self._apply_bubble_style()
         self._menu_changed()
         if not self.ask_box.isVisible():
-            self.say(self.name, f"New look: {self._bubble_style().label.split(' (')[0].lower()}.", timeout_s=4)
+            self.say(self.name, _("New look: {style}.").format(style=menus.style_word(self._bubble_style().name)), timeout_s=4)
 
     def _set_bubble_effects(self, on: bool) -> None:
         self.state.set("bubble_effects", on)
@@ -2677,9 +2719,9 @@ class Companion(QObject):
 
     def _say_config_problem(self) -> None:
         if self._config_unreadable:
-            self.say("I couldn't read my settings", f"`{self.config_error}`\n\nUsing the defaults for now.", timeout_s=30)
+            self.say(_("I couldn't read my settings"), _("`{problem}`\n\nUsing the defaults for now.").format(problem=self.config_error), timeout_s=30)
         else:
-            self.say("Some of my settings were wrong", f"`{self.config_error}`\n\nEverything else applies.", timeout_s=30)
+            self.say(_("Some of my settings were wrong"), _("`{problem}`\n\nEverything else applies.").format(problem=self.config_error), timeout_s=30)
 
     def _override(self, path: tuple[str, ...], value) -> None:
         """Keep a setting you made (Settings, the menu) over the settings file's."""
@@ -2738,12 +2780,17 @@ class Companion(QObject):
             "language": str(c.get(i18n.SETTING) or ""),
         }
         current = self._brain(wait=False)
-        matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()
+        matching = menus.style_word(styles.get(self._companion().bubble_style).name)
+        if current and not self.state.get("brain"):
+            automatic = _("Automatic ({brain})").format(brain=current.label)
+        else:
+            automatic = _("Automatic (the first one found)")
         choices = {
             "companions": [(x.id, x.label) for x in companions.COMPANIONS.values() if companions.get(x.id) is x],
-            "bubble_styles": [(MATCH, f"Match companion ({matching})")] + [(x.name, x.label) for x in styles.STYLES.values()],
-            "brains": [("", f"Automatic ({current.label if current and not self.state.get('brain') else 'the first one found'})")]
-            + [(b.name, b.label if b.available(wait=False) else f"{b.label} ({b.why_not()})") for b in self.brains.values()],
+            "bubble_styles": [(MATCH, _("Match companion ({style})").format(style=matching))] + [(x.name, x.label) for x in styles.STYLES.values()],
+            "brains": [("", automatic)]
+            # Translators: a brain that can't answer now, and why: "Ollama (not running)".
+            + [(b.name, b.label if b.available(wait=False) else _("{brain} ({reason})").format(brain=b.label, reason=b.why_not())) for b in self.brains.values()],
             # An API brain's key: whether one is saved in the keychain, else where it would come from (never the key).
             "keys": {b.name: _key_status(b) for b in self.brains.values() if b.type != "command" and not b.local and b.api_key_env},
             "key_store": keychain.where(),
@@ -2786,7 +2833,7 @@ class Companion(QObject):
         window = self._settings_window
         brain = self._with_options(self.brains.get(name)) if name else self._brain(wait=False)
         if brain is None:
-            window.show_test(False, "There's no brain to test yet: pick one above.", 0.0)
+            window.show_test(False, _("There's no brain to test yet: pick one above."), 0.0)
             return
         if typed_key:
             brain = dataclasses.replace(brain, api_key=typed_key)
@@ -2799,19 +2846,21 @@ class Companion(QObject):
         self._brain_test = None
         window = self._settings_window
         if window is not None and not sip.isdeleted(window):
-            window.show_test(ok, f"{label} answered in {seconds:.1f} s." if ok else text, seconds)
+            window.show_test(ok, _("{brain} answered in {seconds} s.").format(brain=label, seconds=f"{seconds:.1f}") if ok else text, seconds)
 
     def _remove_key(self, name: str) -> None:
         """The key saved for brain `name` in the keychain, taken out (Settings' Remove key)."""
         problem = keychain.delete(name)
         window = self._settings_window
         if window is not None and not sip.isdeleted(window):
-            window.show_key_status(name, problem or f"Removed from {keychain.where()}.", _key_status(self.brains[name]) if name in self.brains else None)
+            # Translators: {store} is where keys are kept, as keychain names it: "Windows Credential Manager", "your desktop's keyring".
+            said = problem or _("Removed from {store}.").format(store=keychain.where())
+            window.show_key_status(name, said, _key_status(self.brains[name]) if name in self.brains else None)
         self._menu_changed()
 
     def _back_up(self, with_chats: bool) -> None:
         """Settings' Back up: where to, then the zip (backup.py)."""
-        name, _ = QFileDialog.getSaveFileName(self._settings_window, "Back up Chatmon", str(Path.home() / backup.default_name()), "Chatmon backup (*.zip)")
+        name, _kind = QFileDialog.getSaveFileName(self._settings_window, _("Back up Chatmon"), str(Path.home() / backup.default_name()), _("Chatmon backup (*.zip)"))
         if name:
             self._back_up_to(Path(name), with_chats)
 
@@ -2820,13 +2869,13 @@ class Companion(QObject):
         try:
             contents = backup.export(path, self.state, self.memory, self.chat_book if with_chats else None)
         except OSError as exc:
-            self.say("Couldn't back up", str(exc), timeout_s=15)
+            self.say(_("Couldn't back up"), str(exc), timeout_s=15)
             return
-        self.say("Backed up", f"`{path.name}` has {contents.summary()}. Keys are never in a backup.", timeout_s=12)
+        self.say(_("Backed up"), _("`{file}` has {what}. Keys are never in a backup.").format(file=path.name, what=contents.summary()), timeout_s=12)
 
     def _bring_back(self) -> None:
         """Settings' Bring back: which backup, then what's in it, to confirm."""
-        name, _ = QFileDialog.getOpenFileName(self._settings_window, "Bring back a Chatmon backup", str(Path.home()), "Chatmon backup (*.zip)")
+        name, _kind = QFileDialog.getOpenFileName(self._settings_window, _("Bring back a Chatmon backup"), str(Path.home()), _("Chatmon backup (*.zip)"))
         if name:
             self._offer_restore(Path(name))
 
@@ -2834,11 +2883,12 @@ class Companion(QObject):
         try:
             contents = backup.read(path)  # checked first: nothing changes if any of it isn't right
         except backup.BackupError as exc:
-            self.say("That backup can't be used", str(exc), timeout_s=20)
+            self.say(_("That backup can't be used"), str(exc), timeout_s=20)
             return
         self.say(
-            "Bring this backup back?", f"It has {contents.summary()}. Your settings, memory, notes and reminders become its; its chats join yours.",
-            [("Bring it back", partial(self._restore, contents)), ("Not now", None)], timeout_s=None,
+            _("Bring this backup back?"),
+            _("It has {what}. Your settings, memory, notes and reminders become its; its chats join yours.").format(what=contents.summary()),
+            [(_("Bring it back"), partial(self._restore, contents)), (_("Not now"), None)], timeout_s=None,
         )
 
     def _restore(self, contents) -> None:
@@ -2850,7 +2900,7 @@ class Companion(QObject):
         window = self._settings_window
         if window is not None and not sip.isdeleted(window):
             window.close()  # it shows what was set before
-        self.say("Backup brought back", said, timeout_s=15)
+        self.say(_("Backup brought back"), said, timeout_s=15)
 
     # -- Chats: a window of them all, with search (chatswin.py)
 
@@ -2885,7 +2935,7 @@ class Companion(QObject):
         if not self.ask_box.isVisible():
             self.open_ask()
         if self.questions.full():
-            self._show_chat("*One question is waiting already. Ask again once that one goes, or press Stop.*")
+            self._show_chat(_("*One question is waiting already. Ask again once that one goes, or press Stop.*"))
             return
         question = asking.Question(self.chat.id, asked.text, [], other, before=index)
         if self.questions.ask(question):
@@ -2915,7 +2965,7 @@ class Companion(QObject):
             name, key = changed["api_key"]
             problem = keychain.set(name, key)
             label = self.brains[name].label if name in self.brains else name
-            self.say(f"{label}'s key", problem or f"Saved in {keychain.where()}.", timeout_s=10)
+            self.say(_("{brain}'s key").format(brain=label), problem or _("Saved in {store}.").format(store=keychain.where()), timeout_s=10)
         if "keep_chats" in changed:
             self.state.set("keep_chats", changed["keep_chats"])
             if not changed["keep_chats"]:
@@ -2959,7 +3009,7 @@ class Companion(QObject):
         self._apply_bubble_style()
         self._menu_changed()
         if not quietly and not self.config_error:
-            self.say("Settings reloaded", timeout_s=3)
+            self.say(_("Settings reloaded"), timeout_s=3)
 
     def _set_sprite_scale(self, scale: float) -> None:
         """The stage's screen has this many device pixels to a pixel: draw the penguin with them."""
@@ -3024,13 +3074,13 @@ def _key_status(brain: brains.Brain) -> dict:
     """What's known of an API brain's key, for Settings, never reading it: in words, and whether the keychain has one."""
     saved = keychain.has(brain.name)
     if brain.api_key:
-        said = "Its key is in the settings file."
+        said = _("Its key is in the settings file.")
     elif saved:
-        said = f"A key is saved in {keychain.where()}."
+        said = _("A key is saved in {store}.").format(store=keychain.where())
     elif brain.api_key_env and os.environ.get(brain.api_key_env):
-        said = f"Its key comes from {brain.api_key_env}."
+        said = _("Its key comes from {variable}.").format(variable=brain.api_key_env)
     else:
-        said = f"No key yet: paste one here, or set {brain.api_key_env}."
+        said = _("No key yet: paste one here, or set {variable}.").format(variable=brain.api_key_env)
     return {"said": said, "saved": saved}
 
 
@@ -3171,7 +3221,9 @@ def open_server(reached: str = events.ABSENT) -> tuple[QLocalServer | None, str 
 
         # Any user can make a pipe of any name, and Qt would quietly add its own to theirs: claim the
         # name before Qt listens on it, and don't listen at all if someone else has it.
-        held = f"Another user on this computer is holding `{winpipe.full_name(name)}`, the address your agents' hooks reach me at, so I won't listen there and they'll tell it nothing."
+        # (cli.main has chosen the language already: the Companion chooses it again once Qt's application exists.)
+        held = _("Another user on this computer is holding `{pipe}`, the address your agents' hooks reach me at, so I won't listen there and they'll "
+                 "tell it nothing.").format(pipe=winpipe.full_name(name))
         if reached == events.FOREIGN:
             return server, held
         try:
@@ -3185,7 +3237,7 @@ def open_server(reached: str = events.ABSENT) -> tuple[QLocalServer | None, str 
         # Two started at once could both find nothing listening, and the second would take the first's socket
         # away: whoever holds this lock (for as long as it runs) is the one Chatmon here.
         if not _hold_instance_lock(name + ".lock"):
-            for _ in range(15):  # the other is starting, or running: it shows itself
+            for _attempt in range(15):  # the other is starting, or running: it shows itself
                 if events.send({"type": "show"}):
                     break
                 time.sleep(0.2)
@@ -3193,7 +3245,7 @@ def open_server(reached: str = events.ABSENT) -> tuple[QLocalServer | None, str 
         QLocalServer.removeServer(name)  # a socket left behind in our own private folder
     try:
         if not server.listen(name):
-            return server, f"I couldn't open `{name}` ({server.errorString()}), the address your agents' hooks reach me at."
+            return server, _("I couldn't open `{pipe}` ({error}), the address your agents' hooks reach me at.").format(pipe=name, error=server.errorString())
     finally:
         if guard is not None:
             winpipe.release(guard)
@@ -3222,7 +3274,7 @@ def run() -> int:
     sys.excepthook = _log_exception
     reached = events.deliver({"type": "show"})
     if reached == events.SENT:
-        print("Chatmon is already running; it says hi.")
+        print(_("Chatmon is already running; it says hi."))
         return 0
     if sys.platform == "win32":
         # Its identity on Windows (taskbar, notifications), the same one its shortcuts carry: set before any
@@ -3249,7 +3301,7 @@ def run() -> int:
     app.setQuitOnLastWindowClosed(False)
     server, problem = open_server(reached)
     if server is None:
-        print("Chatmon is already running; it says hi.")
+        print(_("Chatmon is already running; it says hi."))
         return 0
     if problem:
         print(f"{problem} Hooks won't reach Chatmon.", file=sys.stderr)
