@@ -25,7 +25,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Your chatmon can follow you to another monitor** (Windows, macOS, X11).
 - **The first unlock of the day** says what's waiting: today's reminders, agents waiting for you, updates.
 - `chatmon ask [TEXT]` opens the ask box, filled in; `chatmon status` prints the brain, your reminders and your agents.
-- **Chatmon can be translated**: every word it shows comes from a translation when there's one for your language, or the one you pick in Settings. Only English ships so far, and a new language is a single file. Times and dates follow your system's regional settings.
+- **Chatmon can be translated**: every word it shows, in its bubbles, menus, Settings and the `chatmon` command, comes from a translation when there's one for your language, or the one you pick in Settings, and Qt's own buttons follow it. Only English ships so far, and a new language is a single file. Times and dates follow your system's regional settings.
 
 ### Changes
 - **The menu is tidier**: Companion, Bubble style, Walk around and Start when I log in are under **Appearance**, focus and notes share one menu, and **Reload settings file** is under **Help & updates**.
@@ -63,6 +63,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - Hovering a walking chatmon stops it mid-step instead of snapping it round.
 - The fairy style's highlighted button label could not be seen.
 - pip and pipx installs include the sounds and offline phrases.
+- A repeating reminder reads "Every day at 9:00 AM", and one-of-a-kind counts read right ("1 minute", "1 hook script").
 
 ## 0.9.2
 
