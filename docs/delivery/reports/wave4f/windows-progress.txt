@@ -1,0 +1,18 @@
+suite-windows.log 1259 passed, 179 skipped in 249.08s (0:04:09) # exit 0 18:56:27-19:00:38
+docs/delivery/reports/m6a/wave4f/drill-spec.json exit 0 19:00:38-19:00:53 6 pass 0 fail
+docs/delivery/reports/m6b/wave4f/drill-spec.json exit 0 19:00:53-19:02:34 21 pass 0 fail
+docs/delivery/reports/m6b/wave4f/drill-spec-b.json exit 0 19:02:34-19:03:39 9 pass 0 fail
+docs/delivery/reports/m10/wave4f/drill-spec.json exit 0 19:03:39-19:04:15 9 pass 0 fail
+docs/delivery/reports/m10/wave4f/drill-spec-ci-venv.json exit 0 19:04:16-19:04:40 1 pass 0 fail
+m6a gate drills exit 0 19:04:43-19:07:19
+m6b gate drills exit 0 19:07:19-19:08:44
+m10 gate drills exit 0 19:08:44-19:11:14
+m10 mypy 6.11 exit 0
+m10 mypy 6.12.1 exit 0
+uia-ci-venv exit 0
+m10 locks done
+m6a sde exit 0
+m6a winupdate 2 of 2 exit 0
+m6a dependabot exit 0
+template exit 0
+DONE
