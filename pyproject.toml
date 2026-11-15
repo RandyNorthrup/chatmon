@@ -39,8 +39,8 @@ test = ["pytest", "pytest-timeout", "hypothesis", "tzdata", "comtypes; sys_platf
 # Everything CI runs, at the versions it runs them: `pip install -e ".[dev]"`. packaging/requirements-dev.txt locks
 # the same versions with hashes (tests/test_requirements.py keeps the two in step).
 dev = [
-    "PyQt6==6.11.0",
-    "PyQt6-Qt6==6.11.2",
+    "PyQt6==6.12.0",
+    "PyQt6-Qt6==6.12.0",
     "psutil==7.2.2",
     "pytest==9.2.0",
     "pytest-timeout==2.4.0",

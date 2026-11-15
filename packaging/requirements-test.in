@@ -1,7 +1,7 @@
 # What CI's tests run with: the Qt that ships (as requirements.in pins it) and the test tools.
 # requirements-test.txt is this list locked with hashes; lock it again after changing a pin (CONTRIBUTING.md).
-PyQt6==6.11.0
-PyQt6-Qt6==6.11.2
+PyQt6==6.12.0
+PyQt6-Qt6==6.12.0
 psutil==7.2.2
 pytest==9.2.0
 pytest-timeout==2.4.0

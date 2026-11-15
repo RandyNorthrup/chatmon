@@ -4,6 +4,6 @@
 nuitka==4.3.1; sys_platform == 'win32'  # Windows: compiles Chatmon and the standard library it uses into its programs
 pyinstaller==6.22.3; sys_platform == 'darwin'  # macOS (Nuitka doesn't support PyQt6 there)
 pyinstaller-hooks-contrib==2026.9; sys_platform == 'darwin'
-PyQt6==6.11.0  # the Qt that ships: CI's tests run on it too (requirements-test.in)
-PyQt6-Qt6==6.11.2
+PyQt6==6.12.0  # the Qt that ships: CI's tests run on it too (requirements-test.in)
+PyQt6-Qt6==6.12.0
 psutil==7.2.2  # battery levels, on Windows and macOS
