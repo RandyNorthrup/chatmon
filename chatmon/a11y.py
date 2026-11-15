@@ -73,6 +73,8 @@ def announce(found: Reader | None, words: str, important: bool = False, notify: 
 
 
 def _uia_say(words: str, important: bool) -> bool:
+    if sys.platform != "win32":
+        return False
     try:
         from . import winuia
     except (ImportError, OSError):
