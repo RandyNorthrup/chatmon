@@ -873,9 +873,12 @@ class Stage(QObject):
 
     def _menu_keyboard(self, on: bool) -> None:
         """The overlay takes the keyboard while its menu is open, as any popup menu does, and gives it back as
-        the menu closes; while the ask box is open the keyboard is already the overlay's, and stays."""
+        the menu closes; while the ask box is open on it the keyboard is already the overlay's, and stays. With the
+        ask box a window of its own (set_hosting(False)) the penguin's menu is still drawn here, so it takes the
+        keyboard from the box too, and the compositor gives it back to the box as the menu closes."""
         focus = getattr(self.surface, "focus_keyboard", None)
-        if focus is not None and self.draws_menus() and not (self.hosted is not None and self.hosted.visible()):
+        drawn_here = bool(getattr(self.surface, "draws_menus", False))  # whatever the hosting: this menu is the overlay's
+        if focus is not None and drawn_here and not (self.hosted is not None and self.hosted.visible()):
             focus(on, on)
 
     def _close_owned(self) -> None:
@@ -1074,13 +1077,21 @@ class Stage(QObject):
         size = self.bubble.size
         x = min(max(head.x() - size.width() / 2, 4), self._geo.width() - size.width() - 4)
         top = head.y()
-        if self._clear_of is not None and self._clear_of.isVisible():
+        if self._clear_of is not None and self._clear_of.isVisible() and self._placed_as_asked(self._clear_of):
             top = min(top, self._clear_of.geometry().top() - origin.y())
         y = max(top - size.height(), 4)
         # On whole device pixels: off them, every pixmap of an animated bubble is resampled each frame,
         # which is slow and blurs it by half a pixel.
         x, y = round(x * k) / k, math.floor(y * k) / k  # down, never up: it stays clear of what is below it
         return QRectF(x, y, size.width(), size.height())
+
+    @staticmethod
+    def _placed_as_asked(widget: QWidget) -> bool:
+        """Whether `widget` is where its geometry says: drawn on the stage (hosted), or a window where windows go
+        where they're asked (X11, Windows, macOS). On Wayland the compositor places a window and never says where
+        (sway centres the ask box, floating): its geometry there is only what was asked for, and a bubble kept
+        above that lands on the box itself."""
+        return widget.graphicsProxyWidget() is not None or not QGuiApplication.platformName().startswith("wayland")
 
     def _damage(self, key: tuple, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: tuple, pulse: int, origin: QPoint) -> None:
         """Draw again only the parts whose look (their part of `key`) changed since the last frame drawn."""

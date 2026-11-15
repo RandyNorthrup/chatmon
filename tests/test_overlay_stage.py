@@ -332,6 +332,45 @@ def test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus(s
     assert box.graphicsProxyWidget() is not None and s.hosts_windows() and s.hosted.widget is box
 
 
+def test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open(stage):
+    """The penguin's own menu is drawn on the overlay whatever the hosting (Qt's menus need a Qt window to belong
+    to): it takes the keyboard from the box's window while it's open, and gives it back as it closes."""
+    s, box = stage
+    s.set_hosting(False)
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    spin(0.1)
+    s.surface.focus.clear()
+    menu = QMenu()
+    picked = []
+    menu.addAction("First", lambda: picked.append("first"))
+    menu.addAction("Second", lambda: picked.append("second"))
+    s.open_menu(menu, QPoint(300, 300))
+    assert s.surface.focus == [(True, True)]  # taken now, as a popup menu takes it
+    s.key(key("", Qt.Key.Key_Down), True, False)
+    s.key(key("", Qt.Key.Key_Down), True, False)
+    s.key(key("\r", Qt.Key.Key_Return), True, False)
+    assert picked == ["second"] and not s.menu.is_open()
+    assert s.surface.focus[-1] == (False, False)  # given back: the box's window has it again
+    assert box.entry.text() == ""  # none of the menu's keys reached the box
+
+
+def test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is(stage, monkeypatch):
+    s, box = stage
+    box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+    assert s._placed_as_asked(box)  # hosted: drawn by the stage, where its geometry says
+    s.set_hosting(False)
+    spin(0.1)
+    assert s._placed_as_asked(box)  # a window here (offscreen, as on X11, Windows, macOS): where it's asked to be
+    from PyQt6.QtGui import QGuiApplication
+
+    monkeypatch.setattr(QGuiApplication, "platformName", staticmethod(lambda: "wayland"))
+    assert not s._placed_as_asked(box)  # a Wayland window: where the compositor put it, which nobody is told
+    s.show_message("Reminder", "stretch")
+    spin(0.2)
+    head = s._head.y()
+    assert s._bubble_box.bottom() <= head and s._bubble_box.bottom() > box.geometry().top() - s.origin().y()  # over the head
+
+
 def test_a_message_goes_above_the_open_box(stage):
     s, box = stage
     box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
