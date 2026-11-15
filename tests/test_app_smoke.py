@@ -858,6 +858,25 @@ def test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window(companio
     window.close()
 
 
+def test_the_chats_menu_lists_chats_without_reading_any_whole(companion, monkeypatch):
+    """The Chats menu shows each chat's title, time and pin (ChatBook.listing), never a whole chat: with many kept,
+    reading every message of each to fill a menu was the cost M0-03 took away."""
+    from chatmon import chats, menus
+
+    c = companion
+    for i in range(menus.RECENT_CHATS + 3):
+        chat = chats.Chat()
+        chat.add(chats.Message("user", f"chat {i}", at=1000.0 + i))
+        c.chat_book.save(chat)
+    read_whole: list[str] = []
+    load = chats.ChatBook.load
+    monkeypatch.setattr(chats.ChatBook, "load", lambda book, chat_id: (read_whole.append(chat_id), load(book, chat_id))[1])
+    c.menus.fill()
+    chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
+    assert sum("   ·" in a.text() for a in chats_menu.actions()) == menus.RECENT_CHATS
+    assert read_whole == []
+
+
 def test_a_command_line_tool_that_can_read_files_gets_no_attachments(companion, monkeypatch):
     c = companion
     brain = PretendBrain(c, monkeypatch, kind="command", tools_off=False)
