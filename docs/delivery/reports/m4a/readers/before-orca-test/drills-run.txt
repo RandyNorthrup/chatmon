@@ -1,0 +1,12 @@
+
+=== summary
+PASS AC-12a-uid
+PASS AC-12a-comm-newline
+PASS AC-12b-orca-order
+PASS AC-12c-old-at-spi
+PASS AC-12c-is-enabled-alone
+PASS AC-12c-no-rescan-on-status
+PASS AC-12c-bus-gone
+PASS AC-12d-gnome
+PASS AC-12e-orca-speaks
+PASS AC-12f-desk-signal

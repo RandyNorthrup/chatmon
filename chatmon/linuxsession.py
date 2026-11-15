@@ -11,6 +11,9 @@
   its SettingChanged signal. https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.Settings.html
 - The notification server's own Do Not Disturb: KDE's, dunst's, mako's, SwayNotificationCenter's and
   xfce4-notifyd's.
+- Whether a screen reader runs (ScreenReaders): Orca's remote controller (49 and later) on the session bus,
+  AT-SPI's ScreenReaderEnabled where at-spi2-core still keeps it (it went in 2.62, which kept only IsEnabled: an
+  assistive technology listens), GNOME's screen-reader-enabled setting, and a screen reader's own process.
 
 Nothing here waits on the screen's thread but the session lookup at start: every other question is asked without
 waiting, and its answer comes back as a signal. A service that isn't running is never started by a question
@@ -24,9 +27,10 @@ from __future__ import annotations
 import os
 import time
 from collections.abc import Callable
+from pathlib import Path
 
 from PyQt6.QtCore import QMetaType, QObject, pyqtSlot
-from PyQt6.QtDBus import QDBus, QDBusArgument, QDBusConnection, QDBusMessage, QDBusPendingCallWatcher, QDBusPendingReply
+from PyQt6.QtDBus import QDBus, QDBusArgument, QDBusConnection, QDBusMessage, QDBusPendingCallWatcher, QDBusPendingReply, QDBusServiceWatcher
 
 from .qtsignal import pyqtSignal
 
@@ -335,3 +339,161 @@ class NotificationDnd(QObject):
 
     def heard(self, answer) -> None:
         self.state = dnd_on(self.server or "", answer)
+
+
+# -- Whether a screen reader runs. Each way is asked without waiting and followed as it changes; a reading says what
+#    was last heard. at-spi2-core 2.62 dropped org.a11y.Status ScreenReaderEnabled (2.61 reworked IsEnabled, which
+#    the bus launcher now sets as an assistive technology registers for events): there IsEnabled says something
+#    listens, not what, so the reader itself is looked for, by its remote controller or its process.
+#    https://gitlab.gnome.org/GNOME/at-spi2-core/-/blob/main/NEWS
+
+# Orca's remote controller, which speaks (and brailles) what it's sent: org.gnome.Orca.Service in 49 and 50,
+# org.gnome.Orca1.Service from 51. https://gitlab.gnome.org/GNOME/orca/-/blob/main/docs/remote-controller.md
+ORCA = (("org.gnome.Orca1.Service", "/org/gnome/Orca1/Service"), ("org.gnome.Orca.Service", "/org/gnome/Orca/Service"))
+A11Y_BUS = ("org.a11y.Bus", "/org/a11y/bus")
+A11Y_STATUS = "org.a11y.Status"
+# Linux screen readers by their process name (/proc/PID/comm), as each one's own launcher names it.
+READER_PROCESSES = {"orca": "Orca", "odilia": "Odilia", "fenrir": "Fenrir"}
+GNOME_SCREEN_READER = ("org.gnome.desktop.a11y.applications", "screen-reader-enabled")
+PROC = Path("/proc")
+
+
+def running_readers(proc: Path = PROC, uid: int | None = None) -> list[str]:
+    """The screen readers running as this user (`uid`; None: whoever), by their processes: names, sorted."""
+    found = set()
+    try:
+        entries = list(proc.iterdir())
+    except OSError:  # no /proc: not Linux, or hidden from this process
+        return []
+    for entry in entries:
+        if not entry.name.isdigit():
+            continue
+        try:
+            name = READER_PROCESSES.get((entry / "comm").read_text(encoding="utf-8", errors="replace").strip())
+            if name and (uid is None or entry.stat().st_uid == uid):
+                found.add(name)
+        except OSError:  # gone since it was listed, or not ours to read
+            continue
+    return sorted(found)
+
+
+class ScreenReaders(QObject):
+    """Whether a screen reader runs, and which, as last heard: `found()`. `changed` is emitted when that changes
+    (Orca's remote controller comes or goes, AT-SPI's status changes, GNOME's setting changes, `rescan()` finds a
+    reader's process started or stopped). Nothing waits, and nothing is started: AT-SPI's bus isn't launched by
+    asking about it. One per app: `screen_readers()`."""
+
+    changed = pyqtSignal()
+
+    def __init__(self, parent: QObject | None = None, proc: Path = PROC, gnome: bool | None = None):
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
+        self.orca: tuple[str, str] | None = None  # Orca's remote controller, (service, path), while it's registered
+        self.screen_reader_enabled: bool | None = None  # AT-SPI's ScreenReaderEnabled, before at-spi2-core 2.62
+        self.accessibility: bool | None = None  # AT-SPI's IsEnabled: an assistive technology listens
+        self.gnome: bool | None = None  # GNOME's screen-reader-enabled setting, on GNOME
+        self.running: list[str] = []
+        self._proc = proc
+        self._uid = os.getuid() if hasattr(os, "getuid") else None
+        self._owned: dict[str, bool] = {}
+        self._told: tuple[str, tuple[str, str] | None] | None = None
+        self._gnome_setting = None
+        if gnome is None:
+            gnome = "gnome" in (os.environ.get("XDG_CURRENT_DESKTOP") or "").lower()
+        if gnome:
+            from .presence import _GSetting
+
+            self._gnome_setting = _GSetting(*GNOME_SCREEN_READER, self)
+            self._gnome_setting.changed.connect(self._gnome_changed)
+        self._bus: QDBusConnection = QDBusConnection.sessionBus()
+        if self._bus.isConnected():
+            services = [service for service, _ in ORCA] + [A11Y_BUS[0]]
+            self._watcher = QDBusServiceWatcher(services[0], self._bus, QDBusServiceWatcher.WatchModeFlag.WatchForOwnerChange, self)
+            for service in services[1:]:  # one at a time: setWatchedServices never returned here (Qt 6.12.0, Linux)
+                self._watcher.addWatchedService(service)
+            self._watcher.serviceOwnerChanged.connect(self._owner_changed)
+            self._bus.connect(A11Y_BUS[0], A11Y_BUS[1], PROPERTIES, "PropertiesChanged", self._status_changed)
+            for service in services:
+                _ask(self, self._bus, _call("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "NameHasOwner", service),
+                     self._owner_answer(service))
+        self.rescan()
+
+    def found(self) -> tuple[str, tuple[str, str] | None] | None:
+        """(the screen reader's name, Orca's remote controller to speak through or None), or None if none runs."""
+        if self.orca is not None:
+            return "Orca", self.orca
+        if self.screen_reader_enabled or self.gnome:
+            return (self.running[0] if self.running else "a screen reader"), None
+        if self.running:
+            return self.running[0], None
+        return None
+
+    def rescan(self) -> None:
+        """Look again for a screen reader's process (a quick read of /proc, no question to anyone)."""
+        self.running = running_readers(self._proc, self._uid)
+        self._tell()
+
+    def owned(self, service: str, owned: bool) -> None:
+        """Whether that bus name has an owner now (asked at start, then told as it changes)."""
+        self._owned[service] = owned
+        self.orca = next(((name, path) for name, path in ORCA if self._owned.get(name)), None)
+        if service == A11Y_BUS[0]:
+            if owned:  # AT-SPI's bus is up (again): what does it say?
+                _ask(self, self._bus, _call(*A11Y_BUS, PROPERTIES, "GetAll", A11Y_STATUS), self._status_read)
+            else:
+                self.screen_reader_enabled = self.accessibility = None
+        self.rescan()
+
+    def status(self, changed: dict) -> None:
+        """AT-SPI's org.a11y.Status properties, as read or as changed."""
+        if "ScreenReaderEnabled" in changed:
+            self.screen_reader_enabled = bool(_value(changed["ScreenReaderEnabled"]))
+        if "IsEnabled" in changed:
+            self.accessibility = bool(_value(changed["IsEnabled"]))
+        self.rescan()  # something started or stopped listening: is it a screen reader?
+
+    def _owner_answer(self, service: str) -> Callable[[QDBusMessage], None]:
+        def answered(reply: QDBusMessage) -> None:
+            self.owned(service, _answer(reply) is True)
+
+        return answered
+
+    def _owner_changed(self, service: str, old: str, new: str) -> None:
+        self.owned(service, bool(new))
+
+    def _status_read(self, reply: QDBusMessage) -> None:
+        answer = _answer(reply)
+        if isinstance(answer, dict):
+            self.status(answer)
+
+    @pyqtSlot(QDBusMessage)
+    def _status_changed(self, message: QDBusMessage) -> None:
+        args = message.arguments()
+        if len(args) >= 2 and args[0] == A11Y_STATUS and isinstance(args[1], dict):
+            self.status(args[1])
+
+    def _gnome_changed(self) -> None:
+        value = self._gnome_setting.value if self._gnome_setting is not None else None
+        self.gnome = None if value is None else value == "true"
+        self.rescan()
+
+    def _tell(self) -> None:
+        found = self.found()
+        if found != self._told:
+            self._told = found
+            self.changed.emit()
+
+    def close(self) -> None:
+        if self._gnome_setting is not None:
+            self._gnome_setting.close()
+
+
+_screen_readers: ScreenReaders | None = None
+
+
+def screen_readers() -> ScreenReaders:
+    """The app's one ScreenReaders, made on first use and kept: a11y.reader() reads it, presence.Desk passes on its
+    changes as screen_reader_changed."""
+    global _screen_readers
+    if _screen_readers is None:
+        _screen_readers = ScreenReaders()
+    return _screen_readers

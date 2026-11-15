@@ -395,7 +395,8 @@ class Desk(QObject):
     `settings_changed` says reduced motion or high contrast may have changed (read them again): from the portal's
     SettingChanged and GNOME's settings on Linux, Qt's contrastPreferenceChanged (Qt 6.10 and later), and Windows'
     WM_SETTINGCHANGE, which winlock.LockWatcher hears and passes to `windows_setting_changed`.
-    `screen_reader_changed` says a screen reader started or stopped (Windows says so for NVDA, JAWS and others)."""
+    `screen_reader_changed` says a screen reader started or stopped (Windows says so for NVDA, JAWS and others;
+    on Linux, linuxsession.ScreenReaders hears Orca, AT-SPI, GNOME's setting and a reader's own process)."""
 
     settings_changed = pyqtSignal()
     screen_reader_changed = pyqtSignal()
@@ -413,6 +414,18 @@ class Desk(QObject):
         self._portal = None  # linuxsession.PortalSettings, from the first reading on; False: no D-Bus here
         self._dnd = None  # linuxsession.NotificationDnd, likewise
         self._watch_qt_contrast()
+        self._watch_screen_readers()
+
+    def _watch_screen_readers(self) -> None:
+        """Linux: the app's ScreenReaders from the start, so it's heard who runs by the first read-aloud, and its
+        changes passed on as screen_reader_changed (a Qt connection, which goes with the Desk)."""
+        if sys.platform in ("win32", "darwin"):
+            return
+        try:
+            from . import linuxsession
+        except ImportError:  # no QtDBus
+            return
+        linuxsession.screen_readers().changed.connect(self.screen_reader_changed)
 
     def _watch_qt_contrast(self) -> None:
         """Qt 6.10 and later say when the system's contrast preference changes, on every platform. PyQt6 6.11
