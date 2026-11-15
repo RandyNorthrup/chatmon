@@ -655,6 +655,60 @@ def test_the_keyboard_is_taken_only_while_the_ask_box_is_open(qapp):
 
 
 @linux_only
+def test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive(qapp):
+    """sway 1.12 gives the keyboard back to the window it came from as an exclusive layer surface goes on_demand
+    (tests/test_sway.py sees it happen): the overlay takes it again at once and keeps grabs exclusive from then on."""
+    conn, server, stage, surf, ids = _configured(qapp)
+    surf.set_input([QRect(100, 100, 200, 100)])
+    surf._present()
+    server.requests()
+    surf.focus_keyboard(True)
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 1, ids["surface"], b"")
+    server.send(ids["pointer"], layer.EV_POINTER_ENTER, "uoff", 2, ids["surface"], 150.0, 150.0)
+    conn.read()
+    conn.flush()
+    assert interactivity(server.requests(), ids) == [layer.KEYBOARD_EXCLUSIVE, layer.KEYBOARD_ON_DEMAND]
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_LEAVE, "uo", 3, ids["surface"])  # straight away, with nothing done
+    conn.read()
+    conn.flush()
+    assert interactivity(server.requests(), ids) == [layer.KEYBOARD_EXCLUSIVE]  # taken back
+    assert ("keyboard", False) not in stage.calls  # the box never lost it, as far as it knows
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 4, ids["surface"], b"")
+    server.send(ids["pointer"], layer.EV_POINTER_MOTION, "uff", 0, 160.0, 150.0)
+    conn.read()
+    conn.flush()
+    assert interactivity(server.requests(), ids) == []  # no handover again: it stays exclusive while the box is open
+    surf.focus_keyboard(False)
+    surf.focus_keyboard(True)
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 5, ids["surface"], b"")
+    conn.read()
+    conn.flush()
+    assert interactivity(server.requests(), ids) == [layer.KEYBOARD_NONE, layer.KEYBOARD_EXCLUSIVE]  # the next time too
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_a_keyboard_that_leaves_later_was_yours_to_take_elsewhere(qapp):
+    conn, server, stage, surf, ids = _configured(qapp)
+    surf.set_input([QRect(100, 100, 200, 100)])
+    surf._present()
+    surf.focus_keyboard(True)
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 1, ids["surface"], b"")
+    server.send(ids["pointer"], layer.EV_POINTER_ENTER, "uoff", 2, ids["surface"], 150.0, 150.0)
+    conn.read()
+    conn.flush()
+    server.requests()
+    surf._handed_over_at -= layer.HANDOVER_GRACE  # a while ago
+    server.send(ids["keyboard"], layer.EV_KEYBOARD_LEAVE, "uo", 3, ids["surface"])  # you clicked another window
+    conn.read()
+    conn.flush()
+    assert interactivity(server.requests(), ids) == [] and ("keyboard", False) in stage.calls and surf._on_demand_holds
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
 def test_an_older_layer_shell_keeps_the_keyboard_exclusive(qapp):
     _conn, server, _stage, surf, ids = _configured(qapp, layer_version=3)
     surf.focus_keyboard(True, grab=False)
@@ -791,6 +845,7 @@ def test_the_clipboard_is_the_overlays_own(qapp):
     server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")  # copying needs an input serial
     conn.read()
     surf.copy("copied ✓")
+    assert qapp.clipboard().text() == "copied ✓"  # Qt's too, for Chatmon's own windows: they'd ask this connection, on the thread they block
     reqs = server.requests()
     (create,) = named(reqs, ids["data_device_manager"], layer.DATA_DEVICE_MANAGER_CREATE_SOURCE)
     (source,) = wayland.decode("n", create)

@@ -26,6 +26,7 @@ import ctypes
 import logging
 import math
 import threading
+import time
 from dataclasses import dataclass, field
 from functools import partial
 import mmap
@@ -115,6 +116,7 @@ EV_LOCK_LOCKED, EV_LOCK_UNLOCKED = 0, 1
 IDLE_AFTER_MS = 300_000
 ANCHOR_ALL = 1 | 2 | 4 | 8  # top, bottom, left, right: the whole output
 KEYBOARD_NONE, KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND = 0, 1, 2  # on_demand: layer-shell version 4
+HANDOVER_GRACE = 0.5  # s: the keyboard gone this soon after a handover to on_demand was the compositor's doing
 KEYMAP_XKB_V1 = 1
 SHM_ARGB8888 = 0  # premultiplied, byte order B G R A: QImage's ARGB32_Premultiplied on little-endian
 CAP_POINTER, CAP_KEYBOARD = 1, 2
@@ -640,6 +642,8 @@ class LayerSurface(QObject):
         self._kb_wanted = False  # whether the stage wants it (the ask box is open)
         self._kb_grab = False
         self._kb_mode = KEYBOARD_NONE
+        self._on_demand_holds = True  # until a compositor takes the keyboard away on the handover (focus_keyboard)
+        self._handed_over_at: float | None = None  # when a grab was last handed over to on_demand
         self._raised = False  # wanted above full-screen windows (an alert, the ask box), whichever surface is up
         self._layer_level = LAYER_OVERLAY  # where the surface up now is
         self._idle: int | None = None
@@ -752,9 +756,17 @@ class LayerSurface(QObject):
         self.selections["clipboard"].paste_rich(then)
 
     def copy(self, text: str, which: str = "clipboard") -> None:
-        """Put text on the clipboard (or primary selection), for any app to paste."""
+        """Put text on the clipboard (or primary selection), for any app to paste.
+
+        The clipboard's text goes on Qt's own clipboard too, for Chatmon's own windows (Settings, Chats): they
+        paste from Qt's, which on Wayland asks the compositor, which asks this connection, whose events wait on
+        the very thread Qt is then blocked in (a two-second freeze and nothing pasted, on sway). Qt keeps what it
+        was given in memory for them, and offers it to other apps itself if the compositor takes its offer."""
         self.selections[which].copy(text)
         self._flush()
+        board = QGuiApplication.clipboard() if which == "clipboard" and text else None
+        if board is not None:
+            board.setText(text)
 
     def set_text_input(self, state: TextState | None) -> None:
         """The text field that has the focus on the stage (None: none does),
@@ -775,6 +787,13 @@ class LayerSurface(QObject):
         say a terminal, when you opened the box from the tray. Without `grab`
         it's `on_demand` from the start: the box gets the keyboard when you
         click it.
+
+        Some compositors take the keyboard away from an `on_demand` surface
+        as soon as it stops being `exclusive` (sway 1.12 gives it back to the
+        window it came from, on the commit that changes it). Where that
+        happens the overlay takes it again and stays `exclusive` while it
+        wants the keyboard, as a launcher does: Esc or a click on the chatmon
+        closes the box, and with it the grab.
         """
         self._kb_wanted = on
         self._kb_grab = on and grab
@@ -782,7 +801,7 @@ class LayerSurface(QObject):
         if not on:
             self._stop_repeat()
             mode = KEYBOARD_NONE
-        elif on_demand and (not grab or (self._kb_focus and self._pointer_inside())):
+        elif on_demand and (not grab or (self._on_demand_holds and self._kb_focus and self._pointer_inside())):
             mode = KEYBOARD_ON_DEMAND
         else:
             mode = KEYBOARD_EXCLUSIVE  # also all an older layer shell has
@@ -790,8 +809,19 @@ class LayerSurface(QObject):
 
     def _maybe_on_demand(self) -> None:
         """While grabbing: hand over to on_demand once that keeps the keyboard here."""
-        if self._kb_wanted and self._kb_mode == KEYBOARD_EXCLUSIVE and self._kb_focus and self._pointer_inside():
+        if self._on_demand_holds and self._kb_wanted and self._kb_mode == KEYBOARD_EXCLUSIVE and self._kb_focus and self._pointer_inside():
             self.focus_keyboard(True, self._kb_grab)
+
+    def _dropped_on_handover(self) -> bool:
+        """The keyboard went away just as a grab was handed over to on_demand, with nothing done meanwhile: the
+        compositor's doing, not yours. From now on keep grabs exclusive, and take this one back."""
+        handed = self._handed_over_at
+        if not (self._kb_grab and self._kb_mode == KEYBOARD_ON_DEMAND and handed is not None and time.monotonic() - handed < HANDOVER_GRACE):
+            return False
+        logger.debug("the compositor took the keyboard back on the handover to on_demand; keeping grabs exclusive")
+        self._on_demand_holds = False
+        self.focus_keyboard(True, True)
+        return True
 
     def _pointer_inside(self) -> bool:
         """Whether the pointer is on something of ours (the input region), not
@@ -1004,7 +1034,8 @@ class LayerSurface(QObject):
             if self._kb_focus:
                 self._kb_focus = False
                 self._stop_repeat()
-                self.stage.keyboard_focus(False)
+                if not self._dropped_on_handover():  # taken back at once: the stage never knew it had gone
+                    self.stage.keyboard_focus(False)
         elif opcode == EV_KEYBOARD_MODIFIERS:
             _serial, depressed, latched, locked, group = decode("uuuuu", args)
             if self._keyboard is not None:
@@ -1073,6 +1104,7 @@ class LayerSurface(QObject):
         if mode == self._kb_mode or self._layer is None or self._surface is None:  # the two come and go together
             self._kb_mode = mode
             return
+        self._handed_over_at = time.monotonic() if (self._kb_mode, mode) == (KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND) else None
         self._kb_mode = mode
         self.conn.request(self._layer, LAYER_SURFACE_SET_KEYBOARD_INTERACTIVITY, "u", mode)
         self.conn.request(self._surface, SURFACE_COMMIT)
