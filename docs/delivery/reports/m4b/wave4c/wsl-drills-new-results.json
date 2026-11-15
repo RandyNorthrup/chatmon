@@ -1,0 +1,32 @@
+[
+  {
+    "id": "W4-L-02E-linux-player",
+    "requirement": "AC-02E",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "servers = {\"pw-play\": folder / \"pipewire-0\", \"paplay\": folder / \"pulse\" / \"native\", \"canberra-gtk-play\": None}",
+      "replace": "servers = {\"pw-play\": None, \"paplay\": folder / \"pulse\" / \"native\", \"canberra-gtk-play\": None}"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+    ],
+    "expected": [
+      "test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "b492bd96e3566047a5117555a7e5f3ab1ae4a8506c2cbd682a218e97dd36bb4d",
+    "mutated_exit": 1,
+    "observed": "______ test_linux_players_follow_the_sound_server_and_never_make_you_wait ______",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  }
+]

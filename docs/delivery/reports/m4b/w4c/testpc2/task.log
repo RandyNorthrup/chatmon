@@ -1,0 +1,13 @@
+== 2026-11-15 09:11:56 -08:00
+ USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME
+ technician            console             1  Active      none   11/12/2026 12:00 PM
+registered ChatmonM4BToastDrill : user Technician, logon Interactive, run level Limited, triggers 1
+started 09:11:57
+finished: True; task state Ready, last run 11/15/2026 09:11:58, last result 0
+run.ps1 started 2026-11-15 09:11:58 -08:00 as testpc2\technician, session 1, in W:\chatmon-m4b\src at 0c8384bd289cf9bea8094840a88050086e800a9c
+integrity: Mandatory Label\Medium Mandatory Level                        Label            S-1-16-8192
+probe exit 0 (09:11:58-09:12:00): W:\chatmon-m4b\venv\Scripts\python.exe W:\chatmon-m4b\rec\toast_probe.py
+plain-test exit 0 (09:12:00-09:12:03): W:\chatmon-m4b\venv\Scripts\python.exe -m pytest -v -rA -p no:cacheprovider tests/test_wintoast.py
+drills-stdout exit 0 (09:12:03-09:12:18): W:\chatmon-m4b\venv\Scripts\python.exe tests\drills\run.py W:\chatmon-m4b\rec\drill-spec.json --log W:\chatmon-m4b\logs\drills.log --python W:\chatmon-m4b\venv\Scripts\python.exe
+git status --porcelain after the drills: 
+run.ps1 done 2026-11-15 09:12:18 -08:00

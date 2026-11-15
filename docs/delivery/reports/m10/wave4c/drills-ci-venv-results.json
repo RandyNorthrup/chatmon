@@ -1,0 +1,32 @@
+[
+  {
+    "id": "M10-01-announcement-not-important",
+    "requirement": "M10-01.A2",
+    "file": "chatmon/winuia.py",
+    "mutation": {
+      "find": "IMPORTANT_ALL if important else ALL, words, activity)",
+      "replace": "ALL if important else ALL, words, activity)"
+    },
+    "command": [
+      "C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+    ],
+    "expected": [
+      "'processing': 2"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655",
+    "baseline_exit": 0,
+    "mutated_sha256": "39cbb762d1133ff8571b0b79e9b53856841e4153b46dde4b1032075314eaf835",
+    "mutated_exit": 1,
+    "observed": "E       AssertionError: [{'kind': 4, 'processing': 2, 'words': 'Reminder. Stretch your legs.', 'activity': 'chatmon.announcement'}]",
+    "after_sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655",
+    "restored_exit": 0
+  }
+]

@@ -1,0 +1,34 @@
+== build, 2026-11-15 09:11:13 -08:00, testpc2\technician
+last boot: 2026-11-12 11:59:51
+claims:
+--- chatmon.txt
+console 2026-11-15 09:08 -08:00 until 2026-11-15 11:08 -08:00: Chatmon M4B toast drill (AC-03E), a scheduled task in Technician's console session showing and hiding toasts
+drive 0025_38B8_21B7_37C0. 2026-11-15 09:08 -08:00 until 2026-11-15 11:08 -08:00: Chatmon writes W:\chatmon-m4b only (source, venv, logs), no erase; removed at the end
+W: is disk 0: SAMSUNG MZVL2512HCJQ-00BH1, serial 0025_38B8_21B7_37C0., 512110190592 bytes, boot False
+zip: 123411586 bytes, SHA-256 17FCE1ED6B02B78FE2DCD0FCCE6F12C0AB3D4A6E5DED6900C24B8C79EA7EEE1B
+tree: 73fd28a572bd43377ac7822ca57c3befa4903a76 (the commit's: 73fd28a572bd43377ac7822ca57c3befa4903a76)
+git status --porcelain: (clean)
+wintoast.py SHA-256: e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c
+test_wintoast.py SHA-256: 6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e
+run.py SHA-256: 2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc
+Successfully installed colorama-0.4.6 comtypes-1.4.17 coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 sortedcontainers-2.4.0 tzdata-2026.6
+pip freeze:
+colorama==0.4.6
+comtypes==1.4.17
+coverage==7.17.0
+hypothesis==6.170.14
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+psutil==7.2.2
+Pygments==2.21.0
+PyQt6==6.11.0
+PyQt6-Qt6==6.11.2
+PyQt6_sip==13.13.0
+pytest==9.2.0
+pytest-timeout==2.4.0
+sortedcontainers==2.4.0
+tzdata==2026.6
+python 3.14.10 pyqt6 6.11.0 qt 6.11.0 pytest 9.2.0
+owner of W:\chatmon-m4b and everything in it: Technician
+setup done

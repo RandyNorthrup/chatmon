@@ -1,0 +1,87 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/plans3/docs/delivery/reports/m0/wave4c/drill-spec-linux.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-vzxpbzlx
+copied 310 files
+
+=== drill W4-M0-13-log-left-at-the-umask (M0-13.A1) on chatmon/log.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.57s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_the_log_is_readable_only_by_you_and_never_followed_through_a_link ____
+
+state = PosixPath('/tmp/pytest-of-randy/pytest-440/test_the_log_is_readable_only_0/state/chatmon')
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-440/test_the_log_is_readable_only_0')
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="file modes and symbolic links are the POSIX log's protections")
+    def test_the_log_is_readable_only_by_you_and_never_followed_through_a_link(state, tmp_path):
+        state.mkdir(parents=True)
+        made_at_the_umask = state / "chatmon.log"
+        made_at_the_umask.write_text("an older Chatmon's log\n")
+        os.chmod(made_at_the_umask, 0o644)
+        log.setup()
+        logging.getLogger("chatmon.x").warning("private")
+>       assert os.stat(made_at_the_umask).st_mode & 0o777 == 0o600
+E       AssertionError: assert (33188 & 511) == 384
+E        +  where 33188 = os.stat_result(st_mode=33188, st_ino=67520, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=74, st_atime=1794758867, st_mtime=1794758867, st_ctime=1794758867).st_mode
+E        +    where os.stat_result(st_mode=33188, st_ino=67520, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=74, st_atime=1794758867, st_mtime=1794758867, st_ctime=1794758867) = <built-in function stat>(PosixPath('/tmp/pytest-of-randy/pytest-440/test_the_log_is_readable_only_0/state/chatmon/chatmon.log'))
+E        +      where <built-in function stat> = os.stat
+
+tests/test_log.py:102: AssertionError
+----------------------------- Captured stderr call -----------------------------
+chatmon: private
+------------------------------ Captured log call -------------------------------
+WARNING  chatmon.x:test_log.py:101 private
+1 failed in 0.54s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+
+=== drill W4-M0-13-log-followed-through-a-link (M0-13.A1) on chatmon/log.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.51s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_the_log_is_readable_only_by_you_and_never_followed_through_a_link ____
+
+state = PosixPath('/tmp/pytest-of-randy/pytest-443/test_the_log_is_readable_only_0/state/chatmon')
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-443/test_the_log_is_readable_only_0')
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="file modes and symbolic links are the POSIX log's protections")
+    def test_the_log_is_readable_only_by_you_and_never_followed_through_a_link(state, tmp_path):
+        state.mkdir(parents=True)
+        made_at_the_umask = state / "chatmon.log"
+        made_at_the_umask.write_text("an older Chatmon's log\n")
+        os.chmod(made_at_the_umask, 0o644)
+        log.setup()
+        logging.getLogger("chatmon.x").warning("private")
+        assert os.stat(made_at_the_umask).st_mode & 0o777 == 0o600
+        log.reset()
+        made_at_the_umask.unlink()
+        elsewhere = tmp_path / "elsewhere.txt"
+        elsewhere.write_text("someone else's file\n")
+        made_at_the_umask.symlink_to(elsewhere)
+>       assert log.setup() is None
+E       AssertionError: assert PosixPath('/tmp/pytest-of-randy/pytest-443/test_the_log_is_readable_only_0/state/chatmon/chatmon.log') is None
+E        +  where PosixPath('/tmp/pytest-of-randy/pytest-443/test_the_log_is_readable_only_0/state/chatmon/chatmon.log') = <function setup at 0x7e1e2e8dd7a0>()
+E        +    where <function setup at 0x7e1e2e8dd7a0> = log.setup
+
+tests/test_log.py:108: AssertionError
+----------------------------- Captured stderr call -----------------------------
+chatmon: private
+------------------------------ Captured log call -------------------------------
+WARNING  chatmon.x:test_log.py:101 private
+1 failed in 0.54s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.50s
+
+=== summary
+PASS W4-M0-13-log-left-at-the-umask
+PASS W4-M0-13-log-followed-through-a-link

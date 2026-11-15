@@ -1,0 +1,7 @@
+$ python verify-delivery.py --root . --plan docs/delivery/m6a-ci-tooling.md --stage resume --context docs/delivery/reports/m6a/wave4c/context.json
+FAIL: resume record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, checkpoint-freshness
+outcome-unresolved | P-DEPENDABOT | After the PR reaches main (the coordinator), read Dependabot's first pull requests. If it can't relock the uv-made files, lock them by hand on its proposals (CONTRIBUTING.md has the command).
+outcome-unresolved | P-RELEASE | At the 0.10.0 release (Randy or the coordinator): push the tag, watch attest and publish, then run gh attestation verify <file> --repo RandyNorthrup/chatmon on one file.
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

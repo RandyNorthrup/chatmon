@@ -1,0 +1,312 @@
+lint	Set up job	﻿2026-11-15T15:23:40.7451484Z Current runner version: '2.338.2'
+lint	Set up job	2026-11-15T15:23:40.7503467Z ##[group]Runner Image Provisioner
+lint	Set up job	2026-11-15T15:23:40.7504406Z Hosted Compute Agent
+lint	Set up job	2026-11-15T15:23:40.7505085Z Version: 20261103.629
+lint	Set up job	2026-11-15T15:23:40.7506266Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+lint	Set up job	2026-11-15T15:23:40.7507041Z Build Date: 2026-11-03T17:26:59Z
+lint	Set up job	2026-11-15T15:23:40.7507830Z Worker ID: {be5b62bb-eec0-4ece-8ee7-c799333562c7}
+lint	Set up job	2026-11-15T15:23:40.7508580Z Region: northcentralus
+lint	Set up job	2026-11-15T15:23:40.7509152Z Cloud: Azure
+lint	Set up job	2026-11-15T15:23:40.7509804Z ##[endgroup]
+lint	Set up job	2026-11-15T15:23:40.7511364Z ##[group]Operating System
+lint	Set up job	2026-11-15T15:23:40.7512144Z Ubuntu
+lint	Set up job	2026-11-15T15:23:40.7512748Z 24.04.5
+lint	Set up job	2026-11-15T15:23:40.7513456Z LTS
+lint	Set up job	2026-11-15T15:23:40.7514121Z ##[endgroup]
+lint	Set up job	2026-11-15T15:23:40.7514692Z ##[group]Runner Image
+lint	Set up job	2026-11-15T15:23:40.7515724Z Image: ubuntu-24.04
+lint	Set up job	2026-11-15T15:23:40.7516401Z Version: 20261111.370.1
+lint	Set up job	2026-11-15T15:23:40.7517504Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+lint	Set up job	2026-11-15T15:23:40.7519413Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+lint	Set up job	2026-11-15T15:23:40.7520428Z ##[endgroup]
+lint	Set up job	2026-11-15T15:23:40.7521631Z ##[group]GITHUB_TOKEN Permissions
+lint	Set up job	2026-11-15T15:23:40.7523904Z Contents: read
+lint	Set up job	2026-11-15T15:23:40.7524621Z Metadata: read
+lint	Set up job	2026-11-15T15:23:40.7525198Z ##[endgroup]
+lint	Set up job	2026-11-15T15:23:40.7527805Z Secret source: Actions
+lint	Set up job	2026-11-15T15:23:40.7529978Z Cache mode: write
+lint	Set up job	2026-11-15T15:23:40.7531631Z Prepare workflow directory
+lint	Set up job	2026-11-15T15:23:40.7942856Z Prepare all required actions
+lint	Set up job	2026-11-15T15:23:40.7991671Z Getting action download info
+lint	Set up job	2026-11-15T15:23:41.0382321Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+lint	Set up job	2026-11-15T15:23:41.2043808Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+lint	Set up job	2026-11-15T15:23:41.3856144Z Complete job name: lint
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T15:23:41.4787703Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4788799Z with:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4789264Z   persist-credentials: false
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4789810Z   repository: RandyNorthrup/chatmon
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4793835Z   token: ***
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4794274Z   ssh-strict: true
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4794715Z   ssh-user: git
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4795146Z   clean: true
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4796031Z   sparse-checkout-cone-mode: true
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4796729Z   fetch-depth: 1
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4797210Z   fetch-tags: false
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4797671Z   show-progress: true
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4798120Z   lfs: false
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4798543Z   submodules: false
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4799000Z   set-safe-directory: true
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4799522Z   allow-unsafe-pr-checkout: false
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4800421Z env:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4800878Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.4801408Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7210100Z Syncing repository: RandyNorthrup/chatmon
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7213367Z ##[group]Getting Git version info
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7215050Z Working directory is '/home/runner/work/chatmon/chatmon'
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7217482Z [command]/usr/bin/git version
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7283535Z git version 2.56.1
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7305850Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7316442Z Temporarily overriding HOME='/home/runner/work/_temp/c05fd7c5-bd75-4dce-abe4-2740abf52fdd' before making global git config changes
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7318600Z Adding repository directory to the temporary git global config as a safe directory
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7321542Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7364499Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7368157Z ##[group]Determining repository object format
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7369567Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7370410Z ##[group]Initializing the repository
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7373750Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7475787Z hint: Using 'master' as the name for the initial branch. This default branch name
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7478324Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7480588Z hint: to use in all of your new repositories, which will suppress this warning,
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7482534Z hint: call:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7483684Z hint:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7484983Z hint: 	git config --global init.defaultBranch <name>
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7486870Z hint:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7488320Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7490584Z hint: 'development'. The just-created branch can be renamed via this command:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7492426Z hint:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7493891Z hint: 	git branch -m <name>
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7495074Z hint:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7496866Z hint: Disable this message with "git config set advice.defaultBranchName false"
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7499390Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7503441Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7579796Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7581428Z ##[group]Disabling automatic garbage collection
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7583691Z [command]/usr/bin/git config --local gc.auto 0
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7637709Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7639231Z ##[group]Setting up auth
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7640432Z Removing SSH command configuration
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7642850Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.7668108Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8021315Z Removing HTTP extra header
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8036223Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8067686Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8303486Z Removing includeIf entries pointing to credentials config files
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8309670Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8342975Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8576359Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8614708Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8650303Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8684188Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8717032Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8747017Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8747874Z ##[group]Fetching the repository
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:41.8753285Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5545f5a9b3fad2e700176b2efb81b7536ab2901e:refs/remotes/pull/18/merge
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6622544Z From https://github.com/RandyNorthrup/chatmon
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6626041Z  * [new ref]         5545f5a9b3fad2e700176b2efb81b7536ab2901e -> pull/18/merge
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6630902Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6632577Z ##[group]Determining the checkout info
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6634132Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6634992Z [command]/usr/bin/git sparse-checkout disable
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6690118Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6722678Z ##[group]Checking out the ref
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.6726247Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/18/merge
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3596044Z Note: switching to 'refs/remotes/pull/18/merge'.
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3596642Z 
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3597014Z You are in 'detached HEAD' state. You can look around, make experimental
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3597705Z changes and commit them, and you can discard any commits you make in this
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3599221Z state without impacting any branches by switching back to a branch.
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3599858Z 
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3600177Z If you want to create a new branch to retain commits you create, you may
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3600818Z do so (now or later) by using -c with the switch command. Example:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3601182Z 
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3601351Z   git switch -c <new-branch-name>
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3601607Z 
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3601769Z Or undo this operation with:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3602005Z 
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3602142Z   git switch -
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3602342Z 
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3602732Z Turn off this advice by setting config variable advice.detachedHead to false
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3606305Z 
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3606867Z HEAD is now at 5545f5a Merge 3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3654489Z ##[endgroup]
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3706183Z [command]/usr/bin/git log -1 --format=%H
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3734606Z 5545f5a9b3fad2e700176b2efb81b7536ab2901e
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3744371Z ##[group]Removing auth
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3744777Z Removing SSH command configuration
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3748354Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.3782344Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4020911Z Removing HTTP extra header
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4025709Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4061415Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4296803Z Removing includeIf entries pointing to credentials config files
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4301116Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4330696Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4331524Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4331983Z includeif.gitdir:/github/workspace/.git.path
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4332355Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4340396Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4365829Z /home/runner/work/_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4379473Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-ac9a6fdd\-b70f\-418d\-8cea\-809ffb37499e\.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4419406Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4451328Z /home/runner/work/_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4461681Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-ac9a6fdd\-b70f\-418d\-8cea\-809ffb37499e\.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4498890Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4524927Z /github/runner_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4533006Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-ac9a6fdd\-b70f\-418d\-8cea\-809ffb37499e\.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4576945Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4601926Z /github/runner_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4612758Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-ac9a6fdd\-b70f\-418d\-8cea\-809ffb37499e\.config
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4649723Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4885240Z Removing credentials config '/home/runner/work/_temp/git-credentials-ac9a6fdd-b70f-418d-8cea-809ffb37499e.config'
+lint	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.4895744Z ##[endgroup]
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T15:23:45.5265073Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5265736Z with:
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5265958Z   python-version: 3.14
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5266191Z   check-latest: false
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5268856Z   token: ***
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5269194Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5269628Z   update-environment: true
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5269873Z   allow-prereleases: false
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5270109Z   freethreaded: false
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5270319Z env:
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5270512Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.5270761Z ##[endgroup]
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.6514001Z ##[group]Installed versions
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.6594760Z Successfully set up CPython (3.14.10)
+lint	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:45.6595974Z ##[endgroup]
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	﻿2026-11-15T15:23:45.6786492Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-dev.txt
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6787296Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-dev.txt[0m
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6926664Z shell: /usr/bin/bash -e {0}
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6927024Z env:
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6927273Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6927633Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6928100Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6928602Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6929013Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6929428Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6929838Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:45.6930182Z ##[endgroup]
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:48.9801838Z Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:48.9803648Z Ignoring comtypes: markers 'sys_platform == "win32"' don't match your environment
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:49.1086428Z Collecting ast-serialize==0.13.1 (from -r packaging/requirements-dev.txt (line 3))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:49.1577881Z   Downloading ast_serialize-0.13.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:49.2036616Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 61.9 MB/s  0:00:00
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:49.6379480Z Collecting coverage==7.17.0 (from -r packaging/requirements-dev.txt (line 70))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:49.6424830Z   Downloading coverage-7.17.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (261 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.0038653Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-dev.txt (line 191))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.0103304Z   Downloading hypothesis-6.170.14-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.0254820Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 84.4 MB/s  0:00:00
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.0395671Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-dev.txt (line 276))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.0433883Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.1764007Z Collecting librt==0.16.0 (from -r packaging/requirements-dev.txt (line 280))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.1806833Z   Downloading librt-0.16.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (523 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.2913070Z Collecting mypy==2.4.1 (from -r packaging/requirements-dev.txt (line 419))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.2958373Z   Downloading mypy-2.4.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (15.4 MB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.3749350Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.4/15.4 MB 198.5 MB/s  0:00:00
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.4030831Z Collecting mypy-extensions==1.1.0 (from -r packaging/requirements-dev.txt (line 473))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.4068686Z   Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.4215765Z Collecting packaging==26.3 (from -r packaging/requirements-dev.txt (line 477))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.4255244Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.4412790Z Collecting pathspec==1.1.1 (from -r packaging/requirements-dev.txt (line 481))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.4453829Z   Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.4606973Z Collecting pluggy==1.7.0 (from -r packaging/requirements-dev.txt (line 485))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.4644249Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.5297693Z Collecting psutil==7.2.2 (from -r packaging/requirements-dev.txt (line 489))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.5342179Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.5569482Z Collecting pygments==2.21.0 (from -r packaging/requirements-dev.txt (line 512))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.5616428Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.5689351Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 224.8 MB/s  0:00:00
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.5886308Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-dev.txt (line 516))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.5940108Z   Downloading pyqt6-6.11.0-cp310-abi3-manylinux_2_34_x86_64.whl (8.3 MB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.6273117Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 270.9 MB/s  0:00:00
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.6543080Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-dev.txt (line 524))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.6601166Z   Downloading pyqt6_qt6-6.11.2-py3-none-manylinux_2_34_x86_64.whl (86.0 MB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:50.9925807Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.0/86.0 MB 260.2 MB/s  0:00:00
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.0954152Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-dev.txt (line 534))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.1002876Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-manylinux1_x86_64.manylinux_2_5_x86_64.whl (301 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.1292002Z Collecting pytest==9.2.0 (from -r packaging/requirements-dev.txt (line 566))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.1335393Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.1514980Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-dev.txt (line 572))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.1551520Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.5235200Z Collecting ruff==0.17.3 (from -r packaging/requirements-dev.txt (line 576))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.5288224Z   Downloading ruff-0.17.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.6 MB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.5688574Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.6/10.6 MB 282.2 MB/s  0:00:00
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.5892806Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-dev.txt (line 596))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.5931840Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.6093371Z Collecting typing-extensions==4.16.0 (from -r packaging/requirements-dev.txt (line 600))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.6131042Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.6265704Z Collecting tzdata==2026.6 (from -r packaging/requirements-dev.txt (line 604))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.6305271Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.6867481Z Collecting zizmor==1.31.1 (from -r packaging/requirements-dev.txt (line 608))
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.6914384Z   Downloading zizmor-1.31.1-py3-none-manylinux_2_28_x86_64.whl (9.6 MB)
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:51.7279187Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.6/9.6 MB 276.2 MB/s  0:00:00
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:52.0084234Z Installing collected packages: sortedcontainers, pyqt6-qt6, zizmor, tzdata, typing-extensions, ruff, pyqt6-sip, pygments, psutil, pluggy, pathspec, packaging, mypy-extensions, librt, iniconfig, hypothesis, coverage, ast-serialize, pytest, pyqt6, mypy, pytest-timeout
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:58.1531069Z 
+lint	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-15T15:23:58.1558305Z Successfully installed ast-serialize-0.13.1 coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 librt-0.16.0 mypy-2.4.1 mypy-extensions-1.1.0 packaging-26.3 pathspec-1.1.1 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 ruff-0.17.3 sortedcontainers-2.4.0 typing-extensions-4.16.0 tzdata-2026.6 zizmor-1.31.1
+lint	Run ruff check .	﻿2026-11-15T15:23:58.3421090Z ##[group]Run ruff check .
+lint	Run ruff check .	2026-11-15T15:23:58.3421399Z [36;1mruff check .[0m
+lint	Run ruff check .	2026-11-15T15:23:58.3443185Z shell: /usr/bin/bash -e {0}
+lint	Run ruff check .	2026-11-15T15:23:58.3443441Z env:
+lint	Run ruff check .	2026-11-15T15:23:58.3443669Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+lint	Run ruff check .	2026-11-15T15:23:58.3443999Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	Run ruff check .	2026-11-15T15:23:58.3444438Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+lint	Run ruff check .	2026-11-15T15:23:58.3444882Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	Run ruff check .	2026-11-15T15:23:58.3445272Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	Run ruff check .	2026-11-15T15:23:58.3446080Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	Run ruff check .	2026-11-15T15:23:58.3446483Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+lint	Run ruff check .	2026-11-15T15:23:58.3446811Z ##[endgroup]
+lint	Run ruff check .	2026-11-15T15:23:58.4279473Z All checks passed!
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	﻿2026-11-15T15:23:58.4352075Z ##[group]Run version=1.7.12
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4352406Z [36;1mversion=1.7.12[0m
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4352933Z [36;1msum=8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  # actionlint_1.7.12_linux_amd64.tar.gz[0m
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4353570Z [36;1mtarball="actionlint_${version}_linux_amd64.tar.gz"[0m
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4354224Z [36;1mcurl -fsSL -o "$RUNNER_TEMP/$tarball" "https://github.com/rhysd/actionlint/releases/download/v${version}/$tarball"[0m
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4354858Z [36;1mecho "$sum  $RUNNER_TEMP/$tarball" | sha256sum -c -[0m
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4355279Z [36;1mtar -xzf "$RUNNER_TEMP/$tarball" -C "$RUNNER_TEMP" actionlint[0m
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4356123Z [36;1m"$RUNNER_TEMP/actionlint" -color[0m
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4377530Z shell: /usr/bin/bash -e {0}
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4377789Z env:
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4377991Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4378318Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4378768Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4379237Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4379783Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4380180Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4380756Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.4381077Z ##[endgroup]
+lint	actionlint, on the workflows (and shellcheck, the runner's, on their scripts)	2026-11-15T15:23:58.5752555Z /home/runner/work/_temp/actionlint_1.7.12_linux_amd64.tar.gz: OK
+lint	zizmor, the workflows' security audit	﻿2026-11-15T15:23:59.6195264Z ##[group]Run zizmor --no-online-audits --format github .github
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6195998Z [36;1mzizmor --no-online-audits --format github .github[0m
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6216254Z shell: /usr/bin/bash -e {0}
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6216507Z env:
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6216714Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6217047Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6217485Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6217917Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6218292Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6218668Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6219063Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6219382Z ##[endgroup]
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6289511Z [32m INFO[0m [2mzizmor[0m[2m:[0m 🌈 zizmor v1.31.1
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6884507Z [33m WARN[0m [1maudit[0m[2m:[0m [2mzizmor[0m[2m:[0m zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6886759Z [32m INFO[0m [1maudit[0m[2m:[0m [2mzizmor[0m[2m:[0m 🌈 completed .github/dependabot.yml
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6933597Z [32m INFO[0m [1maudit[0m[2m:[0m [2mzizmor[0m[2m:[0m 🌈 completed .github/workflows/ci.yml
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.6935131Z [33m WARN[0m [1maudit[0m[2m:[0m [2mzizmor[0m[2m:[0m one or more inputs contains YAML anchors; see https://docs.zizmor.sh/usage/#yaml-anchors for details
+lint	zizmor, the workflows' security audit	2026-11-15T15:23:59.7020805Z [32m INFO[0m [1maudit[0m[2m:[0m [2mzizmor[0m[2m:[0m 🌈 completed .github/workflows/packages.yml
+lint	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T15:23:59.7178183Z Post job cleanup.
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T15:23:59.8573497Z Post job cleanup.
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9480105Z [command]/usr/bin/git version
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9522114Z git version 2.56.1
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9560748Z Temporarily overriding HOME='/home/runner/work/_temp/6e36540a-a419-4c46-b5f7-8eadbed27fd8' before making global git config changes
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9561941Z Adding repository directory to the temporary git global config as a safe directory
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9567404Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9604334Z Removing SSH command configuration
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9611442Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9651832Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9894198Z Removing HTTP extra header
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9900517Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:59.9941215Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:24:00.0176781Z Removing includeIf entries pointing to credentials config files
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:24:00.0183374Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+lint	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:24:00.0219998Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+lint	Complete job	﻿2026-11-15T15:24:00.0618569Z Cleaning up orphan processes

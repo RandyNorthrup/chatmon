@@ -1,0 +1,997 @@
+distro (fedora:44)	Set up job	﻿2026-11-15T15:23:41.4357682Z Current runner version: '2.338.2'
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4408392Z ##[group]Runner Image Provisioner
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4409625Z Hosted Compute Agent
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4410418Z Version: 20261103.629
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4411124Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4411870Z Build Date: 2026-11-03T17:26:59Z
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4412632Z Worker ID: {5d5ed4b4-3e5a-4084-8c1d-f01e27b15545}
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4413401Z Region: westus
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4413951Z Cloud: Azure
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4414600Z ##[endgroup]
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4416108Z ##[group]Operating System
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4416856Z Ubuntu
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4417430Z 24.04.5
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4417932Z LTS
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4418513Z ##[endgroup]
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4419352Z ##[group]Runner Image
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4420013Z Image: ubuntu-24.04
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4420660Z Version: 20261111.370.1
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4421753Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4423566Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4424565Z ##[endgroup]
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4425755Z ##[group]GITHUB_TOKEN Permissions
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4427928Z Contents: read
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4428601Z Metadata: read
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4429449Z ##[endgroup]
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4431629Z Secret source: Actions
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4432595Z Cache mode: write
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4433387Z Prepare workflow directory
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4853580Z Prepare all required actions
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.4903154Z Getting action download info
+distro (fedora:44)	Set up job	2026-11-15T15:23:41.8238535Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+distro (fedora:44)	Set up job	2026-11-15T15:23:42.0482576Z Complete job name: distro (fedora:44)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T15:23:42.1434586Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1435712Z with:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1436210Z   persist-credentials: false
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1436770Z   sparse-checkout: /*
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1437365Z   sparse-checkout-cone-mode: false
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1437933Z   repository: RandyNorthrup/chatmon
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1441830Z   token: ***
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1442292Z   ssh-strict: true
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1442752Z   ssh-user: git
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1443202Z   clean: true
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1443634Z   fetch-depth: 1
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1444077Z   fetch-tags: false
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1444537Z   show-progress: true
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1444995Z   lfs: false
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1445421Z   submodules: false
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1445883Z   set-safe-directory: true
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1446404Z   allow-unsafe-pr-checkout: false
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1447208Z env:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1447663Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.1448197Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4750073Z Syncing repository: RandyNorthrup/chatmon
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4751972Z ##[group]Getting Git version info
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4752701Z Working directory is '/home/runner/work/chatmon/chatmon'
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4753739Z [command]/usr/bin/git version
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4864286Z git version 2.56.1
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4885521Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4895927Z Temporarily overriding HOME='/home/runner/work/_temp/b0d4938f-a211-423f-a679-de99fcfdc4a4' before making global git config changes
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4897602Z Adding repository directory to the temporary git global config as a safe directory
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4901652Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4955837Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4959979Z ##[group]Determining repository object format
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4961577Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4962323Z ##[group]Initializing the repository
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.4967047Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5132542Z hint: Using 'master' as the name for the initial branch. This default branch name
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5133938Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5135057Z hint: to use in all of your new repositories, which will suppress this warning,
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5135913Z hint: call:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5136398Z hint:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5136981Z hint: 	git config --global init.defaultBranch <name>
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5137690Z hint:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5138348Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5139794Z hint: 'development'. The just-created branch can be renamed via this command:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5140640Z hint:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5141063Z hint: 	git branch -m <name>
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5141746Z hint:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5142999Z hint: Disable this message with "git config set advice.defaultBranchName false"
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5144930Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5156682Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5214238Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5216286Z ##[group]Disabling automatic garbage collection
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5217956Z [command]/usr/bin/git config --local gc.auto 0
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5252351Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5253729Z ##[group]Setting up auth
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5254689Z Removing SSH command configuration
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5259957Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5300175Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5747479Z Removing HTTP extra header
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5754077Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.5796601Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6020537Z Removing includeIf entries pointing to credentials config files
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6026765Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6061608Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6294084Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6331692Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6363474Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6396381Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6429586Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6459893Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6461110Z ##[group]Fetching the repository
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.6465940Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +5545f5a9b3fad2e700176b2efb81b7536ab2901e:refs/remotes/pull/18/merge
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0192353Z From https://github.com/RandyNorthrup/chatmon
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0194029Z  * [new ref]         5545f5a9b3fad2e700176b2efb81b7536ab2901e -> pull/18/merge
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0198208Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0199827Z ##[group]Determining the checkout info
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0200942Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0201741Z ##[group]Setting up sparse checkout
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0205260Z [command]/usr/bin/git config core.sparseCheckout true
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0242731Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0268026Z .git/info/sparse-checkout
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0277209Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0281946Z ##[group]Checking out the ref
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.0282753Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/18/merge
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1003812Z Updating files:   0% (1/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1009553Z Updating files:   1% (4/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1010560Z Updating files:   2% (7/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1014378Z Updating files:   3% (10/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1016159Z Updating files:   4% (13/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1020346Z Updating files:   5% (16/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1041650Z Updating files:   6% (19/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1058091Z Updating files:   7% (22/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1069198Z Updating files:   8% (25/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1091772Z Updating files:   9% (28/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1119641Z Updating files:  10% (31/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1135899Z Updating files:  11% (35/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1145890Z Updating files:  12% (38/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1161559Z Updating files:  13% (41/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1177693Z Updating files:  14% (44/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1191657Z Updating files:  15% (47/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1211006Z Updating files:  16% (50/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1227461Z Updating files:  17% (53/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1240668Z Updating files:  18% (56/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1254468Z Updating files:  19% (59/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1274149Z Updating files:  20% (62/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1283547Z Updating files:  21% (66/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1299409Z Updating files:  22% (69/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1315090Z Updating files:  23% (72/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1326977Z Updating files:  24% (75/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1340178Z Updating files:  25% (78/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1352678Z Updating files:  26% (81/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1361961Z Updating files:  27% (84/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1364851Z Updating files:  28% (87/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1375349Z Updating files:  29% (90/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1379771Z Updating files:  30% (93/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1383384Z Updating files:  31% (97/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1407247Z Updating files:  32% (100/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1412567Z Updating files:  33% (103/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1417236Z Updating files:  34% (106/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1420155Z Updating files:  35% (109/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1423345Z Updating files:  36% (112/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1425743Z Updating files:  37% (115/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1428587Z Updating files:  38% (118/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1433576Z Updating files:  39% (121/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1440720Z Updating files:  40% (124/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1446219Z Updating files:  41% (128/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1449738Z Updating files:  42% (131/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1452838Z Updating files:  43% (134/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1456533Z Updating files:  44% (137/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1462178Z Updating files:  45% (140/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1465212Z Updating files:  46% (143/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1469026Z Updating files:  47% (146/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1473529Z Updating files:  48% (149/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1480498Z Updating files:  49% (152/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1496325Z Updating files:  50% (155/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1509048Z Updating files:  51% (159/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1512739Z Updating files:  52% (162/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1516437Z Updating files:  53% (165/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1519424Z Updating files:  54% (168/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1522859Z Updating files:  55% (171/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1526486Z Updating files:  56% (174/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1531374Z Updating files:  57% (177/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1533370Z Updating files:  58% (180/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1537174Z Updating files:  59% (183/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1585297Z Updating files:  60% (186/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1587156Z Updating files:  61% (190/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1588607Z Updating files:  62% (193/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1591181Z Updating files:  63% (196/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1593093Z Updating files:  64% (199/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1595043Z Updating files:  65% (202/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1598614Z Updating files:  66% (205/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1604000Z Updating files:  67% (208/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1606640Z Updating files:  68% (211/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1609061Z Updating files:  69% (214/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1614503Z Updating files:  70% (217/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1615748Z Updating files:  71% (221/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1617331Z Updating files:  72% (224/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1619219Z Updating files:  73% (227/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1622873Z Updating files:  74% (230/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1625841Z Updating files:  75% (233/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1632888Z Updating files:  76% (236/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1635540Z Updating files:  77% (239/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1637990Z Updating files:  78% (242/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1643080Z Updating files:  79% (245/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1646809Z Updating files:  80% (248/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1649206Z Updating files:  81% (252/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1652188Z Updating files:  82% (255/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1659666Z Updating files:  83% (258/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1661009Z Updating files:  84% (261/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1662164Z Updating files:  85% (264/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1664929Z Updating files:  86% (267/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1667689Z Updating files:  87% (270/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1671209Z Updating files:  88% (273/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1676626Z Updating files:  89% (276/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1681459Z Updating files:  90% (279/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1684195Z Updating files:  91% (283/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1687034Z Updating files:  92% (286/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1690325Z Updating files:  93% (289/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1692586Z Updating files:  94% (292/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1695493Z Updating files:  95% (295/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1701813Z Updating files:  96% (298/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1704919Z Updating files:  97% (301/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1707575Z Updating files:  98% (304/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1709955Z Updating files:  99% (307/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1710648Z Updating files: 100% (310/310)
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1711155Z Updating files: 100% (310/310), done.
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1728265Z Note: switching to 'refs/remotes/pull/18/merge'.
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1728669Z 
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1729253Z You are in 'detached HEAD' state. You can look around, make experimental
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1729953Z changes and commit them, and you can discard any commits you make in this
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1730604Z state without impacting any branches by switching back to a branch.
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1730975Z 
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1731245Z If you want to create a new branch to retain commits you create, you may
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1731840Z do so (now or later) by using -c with the switch command. Example:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1732192Z 
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1732350Z   git switch -c <new-branch-name>
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1732598Z 
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1732749Z Or undo this operation with:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1732971Z 
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1733109Z   git switch -
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1733279Z 
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1733580Z Turn off this advice by setting config variable advice.detachedHead to false
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1733988Z 
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1734430Z HEAD is now at 5545f5a Merge 3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1748337Z ##[endgroup]
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1798090Z [command]/usr/bin/git log -1 --format=%H
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1826475Z 5545f5a9b3fad2e700176b2efb81b7536ab2901e
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1836524Z ##[group]Removing auth
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1836976Z Removing SSH command configuration
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1841166Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.1875880Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2112764Z Removing HTTP extra header
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2116479Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2150942Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2378571Z Removing includeIf entries pointing to credentials config files
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2382046Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2411810Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2412888Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2413504Z includeif.gitdir:/github/workspace/.git.path
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2414032Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2420541Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2444749Z /home/runner/work/_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2453862Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-2622cf9d\-e5c1\-448e\-9a8a\-73b53b7d84d9\.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2490489Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2513904Z /home/runner/work/_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2522469Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-2622cf9d\-e5c1\-448e\-9a8a\-73b53b7d84d9\.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2561113Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2591852Z /github/runner_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2603244Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-2622cf9d\-e5c1\-448e\-9a8a\-73b53b7d84d9\.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2634331Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2658545Z /github/runner_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2666674Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-2622cf9d\-e5c1\-448e\-9a8a\-73b53b7d84d9\.config
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2700172Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2929332Z Removing credentials config '/home/runner/work/_temp/git-credentials-2622cf9d-e5c1-448e-9a8a-73b53b7d84d9.config'
+distro (fedora:44)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:44.2938202Z ##[endgroup]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	﻿2026-11-15T15:23:44.3262842Z ##[group]Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:44.3263840Z [36;1mdocker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh[0m
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:44.3287814Z shell: /usr/bin/bash -e {0}
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:44.3288255Z env:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:44.3288602Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:44.3289447Z   IMAGE: fedora:44
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:44.3290066Z ##[endgroup]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:44.4614910Z Unable to find image 'fedora:44' locally
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:45.3598207Z 44: Pulling from library/fedora
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:45.6269023Z 74c6c6c29499: Pulling fs layer
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:46.0709505Z 74c6c6c29499: Verifying Checksum
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:46.0710327Z 74c6c6c29499: Download complete
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:48.1532483Z 74c6c6c29499: Pull complete
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:48.1584474Z Digest: sha256:15da97ed9aa94dd3d92c3925eb89520f6c80e07ea7ee24cba848d1f8b6912b3e
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:48.1600366Z Status: Downloaded newer image for fedora:44
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:58.2662461Z Package "tzdata-2026e-1.fc44.noarch" is already installed.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:23:58.2663214Z 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.6901448Z [  1/394] Verify package files          100% | 344.0   B/s | 390.0   B |  00m01s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.8749065Z [  2/394] Prepare transaction           100% |   1.7 KiB/s | 392.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.8800210Z [  3/394] Installing dbus-libs-1:1.16.2 100% |  70.0 MiB/s | 358.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.8947146Z [  4/394] Installing expat-0:2.9.0-1.fc 100% |  21.5 MiB/s | 351.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.9001437Z [  5/394] Installing libpng-2:1.6.59-1. 100% |  61.3 MiB/s | 250.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.9049035Z [  6/394] Installing libwayland-client- 100% |  21.9 MiB/s |  67.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.9090613Z [  7/394] Installing libjpeg-turbo-0:3. 100% | 200.2 MiB/s | 819.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.9120699Z [  8/394] Installing avahi-libs-0:0.9~r 100% |  44.4 MiB/s | 181.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.9164377Z [  9/394] Installing libX11-xcb-0:1.8.1 100% |   5.7 MiB/s |  11.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.9216003Z [ 10/394] Installing nspr-0:4.39.0-8.fc 100% |  64.2 MiB/s | 328.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.9258506Z [ 11/394] Installing json-glib-0:1.10.8 100% | 118.8 MiB/s | 608.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:15.9959491Z [ 12/394] Installing libtalloc-0:2.4.4- 100% |  21.2 MiB/s |  65.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0310950Z [ 13/394] Installing libicu-0:77.1-4.fc 100% | 359.0 MiB/s |  36.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0362197Z [ 14/394] Installing libogg-2:1.3.6-2.f 100% |  23.0 MiB/s |  47.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0394144Z [ 15/394] Installing libvorbis-1:1.3.7- 100% | 164.0 MiB/s | 839.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0424257Z [ 16/394] Installing libtevent-0:0.17.1 100% |  33.4 MiB/s | 102.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0467800Z [ 17/394] Installing libwayland-cursor- 100% |  18.7 MiB/s |  38.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0665142Z [ 18/394] Installing libplist-0:2.7.0-1 100% |  12.3 MiB/s | 251.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0706505Z [ 19/394] Installing libtdb-0:1.4.15-1. 100% |  35.6 MiB/s | 109.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0742268Z [ 20/394] Installing lcms2-0:2.16-7.fc4 100% | 109.2 MiB/s | 447.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0768452Z [ 21/394] Installing libgudev-0:238-9.f 100% |  30.3 MiB/s |  93.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0811333Z [ 22/394] Installing fonts-filesystem-1 100% | 384.8 KiB/s | 788.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0862467Z [ 23/394] Installing nss-util-0:3.133.0 100% |  52.2 MiB/s | 213.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.0971607Z [ 24/394] Installing polkit-libs-0:127- 100% |  43.4 MiB/s | 222.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1228892Z [ 25/394] Installing systemd-shared-0:2 100% | 272.7 MiB/s |   5.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1427932Z [ 26/394] Installing alsa-lib-0:1.2.16. 100% |  50.3 MiB/s |   1.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1500092Z [ 27/394] Installing openjpeg-0:2.5.4-5 100% | 113.8 MiB/s | 466.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1534223Z [ 28/394] Installing libwebp-0:1.6.0-3. 100% | 135.6 MiB/s | 972.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1573712Z [ 29/394] Installing libwayland-egl-0:1 100% |   6.6 MiB/s |  13.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1609988Z [ 30/394] Installing opus-0:1.6-2.fc44. 100% | 114.5 MiB/s | 468.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1805764Z [ 31/394] Installing libglvnd-1:1.7.0-9 100% | 171.8 MiB/s | 527.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1843983Z [ 32/394] Installing spirv-tools-libs-0 100% | 304.8 MiB/s |   6.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1873639Z [ 33/394] Installing libimobiledevice-g 100% |  40.6 MiB/s | 124.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1923254Z [ 34/394] Installing avahi-glib-0:0.9~r 100% |   9.9 MiB/s |  20.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1962577Z [ 35/394] Installing gobject-introspect 100% |  78.4 MiB/s | 401.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.1980168Z [ 36/394] Installing libseccomp-0:2.6.1 100% |  72.9 MiB/s | 224.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2082001Z [ 37/394] Installing libdav1d-0:1.5.4-1 100% | 251.4 MiB/s |   1.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2124581Z [ 38/394] Installing libvpl-1:2.17.0-1. 100% | 107.3 MiB/s | 439.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2355149Z [ 39/394] Installing libfdisk-0:2.41.6- 100% |  95.1 MiB/s | 389.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2393413Z [ 40/394] Installing hwdata-0:0.413-1.f 100% | 423.4 MiB/s |  10.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2426344Z [ 41/394] Installing mesa-filesystem-0: 100% |   4.2 MiB/s |   4.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2455786Z [ 42/394] Installing upower-libs-0:1.91 100% |  58.6 MiB/s | 180.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2504874Z [ 43/394] Installing libglvnd-opengl-1: 100% |  71.0 MiB/s | 145.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2531558Z [ 44/394] Installing libtheora-1:1.1.1- 100% | 118.0 MiB/s | 483.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2567226Z [ 45/394] Upgrading pcre2-syntax-0:10.4 100% | 144.0 MiB/s | 295.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2696919Z [ 46/394] Installing fuse3-libs-0:3.18. 100% |  73.0 MiB/s | 298.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2872082Z [ 47/394] Installing gsettings-desktop- 100% | 235.8 MiB/s |   6.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.2914748Z [ 48/394] Installing libwbclient-2:4.24 100% |  23.4 MiB/s |  71.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.3076378Z [ 49/394] Installing fribidi-0:1.0.18-1 100% |  22.2 MiB/s | 409.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.3522040Z [ 50/394] Installing shared-mime-info-0 100% |  64.9 MiB/s |   2.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.3556818Z [ 51/394] Installing openh264-0:2.6.0-3 100% | 186.0 MiB/s |   1.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.3589230Z [ 52/394] Installing libevdev-0:1.13.7- 100% |  44.4 MiB/s |  91.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.3623560Z [ 53/394] Installing bluez-libs-0:5.88- 100% |  66.2 MiB/s | 203.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.3828928Z [ 54/394] Installing libdvdread-0:7.0.1 100% |  44.8 MiB/s | 183.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.3942699Z [ 55/394] Installing svt-av1-libs-0:3.1 100% | 295.3 MiB/s |   5.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.3980056Z [ 56/394] Installing rav1e-libs-0:0.8.1 100% | 280.3 MiB/s |   3.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4024853Z [ 57/394] Installing liblc3-0:1.1.3-7.f 100% |  57.2 MiB/s | 175.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4076810Z [ 58/394] Installing fdk-aac-free-0:2.0 100% | 153.8 MiB/s | 629.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4105210Z [ 59/394] Installing vulkan-loader-0:1. 100% | 113.3 MiB/s | 580.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4174046Z [ 60/394] Installing libxshmfence-0:1.3 100% |   6.6 MiB/s |  13.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4225804Z [ 61/394] Installing mpg123-libs-0:1.32 100% | 134.8 MiB/s | 828.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4257878Z [ 62/394] Installing lame-libs-0:3.100- 100% | 240.5 MiB/s |   1.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4419753Z [ 63/394] Installing gsm-0:1.0.24-2.fc4 100% |   4.4 MiB/s |  67.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4447765Z [ 64/394] Installing xml-common-0:0.6.3 100% |  26.4 MiB/s |  81.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4476117Z [ 65/394] Installing mtdev-0:1.1.6-12.f 100% |  14.8 MiB/s |  30.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4499414Z [ 66/394] Installing libICE-0:1.1.2-4.f 100% |  97.5 MiB/s | 199.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4541417Z [ 67/394] Installing qt6-qttools-common 100% |   7.7 MiB/s |   7.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4579217Z [ 68/394] Installing duktape-0:2.7.0-11 100% | 152.7 MiB/s | 625.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4853347Z [ 69/394] Installing libproxy-0:0.5.12- 100% |   3.9 MiB/s | 104.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4854768Z >>> Running sysusers scriptlet: dbus-common-1:1.16.2-1.fc44.noarch
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4855625Z >>> Finished sysusers scriptlet: dbus-common-1:1.16.2-1.fc44.noarch
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4856267Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4856668Z >>> Creating group 'dbus' with GID 81.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4857298Z >>> Creating user 'dbus' (System Message Bus) with UID 81 and GID 81.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.4857903Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.5199322Z [ 70/394] Installing dbus-common-1:1.16 100% | 376.4 KiB/s |  13.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.5549119Z [ 71/394] Installing dbus-broker-0:37-8 100% |  11.1 MiB/s | 397.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.5611370Z [ 72/394] Installing dbus-1:1.16.2-1.fc 100% |  60.5 KiB/s | 124.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.5696647Z [ 73/394] Installing glib-networking-0: 100% |  93.4 MiB/s | 765.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.5746746Z [ 74/394] Installing libsoup3-0:3.6.6-1 100% | 170.2 MiB/s |   1.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.5789655Z [ 75/394] Installing gssdp-0:1.6.6-1.fc 100% |  37.4 MiB/s | 153.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.5830129Z [ 76/394] Installing gupnp-0:1.6.10-1.f 100% |  76.6 MiB/s | 313.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.5890201Z [ 77/394] Installing gupnp-igd-0:1.6.0- 100% |  22.3 MiB/s |  68.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.6069279Z [ 78/394] Installing libnice-0:0.1.23-2 100% |  26.4 MiB/s | 512.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.6230226Z [ 79/394] Installing osinfo-db-tools-0: 100% |  10.7 MiB/s | 196.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.6688224Z [ 80/394] Installing libSM-0:1.2.5-4.fc 100% |  25.0 MiB/s | 102.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.6806907Z [ 81/394] Installing iso-codes-0:4.20.1 100% | 489.8 MiB/s |  22.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.6844206Z [ 82/394] Installing libopenmpt-0:0.8.1 100% | 233.7 MiB/s |   1.9 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.6888136Z [ 83/394] Installing libdvdnav-0:7.0.0- 100% |  41.2 MiB/s | 126.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.6918461Z [ 84/394] Installing pcre2-utf16-0:10.4 100% | 161.1 MiB/s | 660.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.6979705Z [ 85/394] Installing libpciaccess-0:0.1 100% |  16.2 MiB/s |  49.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.7239083Z [ 86/394] Installing libdrm-0:2.4.134-1 100% |  50.0 MiB/s | 409.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.8352078Z [ 87/394] Installing osinfo-db-0:202512 100% |  33.6 MiB/s |   4.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.8391401Z [ 88/394] Installing libusbmuxd-0:2.1.1 100% |  25.0 MiB/s |  76.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.8526597Z [ 89/394] Installing libimobiledevice-0 100% |  79.6 MiB/s | 326.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.8602822Z [ 90/394] Installing libshaderc-0:2026. 100% | 304.0 MiB/s |   4.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.8695682Z [ 91/394] Installing nss-softokn-freebl 100% | 152.9 MiB/s |   1.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.8730350Z [ 92/394] Installing nss-softokn-0:3.13 100% | 230.8 MiB/s |   2.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.8945998Z [ 93/394] Installing nss-sysinit-0:3.13 100% |   1.2 MiB/s |  19.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9121258Z [ 94/394] Installing nss-0:3.133.0-1.fc 100% |  90.8 MiB/s |   2.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9171768Z [ 95/394] Installing abattis-cantarell- 100% |  63.3 MiB/s | 194.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9222964Z [ 96/394] Installing flac-libs-0:1.5.0- 100% | 123.1 MiB/s | 630.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9258671Z [ 97/394] Installing libsndfile-0:1.2.2 100% | 135.6 MiB/s | 555.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9286472Z [ 98/394] Installing libgusb-0:0.4.9-5. 100% |  39.0 MiB/s | 159.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9380845Z [ 99/394] Installing colord-libs-0:1.4. 100% | 135.7 MiB/s | 833.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9412145Z [100/394] Installing libyuv-0:0-0.61.20 100% | 167.3 MiB/s | 685.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9494492Z [101/394] Installing aribb24-0:1.0.3^20 100% |  27.5 MiB/s |  84.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:16.9850797Z [102/394] Installing zvbi-0:0.2.46-1.fc 100% |  34.5 MiB/s |   1.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.0031283Z [103/394] Installing exempi-0:2.6.4-9.f 100% |  68.6 MiB/s |   1.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.0186385Z [104/394] Installing dbus-tools-1:1.16. 100% |   6.2 MiB/s | 101.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.0287211Z [105/394] Installing numactl-libs-0:2.0 100% |  28.2 MiB/s |  57.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.0334245Z [106/394] Installing lttng-ust-0:2.14.0 100% | 111.4 MiB/s |   1.3 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.1346405Z [107/394] Installing kbd-misc-0:2.9.0-4 100% |  30.8 MiB/s |   2.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.1596738Z [108/394] Installing kbd-legacy-0:2.9.0 100% |  17.5 MiB/s | 610.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.1766369Z [109/394] Installing kbd-0:2.9.0-4.fc44 100% |  54.4 MiB/s |   1.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.1793962Z [110/394] Installing fuse-common-0:3.18 100% | 285.2 KiB/s | 292.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.1948520Z [111/394] Installing fuse3-0:3.18.3-1.f 100% |   9.2 MiB/s | 141.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.1975272Z [112/394] Installing inih-0:62-2.fc44.x 100% |  11.5 MiB/s |  23.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2077073Z [113/394] Installing inih-cpp-0:62-2.fc 100% |  19.9 MiB/s |  40.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2124780Z [114/394] Installing exiv2-libs-0:0.28. 100% | 265.4 MiB/s |   2.9 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2171367Z [115/394] Installing libgexiv2-0:0.16.2 100% |  65.9 MiB/s | 270.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2349505Z [116/394] Installing uchardet-0:0.0.8-1 100% |  16.9 MiB/s | 277.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2386944Z [117/394] Installing totem-pl-parser-0: 100% |  54.5 MiB/s | 334.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2760913Z [118/394] Installing giflib-0:6.1.3-2.f 100% |  40.3 MiB/s | 123.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2854607Z [119/394] Installing abseil-cpp-0:20260 100% |  66.4 MiB/s |   2.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2890789Z [120/394] Installing webrtc-audio-proce 100% | 177.7 MiB/s |   1.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2928033Z [121/394] Installing libsbc-0:2.1-2.fc4 100% |  30.7 MiB/s |  94.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.2960665Z [122/394] Installing libldac-0:2.0.2.3- 100% |  19.5 MiB/s |  80.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.3087515Z [123/394] Installing libebur128-0:1.2.6 100% |  19.8 MiB/s |  40.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.3161207Z [124/394] Installing fftw-libs-single-0 100% | 278.1 MiB/s |   3.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.3212343Z [125/394] Installing ModemManager-glib- 100% | 253.8 MiB/s |   1.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.3383924Z [126/394] Installing gpgme-0:2.0.1-5.fc 100% |  33.7 MiB/s | 620.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.3405560Z [127/394] Installing gpgmepp-0:2.0.1-5. 100% | 108.1 MiB/s | 442.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.3456597Z [128/394] Installing libbpf-2:1.6.3-2.f 100% | 144.4 MiB/s | 443.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.3520952Z [129/394] Installing kmod-libs-0:34.2-4 100% |  45.6 MiB/s | 140.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.4306806Z [130/394] Installing sound-theme-freede 100% |  19.8 MiB/s | 467.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.4372644Z [131/394] Installing poppler-data-0:0.4 100% | 199.8 MiB/s |  12.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.4538087Z [132/394] Installing libxslt-0:1.1.43-6 100% |  24.4 MiB/s | 474.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.4747666Z [133/394] Installing libosinfo-0:1.12.0 100% |  63.5 MiB/s |   1.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.4777318Z [134/394] Installing libzip-0:1.11.4-3. 100% |  47.2 MiB/s | 144.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.4810789Z [135/394] Installing libcue-0:2.3.0-14. 100% |  42.6 MiB/s |  87.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.4847134Z [136/394] Installing libdisplay-info-0: 100% |  74.2 MiB/s | 227.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.4889335Z [137/394] Installing libopenjph-0:0.25. 100% | 118.0 MiB/s | 483.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.5058633Z [138/394] Installing bubblewrap-0:0.12. 100% |   8.7 MiB/s | 142.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.5121634Z [139/394] Installing libstemmer-0:3.0.1 100% | 156.9 MiB/s | 642.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.5158964Z [140/394] Installing libtinysparql-0:3. 100% | 143.9 MiB/s |   1.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.5183583Z [141/394] Installing libcloudproviders- 100% |  61.5 MiB/s | 125.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.5211762Z [142/394] Installing ngtcp2-crypto-gnut 100% |  21.7 MiB/s |  44.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.5284303Z [143/394] Installing lmdb-libs-0:0.9.34 100% |  37.5 MiB/s | 115.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.5549751Z [144/394] Installing libldb-2:4.24.7-1. 100% |  51.1 MiB/s | 471.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.6561481Z [145/394] Installing glibc-gconv-extra- 100% |  82.4 MiB/s |   7.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.8352763Z [146/394] Installing adwaita-icon-theme 100% |  12.7 MiB/s |   2.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.9130787Z [147/394] Installing adwaita-cursor-the 100% | 457.1 MiB/s |  11.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.9355020Z [148/394] Installing adwaita-icon-theme 100% |  13.7 MiB/s |   1.3 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.9882561Z [149/394] Installing libepoxy-0:1.5.10- 100% | 217.2 MiB/s |   1.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.9929084Z [150/394] Installing hicolor-icon-theme 100% |   3.2 MiB/s | 179.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.9956092Z [151/394] Installing cjson-0:1.7.19-1.f 100% |  33.8 MiB/s |  69.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:17.9996956Z [152/394] Installing librist-0:0.2.11-1 100% |  59.8 MiB/s | 183.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0039525Z [153/394] Installing libunwind-0:1.8.3- 100% |  48.2 MiB/s | 197.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0069703Z [154/394] Installing libsodium-0:1.0.22 100% | 157.1 MiB/s | 482.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0139145Z [155/394] Installing pugixml-0:1.16-1.f 100% |  93.8 MiB/s | 288.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0340754Z [156/394] Installing highway-0:1.3.0-2. 100% | 425.7 MiB/s |   5.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0385273Z [157/394] Installing libjxl-1:0.11.2-1. 100% | 316.8 MiB/s |   4.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0552415Z [158/394] Installing libvmaf-0:3.0.0-5. 100% | 207.1 MiB/s | 848.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0672961Z [159/394] Installing libaom-0:3.15.3-1. 100% | 334.9 MiB/s |   5.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0724455Z [160/394] Installing libheif-0:1.23.7-1 100% | 199.0 MiB/s |   2.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0748908Z [161/394] Installing pixman-0:0.46.2-3. 100% | 234.1 MiB/s | 719.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0801037Z [162/394] Installing lzo-0:2.10-16.fc44 100% |  86.1 MiB/s | 176.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0827764Z [163/394] Installing srt-libs-0:1.5.7-1 100% | 210.7 MiB/s |   1.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.0854021Z [164/394] Installing jansson-0:2.14-4.f 100% |  44.1 MiB/s |  90.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.1150811Z [165/394] Installing librabbitmq-0:0.18 100% |  22.1 MiB/s |  90.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.1759264Z [166/394] Installing libwacom-data-0:2. 100% |  18.6 MiB/s |   1.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.1789084Z [167/394] Installing liblerc-0:4.3.0-1. 100% | 161.8 MiB/s | 662.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.1811638Z [168/394] Installing libedit-0:3.1-59.2 100% |  81.4 MiB/s | 250.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.2161969Z [169/394] Installing llvm-filesystem-0: 100% |   1.0 MiB/s |   1.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5257689Z [170/394] Installing llvm-libs-0:22.1.8 100% | 413.1 MiB/s | 140.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5288926Z [171/394] Installing python-pip-wheel-0 100% | 407.8 MiB/s |   1.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5322791Z [172/394] Installing qt6-filesystem-0:6 100% |   1.1 MiB/s |   3.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5506627Z [173/394] Installing graphite2-0:1.3.14 100% |  11.8 MiB/s | 193.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5625142Z [174/394] Installing freetype-0:2.14.3- 100% | 149.7 MiB/s | 920.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5657319Z [175/394] Installing harfbuzz-0:14.1.0- 100% | 255.7 MiB/s |   2.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5699477Z [176/394] Installing cups-filesystem-1: 100% | 890.6 KiB/s |   1.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5732432Z [177/394] Installing cups-libs-1:2.4.19 100% | 155.3 MiB/s | 636.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5784081Z [178/394] Installing openpgm-0:5.3.128- 100% | 104.7 MiB/s | 321.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5936940Z [179/394] Installing zeromq-0:4.3.5-22. 100% |  52.1 MiB/s | 906.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.5967328Z [180/394] Installing libudfread-0:1.2.0 100% |  31.0 MiB/s |  63.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6000299Z [181/394] Installing libmodplug-1:0.8.9 100% | 120.1 MiB/s | 369.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6202475Z [182/394] Installing game-music-emu-0:0 100% | 117.7 MiB/s | 361.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6378117Z [183/394] Installing lpcnetfreedv-0:0.5 100% | 494.1 MiB/s |  14.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6414141Z [184/394] Installing codec2-0:1.2.0-9.f 100% | 195.0 MiB/s |   1.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6456789Z [185/394] Installing soxr-0:0.1.3-21.fc 100% |  62.9 MiB/s | 193.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6500096Z [186/394] Installing xvidcore-0:1.3.7-1 100% | 214.8 MiB/s | 879.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6534583Z [187/394] Installing xeve-libs-0:0.5.1- 100% | 221.2 MiB/s | 905.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6559686Z [188/394] Installing xevd-libs-0:0.5.0- 100% | 124.0 MiB/s | 381.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6582804Z [189/394] Installing vo-amrwbenc-0:0.1. 100% |  77.8 MiB/s | 159.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6607059Z [190/394] Installing twolame-libs-0:0.4 100% |  79.3 MiB/s | 162.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6632352Z [191/394] Installing speex-0:1.2.0-21.f 100% |  63.6 MiB/s | 130.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6669622Z [192/394] Installing snappy-0:1.2.2-4.f 100% |  39.8 MiB/s |  81.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6697411Z [193/394] Installing opencore-amr-0:0.1 100% | 115.6 MiB/s | 355.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6808560Z [194/394] Installing openapv-libs-0:0.2 100% |  61.8 MiB/s | 126.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6836858Z [195/394] Installing libvpx-0:1.15.0-5. 100% | 299.2 MiB/s |   3.3 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.6888545Z [196/394] Installing ilbc-0:3.0.4-19.fc 100% |  45.3 MiB/s |  92.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7051702Z [197/394] Installing orc-0:0.4.41-3.fc4 100% |  41.6 MiB/s | 724.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7083982Z [198/394] Installing libvisual-1:0.4.2- 100% | 152.0 MiB/s | 467.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7112474Z [199/394] Installing graphene-0:1.10.8- 100% |  52.1 MiB/s | 160.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7140262Z [200/394] Installing cdparanoia-libs-0: 100% |  56.0 MiB/s | 114.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7185930Z [201/394] Installing jbigkit-libs-0:2.1 100% |  58.2 MiB/s | 119.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7211178Z [202/394] Installing libtiff-0:4.7.2-3. 100% | 127.1 MiB/s | 650.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7273873Z [203/394] Installing spandsp-0:0.0.6-22 100% | 167.6 MiB/s | 858.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7303409Z [204/394] Installing jsoncpp-0:1.9.6-3. 100% |  93.5 MiB/s | 287.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7325580Z [205/394] Installing openxr-libs-0:1.1. 100% | 137.5 MiB/s | 281.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7551137Z [206/394] Installing poly2tri-0:0.0^201 100% |  27.9 MiB/s |  57.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7705386Z [207/394] Installing assimp-0:6.0.5-6.f 100% | 212.9 MiB/s |   7.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7747780Z [208/394] Installing libdatrie-0:0.2.14 100% |  30.7 MiB/s |  62.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.7779741Z [209/394] Installing libthai-0:0.1.30-2 100% | 196.0 MiB/s | 802.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.8223855Z [210/394] Installing liblastlog2-0:2.41 100% |   2.5 MiB/s |  43.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9376147Z [211/394] Installing util-linux-0:2.41. 100% |  25.1 MiB/s |   3.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9377311Z >>> Running sysusers scriptlet: systemd-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9378183Z >>> Finished sysusers scriptlet: systemd-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9379329Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9379773Z >>> Creating group 'empower' with GID 999.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9380235Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9380669Z >>> Running sysusers scriptlet: systemd-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9381385Z >>> Finished sysusers scriptlet: systemd-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9382083Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9382659Z >>> Creating group 'systemd-journal' with GID 190.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9383151Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9383572Z >>> Running sysusers scriptlet: systemd-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9384316Z >>> Finished sysusers scriptlet: systemd-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9384937Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9385378Z >>> Creating group 'systemd-oom' with GID 998.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9386197Z >>> Creating user 'systemd-oom' (systemd Userspace OOM Killer) with UID 998 and GID 998.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:18.9386992Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.2771335Z [212/394] Installing systemd-0:259.10-1 100% |  38.6 MiB/s |  13.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.2970139Z [213/394] Installing device-mapper-0:1. 100% |  20.1 MiB/s | 350.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3045951Z [214/394] Installing device-mapper-libs 100% | 105.3 MiB/s | 431.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3463394Z [215/394] Installing cryptsetup-libs-0: 100% |  67.8 MiB/s |   3.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3464199Z >>> Running sysusers scriptlet: samba-common-2:4.24.7-1.fc44.noarch
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3464707Z >>> Finished sysusers scriptlet: samba-common-2:4.24.7-1.fc44.noarch
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3465111Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3465412Z >>> Creating group 'printadmin' with GID 997.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3465718Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3735952Z [216/394] Installing samba-common-2:4.2 100% |  10.1 MiB/s | 226.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.3780105Z [217/394] Installing samba-core-libs-2: 100% | 168.3 MiB/s |   1.7 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.4320924Z [218/394] Installing samba-ndr-libs-2:4 100% |  95.6 MiB/s |   4.7 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.4321906Z >>> Running sysusers scriptlet: polkit-0:127-2.fc44.2.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.4322637Z >>> Finished sysusers scriptlet: polkit-0:127-2.fc44.2.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.4323262Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.4323669Z >>> Creating group 'polkitd' with GID 114.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.4324329Z >>> Creating user 'polkitd' (User for polkitd) with UID 114 and GID 114.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.4324844Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5103517Z [219/394] Installing polkit-0:127-2.fc4 100% |   5.9 MiB/s | 504.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5104278Z >>> Running sysusers scriptlet: rtkit-0:0.11-70.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5104798Z >>> Finished sysusers scriptlet: rtkit-0:0.11-70.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5105225Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5105533Z >>> Creating group 'rtkit' with GID 996.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5105990Z >>> Creating user 'rtkit' (RealtimeKit) with UID 996 and GID 996.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5106434Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5993617Z [220/394] Installing rtkit-0:0.11-70.fc 100% |   3.3 MiB/s | 140.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5994298Z >>> Running %post scriptlet: rtkit-0:0.11-70.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5994751Z >>> Finished %post scriptlet: rtkit-0:0.11-70.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5995133Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5996181Z >>> Created symlink '/etc/systemd/system/graphical.target.wants/rtkit-daemon.service' → '/usr/lib/systemd/system/rtkit-daemon.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.5996956Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.6053033Z [221/394] Installing samba-client-libs- 100% | 219.8 MiB/s |  11.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.6082577Z [222/394] Installing libsmbclient-2:4.2 100% |  84.2 MiB/s | 172.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.6114170Z [223/394] Installing libpkgconf-0:2.5.1 100% |  44.6 MiB/s |  91.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.6268222Z [224/394] Installing pkgconf-0:2.5.1-1. 100% |   5.8 MiB/s |  95.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.6283720Z [225/394] Installing pkgconf-m4-0:2.5.1 100% |  14.4 MiB/s |  14.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.6430817Z [226/394] Installing pkgconf-pkg-config 100% | 126.7 KiB/s |   1.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.6477272Z [227/394] Installing libffi-devel-0:3.5 100% |  17.4 MiB/s |  35.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7192688Z [228/394] Installing kmod-0:34.2-4.fc44 100% |   3.4 MiB/s | 256.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7193578Z >>> Running sysusers scriptlet: systemd-udev-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7194306Z >>> Finished sysusers scriptlet: systemd-udev-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7194886Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7195335Z >>> Creating group 'systemd-coredump' with GID 995.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7196056Z >>> Creating user 'systemd-coredump' (systemd Core Dumper) with UID 995 and GID 995.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7196709Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7197137Z >>> Running sysusers scriptlet: systemd-udev-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7197868Z >>> Finished sysusers scriptlet: systemd-udev-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7198438Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7199131Z >>> Creating group 'systemd-timesync' with GID 994.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7199893Z >>> Creating user 'systemd-timesync' (systemd Time Synchronization) with UID 994 and GID 994.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:19.7200595Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3259126Z [229/394] Installing systemd-udev-0:259 100% |  21.8 MiB/s |  13.2 MiB |  00m01s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3260063Z >>> Running %post scriptlet: systemd-udev-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3260690Z >>> Finished %post scriptlet: systemd-udev-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3261216Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3261716Z >>> Failed to preset unit: Unit systemd-tmpfiles-clear.service does not exist
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3263208Z >>> Created symlink '/etc/systemd/system/multi-user.target.wants/remote-cryptsetup.target' → '/usr/lib/systemd/system/remote-cryptsetup.target'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3265185Z >>> Created symlink '/etc/systemd/system/multi-user.target.wants/remote-veritysetup.target' → '/usr/lib/systemd/system/remote-veritysetup.target'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3267727Z >>> Created symlink '/etc/systemd/system/systemd-homed.service.wants/systemd-homed-activate.service' → '/usr/lib/systemd/system/systemd-homed-activate.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3270720Z >>> Created symlink '/etc/systemd/system/dbus-org.freedesktop.home1.service' → '/usr/lib/systemd/system/systemd-homed.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3273085Z >>> Created symlink '/etc/systemd/system/multi-user.target.wants/systemd-homed.service' → '/usr/lib/systemd/system/systemd-homed.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3275339Z >>> Created symlink '/etc/systemd/system/sysinit.target.wants/systemd-network-generator.service' → '/usr/lib/systemd/system/systemd-network-generator.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3277093Z >>> Created symlink '/etc/systemd/system/dbus-org.freedesktop.oom1.service' → '/usr/lib/systemd/system/systemd-oomd.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3278162Z >>> Created symlink '/etc/systemd/system/multi-user.target.wants/systemd-oomd.service' → '/usr/lib/systemd/system/systemd-oomd.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3280137Z >>> Created symlink '/etc/systemd/system/sockets.target.wants/systemd-oomd.socket' → '/usr/lib/systemd/system/systemd-oomd.socket'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3281221Z >>> Created symlink '/etc/systemd/system/sysinit.target.wants/systemd-pstore.service' → '/usr/lib/systemd/system/systemd-pstore.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3281832Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3609854Z [230/394] Installing lm_sensors-libs-0: 100% |  28.3 MiB/s |  86.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3650646Z [231/394] Installing libX11-common-0:1. 100% |  34.9 MiB/s |   1.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.3679220Z [232/394] Installing libasyncns-0:0.8-3 100% |  27.7 MiB/s |  56.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.4270916Z [233/394] Installing mpdecimal-0:4.0.1- 100% |  23.7 MiB/s | 218.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.7492639Z [234/394] Installing python3-libs-0:3.1 100% | 120.1 MiB/s |  44.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.7929838Z [235/394] Installing python3-0:3.14.10- 100% |   1.3 MiB/s |  30.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.8195333Z [236/394] Installing gstreamer1-0:1.28. 100% | 140.2 MiB/s |   5.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.8242142Z [237/394] Installing python3-packaging- 100% |  60.5 MiB/s | 619.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.8295021Z [238/394] Installing python3-iniconfig- 100% |  13.2 MiB/s |  54.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:20.8349521Z [239/394] Installing python3-pluggy-0:1 100% |  30.4 MiB/s | 217.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.0271910Z [240/394] Installing python3-pygments-0 100% |  82.1 MiB/s |  11.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.0531864Z [241/394] Installing python3-pytest-0:8 100% | 306.4 MiB/s |  22.7 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.0629369Z [242/394] Installing python3-attrs-0:25 100% |  44.1 MiB/s | 451.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.0765144Z [243/394] Installing python3-sortedcont 100% |  77.6 MiB/s | 397.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.0835523Z [244/394] Installing python3-dbus-0:1.4 100% |  35.8 MiB/s | 549.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.0881439Z [245/394] Installing python3-pyqt6-sip- 100% |  32.2 MiB/s | 164.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.1143392Z [246/394] Installing libwacom-0:2.19.0- 100% |   6.3 MiB/s | 116.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.1483883Z [247/394] Installing libinput-0:1.31.3- 100% |  16.6 MiB/s | 714.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.1507378Z [248/394] Installing libwayland-server- 100% |  28.5 MiB/s |  87.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.1538152Z [249/394] Installing google-noto-fonts- 100% |  18.1 MiB/s |  18.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.1622907Z [250/394] Installing google-noto-sans-v 100% | 231.9 MiB/s |   1.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:21.1763417Z [251/394] Installing default-fonts-core 100% |   3.0 MiB/s |  18.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.2253835Z [252/394] Installing fontconfig-0:2.17. 100% | 750.7 KiB/s | 795.8 KiB |  00m01s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.2314621Z [253/394] Installing libaribcaption-0:1 100% |  63.8 MiB/s | 261.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.2453672Z [254/394] Installing libbluray-0:1.4.0- 100% | 104.1 MiB/s | 319.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3041600Z [255/394] Installing poppler-0:26.01.0- 100% | 146.8 MiB/s |   4.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3119580Z [256/394] Installing xkeyboard-config-0 100% | 134.7 MiB/s |   6.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3146156Z [257/394] Installing libxkbcommon-0:1.1 100% | 105.9 MiB/s | 433.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3294208Z [258/394] Installing libXau-0:1.0.12-4. 100% |  36.3 MiB/s |  74.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3372443Z [259/394] Installing libxcb-0:1.17.0-7. 100% |  67.3 MiB/s |   1.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3397369Z [260/394] Installing libX11-0:1.8.13-3. 100% | 224.0 MiB/s |   1.3 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3415876Z [261/394] Installing libXext-0:1.3.6-5. 100% |  44.5 MiB/s |  91.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3492896Z [262/394] Installing libXrender-0:0.9.1 100% |  50.0 MiB/s |  51.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3521826Z [263/394] Installing cairo-0:1.18.6-1.f 100% | 228.5 MiB/s |   1.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3541288Z [264/394] Installing libXi-0:1.8.3-1.fc 100% |  79.7 MiB/s |  81.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3558514Z [265/394] Installing libXfixes-0:6.0.1- 100% |  34.6 MiB/s |  35.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.3651621Z [266/394] Installing cairo-gobject-0:1. 100% |  15.5 MiB/s |  31.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.4252063Z [267/394] Installing pulseaudio-libs-0: 100% | 308.9 MiB/s |   3.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.4674574Z [268/394] Installing pipewire-libs-0:1. 100% |  99.8 MiB/s |   9.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6319759Z [269/394] Installing mesa-dri-drivers-0 100% | 326.8 MiB/s |  53.3 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6351411Z [270/394] Installing mesa-libgbm-0:26.2 100% |   9.9 MiB/s |  20.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6385406Z [271/394] Installing libglvnd-egl-1:1.7 100% |  22.9 MiB/s |  70.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6412828Z [272/394] Installing mesa-libEGL-0:26.2 100% | 130.0 MiB/s | 399.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6434390Z [273/394] Installing libXrandr-0:1.5.4- 100% |  27.8 MiB/s |  56.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6459468Z [274/394] Installing xcb-util-renderuti 100% |  12.5 MiB/s |  25.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6552009Z [275/394] Installing libglvnd-gles-1:1. 100% |  48.4 MiB/s |  99.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6710269Z [276/394] Installing libcamera-0:0.7.2- 100% | 216.1 MiB/s |   2.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.6737987Z [277/394] Installing wireplumber-libs-0 100% |  98.9 MiB/s |   1.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7076516Z [278/394] Installing wireplumber-0:0.5. 100% |  17.4 MiB/s | 533.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7233138Z [279/394] Installing pipewire-jack-audi 100% |  28.4 MiB/s | 522.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7286360Z [280/394] Installing pipewire-jack-audi 100% | 304.7 KiB/s | 312.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7711419Z [281/394] Installing libcanberra-0:0.30 100% |   5.9 MiB/s | 270.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7731927Z [282/394] Installing libXcursor-0:1.2.3 100% |  26.9 MiB/s |  55.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7747621Z [283/394] Installing libXdamage-0:1.1.6 100% |  40.1 MiB/s |  41.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7780861Z [284/394] Installing libXtst-0:1.2.5-4. 100% |  16.8 MiB/s |  34.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7827190Z [285/394] Installing libgxps-0:0.3.2-12 100% |  63.2 MiB/s | 194.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7856171Z [286/394] Installing poppler-glib-0:26. 100% | 161.1 MiB/s | 659.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.7938608Z [287/394] Installing libXft-0:2.3.8-10. 100% |  82.9 MiB/s | 169.8 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.8470361Z [288/394] Installing pango-0:1.57.1-1.f 100% |  46.2 MiB/s |   1.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.8620030Z [289/394] Installing glycin-loaders-0:2 100% | 355.1 MiB/s |  13.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.8702193Z [290/394] Installing glycin-libs-0:2.1. 100% | 304.7 MiB/s |   4.3 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.8871648Z [291/394] Installing gdk-pixbuf2-0:2.44 100% | 115.1 MiB/s |   2.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.9053038Z [292/394] Installing librsvg2-0:2.62.4- 100% | 293.2 MiB/s |   5.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.9239025Z [293/394] Installing gtk-update-icon-ca 100% |   4.1 MiB/s |  63.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:22.9414415Z [294/394] Installing libgsf-0:1.14.60-1 100% |  51.6 MiB/s |   1.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0009792Z [295/394] Installing libnotify-0:0.8.9- 100% |   2.1 MiB/s | 130.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0010940Z >>> Running sysusers scriptlet: geoclue2-0:2.8.2-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0011936Z >>> Finished sysusers scriptlet: geoclue2-0:2.8.2-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0012698Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0013169Z >>> Creating group 'geoclue' with GID 993.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0013915Z >>> Creating user 'geoclue' (n/a) with UID 993 and GID 993.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0014599Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0320589Z [296/394] Installing geoclue2-0:2.8.2-1 100% |  13.6 MiB/s | 417.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0361736Z [297/394] Installing libXxf86vm-0:1.1.6 100% |  12.9 MiB/s |  26.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0396984Z [298/394] Installing libglvnd-glx-1:1.7 100% | 147.1 MiB/s | 602.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0454130Z [299/394] Installing mesa-libGL-0:26.2. 100% | 123.4 MiB/s | 379.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0492835Z [300/394] Installing libva-0:2.23.0-3.f 100% |  68.3 MiB/s | 349.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.0663510Z [301/394] Installing glx-utils-0:9.0.0- 100% |  24.1 MiB/s | 419.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.1081700Z [302/394] Installing libXv-0:1.0.13-4.f 100% |   8.8 MiB/s |  27.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.1366187Z [303/394] Installing gstreamer1-plugins 100% | 167.7 MiB/s |   7.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.1537980Z [304/394] Installing gstreamer1-plugins 100% | 139.6 MiB/s |   3.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.1895638Z [305/394] Installing xdg-desktop-portal 100% |  41.1 MiB/s |   1.9 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.1955771Z [306/394] Installing libvdpau-0:1.5-11. 100% |   7.2 MiB/s |  22.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.1990375Z [307/394] Installing libavutil-free-0:8 100% | 158.9 MiB/s | 976.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2091186Z [308/394] Installing libswresample-free 100% |  50.9 MiB/s | 156.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2387797Z [309/394] Installing libavcodec-free-0: 100% | 288.9 MiB/s |  10.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2497243Z [310/394] Installing libchromaprint-0:1 100% |  23.0 MiB/s |  70.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2557392Z [311/394] Installing libavformat-free-0 100% | 256.7 MiB/s |   2.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2580900Z [312/394] Installing libswscale-free-0: 100% | 199.8 MiB/s |   1.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2599977Z [313/394] Installing libXinerama-0:1.1. 100% |  15.6 MiB/s |  15.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2620752Z [314/394] Installing libXcomposite-0:0. 100% |  40.9 MiB/s |  41.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2850004Z [315/394] Installing xprop-0:1.2.8-5.fc 100% |   3.4 MiB/s |  55.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2905649Z [316/394] Installing at-spi2-core-0:2.6 100% | 160.1 MiB/s |   1.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.2947123Z [317/394] Installing atk-0:2.60.7-1.fc4 100% |  82.7 MiB/s | 253.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.3101758Z [318/394] Installing at-spi2-atk-0:2.60 100% |  55.9 MiB/s | 286.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.3789843Z [319/394] Installing gtk3-0:3.24.52-2.f 100% | 288.5 MiB/s |  22.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.3931496Z [320/394] Installing libdecor-0:0.2.5-2 100% |  27.9 MiB/s | 171.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.3972798Z [321/394] Installing SDL3-0:3.4.20-1.fc 100% | 269.4 MiB/s |   3.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4075806Z [322/394] Installing sdl2-compat-0:2.32 100% | 134.8 MiB/s | 414.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4244007Z [323/394] Installing tslib-0:1.24-2.fc4 100% |  16.4 MiB/s | 419.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4280859Z [324/394] Installing libxkbcommon-x11-0 100% |  11.8 MiB/s |  36.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4307611Z [325/394] Installing xcb-util-keysyms-0 100% |  17.3 MiB/s |  17.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4329658Z [326/394] Installing xcb-util-wm-0:0.4. 100% |  40.5 MiB/s |  83.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4351361Z [327/394] Installing xcb-util-0:0.4.1-9 100% |  13.4 MiB/s |  27.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4376779Z [328/394] Installing xcb-util-image-0:0 100% |  11.5 MiB/s |  23.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4402391Z [329/394] Installing xcb-util-cursor-0: 100% |  12.0 MiB/s |  24.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4428060Z [330/394] Installing libb2-0:0.98.1-15. 100% |  21.0 MiB/s |  43.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.4925341Z [331/394] Installing double-conversion- 100% |  33.7 MiB/s | 103.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.5109562Z [332/394] Installing qt6-qtbase-0:6.11. 100% | 214.7 MiB/s |  14.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.5254839Z [333/394] Installing qt6-qtbase-common- 100% | 171.9 KiB/s | 352.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.6297590Z [334/394] Installing qt6-qtbase-gui-0:6 100% | 236.3 MiB/s |  27.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.7307276Z [335/394] Installing qt6-qtsvg-0:6.11.2 100% |  84.0 MiB/s | 946.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.9829902Z [336/394] Installing qt6-qtdeclarative- 100% | 176.0 MiB/s |  59.7 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.9922625Z [337/394] Installing qt6-qtserialport-0 100% |  56.8 MiB/s | 232.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:23.9988363Z [338/394] Installing qt6-qtpositioning- 100% | 157.0 MiB/s |   1.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.0072311Z [339/394] Installing qt6-qtwebchannel-0 100% |  75.4 MiB/s | 463.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.0177682Z [340/394] Installing qt6-qtsensors-0:6. 100% | 104.7 MiB/s | 964.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.0700298Z [341/394] Installing qt6-qtremoteobject 100% | 155.9 MiB/s |   1.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.1033655Z [342/394] Installing qt6-qtpdf-0:6.11.2 100% | 309.1 MiB/s |  24.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.1209940Z [343/394] Installing qt6-qtquicktimelin 100% |  50.8 MiB/s | 312.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.1259332Z [344/394] Installing qt6-qttools-libs-d 100% | 335.1 MiB/s |   6.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.1487350Z [345/394] Installing qt6-qttools-libs-h 100% | 154.3 MiB/s | 631.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.1710516Z [346/394] Installing qt6-qtshadertools- 100% | 189.0 MiB/s |   7.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.2734614Z [347/394] Installing qt6-qtquick3d-0:6. 100% | 147.0 MiB/s |  15.7 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.2979094Z [348/394] Installing qt6-qtmultimedia-0 100% | 220.7 MiB/s |   4.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.3025114Z [349/394] Installing qt6-qtspeech-0:6.1 100% |  61.7 MiB/s | 379.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.3105896Z [350/394] Installing qt6-qtwebsockets-0 100% |  80.7 MiB/s | 330.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.3130110Z [351/394] Installing qt6-qtconnectivity 100% | 200.4 MiB/s |   1.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.3704989Z [352/394] Installing python-pyqt6-rpm-m 100% | 406.2 KiB/s | 416.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.3885701Z [353/394] Installing python3-pyqt6-base 100% | 220.2 MiB/s |  16.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.4170901Z [354/394] Installing python3-pyqt6-0:6. 100% | 233.7 MiB/s |   5.8 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.4435596Z [355/394] Installing xdg-desktop-portal 100% |  17.9 MiB/s | 477.1 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.4856449Z [356/394] Installing libcanberra-gtk3-0 100% |   3.4 MiB/s |  73.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.5271159Z [357/394] Installing localsearch-0:3.11 100% |  53.9 MiB/s |   3.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.5969712Z [358/394] Installing libheif-ffmpeg-0:1 100% |   1.7 MiB/s |  32.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.6280649Z [359/394] Installing intel-mediasdk-0:2 100% | 461.8 MiB/s |  24.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.6347928Z [360/394] Installing intel-vpl-gpu-rt-0 100% | 353.1 MiB/s |  11.7 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7065987Z [361/394] Installing xdriinfo-0:1.0.7-6 100% | 475.3 KiB/s |  31.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7067028Z >>> Running sysusers scriptlet: pipewire-0:1.6.11-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7067848Z >>> Finished sysusers scriptlet: pipewire-0:1.6.11-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7068510Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7069248Z >>> Creating group 'pipewire' with GID 992.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7070019Z >>> Creating user 'pipewire' (PipeWire System Daemon) with UID 992 and GID 992.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7070725Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7513649Z [362/394] Installing pipewire-0:1.6.11- 100% |   9.1 MiB/s | 468.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7514761Z >>> Running %post scriptlet: pipewire-0:1.6.11-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7515593Z >>> Finished %post scriptlet: pipewire-0:1.6.11-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7516421Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7517899Z >>> Created symlink '/etc/systemd/user/sockets.target.wants/pipewire.socket' → '/usr/lib/systemd/user/pipewire.socket'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7519454Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7606379Z [363/394] Installing pipewire-plugin-li 100% |  46.6 MiB/s | 143.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7732165Z [364/394] Installing libcamera-ipa-0:0. 100% |  36.6 MiB/s | 598.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.7786998Z [365/394] Installing pipewire-alsa-0:1. 100% |  38.9 MiB/s | 159.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.8524532Z [366/394] Installing pipewire-pulseaudi 100% |   9.8 MiB/s | 472.2 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.8525401Z >>> Running %post scriptlet: pipewire-pulseaudio-0:1.6.11-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.8526104Z >>> Finished %post scriptlet: pipewire-pulseaudio-0:1.6.11-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.8527031Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.8528200Z >>> Created symlink '/etc/systemd/user/sockets.target.wants/pipewire-pulse.socket' → '/usr/lib/systemd/user/pipewire-pulse.socket'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:24.8529378Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.1797964Z [367/394] Installing mesa-vulkan-driver 100% | 495.8 MiB/s | 174.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.2407858Z [368/394] Installing wayland-devel-0:1. 100% |  34.1 MiB/s | 733.3 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.2584556Z [369/394] Installing python3-hypothesis 100% |  83.0 MiB/s |   5.1 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.2682084Z [370/394] Installing python3-pytest-tim 100% |  27.5 MiB/s |  84.6 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.2733615Z [371/394] Installing python3-psutil-0:7 100% | 129.1 MiB/s |   1.4 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.2926585Z [372/394] Installing python-unversioned 100% |  27.6 KiB/s | 424.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3862138Z [373/394] Installing upower-0:1.91.5-1. 100% |   3.2 MiB/s | 317.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3862941Z >>> Running %post scriptlet: upower-0:1.91.5-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3863417Z >>> Finished %post scriptlet: upower-0:1.91.5-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3863811Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3864760Z >>> Created symlink '/etc/systemd/system/graphical.target.wants/upower.service' → '/usr/lib/systemd/system/upower.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3865484Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3865864Z >>> Running sysusers scriptlet: usbmuxd-0:1.1.1^20251205git3ded00c-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3866506Z >>> Finished sysusers scriptlet: usbmuxd-0:1.1.1^20251205git3ded00c-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3867008Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3867288Z >>> Creating group 'usbmuxd' with GID 113.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3867716Z >>> Creating user 'usbmuxd' (usbmuxd user) with UID 113 and GID 113.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.3868122Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.4550109Z [374/394] Installing usbmuxd-0:1.1.1^20 100% |   3.4 MiB/s | 151.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.4607003Z [375/394] Installing wayland-protocols- 100% |  37.0 MiB/s |   1.0 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.4781631Z [376/394] Installing polkit-pkla-compat 100% |   5.4 MiB/s |  93.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.5292244Z [377/394] Installing iio-sensor-proxy-0 100% |   2.9 MiB/s | 158.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6171852Z [378/394] Installing logrotate-0:3.22.0 100% |   2.0 MiB/s | 155.4 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6172828Z >>> Running %post scriptlet: logrotate-0:3.22.0-5.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6173616Z >>> Finished %post scriptlet: logrotate-0:3.22.0-5.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6174369Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6175786Z >>> Created symlink '/etc/systemd/system/timers.target.wants/logrotate.timer' → '/usr/lib/systemd/system/logrotate.timer'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6176824Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6177358Z >>> Running sysusers scriptlet: systemd-networkd-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6178259Z >>> Finished sysusers scriptlet: systemd-networkd-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6179361Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6179857Z >>> Creating group 'systemd-network' with GID 192.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6180747Z >>> Creating user 'systemd-network' (systemd Network Management) with UID 192 and GID 192.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6181553Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6908357Z [379/394] Installing systemd-networkd-0 100% |  27.2 MiB/s |   2.3 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6909944Z >>> Running sysusers scriptlet: systemd-resolved-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6911039Z >>> Finished sysusers scriptlet: systemd-resolved-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6911873Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6912357Z >>> Creating group 'systemd-resolve' with GID 193.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6913348Z >>> Creating user 'systemd-resolve' (systemd Resolver) with UID 193 and GID 193.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.6914258Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7436404Z [380/394] Installing systemd-resolved-0 100% |  13.4 MiB/s | 659.7 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7437850Z >>> Running %post scriptlet: systemd-resolved-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7438958Z >>> Finished %post scriptlet: systemd-resolved-0:259.10-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7439641Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7441115Z >>> Created symlink '/etc/systemd/system/dbus-org.freedesktop.resolve1.service' → '/usr/lib/systemd/system/systemd-resolved.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7443379Z >>> Created symlink '/etc/systemd/system/sysinit.target.wants/systemd-resolved.service' → '/usr/lib/systemd/system/systemd-resolved.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7445536Z >>> Created symlink '/etc/systemd/system/sockets.target.wants/systemd-resolved-varlink.socket' → '/usr/lib/systemd/system/systemd-resolved-varlink.socket'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7447821Z >>> Created symlink '/etc/systemd/system/sockets.target.wants/systemd-resolved-monitor.socket' → '/usr/lib/systemd/system/systemd-resolved-monitor.socket'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7449324Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7544424Z [381/394] Installing systemd-pam-0:259. 100% | 174.6 MiB/s |   1.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.7928184Z [382/394] Installing tinysparql-0:3.11. 100% |  57.1 MiB/s |   2.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.8453456Z [383/394] Installing exiv2-0:0.28.9-1.f 100% | 260.6 MiB/s |  12.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.8939054Z [384/394] Installing dbus-daemon-1:1.16 100% |   8.5 MiB/s | 449.9 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.9383923Z [385/394] Installing dconf-0:0.49.0-5.f 100% |   7.2 MiB/s | 311.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.9553398Z [386/394] Upgrading pcre2-0:10.49-1.fc4 100% | 177.7 MiB/s | 728.0 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.9634040Z [387/394] Installing adwaita-mono-fonts 100% | 349.6 MiB/s |   5.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.9699768Z [388/394] Installing adwaita-sans-fonts 100% | 214.9 MiB/s |   1.7 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.9727783Z [389/394] Installing icu-tzdata-0:2026f 100% | 195.3 MiB/s |   1.2 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.9783895Z [390/394] Installing qrencode-libs-0:4. 100% |  81.3 MiB/s | 166.5 KiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:25.9962434Z [391/394] Installing diffutils-0:3.12-5 100% |  74.9 MiB/s |   1.6 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:26.0188266Z [392/394] Installing qt6-qttranslations 100% | 704.7 MiB/s |  15.5 MiB |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:26.0207048Z [393/394] Removing pcre2-0:10.47-1.fc44 100% |   4.4 KiB/s |   9.0   B |  00m00s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:30.8030246Z [394/394] Removing pcre2-syntax-0:10.47 100% |   3.0   B/s |  16.0   B |  00m05s
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:30.8031067Z >>> Running %posttrans scriptlet: wireplumber-0:0.5.19-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:30.8031586Z >>> Finished %posttrans scriptlet: wireplumber-0:0.5.19-1.fc44.x86_64
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:30.8031994Z >>> Scriptlet output:
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:30.8034999Z >>> Created symlink '/etc/systemd/user/pipewire-session-manager.service' → '/usr/lib/systemd/user/wireplumber.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:30.8036706Z >>> Created symlink '/etc/systemd/user/pipewire.service.wants/wireplumber.service' → '/usr/lib/systemd/user/wireplumber.service'.
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:30.8037726Z >>> 
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:30.8607019Z Fedora Linux 44 (Container Image): Python 3.14.10, PyQt6 6.11.0, Qt 6.11.2
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:24:40.2343491Z ...ss................................................................... [  5%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:25:44.7536768Z ................s.............ss........................................ [ 10%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:26:41.7597420Z ........................................................................ [ 15%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:26:47.2286540Z .....................................................sss..s............. [ 20%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:26:49.4901185Z .......................................................................s [ 25%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:26:56.8603286Z .....s...s.............................................................. [ 30%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:26:58.4938721Z ..........................s............s.......ssss..s.................. [ 35%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:26:59.9714677Z ........................................................................ [ 40%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:27:11.7637769Z .s.......................s................................ssssss........ [ 45%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:27:17.0106658Z .............ss..................................sssssssss...........s.. [ 50%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:27:18.3442063Z ........................ssssssss........................................ [ 55%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:27:18.5150070Z ........................................................................ [ 60%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:27:25.6118208Z .....................................sss.........s.........s......ssss.. [ 65%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:28:12.2700477Z ................ss.ssss....s...s.s..........s.s......................... [ 70%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:28:12.4537531Z ........................................................................ [ 75%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:28:51.1083040Z ........................................................................ [ 80%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:28:54.4191023Z ........................ss.s..s......................................... [ 85%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:03.7789218Z ..............................ssssssssssssssssssss...................... [ 90%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:13.7835741Z .............................s................................ss.sssssss [ 95%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2585610Z ssssssssssssssssssssssssssss...ssssssss......sssssssssssssss.........    [100%]
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2587483Z =========================== short test summary info ============================
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2590396Z SKIPPED [1] tests/test_a11y.py:65: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2590841Z SKIPPED [1] tests/test_a11y.py:73: macOS
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2591587Z SKIPPED [1] tests/test_app_m7.py:149: Windows pipes: the access list keeps other users out, and each connection is checked too
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2592362Z SKIPPED [1] tests/test_app_m7.py:423: Windows' toasts
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2592830Z SKIPPED [1] tests/test_app_m7.py:468: Windows' Magnifier
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2593359Z SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2593937Z SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2594479Z SKIPPED [1] tests/test_attachments.py:125: Windows links
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2594952Z SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2595478Z SKIPPED [1] tests/test_brains.py:479: Claude Code isn't installed here
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2596202Z SKIPPED [1] tests/test_brains.py:592: cmd.exe and the tools npm installs as .cmd files are Windows'
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2596706Z SKIPPED [1] tests/test_brains.py:681: Windows' process tree
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2597129Z SKIPPED [1] tests/test_chats.py:373: the roaming app-data folder is Windows'
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2597684Z SKIPPED [1] tests/test_cli.py:94: only Windows keeps a program you're not using from coming to the front
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2598188Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2598534Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2599252Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2599617Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2600054Z SKIPPED [1] tests/test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2600565Z SKIPPED [1] tests/test_events.py:121: macOS's temporary folder of your own
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2600957Z SKIPPED [1] tests/test_heads_up.py:135: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2601281Z SKIPPED [1] tests/test_hotkey.py:157: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2601586Z SKIPPED [1] tests/test_hotkey.py:183: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2601889Z SKIPPED [1] tests/test_hotkey.py:200: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2602302Z SKIPPED [1] tests/test_hotkey.py:254: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2602769Z SKIPPED [1] tests/test_hotkey.py:271: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2603091Z SKIPPED [1] tests/test_hotkey.py:352: Linux with Xvfb
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2603614Z SKIPPED [1] tests/test_i18n.py:243: Qt's own translations aren't installed (a separate package on some distributions)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2604846Z SKIPPED [1] tests/test_i18n.py:274: Qt's own translations aren't installed (a separate package on some distributions)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2606110Z SKIPPED [1] tests/test_install_update.py:256: macOS's root code: ditto, BSD find, osascript
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2606787Z SKIPPED [3] tests/test_install_update.py:267: macOS's root code: ditto, BSD find, osascript
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2607727Z SKIPPED [1] tests/test_install_update.py:282: macOS's root code: ditto, BSD find, osascript
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2608277Z SKIPPED [1] tests/test_install_update.py:291: macOS's root code: ditto, BSD find, osascript
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2609032Z SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2609629Z SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2610213Z SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2610608Z SKIPPED [1] tests/test_linuxsession.py:102: no PackageKit here
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2610963Z SKIPPED [1] tests/test_macnative.py:20: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2611286Z SKIPPED [1] tests/test_macnative.py:29: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2611623Z SKIPPED [1] tests/test_macnative.py:63: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2611950Z SKIPPED [1] tests/test_macnative.py:97: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2612264Z SKIPPED [1] tests/test_macnative.py:125: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2612593Z SKIPPED [1] tests/test_macnative.py:143: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2612906Z SKIPPED [1] tests/test_macnative.py:171: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2613242Z SKIPPED [1] tests/test_macnative.py:179: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2613754Z SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2614496Z SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2615210Z SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2615973Z SKIPPED [1] tests/test_packaging.py:141: Qt's own translations aren't installed (a separate package on some distributions)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2616603Z SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2617046Z SKIPPED [1] tests/test_platform_events.py:104: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2617420Z SKIPPED [1] tests/test_platform_events.py:119: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2617809Z SKIPPED [1] tests/test_platform_events.py:127: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2618164Z SKIPPED [1] tests/test_platform_events.py:181: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2618538Z SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2619393Z SKIPPED [1] tests/test_portowner.py:54: no other account listens on anything here
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2619817Z SKIPPED [1] tests/test_presence.py:18: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2620137Z SKIPPED [1] tests/test_presence.py:33: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2620448Z SKIPPED [1] tests/test_presence.py:55: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2620770Z SKIPPED [1] tests/test_presence.py:74: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2621147Z SKIPPED [1] tests/test_presence.py:143: no GNOME session here
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2621505Z SKIPPED [1] tests/test_presence.py:220: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2622008Z SKIPPED [1] tests/test_presence.py:248: PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2622556Z SKIPPED [1] tests/test_presence.py:364: Linux with an X display
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2622983Z SKIPPED [1] tests/test_releasecheck.py:59: needs OpenSSL to compare with
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2623468Z SKIPPED [1] tests/test_sound.py:185: no QtMultimedia, or no audio device to play to
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2623884Z SKIPPED [1] tests/test_sound.py:210: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2624194Z SKIPPED [1] tests/test_sound.py:261: macOS only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2624616Z SKIPPED [1] tests/test_sound.py:334: no QtMultimedia, or no audio device to play to
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2625267Z SKIPPED [1] tests/test_sway.py:111: wlr-protocols isn't installed
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2625778Z SKIPPED [1] tests/test_sway.py:125: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2626409Z SKIPPED [1] tests/test_sway.py:141: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2627176Z SKIPPED [1] tests/test_sway.py:152: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2627790Z SKIPPED [1] tests/test_sway.py:171: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2628377Z SKIPPED [1] tests/test_sway.py:195: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2629299Z SKIPPED [1] tests/test_sway.py:221: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2629905Z SKIPPED [1] tests/test_sway.py:234: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2630509Z SKIPPED [4] tests/test_sway.py:56: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2631094Z SKIPPED [1] tests/test_sway.py:279: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2631702Z SKIPPED [1] tests/test_sway.py:322: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2632289Z SKIPPED [1] tests/test_sway.py:349: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2632892Z SKIPPED [1] tests/test_sway.py:376: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2633474Z SKIPPED [1] tests/test_sway.py:402: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2634078Z SKIPPED [2] tests/test_sway.py:430: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2634666Z SKIPPED [1] tests/test_sway.py:456: sway isn't installed (CI's sway job installs sway, grim and dbus)
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2635219Z SKIPPED [1] tests/test_updates.py:648: holding a file open against changes: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2635650Z SKIPPED [1] tests/test_wincaret.py:52: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2635974Z SKIPPED [1] tests/test_wincaret.py:87: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2636288Z SKIPPED [1] tests/test_windows.py:77: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2636649Z SKIPPED [1] tests/test_windows.py:87: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2636966Z SKIPPED [1] tests/test_windows.py:98: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2637279Z SKIPPED [1] tests/test_windows.py:102: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2637595Z SKIPPED [1] tests/test_windows.py:107: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2637902Z SKIPPED [1] tests/test_windows.py:127: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2638206Z SKIPPED [1] tests/test_windows.py:138: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2638515Z SKIPPED [1] tests/test_windows.py:153: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2639082Z SKIPPED [1] tests/test_windows.py:164: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2639399Z SKIPPED [1] tests/test_windows.py:197: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2639705Z SKIPPED [1] tests/test_windows.py:210: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2640011Z SKIPPED [1] tests/test_windows.py:224: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2640317Z SKIPPED [1] tests/test_windows.py:261: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2640619Z SKIPPED [1] tests/test_windows.py:279: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2640937Z SKIPPED [1] tests/test_windows.py:292: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2641248Z SKIPPED [1] tests/test_windows.py:315: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2641554Z SKIPPED [1] tests/test_windows.py:339: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2641865Z SKIPPED [1] tests/test_windows.py:366: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2642175Z SKIPPED [1] tests/test_windows.py:408: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2642480Z SKIPPED [1] tests/test_windows.py:434: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2642782Z SKIPPED [1] tests/test_windows.py:441: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2643120Z SKIPPED [1] tests/test_windows.py:479: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2643721Z SKIPPED [1] tests/test_windows.py:491: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2644043Z SKIPPED [1] tests/test_windows.py:502: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2644345Z SKIPPED [1] tests/test_windows.py:519: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2644649Z SKIPPED [1] tests/test_windows.py:535: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2645071Z SKIPPED [1] tests/test_windows.py:561: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2645376Z SKIPPED [1] tests/test_windows.py:583: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2645681Z SKIPPED [1] tests/test_windows.py:601: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2646220Z SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2646768Z SKIPPED [1] tests/test_windows.py:684: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2647080Z SKIPPED [1] tests/test_windows.py:699: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2647393Z SKIPPED [1] tests/test_windows.py:739: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2647908Z SKIPPED [1] tests/test_windows.py:795: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2648391Z SKIPPED [1] tests/test_windows.py:818: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2648949Z SKIPPED [1] tests/test_winlock.py:17: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2649401Z SKIPPED [1] tests/test_winlock.py:41: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2649721Z SKIPPED [1] tests/test_winlock.py:78: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2650070Z SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2650474Z SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2650940Z SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2651297Z SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2651651Z SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2651998Z SKIPPED [1] tests/test_wintoast.py:110: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2652324Z SKIPPED [1] tests/test_wintoast.py:124: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2652656Z SKIPPED [1] tests/test_wintoast.py:149: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2652972Z SKIPPED [1] tests/test_wintoast.py:209: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2653286Z SKIPPED [1] tests/test_wintoast.py:233: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2653602Z SKIPPED [1] tests/test_wintoast.py:253: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2653922Z SKIPPED [1] tests/test_wintoast.py:273: Windows only
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2654323Z SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2654811Z SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2655292Z SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2655762Z SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2656246Z SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+distro (fedora:44)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T15:29:14.2656631Z 1285 passed, 152 skipped in 282.91s (0:04:42)
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T15:29:16.4434038Z Post job cleanup.
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5295534Z [command]/usr/bin/git version
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5369272Z git version 2.56.1
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5405346Z Temporarily overriding HOME='/home/runner/work/_temp/72f36b3b-5df2-4377-8a82-57600612da81' before making global git config changes
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5406779Z Adding repository directory to the temporary git global config as a safe directory
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5411934Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5444157Z Removing SSH command configuration
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5450818Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5485716Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5717326Z Removing HTTP extra header
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5723646Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5757411Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5982885Z Removing includeIf entries pointing to credentials config files
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.5989714Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (fedora:44)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:29:16.6021811Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (fedora:44)	Complete job	﻿2026-11-15T15:29:16.6432256Z Cleaning up orphan processes

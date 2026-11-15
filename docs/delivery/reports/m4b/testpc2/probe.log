@@ -1,0 +1,14 @@
+python 3.14.10, PyQt6 6.11.0, Qt 6.11.0
+user Technician, session 1
+ToastEnabled: absent (notifications never turned off: on)
+SHQueryUserNotificationState: hr 0, state 5 (accepts notifications)
+Focus session active: False
+app ID RandyNorthrup.Chatmon.Test25bd79b1: NotificationSetting None
+show() -> tag 2640252c68cd4bd4, why_not None
+in the history under its tag: True, after 0.02 s; history ['2640252c68cd4bd4']
+hide() -> True
+heard (HIDDEN_BY_CHATMON = 1, TIMED_OUT = 2): [('dismissed', '2640252c68cd4bd4', 1)]
+history after hide(), before clear(): []
+history after clear(): []
+registration removed: True
+PROBE OK

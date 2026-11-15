@@ -1,0 +1,52 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/m4b-toast/docs/delivery/reports/m4b/w4c/wsl-drill-spec.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-pczzxm14
+copied 310 files
+
+=== drill L-00B-eager-objc (AC-00B) on chatmon/sound.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_m4b_imports.py::test_it_imports_here
+-- green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.07s
+-- red: exit 1
+.F......                                                                 [100%]
+=================================== FAILURES ===================================
+_________________________ test_it_imports_here[sound] __________________________
+
+module = 'sound'
+
+    @pytest.mark.parametrize("module", MODULES)
+    def test_it_imports_here(module):
+        env = dict(os.environ, PYTHONPATH=str(ROOT), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", f"import chatmon.{module}"], cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+>       assert out.returncode == 0, out.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             import chatmon.sound
+E           File "/var/tmp/chatmon-wsl-drill-pczzxm14/chatmon/sound.py", line 353, in <module>
+E             MacPlayer()
+E             ~~~~~~~~~^^
+E           File "/var/tmp/chatmon-wsl-drill-pczzxm14/chatmon/sound.py", line 195, in __init__
+E             ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
+E             ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/usr/lib/python3.14/ctypes/__init__.py", line 554, in LoadLibrary
+E             return self._dlltype(name)
+E                    ~~~~~~~~~~~~~^^^^^^
+E           File "/usr/lib/python3.14/ctypes/__init__.py", line 433, in __init__
+E             self._handle = self._load_library(name, mode, handle, winmode)
+E                            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/usr/lib/python3.14/ctypes/__init__.py", line 475, in _load_library
+E             return _dlopen(name, mode)
+E         OSError: /System/Library/Frameworks/AppKit.framework/AppKit: cannot open shared object file: No such file or directory
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/var/tmp/plans-venv/bin/python', '-c', 'import chatmon.sound'], returncode=1, stdout='', stder...rror: /System/Library/Frameworks/AppKit.framework/AppKit: cannot open shared object file: No such file or directory\n').returncode
+
+tests/test_m4b_imports.py:19: AssertionError
+1 failed, 7 passed in 1.04s
+-- restored green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.00s
+
+=== summary
+PASS L-00B-eager-objc

@@ -1,0 +1,10 @@
+
+=== summary
+PASS W4-M0-01-priority
+PASS W4-M0-04-appearance
+PASS W4-M0-04-reload-under-help
+PASS W4-M0-05-hide-not-kept
+PASS W4-M0-09-password-read-out
+PASS W4-M0-12-come-forward
+PASS W4-M0-03-light-limit
+PASS W4-M0-03-light-copies-v2

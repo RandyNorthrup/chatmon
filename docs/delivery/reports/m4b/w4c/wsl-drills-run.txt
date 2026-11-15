@@ -1,0 +1,3 @@
+
+=== summary
+PASS L-00B-eager-objc

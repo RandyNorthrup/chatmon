@@ -365,6 +365,23 @@ class Companion(QObject):
 
         QTimer.singleShot(ms, go)
 
+    def _heard(self, method: Callable[..., object]) -> Callable[..., None]:
+        """`method`, one of the Companion's own, as a callback for something outside it that may call long after (the
+        system's lock, sleep, power and settings watchers, the hotkey): it does nothing once the Companion has quit,
+        and holds it only weakly. A D-Bus answer or an NSWorkspace notice can arrive after quit, and a quit
+        Companion acts on nothing (as with _later)."""
+        func = getattr(method, "__func__", None)
+        if func is None or getattr(method, "__self__", None) is not self:
+            raise TypeError(f"_heard passes on one of the Companion's own methods, not {method!r}")
+        me = weakref.ref(self)
+
+        def call(*args: object) -> None:
+            c = me()
+            if c is not None and not c._quitting:
+                func(c, *args)
+
+        return call
+
     def _make_watcher(self) -> heads_up.Watcher:
         h = self.config["heads_up"]
         return heads_up.Watcher(float(h["battery_low"]), float(h["battery_critical"]), float(h["disk_full_percent"]))
@@ -635,8 +652,8 @@ class Companion(QObject):
     def _watch_desk(self, desk: presence.Desk) -> None:
         """What the desktop says as it changes (M4A's Desk): reduced motion and high contrast, applied at once rather
         than at the next look, and a screen reader starting or stopping (Windows)."""
-        desk.settings_changed.connect(self._check_accessibility)
-        desk.screen_reader_changed.connect(self._screen_reader_changed)
+        desk.settings_changed.connect(self._heard(self._check_accessibility))
+        desk.screen_reader_changed.connect(self._heard(self._screen_reader_changed))
 
     def _screen_reader_changed(self) -> None:
         """A screen reader started or stopped (Windows says so): look again at once, and put the ask box where it
@@ -1930,7 +1947,8 @@ class Companion(QObject):
         if sys.platform == "win32":
             from . import winlock
 
-            self._lock_watcher = winlock.LockWatcher(self._screen_locked, self._sleeping, seen=self._seen, saving=self._power_saving,
+            self._lock_watcher = winlock.LockWatcher(self._heard(self._screen_locked), self._heard(self._sleeping), seen=self._heard(self._seen),
+                                                     saving=self._heard(self._power_saving),
                                                      settings=self.desk.windows_setting_changed)
             return
         if sys.platform == "darwin":
@@ -1939,10 +1957,11 @@ class Companion(QObject):
             from . import macnative
 
             watcher = macnative.WorkspaceWatcher()
-            watcher.slept.connect(self._sleeping)
-            watcher.screens_slept.connect(lambda asleep: self._seen(not asleep))  # nothing drawn while the displays sleep
-            watcher.accessibility_changed.connect(self._check_accessibility)
-            watcher.low_power_changed.connect(self._power_saving)
+            watcher.slept.connect(self._heard(self._sleeping))
+            seen = self._heard(self._seen)
+            watcher.screens_slept.connect(lambda asleep: seen(not asleep))  # nothing drawn while the displays sleep
+            watcher.accessibility_changed.connect(self._heard(self._check_accessibility))
+            watcher.low_power_changed.connect(self._heard(self._power_saving))
             self._lock_watcher = watcher
             self._power_saving(bool(macnative.low_power_mode()))
             return
@@ -1950,8 +1969,9 @@ class Companion(QObject):
             from . import linuxsession
         except ImportError:
             return
-        self._lock_watcher = linuxsession.SessionWatcher(self._screen_locked, self._sleeping, seen=self._seen, parent=self)
-        self._power_watcher = linuxsession.PowerProfile(self._power_saving, parent=self)
+        self._lock_watcher = linuxsession.SessionWatcher(self._heard(self._screen_locked), self._heard(self._sleeping), seen=self._heard(self._seen),
+                                                         parent=self)
+        self._power_watcher = linuxsession.PowerProfile(self._heard(self._power_saving), parent=self)
 
     def _power_saving(self, on: bool) -> None:
         """The system's power saver: the stage draws less often, and the bubble and the box hold their still pictures."""
@@ -2647,7 +2667,7 @@ class Companion(QObject):
             self._hotkey = ""
             self._hotkey_bound(None)
             return
-        error = hotkey.register(sequence, self._hotkey_pressed, failed=self._hotkey_failed, bound=self._hotkey_bound)
+        error = hotkey.register(sequence, self._hotkey_pressed, failed=self._hotkey_failed, bound=self._hotkey_bound)  # quit unregisters it
         if error:
             self._hotkey_failed(error)
         else:
@@ -3170,7 +3190,7 @@ class Companion(QObject):
             self._brain_test = None
         self.ask_box.hide()  # (its redraws stop as it hides)
         for widget in (self.ask_box, self.ask_box.entry, self.ask_box.answer):
-            widget.removeEventFilter(self)  # Qt called it for every event of theirs, a quit one's too
+            widget.removeEventFilter(self)  # type: ignore[arg-type]  # PyQt6 6.12.1's stub types the filter as the widget's own class (CONTRIBUTING.md); Qt called it for every event of theirs, a quit one's too
         for owner in (self, self.ask_box):
             for timer in owner.findChildren(QTimer):
                 timer.stop()

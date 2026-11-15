@@ -1,0 +1,47 @@
+{
+ "readiness_method": "Requirements review, round three, at 3586a0d (readiness.md): M8-01 and its ten criteria re-read against ASSESSMENT.md, the amended ROADMAP.md (the translation decision unchanged) and pyproject.toml as they are now, and the M0, M5 and M7 plans it takes as inputs (re-bound in round three first); no conflict or gap; the next push's CI run it named has happened.",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "drill_acceptance": {},
+ "observe_add": [
+  "tests/test_i18n.py",
+  "tests/test_i18n_app.py",
+  "tests/test_chatswin.py",
+  "tests/test_package_data.py"
+ ],
+ "ci": [
+  {
+   "id": "W4C-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132858987756-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43729628408 on 3586a0d, job test (ubuntu-24.04, 3.15). Every test these criteria's drills run passed there, all of tests/test_i18n.py, tests/test_i18n_app.py and tests/test_chatswin.py among them, as on ubuntu 3.11 and ubuntu-24.04-arm 3.14. The three distro containers passed them too, except test_qts_own_words_and_a_chosen_languages_dates_follow_it and M10's test_an_installers_app_finds_qts_own_words_in_its_own_folder, which skip there with their reason: Qt's own translations aren't installed (a separate package on some distributions). This is the Linux leg the plan's closing next action named."
+  },
+  {
+   "id": "W4C-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132858987797-test-macos-latest-3.14.log",
+   "method": "CI run 43729628408 on 3586a0d, job test (macos-latest, 3.14). The same tests passed on macOS, as on the 3.11 and 3.15 legs, except tests/test_i18n.py::test_the_command_line_reads_the_same_preferred_languages_as_qt, which skips on macOS with its reason. This is the macOS leg the plan's closing next action named."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4C-BEH-TEMPLATE",
+   "kind": "behavior",
+   "acceptance": [
+    "M8-01.A7"
+   ],
+   "artifact": "docs/delivery/reports/wave4c/extract-strings-check.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "packaging/extract_strings.py",
+    "--check"
+   ],
+   "exit_code": 0,
+   "method": "packaging/extract_strings.py --check at 3586a0d on this workstation, exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes from today's marked strings, and none of them is a string that couldn't be translated."
+  }
+ ],
+ "pending": [],
+ "next_action": "None in M8 on 3586a0d. The Windows and macOS builds carry Qt's own translation for each language Chatmon has a .po for (M10), which the plan's closing note asked for. Any string a later change adds must be in the template: extract_strings.py --check, and CI's lint job, say so."
+}

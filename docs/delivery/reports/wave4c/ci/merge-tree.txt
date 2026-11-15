@@ -1,0 +1,9 @@
+# The PR CI's merge commit against 3586a0d (read-only: gh api, git cat-file), 2026-11-15T15:34:07Z
+every job's checkout: HEAD is now at 5545f5a Merge 3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b into 5d20c55de144b99b3e4204f2ac08017f36396fe8 (19 of 19 logs of CI run 43729628408, and 5 of 5 build-job logs of Packages run 43729628343, whose other five jobs, the release ones, were skipped)
+$ gh api repos/RandyNorthrup/chatmon/git/commits/5545f5a9b3fad2e700176b2efb81b7536ab2901e --jq '.tree.sha, [.parents[].sha]'
+2d3c01b01139ec57ff32a4314a5f80a60dae1d5f
+5d20c55de144b99b3e4204f2ac08017f36396fe8 3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b
+$ git rev-parse 3586a0d^{tree}
+2d3c01b01139ec57ff32a4314a5f80a60dae1d5f
+$ git merge-base --is-ancestor 5d20c55de144b99b3e4204f2ac08017f36396fe8 3586a0d; echo $?
+0

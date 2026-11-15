@@ -1,0 +1,39 @@
+red drills from W:\chatmon-m4b\rec\drill-spec.json
+python: W:\chatmon-m4b\venv\Scripts\python.exe
+copy: W:\chatmon-m4b\tmp\chatmon-drill-34cdf_tm
+copied 310 files
+
+=== drill D-03E-hide-kept (AC-03E) on chatmon/wintoast.py
+command: W:\chatmon-m4b\venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.00s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________
+
+toaster = <chatmon.wintoast.Toaster object at 0x0000000004C35E50>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000000004C35F90>
+
+    @windows
+    def test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon(toaster, qapp):
+        tag = toaster.show("Chatmon test", "A toast from Chatmon's tests, removed at once.", ["OK"], silent=True)
+        if notifications_on():
+            # Windows may not say whether this app ID's notifications are on (none, for one without a Start menu
+            # shortcut, on CI's runners): that's no reason not to try.
+            assert tag is not None and toaster.why_not is None, f"declined: setting {toaster.setting()}, {toaster.why_not}"
+            assert wait_for(qapp, lambda: tag in toaster.in_action_center()), "Windows never had the toast"
+>           assert toaster.hide(tag)
+E           AssertionError: assert False
+E            +  where False = hide('6ae747fef66747a4')
+E            +    where hide = <chatmon.wintoast.Toaster object at 0x0000000004C35E50>.hide
+
+tests\test_wintoast.py:118: AssertionError
+1 failed in 1.10s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.96s
+
+=== summary
+PASS D-03E-hide-kept

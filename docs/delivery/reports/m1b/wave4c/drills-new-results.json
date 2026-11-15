@@ -1,0 +1,64 @@
+[
+  {
+    "id": "W4-M1B-05-stale-folders",
+    "requirement": "AC-M1B-05",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "_tidying = threading.Thread(target=remove_stale_folders, name=\"chatmon-tidy\", daemon=True)",
+      "replace": "_tidying = threading.Thread(target=lambda: 0, name=\"chatmon-tidy\", daemon=True)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept"
+    ],
+    "expected": [
+      "test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb",
+    "baseline_exit": 0,
+    "mutated_sha256": "532d90b5dc36d2e3a3b5d5683af207bd2cf98c937e2e1a922f040c691dd442c5",
+    "mutated_exit": 1,
+    "observed": "____ test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept ____",
+    "after_sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb",
+    "restored_exit": 0
+  },
+  {
+    "id": "W4-M1B-12-partial",
+    "requirement": "AC-M1B-12",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "            for piece in stream.feed(chunk):\n                self.partial.emit(piece)\n            return",
+      "replace": "            stream.feed(chunk)\n            return"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_the_anthropic_api_streams_each_piece_as_its_written",
+      "tests/test_streaming.py::test_the_openai_responses_api_streams"
+    ],
+    "expected": [
+      "test_the_anthropic_api_streams_each_piece_as_its_written",
+      "test_the_openai_responses_api_streams"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb",
+    "baseline_exit": 0,
+    "mutated_sha256": "439f7ab7c25903d95881b5db6db5e0f9d2ae0e72ce7702c986661ae86e4bb929",
+    "mutated_exit": 1,
+    "observed": "__________ test_the_anthropic_api_streams_each_piece_as_its_written ___________",
+    "after_sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb",
+    "restored_exit": 0
+  }
+]

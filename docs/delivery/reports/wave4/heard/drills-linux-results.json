@@ -1,0 +1,32 @@
+[
+  {
+    "id": "HEARD-01-power-unguarded",
+    "requirement": "wave4 quit guard",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "linuxsession.PowerProfile(self._heard(self._power_saving), parent=self)",
+      "replace": "linuxsession.PowerProfile(self._power_saving, parent=self)"
+    },
+    "command": [
+      "/var/tmp/wayland-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "expected": [
+      "test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9ac3c4996d1b9537e47d536210ad4b4cb8b92787588bbdf208bae8d7b6514bc3",
+    "baseline_exit": 0,
+    "mutated_sha256": "9127667f92c811bc8e9de0cfdc31b05fd46233c84726605534789c65f41af5bc",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_quit_companion_runs_nothing_it_had_waiting _______________",
+    "after_sha256": "9ac3c4996d1b9537e47d536210ad4b4cb8b92787588bbdf208bae8d7b6514bc3",
+    "restored_exit": 0
+  }
+]

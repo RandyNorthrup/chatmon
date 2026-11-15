@@ -1,0 +1,762 @@
+{
+ "plan": "docs/delivery/m3-stage-overlay.md",
+ "section": "docs/delivery/reports/m3/wave4c/section.md",
+ "rules": {
+  "docs/delivery/ROADMAP.md": "3586a0d+wave4c",
+  "pyproject.toml": "3586a0d"
+ },
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "task_changes_add": {},
+ "stale_reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408",
+ "receipts": [
+  {
+   "id": "W4C-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-quiet",
+    "AC-M3-01-pointer",
+    "AC-M3-02-refresh",
+    "AC-M3-02-pixels",
+    "AC-M3-02-drag",
+    "AC-M3-03-once",
+    "AC-M3-03-cache",
+    "AC-M3-04-buffers",
+    "AC-M3-05-keys",
+    "AC-M3-05-focus",
+    "AC-M3-06-scroll",
+    "AC-M3-06-hover",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-09-latin",
+    "AC-M3-09-overlay",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage",
+    "AC-M3-04-content",
+    "AC-M3-14-sway",
+    "AC-M3-14-atspi",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave4c/readiness.md",
+   "method": "Requirements review, round three, at 3586a0d (readiness.md): M3-01 to M3-15, M3-M2 and M3-RC (scope revision 3) re-read against ASSESSMENT.md, the amended ROADMAP.md (sway now one of main's 19 required checks) and pyproject.toml as they are now; no conflict or gap; CI-sway-job answered by CI run 43729628408."
+  },
+  {
+   "id": "W4C-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-pointer",
+    "AC-M3-01-quiet",
+    "AC-M3-02-drag",
+    "AC-M3-02-pixels",
+    "AC-M3-02-refresh",
+    "AC-M3-03-cache",
+    "AC-M3-03-once",
+    "AC-M3-05-focus",
+    "AC-M3-05-keys",
+    "AC-M3-06-hover",
+    "AC-M3-06-scroll",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage"
+   ],
+   "artifact": "docs/delivery/reports/wave4c/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 3586a0d's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. These are the criteria the Windows side tests (offscreen); the Linux-only and real-compositor tests skip here with their reasons, and the WSL and CI receipts carry them. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-WSL-SUITE",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-pointer",
+    "AC-M3-01-quiet",
+    "AC-M3-02-drag",
+    "AC-M3-02-pixels",
+    "AC-M3-02-refresh",
+    "AC-M3-03-cache",
+    "AC-M3-03-once",
+    "AC-M3-04-buffers",
+    "AC-M3-04-content",
+    "AC-M3-05-focus",
+    "AC-M3-05-keys",
+    "AC-M3-06-hover",
+    "AC-M3-06-scroll",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-09-latin",
+    "AC-M3-09-overlay",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-atspi",
+    "AC-M3-14-sway",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/wave4c/suite-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 1,
+   "method": "The whole suite in WSL (Arch, sway 1.12, at-spi2-core 2.62.1, Orca 51.1, UPower 1.91.5 on the system bus; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11) on 3586a0d's files, through docs/delivery/reports/wave4c/run-wsl.sh: 1 failed, 1315 passed, 121 skipped, exit 1.",
+   "status": "fail",
+   "reason": "One test failed, none of M3's: the crash fix's own tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting, 'assert [Companion._power_saving] == []'. linuxsession.PowerProfile asks the system bus (UPower's OnBattery) and its answer comes back after quit; Companion._stop_for_good doesn't stop it. It fails five runs in five with UPower on the bus and passes without a system bus (reports/wave4c/crash-test-wsl.log); CI's runners have none, so CI passes it. Product code, not this reconciliation's: the coordinator. M3's own test files were run instead (W4C-BEH-WSL-M3)."
+  },
+  {
+   "id": "W4C-BEH-WSL-M3",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-pointer",
+    "AC-M3-01-quiet",
+    "AC-M3-02-drag",
+    "AC-M3-02-pixels",
+    "AC-M3-02-refresh",
+    "AC-M3-03-cache",
+    "AC-M3-03-once",
+    "AC-M3-04-buffers",
+    "AC-M3-04-content",
+    "AC-M3-05-focus",
+    "AC-M3-05-keys",
+    "AC-M3-06-hover",
+    "AC-M3-06-scroll",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-09-latin",
+    "AC-M3-09-overlay",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-atspi",
+    "AC-M3-14-sway",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave4c/m3-tests-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-rs",
+    "tests/test_wayland.py",
+    "tests/test_xkb.py",
+    "tests/test_overlay_stage.py",
+    "tests/test_clickthrough.py",
+    "tests/test_stage_timer.py",
+    "tests/test_behavior.py",
+    "tests/test_sprites.py",
+    "tests/test_stagemenu.py",
+    "tests/test_stage_features.py",
+    "tests/test_sway.py"
+   ],
+   "exit_code": 0,
+   "method": "M3's own test files in WSL (Arch, sway 1.12, at-spi2-core 2.62.1, Orca 51.1; /var/tmp/plans-venv, PyQt6 6.11) on 3586a0d's files, through docs/delivery/reports/wave4c/run-wsl2.sh: every file any of M3's drills runs a test of, the real-compositor and real-Orca tests of tests/test_sway.py among them. 145 passed, 4 skipped (tests/test_clickthrough.py's Windows-only tests, each with its reason), exit 0. This stands in for the whole suite's run, which failed one test that is none of M3's (W4C-BEH-WSL-SUITE). The receipt's environment is the plan's profile; the run's own versions head the log (ROADMAP: evidence from elsewhere)."
+  },
+  {
+   "id": "W4C-BEH-WSL-SWAY",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-04-content",
+    "AC-M3-14-atspi",
+    "AC-M3-14-sway",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave4c/sway-tests-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-p",
+    "no:cacheprovider",
+    "-v",
+    "-rs",
+    "tests/test_sway.py",
+    "tests/test_wayland.py"
+   ],
+   "exit_code": 0,
+   "method": "tests/test_sway.py and tests/test_wayland.py on their own in WSL, verbose, on 3586a0d's files with the real sway 1.12, at-spi2-core 2.62.1 and Orca 51.1: every real-compositor test by name, the two real-Orca tests among them (the ask box as a window announced and echoing typing; drawn on the overlay, neither announced nor echoed)."
+  },
+  {
+   "id": "W4C-BEH-MEMORY",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave4c/memory-after--window.json",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "docs/delivery/reports/m3/memory.py",
+    "/mnt/c/Users/Randy/Coding/chatmon-wt/plans3",
+    "--window"
+   ],
+   "exit_code": 0,
+   "method": "M3's memory.py on 3586a0d's files: a headless sway at 3840x2160 and scale 2 with a window under the overlay, the overlay's buffers read inside Chatmon at each moment: at every moment at most two buffers, sized to what is shown. That is 640x640 for the chatmon alone, 896x768 with a bubble and 896x1088 with the ask box or its menu, 1.1 to 7.4 MB, against fb19cb9's one or two full-output 3840x2160 buffers (31.6 to 63.3 MB) in M3's memory-before--window.json. One moment differs from the wayland worker's own after-run: with nothing showing, 5 s on, the overlay still held both 640x640 buffers (3.1 MB) and drew 4 frames in 2 s (round two's run: 7), where theirs held one (1.6 MB) and drew none. That is still within M3-04's at most two buffers sized to what is shown. The fb19cb9 side of the comparison is M3's own memory-before--window.json, whose code (revision 2's) hasn't changed."
+  },
+  {
+   "id": "W4C-BEH-CI-SWAY",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-RC-sway",
+    "AC-M3-14-sway",
+    "AC-M3-14-atspi",
+    "AC-M3-04-content"
+   ],
+   "artifact": "docs/delivery/reports/m3/ci/ci-132858987755-sway.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987755",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job sway (one of main's 19 required checks): a headless sway of the tests' own on ubuntu-24.04, with CHATMON_SWAY=1 making a missing piece a failure, ran tests/test_sway.py and tests/test_wayland.py: 49 passed, 3 skipped. The overlay mapped as a layer surface sway draws and keeps out of its windows; clicks, the keyboard, the penguin's menu, the clipboard, full-screen windows, a screen going and drags all worked; buffers were the size of what is shown at 3840x2160 scale 2 and 2560x1440 scale 1.5; with a screen reader the ask box was a window sway floats, centres and focuses, and AT-SPI's registry found its field, buttons and conversation. The three skips say why: wlr-protocols isn't installed (the virtual pointer's opcode check), and Orca isn't installed (the two real-Orca tests, which ran in WSL: W4C-BEH-WSL-SWAY). This answers CI-sway-job. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-01-idle",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-01-idle"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-01-idle",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-01-idle through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-01-missed",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-01-idle"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-01-missed",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-01-missed through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-01-pointer",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-01-pointer"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-01-pointer",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-01-pointer through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-01-quiet",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-01-quiet"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-01-quiet",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-01-quiet through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-02-drag",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-02-drag"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-02-drag",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-02-drag through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-02-pixels",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-02-pixels"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-02-pixels",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-02-pixels through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-02-refresh",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-02-refresh"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-02-refresh",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-02-refresh through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-03-cache",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-03-cache"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-03-cache",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-03-cache through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-03-once",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-03-once"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-03-once",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-03-once through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-04-buffers",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-buffers"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-linux-r3-results.json",
+   "drill": "M3-04-buffers",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-linux-r3.log",
+   "method": "Red drill M3-04-buffers in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-04-content",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-04-content",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-04-content in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-04-extent",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-results.json",
+   "drill": "M3-04-extent",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland.log",
+   "method": "Red drill M3-04-extent through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-04-move-waits",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-04-move-waits",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-04-move-waits in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-04-placed",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-04-placed",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-04-placed in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-04-trim",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-buffers"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-linux-r3-results.json",
+   "drill": "M3-04-trim",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-linux-r3.log",
+   "method": "Red drill M3-04-trim in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-05-focus",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-05-focus"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-05-focus",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-05-focus through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-05-keys",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-05-keys"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-05-keys",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-05-keys through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-05-outline",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-05-focus"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-05-outline",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-05-outline through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-05-route",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-05-keys"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-05-route",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-05-route through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-06-hover",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-06-hover"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-06-hover",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-06-hover through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-06-scroll",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-06-scroll"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-06-scroll",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-06-scroll through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-07-contrast",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-07-contrast"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-07-contrast",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-07-contrast through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-08-rows",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-08-rows"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-08-rows",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-08-rows through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-09-latin",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-09-latin"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-linux-r3-results.json",
+   "drill": "M3-09-latin",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-linux-r3.log",
+   "method": "Red drill M3-09-latin in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-09-overlay",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-09-overlay"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-linux-r3-results.json",
+   "drill": "M3-09-overlay",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-linux-r3.log",
+   "method": "Red drill M3-09-overlay in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-10-shape",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-10-shape"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-10-shape",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-10-shape through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-10-xserver",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-10-shape"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-linux-r3-results.json",
+   "drill": "M3-10-xserver",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-linux-r3.log",
+   "method": "Red drill M3-10-xserver in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-11-still",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-11-still"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-11-still",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-11-still through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-11-zs",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-11-still"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-11-zs",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-11-zs through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-12-hold",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-12-hold"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-12-hold",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-12-hold through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-13-badge",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-13-badge"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-13-badge",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-13-badge through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-14-bubble-clear",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-results.json",
+   "drill": "M3-14-bubble-clear",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland.log",
+   "method": "Red drill M3-14-bubble-clear through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-14-hosting",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway",
+    "AC-M3-14-atspi"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-14-hosting",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-14-hosting in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-14-menu-keys",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-results.json",
+   "drill": "M3-14-menu-keys",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland.log",
+   "method": "Red drill M3-14-menu-keys through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-14-sway-bubble",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-14-sway-bubble",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-14-sway-bubble in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-14-sway-menu",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-14-sway-menu",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-14-sway-menu in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-14-unhosted",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-unhosted"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-14-unhosted",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-14-unhosted through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-15-follow",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-15-follow"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-15-follow",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-15-follow through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-M2-hover",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-M2-stage"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-M2-hover",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-M2-hover through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-M2-link",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-M2-stage"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-M2-link",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-M2-link through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-M2-ring",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-M2-stage"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-r3-results.json",
+   "drill": "M3-M2-ring",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-r3.log",
+   "method": "Red drill M3-M2-ring through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-RC-clipboard",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-RC-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-RC-clipboard",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-RC-clipboard in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-RC-input",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-RC-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-RC-input",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-RC-input in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M3-RC-keyboard",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-RC-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave4c/drills-wayland-linux-results.json",
+   "drill": "M3-RC-keyboard",
+   "artifact": "docs/delivery/reports/m3/wave4c/drills-wayland-linux.log",
+   "method": "Red drill M3-RC-keyboard in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  }
+ ],
+ "tasks": {},
+ "pending": [],
+ "next_action": "None in M3 on 3586a0d: CI-sway-job is answered and sway is one of main's 19 required checks. Owners named in the Integration notes keep theirs (speaking the drawn penguin menu's items to a screen reader).",
+ "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
+}
