@@ -1,0 +1,58 @@
+red drills from docs\delivery\reports\m10\wave4f\drill-spec-ci-venv.json
+python: C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-8idda4sr
+copied 310 files
+
+=== drill M10-01-announcement-not-important (M10-01.A2) on chatmon/winuia.py
+command: C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 7.26s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_ui_automation_client_hears_the_announcement ______________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-8464/test_a_ui_automation_client_he0')
+
+    @windows
+    def test_a_ui_automation_client_hears_the_announcement(tmp_path):
+        """End to end, as Narrator, NVDA or JAWS hear it: a UI Automation client in another process gets the
+        notification event with the words, from the announcer window on Qt's real Windows platform."""
+        pytest.importorskip("comtypes")
+        log, words = tmp_path / "heard.jsonl", "Reminder. Stretch your legs."
+        client = subprocess.Popen([sys.executable, str(HERE / "uia_client.py"), "listen", str(log), "40"], stdout=subprocess.PIPE, text=True)
+        env = dict(os.environ, QT_QPA_PLATFORM="windows")
+        announcer = None
+        try:
+            assert client.stdout.readline().strip() == "ready"
+            announcer = subprocess.Popen([sys.executable, "-c", ANNOUNCER, str(HERE.parent), words, str(log)], stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE, text=True, env=env)
+            said = [announcer.stdout.readline().strip() for _ in range(4)]
+            assert said[0] == "prepared True" and said[1].startswith("window ") and said[2:] == ["too soon False", "routes ['uia'] []"], said
+            # The window's element is the announcer's own provider (it names itself), not Qt's or the bare window's.
+            name = subprocess.run([sys.executable, str(HERE / "uia_client.py"), "name", said[1].split()[1]], capture_output=True, text=True, timeout=30)
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline and not (log.exists() and log.read_text(encoding="utf-8").strip()):
+                time.sleep(0.1)
+            heard = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()] if log.exists() else []
+        finally:
+            for process in (client, announcer):
+                if process is not None:
+                    process.kill()
+                    process.communicate(timeout=10)  # waited for, and its pipes closed
+        assert name.stdout.strip() == "Chatmon announcements", name.stderr
+>       assert heard and all(h == {"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"} for h in heard), heard  # Other, ImportantAll
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: [{'kind': 4, 'processing': 2, 'words': 'Reminder. Stretch your legs.', 'activity': 'chatmon.announcement'}]
+E       assert ([{'kind': 4, 'processing': 2, 'words': 'Reminder. Stretch your legs.', 'activity': 'chatmon.announcement'}] and False)
+E        +  where False = all(<generator object test_a_ui_automation_client_hears_the_announcement.<locals>.<genexpr> at 0x0000018F990DB230>)
+
+tests\test_platform_events.py:208: AssertionError
+1 failed in 6.88s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.34s
+
+=== summary
+PASS M10-01-announcement-not-important

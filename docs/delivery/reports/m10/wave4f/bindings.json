@@ -1,0 +1,383 @@
+{
+ "plan": "docs/delivery/m10-followups.md",
+ "section": "docs/delivery/reports/m10/wave4f/section.md",
+ "rules": {},
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "task_changes_add": {},
+ "stale_reason": "Stale in wave 4's final round (2026-11-15), when M6A's plan gained its final-round section: a plan's prose is in every receipt's scope, and M6B and M10 bind M6A's plan. The W4F- receipts re-ran its check on 45a17b3 or read it from CI run 43743804662 or Packages run 43743804716",
+ "receipts": [
+  {
+   "id": "W4F-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "M10-01.A1",
+    "M10-01.A2",
+    "M10-02.A1",
+    "M10-02.A2",
+    "M10-03.A1",
+    "M10-03.A2",
+    "M10-03.A3"
+   ],
+   "artifact": "docs/delivery/reports/m10/wave4f/readiness.md",
+   "method": "Requirements review, final round (after M6A's section), at 45a17b3 (readiness.md): M10-01 to M10-03 re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and the M6B plan it takes as an input (re-bound in this round first); no conflict or gap; the line round three found failing carries the plan's own workaround; note 2's CI entry is the coordinator's from 2026-11-28, note 4's report the owner's."
+  },
+  {
+   "id": "W4F-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-01.A1",
+    "M10-02.A1",
+    "M10-02.A2",
+    "M10-03.A2"
+   ],
+   "artifact": "docs/delivery/reports/wave4f/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 45a17b3's source on this Windows 11 workstation (offscreen Qt, the shared venv, a CHATMON_INSTANCE of its own), which runs every test these criteria's earlier receipts named: 1259 passed, 179 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. tests/test_requirements.py (M10-01.A1), tests/test_packaging.py and tests/test_i18n.py (M10-02.A1 and A2) and every signal test (M10-03.A2) are among them, as in the plan's E-suite and E-qt-translations. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-BEH-LOCKS",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-01.A1"
+   ],
+   "artifact": "docs/delivery/reports/m10/wave4f/locks.log",
+   "command": [
+    "C:/Program Files/Git/usr/bin/bash.exe",
+    "docs/delivery/reports/wave4f/run-locks.sh"
+   ],
+   "exit_code": 0,
+   "method": "The plan's E-locks again on 45a17b3: uv 0.12.7 locked requirements-test.in and requirements-dev.in again in a scratch copy of packaging/ with the command the locks' headers record (--exclude-newer 2026-10-31), and both came out byte for byte the committed locks; the five files are unchanged since 45a17b3; then tests/test_requirements.py passed, exit 0 (locks.log, sections 1-3)."
+  },
+  {
+   "id": "W4F-BEH-UIA-CI-VENV",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-01.A2"
+   ],
+   "artifact": "docs/delivery/reports/m10/wave4f/uia-ci-venv.log",
+   "command": [
+    "C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-rs",
+    "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+   ],
+   "exit_code": 0,
+   "method": "The plan's E-uia-ci-venv again on 45a17b3: in the venv made from packaging/requirements-test.txt with --require-hashes (%TEMP%/m10-ci-test, comtypes 1.4.17, as CI's Windows legs), the UI Automation end-to-end test ran, not skipped, and passed: a client in another process heard the announcement."
+  },
+  {
+   "id": "W4F-BEH-MYPY-611",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "artifact": "docs/delivery/reports/m10/wave4f/mypy-611.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "docs/delivery/reports/m10/mypy_runs.py",
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "docs/delivery/reports/m10/wave4f/mypy-611.log"
+   ],
+   "exit_code": 0,
+   "method": "mypy 2.4.1 --platform linux, win32 and darwin on 45a17b3's tree with the shared venv's PyQt6 6.11 stubs (M10's mypy_runs.py): no issues in 70 files on each, no module exempted."
+  },
+  {
+   "id": "W4F-BEH-MYPY-6121",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "artifact": "docs/delivery/reports/m10/wave4f/mypy-6121.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "docs/delivery/reports/m10/mypy_runs.py",
+    "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+    "docs/delivery/reports/m10/wave4f/mypy-6121.log"
+   ],
+   "exit_code": 0,
+   "method": "mypy 2.4.1 --platform linux, win32 and darwin on 45a17b3's tree with the throwaway venv's PyQt6 6.12.1 stubs (%TEMP%/m10-qt6121), through M10's mypy_runs.py: 'Success: no issues found in 70 source files' on each, layer.py and penguin.py included (integration note 1, the wayland worker's 964510f) and app.py too, whose removeEventFilter(self), round three's one error, now carries the arg-type ignore with its reason. No module exempted."
+  },
+  {
+   "id": "W4F-MAN-HOWTO",
+   "kind": "manual",
+   "acceptance": [
+    "M10-03.A3"
+   ],
+   "artifact": "docs/delivery/reports/m10/wave4f/howto-review.md",
+   "method": "Review of CONTRIBUTING.md's how-to for the next stubs and of the integration note's CI entry, line by line, against 45a17b3 and the commands run there (howto-review.md): mypy_runs.py with the 6.12.1 venv here, and CONTRIBUTING.md's five commands replayed as written in WSL Arch on a copy of 45a17b3's tracked files (howto-replay.log). The sentence that mypy also passes with 6.12.1's stubs, false at 45a17b3, is true again."
+  },
+  {
+   "id": "W4F-BEH-CI-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-01.A1",
+    "M10-01.A2"
+   ],
+   "artifact": "docs/delivery/reports/m10/ci/ci-132902559436-test-windows-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43743804662",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132902559436",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43743804662 on 45a17b3, job test (windows-latest, 3.14), which installs packaging/requirements-test.txt with --require-hashes (comtypes 1.4.17 for Windows): tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement ran, not skipped, and passed, as on the 3.11 and 3.15 legs; M4A's note is answered in CI. tests/test_requirements.py's lock tests passed on every leg. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 45a17b3's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-45a17b3.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-BEH-CI-TYPES-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "artifact": "docs/delivery/reports/m10/ci/ci-132902559329-types-linux.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43743804662",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132902559329",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43743804662 on 45a17b3, job types (linux): mypy --platform linux with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W4F-BEH-MYPY-6121, here. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-BEH-CI-TYPES-WIN32",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "artifact": "docs/delivery/reports/m10/ci/ci-132902559380-types-win32.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43743804662",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132902559380",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43743804662 on 45a17b3, job types (win32): mypy --platform win32 with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W4F-BEH-MYPY-6121, here. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-BEH-CI-TYPES-DARWIN",
+   "kind": "behavior",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "artifact": "docs/delivery/reports/m10/ci/ci-132902559239-types-darwin.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43743804662",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132902559239",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43743804662 on 45a17b3, job types (darwin): mypy --platform darwin with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W4F-BEH-MYPY-6121, here. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-01-announcement-not-important",
+   "kind": "red",
+   "acceptance": [
+    "M10-01.A2"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-ci-venv-results.json",
+   "drill": "M10-01-announcement-not-important",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills-ci-venv.log",
+   "method": "Red drill M10-01-announcement-not-important through tests/drills/run.py --python with the CI-shaped venv (m10-ci-test: packaging/requirements-test.txt installed with --require-hashes, comtypes 1.4.17) on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-01-comtypes-left-out-of-the-dev-lock",
+   "kind": "red",
+   "acceptance": [
+    "M10-01.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-01-comtypes-left-out-of-the-dev-lock",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-01-comtypes-left-out-of-the-dev-lock through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-01-comtypes-on-every-platform",
+   "kind": "red",
+   "acceptance": [
+    "M10-01.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-01-comtypes-on-every-platform",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-01-comtypes-on-every-platform through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-02-app-folder-before-qts",
+   "kind": "red",
+   "acceptance": [
+    "M10-02.A2"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-02-app-folder-before-qts",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-02-app-folder-before-qts through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-02-english-carries-qts-english",
+   "kind": "red",
+   "acceptance": [
+    "M10-02.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-02-english-carries-qts-english",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-02-english-carries-qts-english through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-02-frozen-app-folder-never-looked-in",
+   "kind": "red",
+   "acceptance": [
+    "M10-02.A2"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-02-frozen-app-folder-never-looked-in",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-02-frozen-app-folder-never-looked-in through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-02-nuitka-left-without-them",
+   "kind": "red",
+   "acceptance": [
+    "M10-02.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-02-nuitka-left-without-them",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-02-nuitka-left-without-them through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-02-pyinstaller-keeps-every-language",
+   "kind": "red",
+   "acceptance": [
+    "M10-02.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-02-pyinstaller-keeps-every-language",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-02-pyinstaller-keeps-every-language through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-02-translator-only-asks-qt",
+   "kind": "red",
+   "acceptance": [
+    "M10-02.A2"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-02-translator-only-asks-qt",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-02-translator-only-asks-qt through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-M10-03-alias-not-pyqts-signal",
+   "kind": "red",
+   "acceptance": [
+    "M10-03.A2"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/drills-results.json",
+   "drill": "M10-03-alias-not-pyqts-signal",
+   "artifact": "docs/delivery/reports/m10/wave4f/drills.log",
+   "method": "Red drill M10-03-alias-not-pyqts-signal through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-alias-mistyped",
+   "kind": "red",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/gate-drills-results.json",
+   "drill": "alias-mistyped",
+   "artifact": "docs/delivery/reports/m10/wave4f/gate-drills.log",
+   "method": "Red drill alias-mistyped through wave4f/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave4f/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-constructor-untyped",
+   "kind": "red",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/gate-drills-results.json",
+   "drill": "constructor-untyped",
+   "artifact": "docs/delivery/reports/m10/wave4f/gate-drills.log",
+   "method": "Red drill constructor-untyped through wave4f/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave4f/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-null-image-unchecked",
+   "kind": "red",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/gate-drills-results.json",
+   "drill": "null-image-unchecked",
+   "artifact": "docs/delivery/reports/m10/wave4f/gate-drills.log",
+   "method": "Red drill null-image-unchecked through wave4f/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave4f/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-parent-unignored",
+   "kind": "red",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/gate-drills-results.json",
+   "drill": "parent-unignored",
+   "artifact": "docs/delivery/reports/m10/wave4f/gate-drills.log",
+   "method": "Red drill parent-unignored through wave4f/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave4f/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4F-RED-signal-from-qtcore",
+   "kind": "red",
+   "acceptance": [
+    "M10-03.A1"
+   ],
+   "results": "docs/delivery/reports/m10/wave4f/gate-drills-results.json",
+   "drill": "signal-from-qtcore",
+   "artifact": "docs/delivery/reports/m10/wave4f/gate-drills.log",
+   "method": "Red drill signal-from-qtcore through wave4f/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave4f/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  }
+ ],
+ "tasks": {},
+ "pending": [
+  {
+   "id": "P-CI-NEXT-STUBS",
+   "description": "Integration note 2: a CI check of mypy against the next PyQt6's stubs. M10-03 asks for one only if it can be hash-locked like the rest, and under the two-week rule 6.12.1 can be locked from 2026-11-28 (6.12.0, lockable now, has a QtDBus.pyi mypy can't parse). Not a criterion; not passing either.",
+   "next_action": "From 2026-11-28 (the coordinator): packaging/requirements-types-next.in with PyQt6==6.12.1, psutil==7.2.2 and mypy==2.4.1, locked with the documented command; tests/test_requirements.py taught about it; the types job's stubs axis, as the integration note gives it."
+  }
+ ],
+ "next_action": "None in M10's criteria on 45a17b3. From 2026-11-28, the coordinator: the types job's check against PyQt6 6.12.1's stubs (P-CI-NEXT-STUBS, integration note 2). The owner: the upstream report on PyQt6's stubs (note 4), which needs the owner's PyQt mailing-list account.",
+ "source_revision": "45a17b37fb25590a62fe3391379f7c8d2870da29"
+}
