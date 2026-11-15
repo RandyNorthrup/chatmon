@@ -1,0 +1,32 @@
+{
+  "drills": [
+    {
+      "id": "D-03E-hide-kept",
+      "requirement": "AC-03E",
+      "file": "chatmon/wintoast.py",
+      "find": "            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\n            return True\n",
+      "replace": "            return False\n",
+      "test": [
+        "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ],
+      "expect": [
+        "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+        "assert toaster.hide(tag)"
+      ]
+    },
+    {
+      "id": "D-03E-hide-noop",
+      "requirement": "AC-03E",
+      "file": "chatmon/wintoast.py",
+      "find": "            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\n",
+      "replace": "",
+      "test": [
+        "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ],
+      "expect": [
+        "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+        "the hidden toast is still in Action Center"
+      ]
+    }
+  ]
+}

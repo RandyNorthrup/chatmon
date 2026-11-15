@@ -1,0 +1,96 @@
+red drills from /Users/user/chatmon-drills-tmp/specs/m1a/drill-spec.json
+python: /Users/user/chatmon-drills-tmp/venv/bin/python
+copy: /Users/user/chatmon-drills-tmp/tmp/chatmon-drill-5nf03aph
+copied 310 files
+
+=== drill MAC-AC-01-MACOS-writable (M1A-01) on chatmon/updates.py
+command: /Users/user/chatmon-drills-tmp/venv/bin/python -m pytest -q -p no:cacheprovider tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.99s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_mac_an_app_others_could_change_is_never_run_as_root ___________
+
+mac = (<test_install_update.Release object at 0x110906f90>, PosixPath('/Users/user/chatmon-drills-tmp/tmp/pytest-of-user/pyt...e from the release page." >&2\n    exit 3\nfi\n/bin/sh "$d/Chatmon.app/Contents/Resources/install-update" "$d" "$@"\n')
+tmp_path = PosixPath('/Users/user/chatmon-drills-tmp/tmp/pytest-of-user/pytest-1/test_mac_an_app_others_could_c0')
+
+    def test_mac_an_app_others_could_change_is_never_run_as_root(mac, tmp_path):
+        """One file in Chatmon.app that isn't root's alone (here, writable by its group): nothing of the app runs."""
+        release, app, record, run, _root = mac
+        (app / "Contents" / "Resources" / "chatmon" / "ed25519.py").chmod(0o664)
+        out = run(release.package, release.sums, release.sig)
+>       assert out.returncode == 3 and "isn't the system's own" in out.stderr, out
+E       AssertionError: CompletedProcess(args=['/bin/sh', '-c', 'set -eu
+E         PATH=/usr/bin:/bin:/usr/sbin:/sbin
+E         export PATH
+E         umask 077
+E         app=\'/U...st-of-user/pytest-1/test_mac_an_app_others_could_c0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')
+E       assert (0 == 3)
+E        +  where 0 = CompletedProcess(args=['/bin/sh', '-c', 'set -eu\nPATH=/usr/bin:/bin:/usr/sbin:/sbin\nexport PATH\numask 077\napp=\'/U...st-of-user/pytest-1/test_mac_an_app_others_could_c0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='').returncode
+
+tests/test_install_update.py:287: AssertionError
+1 failed in 1.07s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.95s
+
+=== drill MAC-AC-01-MACOS-plan-text (M1A-01) on chatmon/updates.py
+command: /Users/user/chatmon-drills-tmp/venv/bin/python -m pytest -q -p no:cacheprovider tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.83s
+-- red: exit 1
+E                                                                        [100%]
+==================================== ERRORS ====================================
+__ ERROR at setup of test_mac_an_app_others_could_change_is_never_run_as_root __
+
+tmp_path = PosixPath('/Users/user/chatmon-drills-tmp/tmp/pytest-of-user/pytest-4/test_mac_an_app_others_could_c0')
+
+    @pytest.fixture
+    def mac(tmp_path):
+        if sys.platform != "darwin":
+            pytest.skip("macOS's root code: ditto, BSD find, osascript")
+        from chatmon import updates  # Qt, which macOS CI has
+    
+        release = Release(tmp_path / "downloads", "Chatmon-9.0.0-macos-arm64.pkg")
+        record = tmp_path / "record"
+        record.mkdir()
+        app = tmp_path / "Applications" / "Chatmon.app"
+        uid = str(os.getuid())
+        resources = app / "Contents" / "Resources"
+        package_copy(resources, release.public)
+        write(app / "Contents" / "MacOS" / "Chatmon", FAKE_APP.format(ran=tmp_path / "app-ran", python=sys.executable), 0o755)
+        installer = write(tmp_path / "installer", RECORDER.format(record=record), 0o755)
+        write(resources / "install-update", substituted(text(REPO / "packaging" / "macos" / "install-update"), **{
+            '[ "$(id -u)" = 0 ]': f'[ "$(id -u)" = {uid} ]', "installer -pkg": f"{installer} -pkg",
+        }), 0o755)
+        for folder in (app, app / "Contents", app / "Contents" / "MacOS", resources):
+            folder.chmod(0o755)
+>       root = substituted(updates._MACOS_ROOT, **{"app=/Applications/Chatmon.app": f"app='{app}'", "! -user root": f"! -user {uid}"})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_install_update.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+content = 'set -eu\nPATH=/usr/bin:/bin:/usr/sbin:/sbin\nexport PATH\numask 077\napp=\'/Users/user/chatmon-drills-tmp/tmp/pytest-...ne from the release page." >&2\n    exit 3\nfi\n/bin/sh "$d/Chatmon.app/Contents/Resources/install-update" "$d" "$@"\n'
+changes = {'app=/Applications/Chatmon.app': "app='/Users/user/chatmon-drills-tmp/tmp/pytest-of-user/pytest-4/test_mac_an_app_others_could_c0/Applications/Chatmon.app'", '! -user root': '! -user 503'}
+
+    def substituted(content: str, **changes: str) -> str:
+        for old, new in changes.items():
+>           assert content.count(old) >= 1, f"{old!r} isn't in the script any more"
+E           AssertionError: '! -user root' isn't in the script any more
+E           assert 0 >= 1
+E            +  where 0 = <built-in method count of str object at 0x7f7f12fac1e0>('! -user root')
+E            +    where <built-in method count of str object at 0x7f7f12fac1e0> = 'set -eu\nPATH=/usr/bin:/bin:/usr/sbin:/sbin\nexport PATH\numask 077\napp=\'/Users/user/chatmon-drills-tmp/tmp/pytest-...ne from the release page." >&2\n    exit 3\nfi\n/bin/sh "$d/Chatmon.app/Contents/Resources/install-update" "$d" "$@"\n'.count
+
+tests/test_install_update.py:43: AssertionError
+1 error in 0.80s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.81s
+
+=== summary
+PASS MAC-AC-01-MACOS-writable
+PASS MAC-AC-01-MACOS-plan-text

@@ -1,0 +1,26 @@
+ProductName:		macOS
+ProductVersion:		15.7.9
+BuildVersion:		24G830
+machine: x86_64
+kernel: 24.6.0
+python: 3.13.7 (main, Aug 14 2025, 11:12:11) [Clang 17.0.0 (clang-1700.0.13.3)]
+base python: /usr/local/Cellar/python@3.13/3.13.7/Frameworks/Python.framework/Versions/3.13/bin/python3.13
+pyqt6: 6.11.0 built for qt: 6.11.0 qt: 6.11.2
+pytest 9.2.0
+coverage==7.17.0
+hypothesis==6.170.14
+iniconfig==2.3.1
+packaging==26.3
+pip==25.2
+pluggy==1.7.0
+psutil==7.2.2
+Pygments==2.21.0
+PyQt6==6.11.0
+PyQt6-Qt6==6.11.2
+PyQt6_sip==13.13.0
+pytest==9.2.0
+pytest-timeout==2.4.0
+sortedcontainers==2.4.0
+tzdata==2026.6
+git version 2.50.1 (Apple Git-155)
+launchd session: Background

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "MAC-00C-linux-import-sound",
+    "requirement": "AC-00C",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "import wave\nfrom collections.abc import Callable, Mapping, Sequence\n",
+      "replace": "import wave\nfrom select import epoll  # Linux's alone\nfrom collections.abc import Callable, Mapping, Sequence\n"
+    },
+    "command": [
+      "/Users/user/chatmon-drills-tmp/venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_m4b_imports.py::test_it_imports_here"
+    ],
+    "expected": [
+      "test_it_imports_here[sound]",
+      "cannot import name 'epoll' from 'select'",
+      "1 failed, 7 passed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "e01e025abb7f353ffa30ad974dad41da33ede43ae02ca12f5fbfb7a0c0ef326e",
+    "mutated_exit": 1,
+    "observed": "_________________________ test_it_imports_here[sound] __________________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "MAC-01D-conflict-unreported",
+    "requirement": "AC-01D",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "        if status == self.HOT_KEY_EXISTS:\n            return _(CONFLICT).format(combo=combo.text())\n",
+      "replace": "        if status == self.HOT_KEY_EXISTS:\n            return None\n"
+    },
+    "command": [
+      "/Users/user/chatmon-drills-tmp/venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had"
+    ],
+    "expected": [
+      "tests/test_hotkey.py:281: AssertionError",
+      "assert None == 'Ctrl+Alt+Shift+F18 is already used by another app. Pick another shortcut.'",
+      "1 failed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "24d127b2a5203af8c998a64804ea4c1bad103e3fc5c3c5d2bd8023af83635b85",
+    "mutated_exit": 1,
+    "observed": "E           AssertionError: assert None == 'Ctrl+Alt+Shift+F18 is already used by another app. Pick another shortcut.'",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "MAC-02F-volume-unset",
+    "requirement": "AC-02F",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "        self._set_float(sound, self._sel(\"setVolume:\"), volume)\n",
+      "replace": ""
+    },
+    "command": [
+      "/Users/user/chatmon-drills-tmp/venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_nssound_plays_at_the_volume"
+    ],
+    "expected": [
+      "tests/test_sound.py:267: AssertionError",
+      "== 0.5 \u00b1",
+      "1 failed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "ed10909ccc85a800f8e0822cb8bc86a2f6f531425d48ec1f49bfa2cd0e4315c8",
+    "mutated_exit": 1,
+    "observed": "E       assert 1.0 == 0.5 \u00b1 5.0e-07",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  }
+]

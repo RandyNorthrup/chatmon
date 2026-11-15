@@ -1,0 +1,5 @@
+
+=== summary
+FAIL MAC-AC-01-MACOS-writable: mutated run did not print ['FAILED tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root']
+FAIL MAC-AC-01-MACOS-plan-text: mutated run did not print ['ERROR tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root']
+harness exit 1

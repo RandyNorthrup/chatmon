@@ -1,0 +1,64 @@
+[
+  {
+    "id": "D-03E-hide-kept",
+    "requirement": "AC-03E",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\n            return True\n",
+      "replace": "            return False\n"
+    },
+    "command": [
+      "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+    ],
+    "expected": [
+      "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+      "assert toaster.hide(tag)"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "2c4e4d7e0b14cdfa09d2172957560dd91f6eb30c17497d09ab5b520c32957c0d",
+    "mutated_exit": 1,
+    "observed": "_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03E-hide-noop",
+    "requirement": "AC-03E",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\n",
+      "replace": ""
+    },
+    "command": [
+      "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+    ],
+    "expected": [
+      "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+      "the hidden toast is still in Action Center"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "9e6561d48b2544819e3bb8525baf47c699f1c6d53862e74a7317c3b7fd2011ab",
+    "mutated_exit": 1,
+    "observed": "_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  }
+]
