@@ -1,0 +1,138 @@
+"""Which way brings Chatmon forward when `chatmon ask` comes from a script or a launcher, on this macOS? For Chatmon run
+from source (as `python -m chatmon`) and for the installed Chatmon.app: with Finder in front, `chatmon ask`, then one
+way of bringing it forward from another process (activate_try.py), then which app is frontmost. No screen reader.
+
+usage: study_activation.py OUT_DIR SOURCE_TREE SHIM TRY_SCRIPT FRONT_SCRIPT
+Which app is in front is asked three ways: AppKit from a fresh process (NSWorkspace frontmostApplication),
+LaunchServices (`lsappinfo front`) and System Events; and a screenshot shows whose menu bar it is.
+"""
+
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+OUT, SRC, SHIM, TRY, FRONT_PY = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]), Path(sys.argv[4]), Path(sys.argv[5])
+SHORTCUT = 'tell application "System Events" to key code 49 using {command down, shift down}'  # Chatmon's Ctrl+Shift+Space
+OUT.mkdir(parents=True, exist_ok=True)
+PY = sys.executable
+APP = "/Applications/Chatmon.app"
+CLI = "/Applications/Chatmon.app/Contents/MacOS/Chatmon"  # what /usr/local/bin/chatmon links to, where the .pkg can add it
+FRONT = ('tell application "System Events"\nset p to first application process whose frontmost is true\n'
+         'return (name of p) & " " & (unix id of p)\nend tell')
+log = open(OUT / "study.log", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+results: list[dict] = []
+
+
+def note(text: str) -> None:
+    line = time.strftime("%H:%M:%S ", time.gmtime()) + text
+    print(line, flush=True)
+    log.write(line + "\n")
+
+
+def osa(script: str) -> str:
+    r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=20)
+    return r.stdout.strip() if r.returncode == 0 else f"? {r.stderr.strip()}"
+
+
+def front() -> str:
+    return osa(FRONT)
+
+
+def appkit_front() -> str:
+    r = subprocess.run([PY, str(FRONT_PY)], capture_output=True, text=True, timeout=30)
+    return r.stdout.strip() or r.stderr.strip()
+
+
+def ls_front() -> str:
+    asn = subprocess.run(["lsappinfo", "front"], capture_output=True, text=True, timeout=10).stdout.strip()
+    info = subprocess.run(["lsappinfo", "info", "-only", "name", asn], capture_output=True, text=True, timeout=10).stdout.strip()
+    return f"{asn} {info}"
+
+
+def sh(args: list[str], timeout: float = 60) -> str:
+    r = subprocess.run(args, capture_output=True, text=True, timeout=timeout, cwd=SRC)
+    out = (r.stdout + r.stderr).strip().replace("\n", " | ")
+    note(f"$ {' '.join(args)} -> {r.returncode}{': ' + out if out else ''}")
+    return out
+
+
+def reset(pid: int) -> None:
+    """Chatmon's ask box closed and Finder in front."""
+    if appkit_front().split()[:1] != [str(pid)]:
+        osa(f'tell application "System Events" to set frontmost of (first application process whose unix id is {pid}) to true')
+        time.sleep(1.5)
+    osa('tell application "System Events" to key code 53')
+    time.sleep(1)
+    osa('tell application "Finder" to activate')
+    time.sleep(2.5)
+
+
+def trials(kind: str, pid: int, ask: list[str], methods: list[str]) -> None:
+    for method in methods:
+        for attempt in (1, 2):
+            reset(pid)
+            before = front()
+            if method == "shortcut":
+                osa(SHORTCUT)
+                note("pressed Cmd+Shift+Space (System Events)")
+            else:
+                sh(ask)
+            if method not in ("none", "shortcut"):
+                sh([PY, str(TRY), method, str(pid)])
+            time.sleep(2.5)
+            after = front()
+            appkit, launch_services = appkit_front(), ls_front()
+            subprocess.run(["screencapture", "-x", str(OUT / f"screen-{kind}-{method}-{attempt}.png")], capture_output=True, timeout=30)
+            pythons = sh(["pgrep", "-fl", "Python|python|Chatmon"])
+            entry = {"kind": kind, "method": method, "attempt": attempt, "front_before": before, "front_after": after,
+                     "appkit_front": appkit, "launchservices_front": launch_services,
+                     "chatmon_frontmost": appkit.split()[:1] == [str(pid)], "system_events_says_chatmon": str(pid) in after.split()[-1:],
+                     "processes": pythons}
+            results.append(entry)
+            note(f"RESULT {kind} {method} #{attempt}: AppKit front {appkit!r}; LaunchServices {launch_services!r}; System Events {after!r}; "
+                 f"Chatmon frontmost (AppKit): {entry['chatmon_frontmost']}")
+
+
+def wait_running(cli: list[str]) -> None:
+    for _ in range(90):
+        r = subprocess.run([*cli, "status"], capture_output=True, text=True, timeout=60, cwd=SRC)
+        if r.stdout.startswith("Chatmon is running."):
+            return
+        time.sleep(1)
+
+
+def main() -> int:
+    note(f"study on {sh(['sw_vers', '-productVersion'])}")
+    # From source, through the probe's shim (Chatmon unchanged).
+    env = dict(os.environ, PROBE_SRC=str(SRC), PROBE_TRACE=str(OUT / "trace-source.jsonl"))
+    with open(OUT / "source-stdout.log", "w", encoding="utf-8") as console:
+        app = subprocess.Popen([PY, str(SHIM)], cwd=SRC, env=env, stdout=console, stderr=subprocess.STDOUT)
+    wait_running([PY, "-m", "chatmon"])
+    time.sleep(8)
+    starts = [json.loads(line) for line in (OUT / "trace-source.jsonl").read_text(encoding="utf-8").splitlines()]
+    pid = next(e["pid"] for e in starts if e["event"] == "start")
+    note(f"source Chatmon pid {pid} (launcher {app.pid})")
+    trials("source", pid, [PY, "-m", "chatmon", "ask"], ["none", "shortcut", "options", "workspace"])
+    sh([PY, "-m", "chatmon", "quit"])
+    app.wait(30)
+    time.sleep(3)
+    # The installed Chatmon.app, started as a person starts it.
+    if Path(APP).exists():
+        sh(["/usr/bin/open", "-a", APP])
+        wait_running([CLI])
+        time.sleep(8)
+        pid = int(subprocess.run(["pgrep", "-n", "-f", f"{APP}/Contents/MacOS/Chatmon"], capture_output=True, text=True).stdout.split()[0])
+        note(f"bundled Chatmon pid {pid}")
+        trials("bundle", pid, [CLI, "ask"], ["none", "shortcut", "options", "from-current", "workspace", "open-a"])
+        sh([CLI, "quit"])
+    (OUT / "results.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    for r in results:
+        note(f"{r['kind']:6} {r['method']:12} #{r['attempt']}: Chatmon frontmost {r['chatmon_frontmost']}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

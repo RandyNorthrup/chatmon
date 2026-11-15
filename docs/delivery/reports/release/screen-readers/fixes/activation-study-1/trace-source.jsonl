@@ -1,0 +1,23 @@
+{"t": 1794780730.824, "event": "start", "pid": 6920, "platform": "darwin", "python": "3.14.10"}
+{"t": 1794780736.141, "event": "reader", "found": null}
+{"t": 1794780747.905, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780752.956, "event": "focus", "widget": null}
+{"t": 1794780756.886, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780761.411, "event": "focus", "widget": null}
+{"t": 1794780765.314, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780768.337, "event": "focus", "widget": null}
+{"t": 1794780772.315, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780775.572, "event": "focus", "widget": null}
+{"t": 1794780779.621, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780782.971, "event": "focus", "widget": null}
+{"t": 1794780786.944, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780790.271, "event": "focus", "widget": null}
+{"t": 1794780794.343, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780799.56, "event": "focus", "widget": null}
+{"t": 1794780803.586, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780808.714, "event": "focus", "widget": null}
+{"t": 1794780812.614, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780815.678, "event": "focus", "widget": null}
+{"t": 1794780819.593, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794780822.538, "event": "focus", "widget": null}
+{"t": 1794780822.573, "event": "exit", "code": 0}

@@ -1,0 +1,454 @@
+diff --git a/chatmon/a11y.py b/chatmon/a11y.py
+index 6220c2a..1ec776a 100644
+--- a/chatmon/a11y.py
++++ b/chatmon/a11y.py
+@@ -13,9 +13,10 @@ notifications; Orca reads GNOME's). `announce()` picks.
+   still keeps it (before 2.62), GNOME's screen-reader-enabled setting, or its own process, and the notification
+   says it (linuxsession.ScreenReaders, which hears each without waiting).
+ - macOS, VoiceOver: NSAccessibilityAnnouncementRequestedNotification, posted on the app. VoiceOver speaks it for
+-  the app in front (with the chat open, Chatmon is); from the background it may stay silent. So while Chatmon
+-  isn't in front, announcements wait (the last few) and are said when you come to it; or, if you chose it
+-  (`set_speech_fallback`), macOS's own voice says them at once.
++  the app in front (with the chat open, Chatmon is); from the background it may stay silent, and it drops one
++  that comes while it moves to Chatmon. So while Chatmon isn't in front, announcements wait (the last few) and are
++  said a moment after you come to it; or, if you chose it (`set_speech_fallback`), macOS's own voice says them at
++  once.
+   https://developer.apple.com/documentation/appkit/nsaccessibility-swift.struct/notification/announcementrequested
+ - Windows: UI Automation's notification event (winuia.py) while Chatmon is in front; NVDA ignores those from apps
+   in the background, so then the notification. https://github.com/nvaccess/nvda/blob/master/source/NVDAObjects/UIA/__init__.py
+@@ -27,10 +28,11 @@ import ctypes
+ import logging
+ import re
+ import sys
++import time
+ from collections.abc import Callable
+ from dataclasses import dataclass
+ 
+-from PyQt6.QtCore import QCoreApplication, QObject, QProcess, Qt
++from PyQt6.QtCore import QCoreApplication, QObject, QProcess, Qt, QTimer
+ 
+ from .i18n import _, either
+ 
+@@ -227,10 +229,18 @@ def set_speech_fallback(on: bool) -> None:
+ 
+ class VoiceOver(QObject):
+     """Announcements for VoiceOver: posted at once while Chatmon is the active app; otherwise held (the last
+-    `HELD`) and posted together when it becomes active, or, with the speech fallback on, said by `say` at once.
++    `HELD`) and posted together SETTLE_MS after it becomes active, or, with the speech fallback on, said by `say`
++    at once. VoiceOver drops an announcement that comes while it moves to an app that has just become active (or
++    just started): on macOS 26.7, every one posted at that moment, or a second after, went unsaid, and each posted
++    2.5 s after was said. So what's held, and what's said in that first moment, waits until then.
+     `post`, `active` and `speak` are AppKit's announcement, Qt's application state and macOS's `say` command."""
+ 
+     HELD = 5
++    # From Chatmon becoming active (or starting active) to VoiceOver taking its announcements. Measured with VoiceOver
++    # itself (docs/delivery/reports/release/screen-readers): at 1 s it still dropped them, at 2.5 s and 4 s it said
++    # every one. AppKit has no word for when VoiceOver has finished announcing the newly active window (no
++    # counterpart of iOS's UIAccessibilityAnnouncementDidFinishNotification), so it's a time.
++    SETTLE_MS = 2500
+ 
+     def __init__(self, post: Callable[[str, bool], None] | None = None, active: Callable[[], bool] | None = None,
+                  speak: Callable[[str], None] | None = None):
+@@ -243,20 +253,43 @@ class VoiceOver(QObject):
+         self.held: list[tuple[str, bool]] = []
+         self._voice: QProcess | None = None
+         self._to_say: list[str] = []
++        self._settled_at: float | None = time.monotonic() + self.SETTLE_MS / 1000 if self._active() else None
++        self._settle = QTimer(self)
++        self._settle.setSingleShot(True)
++        self._settle.timeout.connect(self._post_held)
+         app: QCoreApplication | None = QGuiApplication.instance()
+         if isinstance(app, QGuiApplication):  # only a GUI application has a state (and Chatmon's always is one)
+             app.applicationStateChanged.connect(self.state_changed)
+ 
+     def say(self, text: str, important: bool = False) -> None:
+-        if self._active():
++        wait = self._settling_ms()
++        if self._active() and not wait:
+             self._post(text, important)
++        elif self._active():  # just became active: VoiceOver would drop it yet
++            self.held = [*self.held, (text, important)][-self.HELD:]
++            self._settle.start(wait)
+         elif _speech_fallback:
+             self._speak(text)
+         else:
+             self.held = [*self.held, (text, important)][-self.HELD:]
+ 
+     def state_changed(self, state) -> None:
+-        if state == Qt.ApplicationState.ApplicationActive and self.held:
++        if state == Qt.ApplicationState.ApplicationActive:
++            self._settled_at = time.monotonic() + self.SETTLE_MS / 1000
++            if self.held:
++                self._settle.start(self.SETTLE_MS)
++        else:
++            self._settled_at = None
++            self._settle.stop()
++
++    def _settling_ms(self) -> int:
++        """How long until VoiceOver takes Chatmon's announcements (0: it does now)."""
++        if self._settled_at is None:
++            return 0
++        return max(0, round((self._settled_at - time.monotonic()) * 1000))
++
++    def _post_held(self) -> None:
++        if self.held and self._active():
+             held, self.held = self.held, []
+             self._post(" ".join(text for text, _ in held), any(important for _, important in held))
+ 
+diff --git a/chatmon/bubble.py b/chatmon/bubble.py
+index 9386aed..661d1b8 100644
+--- a/chatmon/bubble.py
++++ b/chatmon/bubble.py
+@@ -1030,6 +1030,9 @@ class AskBox(QWidget):
+         self.attach_button.clicked.connect(lambda: self.attach_requested.emit(self._below(self.attach_button)))
+         row.addWidget(self.attach_button, 0, Qt.AlignmentFlag.AlignBottom)
+         self.entry = Entry()
++        # VoiceOver lands on the title first, and with "keyboard focus follows the VoiceOver cursor" (on by default) its
++        # focus would leave the field, so what you type went nowhere (macOS 26.7, with the shortcut): the title passes it on.
++        self.title.setFocusProxy(self.entry)
+         self.entry.returnPressed.connect(self._submit)
+         self.entry.paste_requested.connect(self.paste_clipboard)
+         self.entry.resized.connect(self._refit)
+diff --git a/chatmon/cli.py b/chatmon/cli.py
+index 151b693..15585fb 100644
+--- a/chatmon/cli.py
++++ b/chatmon/cli.py
+@@ -137,7 +137,27 @@ def remind(args: list[str]) -> int:
+ def ask(args: list[str]) -> int:
+     """Open the running chatmon's ask box with `args` typed in, ready to type more (a hotkey, a launcher)."""
+     _let_chatmon_come_forward()
+-    return _send({"type": "ask", "text": " ".join(args)})
++    sent = _send({"type": "ask", "text": " ".join(args)})
++    if sent == 0:
++        _make_chatmon_active()
++    return sent
++
++
++def _make_chatmon_active() -> bool:
++    """macOS 14 and later activate apps cooperatively: Chatmon, opening its ask box on a script's or a launcher's
++    word, isn't let make itself the active app (the request isn't the person's own input), so the keyboard stayed
++    with the app you were in, and VoiceOver kept holding what Chatmon said. This command, run from that app, asks
++    for it instead, once the box is open, by the running Chatmon's process id (its answer to `status`): that's
++    taken, from source and as Chatmon.app (macOS 26.7). Elsewhere there's nothing to do. True if macOS took it."""
++    if sys.platform != "darwin":
++        return False
++    reply = events.request({"type": "status"}, timeout=1.0)
++    pid = reply.get("pid") if reply else None
++    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
++        return False  # a Chatmon too old to say its id
++    from . import macnative
++
++    return macnative.activate_app(pid)
+ 
+ 
+ def _let_chatmon_come_forward() -> bool:
+diff --git a/chatmon/clickthrough.py b/chatmon/clickthrough.py
+index 1d24983..c96efea 100644
+--- a/chatmon/clickthrough.py
++++ b/chatmon/clickthrough.py
+@@ -138,6 +138,9 @@ class MacPointerToggle(PointerToggle):
+ 
+ GWL_EXSTYLE = -20
+ WS_EX_TRANSPARENT = 0x20  # on a layered window: every click goes through it, to the window below
++# A window property Explorer reads before it counts a window as a full-screen app (a "rude" window): with it set,
++# the window isn't one.
++NON_RUDE = "NonRudeHWND"
+ _WinDLL = getattr(ctypes, "WinDLL", ctypes.CDLL)  # Windows' own loader; ctypes has it only there
+ 
+ 
+@@ -150,7 +153,13 @@ class WindowsPointerToggle(PointerToggle):
+     moment. Windows throws away a layered window's picture when it does, and the
+     stage only redraws what changed, so the next frame put up just that patch:
+     the chatmon vanished, and since a layered window lets clicks through
+-    wherever it's transparent, it couldn't be clicked either."""
++    wherever it's transparent, it couldn't be clicked either.
++
++    It also marks the window NonRudeHWND. The stage is a topmost window over the
++    whole monitor, which Explorer otherwise takes for a full-screen app: for as
++    long as Chatmon ran, Windows said it was busy (SHQueryUserNotificationState's
++    QUNS_BUSY), so Chatmon held its own bubbles back and Windows showed no
++    notification banners, Chatmon's or any other app's."""
+ 
+     def __init__(self, widget: QWidget):
+         super().__init__(widget)
+@@ -159,12 +168,17 @@ class WindowsPointerToggle(PointerToggle):
+         self._get_style.restype, self._get_style.argtypes = ctypes.c_ssize_t, [ctypes.c_void_p, ctypes.c_int]
+         self._set_style = user32.SetWindowLongPtrW
+         self._set_style.restype, self._set_style.argtypes = ctypes.c_ssize_t, [ctypes.c_void_p, ctypes.c_int, ctypes.c_ssize_t]
++        self._set_prop = user32.SetPropW
++        self._set_prop.restype, self._set_prop.argtypes = ctypes.c_int, [ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_void_p]
++        self._not_rude = 0  # the native window marked NonRudeHWND
+         self._accept(False)  # the window covers the screen: clicks go through it from the start
+ 
+     def _accept(self, accepting: bool) -> None:
+         # The style is read every frame, not remembered: if Qt ever sets the window's styles again, the
+         # next frame puts this one back.
+         hwnd = int(self._widget.winId())
++        if hwnd and hwnd != self._not_rude and self._set_prop(hwnd, NON_RUDE, 1):  # a new native window: marked too
++            self._not_rude = hwnd
+         style = self._get_style(hwnd, GWL_EXSTYLE)
+         wanted = style & ~WS_EX_TRANSPARENT if accepting else style | WS_EX_TRANSPARENT
+         if style and wanted != style:
+diff --git a/chatmon/macnative.py b/chatmon/macnative.py
+index 955cf2b..16573f6 100644
+--- a/chatmon/macnative.py
++++ b/chatmon/macnative.py
+@@ -6,7 +6,8 @@
+   https://developer.apple.com/documentation/appkit/nswindow/collectionbehavior-swift.struct
+ - Clicks through the stage are switched with setIgnoresMouseEvents: rather than a Qt window flag, which has
+   Qt set up the whole window again each time.
+-- Chatmon becomes the active app only when you open the ask box, never when a bubble shows.
++- Chatmon becomes the active app only when you open the ask box, never when a bubble shows; `chatmon ask` from a
++  script or launcher asks for it from its own process (activate_app), which macOS 14 and later take.
+ - Whether a full-screen app is over the chatmon's screen, from CoreGraphics' window list: bounds, layers and
+   owners only, which need no Screen Recording permission (titles and contents would).
+ - Starting at login as a login item of its own (SMAppService), not an unattributed LaunchAgent.
+@@ -140,6 +141,25 @@ def activate() -> None:
+         rt.set_bool(app, rt.sel("activateIgnoringOtherApps:"), True)
+ 
+ 
++ACTIVATE_ALL_WINDOWS, ACTIVATE_IGNORING_OTHER_APPS = 1 << 0, 1 << 1  # NSApplicationActivationOptions
++
++
++def activate_app(pid: int) -> bool:
++    """Make the app with process id `pid` the active one, asked from another process: what `chatmon ask` does for
++    the Chatmon running, which macOS 14's cooperative activation won't let make itself active on a script's word.
++    NSRunningApplication's activateWithOptions:, asked from the command's process, is taken (checked on macOS 26.7,
++    for Chatmon from source and as Chatmon.app, an accessory app). True if macOS said it would."""
++    rt = _rt()
++    if rt is None:
++        return False
++    find = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int)(rt.send)
++    app = find(rt.cls("NSRunningApplication"), rt.sel("runningApplicationWithProcessIdentifier:"), pid)
++    if not app:
++        return False
++    activate = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong)(rt.send)
++    return bool(activate(app, rt.sel("activateWithOptions:"), ACTIVATE_ALL_WINDOWS | ACTIVATE_IGNORING_OTHER_APPS))
++
++
+ # -- What's on screen: CoreGraphics' window list, each window's owner, layer, bounds and whether it's on screen.
+ #    https://developer.apple.com/documentation/coregraphics/cgwindowlistcopywindowinfo(_:_:)
+ 
+diff --git a/tests/test_ask_box.py b/tests/test_ask_box.py
+index 60b276e..7a9433e 100644
+--- a/tests/test_ask_box.py
++++ b/tests/test_ask_box.py
+@@ -83,6 +83,17 @@ def test_every_control_shows_a_focus_outline(box, name):
+         assert ring(box, control, focus) == 4, f"{what} shows its focus ({name})"
+ 
+ 
++def test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field(box):
++    """VoiceOver's cursor lands on the title first and, with "keyboard focus follows the VoiceOver cursor", gives the
++    title the focus: typing must still reach the field."""
++    open_chat(box, activate=True)
++    box.activateWindow()
++    spin(0.05)
++    box.title.setFocus(Qt.FocusReason.OtherFocusReason)
++    spin(0.01)
++    assert QApplication.focusWidget() is box.entry  # the title "has" it only through its proxy
++
++
+ @pytest.mark.parametrize("name", STYLES)
+ def test_the_focus_colour_stands_out_from_the_bubble(qapp, name):
+     c = styles.get(name).colours()
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index 3936a20..000f78d 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -108,6 +108,33 @@ def test_on_windows_ask_lets_only_chatmon_come_forward_before_sending(sent, monk
+     assert order == [("allow", cli.ASFW_ANY), ("send", "ask")]
+ 
+ 
++def test_on_macos_ask_makes_chatmon_the_active_app_once_the_box_is_open(sent, monkeypatch):
++    """macOS 14 and later won't let Chatmon make itself active on a script's or launcher's word (cooperative
++    activation): the command asks for it, after the box is open, by the process id Chatmon answers with."""
++    from chatmon import macnative
++
++    order = []
++    monkeypatch.setattr(sys, "platform", "darwin")
++    monkeypatch.setattr(events, "send", lambda message, timeout=0.5: order.append(("send", message["type"])) or True)
++    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: order.append(("ask", message["type"])) or {"type": "status", "pid": 4242})
++    monkeypatch.setattr(macnative, "activate_app", lambda pid: order.append(("activate", pid)) or True)
++    assert cli.main(["ask", "hello"]) == 0
++    assert order == [("send", "ask"), ("ask", "status"), ("activate", 4242)]
++    order.clear()
++    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: order.append(("ask", message["type"])) or None)  # too old to say
++    assert cli.main(["ask", "hello"]) == 0
++    assert order == [("send", "ask"), ("ask", "status")]  # nothing to activate by
++    order.clear()
++    monkeypatch.setattr(events, "send", lambda message, timeout=0.5: order.append(("send", message["type"])) and False)
++    assert cli.main(["ask", "hello"]) == 1
++    assert order == [("send", "ask")]  # not running: nothing more
++
++
++def test_making_chatmon_active_is_macos_only_and_never_fails():
++    made = cli._make_chatmon_active()  # the real call: on macOS, whether it took depends on a Chatmon running
++    assert isinstance(made, bool) and (made is False or sys.platform == "darwin")
++
++
+ def test_letting_chatmon_come_forward_is_windows_only_and_never_fails():
+     allowed = cli._let_chatmon_come_forward()  # the real call, on Windows: whether it took depends on the desktop
+     assert isinstance(allowed, bool) and (allowed is False or sys.platform == "win32")
+diff --git a/tests/test_clickthrough.py b/tests/test_clickthrough.py
+index 8228155..2396660 100644
+--- a/tests/test_clickthrough.py
++++ b/tests/test_clickthrough.py
+@@ -86,6 +86,31 @@ def test_clicks_go_through_from_the_start(qapp, user32, hwnd):
+     assert style(user32, hwnd) == WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST | clickthrough.WS_EX_TRANSPARENT
+ 
+ 
++@windows_only
++def test_the_stage_isnt_taken_for_a_full_screen_app(qapp, user32, hwnd):
++    """The stage covers the whole monitor and stays on top: Explorer counted it as a full-screen app, so Windows said
++    it was busy (QUNS_BUSY) for as long as Chatmon ran, holding Chatmon's bubbles back and hiding every app's
++    notification banners. NonRudeHWND tells Explorer it isn't one."""
++    user32.GetPropW.restype, user32.GetPropW.argtypes = ctypes.c_void_p, [ctypes.c_void_p, ctypes.c_wchar_p]
++    clickthrough.WindowsPointerToggle(Widget(hwnd))
++    assert user32.GetPropW(hwnd, "NonRudeHWND") == 1
++
++
++@windows_only
++def test_a_new_native_window_is_marked_too(qapp, user32, hwnd):
++    """Qt can give the stage a new native window (a screen of another scale, say): it's marked on the next frame."""
++    user32.GetPropW.restype, user32.GetPropW.argtypes = ctypes.c_void_p, [ctypes.c_void_p, ctypes.c_wchar_p]
++    first = user32.CreateWindowExW(WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST, "STATIC", "chatmon test", WS_POPUP, 0, 0, 64, 64, None, None, None, None)
++    widget = Widget(first)
++    try:
++        toggle = clickthrough.WindowsPointerToggle(widget)
++        widget.hwnd = hwnd  # as winId() answers after Qt made the window again
++        toggle.follow_pointer(lambda pos: NOWHERE)
++        assert user32.GetPropW(hwnd, "NonRudeHWND") == 1
++    finally:
++        user32.DestroyWindow(first)
++
++
+ @windows_only
+ def test_takes_the_mouse_only_over_the_chatmon_and_keeps_the_window_layered(qapp, user32, hwnd):
+     toggle = clickthrough.WindowsPointerToggle(Widget(hwnd))
+diff --git a/tests/test_macnative.py b/tests/test_macnative.py
+index 8129a32..1310023 100644
+--- a/tests/test_macnative.py
++++ b/tests/test_macnative.py
+@@ -26,6 +26,14 @@ def test_app_nap_is_held_off_so_timers_keep_their_time():
+     assert macnative.keep_time("again") and macnative._activity == held  # the first one is kept
+ 
+ 
++def test_activating_an_app_by_its_process_id_answers_and_never_raises():
++    """`chatmon ask`'s way of making the running Chatmon active (cli._make_chatmon_active): AppKit is asked for the
++    app by its process id; there's none for a process that isn't one, and that's an answer, not an error."""
++    from chatmon import macnative
++
++    assert macnative.activate_app(2**31 - 1) is False  # no such process: no app to activate
++
++
+ def test_the_stage_floats_on_every_space_but_not_in_full_screen_apps(cocoa):
+     from PyQt6.QtCore import Qt
+     from PyQt6.QtWidgets import QWidget
+diff --git a/tests/test_platform_events.py b/tests/test_platform_events.py
+index bfc618d..4634a13 100644
+--- a/tests/test_platform_events.py
++++ b/tests/test_platform_events.py
+@@ -208,11 +208,19 @@ def test_a_ui_automation_client_hears_the_announcement(tmp_path):
+     assert heard and all(h == {"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"} for h in heard), heard  # Other, ImportantAll
+ 
+ 
++def _pump(qapp, seconds: float) -> None:
++    end = time.monotonic() + seconds
++    while time.monotonic() < end:
++        qapp.processEvents()
++        time.sleep(0.01)
++
++
+ def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypatch):
+     from PyQt6.QtCore import Qt
+ 
+     from chatmon import a11y
+ 
++    monkeypatch.setattr(a11y.VoiceOver, "SETTLE_MS", 300, raising=False)
+     active, posted, spoken = [False], [], []
+     queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=spoken.append)
+     for i in range(7):
+@@ -222,13 +230,50 @@ def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypat
+     assert posted == []
+     active[0] = True
+     queue.state_changed(Qt.ApplicationState.ApplicationActive)  # you came to Chatmon
++    _pump(qapp, 0.1)
++    assert posted == []  # VoiceOver is still moving to Chatmon, and would drop it
++    _pump(qapp, 0.4)
+     assert posted == [("Message 2. Message 3. Message 4. Message 5. Message 6.", True)] and queue.held == []
+-    queue.say("Now.", False)  # in front: said at once
++    queue.say("Now.", False)  # in front, and settled: said at once
+     assert posted[-1] == ("Now.", False)
+     queue.state_changed(Qt.ApplicationState.ApplicationActive)  # nothing held: nothing again
++    _pump(qapp, 0.5)
+     assert len(posted) == 2 and spoken == []
+ 
+ 
++def test_voiceover_is_given_the_time_it_was_measured_to_need():
++    """Posted as Chatmon became active, or a second after, VoiceOver dropped every announcement; 2.5 s after, it said
++    each one (macOS 26.7, the screen-reader probe before 0.10.0). Shorter is what it dropped."""
++    from chatmon import a11y
++
++    assert a11y.VoiceOver.SETTLE_MS >= 2500
++
++
++def test_voiceover_waits_after_chatmon_comes_in_front(qapp, monkeypatch):
++    """What's said just as Chatmon becomes active (or starts active) waits until VoiceOver has moved to it; going
++    behind again meanwhile keeps it held."""
++    from PyQt6.QtCore import Qt
++
++    from chatmon import a11y
++
++    monkeypatch.setattr(a11y.VoiceOver, "SETTLE_MS", 300, raising=False)
++    active, posted = [True], []
++    queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=lambda _: None)
++    queue.say("Hi.")  # made while active, as at the start: not yet
++    assert posted == [] and queue.held == [("Hi.", False)]
++    _pump(qapp, 0.5)
++    assert posted == [("Hi.", False)]
++    active[0] = False
++    queue.state_changed(Qt.ApplicationState.ApplicationInactive)
++    active[0] = True
++    queue.state_changed(Qt.ApplicationState.ApplicationActive)
++    queue.say("Agent done.", True)
++    active[0] = False
++    queue.state_changed(Qt.ApplicationState.ApplicationInactive)  # gone again before VoiceOver got there
++    _pump(qapp, 0.5)
++    assert posted == [("Hi.", False)] and queue.held == [("Agent done.", True)]
++
++
+ def test_the_speech_fallback_says_it_at_once_instead(qapp, monkeypatch):
+     from chatmon import a11y
+ 
+diff --git a/tests/test_presence.py b/tests/test_presence.py
+index 1860660..c0b9fc2 100644
+--- a/tests/test_presence.py
++++ b/tests/test_presence.py
+@@ -71,6 +71,27 @@ def test_focus_holds_bubbles_on_windows(monkeypatch):
+     assert desk.quiet() == "a presentation"  # what SHQueryUserNotificationState says comes first
+ 
+ 
++@windows
++def test_a_full_screen_app_still_holds_bubbles_on_windows(monkeypatch):
++    """Windows says busy (QUNS_BUSY) while a full-screen app is in front. Chatmon's own stage no longer makes it say
++    so (it's marked NonRudeHWND, clickthrough.py), so busy is a real full-screen app again: bubbles that come on their
++    own wait for it."""
++    import ctypes
++
++    def busy(state):
++        state._obj.value = 2  # byref(c_int): the int Windows writes
++        return 0
++
++    monkeypatch.setattr(ctypes.windll.shell32, "SHQueryUserNotificationState", busy)
++    assert presence._win_quiet() == "a full-screen app"
++    desk = presence.Desk("windows")
++    try:
++        monkeypatch.setattr(desk, "_win_focus", lambda: False)
++        assert desk.quiet() == "a full-screen app"
++    finally:
++        desk.close()
++
++
+ @macos
+ def test_macos_readings():
+     idle = presence._mac_idle()

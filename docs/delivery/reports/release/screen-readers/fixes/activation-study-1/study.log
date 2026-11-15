@@ -1,0 +1,103 @@
+22:12:10 $ sw_vers -productVersion -> 0: 26.7.2
+22:12:10 study on 26.7.2
+22:12:23 source Chatmon pid 6920 (launcher 6920)
+22:12:27 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:12:30 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:12:30 RESULT source none #1: frontmost 'Finder 336'; Chatmon frontmost: False
+22:12:36 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:12:39 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:12:39 RESULT source none #2: frontmost 'Finder 336'; Chatmon frontmost: False
+22:12:45 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:12:45 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py options 6920 -> 0: app 6920: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | activateWithOptions: -> True | after: active False
+22:12:48 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:12:48 RESULT source options #1: frontmost 'Python 6920'; Chatmon frontmost: True
+22:12:52 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:12:52 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py options 6920 -> 0: app 6920: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | activateWithOptions: -> True | after: active False
+22:12:55 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:12:55 RESULT source options #2: frontmost 'Python 6920'; Chatmon frontmost: True
+22:12:59 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:12:59 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py from-current 6920 -> 0: app 6920: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | activateFromApplication:options: -> True | after: active False
+22:13:02 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:13:02 RESULT source from-current #1: frontmost 'Python 6920'; Chatmon frontmost: True
+22:13:06 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:13:07 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py from-current 6920 -> 0: app 6920: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | activateFromApplication:options: -> True | after: active False
+22:13:09 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:13:09 RESULT source from-current #2: frontmost 'Python 6920'; Chatmon frontmost: True
+22:13:14 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:13:16 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py workspace 6920 -> 0: app 6920: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | openApplicationAtURL:configuration:completionHandler: sent | after: active False
+22:13:19 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:13:19 RESULT source workspace #1: frontmost 'Python 6920'; Chatmon frontmost: True
+22:13:23 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:13:25 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py workspace 6920 -> 0: app 6920: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | openApplicationAtURL:configuration:completionHandler: sent | after: active False
+22:13:28 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:13:28 RESULT source workspace #2: frontmost 'Python 6920'; Chatmon frontmost: True
+22:13:32 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:13:32 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py open-a 6920 -> 0: app 6920: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | open -a /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app: exit 0   | after: active False
+22:13:35 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:13:35 RESULT source open-a #1: frontmost 'Python 6920'; Chatmon frontmost: True
+22:13:39 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:13:39 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py open-a 6920 -> 0: app 6920: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | open -a /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app: exit 0   | after: active False
+22:13:42 $ pgrep -fl Python|python|Chatmon -> 0: 6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:13:42 RESULT source open-a #2: frontmost 'Python 6920'; Chatmon frontmost: True
+22:13:42 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon quit -> 0
+22:13:45 $ /usr/bin/open -a /Applications/Chatmon.app -> 0
+22:13:56 bundled Chatmon pid 9177
+22:14:02 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:14:05 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:14:05 RESULT bundle none #1: frontmost 'Finder 336'; Chatmon frontmost: False
+22:14:11 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:14:13 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:14:13 RESULT bundle none #2: frontmost 'Finder 336'; Chatmon frontmost: False
+22:14:19 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:14:19 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py options 9177 -> 0: app 9177: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | activateWithOptions: -> True | after: active False
+22:14:22 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:14:22 RESULT bundle options #1: frontmost 'Finder 336'; Chatmon frontmost: False
+22:14:28 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:14:28 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py options 9177 -> 0: app 9177: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | activateWithOptions: -> True | after: active False
+22:14:31 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:14:31 RESULT bundle options #2: frontmost 'Finder 336'; Chatmon frontmost: False
+22:14:37 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:14:37 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py from-current 9177 -> 0: app 9177: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | activateFromApplication:options: -> True | after: active False
+22:14:39 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:14:39 RESULT bundle from-current #1: frontmost 'Finder 336'; Chatmon frontmost: False
+22:14:45 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:14:45 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py from-current 9177 -> 0: app 9177: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | activateFromApplication:options: -> True | after: active False
+22:14:48 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:14:48 RESULT bundle from-current #2: frontmost 'Finder 336'; Chatmon frontmost: False
+22:14:54 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:14:56 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py workspace 9177 -> 0: app 9177: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | openApplicationAtURL:configuration:completionHandler: sent | after: active False
+22:14:59 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:14:59 RESULT bundle workspace #1: frontmost 'Finder 336'; Chatmon frontmost: False
+22:15:05 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:15:07 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py workspace 9177 -> 0: app 9177: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | openApplicationAtURL:configuration:completionHandler: sent | after: active False
+22:15:09 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:15:09 RESULT bundle workspace #2: frontmost 'Finder 336'; Chatmon frontmost: False
+22:15:15 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:15:15 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py open-a 9177 -> 0: app 9177: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | open -a /Applications/Chatmon.app: exit 0   | after: active False
+22:15:18 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:15:18 RESULT bundle open-a #1: frontmost 'Finder 336'; Chatmon frontmost: False
+22:15:24 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:15:24 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py open-a 9177 -> 0: app 9177: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | open -a /Applications/Chatmon.app: exit 0   | after: active False
+22:15:27 $ pgrep -fl Python|python|Chatmon -> 0: 9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:15:27 RESULT bundle open-a #2: frontmost 'Finder 336'; Chatmon frontmost: False
+22:15:27 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon quit -> 0
+22:15:27 source none         #1: Chatmon frontmost False
+22:15:27 source none         #2: Chatmon frontmost False
+22:15:27 source options      #1: Chatmon frontmost True
+22:15:27 source options      #2: Chatmon frontmost True
+22:15:27 source from-current #1: Chatmon frontmost True
+22:15:27 source from-current #2: Chatmon frontmost True
+22:15:27 source workspace    #1: Chatmon frontmost True
+22:15:27 source workspace    #2: Chatmon frontmost True
+22:15:27 source open-a       #1: Chatmon frontmost True
+22:15:27 source open-a       #2: Chatmon frontmost True
+22:15:27 bundle none         #1: Chatmon frontmost False
+22:15:27 bundle none         #2: Chatmon frontmost False
+22:15:27 bundle options      #1: Chatmon frontmost False
+22:15:27 bundle options      #2: Chatmon frontmost False
+22:15:27 bundle from-current #1: Chatmon frontmost False
+22:15:27 bundle from-current #2: Chatmon frontmost False
+22:15:27 bundle workspace    #1: Chatmon frontmost False
+22:15:27 bundle workspace    #2: Chatmon frontmost False
+22:15:27 bundle open-a       #1: Chatmon frontmost False
+22:15:27 bundle open-a       #2: Chatmon frontmost False

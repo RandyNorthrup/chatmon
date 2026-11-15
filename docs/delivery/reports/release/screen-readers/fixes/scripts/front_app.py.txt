@@ -1,0 +1,18 @@
+"""The frontmost app as AppKit says it now, from a fresh process: pid, bundle identifier, activation policy."""
+
+import ctypes
+import ctypes.util
+
+objc = ctypes.cdll.LoadLibrary(ctypes.util.find_library("objc"))
+ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
+objc.objc_getClass.restype, objc.objc_getClass.argtypes = ctypes.c_void_p, [ctypes.c_char_p]
+objc.sel_registerName.restype, objc.sel_registerName.argtypes = ctypes.c_void_p, [ctypes.c_char_p]
+SEND = ctypes.cast(objc.objc_msgSend, ctypes.c_void_p).value
+obj = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(SEND)
+text = ctypes.CFUNCTYPE(ctypes.c_char_p, ctypes.c_void_p, ctypes.c_void_p)(SEND)
+number = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_void_p)(SEND)
+sel = lambda n: objc.sel_registerName(n.encode())  # noqa: E731
+app = obj(obj(objc.objc_getClass(b"NSWorkspace"), sel("sharedWorkspace")), sel("frontmostApplication"))
+ident = obj(app, sel("bundleIdentifier")) if app else 0
+print(f"{number(app, sel('processIdentifier')) if app else 0} {(text(ident, sel('UTF8String')) or b'').decode() if ident else ''} "
+      f"policy {number(app, sel('activationPolicy')) if app else -1}")

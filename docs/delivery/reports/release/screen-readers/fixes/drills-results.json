@@ -1,0 +1,219 @@
+[
+  {
+    "id": "SR-1-held-posted-at-activation",
+    "requirement": "screen-readers problem 1",
+    "file": "chatmon/a11y.py",
+    "mutation": {
+      "find": "                self._settle.start(self.SETTLE_MS)\n",
+      "replace": "                self._post_held()\n"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_voiceover_holds_announcements_until_chatmon_is_in_front"
+    ],
+    "expected": [
+      "test_voiceover_holds_announcements_until_chatmon_is_in_front",
+      "VoiceOver is still moving to Chatmon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4",
+    "baseline_exit": 0,
+    "mutated_sha256": "13c31cf5bb81f092dd3e66dff4adea49d74d176c08400669a7db20b176477736",
+    "mutated_exit": 1,
+    "observed": "________ test_voiceover_holds_announcements_until_chatmon_is_in_front _________",
+    "after_sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4",
+    "restored_exit": 0
+  },
+  {
+    "id": "SR-1-said-at-once-while-just-active",
+    "requirement": "screen-readers problem 1",
+    "file": "chatmon/a11y.py",
+    "mutation": {
+      "find": "        wait = self._settling_ms()\n",
+      "replace": "        wait = 0\n"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_voiceover_waits_after_chatmon_comes_in_front"
+    ],
+    "expected": [
+      "test_voiceover_waits_after_chatmon_comes_in_front",
+      "made while active, as at the start: not yet"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4",
+    "baseline_exit": 0,
+    "mutated_sha256": "8d9e799c428aa1e03a115cea7dadda43b70af200353780aeec6f7a18d4e71890",
+    "mutated_exit": 1,
+    "observed": "______________ test_voiceover_waits_after_chatmon_comes_in_front ______________",
+    "after_sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4",
+    "restored_exit": 0
+  },
+  {
+    "id": "SR-1-a-second-only",
+    "requirement": "screen-readers problem 1",
+    "file": "chatmon/a11y.py",
+    "mutation": {
+      "find": "    SETTLE_MS = 2500\n",
+      "replace": "    SETTLE_MS = 1000\n"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_voiceover_is_given_the_time_it_was_measured_to_need"
+    ],
+    "expected": [
+      "test_voiceover_is_given_the_time_it_was_measured_to_need",
+      "assert 1000 >= 2500"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4",
+    "baseline_exit": 0,
+    "mutated_sha256": "1c203771a398294c93e0529fcd3fbba18bb4ccc910838813f34d5299741a541a",
+    "mutated_exit": 1,
+    "observed": "__________ test_voiceover_is_given_the_time_it_was_measured_to_need ___________",
+    "after_sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4",
+    "restored_exit": 0
+  },
+  {
+    "id": "SR-2-title-takes-the-keyboard",
+    "requirement": "screen-readers problem 2",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        self.title.setFocusProxy(self.entry)\n",
+      "replace": ""
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_ask_box.py::test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field"
+    ],
+    "expected": [
+      "test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field",
+      "QLabel"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805",
+    "baseline_exit": 0,
+    "mutated_sha256": "52dbe47195558ca4f6cd522b5eb4412029d1357ef5fcaa69340376dd410a59f7",
+    "mutated_exit": 1,
+    "observed": "_____ test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field ______",
+    "after_sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805",
+    "restored_exit": 0
+  },
+  {
+    "id": "SR-3-stage-left-rude",
+    "requirement": "screen-readers problem 3",
+    "file": "chatmon/clickthrough.py",
+    "mutation": {
+      "find": "and self._set_prop(hwnd, NON_RUDE, 1):",
+      "replace": "and True:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_clickthrough.py::test_the_stage_isnt_taken_for_a_full_screen_app",
+      "tests/test_clickthrough.py::test_a_new_native_window_is_marked_too"
+    ],
+    "expected": [
+      "test_the_stage_isnt_taken_for_a_full_screen_app",
+      "test_a_new_native_window_is_marked_too"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a833a2b8c45513bd4ed13e2dcc199bd0905b308bfea05917febd0f512b0e4353",
+    "baseline_exit": 0,
+    "mutated_sha256": "1a003e541bc41994d5df72f4730ffab5cd76f7c089948fe2306be66248cfff30",
+    "mutated_exit": 1,
+    "observed": "_______________ test_the_stage_isnt_taken_for_a_full_screen_app _______________",
+    "after_sha256": "a833a2b8c45513bd4ed13e2dcc199bd0905b308bfea05917febd0f512b0e4353",
+    "restored_exit": 0
+  },
+  {
+    "id": "SR-3-busy-not-quiet",
+    "requirement": "screen-readers problem 3",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "_QUNS = {2: \"a full-screen app\", 3:",
+      "replace": "_QUNS = {3:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_a_full_screen_app_still_holds_bubbles_on_windows"
+    ],
+    "expected": [
+      "test_a_full_screen_app_still_holds_bubbles_on_windows"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "c4cc164da94df8678de1209056413dfd476c6f1ab6d3a4bd33043076524f5f5c",
+    "mutated_exit": 1,
+    "observed": "____________ test_a_full_screen_app_still_holds_bubbles_on_windows ____________",
+    "after_sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "SR-4-ask-leaves-it-behind",
+    "requirement": "screen-readers problem 4",
+    "file": "chatmon/cli.py",
+    "mutation": {
+      "find": "    if sent == 0:\n        _make_chatmon_active()\n",
+      "replace": ""
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_cli.py::test_on_macos_ask_makes_chatmon_the_active_app_once_the_box_is_open"
+    ],
+    "expected": [
+      "test_on_macos_ask_makes_chatmon_the_active_app_once_the_box_is_open",
+      "assert [('send', 'ask')] =="
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3048ebd88a47d8dd23c6eb4429f236b8811d3e85378b930d7c4228efd2c154cf",
+    "baseline_exit": 0,
+    "mutated_sha256": "fbd786808da81f02f3840211f585dc9d7c58087cf5ea533cc433992dcf37f8fd",
+    "mutated_exit": 1,
+    "observed": "_____ test_on_macos_ask_makes_chatmon_the_active_app_once_the_box_is_open _____",
+    "after_sha256": "3048ebd88a47d8dd23c6eb4429f236b8811d3e85378b930d7c4228efd2c154cf",
+    "restored_exit": 0
+  }
+]

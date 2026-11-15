@@ -1,0 +1,55 @@
+ProductName:		macOS
+ProductVersion:		26.7.2
+BuildVersion:		25G332
+Darwin dsm12-be224-d7081e06-9725-479e-bd50-e57991d8d0b6-CA1C12E6FB5F.local 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64
+Python 3.14.10
+altgraph==0.17.5
+build==1.6.1
+certifi==2026.10.23
+charset-normalizer==3.5.2
+docutils==0.23
+id==1.6.1
+idna==3.20
+iniconfig==2.3.1
+jaraco.classes==3.4.0
+jaraco.context==6.1.2
+jaraco.functools==4.6.0
+keyring==25.7.0
+macholib==1.16.4
+markdown-it-py==4.2.0
+mdurl==0.1.2
+more-itertools==11.2.1
+nh3==0.3.7
+packaging==26.3
+pluggy==1.7.0
+psutil==7.2.2
+Pygments==2.21.0
+pyinstaller==6.22.3
+pyinstaller-hooks-contrib==2026.9
+pyproject_hooks==1.3.3
+PyQt6==6.11.0
+PyQt6-Qt6==6.11.2
+PyQt6_sip==13.13.0
+pytest==9.2.0
+pytest-timeout==2.4.0
+readme_renderer==46.0
+requests==2.34.2
+requests-toolbelt==1.0.0
+rfc3986==2.0.0
+rich==15.0.0
+setuptools==84.2.1
+twine==7.0.0
+urllib3==2.8.0
+wheel==0.48.0
+4d6dc58abd3e548e8c1ebc29fe89d1ff64733e3a
+ M chatmon/a11y.py
+ M chatmon/bubble.py
+ M chatmon/cli.py
+ M chatmon/clickthrough.py
+ M chatmon/macnative.py
+ M tests/test_ask_box.py
+ M tests/test_cli.py
+ M tests/test_clickthrough.py
+ M tests/test_macnative.py
+ M tests/test_platform_events.py
+ M tests/test_presence.py

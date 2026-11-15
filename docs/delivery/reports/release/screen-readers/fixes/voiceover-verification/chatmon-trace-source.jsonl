@@ -1,0 +1,69 @@
+{"t": 1794781902.05, "event": "start", "pid": 3000, "platform": "darwin", "python": "3.14.10"}
+{"t": 1794781904.689, "event": "reader", "found": "VoiceOver"}
+{"t": 1794781904.689, "event": "voiceover-say", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "active": true, "fallback": false, "held": ["Hi, I'm Chatmon! Click me to ask anything."]}
+{"t": 1794781904.689, "event": "announce", "reader": "VoiceOver", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "spoken"}
+{"t": 1794781907.186, "event": "voiceover-post", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false}
+{"t": 1794781916.459, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794781919.629, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781919.901, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794781927.805, "event": "reader", "found": "VoiceOver"}
+{"t": 1794781927.806, "event": "voiceover-post", "text": "Chatmon. Probe source A1, said while Chatmon is in front.", "important": false}
+{"t": 1794781927.806, "event": "voiceover-say", "text": "Chatmon. Probe source A1, said while Chatmon is in front.", "important": false, "active": true, "fallback": false, "held": []}
+{"t": 1794781927.807, "event": "announce", "reader": "VoiceOver", "words": "Chatmon. Probe source A1, said while Chatmon is in front.", "important": false, "route": "spoken"}
+{"t": 1794781936.746, "event": "voiceover-post", "text": "I'm Chatmon 0.10.0.", "important": false}
+{"t": 1794781936.746, "event": "voiceover-say", "text": "I'm Chatmon 0.10.0.", "important": false, "active": true, "fallback": false, "held": []}
+{"t": 1794781936.746, "event": "announce", "reader": "VoiceOver", "words": "I'm Chatmon 0.10.0.", "important": false, "route": "spoken"}
+{"t": 1794781944.947, "event": "focus", "widget": null}
+{"t": 1794781946.068, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794781949.206, "event": "reader", "found": "VoiceOver"}
+{"t": 1794781949.206, "event": "voiceover-say", "text": "Chatmon. Probe source B1, held while Chatmon is behind.", "important": false, "active": false, "fallback": false, "held": ["Chatmon. Probe source B1, held while Chatmon is behind."]}
+{"t": 1794781949.206, "event": "announce", "reader": "VoiceOver", "words": "Chatmon. Probe source B1, held while Chatmon is behind.", "important": false, "route": "spoken"}
+{"t": 1794781959.364, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781959.373, "event": "app-state", "state": "ApplicationActive", "held": ["Chatmon. Probe source B1, held while Chatmon is behind."]}
+{"t": 1794781961.76, "event": "voiceover-post", "text": "Chatmon. Probe source B1, held while Chatmon is behind.", "important": false}
+{"t": 1794781970.317, "event": "focus", "widget": null}
+{"t": 1794781971.468, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794781974.612, "event": "reader", "found": "VoiceOver"}
+{"t": 1794781974.612, "event": "voiceover-say", "text": "Chatmon. Probe source B3, held while Chatmon is behind.", "important": false, "active": false, "fallback": false, "held": ["Chatmon. Probe source B3, held while Chatmon is behind."]}
+{"t": 1794781974.612, "event": "announce", "reader": "VoiceOver", "words": "Chatmon. Probe source B3, held while Chatmon is behind.", "important": false, "route": "spoken"}
+{"t": 1794781984.762, "event": "app-state", "state": "ApplicationActive", "held": ["Chatmon. Probe source B3, held while Chatmon is behind."]}
+{"t": 1794781987.186, "event": "voiceover-post", "text": "Chatmon. Probe source B3, held while Chatmon is behind.", "important": false}
+{"t": 1794781996.7, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794781999.803, "event": "reader", "found": "VoiceOver"}
+{"t": 1794781999.803, "event": "voiceover-say", "text": "Claude needs you. Probe source C1, waiting for your approval. To answer, type “OK” in the chat.", "important": true, "active": false, "fallback": false, "held": ["Claude needs you. Probe source C1, waiting for your approval. To answer, type “OK” in the chat."]}
+{"t": 1794781999.803, "event": "announce", "reader": "VoiceOver", "words": "Claude needs you. Probe source C1, waiting for your approval. To answer, type “OK” in the chat.", "important": true, "route": "spoken"}
+{"t": 1794782009.991, "event": "app-state", "state": "ApplicationActive", "held": ["Claude needs you. Probe source C1, waiting for your approval. To answer, type “OK” in the chat."]}
+{"t": 1794782012.663, "event": "voiceover-post", "text": "Claude needs you. Probe source C1, waiting for your approval. To answer, type “OK” in the chat.", "important": true}
+{"t": 1794782022.108, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794782025.237, "event": "reader", "found": "VoiceOver"}
+{"t": 1794782025.237, "event": "voiceover-say", "text": "Claude needs you. Probe source C2, waiting for your approval. To answer, type “OK” in the chat.", "important": true, "active": false, "fallback": false, "held": ["Claude needs you. Probe source C2, waiting for your approval. To answer, type “OK” in the chat."]}
+{"t": 1794782025.237, "event": "announce", "reader": "VoiceOver", "words": "Claude needs you. Probe source C2, waiting for your approval. To answer, type “OK” in the chat.", "important": true, "route": "spoken"}
+{"t": 1794782035.317, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794782035.328, "event": "app-state", "state": "ApplicationActive", "held": ["Claude needs you. Probe source C2, waiting for your approval. To answer, type “OK” in the chat."]}
+{"t": 1794782037.771, "event": "voiceover-post", "text": "Claude needs you. Probe source C2, waiting for your approval. To answer, type “OK” in the chat.", "important": true}
+{"t": 1794782046.067, "event": "focus", "widget": null}
+{"t": 1794782047.168, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794782050.349, "event": "reader", "found": "VoiceOver"}
+{"t": 1794782050.349, "event": "voiceover-say", "text": "Chatmon. Probe source D1, held while Chatmon is behind.", "important": false, "active": false, "fallback": false, "held": ["Chatmon. Probe source D1, held while Chatmon is behind."]}
+{"t": 1794782050.349, "event": "announce", "reader": "VoiceOver", "words": "Chatmon. Probe source D1, held while Chatmon is behind.", "important": false, "route": "spoken"}
+{"t": 1794782060.413, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794782060.486, "event": "app-state", "state": "ApplicationActive", "held": ["Chatmon. Probe source D1, held while Chatmon is behind."]}
+{"t": 1794782063.156, "event": "voiceover-post", "text": "Chatmon. Probe source D1, held while Chatmon is behind.", "important": false}
+{"t": 1794782072.051, "event": "reader", "found": "VoiceOver"}
+{"t": 1794782072.051, "event": "voiceover-post", "text": "I'm Chatmon 0.10.0.", "important": false}
+{"t": 1794782072.051, "event": "voiceover-say", "text": "I'm Chatmon 0.10.0.", "important": false, "active": true, "fallback": false, "held": []}
+{"t": 1794782072.051, "event": "announce", "reader": "VoiceOver", "words": "I'm Chatmon 0.10.0.", "important": false, "route": "spoken"}
+{"t": 1794782080.257, "event": "focus", "widget": null}
+{"t": 1794782081.413, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794782084.575, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794782084.623, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794782089.342, "event": "focus", "widget": null}
+{"t": 1794782089.401, "event": "focus", "widget": "QCheckBox '' accessible '' in ''"}
+{"t": 1794782089.404, "event": "focus", "widget": null}
+{"t": 1794782089.428, "event": "focus", "widget": "QTabBar 'qt_tabwidget_tabbar' accessible '' in 'Chatmon Settings'"}
+{"t": 1794782095.664, "event": "focus", "widget": null}
+{"t": 1794782098.902, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794782102.07, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794782102.077, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794782115.185, "event": "focus", "widget": null}
+{"t": 1794782115.197, "event": "exit", "code": 0}

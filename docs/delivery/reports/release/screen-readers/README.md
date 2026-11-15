@@ -3,7 +3,7 @@
 OUTCOME.md's gap for a person: nobody had heard VoiceOver or Narrator speak Chatmon's announcements. This probe ran
 Chatmon 0.10.0 from source at **65ed989** (PR #18's merge) with real screen readers, made it announce things the ways a
 person meets them, and kept what each reader said as text. Nothing in Chatmon was changed. A shim
-([run_chatmon.py](voiceover/scripts/run_chatmon.py)) starts Chatmon as `python -m chatmon` does, and wraps
+([run_chatmon.py](voiceover/scripts/run_chatmon.py.txt)) starts Chatmon as `python -m chatmon` does, and wraps
 `a11y.announce`, `a11y.reader`, VoiceOver's queue, `winuia.say`, `wintoast.show` and the message queue to log what
 Chatmon handed the reader. The wrappers don't change what those functions do. Hypotheses tested on the way are labelled
 **HYPOTHESIS**: the shim applies them only when told to, and only in their own passes.
@@ -21,6 +21,10 @@ Chatmon handed the reader. The wrappers don't change what those functions do. Hy
 There are two proposed diffs, [proposed-fix-voiceover.diff](proposed-fix-voiceover.diff) and
 [proposed-fix-windows-quiet.diff](proposed-fix-windows-quiet.diff). Neither is committed to Chatmon. Both apply to
 65ed989.
+
+**Later the same day, all four problems were fixed** on `wave5/screen-readers` and checked again with the real readers:
+see [fixes/README.md](fixes/README.md). The VoiceOver diff went in as proposed; the Windows one was replaced by a fix of
+the root cause (the stage is marked `NonRudeHWND`), and two statements below turned out wrong (marked where they stand).
 
 ## Results
 
@@ -178,8 +182,13 @@ Consequences:
   unread by NVDA on both Windows machines. This is inferred from QUNS_BUSY's meaning, not observed on screen.
 
 M7's CI finding ("on the runner the desktop reports quiet") is most likely this same cause, not the runner.
+**Wrong, as measured later:** a fresh GitHub Windows runner says 6 (quiet time, the first hour after a user's first logon)
+before Chatmon starts, while it runs and after, with or without the fix ([fixes/windows-runner-quiet-time](fixes/windows-runner-quiet-time)).
+M7's runner quiet was that.
 
-**Proposed fix for (a)** ([proposed-fix-windows-quiet.diff](proposed-fix-windows-quiet.diff), `chatmon/presence.py`):
+**Proposed fix for (a)** ([proposed-fix-windows-quiet.diff](proposed-fix-windows-quiet.diff), `chatmon/presence.py`).
+**Superseded, not applied:** the root cause is fixed instead (fixes/README.md), so 2 is a real full-screen app again and
+must keep holding bubbles:
 
 - Drop 2 from `_QUNS`.
 - Add `_win_full_screen_app()`: another app's window in front that fills its monitor, never Chatmon's own. `quiet()`
@@ -208,7 +217,8 @@ Chatmon's own shortcut (Carbon hotkey, a key press) did activate it, every time 
 **Likely cause:** macOS 14's cooperative `NSApp.activate()`, which `macnative.activate()` uses, is ignored when the
 request doesn't come from the person's own input or from the active app yielding.
 
-No diff: the way to hand activation over from a launcher (for example LaunchServices for the bundled app) wasn't tried
+**Fixed later** (fixes/README.md): the command activates Chatmon by its process id. No diff here: the way to hand
+activation over from a launcher (for example LaunchServices for the bundled app) wasn't tried
 here.
 
 ## What couldn't be checked
@@ -257,8 +267,8 @@ A throwaway branch `probe/screen-readers` from 65ed989 held only `.github/workfl
 
 The scripts the workflow embeds are in [voiceover/scripts](voiceover/scripts):
 
-- [make_workflow.py](voiceover/scripts/make_workflow.py) writes the workflow from them (`--nvda` adds the Windows job).
-- [check_settle.py](voiceover/scripts/check_settle.py) checks the settle hypothesis's logic offscreen.
+- [make_workflow.py](voiceover/scripts/make_workflow.py.txt) writes the workflow from them (`--nvda` adds the Windows job).
+- [check_settle.py](voiceover/scripts/check_settle.py.txt) checks the settle hypothesis's logic offscreen.
 - The NVDA runner job checked NV Access's installer against its published SHA-256 (`6F80A5B0...F052`), and
   `--create-portable-silent` made the portable copy.
 
@@ -304,7 +314,7 @@ Technician; scripts went by `scp` and ran with `powershell -NoProfile -Execution
     Narrator didn't take Ctrl+Win+Enter after its recap dialog, so it was stopped with `narrator_stop.ps1` (13:38:15
     and 13:39:52).
 12. **13:43-13:45, put back:**
-    - [toast_check.py](testpc2/scripts/toast_check.py): no Chatmon toasts left in Action Center.
+    - [toast_check.py](testpc2/scripts/toast_check.py.txt): no Chatmon toasts left in Action Center.
     - [cleanup.ps1](testpc2/scripts/cleanup.ps1) ([cleanup.log](testpc2/logs/cleanup.log)). Its first run stopped early
       because its process sweep matched the ssh session's own shell; it was fixed and run again.
 

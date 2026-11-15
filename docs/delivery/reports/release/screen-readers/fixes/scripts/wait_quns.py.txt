@@ -1,0 +1,17 @@
+"""Wait until Windows' notification state is no longer quiet time (6: the first hour after a user's first logon, as
+on a fresh runner), saying it each minute. usage: wait_quns.py MAX_MINUTES"""
+
+import ctypes
+import sys
+import time
+
+end = time.monotonic() + float(sys.argv[1]) * 60
+while True:
+    state = ctypes.c_int(0)
+    ctypes.windll.shell32.SHQueryUserNotificationState(ctypes.byref(state))
+    print(time.strftime("%H:%M:%S"), "state", state.value, flush=True)
+    if state.value != 6:
+        sys.exit(0)
+    if time.monotonic() > end:
+        sys.exit(1)
+    time.sleep(60)

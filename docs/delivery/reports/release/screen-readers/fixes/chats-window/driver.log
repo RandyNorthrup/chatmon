@@ -1,0 +1,33 @@
+22:42:47.076Z osascript (Finder activate): exit 0
+22:42:53.053Z Chatmon (source) running, pid 2718
+22:43:03.225Z == Chats window, attempt 1: the shortcut, `history`, the History menu's All chats…
+22:43:03.385Z frontmost app (AppKit): 2718 org.python.python policy 0
+22:43:03.527Z osascript (Esc): exit 0
+22:43:04.761Z osascript (Finder activate): exit 0
+22:43:07.849Z frontmost app (AppKit): 367 com.apple.finder policy 0
+22:43:08.014Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+22:43:12.575Z osascript (keystroke history): exit 0
+22:43:13.276Z osascript (Return): exit 0
+22:43:15.410Z osascript (Down): exit 0
+22:43:16.119Z osascript (Down): exit 0
+22:43:16.899Z osascript (Down): exit 0
+22:43:17.710Z osascript (Return): exit 0
+22:43:23.968Z Chatmon's focused element: AXTextField | Search your chats | value:
+22:43:23.970Z CASE source/S3-1: focused 'AXTextField | Search your chats | value:'; Qt focus ["QLineEdit '' accessible 'Search your chats' in 'Chats'"]; on a label: False
+22:43:24.798Z osascript (Esc (the window closes)): exit 0
+22:43:26.875Z == Chats window, attempt 2: the shortcut, `history`, the History menu's All chats…
+22:43:27.275Z frontmost app (AppKit): 2718 org.python.python policy 0
+22:43:27.435Z osascript (Esc): exit 0
+22:43:28.683Z osascript (Finder activate): exit 0
+22:43:31.823Z frontmost app (AppKit): 367 com.apple.finder policy 0
+22:43:31.995Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+22:43:36.167Z osascript (keystroke history): exit 0
+22:43:36.830Z osascript (Return): exit 0
+22:43:39.010Z osascript (Down): exit 0
+22:43:39.812Z osascript (Down): exit 0
+22:43:40.607Z osascript (Down): exit 0
+22:43:41.383Z osascript (Return): exit 0
+22:43:47.678Z Chatmon's focused element: AXTextField | Search your chats | value:
+22:43:47.681Z CASE source/S3-2: focused 'AXTextField | Search your chats | value:'; Qt focus ["QLineEdit '' accessible 'Search your chats' in 'Chats'"]; on a label: False
+22:43:48.173Z osascript (Esc (the window closes)): exit 0
+22:43:50.671Z $ chatmon quit (source): exit 0 in 0.40 s
