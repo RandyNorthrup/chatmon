@@ -1,0 +1,63 @@
+[
+  {
+    "id": "M8-01-english-list-broken",
+    "requirement": "M8-01",
+    "file": "chatmon/i18n.py",
+    "mutation": {
+      "find": "    for item in listed[1:-1]:",
+      "replace": "    for item in listed[1:]:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n.py::test_before_a_language_is_chosen_every_string_is_its_english"
+    ],
+    "expected": [
+      "test_before_a_language_is_chosen_every_string_is_its_english"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1c3f760bb998420728adc8a35e2fe16dc381b64f00f1568219d1e795ca3c4546",
+    "baseline_exit": 0,
+    "mutated_sha256": "a3fac8a0504f93154904ce3fcd55a70964ae89aa9f46b1783c971e5f262ebfa5",
+    "mutated_exit": 1,
+    "observed": "________ test_before_a_language_is_chosen_every_string_is_its_english _________",
+    "after_sha256": "1c3f760bb998420728adc8a35e2fe16dc381b64f00f1568219d1e795ca3c4546",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-01-english-sentence-changed",
+    "requirement": "M8-01",
+    "file": "chatmon/backup.py",
+    "mutation": {
+      "find": "    return _(\"Brought back {what}.\").format(what=contents.summary())",
+      "replace": "    return _(\"Brought back: {what}.\").format(what=contents.summary())"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_backup.py::test_a_backup_moves_everything_to_another_computer"
+    ],
+    "expected": [
+      "test_a_backup_moves_everything_to_another_computer",
+      "Brought back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "786f8e2aa8d1e853ee92be33dfda0e6008439151e7beaa7052dcaf98ccbdde2d",
+    "baseline_exit": 0,
+    "mutated_sha256": "574ceb66d7e882c1b2c08fbde3c6aba34bdc7cef0f73c701797fda26ffc153ea",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_backup_moves_everything_to_another_computer ______________",
+    "after_sha256": "786f8e2aa8d1e853ee92be33dfda0e6008439151e7beaa7052dcaf98ccbdde2d",
+    "restored_exit": 0
+  }
+]

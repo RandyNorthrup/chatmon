@@ -1,0 +1,7 @@
+
+=== summary
+PASS M8-01C-window-title-english
+PASS M8-01C-this-one-glued
+PASS M8-01C-pin-label-english
+PASS M8-01C-template-stale
+drill-spec-c.json exit 0
