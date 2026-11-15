@@ -1524,6 +1524,12 @@ class Asker(QObject):
         self._timer = QTimer(self)  # how long it may go without a word: restarted by each piece that comes
         self._timer.setSingleShot(True)
         self._timer.timeout.connect(self._timed_out)
+        self.failed.connect(self._log_failure)
+
+    def _log_failure(self, message: str) -> None:
+        """Keep what went wrong in the log, as it was said on screen: the brain's key never, should a provider have
+        repeated it. The question and the answer so far are never in it."""
+        logger.info("a question failed: %s", _scrub(message, self._brain) if self._brain is not None else message)
 
     def busy(self) -> bool:
         return self._proc is not None or self._reply is not None
