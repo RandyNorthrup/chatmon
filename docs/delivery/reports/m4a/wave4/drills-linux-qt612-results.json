@@ -1,0 +1,32 @@
+[
+  {
+    "id": "W4-L-AC-04b-qt-signal",
+    "requirement": "AC-04b",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "            changed.connect(self.settings_changed)\n        except (AttributeError, ImportError, RuntimeError, TypeError):",
+      "replace": "            changed.connect(lambda *_: None)\n        except (AttributeError, ImportError, RuntimeError, TypeError):"
+    },
+    "command": [
+      "/var/tmp/m4a-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_qts_contrast_change_is_passed_on"
+    ],
+    "expected": [
+      "test_qts_contrast_change_is_passed_on"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "135f18eb1a8bb8cb32ad4e80769c91fcbe5d160f2d6f63a72d3598f21e588875",
+    "mutated_exit": 1,
+    "observed": "____________________ test_qts_contrast_change_is_passed_on _____________________",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  }
+]
