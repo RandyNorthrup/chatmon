@@ -46,7 +46,7 @@ receipts = [
                "skipped (other platforms' tests, each skip with its reason; the new owner test is one of them), exit 0. " + WHY},
     {"id": "W4D-BEH-LINUX", "kind": "behavior", "acceptance": ["AC-01-LINUX", "AC-02", "AC-07", "AC-09-ORDER", "AC-09-REMOTE"],
      "artifact": f"{W}/linux-tests.log",
-     "command": ["wsl.exe", "-d", "archlinux", "--", "/var/tmp/plans-venv/bin/python", "-m", "pytest", "-v", "-rA", "-p",
+     "command": ["wsl.exe", "-d", "archlinux", "--", "/var/tmp/plans-venv/bin/python", "-m", "pytest", "-v", "-rA", "-p",  # noqa: S108 (a command line recorded, not a temp file)
                  "no:cacheprovider", "tests/test_install_update.py", "tests/test_packaging.py", "tests/test_agents.py",
                  "tests/test_attachments.py"], "exit_code": 0,
      "method": f"In WSL (Arch Linux; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11.0, Qt 6.11.2, pytest 9.2.0) on "
@@ -68,7 +68,7 @@ receipts = [
                + ELSE + " " + WHY},
 ]
 for drill in ("AC-01-LINUX-launcher-owner", "AC-01-LINUX-refusal-stops", "AC-01-LINUX-installs-the-copy"):
-    receipts.append(red(f"W4D-RED-{drill}", ["AC-01-LINUX"], f"{W}/drills-linux-results.json", drill, f"{W}/drills-linux.log", WSL))
+    receipts.append(red(f"W4D-RED-{drill}", ["AC-01-LINUX"], f"{W}/drills-linux-results.json", drill, f"{W}/drills-linux.log", WSL))  # noqa: PERF401
 receipts.append(red("W4D-RED-AC-01-USER-handoff", ["AC-01-USER"], f"{W}/drills-windows-results.json", "AC-01-USER-handoff",
                     f"{W}/drills-windows.log", "through tests/drills/run.py on this Windows workstation (wave4c/drill-spec.json --only "
                     f"AC-01-USER-handoff), in a temporary copy of {HEAD}'s files"))
