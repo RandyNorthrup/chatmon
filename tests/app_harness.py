@@ -2,16 +2,38 @@
 set by the test (`PretendDesk`), a brain that answers when told to (`PretendBrain`), and the event loop run for a while
 (`spin`, `until`). Imported by the test files that build a Companion; not a test file itself."""
 
+import gc
 import os
 import sys
 import tempfile
 import time
+import weakref
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from PyQt6 import sip
 from PyQt6.QtCore import QEventLoop, QPoint, QTimer
 from PyQt6.QtNetwork import QLocalServer
 from PyQt6.QtWidgets import QApplication
+
+# Each quit Companion, and the windows its test left, held here until nothing else holds them, then let go of and
+# collected at once, as a later Companion's test ends (let_go_of_the_quit). A quit Companion lives on for a while (its
+# first look at the agents is a timer three seconds in, and the sound module keeps it until the next one starts), and
+# then it's garbage. Left to Python's own collections, its windows went whenever one ran, which can be inside any
+# Python call Qt makes: the ask boxes' event filter, say, which Qt calls as it tells every top-level window of the
+# new icon (QApplication.setWindowIcon, as the next Companion starts). Qt then went on to the windows freed under it
+# and the run crashed, in QApplicationPrivate::notifyWindowIconChanged (CI's fedora:44 job, run 43700807137).
+_QUIT: list = []
+
+
+def let_go_of_the_quit() -> None:
+    """The quit Companions and windows that nothing else holds any more, let go of and collected now, between tests,
+    where none of Qt's loops over the windows is under way. Those still held elsewhere (a timer of theirs not yet gone
+    off, a look at the agents on its way back) are held again, until next time."""
+    held = [weakref.ref(o) for o in _QUIT]
+    _QUIT.clear()
+    gc.collect()
+    _QUIT.extend(o for o in (r() for r in held) if o is not None)
 
 
 def spin(seconds: float) -> None:
@@ -86,6 +108,7 @@ def make_companion(tmp_path, monkeypatch):
     State(paths.state_file(), seen).save()
     qapp = QApplication.instance() or QApplication([])
     qapp.setQuitOnLastWindowClosed(False)
+    others = {sip.unwrapinstance(w) for w in QApplication.topLevelWidgets()}  # windows already there, not this test's
     server = QLocalServer()
     server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)
     QLocalServer.removeServer(paths.server_name())
@@ -116,6 +139,9 @@ def make_companion(tmp_path, monkeypatch):
         from chatmon import i18n
 
         i18n.reset()  # the Companion chose a language as it started: English again for the next test
+        # Freed by let_go_of_the_quit only, never by a collection of Python's own: see _QUIT.
+        _QUIT.extend([c, *(w for w in QApplication.topLevelWidgets() if sip.unwrapinstance(w) not in others)])
+        let_go_of_the_quit()
 
 
 class PretendNotifier:

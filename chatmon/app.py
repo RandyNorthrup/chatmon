@@ -2413,7 +2413,10 @@ class Companion(QObject):
         """How each agent stands, off the main thread. The first time, hooks connected under the old name
         (penguin-companion) are swapped for chatmon's first. One look at a time: each starts the agents'
         own command lines (a second or so each), and every refill of the menu asks for one. Asked again
-        meanwhile, it looks once more when this one is done."""
+        meanwhile, it looks once more when this one is done. Never once quit: the first look's timer, three seconds
+        in, goes off even so in a process that goes on (the tests'), and ran the agents' own command lines then."""
+        if self._quitting:
+            return
         if self._refreshing:
             self._refresh_next = migrate or bool(self._refresh_next)
             return

@@ -654,6 +654,97 @@ def test_a_quit_companion_runs_and_paints_nothing_more(companion):
     running = [(t.interval(), type(t.parent()).__name__, t.objectName()) for owner in (c, c.ask_box, c.stage) for t in owner.findChildren(QTimer) if t.isActive()]
     assert running == [] and painted == [] and not c.ask_box.isVisible()
 
+
+def test_a_quit_companion_never_looks_at_the_agents_again(companion, monkeypatch):
+    """Its first look at the agents is a timer three seconds in, which quitting can't stop: after a shorter test it
+    went off in a later one, the harness's stand-ins undone by then, and ran the agents' own command lines (and moved
+    hooks connected under the old name) as whoever ran the tests."""
+    c = companion
+    assert until(lambda: not c._refreshing)  # a look already on its way: back first
+    looked = []
+    monkeypatch.setattr(c.background, "run", lambda work, then: looked.append(work))
+    c._refresh_agents()
+    assert len(looked) == 1  # running, it looks
+    c._refreshing = False  # (as that look coming back would have it)
+    c.quit()
+    c._refresh_agents(True)  # as that timer does, gone off after quitting
+    assert len(looked) == 1
+
+
+QUIT_COMPANIONS = r"""
+import faulthandler, gc, os, sys, tempfile, time, weakref
+from pathlib import Path
+faulthandler.enable()
+gc.disable()  # no collection but those made here and the harness's: Python's own would come at moments of their own
+sys.path[:0] = [sys.argv[1], os.path.join(sys.argv[1], "tests")]
+import pytest
+from PyQt6.QtCore import QEvent, QObject
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtWidgets import QApplication, QWidget
+app = QApplication([])
+from chatmon import agents
+agents._run_json = lambda argv, what: []  # for good: nothing that goes off after a test's stand-ins are undone runs one
+import app_harness
+from app_harness import make_companion, spin
+
+def companion_test():
+    # a test of the companion fixture's, a short one: built, the event loop run a moment, then the teardown
+    with pytest.MonkeyPatch.context() as mp:
+        folder = Path(tempfile.mkdtemp(dir=sys.argv[2]))
+        mp.setenv("LOCALAPPDATA", str(folder))
+        fixture = make_companion(folder, mp)
+        c = next(fixture)
+        spin(0.2)
+        fixture.close()
+    return weakref.ref(c)
+
+first = companion_test()
+companion_test()  # the next test's: as it starts, the sound module lets go of the first; its own timer, 3 s in, still holds it
+
+class CollectsInside(QObject):
+    # A collection inside Qt's loop over the top-level windows, as one of Python's own can start in any Python call Qt
+    # makes there; as Qt reaches a window of this script's own, which holds nothing of the Companions'.
+    freed = 0
+    def eventFilter(self, watched, event):
+        if event.type() == QEvent.Type.ApplicationWindowIconChange:
+            before = len(QApplication.topLevelWidgets())
+            gc.collect()
+            self.freed += before - len(QApplication.topLevelWidgets())
+        return False
+
+inside, window = CollectsInside(), QWidget()
+window.installEventFilter(inside)
+deadline = time.monotonic() + 7  # its timers go off meanwhile (all by about 5 s in), and nothing but the harness holds it then
+while time.monotonic() < deadline and not inside.freed:
+    spin(0.25)
+    app.setWindowIcon(QIcon(QPixmap(16, 16)))  # as every Companion does as it starts
+window.removeEventFilter(inside)
+print("windows freed inside Qt's loop:", inside.freed, flush=True)
+deadline = time.monotonic() + 15
+while first() is not None and time.monotonic() < deadline:
+    spin(0.25)
+    app_harness.let_go_of_the_quit()
+print("the first freed by the harness:", first() is None, flush=True)
+"""
+
+
+def test_a_quit_companion_is_freed_between_tests_never_inside_qts_own_loops(tmp_path):
+    """A quit Companion is garbage once its timers have gone off, and Python's own collections freed its windows
+    whenever one ran: once inside the ask boxes' event filter, which Qt called as it told every top-level window of
+    the next Companion's icon (setWindowIcon). Qt went on to the windows freed under it, and CI's fedora:44 job
+    crashed (Fatal Python error: Segmentation fault, in QApplicationPrivate::notifyWindowIconChanged). The harness
+    holds each quit Companion and its windows until nothing else does, then frees them itself, between tests. Here
+    a collection runs inside that loop of Qt's while the first of two quit Companions becomes garbage; run apart, as
+    a crash here must not take the tests with it."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env = dict(os.environ, QT_QPA_PLATFORM="offscreen", CHATMON_INSTANCE=f"test-{os.getpid()}-quit")
+    for var in ("HOME", "USERPROFILE", "APPDATA", "LOCALAPPDATA", "XDG_CONFIG_HOME", "XDG_STATE_HOME"):
+        env[var] = str(tmp_path)  # whatever outlives a test's stand-ins finds no one's own files
+    out = subprocess.run([sys.executable, "-X", "faulthandler", "-c", QUIT_COMPANIONS, root, str(tmp_path)],
+                         capture_output=True, text=True, timeout=90, env=env)
+    assert out.returncode == 0 and "windows freed inside Qt's loop: 0" in out.stdout and "the first freed by the harness: True" in out.stdout, (
+        hex(out.returncode & 0xFFFFFFFF), out.stdout[-500:], out.stderr[-3000:])
+
 def test_after_an_update_it_shows_whats_new_once(companion):
     from chatmon import __version__
 

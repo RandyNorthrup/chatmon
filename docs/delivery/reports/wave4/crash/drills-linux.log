@@ -1,0 +1,13 @@
+# linux-drills.sh in the fedora:44 container (Python 3.14.10, PyQt6 6.11.0, Qt 6.11.2), as CI's user: the two new tests green, each red under its drill-spec.json mutation, then green again. Under CRASH-01 the test's own subprocess crashed as CI did (exit -11, 0xfffffff5); the "windows freed inside Qt's loop: 0" line counted there is the assertion's text in pytest's report, not the subprocess's output.
+green:
+  exit 0: 2 passed in 9.27s
+red (CRASH-01, the harness holds nothing):
+  exit 1: 1 failed in 4.33s
+          1 0xfffffff5'
+          2 Fatal Python error: Segmentation fault
+          1 QApplicationPrivate::notifyWindowIconChanged
+          1 windows freed inside Qt's loop: 0
+red (CRASH-02, no guard):
+  exit 1: 1 failed in 0.82s
+green again:
+  exit 0: 2 passed in 9.25s
