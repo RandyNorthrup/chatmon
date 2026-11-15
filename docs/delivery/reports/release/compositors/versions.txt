@@ -1,0 +1,46 @@
+# 2026-11-15T13:36:16-08:00
+WSL: Arch Linux, kernel 6.18.58.1-microsoft-standard-WSL2; DRM devices: card0 renderD128 (vgem)
+kwin_wayland --version: kwin 6.8.2
+Hyprland --version: Hyprland 0.57.0 built from branch v0.57.0 at commit 0aa6745f705f2c4b0a5004eb019ef76e5bbdb426 clean (VERSION: bump to 0.57.0).
+sway --version: sway version 1.12
+orca --version: Orca version 51.1 (rev 244bdadd9), AT-SPI2 version: 2.62.1
+Mesa (llvmpipe): mesa 1:26.2.6-1
+
+## packages
+kwin 6.8.2-2
+kwayland 6.8.2-1
+libkscreen 6.8.2-1
+plasma-wayland-protocols 1.23.0-1
+karchive 6.31.0-1
+hyprland 0.57.0-1
+aquamarine 0.15.1-1
+hyprutils 0.14.3-1
+hyprlang 0.6.8-5
+sway 1:1.12-4
+wlroots0.20 0.20.2-1
+grim 1.5.0-2
+wl-clipboard 1:2.3.0-1
+dbus 1.16.2-2
+at-spi2-core 2.62.1-1
+orca 51.1-1
+python-gobject 3.58.1-1
+mesa 1:26.2.6-1
+qt6-base 6.12.0-3
+qt6-wayland 6.12.0-1
+libxkbcommon 1.13.2-1
+python 3.14.9-1
+
+## the venvs (packaging/requirements-test.txt)
+/var/tmp/plans-venv: Python 3.14.9 PyQt6 6.11.0 Qt 6.11.2
+/var/tmp/m4a-venv: Python 3.14.9 PyQt6 6.12.1 Qt 6.12.0
+
+## installed for this work (pacman.log, 2026-11-15)
+[2026-11-15T12:15:31-0800] [PACMAN] Running 'pacman -S --needed --noconfirm kwin'
+[2026-11-15T12:15:37-0800] [ALPM] installed karchive (6.31.0-2)
+[2026-11-15T12:15:40-0800] [ALPM] installed kwin (6.8.2-2)
+[2026-11-15T12:16:41-0800] [PACMAN] Running 'pacman -U --noconfirm https://archive.archlinux.org/packages/k/karchive/karchive-6.31.0-1-x86_64.pkg.tar.zst'
+[2026-11-15T12:16:42-0800] [ALPM] downgraded karchive (6.31.0-2 -> 6.31.0-1)
+[2026-11-15T12:19:54-0800] [PACMAN] Running 'pacman -S --needed --noconfirm plasma-wayland-protocols'
+[2026-11-15T12:19:55-0800] [ALPM] installed plasma-wayland-protocols (1.23.0-1)
+(karchive 6.31.0-2, which kwin pulled in, wants OpenSSL 4, newer than this system's 3.6.5: its OpenSSL 3 build, 6.31.0-1, from the Arch archive, instead of a full system upgrade on a shared WSL)
+(Hyprland 0.57.0 and Aquamarine 0.15.1 were installed already: [2026-11-01T14:20:17-0800] [ALPM] upgraded hyprland (0.56.2-3 -> 0.57.0-1))
