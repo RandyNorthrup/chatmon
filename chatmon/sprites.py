@@ -68,9 +68,7 @@ class AnimInfo:
 
 def _alpha_rows(img: QImage) -> list[bytes]:
     w, bpl = img.width(), img.bytesPerLine()
-    ptr = img.constBits()
-    ptr.setsize(img.sizeInBytes())
-    data = bytes(ptr)
+    data = img.constBits().asstring(img.sizeInBytes())
     return [data[y * bpl + 3 : y * bpl + 4 * w : 4] for y in range(img.height())]
 
 

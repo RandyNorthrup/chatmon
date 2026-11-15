@@ -7,12 +7,12 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QPoint, QPointF, QRect  # noqa: E402
-from PyQt6.QtGui import QImage, QPainter, QRegion  # noqa: E402
-from PyQt6.QtWidgets import QMenu  # noqa: E402
+from PyQt6.QtCore import QPoint, QPointF, QRect
+from PyQt6.QtGui import QImage, QPainter, QRegion
+from PyQt6.QtWidgets import QMenu
 
-from chatmon import penguin  # noqa: E402
-from test_stage_timer import follow_the_clock, make_stage  # noqa: E402
+from chatmon import penguin
+from test_stage_timer import follow_the_clock, make_stage
 
 
 @pytest.fixture
@@ -39,7 +39,7 @@ def close_to(colour, wanted, slack=24):
 
 
 def test_the_badge_counts_agents_by_state_with_a_shape_for_each(stage):
-    s, clock = stage
+    s, _clock = stage
     assert s._badges == () and s.badge_description() == ""
     s.set_badge(working=2, needs_you=1)
     assert s._timer.remainingTime() <= 17  # drawn within a frame
@@ -185,6 +185,6 @@ def test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second
 
 
 def test_where_the_pointer_isnt_known_it_cant_follow(stage):
-    s, clock = stage
+    s, _clock = stage
     s._pointer_known = lambda: False  # a Wayland desktop
     assert not s.follow_pointer_screen(True) and not s._follow

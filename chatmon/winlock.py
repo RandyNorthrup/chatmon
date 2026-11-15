@@ -8,7 +8,7 @@ again.
 Windows tells a window that asked (WTSRegisterSessionNotification) with WM_WTSSESSION_CHANGE, every
 top-level window WM_POWERBROADCAST and WM_SETTINGCHANGE, and a window that registered for a power setting
 (RegisterPowerSettingNotification) PBT_POWERSETTINGCHANGE, first with the setting as it stands, then as it
-changes. A native event filter hears them. Imported on Windows alone.
+changes. A native event filter hears them. Used on Windows alone; imports anywhere.
 https://learn.microsoft.com/en-us/windows/win32/termserv/wm-wtssession-change
 https://learn.microsoft.com/en-us/windows/win32/power/wm-powerbroadcast
 https://learn.microsoft.com/en-us/windows/win32/power/power-setting-guids
@@ -18,8 +18,8 @@ from __future__ import annotations
 
 import ctypes
 import uuid
+from collections.abc import Callable
 from ctypes import wintypes
-from typing import Callable
 
 from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, QTimer
 from PyQt6.QtGui import QWindow
@@ -50,16 +50,35 @@ class POWERBROADCAST_SETTING(ctypes.Structure):
     _fields_ = [("PowerSetting", ctypes.c_ubyte * 16), ("DataLength", wintypes.DWORD), ("Data", ctypes.c_ubyte * 4)]
 
 
-_wtsapi32 = ctypes.WinDLL("wtsapi32", use_last_error=True)
-_Register = _wtsapi32.WTSRegisterSessionNotification
-_Register.restype, _Register.argtypes = wintypes.BOOL, [wintypes.HWND, wintypes.DWORD]
-_Unregister = _wtsapi32.WTSUnRegisterSessionNotification
-_Unregister.restype, _Unregister.argtypes = wintypes.BOOL, [wintypes.HWND]
-_user32 = ctypes.WinDLL("user32", use_last_error=True)
-_RegisterPower = _user32.RegisterPowerSettingNotification
-_RegisterPower.restype, _RegisterPower.argtypes = ctypes.c_void_p, [wintypes.HANDLE, ctypes.c_char_p, wintypes.DWORD]
-_UnregisterPower = _user32.UnregisterPowerSettingNotification
-_UnregisterPower.restype, _UnregisterPower.argtypes = wintypes.BOOL, [ctypes.c_void_p]
+# Windows' DLLs; CDLL elsewhere only so the module imports on every OS (nothing here runs there).
+_WinDLL = getattr(ctypes, "WinDLL", ctypes.CDLL)
+
+
+class _Api:
+    """wtsapi32's and user32's session and power-setting calls, with their prototypes: loaded with the first
+    LockWatcher."""
+
+    def __init__(self) -> None:
+        wtsapi32 = _WinDLL("wtsapi32", use_last_error=True)
+        self.register = wtsapi32.WTSRegisterSessionNotification
+        self.register.restype, self.register.argtypes = wintypes.BOOL, [wintypes.HWND, wintypes.DWORD]
+        self.unregister = wtsapi32.WTSUnRegisterSessionNotification
+        self.unregister.restype, self.unregister.argtypes = wintypes.BOOL, [wintypes.HWND]
+        user32 = _WinDLL("user32", use_last_error=True)
+        self.register_power = user32.RegisterPowerSettingNotification
+        self.register_power.restype, self.register_power.argtypes = ctypes.c_void_p, [wintypes.HANDLE, ctypes.c_char_p, wintypes.DWORD]
+        self.unregister_power = user32.UnregisterPowerSettingNotification
+        self.unregister_power.restype, self.unregister_power.argtypes = wintypes.BOOL, [ctypes.c_void_p]
+
+
+_loaded: _Api | None = None
+
+
+def _api() -> _Api:
+    global _loaded
+    if _loaded is None:
+        _loaded = _Api()
+    return _loaded
 
 
 def power_setting(address: int) -> tuple[uuid.UUID, int] | None:
@@ -94,18 +113,21 @@ class LockWatcher(QAbstractNativeEventFilter):
         self.visible = True  # what `seen` was last told
         self.power_saving = False
         self._settings: dict[uuid.UUID, int] = {}
+        api = _api()
         self._window = QWindow()  # never shown: only there to be told
         self.hwnd = int(self._window.winId())
-        QCoreApplication.instance().installNativeEventFilter(self)  # sleep and resume reach every top-level window
+        app: QCoreApplication | None = QCoreApplication.instance()  # typed: PyQt6 6.12's stub says an unbound Self
+        if app is not None:  # there is one: the window above needs it
+            app.installNativeEventFilter(self)  # sleep and resume reach every top-level window
         self.listening = False
         self._tries = 0
         self._register()
         # Each is told at once as it stands, then as it changes.
-        self._power = [handle for handle in (_RegisterPower(self.hwnd, guid.bytes_le, DEVICE_NOTIFY_WINDOW_HANDLE)
+        self._power = [handle for handle in (api.register_power(self.hwnd, guid.bytes_le, DEVICE_NOTIFY_WINDOW_HANDLE)
                                              for guid in (SESSION_DISPLAY_STATUS, ENERGY_SAVER_STATUS, POWER_SAVING_STATUS)) if handle]
 
     def _register(self) -> None:
-        self.listening = bool(_Register(self.hwnd, NOTIFY_FOR_THIS_SESSION))
+        self.listening = bool(_api().register(self.hwnd, NOTIFY_FOR_THIS_SESSION))
         self._tries += 1
         if not self.listening and self._tries < self.RETRIES:
             QTimer.singleShot(10_000, self._register)
@@ -154,11 +176,13 @@ class LockWatcher(QAbstractNativeEventFilter):
                 self._seen(visible)
 
     def close(self) -> None:
-        QCoreApplication.instance().removeNativeEventFilter(self)
+        app: QCoreApplication | None = QCoreApplication.instance()
+        if app is not None:  # gone only if Qt was shut down first
+            app.removeNativeEventFilter(self)
         self._tries = self.RETRIES
         for handle in self._power:
-            _UnregisterPower(handle)
+            _api().unregister_power(handle)
         self._power = []
         if self.listening:
-            _Unregister(self.hwnd)
+            _api().unregister(self.hwnd)
             self.listening = False

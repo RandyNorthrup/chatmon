@@ -2,6 +2,7 @@
 surface talking to a pretend compositor over a socket pair."""
 
 import array
+import logging
 import mmap
 import os
 import socket
@@ -15,10 +16,10 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QPointF, QRect, Qt  # noqa: E402
-from PyQt6.QtGui import QColor, QRegion  # noqa: E402
+from PyQt6.QtCore import QPointF, QRect, Qt
+from PyQt6.QtGui import QColor, QRegion
 
-from chatmon import layer, wayland  # noqa: E402
+from chatmon import layer, wayland
 
 linux_only = pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Wayland is Linux only")
 
@@ -364,7 +365,7 @@ def test_layer_surface_draws_and_takes_clicks_only_on_the_penguin(qapp):
     _pool, size = wayland.decode("ni", pool_req)
     assert size == 2560 * 1600 * 4
     (buffer_req,) = [p for o, op, p in reqs if op == layer.SHM_POOL_CREATE_BUFFER and o == _pool]
-    _buf, offset, w, h, stride, fmt = wayland.decode("niiiiu", buffer_req)
+    _buf, _offset, w, h, stride, fmt = wayland.decode("niiiiu", buffer_req)
     assert (w, h, stride, fmt) == (2560, 1600, 2560 * 4, layer.SHM_ARGB8888)
     assert named(reqs, surface_id, layer.SURFACE_ATTACH)
     (damage,) = named(reqs, surface_id, layer.SURFACE_DAMAGE_BUFFER)
@@ -414,7 +415,7 @@ def test_layer_surface_draws_and_takes_clicks_only_on_the_penguin(qapp):
 
 @linux_only
 def test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still(qapp):
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     shm = surf.globals["wl_shm"][0]
     created, callbacks = list(ids["buffers"]), list(ids["frames"])
     assert len(created) == 1 and len(callbacks) == 1  # the configure's full paint, waiting for its frame
@@ -631,7 +632,7 @@ def test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout(qapp):
 
 @linux_only
 def test_the_keyboard_is_taken_only_while_the_ask_box_is_open(qapp):
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     surf.set_input([QRect(100, 100, 200, 100)])  # the box
     surf._present()
     server.requests()
@@ -655,7 +656,7 @@ def test_the_keyboard_is_taken_only_while_the_ask_box_is_open(qapp):
 
 @linux_only
 def test_an_older_layer_shell_keeps_the_keyboard_exclusive(qapp):
-    conn, server, stage, surf, ids = _configured(qapp, layer_version=3)
+    _conn, server, _stage, surf, ids = _configured(qapp, layer_version=3)
     surf.focus_keyboard(True, grab=False)
     assert interactivity(server.requests(), ids) == [layer.KEYBOARD_EXCLUSIVE]  # no on_demand before version 4
     surf.close()
@@ -716,6 +717,41 @@ def test_input_methods_get_the_field_and_send_text(qapp):
     server.sock.close()
 
 
+@linux_only
+def test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log(qapp, caplog):
+    from chatmon.layer import TextState
+
+    caplog.set_level(logging.DEBUG, logger="chatmon.layer")
+    conn, server, stage, surf, ids = _configured(qapp)
+    ti = ids["text_input"]
+    field, composing, committed = "my password is hunter2", "ひみつ", "swordfish"
+    server.send(ti, layer.EV_TI_ENTER, "o", ids["surface"])
+    conn.read()
+    surf.set_text_input(TextState(field, 7, 7, QRect(10, 20, 2, 16)))  # the text around the cursor goes to the input method
+    server.send(ti, layer.EV_TI_PREEDIT, "sii", composing, 3, 3)
+    server.send(ti, layer.EV_TI_COMMIT_STRING, "s", committed)
+    server.send(ti, layer.EV_TI_DONE, "u", 1)
+    conn.read()
+    assert stage.calls[-1][0] == "im"  # it was typed, all the same
+    logged = [f"{r.getMessage()} {r.args!r}" for r in caplog.records if r.name == "chatmon.layer"]
+    for typed in (field, "hunter2", composing, committed):
+        assert not any(typed in line for line in logged), typed
+    assert any(line.startswith("text input enable: cursor 7, anchor 7, 22 bytes of text") for line in logged)  # where, and how much
+    assert any(line.startswith(f"text input event {layer.EV_TI_COMMIT_STRING}, ") for line in logged)  # the event, by its number and size
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_a_compositor_that_isnt_there_is_logged_and_the_overlay_not_offered(tmp_path, caplog):
+    caplog.set_level(logging.DEBUG, logger="chatmon.wayland")
+    gone = tmp_path / "wayland-9"  # a socket nobody listens on
+    assert wayland.Connection.open({"WAYLAND_DISPLAY": str(gone)}) is None
+    assert not layer.offered({"WAYLAND_DISPLAY": str(gone)})  # Qt goes through XWayland, as before
+    said = [r.getMessage() for r in caplog.records if r.name == "chatmon.wayland" and r.levelno == logging.DEBUG]
+    assert said and said[0].startswith(f"couldn't connect to the Wayland compositor at {gone}: ")
+
+
 def test_byte_offsets_become_qt_positions():
     assert layer.utf16_offset("日本", 3) == 1
     assert layer.utf16_offset("😀a", 4) == 2  # one emoji, two UTF-16 units
@@ -729,7 +765,7 @@ def test_byte_offsets_become_qt_positions():
 @linux_only
 def test_the_clipboard_is_the_overlays_own(qapp):
     """Paste reads the clipboard the compositor offers this connection; copy offers ours."""
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     device = ids["data_device"]
     assert not surf.clipboard_has_text()
     offer = 0xFF000001  # objects the compositor makes have ids from here
@@ -780,7 +816,7 @@ def test_the_clipboard_is_the_overlays_own(qapp):
 @linux_only
 def test_the_primary_selection_too(qapp):
     """The middle-click selection: the same as the clipboard, its own protocol."""
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     device = ids["primary_device"]
     offer = 0xFF000002
     server.send(device, layer.EV_PRIMARY_DEVICE_DATA_OFFER, "n", offer)
@@ -811,7 +847,7 @@ def test_the_primary_selection_too(qapp):
 def test_pasting_into_the_ask_box_prefers_files_then_pictures_then_text(qapp):
     """What the compositor offers for a paste, read in the best type offered: copied files (a file manager
     offers a uri-list), a picture (a screenshot), or text."""
-    conn, server, stage, surf, ids = _configured(qapp)
+    conn, server, _stage, surf, ids = _configured(qapp)
     device = ids["data_device"]
     for n, (offered, wanted, data) in enumerate(
         (
@@ -844,7 +880,7 @@ def test_pasting_into_the_ask_box_prefers_files_then_pictures_then_text(qapp):
 @linux_only
 def test_it_gives_way_to_full_screen_windows_and_comes_above_them_when_it_must(qapp):
     """The top layer, which full-screen windows cover; the overlay while an alert or the ask box needs you."""
-    conn, server, stage, surf, ids = _configured(qapp)
+    _conn, server, _stage, surf, ids = _configured(qapp)
     surf.raise_above(True)
     surf.raise_above(True)  # once is enough
     surf.raise_above(False)
@@ -933,17 +969,20 @@ def _compositor_offering(globals_, monkeypatch):
     def answer():
         registry = None
         deadline = time.monotonic() + 5
-        while time.monotonic() < deadline:
-            for oid, op, payload in server.requests():
-                if oid == wayland.DISPLAY_ID and op == 1:
-                    (registry,) = wayland.decode("n", payload)
-                    for name, (interface, version) in enumerate(globals_, start=1):
-                        server.send(registry, layer.EV_REGISTRY_GLOBAL, "usu", name, interface, version)
-                elif oid == wayland.DISPLAY_ID and op == 0:
-                    (callback,) = wayland.decode("n", payload)
-                    server.send(callback, 0, "u", 1)  # wl_callback.done
-                    return
-            time.sleep(0.01)
+        try:
+            while time.monotonic() < deadline:
+                for oid, op, payload in server.requests():
+                    if oid == wayland.DISPLAY_ID and op == 1:
+                        (registry,) = wayland.decode("n", payload)
+                        for name, (interface, version) in enumerate(globals_, start=1):
+                            server.send(registry, layer.EV_REGISTRY_GLOBAL, "usu", name, interface, version)
+                    elif oid == wayland.DISPLAY_ID and op == 0:
+                        (callback,) = wayland.decode("n", payload)
+                        server.send(callback, 0, "u", 1)  # wl_callback.done
+                        return
+                time.sleep(0.01)
+        finally:
+            server_sock.close()  # its end of the pair: layer.offered() closes the other
 
     threading.Thread(target=answer, daemon=True).start()
     monkeypatch.setattr(layer.Connection, "open", classmethod(lambda cls, env=None: wayland.Connection(client)))

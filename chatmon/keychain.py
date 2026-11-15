@@ -12,9 +12,12 @@ Diffie-Hellman and AES, which Python's own library doesn't have.
 
 from __future__ import annotations
 
+import logging
 import sys
 
 from .i18n import N_, _
+
+logger = logging.getLogger(__name__)
 
 SERVICE = "chatmon"  # what each entry is filed under, with the brain's name
 
@@ -28,7 +31,7 @@ class InMemory:
 
     name = N_("memory only")
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.keys: dict[str, str] = {}
 
     def get(self, name: str) -> str | None:
@@ -83,7 +86,8 @@ def has(name: str) -> bool:
     if name not in _present:
         try:
             _present[name] = bool(_the_store().has(name))
-        except (KeychainError, OSError):
+        except (KeychainError, OSError) as exc:
+            logger.debug("couldn't ask the keychain whether %s has a key: %s", name, exc)
             _present[name] = False
     return _present[name]
 
@@ -94,7 +98,8 @@ def get(name: str) -> str | None:
         return _cache[name]
     try:
         found = _the_store().get(name)
-    except (KeychainError, OSError):
+    except (KeychainError, OSError) as exc:
+        logger.debug("couldn't read the key for %s from the keychain: %s", name, exc)
         found = None
     _cache[name] = found or None
     _present[name] = _cache[name] is not None
@@ -206,8 +211,9 @@ class _Windows:
             raise KeychainError(_("the Credential Manager couldn't save it (error {error})").format(error=ctypes.get_last_error()))
 
     def delete(self, name: str) -> None:
+        ctypes = self.ctypes
         if not self.remove(self.target(name), self.TYPE_GENERIC, 0):
-            error = self.ctypes.get_last_error()
+            error = ctypes.get_last_error()
             if error != self.ERROR_NOT_FOUND:
                 raise KeychainError(_("the Credential Manager couldn't remove it (error {error})").format(error=error))
 
@@ -250,7 +256,7 @@ class _Mac:
         self.cf, self.sec = cf, sec
 
         def constant(lib, symbol: str) -> int:
-            return ctypes.c_void_p.in_dll(lib, symbol).value
+            return ctypes.c_void_p.in_dll(lib, symbol).value or 0  # a NULL pointer reads as None: 0 is the same to C
 
         self.k = {s: constant(sec, s) for s in ("kSecClass", "kSecClassGenericPassword", "kSecAttrService", "kSecAttrAccount",
                                                 "kSecAttrLabel", "kSecValueData", "kSecReturnData", "kSecMatchLimit", "kSecMatchLimitOne")}
@@ -377,7 +383,7 @@ class _SecretService:
         from PyQt6.QtCore import QMetaType
         from PyQt6.QtDBus import QDBusArgument
 
-        text = QMetaType(QMetaType.Type.QString.value)
+        text = QMetaType(QMetaType.Type.QString.value)  # type: ignore[call-overload]  # PyQt6's stub types the member's int value as the enum
         out = QDBusArgument()
         out.beginMap(text, text)  # a{ss}: a plain dict would go as a{sv}, which the service refuses
         for key, value in (("application", SERVICE), ("brain", name)):
@@ -408,8 +414,8 @@ class _SecretService:
     def _close(self, session: str) -> None:
         try:
             self._call(session, "org.freedesktop.Secret.Session", "Close")
-        except KeychainError:
-            pass
+        except KeychainError as exc:
+            logger.debug("couldn't close the keyring's session: %s", exc)
 
     def _items(self, name: str) -> tuple[list[str], list[str]]:
         unlocked, locked = self._call(self.ROOT, self.SERVICE_IFACE, "SearchItems", self._attributes(name))
@@ -477,8 +483,8 @@ class _SecretService:
         """Show the keyring's own window (unlock, confirm) and leave it to you: nothing here waits for it."""
         try:
             self._call(path, "org.freedesktop.Secret.Prompt", "Prompt", "")
-        except KeychainError:
-            pass
+        except KeychainError as exc:
+            logger.debug("couldn't show the keyring's own window: %s", exc)
 
     @staticmethod
     def _object(path: str):

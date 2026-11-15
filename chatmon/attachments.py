@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import base64
 import ctypes
+import logging
 import os
 import re
 import secrets
@@ -25,6 +26,8 @@ from PyQt6.QtCore import QBuffer, QByteArray, QIODevice, Qt
 from PyQt6.QtGui import QImage
 
 from .i18n import _
+
+logger = logging.getLogger(__name__)
 
 MAX_COUNT = 10  # attachments to one question
 MAX_TEXT = 200 * 1024  # bytes of one text file: past this it's cut, and says so
@@ -140,7 +143,7 @@ def _encode(image: QImage, fmt: str, quality: int = -1) -> bytes:
     device = QBuffer(buffer)
     device.open(QIODevice.OpenModeFlag.WriteOnly)
     image.save(device, fmt, quality)
-    return bytes(buffer)
+    return buffer.data()
 
 
 # -- where a file is: on this computer, or on the network
@@ -171,8 +174,9 @@ def network_location(path: Path) -> str | None:
         if sys.platform == "darwin":
             found = _mac_statfs(path)
             return None if found is None or found[0] & MNT_LOCAL else _("a network drive ({kind})").format(kind=found[1])
-    except (OSError, ValueError):
-        return None  # can't tell: looking at the file says what's wrong with it
+    except (OSError, ValueError) as exc:  # can't tell: looking at the file says what's wrong with it
+        logger.debug("couldn't tell whether a file is on another computer: %s", exc)
+        return None
     return None
 
 
@@ -196,6 +200,8 @@ def _windows_remote(text: str, depth: int = 0) -> str | None:
 
 def _drive_type(root: str) -> int:
     """Windows' record of what a drive is (GetDriveTypeW): a mapped drive says so without being contacted."""
+    if sys.platform != "win32":  # asked on Windows alone (network_location)
+        return 0  # DRIVE_UNKNOWN
     kernel32 = ctypes.WinDLL("kernel32")
     kernel32.GetDriveTypeW.argtypes, kernel32.GetDriveTypeW.restype = [ctypes.c_wchar_p], ctypes.c_uint
     return kernel32.GetDriveTypeW(root)

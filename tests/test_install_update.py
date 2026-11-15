@@ -17,7 +17,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import ed25519_sign  # noqa: E402
+import ed25519_sign
 
 pytestmark = pytest.mark.skipif(sys.platform == "win32", reason="root's side is sh, on Linux and macOS")
 
@@ -254,7 +254,7 @@ def mac(tmp_path):
 
 
 def test_mac_a_signed_newer_package_is_installed_from_a_checked_copy(mac, tmp_path):
-    release, app, record, run, _root = mac
+    release, _app, record, run, _root = mac
     out = run(release.package, release.sums, release.sig)
     assert out.returncode == 0, out
     assert (record / "installed").read_bytes() == release.package.read_bytes()

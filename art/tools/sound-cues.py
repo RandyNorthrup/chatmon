@@ -43,7 +43,7 @@ def load() -> dict:
 
 
 def ffmpeg(*args: str) -> str:
-    done = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-y", *args], capture_output=True, text=True,
+    done = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-y", *args], capture_output=True, text=True,  # noqa: S603, S607 - ffmpeg on PATH
                           encoding="utf-8", errors="replace", creationflags=NO_WINDOW)
     if done.returncode != 0:
         raise RuntimeError(f"ffmpeg {' '.join(args)}\n{done.stderr[-2000:]}")
@@ -51,7 +51,7 @@ def ffmpeg(*args: str) -> str:
 
 
 def duration(path: Path) -> float:
-    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(path)],
+    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(path)],  # noqa: S603, S607 - ffprobe on PATH
                          capture_output=True, text=True, check=True, creationflags=NO_WINDOW).stdout
     return float(out.strip())
 

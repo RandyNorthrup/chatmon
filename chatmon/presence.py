@@ -21,20 +21,30 @@ from __future__ import annotations
 
 import ctypes
 import ctypes.util
+import logging
 import os
 import shutil
 import sys
 import time
+from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QObject, QProcess, pyqtSignal, pyqtSlot
+
+if TYPE_CHECKING:
+    from .winfocus import Focus
+
+logger = logging.getLogger(__name__)
 
 AWAY_AFTER = 300  # seconds without input: away from the desk
 
 
-# -- Windows
+# -- Windows (each reading says None, or False, anywhere else)
 
 
 def _win_idle() -> float | None:
+    if sys.platform != "win32":
+        return None
+
     class LASTINPUTINFO(ctypes.Structure):
         _fields_ = [("cbSize", ctypes.c_uint), ("dwTime", ctypes.c_uint32)]
 
@@ -45,7 +55,8 @@ def _win_idle() -> float | None:
             return None
         kernel32.GetTickCount.restype = ctypes.c_uint32
         return ((kernel32.GetTickCount() - info.dwTime) & 0xFFFFFFFF) / 1000.0  # ticks wrap every 49.7 days
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't ask Windows how long since the last input: %s", exc)
         return None
 
 
@@ -54,17 +65,22 @@ _QUNS = {2: "a full-screen app", 3: "a full-screen game", 4: "a presentation", 6
 
 
 def _win_quiet() -> str | None:
+    if sys.platform != "win32":
+        return None
     try:
         state = ctypes.c_int(0)
         if ctypes.windll.shell32.SHQueryUserNotificationState(ctypes.byref(state)) != 0:
             return None
         return _QUNS.get(state.value)
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't ask Windows whether to keep quiet: %s", exc)
         return None
 
 
 def _win_covered(stage_window: int) -> bool:
     """Is a full-screen window in front, on the chatmon's own monitor? (A video, a game, slides.)"""
+    if sys.platform != "win32":
+        return False
 
     class RECT(ctypes.Structure):
         _fields_ = [("left", ctypes.c_long), ("top", ctypes.c_long), ("right", ctypes.c_long), ("bottom", ctypes.c_long)]
@@ -95,7 +111,8 @@ def _win_covered(stage_window: int) -> bool:
             return False
         m = info.rcMonitor
         return rect.left <= m.left and rect.top <= m.top and rect.right >= m.right and rect.bottom >= m.bottom
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't tell whether a full-screen window is in front: %s", exc)
         return False
 
 
@@ -107,16 +124,22 @@ ACCESSIBILITY_SETTINGS = (SPI_SETHIGHCONTRAST, SPI_SETCLIENTAREAANIMATION, SPI_S
 
 
 def _win_setting(action: int) -> int | None:
+    if sys.platform != "win32":
+        return None
     try:
         value = ctypes.c_uint(0)
         if not ctypes.windll.user32.SystemParametersInfoW(action, 0, ctypes.byref(value), 0):
             return None
         return value.value
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't read Windows' setting %#x: %s", action, exc)
         return None
 
 
 def _win_high_contrast() -> bool | None:
+    if sys.platform != "win32":
+        return None
+
     class HIGHCONTRASTW(ctypes.Structure):
         _fields_ = [("cbSize", ctypes.c_uint), ("dwFlags", ctypes.c_uint), ("lpszDefaultScheme", ctypes.c_wchar_p)]
 
@@ -125,7 +148,8 @@ def _win_high_contrast() -> bool | None:
         if not ctypes.windll.user32.SystemParametersInfoW(_SPI_GETHIGHCONTRAST, ctypes.sizeof(hc), ctypes.byref(hc), 0):
             return None
         return bool(hc.dwFlags & 1)  # HCF_HIGHCONTRASTON
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't read Windows' high contrast setting: %s", exc)
         return None
 
 
@@ -138,7 +162,8 @@ def _mac_idle() -> float | None:
         cg.CGEventSourceSecondsSinceLastEventType.restype = ctypes.c_double
         cg.CGEventSourceSecondsSinceLastEventType.argtypes = [ctypes.c_int32, ctypes.c_uint32]
         return float(cg.CGEventSourceSecondsSinceLastEventType(1, 0xFFFFFFFF))  # HID system state, any input
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't ask macOS how long since the last input: %s", exc)
         return None
 
 
@@ -161,13 +186,16 @@ def _mac_workspace_flag(name: bytes) -> bool | None:
         objc.sel_registerName.restype = ctypes.c_void_p
         objc.sel_registerName.argtypes = [ctypes.c_char_p]
         send = ctypes.cast(objc.objc_msgSend, ctypes.c_void_p).value
+        if not send:  # a loaded function always has an address
+            raise OSError("objc_msgSend has no address")
         obj = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)  # exact prototypes: arm64 needs them
         flag = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(send)
         workspace = obj(objc.objc_getClass(b"NSWorkspace"), objc.sel_registerName(b"sharedWorkspace"))
         if not workspace:
             return None
         return bool(flag(workspace, objc.sel_registerName(name)))
-    except (AttributeError, OSError, ValueError):
+    except (AttributeError, OSError, ValueError) as exc:
+        logger.debug("couldn't read macOS's %s: %s", name.decode(), exc)
         return None
 
 
@@ -179,7 +207,9 @@ def _dbus_call(bus, service: str, path: str, interface: str, method: str, *args)
     One message, not an interface object, which would ask the service to describe itself first, and wait."""
     try:
         from PyQt6.QtDBus import QDBus, QDBusMessage
-
+    except ImportError:  # no QtDBus here
+        return None
+    try:
         message = QDBusMessage.createMethodCall(service, path, interface, method)
         if args:
             message.setArguments(list(args))
@@ -190,7 +220,8 @@ def _dbus_call(bus, service: str, path: str, interface: str, method: str, *args)
         while hasattr(value, "variant"):  # QDBusVariant, as a property or a portal setting comes
             value = value.variant()
         return value
-    except (ImportError, RuntimeError, TypeError):
+    except (RuntimeError, TypeError) as exc:
+        logger.debug("the D-Bus call %s.%s failed: %s", interface, method, exc)
         return None
 
 
@@ -247,7 +278,8 @@ class _X11:
                 xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(_Xss)
                 xss.XScreenSaverQueryInfo.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(_Xss)]
                 self.xss, self.info = xss, xss.XScreenSaverAllocInfo()
-        except (AttributeError, OSError):
+        except (AttributeError, OSError) as exc:
+            logger.debug("couldn't reach the X server's libraries: %s", exc)
             self.ok = False
 
     def _longs(self, window: int, prop: str) -> list[int]:
@@ -322,7 +354,8 @@ class _GSetting(QObject):
 
     @pyqtSlot()
     def _read_first(self) -> None:
-        self._set(bytes(self._first.readAllStandardOutput()).decode(errors="replace"))
+        if self._first is not None:  # it is: only its own finished signal calls this
+            self._set(self._first.readAllStandardOutput().data().decode(errors="replace"))
 
     def _set(self, text: str) -> None:
         text = text.strip()
@@ -332,7 +365,9 @@ class _GSetting(QObject):
 
     @pyqtSlot()
     def _heard(self) -> None:
-        for line in bytes(self._monitor.readAllStandardOutput()).decode(errors="replace").splitlines():
+        if self._monitor is None:  # it isn't: only its own signal calls this
+            return
+        for line in self._monitor.readAllStandardOutput().data().decode(errors="replace").splitlines():
             name, _, value = line.partition(":")
             if name.strip() == self._key:
                 self._set(value)
@@ -369,8 +404,8 @@ class Desk(QObject):
         self.overlay_idle_since: float | None = None  # told by the Wayland overlay (ext-idle-notify-v1)
         self._x11: _X11 | None = None
         self._desktop = (os.environ.get("XDG_CURRENT_DESKTOP") or "").lower()
-        self._gnome: dict[str, _GSetting] = {}
-        self._focus = None  # Windows 11's Focus, asked on a thread of its own (winfocus.Focus)
+        self._gnome: dict[tuple[str, str], _GSetting] = {}  # (schema, key): its setting
+        self._focus: Focus | None = None  # Windows 11's Focus, asked on a thread of its own
         # The listeners belong to the Desk (they go with it) and say changes with Qt signals: nothing they hear later
         # reaches a Desk that's gone.
         self._portal = None  # linuxsession.PortalSettings, from the first reading on; False: no D-Bus here
@@ -385,7 +420,14 @@ class Desk(QObject):
 
             if QGuiApplication.instance() is None:
                 return
-            QGuiApplication.styleHints().accessibility().contrastPreferenceChanged.connect(self.settings_changed)
+            hints = QGuiApplication.styleHints()
+            accessibility = hints.accessibility() if hints is not None else None  # AttributeError before Qt 6.10
+            if accessibility is None:
+                return
+            changed = accessibility.contrastPreferenceChanged
+            if not hasattr(changed, "connect"):  # PyQt6 6.11's method
+                return
+            changed.connect(self.settings_changed)
         except (AttributeError, ImportError, RuntimeError, TypeError):
             pass
 
@@ -443,7 +485,8 @@ class Desk(QObject):
                 from . import winfocus
 
                 self._focus = winfocus.Focus()
-            except (ImportError, OSError, RuntimeError):
+            except (ImportError, OSError, RuntimeError) as exc:
+                logger.debug("couldn't start asking Windows about Focus: %s", exc)
                 return False
         return self._focus.active is True
 
@@ -503,7 +546,9 @@ class Desk(QObject):
 
             return macnative.full_screen_over(stage_window)
         x = self._x()
-        full = x.fullscreen_window() if x else 0
+        if x is None:
+            return False
+        full = x.fullscreen_window()
         if not full:
             return False
         area, stage = x.rect(full), (x.rect(stage_window) if stage_window else None)
@@ -546,6 +591,10 @@ def _qt_high_contrast() -> bool:
         from PyQt6.QtCore import Qt
         from PyQt6.QtGui import QGuiApplication
 
-        return QGuiApplication.styleHints().accessibility().contrastPreference() == Qt.ContrastPreference.HighContrast
+        hints = QGuiApplication.styleHints()
+        accessibility = hints.accessibility() if hints is not None else None  # AttributeError before Qt 6.10
+        if accessibility is None:
+            return False
+        return accessibility.contrastPreference() == Qt.ContrastPreference.HighContrast
     except (AttributeError, ImportError, RuntimeError):
         return False

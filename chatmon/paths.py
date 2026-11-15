@@ -8,6 +8,7 @@ before 0.10 kept it all in %APPDATA%\\chatmon; `migrate()` moves it, once."""
 from __future__ import annotations
 
 import getpass
+import logging
 import os
 import re
 import shutil
@@ -15,6 +16,8 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 APP = "chatmon"
 LEGACY_APP = "penguin-companion"  # its name before 0.3.0
@@ -63,15 +66,15 @@ def migrate() -> list[tuple[Path, Path]]:
             try:
                 os.replace(old, new)  # the same parent folder, so the same disk: a rename
             except OSError as exc:
-                print(f"{APP}: couldn't move {old} to {new}: {exc}", file=sys.stderr)
+                logger.warning("couldn't move %s to %s: %s", old, new, exc)
                 continue
             moved.append((old, new))
     if moved:  # whichever command ran first (a hook's notify, likely), the app hears of it when it starts
         try:
             state_dir().mkdir(parents=True, exist_ok=True)
             (state_dir() / RENAMED).touch()
-        except OSError:
-            pass
+        except OSError as exc:
+            logger.debug("couldn't leave the mark that says Chatmon was renamed: %s", exc)
     if sys.platform == "win32":
         _move_to_local()
     return moved
@@ -96,11 +99,11 @@ def _move_to_local() -> None:
             try:
                 os.replace(old, new)
                 return
-            except OSError:
-                pass  # moved file by file
+            except OSError as exc:  # moved file by file
+                logger.debug("couldn't rename %s to %s, so it's moved file by file: %s", old, new, exc)
         _merge(old, new)
     except OSError as exc:
-        print(f"{APP}: couldn't move {old} to {new} yet: {exc}", file=sys.stderr)
+        logger.warning("couldn't move %s to %s yet: %s", old, new, exc)
 
 
 def _merge(old: Path, new: Path) -> None:
@@ -130,11 +133,11 @@ def _merge(old: Path, new: Path) -> None:
                 shutil.copy2(item, target)
                 item.unlink()
         except OSError as exc:
-            print(f"{APP}: couldn't move {item} yet: {exc}", file=sys.stderr)
+            logger.warning("couldn't move %s yet: %s", item, exc)
     try:
         old.rmdir()
-    except OSError:
-        pass  # something's still in it: next time
+    except OSError as exc:  # something's still in it: next time
+        logger.debug("couldn't remove %s yet: %s", old, exc)
 
 
 def first_run_since_rename() -> bool:
@@ -144,8 +147,8 @@ def first_run_since_rename() -> bool:
         mark.unlink()
     except FileNotFoundError:
         return False
-    except OSError:
-        pass
+    except OSError as exc:
+        logger.debug("couldn't remove %s: %s", mark, exc)
     return True
 
 
@@ -196,14 +199,16 @@ def socket_path() -> Path:
         # A user name of more than about 37 characters makes it too long to be a socket's address. macOS keeps
         # a temporary folder for each user, open to them alone: the same for the app, the CLI and every hook.
         try:
-            return Path(os.confstr(_CS_DARWIN_USER_TEMP_DIR)) / name
-        except (OSError, ValueError, TypeError):
-            pass
+            temp = os.confstr(_CS_DARWIN_USER_TEMP_DIR)
+            if temp is not None:  # None: no such folder, so the usual one
+                return Path(temp) / name
+        except (OSError, ValueError, TypeError) as exc:
+            logger.debug("couldn't find your own temporary folder for the socket: %s", exc)
     try:
         folder.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(folder, 0o700)
-    except OSError:
-        pass
+    except OSError as exc:
+        logger.debug("couldn't set up %s, the socket's private folder: %s", folder, exc)
     return path
 
 
@@ -266,23 +271,26 @@ def login_environment(timeout: float = 4.0) -> list[str]:
         # print comes before the marker, and only what follows it is read.
         proc = None
         try:
-            proc = subprocess.Popen(
+            proc = subprocess.Popen(  # noqa: S603 - your own login shell, with a fixed command
                 [shell, "-l", "-i", "-c", f"printf '%s\\0' {_SENTINEL.decode()}; /usr/bin/env -0"],
                 stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, start_new_session=True,
             )
             out, _ = proc.communicate(timeout=timeout)
             if _SENTINEL + b"\0" in out:
                 for item in out.split(_SENTINEL + b"\0", 1)[1].split(b"\0"):
-                    name, eq, value = item.partition(b"=")
-                    if eq and re.fullmatch(rb"[A-Za-z_][A-Za-z0-9_]*", name):
-                        found[name.decode()] = value.decode("utf-8", "replace")
-        except (OSError, subprocess.SubprocessError):
+                    raw_name, eq, raw_value = item.partition(b"=")
+                    if eq and re.fullmatch(rb"[A-Za-z_][A-Za-z0-9_]*", raw_name):
+                        found[raw_name.decode()] = raw_value.decode("utf-8", "replace")
+        except (OSError, subprocess.SubprocessError) as exc:
+            logger.debug("couldn't read your login shell's environment: %s", exc)  # what went wrong, never what it said
             if proc is not None:
                 try:
                     os.killpg(proc.pid, 9)
                 except OSError:
                     pass
                 proc.wait()
+                if proc.stdout is not None:  # communicate() closes it only when it gets to the end
+                    proc.stdout.close()
     usual = ["/opt/homebrew/bin", "/usr/local/bin", str(Path.home() / ".local" / "bin"), str(Path.home() / ".npm-global" / "bin")]
     path = found.get("PATH") or os.pathsep.join([*usual, os.environ.get("PATH", "")])
     adopted = []

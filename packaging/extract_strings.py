@@ -118,6 +118,27 @@ def _arguments(args: ast.arguments) -> list[ast.arg]:
     return [*args.posonlyargs, *args.args, *args.kwonlyargs, *(a for a in (args.vararg, args.kwarg) if a is not None)]
 
 
+def _marked(node: ast.Call, marker: str, where: str, at_import: bool, lines: list[str]) -> tuple[_Found | None, list[str]]:
+    """One marked call: the string it marks, when it can be translated, and what's wrong with it."""
+    problems = []
+    if marker in TRANSLATED_NOW and at_import:
+        problems.append(f"{where}: {marker}() runs as the module is imported, before the language is chosen; mark it with N_() and translate it with _() where it's shown")
+    texts = node.args[: 2 if marker == "ngettext" else 1]
+    values = [t.value for t in texts if isinstance(t, ast.Constant) and isinstance(t.value, str)]
+    if len(node.args) != MARKERS[marker] or node.keywords:
+        problems.append(f"{where}: {marker}() takes {MARKERS[marker]} argument(s), with no keywords")
+    elif marker == "_" and isinstance(texts[0], (ast.Name, ast.Attribute, ast.Subscript)):
+        pass  # a string marked with N_() where it's written, translated here where it's shown
+    elif len(values) != len(texts):
+        problems.append(f"{where}: {marker}() needs plain string literals, so the text can be looked up once translated; put values in {{placeholders}} and .format() the result")
+    elif not values[0]:
+        problems.append(f"{where}: an empty string is gettext's header, not a message")
+    else:
+        plural = values[1] if marker == "ngettext" else None
+        return _Found(node.lineno, node.col_offset, values[0], plural, _translator_comment(lines, node.lineno)), problems
+    return None, problems
+
+
 def scan(source: str, name: str) -> tuple[list[_Found], list[str]]:
     """The marked strings in one module's source, and the problems found in it."""
     tree = ast.parse(source, filename=name)
@@ -152,24 +173,12 @@ def scan(source: str, name: str) -> tuple[list[_Found], list[str]]:
             if isinstance(node, ast.Call):
                 marker = _marker(node)
                 if marker is not None:
-                    where = f"{name}:{node.lineno}"
-                    if marker in TRANSLATED_NOW and at_import:
-                        problems.append(f"{where}: {marker}() runs as the module is imported, before the language is chosen; mark it with N_() and translate it with _() where it's shown")
                     if marker == "_" and isinstance(node.func, ast.Name):
                         translated_here.append(node.lineno)
-                    texts = node.args[: 2 if marker == "ngettext" else 1]
-                    values = [t.value for t in texts if isinstance(t, ast.Constant) and isinstance(t.value, str)]
-                    if len(node.args) != MARKERS[marker] or node.keywords:
-                        problems.append(f"{where}: {marker}() takes {MARKERS[marker]} argument(s), with no keywords")
-                    elif marker == "_" and isinstance(texts[0], (ast.Name, ast.Attribute, ast.Subscript)):
-                        pass  # a string marked with N_() where it's written, translated here where it's shown
-                    elif len(values) != len(texts):
-                        problems.append(f"{where}: {marker}() needs plain string literals, so the text can be looked up once translated; put values in {{placeholders}} and .format() the result")
-                    elif not values[0]:
-                        problems.append(f"{where}: an empty string is gettext's header, not a message")
-                    else:
-                        plural = values[1] if marker == "ngettext" else None
-                        found.append(_Found(node.lineno, node.col_offset, values[0], plural, _translator_comment(lines, node.lineno)))
+                    marked, wrong = _marked(node, marker, f"{name}:{node.lineno}", at_import, lines)
+                    problems.extend(wrong)
+                    if marked is not None:
+                        found.append(marked)
             stack.extend(ast.iter_child_nodes(node))
         if binds and translated_here:
             problems.append(f"{name}:{min(translated_here)}: this function uses _ as a name of its own and calls _() too; give the throwaway another name")

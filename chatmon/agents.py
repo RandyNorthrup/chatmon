@@ -9,15 +9,15 @@ its old name). Run as an administrator or root (an uninstall for everyone),
 Chatmon only edits files: it never starts an agent's own command line, which is
 found in folders you can write to.
 
-Hooks connected under the old name still work (penguin-companion stays as an
-alias for now); `migrate()` swaps them for chatmon's, and the app does that for
-each agent when it starts.
+Hooks connected under the old name are moved over when Chatmon runs: the
+penguin-companion command is gone, and `migrate()` swaps each agent's old hooks
+for chatmon's, which the app does for every agent when it starts.
 """
 
 from __future__ import annotations
 
-import itertools
 import json
+import logging
 import os
 import re
 import shlex
@@ -27,9 +27,13 @@ import sys
 import time
 import tomllib
 from pathlib import Path
+from typing import ClassVar
 
 from . import paths
 from .i18n import N_, _, ngettext
+
+# A log names files and agents, and says what went wrong: never what a settings file holds (they can hold tokens).
+logger = logging.getLogger(__name__)
 
 MARK = "chatmon"  # every command we add contains this; it's how we find ours again
 LEGACY_MARK = "penguin-companion"  # what the commands contained before the rename
@@ -91,11 +95,13 @@ def backup(path: Path) -> Path | None:
     data = path.read_bytes()
     stamp = f"{path.name}.chatmon-backup-{time.strftime('%Y%m%d-%H%M%S')}"
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
-    for n in itertools.count(1):
+    n = 1
+    while True:
         copy = path.with_name(stamp if n == 1 else f"{stamp}-{n}")  # two in one second: -2, -3...
         try:
             fd = os.open(copy, flags, 0o600)
         except FileExistsError:
+            n += 1
             continue
         break
     try:
@@ -110,10 +116,11 @@ def backup(path: Path) -> Path | None:
 
 def _prune_backups(path: Path) -> None:
     prefix = f"{path.name}.chatmon-backup-"
-    found = []
-    for item in path.parent.iterdir():
-        if item.name.startswith(prefix) and item.is_file() and not item.is_symlink():
-            found.append((item.stat().st_mtime_ns, len(item.name), item.name, item))
+    found = [
+        (item.stat().st_mtime_ns, len(item.name), item.name, item)
+        for item in path.parent.iterdir()
+        if item.name.startswith(prefix) and item.is_file() and not item.is_symlink()
+    ]
     for *_order, item in sorted(found)[:-BACKUPS_KEPT]:
         item.unlink(missing_ok=True)
 
@@ -250,8 +257,11 @@ class JsonHooks(Agent):
     """Agents whose settings file has Claude Code's shape:
     {"hooks": {"Event": [{"matcher": ..., "hooks": [{"type": "command", "command": "..."}]}]}}"""
 
-    events: dict[str, str] = {}  # the agent's event name: ours
-    matchers: dict[str, str] = {}  # the agent's event name: which of its kind to catch
+    events: ClassVar[dict[str, str]] = {}  # the agent's event name: ours
+    matchers: ClassVar[dict[str, str]] = {}  # the agent's event name: which of its kind to catch
+
+    def config_path(self) -> Path:  # each agent's own
+        raise NotImplementedError
 
     def _load(self) -> dict:
         return load_json(self.config_path())
@@ -270,7 +280,8 @@ class JsonHooks(Agent):
     def _groups(self) -> list:
         try:
             hooks = self._load().get("hooks") or {}
-        except AgentError:
+        except AgentError as exc:
+            logger.debug("couldn't read %s's hooks: %s", self.label, exc)
             return []
         return [g for event in self.events for g in hooks.get(event) or []] if isinstance(hooks, dict) else []
 
@@ -287,7 +298,7 @@ class JsonHooks(Agent):
             raise AgentError(_('"hooks" in {file} isn\'t an object; not touching it.').format(file=self.config_path()))
         for event, ours in self.events.items():
             groups = [g for g in (hooks.get(event) or []) if not self._is_ours(g)]
-            hooks[event] = groups + [self._entry(event, ours)]
+            hooks[event] = [*groups, self._entry(event, ours)]
         saved = backup(self.config_path())
         write_atomic(self.config_path(), json.dumps(data, indent=2) + "\n")
         return _changed(True, self.label, self.config_path(), saved)
@@ -316,7 +327,10 @@ class JsonHooks(Agent):
 
 
 # No console window for a command-line tool run from the app: there's none of ours for it to share.
-_NO_WINDOW = subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
+if sys.platform == "win32":
+    _NO_WINDOW = subprocess.CREATE_NO_WINDOW
+else:
+    _NO_WINDOW = 0
 
 
 def _run_json(argv: list[str], what: str) -> object:
@@ -325,7 +339,7 @@ def _run_json(argv: list[str], what: str) -> object:
     if not program:
         raise AgentError(_("{program} isn't installed.").format(program=what))
     try:
-        proc = subprocess.run(
+        proc = subprocess.run(  # noqa: S603 - the agent's own listing command, found on PATH; no shell
             [program, *argv[1:]], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120, creationflags=_NO_WINDOW
         )
     except (OSError, subprocess.SubprocessError) as exc:
@@ -458,14 +472,16 @@ class ClaudeCode(Agent):
             return self.marketplace_dir().exists()
         try:
             mine = self._mine()
-        except AgentError:
+        except AgentError as exc:
+            logger.debug("couldn't ask %s for its plugins: %s", self.label, exc)
             return False
         return bool(mine and mine.get("enabled", True))
 
     def legacy(self) -> bool:
         try:
             return self._mine(self.LEGACY_PLUGIN) is not None
-        except AgentError:
+        except AgentError as exc:
+            logger.debug("couldn't ask %s for its plugins: %s", self.label, exc)
             return False
 
     def migrate(self) -> str:
@@ -484,13 +500,14 @@ class ClaudeCode(Agent):
             self._claude("plugin", "uninstall", plugin, "--scope", "user", "--json")
         try:
             self._claude("plugin", "marketplace", "remove", marketplace, "--json")
-        except AgentError:
-            pass
+        except AgentError as exc:
+            logger.debug("couldn't remove %s's %s marketplace: %s", self.label, marketplace, exc)
 
     def status(self) -> str:
         try:
             mine = self._mine()  # once: each look starts Claude Code's command line, a second or so
-        except AgentError:
+        except AgentError as exc:
+            logger.debug("couldn't ask %s for its plugins: %s", self.label, exc)
             mine = None
         if mine:
             return "connected" if mine.get("enabled", True) else "installed but off"
@@ -572,14 +589,16 @@ class Codex(Agent):
     def connected(self) -> bool:
         try:
             current = self._parse(self._text()).get("notify")
-        except AgentError:
+        except AgentError as exc:
+            logger.debug("couldn't read %s's settings: %s", self.label, exc)
             return False
         return isinstance(current, list) and is_ours(" ".join(map(str, current)))
 
     def legacy(self) -> bool:
         try:
             current = self._parse(self._text()).get("notify")
-        except AgentError:
+        except AgentError as exc:
+            logger.debug("couldn't read %s's settings: %s", self.label, exc)
             return False
         return isinstance(current, list) and is_legacy(" ".join(map(str, current)))
 
@@ -664,7 +683,7 @@ class Muse(Agent):
     name, label, command = "muse", "Muse Code", "muse"
     PLUGIN = "chatmon"
     LEGACY_PLUGIN = "penguin-companion"
-    events = {"UserPromptSubmit": "working", "PermissionRequest": "needs-you", "Notification": "needs-you", "Stop": "done", "Interrupt": "idle"}
+    events: ClassVar[dict[str, str]] = {"UserPromptSubmit": "working", "PermissionRequest": "needs-you", "Notification": "needs-you", "Stop": "done", "Interrupt": "idle"}
 
     def bundle_dir(self) -> Path:
         return paths.state_dir() / "integrations" / "muse-plugin"
@@ -691,9 +710,11 @@ class Muse(Agent):
     def _installed(self) -> set[str]:
         try:
             plugins = self._muse("list").get("plugins", [])
-        except AgentError:
+        except AgentError as exc:
+            logger.debug("couldn't ask %s for its plugins: %s", self.label, exc)
             return set()
-        return {(p.get("plugin") or {}).get("id") for p in plugins if isinstance(p, dict)}
+        ids = ((p.get("plugin") or {}).get("id") for p in plugins if isinstance(p, dict))
+        return {i for i in ids if isinstance(i, str)}  # only ever asked about by name
 
     def connected(self) -> bool:
         if elevated():  # Muse Code's command line isn't asked: the plugin Chatmon gave it says
@@ -740,7 +761,7 @@ class Muse(Agent):
 
 class Gemini(JsonHooks):
     name, label, command = "gemini", "Gemini CLI", "gemini"
-    events = {"BeforeAgent": "working", "Notification": "needs-you", "AfterAgent": "done"}
+    events: ClassVar[dict[str, str]] = {"BeforeAgent": "working", "Notification": "needs-you", "AfterAgent": "done"}
 
     def config_path(self) -> Path:
         return _home_env("GEMINI_CLI_HOME", Path.home()) / ".gemini" / "settings.json"
@@ -751,8 +772,8 @@ class Gemini(JsonHooks):
 
 class Qwen(JsonHooks):
     name, label, command = "qwen", "Qwen Code", "qwen"
-    events = {"UserPromptSubmit": "working", "Notification": "needs-you", "Stop": "done"}
-    matchers = {"Notification": "permission_prompt"}
+    events: ClassVar[dict[str, str]] = {"UserPromptSubmit": "working", "Notification": "needs-you", "Stop": "done"}
+    matchers: ClassVar[dict[str, str]] = {"Notification": "permission_prompt"}
 
     def config_path(self) -> Path:
         return Path.home() / ".qwen" / "settings.json"
@@ -760,7 +781,7 @@ class Qwen(JsonHooks):
 
 class Devin(JsonHooks):
     name, label, command = "devin", "Devin CLI", "devin"
-    events = {"UserPromptSubmit": "working", "Stop": "done"}
+    events: ClassVar[dict[str, str]] = {"UserPromptSubmit": "working", "Stop": "done"}
 
     def config_path(self) -> Path:
         if sys.platform == "win32":
@@ -771,6 +792,9 @@ class Devin(JsonHooks):
 class OwnFile(Agent):
     """Agents that read every hooks file in a folder: Chatmon gets a file of its own (chatmon.json; before
     the rename, penguin-companion.json)."""
+
+    def config_path(self) -> Path:  # each agent's own
+        raise NotImplementedError
 
     def content(self) -> dict:
         raise NotImplementedError
@@ -859,7 +883,7 @@ class Cursor(Agent):
     """Cursor's ~/.cursor/hooks.json: {"version": 1, "hooks": {"event": [{"command": ...}]}}."""
 
     name, label, command = "cursor", "Cursor", "cursor"
-    events = {"beforeSubmitPrompt": "working", "stop": "done"}
+    events: ClassVar[dict[str, str]] = {"beforeSubmitPrompt": "working", "stop": "done"}
 
     def config_path(self) -> Path:
         return Path.home() / ".cursor" / "hooks.json"
@@ -877,7 +901,8 @@ class Cursor(Agent):
     def _entries(self) -> list:
         try:
             hooks = self._load().get("hooks") or {}
-        except AgentError:
+        except AgentError as exc:
+            logger.debug("couldn't read %s's hooks: %s", self.label, exc)
             return []
         return [e for event in self.events for e in hooks.get(event) or []] if isinstance(hooks, dict) else []
 
@@ -924,7 +949,7 @@ class Cline(Agent):
     """Cline runs the executable named after each event in ~/Documents/Cline/Hooks."""
 
     name, label, command = "cline", "Cline", "cline"
-    events = {"UserPromptSubmit": "working", "TaskComplete": "done", "TaskCancel": "idle"}
+    events: ClassVar[dict[str, str]] = {"UserPromptSubmit": "working", "TaskComplete": "done", "TaskCancel": "idle"}
 
     def config_path(self) -> Path:
         return Path.home() / "Documents" / "Cline" / "Hooks"
@@ -953,7 +978,7 @@ class Cline(Agent):
         return any(is_legacy(self._text(e) or "") for e in self.events)
 
     def connect(self) -> str:
-        taken = [e for e in self.events if self._text(e) is not None and not is_ours(self._text(e))]
+        taken = [e for e in self.events if (text := self._text(e)) is not None and not is_ours(text)]
         if taken:
             raise AgentError(_("You already have Cline hooks for {events}; not replacing them. See `chatmon hooks show cline`.").format(events=", ".join(taken)))
         for event, ours in self.events.items():

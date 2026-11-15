@@ -14,11 +14,11 @@ import pytest
 
 pytest.importorskip("hypothesis", reason="the property tests need Hypothesis (pip install hypothesis)")
 
-from hypothesis import HealthCheck, example, given, settings  # noqa: E402
-from hypothesis import strategies as st  # noqa: E402
+from hypothesis import HealthCheck, example, given, settings
+from hypothesis import strategies as st
 
-from chatmon import offline  # noqa: E402
-from chatmon.reminders import LONGEST, parse_when  # noqa: E402
+from chatmon import offline
+from chatmon.reminders import LONGEST, parse_when
 
 settings.register_profile(
     "chatmon",

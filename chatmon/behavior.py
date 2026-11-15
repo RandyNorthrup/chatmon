@@ -88,7 +88,7 @@ class Behavior:
         speed: float = 48.0,
     ):
         self.anims = anims
-        self.rng = rng or random.Random()
+        self.rng = rng or random.Random()  # noqa: S311 - an animation's whims, not a secret
         self.walk_enabled = walk
         self.sleep_after = sleep_after
         self.speed = speed
@@ -410,14 +410,14 @@ class Behavior:
             clips += self._to_front()
             clips += [Clip("sleep", [0, 1, 2], self._fps("sleep")), Clip("sleep", [3, 4, 5], self._fps("sleep"), loop=True)]
         elif mood == "think":
-            clips += self._to_front() + [Clip("think", self._think_loop(), self._fps("think"), loop=True)]
+            clips += [*self._to_front(), Clip("think", self._think_loop(), self._fps("think"), loop=True)]
         elif mood in ("alert", "talk", "charge"):
             clips += self._to_front()
             if mood == "talk" and previous == "think" and self._has("think", THINK_GOT_IT):
                 clips.append(Clip("think", [THINK_GOT_IT], 2))  # "got it!" for half a second
             clips.append(Clip(mood, self._all(mood), self._fps(mood), loop=True))
         elif mood == "attend":
-            clips += self._to_front() + [self._idle()]
+            clips += [*self._to_front(), self._idle()]
         else:
             clips += self._ambient()
         if self.reduced_motion:

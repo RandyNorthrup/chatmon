@@ -15,7 +15,7 @@ import time
 
 sys.path.insert(0, sys.argv[1])
 
-from chatmon import libdbus  # noqa: E402
+from chatmon import libdbus
 
 LOG, MODE = sys.argv[2], sys.argv[3]
 PATH = "/org/freedesktop/portal/desktop"

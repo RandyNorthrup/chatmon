@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import ipaddress
 import json
+import logging
 import os
 import re
 import shutil
@@ -25,7 +26,9 @@ import sys
 import tempfile
 import threading
 import time
+import urllib.error
 import urllib.request
+from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -38,6 +41,8 @@ from . import attachments, paths
 from .attachments import IMAGE, PDF, Attachment
 from .events import INTERNAL_ENV
 from .i18n import N_, _
+
+logger = logging.getLogger(__name__)
 
 # Model ids current as of 10 November 2026 (checked on each provider's own pages); the menu offers the
 # `models` listed, and any can be set in the settings.
@@ -522,7 +527,7 @@ class Brain:
             value = options.get(key)
             if value is None:
                 continue
-            candidate = replace(out, **{key: str(value)})
+            candidate = replace(out, effort=str(value)) if key == "effort" else replace(out, thinking=str(value))
             if candidate.refuses() is None:
                 out = candidate
         return out
@@ -593,7 +598,7 @@ def _set(body: dict, dotted: str, value) -> None:
 _SCALAR = (str, int, float)
 # What each setting of a brain must be, to be read at all: a value of another kind is left out (the built-in one
 # stays) and said, never a crash at start or a command line made of a string's letters.
-_KINDS: dict[str, tuple[str, object]] = {
+_KINDS: dict[str, tuple[str, Callable[[object], bool]]] = {
     **{k: (N_("text"), lambda v: isinstance(v, str)) for k in ("type", "label", "url", "model", "api_key_env", "api_key", "effort", "thinking",
                                                                "effort_field", "path", "output")},
     **{k: (N_("a list of text"), lambda v: isinstance(v, list) and all(isinstance(a, _SCALAR) for a in v))
@@ -612,11 +617,13 @@ def load_brains(ai_config: dict, problems: list[str] | None = None) -> dict[str,
     """The built-in brains with your overrides, then your own, in auto order. A setting of the wrong kind is left
     out and said in `problems`."""
     problems = [] if problems is None else problems
-    user = ai_config.get("brains") if isinstance(ai_config.get("brains"), dict) else {}
+    table = ai_config.get("brains")
+    user: dict = table if isinstance(table, dict) else {}
     out: dict[str, Brain] = {}
     for name in list(PRESETS) + [n for n in user if n not in PRESETS]:
         spec = dict(PRESETS.get(name, {}))
-        for key, value in (user.get(name) if isinstance(user.get(name), dict) else {}).items():
+        own = user.get(name)
+        for key, value in (own if isinstance(own, dict) else {}).items():
             kind = _KINDS.get(key)
             if kind is not None and not kind[1](value):
                 problems.append(_("{setting} should be {kind}, so it's left out").format(setting=f"ai.brains.{name}.{key}", kind=_(kind[0])))
@@ -748,7 +755,7 @@ def learn_window(brain: Brain) -> int | None:
     root = brain.url.rstrip("/")
     if root.endswith("/v1"):
         root = root[: -len("/v1")]
-    asks = [(f"{brain.url.rstrip('/')}/models", _from_model_list)]
+    asks: list[tuple[str, Callable[[object, str], int | None]]] = [(f"{brain.url.rstrip('/')}/models", _from_model_list)]
     if brain.local:
         asks += [(f"{root}/api/ps", _from_ollama_ps), (f"{root}/props", _from_llamacpp_props), (f"{root}/api/v1/models", _from_lmstudio)]
     for url, read in asks:
@@ -769,8 +776,13 @@ class _NoRedirects(urllib.request.HTTPRedirectHandler):
 
 def _get_json(url: str, brain: Brain, timeout: float = 2.0):
     check_url(url)
-    request = urllib.request.Request(url, headers={"authorization": f"Bearer {brain.key()}"} if brain.key() else {})
-    with urllib.request.build_opener(_NoRedirects).open(request, timeout=timeout) as reply:
+    request = urllib.request.Request(url, headers={"authorization": f"Bearer {brain.key()}"} if brain.key() else {})  # noqa: S310 - check_url allows https, or http here
+    try:
+        opened = urllib.request.build_opener(_NoRedirects).open(request, timeout=timeout)
+    except urllib.error.HTTPError as exc:  # a refused redirect, or an error: its reply, never read, let go of now
+        exc.close()
+        raise
+    with opened as reply:
         if reply.status != 200:
             raise ValueError(f"HTTP {reply.status}")
         return json.loads(reply.read(4 * 2**20))
@@ -930,7 +942,7 @@ def openai_request(brain: Brain, system: str, history, question: str, attached=(
     headers = {"content-type": "application/json"}
     if brain.key():
         headers["authorization"] = f"Bearer {brain.key()}"
-    body = {"model": brain.model, "messages": [{"role": "system", "content": system}] + _with_attachments(_messages(history, question), attached, _chat_part)}
+    body = {"model": brain.model, "messages": [{"role": "system", "content": system}, *_with_attachments(_messages(history, question), attached, _chat_part)]}
     if brain.effort and brain.effort_levels():
         _set(body, brain.effort_field or "reasoning_effort", brain.effort)
     return _custom(brain, headers, _thinking_fields(brain, body))
@@ -998,12 +1010,12 @@ def parse_responses(data: dict) -> str:
         raise BrainError(_error_message(data) or _("the API returned an error"))
     text = data.get("output_text") if isinstance(data.get("output_text"), str) else ""
     if not text:
-        parts = []
+        parts: list[str] = []
         for item in data.get("output") or []:
             if isinstance(item, dict) and item.get("type") == "message":
-                for part in item.get("content") or []:
-                    if isinstance(part, dict) and part.get("type") in ("output_text", "text"):
-                        parts.append(part.get("text", ""))
+                parts.extend(
+                    part.get("text", "") for part in item.get("content") or [] if isinstance(part, dict) and part.get("type") in ("output_text", "text")
+                )
         text = "".join(parts)
     text = text.strip()
     if not text:
@@ -1147,6 +1159,11 @@ def network_error(brain: Brain, url: str, error: QNetworkReply.NetworkError, det
 MAX_REPLY = 32 * 2**20  # bytes of one answer, at most: past this it isn't an answer
 
 
+def _table(value: object) -> dict:
+    """`value` if it's a JSON object, else an empty one: an event of an odd shape is never a crash."""
+    return value if isinstance(value, dict) else {}
+
+
 class Stream:
     """One answer, read as it arrives. `kind`: "anthropic", "responses" or "openai" (an API's event stream), or
     "stream-json" (Claude Code's lines). feed() returns the new pieces of text; once it's all in, answer() is the
@@ -1210,12 +1227,13 @@ class Stream:
         self.events += 1
         kind = event.get("type")
         if kind == "stream_event":
-            inner = event.get("event") if isinstance(event.get("event"), dict) else {}
-            delta = inner.get("delta") if isinstance(inner.get("delta"), dict) else {}
+            inner = _table(event.get("event"))
+            delta = _table(inner.get("delta"))
             if inner.get("type") == "content_block_delta" and delta.get("type") == "text_delta" and isinstance(delta.get("text"), str):
                 self._piece(delta["text"], new)
         elif kind == "result":
-            result = event.get("result") if isinstance(event.get("result"), str) else ""
+            said = event.get("result")
+            result = said if isinstance(said, str) else ""
             if event.get("is_error") or (event.get("subtype") not in (None, "success")):
                 self.error = result.strip() or str(event.get("subtype") or _("it stopped with an error"))
             else:
@@ -1243,7 +1261,7 @@ class Stream:
             self._chat(event, new)
 
     def _anthropic(self, event: dict, new: list[str]) -> None:
-        kind, delta = event.get("type"), event.get("delta") if isinstance(event.get("delta"), dict) else {}
+        kind, delta = event.get("type"), _table(event.get("delta"))
         if kind == "content_block_delta" and delta.get("type") == "text_delta" and isinstance(delta.get("text"), str):
             self._piece(delta["text"], new)
         elif kind == "message_delta" and delta.get("stop_reason") == "refusal":
@@ -1258,8 +1276,7 @@ class Stream:
         elif kind == "response.refusal.delta" and isinstance(event.get("delta"), str):
             self._refusal.append(event["delta"])
         elif kind == "response.failed":
-            response = event.get("response") if isinstance(event.get("response"), dict) else {}
-            self.error = _error_message(response) or _("the API returned an error")
+            self.error = _error_message(_table(event.get("response"))) or _("the API returned an error")
         elif kind == "error":
             self.error = (event.get("message") if isinstance(event.get("message"), str) else None) or _error_message(event) or _("the API returned an error")
 
@@ -1269,7 +1286,7 @@ class Stream:
             return
         choices = event.get("choices")
         first = choices[0] if isinstance(choices, list) and choices and isinstance(choices[0], dict) else {}
-        delta = first.get("delta") if isinstance(first.get("delta"), dict) else {}
+        delta = _table(first.get("delta"))
         content = delta.get("content")
         if isinstance(content, list):
             content = "".join(p.get("text", "") for p in content if isinstance(p, dict) and isinstance(p.get("text"), str))
@@ -1326,12 +1343,13 @@ def remove_stale_folders(root: Path | None = None) -> int:
     gone = 0
     try:
         found = list(root.glob(ASK_PREFIX + "*"))
-    except OSError:
+    except OSError as exc:
+        logger.debug("couldn't look in %s for left-behind question folders: %s", root, exc)
         return 0
     for path in found:
         try:
             info = path.lstat()
-            if not stat.S_ISDIR(info.st_mode) or (os.name == "posix" and info.st_uid != os.getuid()):
+            if not stat.S_ISDIR(info.st_mode) or (sys.platform != "win32" and info.st_uid != os.getuid()):
                 continue
         except OSError:
             continue
@@ -1411,6 +1429,8 @@ def _end_tree(root: int) -> int:
     number to the next one, so a program whose long-gone parent had the number the brain has now would be ended too
     (on a busy computer it ended Chatmon's own tests). Here a process counts as started by another only if it was
     made after it, and each is ended through a handle opened on it, never by a number that may have moved on."""
+    if sys.platform != "win32":  # Windows' alone: elsewhere _stop kills the brain itself
+        return 0
     import ctypes
     from ctypes import wintypes
 
@@ -1517,10 +1537,16 @@ class Asker(QObject):
         self._dir: Path | None = None  # the empty folder a command-line tool answers in, made for each question
         self._brain: Brain | None = None
         self._parse = parse_openai
-        self._then = None
+        self._then: Callable[[str], None] | None = None  # a local server's: what's done once it says its model
         self._timer = QTimer(self)  # how long it may go without a word: restarted by each piece that comes
         self._timer.setSingleShot(True)
         self._timer.timeout.connect(self._timed_out)
+        self.failed.connect(self._log_failure)
+
+    def _log_failure(self, message: str) -> None:
+        """Keep what went wrong in the log, as it was said on screen: the brain's key never, should a provider have
+        repeated it. The question and the answer so far are never in it."""
+        logger.info("a question failed: %s", _scrub(message, self._brain) if self._brain is not None else message)
 
     def busy(self) -> bool:
         return self._proc is not None or self._reply is not None
@@ -1577,7 +1603,7 @@ class Asker(QObject):
                 # the Asker while Qt still thought it was running, Qt would kill and wait for it inside the delete,
                 # which on Windows takes the whole app down.
                 proc.setParent(None)
-                sip.transferto(proc, None)
+                sip.transferto(proc, None)  # type: ignore[arg-type]  # sip's stub leaves out None, which sip takes (owned by C++ alone)
                 proc.finished.connect(proc.deleteLater)
                 _stop(proc, leftovers)
         if self._reply is not None:
@@ -1645,17 +1671,18 @@ class Asker(QObject):
         if self._proc is None or self._stream is None:
             return
         self._timer.start()
-        for piece in self._stream.feed(bytes(self._proc.readAllStandardOutput())):
+        for piece in self._stream.feed(self._proc.readAllStandardOutput().data()):
             self.partial.emit(piece)
 
     def _process_finished(self, code: int, _status) -> None:
         proc, self._proc = self._proc, None
         self._timer.stop()
-        if proc is None:
+        brain = self._brain
+        if proc is None or brain is None:  # a brain: always, as ask() names it before starting it
             return
         stream, self._stream = self._stream, None
-        out = bytes(proc.readAllStandardOutput())
-        err = clean_output(bytes(proc.readAllStandardError()).decode("utf-8", errors="replace"))
+        out = proc.readAllStandardOutput().data()
+        err = clean_output(proc.readAllStandardError().data().decode("utf-8", errors="replace"))
         proc.deleteLater()
         if stream is not None:
             for piece in stream.feed(out) + stream.end():
@@ -1665,14 +1692,14 @@ class Asker(QObject):
         if self._output_file is not None:
             try:
                 text = self._output_file.read_text(encoding="utf-8") or text
-            except OSError:
-                pass
+            except OSError as exc:
+                logger.debug("couldn't read %s's answer file: %s", brain.name, exc)
         self._drop_output_file()
         if stream is not None and stream.events:
             try:
                 answer = stream.answer()
             except BrainError as exc:
-                self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=self._brain.label, reason=exc))
+                self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=brain.label, reason=exc))
                 return
             if code == 0 or stream.final is not None:
                 self.answered.emit(answer)
@@ -1683,12 +1710,13 @@ class Asker(QObject):
             self.answered.emit(answer)
             return
         detail = err.splitlines()[-1] if err else (_("exit code {code}").format(code=code) if code else _("no answer"))
-        self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=self._brain.label, reason=detail))
+        self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=brain.label, reason=detail))
 
     def _process_error(self, error) -> None:
-        if error == QProcess.ProcessError.FailedToStart and self._proc is not None:
+        brain = self._brain
+        if error == QProcess.ProcessError.FailedToStart and self._proc is not None and brain is not None:
             self.cancel()
-            self.failed.emit(_("Couldn't start {program}.").format(program=self._brain.command[0]))
+            self.failed.emit(_("Couldn't start {program}.").format(program=brain.command[0]))
 
     def _temp(self, prefix: str) -> Path:
         fd, name = tempfile.mkstemp(prefix=prefix, suffix=".txt", dir=self._dir)
@@ -1710,15 +1738,19 @@ class Asker(QObject):
 
     def _post(self, url: str, headers: dict, body: dict) -> None:
         req = self._request(url)
-        streams = self._brain is not None and self._brain.stream
-        if streams:
+        brain = self._brain
+        stream = None
+        if brain is not None and brain.stream:
+            stream = Stream(brain.type if brain.type in ("anthropic", "responses") else "openai")
             body = {**body, "stream": True}
             headers = {**headers, "accept": "text/event-stream"}
         for name, value in headers.items():
             req.setRawHeader(name.encode(), value.encode())
         self._url, self._raw = url, bytearray()
-        self._stream = Stream(self._brain.type if self._brain.type in ("anthropic", "responses") else "openai") if streams else None
+        self._stream = stream
         reply = self._nam.post(req, QByteArray(json.dumps(body).encode("utf-8")))
+        if reply is None:  # never: Qt always makes one (PyQt6's stub allows None)
+            return
         reply.readyRead.connect(self._reply_read)
         reply.finished.connect(self._reply_finished)
         self._reply = reply
@@ -1728,14 +1760,17 @@ class Asker(QObject):
         if brain.key():
             req.setRawHeader(b"authorization", f"Bearer {brain.key()}".encode())
         reply = self._nam.get(req)
+        if reply is None:  # never, as in _post
+            return
         reply.finished.connect(self._models_listed)
         self._reply = reply
 
     def _models_listed(self) -> None:
         reply, self._reply = self._reply, None
-        if reply is None:
+        brain, then = self._brain, self._then
+        if reply is None or brain is None or then is None:  # the brain and what's next: always, as ask() sets both first
             return
-        raw = bytes(reply.readAll())
+        raw = reply.readAll().data()
         status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         redirected = _redirected(reply)
         error = reply.error()
@@ -1745,16 +1780,16 @@ class Asker(QObject):
             if redirected:
                 raise BrainError(redirected)
             if isinstance(status, int) and status >= 400:
-                raise BrainError(http_error(self._brain, status, raw))
+                raise BrainError(http_error(brain, status, raw))
             if not raw and error != QNetworkReply.NetworkError.NoError:
-                raise BrainError(network_error(self._brain, expand_url(self._brain.url), error, detail))
+                raise BrainError(network_error(brain, expand_url(brain.url), error, detail))
             model = first_model(_json_object(raw))
         except (ValueError, BrainError) as exc:
             self._timer.stop()
             why = _sentence(str(exc)) if isinstance(exc, BrainError) else _("no model list.")
-            self.failed.emit(_("{brain}: {error}").format(brain=self._brain.label, error=why))
+            self.failed.emit(_("{brain}: {error}").format(brain=brain.label, error=why))
             return
-        self._then(model)
+        then(model)
 
     def _streaming(self, reply: QNetworkReply) -> bool:
         """Is this reply the answer's event stream (not an error, a redirect, or a whole JSON answer)?"""
@@ -1763,28 +1798,29 @@ class Asker(QObject):
         return self._stream is not None and isinstance(status, int) and status < 300 and kind.startswith("text/event-stream")
 
     def _reply_read(self) -> None:
-        reply = self._reply
-        if reply is None:
+        reply, brain, stream = self._reply, self._brain, self._stream
+        if reply is None or brain is None:  # a brain: always, as ask() names it before asking
             return
         self._timer.start()
-        chunk = bytes(reply.readAll())
-        if self._streaming(reply):
-            for piece in self._stream.feed(chunk):
+        chunk = reply.readAll().data()
+        if stream is not None and self._streaming(reply):
+            for piece in stream.feed(chunk):
                 self.partial.emit(piece)
             return
         self._raw += chunk
         if len(self._raw) > MAX_REPLY:
             self.cancel()
-            self.failed.emit(_("{brain}: the answer was too long to read.").format(brain=self._brain.label))
+            self.failed.emit(_("{brain}: the answer was too long to read.").format(brain=brain.label))
 
     def _reply_finished(self) -> None:
         reply, self._reply = self._reply, None
         self._timer.stop()
-        if reply is None:
+        brain = self._brain
+        if reply is None or brain is None:  # a brain: always, as ask() names it before asking
             return
         streaming = self._streaming(reply)
         stream, self._stream = self._stream, None
-        rest = bytes(reply.readAll())
+        rest = reply.readAll().data()
         status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         error = reply.error()
         detail = reply.errorString()
@@ -1793,25 +1829,25 @@ class Asker(QObject):
         try:
             if redirected:
                 raise BrainError(redirected)
-            if streaming:
+            if streaming and stream is not None:  # streaming is only ever true with a stream
                 for piece in stream.feed(rest) + stream.end():
                     self.partial.emit(piece)
                 if error != QNetworkReply.NetworkError.NoError and not stream.error and not stream.pieces:
-                    raise BrainError(network_error(self._brain, self._url, error, detail))
+                    raise BrainError(network_error(brain, self._url, error, detail))
                 self.answered.emit(stream.answer())
                 return
             raw = bytes(self._raw) + rest
             if isinstance(status, int) and status >= 400:
-                raise BrainError(http_error(self._brain, status, raw))
+                raise BrainError(http_error(brain, status, raw))
             if not raw and error != QNetworkReply.NetworkError.NoError:
-                raise BrainError(network_error(self._brain, self._url, error, detail))
+                raise BrainError(network_error(brain, self._url, error, detail))
             try:
                 data = _json_object(raw)
             except ValueError:
                 data = {}
             self.answered.emit(_parsed(self._parse, data))
         except BrainError as exc:
-            self.failed.emit(_("{brain}: {error}").format(brain=self._brain.label, error=_sentence(_scrub(str(exc), self._brain))))
+            self.failed.emit(_("{brain}: {error}").format(brain=brain.label, error=_sentence(_scrub(str(exc), brain))))
 
     def _timed_out(self) -> None:
         brain = self._brain
@@ -1865,6 +1901,7 @@ class Finder(QObject):
                     if not unsure():
                         break
             except Exception:  # reported as what was known: finding never breaks asking
+                logger.debug("looking for a brain failed; using what was known", exc_info=True)
                 found = quick
             self._looked.emit(then, found)
 

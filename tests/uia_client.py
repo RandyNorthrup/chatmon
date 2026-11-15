@@ -21,7 +21,7 @@ automation = comtypes.client.CreateObject(UIA.CUIAutomation8, interface=UIA.IUIA
 
 
 class Heard(comtypes.COMObject):
-    _com_interfaces_ = [UIA.IUIAutomationNotificationEventHandler]
+    _com_interfaces_ = [UIA.IUIAutomationNotificationEventHandler]  # noqa: RUF012 - comtypes reads this list as it is
 
     def __init__(self, log: str):
         super().__init__()

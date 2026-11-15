@@ -59,7 +59,7 @@ def stored_sha1(path: Path) -> str:
     data = path.read_bytes()
     if path.suffix != ".png":
         data = data.replace(b"\r\n", b"\n")
-    return hashlib.sha1(data).hexdigest()
+    return hashlib.sha1(data, usedforsecurity=False).hexdigest()
 
 
 def test_the_penguins_files_are_untouched():
@@ -137,7 +137,7 @@ def test_companions_stand_about_as_tall_as_the_penguin(qapp):
 
     def drawn_height(companion) -> int:
         frame = Sprites(companion.anim_dir(), 120).frame("idle", 0, False)
-        rows = [r for r in frame.outline]
+        rows = list(frame.outline)
         return max(r.bottom() for r in rows) - min(r.top() for r in rows) + 1
 
     penguin = drawn_height(PENGUIN)

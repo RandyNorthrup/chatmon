@@ -9,10 +9,13 @@ Only the standard library and the system's own interfaces."""
 
 from __future__ import annotations
 
+import logging
 import os
 import subprocess
 import sys
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 LISTEN = "0A"  # a socket's state in /proc/net/tcp: listening
 LSOF = "/usr/sbin/lsof"
@@ -29,12 +32,15 @@ def mine(port: int) -> bool | None:
             return _windows(port)
         if sys.platform == "darwin":
             return _mac(port)
-    except (OSError, ValueError):
+    except (OSError, ValueError) as exc:
+        logger.debug("couldn't tell whose program listens on port %s: %s", port, exc)
         return None
     return None
 
 
 def _linux(port: int) -> bool | None:
+    if sys.platform == "win32":  # asked on Linux alone (mine): Windows has no user ids
+        return None
     owners = []
     read = False
     for table in ("/proc/net/tcp", "/proc/net/tcp6"):
@@ -54,13 +60,16 @@ def _linux(port: int) -> bool | None:
 
 
 def _mac(port: int) -> bool | None:
+    if sys.platform == "win32":  # asked on macOS alone (mine): Windows has no user ids
+        return None
     # Without root, lsof lists only sockets of processes you may look into: your own. Another user's listener on
     # the same port goes unseen, so this is as far as macOS lets an ordinary program see.
     if not os.access(LSOF, os.X_OK):
         return None
     try:
-        out = subprocess.run([LSOF, "-nP", f"-iTCP:{port}", "-sTCP:LISTEN", "-Fu"], capture_output=True, text=True, timeout=LSOF_TIMEOUT_S)
-    except (OSError, subprocess.SubprocessError):
+        out = subprocess.run([LSOF, "-nP", f"-iTCP:{port}", "-sTCP:LISTEN", "-Fu"], capture_output=True, text=True, timeout=LSOF_TIMEOUT_S)  # noqa: S603 - lsof at its fixed path
+    except (OSError, subprocess.SubprocessError) as exc:
+        logger.debug("couldn't ask lsof who listens on port %s: %s", port, exc)
         return None
     uids = [int(line[1:]) for line in out.stdout.splitlines() if line.startswith("u") and line[1:].isdigit()]
     return bool(uids) and all(uid == os.getuid() for uid in uids)
@@ -84,6 +93,8 @@ TOKEN_USER = 1
 
 
 def _listening_pids(port: int) -> set[int] | None:
+    if sys.platform != "win32":  # asked on Windows alone (mine)
+        return None
     import ctypes
     from ctypes import wintypes
 
@@ -102,11 +113,13 @@ def _listening_pids(port: int) -> set[int] | None:
     pids: set[int] = set()
     for family, row in ((AF_INET, Row4), (AF_INET6, Row6)):
         size = wintypes.DWORD(0)
-        for _ in range(5):  # the table can grow between asking its size and reading it
-            buffer = ctypes.create_string_buffer(max(size.value, 4))
-            result = table(buffer, ctypes.byref(size), False, family, TCP_TABLE_OWNER_PID_LISTENER, 0)
+        buffer = ctypes.create_string_buffer(4)
+        result = table(buffer, ctypes.byref(size), False, family, TCP_TABLE_OWNER_PID_LISTENER, 0)
+        for _ in range(4):  # the table can grow between asking its size and reading it: four tries more
             if result != ERROR_INSUFFICIENT_BUFFER:
                 break
+            buffer = ctypes.create_string_buffer(max(size.value, 4))
+            result = table(buffer, ctypes.byref(size), False, family, TCP_TABLE_OWNER_PID_LISTENER, 0)
         if result != 0:
             return None
         count = wintypes.DWORD.from_buffer(buffer).value
@@ -122,6 +135,8 @@ def _listening_pids(port: int) -> set[int] | None:
 def _runs_as_me(pid: int) -> bool:
     """Does process `pid` run as the current user? One that can't be looked into (another user's, the system's)
     counts as someone else's."""
+    if sys.platform != "win32":  # asked on Windows alone (mine)
+        return False
     import ctypes
     from ctypes import wintypes
 
@@ -143,6 +158,8 @@ def _runs_as_me(pid: int) -> bool:
 
 
 def _user_sid(process: int) -> str | None:
+    if sys.platform != "win32":  # asked on Windows alone (mine)
+        return None
     import ctypes
     from ctypes import wintypes
 

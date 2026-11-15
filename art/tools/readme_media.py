@@ -22,16 +22,16 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from PyQt6.QtCore import QPoint, QPointF, QRectF, Qt  # noqa: E402
-from PyQt6.QtGui import QColor, QFont, QFontDatabase, QImage, QLinearGradient, QPainter, QPainterPath, QPen, QRadialGradient  # noqa: E402
-from PyQt6.QtWidgets import QApplication  # noqa: E402
+from PyQt6.QtCore import QPoint, QPointF, QRectF, Qt
+from PyQt6.QtGui import QColor, QFont, QFontDatabase, QImage, QLinearGradient, QPainter, QPainterPath, QPen, QRadialGradient
+from PyQt6.QtWidgets import QApplication
 
 app = QApplication(sys.argv[:1])
 
-from chatmon import companions, styles  # noqa: E402
-from chatmon.behavior import Behavior  # noqa: E402
-from chatmon.bubble import AskBox, SpeechBubble  # noqa: E402
-from chatmon.sprites import Sprites  # noqa: E402
+from chatmon import companions, styles
+from chatmon.behavior import Behavior
+from chatmon.bubble import AskBox, SpeechBubble
+from chatmon.sprites import Sprites
 
 OUT = ROOT / "docs" / "media"
 DPR = 2  # device pixels per pixel: the pictures are made at twice their size
@@ -83,7 +83,7 @@ def card(p: QPainter, w: float, h: float, glows: list[tuple[float, float, str, f
     sky.setColorAt(0.6, QColor("#0d1229"))
     sky.setColorAt(1, QColor("#1a0f2e"))
     p.fillRect(QRectF(0, 0, w, h), sky)
-    rng = random.Random(7)
+    rng = random.Random(7)  # noqa: S311 - where stars go in a picture
     p.setPen(Qt.PenStyle.NoPen)
     for _ in range(int(w * h / 2600)):  # a few faint stars
         c = QColor(255, 255, 255, rng.randint(25, 90))
@@ -119,7 +119,7 @@ class Actor:
         companion = companions.COMPANIONS[cid]
         self.cid = cid
         self.sprites = Sprites(companion.anim_dir(), size, DPR)
-        self.behavior = Behavior(self.sprites.anims(), now=0.0, x=x, rng=random.Random(seed), walk=False)
+        self.behavior = Behavior(self.sprites.anims(), now=0.0, x=x, rng=random.Random(seed), walk=False)  # noqa: S311 - a recorded animation's whims
         self.floor, self.width = floor, width
         self.bubble = SpeechBubble()
         self.bubble.set_style(styles.get(companion.bubble_style), True)
@@ -155,8 +155,8 @@ class Actor:
 
 def encode(frames_dir: Path, out: Path, width_px: int) -> None:
     """Frames to a looping animated WebP, `width_px` wide."""
-    subprocess.run(
-        ["ffmpeg", "-loglevel", "error", "-y", "-framerate", str(FPS), "-i", str(frames_dir / "%04d.png"),
+    subprocess.run(  # noqa: S603 - ffmpeg with fixed arguments
+        ["ffmpeg", "-loglevel", "error", "-y", "-framerate", str(FPS), "-i", str(frames_dir / "%04d.png"),  # noqa: S607 - ffmpeg on PATH
          "-vf", f"scale={width_px}:-1:flags=lanczos", "-c:v", "libwebp_anim", "-pix_fmt", "yuva420p",
          "-quality", "82", "-compression_level", "6", "-loop", "0", str(out)],
         check=True,

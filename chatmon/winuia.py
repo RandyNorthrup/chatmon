@@ -19,7 +19,9 @@ Imported on Windows alone.
 from __future__ import annotations
 
 import ctypes
+import logging
 import os
+import sys
 import time
 import uuid
 from ctypes import wintypes
@@ -28,6 +30,8 @@ from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, Qt
 from PyQt6.QtGui import QGuiApplication
 
 from .i18n import N_, _
+
+logger = logging.getLogger(__name__)
 
 WM_GETOBJECT = 0x003D
 UIA_ROOT_OBJECT_ID = -25  # UiaRootObjectId: WM_GETOBJECT's lParam when UI Automation asks for a window's provider
@@ -199,7 +203,8 @@ def prepare() -> bool:
         else:
             try:
                 _announcer = Announcer()
-            except (AttributeError, OSError):
+            except (AttributeError, OSError) as exc:
+                logger.debug("UI Automation's notifications can't be had: %s", exc)
                 _unavailable = True
     return _announcer is not None
 
@@ -207,11 +212,14 @@ def prepare() -> bool:
 def say(text: str, important: bool = False) -> bool:
     """Have the screen reader say `text` through UI Automation; False if it can't be done now (see `prepare` and
     Announcer.say), and the caller says it another way."""
-    return prepare() and _announcer.say(text, important)
+    prepare()
+    return _announcer is not None and _announcer.say(text, important)
 
 
 def in_front() -> bool:
     """Whether the window in front is one of Chatmon's (its ask box, its menu): then Chatmon is the app in front."""
+    if sys.platform != "win32":
+        return False
     try:
         user32 = ctypes.windll.user32
         user32.GetForegroundWindow.restype = ctypes.c_void_p
@@ -222,5 +230,6 @@ def in_front() -> bool:
         pid = wintypes.DWORD(0)
         user32.GetWindowThreadProcessId(front, ctypes.byref(pid))
         return pid.value == os.getpid()
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't tell which app is in front: %s", exc)
         return False

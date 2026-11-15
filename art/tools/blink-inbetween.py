@@ -110,7 +110,7 @@ def eye_regions(open_rgb, closed_rgb):
     return merged
 
 
-def inbetween(open_rgb, closed_rgb, amount=0.5, info=None):
+def inbetween(open_rgb, closed_rgb, amount=0.5, info=None):  # noqa: C901 - one frame's recipe, step by step, kept together to read
     """Return the in-between frame (uint8 RGB array). open_rgb and closed_rgb: HxWx3 uint8, registered to each other."""
     o = open_rgb.astype(float)
     c = closed_rgb.astype(float)
@@ -118,7 +118,7 @@ def inbetween(open_rgb, closed_rgb, amount=0.5, info=None):
     out = o.copy()
     # the face without any eye drawn: the closed frame with its eyelid arcs taken out by a median filter
     med = np.asarray(Image.fromarray(closed_rgb).filter(ImageFilter.MedianFilter(17))).astype(float)
-    yy, xx = np.mgrid[0:H, 0:W].astype(float)
+    yy, _xx = np.mgrid[0:H, 0:W].astype(float)
     for k, region in enumerate(eye_regions(open_rgb, closed_rgb)):
         # open eye: where the open frame departs from the eyeless face
         eye = (np.sqrt(((o - med) ** 2).sum(-1)) > 40) & region
@@ -174,7 +174,7 @@ def inbetween(open_rgb, closed_rgb, amount=0.5, info=None):
 
         def lid_curve(y_lid):
             """Warp the arc so its middle sits at y_lid over this eye; return (alpha layer, lid centre line per column)."""
-            y_end = int(round(y_lid - sag))
+            y_end = int(round(y_lid - sag))  # noqa: RUF046 - numpy's round can give a float
             band = em[max(ey0, y_end - 1):min(ey1, y_end + 1) + 1]
             cc = np.nonzero(band.any(0))[0]
             width = (cc.max() - cc.min() + 1) if len(cc) else (ex1 - ex0 + 1)
@@ -208,13 +208,13 @@ def inbetween(open_rgb, closed_rgb, amount=0.5, info=None):
                 up = float(thick / 2 + 1 - rel.min())        # move the lid up this far to show it all
                 if vis >= 0.5 and up / span <= COVER_TOLERANCE:
                     y_lid -= up
-                    decision = "lid raised %.1f px to keep the highlight whole" % up
+                    decision = f"lid raised {up:.1f} px to keep the highlight whole"
                 elif down / span <= COVER_TOLERANCE or vis < 0.5:
                     y_lid += min(down, 2 * COVER_TOLERANCE * span)
-                    decision = "lid lowered %.1f px to cover the highlight fully" % min(down, 2 * COVER_TOLERANCE * span)
+                    decision = f"lid lowered {min(down, 2 * COVER_TOLERANCE * span):.1f} px to cover the highlight fully"
                 else:
                     y_lid -= min(up, 2 * COVER_TOLERANCE * span)
-                    decision = "lid raised %.1f px to keep the highlight whole" % min(up, 2 * COVER_TOLERANCE * span)
+                    decision = f"lid raised {min(up, 2 * COVER_TOLERANCE * span):.1f} px to keep the highlight whole"
         wa, line, sx = lid_curve(y_lid)
         # above the lid line, inside the eye region: the closed frame's lid and face
         fill_zone = dilate(em_f, 2) | (region & (wa > 0.02))

@@ -202,7 +202,7 @@ def test_links_in_answers_wear_the_styles_colour_not_the_apps(qapp, name):
         box.deleteLater()
 
 
-@pytest.mark.parametrize("name", PAINTED + ["plain"])
+@pytest.mark.parametrize("name", [*PAINTED, "plain"])
 def test_selected_text_in_the_ask_box_wears_the_selection_colours(qapp, name):
     c = styles.get(name).colours()
     box = AskBox()

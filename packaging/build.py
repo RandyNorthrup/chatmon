@@ -58,7 +58,7 @@ def notes(v: str) -> str:
 
 def run(*argv, **kwargs) -> subprocess.CompletedProcess:
     print("+", " ".join(str(a) for a in argv), flush=True)
-    return subprocess.run([str(a) for a in argv], check=True, **kwargs)
+    return subprocess.run([str(a) for a in argv], check=True, **kwargs)  # noqa: S603 - the build's own steps, each one printed
 
 
 def pyinstaller() -> Path:
@@ -115,7 +115,7 @@ def _pe_overlay(exe: Path) -> int:
 
 def windows() -> Path:
     v = version()
-    numbers = ".".join((re.findall(r"\d+", v)[:3] + ["0", "0", "0", "0"])[:4])
+    numbers = ".".join([*re.findall(r"\d+", v)[:3], "0", "0", "0", "0"][:4])
     common = (
         # Which DLLs each needs, read from their import tables by pefile (Nuitka's own copy), not by a
         # Dependency Walker Nuitka would download unchecked from its website.
@@ -261,7 +261,7 @@ def linux() -> list[Path]:
 
 def smoke(cli: str, app: str, expected: str | None = None) -> None:
     cli, app = (shutil.which(p) or str(Path(p).resolve()) for p in (cli, app))  # a command's name, or a path to it
-    home =Path(tempfile.mkdtemp(prefix="cm-", dir=None if sys.platform == "win32" else "/tmp"))  # a short path: macOS caps socket paths
+    home =Path(tempfile.mkdtemp(prefix="cm-", dir=None if sys.platform == "win32" else "/tmp"))  # noqa: S108 - mkdtemp, private; a short path, as macOS caps socket paths
     env = dict(os.environ, QT_QPA_PLATFORM="offscreen", HOME=str(home), USERPROFILE=str(home), APPDATA=str(home / "AppData"),
                LOCALAPPDATA=str(home / "AppData" / "Local"), XDG_CONFIG_HOME=str(home / ".config"), XDG_STATE_HOME=str(home / ".state"),
                XDG_RUNTIME_DIR=str(home))
@@ -273,7 +273,7 @@ def smoke(cli: str, app: str, expected: str | None = None) -> None:
     env.pop("CHATMON_INTERNAL", None)
 
     def say(*args: str, timeout: float = 30) -> subprocess.CompletedProcess:
-        return subprocess.run([cli, *args], env=env, capture_output=True, text=True, timeout=timeout)
+        return subprocess.run([cli, *args], env=env, capture_output=True, text=True, timeout=timeout)  # noqa: S603 - the build being checked
 
     shown = say("--version").stdout.strip()
     print(f"{cli} --version: {shown}")
@@ -281,7 +281,7 @@ def smoke(cli: str, app: str, expected: str | None = None) -> None:
         sys.exit(f"expected version {expected}")
     log = home / "app-output.txt"
     with open(log, "w") as out:
-        running = subprocess.Popen([app], env=env, stdout=out, stderr=subprocess.STDOUT)
+        running = subprocess.Popen([app], env=env, stdout=out, stderr=subprocess.STDOUT)  # noqa: S603 - the build being checked
     try:
         deadline = time.monotonic() + 90
         while time.monotonic() < deadline:
@@ -318,7 +318,7 @@ def _stack(pid: int) -> str:
     `sample` (native stacks of every thread), else nothing."""
     if sys.platform == "darwin" and shutil.which("sample"):
         try:
-            shown = subprocess.run(["sample", str(pid), "3"], capture_output=True, text=True, timeout=60)
+            shown = subprocess.run(["sample", str(pid), "3"], capture_output=True, text=True, timeout=60)  # noqa: S603, S607 - macOS's own sample, found just above
             return "where it was:\n" + (shown.stdout or shown.stderr)[-12000:]
         except (OSError, subprocess.SubprocessError) as exc:
             return f"(couldn't sample it: {exc})"

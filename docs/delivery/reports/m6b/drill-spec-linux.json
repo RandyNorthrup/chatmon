@@ -1,0 +1,69 @@
+{
+  "drills": [
+    {
+      "id": "M6B-01-overlay-key-press-taken-as-release",
+      "requirement": "M6B-01.A2",
+      "file": "chatmon/layer.py",
+      "find": "        if state == 1:\r\n            key = keyboard.press(code)\r\n",
+      "replace": "        if state == 0:\r\n            key = keyboard.press(code)\r\n",
+      "test": [
+        "tests/test_wayland.py::test_typing_reaches_the_stage_through_the_keymap"
+      ],
+      "expect": [
+        "test_typing_reaches_the_stage_through_the_keymap"
+      ]
+    },
+    {
+      "id": "M6B-02-winpipe-loads-windows-on-import",
+      "requirement": "M6B-02.A2",
+      "file": "chatmon/winpipe.py",
+      "find": "_dlls: dict[str, Any] = {}\r\n",
+      "replace": "_dlls: dict[str, Any] = {\"kernel32\": ctypes.WinDLL(\"kernel32\", use_last_error=True)}\r\n",
+      "test": [
+        "tests/test_imports.py"
+      ],
+      "expect": [
+        "chatmon.winpipe doesn't import on linux"
+      ]
+    },
+    {
+      "id": "M6B-03-log-left-at-the-umask",
+      "requirement": "M6B-03.A2",
+      "file": "chatmon/log.py",
+      "find": "            os.fchmod(fd, 0o600)\n",
+      "replace": "            pass\n",
+      "test": [
+        "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+      ],
+      "expect": [
+        "test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+      ]
+    },
+    {
+      "id": "M6B-03-log-followed-through-a-link",
+      "requirement": "M6B-03.A2",
+      "file": "chatmon/log.py",
+      "find": "getattr(os, \"O_NOFOLLOW\", 0)",
+      "replace": "0",
+      "test": [
+        "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+      ],
+      "expect": [
+        "test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+      ]
+    },
+    {
+      "id": "M6B-03-typed-text-in-the-debug-log",
+      "requirement": "M6B-03.A3",
+      "file": "chatmon/layer.py",
+      "find": "        logger.debug(\"text input event %s, %s bytes\", opcode, len(args))",
+      "replace": "        logger.debug(\"text input event %s %r\", opcode, args[:40])",
+      "test": [
+        "tests/test_wayland.py::test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log"
+      ],
+      "expect": [
+        "test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+$ python verify-delivery.py --observe-context
+{
+  "platform": "windows",
+  "tools": {
+    "python": "3.14.10"
+  }
+}
+$ python -m pytest --version
+pytest 9.2.0
+$ python -c 'import PyQt6.QtCore ...'
+PyQt6 6.11.0 Qt 6.11.0
+$ python -m ruff --version
+ruff 0.17.4
+$ python -m mypy --version
+mypy 2.4.1 (compiled: yes)
+$ wsl: /var/tmp/m6b-venv
+6.12.1 6.12.0
+mypy 2.4.1 (compiled: yes)
+$ python -c 'from PyQt6.QtCore import qVersion; print(qVersion())'
+Qt runtime 6.11.2

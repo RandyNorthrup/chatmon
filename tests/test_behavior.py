@@ -1,4 +1,5 @@
 import copy
+import itertools
 import math
 import random
 
@@ -169,7 +170,7 @@ def test_idle_holds_still_and_blinks_now_and_then():
         current = current + 1 if i == 0 else 0
         runs.append(current)
     assert max(runs) >= 3 * 30 - 2
-    blinks = sum(1 for a, c in zip(idle, idle[1:], strict=False) if a == 0 and c == 2)
+    blinks = sum(1 for a, c in itertools.pairwise(idle) if a == 0 and c == 2)
     assert 6 <= blinks <= 13  # 37 s at one blink every 3-5 s
 
 
@@ -287,7 +288,7 @@ def test_standing_still_it_names_the_next_change_seconds_ahead():
     ticks = assert_nothing_missed(b, 3, 63)
     assert len(ticks) < 60 + 16 * 4  # once a second at most while still, plus the frames of each blink
     frames = [f for _, f in sparse(later, 3, 63)]
-    blinks = sum(1 for a, c in zip(frames, frames[1:], strict=False) if (a.index, c.index) == (0, 2))
+    blinks = sum(1 for a, c in itertools.pairwise(frames) if (a.index, c.index) == (0, 2))
     assert blinks >= 11  # and it still blinks on time: 60 s at one every 3-5 s
 
 

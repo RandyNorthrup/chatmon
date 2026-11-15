@@ -4,6 +4,7 @@ General › Login Items and turned off there or here alike; run from source or p
 
 from __future__ import annotations
 
+import logging
 import os
 import plistlib
 import re
@@ -14,6 +15,8 @@ from pathlib import Path
 
 from . import paths
 from .i18n import _
+
+logger = logging.getLogger(__name__)
 
 _RUN_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
 _NAME = "Chatmon"
@@ -165,7 +168,7 @@ def set_enabled(on: bool) -> None:
         if problem is None:
             _launch_agent().unlink(missing_ok=True)  # an older version's: starting once at login is enough
             return
-        print(f"{paths.APP}: couldn't add Chatmon to Login Items ({problem}), so a LaunchAgent starts it", file=sys.stderr)
+        logger.warning("couldn't add Chatmon to Login Items (%s), so a LaunchAgent starts it", problem)
     path = _launch_agent() if sys.platform == "darwin" else _desktop_file()
     if not on:
         path.unlink(missing_ok=True)

@@ -6,8 +6,8 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from chatmon import paths, sprites  # noqa: E402
-from chatmon.sprites import Sprites  # noqa: E402
+from chatmon import paths, sprites
+from chatmon.sprites import Sprites
 
 
 @pytest.fixture

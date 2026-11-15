@@ -205,7 +205,7 @@ def test_the_readings_can_be_taken_on_a_worker_thread(qapp, tmp_path):
     def take():
         try:
             there.append((heads_up.read_battery(), heads_up.read_disks([tmp_path])))
-        except Exception as exc:  # reported below, with the thread's own error
+        except Exception as exc:  # noqa: BLE001 - reported below, with the thread's own error
             failed.append(exc)
 
     worker = threading.Thread(target=take)

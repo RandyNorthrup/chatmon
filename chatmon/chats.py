@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import copy
 import json
+import logging
 import re
 import time
 import uuid
@@ -23,6 +24,8 @@ from pathlib import Path
 from . import localefmt, paths
 from .i18n import _, ngettext
 from .settings import private_dir, write_private
+
+logger = logging.getLogger(__name__)
 
 MAX_FILE = 64 * 2**20  # bytes: a chat file bigger than this isn't read (it isn't one of ours)
 MAX_INSTRUCTIONS = 4000  # characters of a chat's own instructions
@@ -64,7 +67,7 @@ class Chat:
         """The chat as a Markdown document, to keep or share."""
         from datetime import datetime
 
-        lines = [f"# {self.title or _('A chat with Chatmon')}", "", f"*{localefmt.date_and_time(datetime.fromtimestamp(self.created))}*", ""]
+        lines = [f"# {self.title or _('A chat with Chatmon')}", "", f"*{localefmt.date_and_time(datetime.fromtimestamp(self.created))}*", ""]  # noqa: DTZ006 - your local time, as you saw it
         for m in self.messages:
             if m.role == "user":
                 lines += [_("**You:** {text}").format(text=m.text) if m.text else _("**You:**"), ""]
@@ -242,14 +245,18 @@ class ChatBook:
             chat = None if info.st_size > MAX_FILE else from_json(json.loads(path.read_text(encoding="utf-8")))
             self._read[chat_id] = (info.st_mtime_ns, info.st_size, chat)
             return copy.deepcopy(chat)
-        except (OSError, ValueError, RecursionError):
+        except FileNotFoundError:  # no such chat kept (yet): the answer
+            return None
+        except (OSError, ValueError, RecursionError) as exc:
+            logger.debug("couldn't read chat %s: %s", chat_id, exc)
             return None
 
     def recent(self, limit: int = 200) -> list[Chat]:
         """Pinned chats, then the most recently talked in, newest first."""
         try:
             files = [p for p in self.root().glob("*.json") if _ID.fullmatch(p.stem)]
-        except OSError:
+        except OSError as exc:
+            logger.debug("couldn't list the kept chats: %s", exc)
             return []
         files.sort(key=lambda p: p.stat().st_mtime if p.exists() else 0, reverse=True)
         chats = []
@@ -267,7 +274,8 @@ class ChatBook:
         Chats window lists them; `load` reads one whole)."""
         try:
             files = [(p, p.stat()) for p in self.root().glob("*.json") if _ID.fullmatch(p.stem)]
-        except OSError:
+        except OSError as exc:
+            logger.debug("couldn't list the kept chats: %s", exc)
             return []
         files.sort(key=lambda f: f[1].st_mtime, reverse=True)
         found: list[Listed] = []
@@ -289,15 +297,16 @@ class ChatBook:
             return None
         try:
             chat = from_json(json.loads(path.read_text(encoding="utf-8")))
-        except (OSError, ValueError, RecursionError):
+        except (OSError, ValueError, RecursionError) as exc:
+            logger.debug("couldn't read %s: %s", path, exc)
             return None
         return Listed(chat.id, chat.title, chat.updated, chat.pinned) if chat is not None and chat.messages else None
 
     def delete(self, chat_id: str) -> None:
         try:
             self._file(chat_id).unlink(missing_ok=True)
-        except (OSError, ValueError):
-            pass
+        except (OSError, ValueError) as exc:
+            logger.debug("couldn't delete chat %s: %s", chat_id, exc)
 
     def clear(self) -> int:
         """Delete every chat; how many went."""
@@ -310,8 +319,8 @@ class ChatBook:
                         gone += 1
                 for path in root.glob("*.tmp"):
                     path.unlink(missing_ok=True)
-            except OSError:
-                pass
+            except OSError as exc:
+                logger.debug("couldn't clear the kept chats in %s: %s", root, exc)
         return gone
 
 
@@ -326,7 +335,7 @@ def when(t: float, now: float | None = None) -> str:
     if now - t < 3600:
         minutes = int((now - t) // 60)
         return ngettext("{n} min ago", "{n} min ago", minutes).format(n=minutes)
-    d, n = datetime.fromtimestamp(t), datetime.fromtimestamp(now)
+    d, n = datetime.fromtimestamp(t), datetime.fromtimestamp(now)  # noqa: DTZ006 - "today" is your local day
     if d.date() == n.date():
         return _("today {time}").format(time=localefmt.time_of_day(d))
     if d.date() == n.date() - timedelta(days=1):

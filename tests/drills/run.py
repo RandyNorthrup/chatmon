@@ -211,16 +211,14 @@ def main(argv: list[str] | None = None) -> int:
         if code != 0 or not Path(out.strip().splitlines()[-1]).resolve().is_relative_to(copy.resolve()):
             print(f"drills: the copy's chatmon is not the one imported:\n{out}", file=sys.stderr)
             return 2
-        for d in drills:
-            results.append(drill(d, root, copy, args.python, log))
+        results.extend(drill(d, root, copy, args.python, log) for d in drills)
     finally:
         if not args.keep:
             shutil.rmtree(copy, ignore_errors=True)
 
     failed = [r for r in results if r["status"] != "pass"]
     log.append("\n=== summary")
-    for r in results:
-        log.append(f"{r['status'].upper():4} {r['id']}" + (f": {r['reason']}" if r["reason"] else ""))
+    log.extend(f"{r['status'].upper():4} {r['id']}" + (f": {r['reason']}" if r["reason"] else "") for r in results)
     log_path.parent.mkdir(parents=True, exist_ok=True)
     log_path.write_text("\n".join(log) + "\n", encoding="utf-8")
     log_path.with_name(log_path.stem + "-results.json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")

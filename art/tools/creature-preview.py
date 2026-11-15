@@ -20,14 +20,14 @@ import sys
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-import numpy as np  # noqa: E402
-from PIL import Image, ImageDraw, ImageFont  # noqa: E402
-from PyQt6.QtCore import QPoint  # noqa: E402
-from PyQt6.QtGui import QColor, QGuiApplication, QImage, QPainter  # noqa: E402
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont
+from PyQt6.QtCore import QPoint
+from PyQt6.QtGui import QColor, QGuiApplication, QImage, QPainter
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-from chatmon import companions  # noqa: E402
-from chatmon.sprites import SIDE_VIEWS, Sprites  # noqa: E402
+from chatmon import companions
+from chatmon.sprites import SIDE_VIEWS, Sprites
 
 DARK, LIGHT = "#1e2128", "#e9ebf0"
 MIN_PLAY = 1.6  # seconds: short loops go round until they have played this long

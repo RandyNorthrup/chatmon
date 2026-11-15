@@ -19,7 +19,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import spritefix  # noqa: E402
+import spritefix
 
 # name: (cols, rows, fps, loop, scale)
 # scale is the display scale that keeps the penguin one size on screen, matched

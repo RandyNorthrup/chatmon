@@ -6,12 +6,12 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QEvent, QPointF, QRect, Qt  # noqa: E402
-from PyQt6.QtGui import QColor, QFont, QFontMetrics, QImage, QKeyEvent, QPainter  # noqa: E402
-from PyQt6.QtWidgets import QApplication, QMenu  # noqa: E402
+from PyQt6.QtCore import QEvent, QPointF, QRect, Qt
+from PyQt6.QtGui import QColor, QFont, QFontMetrics, QImage, QKeyEvent, QPainter
+from PyQt6.QtWidgets import QApplication, QMenu
 
-from chatmon import stagemenu  # noqa: E402
-from chatmon.stagemenu import StageMenu, contrast  # noqa: E402
+from chatmon import stagemenu
+from chatmon.stagemenu import StageMenu, contrast
 
 SCREEN = QRect(0, 0, 1280, 800)
 CORNER = QPointF(100, 100)
@@ -191,7 +191,7 @@ def test_a_menu_taller_than_the_screen_scrolls(qapp):
     sm = opened(m, clock, at=QPointF(50, 20), area=QRect(0, 0, 600, 400))
     panel = sm.panels[0]
     assert panel.rect.height() <= 400 - 2 * stagemenu.MARGIN and panel.scrolls()
-    shown = lambda: [i for i in range(60) if panel.view().contains(panel.item_rect(i))]  # noqa: E731
+    shown = lambda: [i for i in range(60) if panel.view().contains(panel.item_rect(i))]
     assert 0 in shown() and 59 not in shown()
     sm.wheel(QPointF(panel.rect.center()), -120)  # a notch down
     assert panel.scroll > 0 and 0 not in shown()

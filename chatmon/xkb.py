@@ -100,7 +100,7 @@ def library() -> ctypes.CDLL | None:
         f.restype, f.argtypes = res, args
     # What finding a key's Latin symbol takes (Keyboard._latin_sym); a libxkbcommon older than 0.4 lacks some,
     # and shortcuts then work as they did before, on Latin layouts only.
-    for fn, res, args in (
+    for fn, result, argtypes in (
         ("xkb_keymap_num_layouts_for_key", u32, [p, u32]),
         ("xkb_keymap_key_get_syms_by_level", i, [p, u32, u32, u32, ctypes.POINTER(ctypes.POINTER(u32))]),
         ("xkb_keymap_min_keycode", u32, [p]),
@@ -113,7 +113,7 @@ def library() -> ctypes.CDLL | None:
             f = getattr(lib, fn)
         except AttributeError:
             continue
-        f.restype, f.argtypes = res, args
+        f.restype, f.argtypes = result, argtypes
     return lib
 
 
@@ -235,8 +235,8 @@ class Keyboard:
             return Key(key, text, mods)
         # A character: Qt names the key by its character, upper case (Ctrl+A is Key_A).
         char = self._utf8(self.lib.xkb_keysym_to_utf8, sym) or text
-        key = ord(char.upper()[0]) if len(char.upper()) == 1 else (ord(char[0]) if char else 0)
-        return Key(key, text, mods)
+        named = ord(char.upper()[0]) if len(char.upper()) == 1 else (ord(char[0]) if char else 0)
+        return Key(named, text, mods)
 
     def _latin_sym(self, xkb_code: int) -> int:
         """The key's Latin-1 symbol in the first other layout that has one at the same level, or 0. As Qt's

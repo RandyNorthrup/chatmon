@@ -87,7 +87,8 @@ def contrast(a: QColor, b: QColor) -> float:
 
 def _mix(a: QColor, b: QColor, t: float) -> QColor:
     """a, moved t of the way to b (opaque)."""
-    return QColor.fromRgbF(*(x + (y - x) * t for x, y in zip(a.getRgbF()[:3], b.getRgbF()[:3], strict=True)), 1.0)
+    red, green, blue = (x + (y - x) * t for x, y in zip(a.getRgbF()[:3], b.getRgbF()[:3], strict=True))
+    return QColor.fromRgbF(red, green, blue, 1.0)
 
 
 def muted(text: QColor, fill: QColor, aim: float = MUTED_AIM, most: float = 0.5) -> QColor:
@@ -214,8 +215,9 @@ class StageMenu:
     def hover(self) -> tuple[int, int] | None:
         """The highlighted item of the innermost panel that has one: (panel, item)."""
         for pi in range(len(self.panels) - 1, -1, -1):
-            if self.panels[pi].active is not None:
-                return pi, self.panels[pi].active
+            active = self.panels[pi].active
+            if active is not None:
+                return pi, active
         return None
 
     def take_chosen(self) -> QAction | None:
@@ -253,15 +255,15 @@ class StageMenu:
 
     def move(self, pos: QPointF) -> None:
         hit = self._hit(pos)
-        if hit is None or hit[1] in ("up", "down"):
-            if hit is None:
-                self._scrolling = None
-            else:  # resting on a scroll arrow: it scrolls, a step at a time
-                step = -1 if hit[1] == "up" else 1
-                if self._scrolling is None or self._scrolling[:2] != (hit[0], step):
-                    self._scrolling = (hit[0], step, self._clock())
+        if hit is None:
+            self._scrolling = None
             return  # crossing a gap, or off the menu: what's open stays
         pi, ii = hit
+        if isinstance(ii, str):  # resting on a scroll arrow ("up" or "down"): it scrolls, a step at a time
+            step = -1 if ii == "up" else 1
+            if self._scrolling is None or self._scrolling[:2] != (pi, step):
+                self._scrolling = (pi, step, self._clock())
+            return  # what's open stays
         self._scrolling = None
         # On a submenu (perhaps on the way from its parent): its parents keep the items it came from lit.
         for p in range(pi):
@@ -286,7 +288,7 @@ class StageMenu:
                 self.close()  # a click elsewhere closes it
             return None
         pi, part = hit
-        if part in ("up", "down"):
+        if isinstance(part, str):  # a scroll arrow: "up" or "down"
             panel = self.panels[pi]
             panel.scroll_to(panel.scroll + (-1 if part == "up" else 1) * self._row_height())
             return None
@@ -334,9 +336,12 @@ class StageMenu:
         panel = self.panels[pi]
         if ii is None or not self._has_submenu(pi, ii):
             return
+        menu = panel.items[ii].action.menu()
+        if menu is None:  # never: _has_submenu saw it
+            return
         panel.active = ii
         anchor = panel.item_rect(ii).translated(panel.rect.topLeft())
-        self.panels.append(self._layout(panel.items[ii].action.menu(), anchor, first=False, opener=ii))
+        self.panels.append(self._layout(menu, anchor, first=False, opener=ii))
 
     # -- the keyboard
 
@@ -358,19 +363,8 @@ class StageMenu:
                 del self.panels[-1:]  # back to the menu it came from
             else:
                 self.close()
-        elif key in (Qt.Key.Key_Down, Qt.Key.Key_Up, Qt.Key.Key_Tab, Qt.Key.Key_Backtab):
-            self._step(panel, -1 if key in (Qt.Key.Key_Up, Qt.Key.Key_Backtab) else 1)
-            self._close_beyond(pi)
-        elif key in (Qt.Key.Key_Home, Qt.Key.Key_End):
-            pickable = self._pickable(panel)
-            if pickable:
-                self._activate(panel, pickable[0 if key == Qt.Key.Key_Home else -1])
-                self._close_beyond(pi)
-        elif key in (Qt.Key.Key_PageUp, Qt.Key.Key_PageDown):
-            rows = max(1, panel.view().height() // self._row_height() - 1)
-            for _ in range(rows):
-                self._step(panel, -1 if key == Qt.Key.Key_PageUp else 1, wrap=False)
-            self._close_beyond(pi)
+        elif key in self._MOVES:
+            self._move(pi, panel, key)
         elif key == Qt.Key.Key_Right:
             if panel.active is not None and self._has_submenu(pi, panel.active):
                 self._enter(pi, panel.active)
@@ -383,6 +377,26 @@ class StageMenu:
         else:
             self._letter(pi, event.text())
         return True
+
+    _MOVES = (
+        Qt.Key.Key_Down, Qt.Key.Key_Up, Qt.Key.Key_Tab, Qt.Key.Key_Backtab,
+        Qt.Key.Key_Home, Qt.Key.Key_End, Qt.Key.Key_PageUp, Qt.Key.Key_PageDown,
+    )
+
+    def _move(self, pi: int, panel: _Panel, key: int) -> None:
+        """One of the keys in _MOVES: light another item of panel pi, and close a submenu it moved off."""
+        if key in (Qt.Key.Key_Down, Qt.Key.Key_Up, Qt.Key.Key_Tab, Qt.Key.Key_Backtab):
+            self._step(panel, -1 if key in (Qt.Key.Key_Up, Qt.Key.Key_Backtab) else 1)
+        elif key in (Qt.Key.Key_Home, Qt.Key.Key_End):
+            pickable = self._pickable(panel)
+            if not pickable:
+                return
+            self._activate(panel, pickable[0 if key == Qt.Key.Key_Home else -1])
+        else:
+            rows = max(1, panel.view().height() // self._row_height() - 1)
+            for _ in range(rows):
+                self._step(panel, -1 if key == Qt.Key.Key_PageUp else 1, wrap=False)
+        self._close_beyond(pi)
 
     def _pickable(self, panel: _Panel) -> list[int]:
         return [i for i, item in enumerate(panel.items) if item.pickable()]

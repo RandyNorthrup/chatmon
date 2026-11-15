@@ -19,7 +19,7 @@ from pathlib import Path
 if __name__ == "__main__":  # run as a script: Chatmon's package is beside this folder
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from chatmon import ed25519 as _curve  # noqa: E402
+from chatmon import ed25519 as _curve
 
 _P, _Q, _G = _curve._P, _curve._Q, _curve._G
 

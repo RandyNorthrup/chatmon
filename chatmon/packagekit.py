@@ -43,7 +43,9 @@ class UpdateCount(QObject):
         self._count = 0
         self._done = False
         self._watchers: list[QDBusPendingCallWatcher] = []
-        self._timer = QTimer(self, singleShot=True, interval=TIMEOUT_MS)
+        self._timer = QTimer(self)
+        self._timer.setSingleShot(True)
+        self._timer.setInterval(TIMEOUT_MS)
         self._timer.timeout.connect(lambda: self._finish(None))
 
     def start(self) -> None:
@@ -77,8 +79,8 @@ class UpdateCount(QObject):
         then(reply)
 
     def _created(self, reply: QDBusMessage) -> None:
-        path = reply.arguments()[0] if reply.arguments() else None
-        path = path.path() if hasattr(path, "path") else path  # a QDBusObjectPath
+        first = reply.arguments()[0] if reply.arguments() else None
+        path = first.path() if first is not None and hasattr(first, "path") else first  # a QDBusObjectPath
         if not path:
             self._finish(None)
             return
@@ -122,5 +124,5 @@ class UpdateCount(QObject):
 
 def _uint64(n: int) -> QVariant:
     v = QVariant(n)
-    v.convert(QMetaType(QMetaType.Type.ULongLong.value))
+    v.convert(QMetaType(QMetaType.Type.ULongLong.value))  # type: ignore[call-overload]  # PyQt6's stub types the member's int value as the enum
     return v

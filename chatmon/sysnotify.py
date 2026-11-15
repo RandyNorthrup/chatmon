@@ -14,7 +14,8 @@ What a notification is for decides how it's sent (Notifier):
 
 from __future__ import annotations
 
-from typing import Callable
+import logging
+from collections.abc import Callable
 
 from PyQt6.QtCore import QObject, pyqtSlot
 
@@ -25,6 +26,8 @@ try:  # a slot taking the D-Bus message itself, where there's QtDBus (this modul
 except ImportError:
     def _message_slot(method):
         return method
+
+logger = logging.getLogger(__name__)
 
 SERVICE = "org.freedesktop.Notifications"
 PATH = "/org/freedesktop/Notifications"
@@ -37,7 +40,9 @@ def message(title: str, body: str, *, replaces: int = 0, actions: list[str] | No
     """Notify(app_name s, replaces_id u, app_icon s, summary s, body s, actions as, hints a{sv}, timeout i)."""
     from PyQt6.QtDBus import QDBusMessage
 
-    msg = QDBusMessage.createMethodCall(SERVICE, PATH, SERVICE, "Notify")
+    # Typed here, as the buses are below: PyQt6 6.12's stubs give these static methods an unbound Self, which mypy
+    # reads as no type at all.
+    msg: QDBusMessage = QDBusMessage.createMethodCall(SERVICE, PATH, SERVICE, "Notify")
     msg.setArguments(["Chatmon", _typed(replaces, "UInt"), APP_ID, title, body, _typed(list(actions or []), "QStringList"),
                       hints(urgency, transient), -1])
     return msg
@@ -75,12 +80,15 @@ def send(title: str, body: str) -> bool:
     """Shown by the desktop (it keeps it, and follows your Do Not Disturb); False if there's no one to show it."""
     try:
         from PyQt6.QtDBus import QDBusConnection
-
-        bus = QDBusConnection.sessionBus()
+    except ImportError:  # no QtDBus here
+        return False
+    try:
+        bus: QDBusConnection = QDBusConnection.sessionBus()
         if not bus.isConnected():
             return False
         return bus.send(message(title, body))  # no waiting for the answer: the id it sends back isn't needed
-    except (ImportError, RuntimeError, TypeError, AttributeError):
+    except (RuntimeError, TypeError, AttributeError) as exc:  # what failed, never what it said
+        logger.debug("couldn't send a desktop notification: %s", exc)
         return False
 
 
@@ -91,7 +99,7 @@ class Notifier(QObject):
     in a moment (a read-aloud one sent before the last one's id is back can't replace it, and shows beside it)."""
 
     def __init__(self, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12's stubs type QObject's parent as Self, this class
         self.read_aloud_id = 0  # the read-aloud notification showing, which the next replaces
         self._pressed: dict[int, Callable[[int], None]] = {}  # notification id: what its buttons do
         self._bus = None
@@ -99,7 +107,7 @@ class Notifier(QObject):
             from PyQt6.QtDBus import QDBusConnection
         except ImportError:
             return
-        bus = QDBusConnection.sessionBus()
+        bus: QDBusConnection = QDBusConnection.sessionBus()
         if bus.isConnected():
             self._bus = bus
             bus.connect(SERVICE, PATH, SERVICE, "ActionInvoked", self._action_invoked)

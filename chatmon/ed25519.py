@@ -66,7 +66,10 @@ def _decompress(raw: bytes) -> tuple | None:
 
 
 _GY = 4 * pow(5, _P - 2, _P) % _P
-_G = (_recover_x(_GY, 0), _GY, 1, _recover_x(_GY, 0) * _GY % _P)
+_GX = _recover_x(_GY, 0)
+if _GX is None:  # never: the base point is on the curve, so it has an x
+    raise ArithmeticError("Ed25519's base point has no x coordinate")
+_G = (_GX, _GY, 1, _GX * _GY % _P)
 
 
 def verify(public_key: bytes, message: bytes, signature: bytes) -> bool:

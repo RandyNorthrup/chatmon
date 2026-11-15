@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import re
 import struct
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 from .attachments import MAX_COUNT, MAX_FILE
 from .i18n import _

@@ -60,8 +60,8 @@ import numpy as np
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import creaturespec as cs  # noqa: E402
-import spritefix  # noqa: E402
+import creaturespec as cs
+import spritefix
 
 KEYER = 9  # bump when spritefix.chroma_key changes, so cached sheets are keyed again
 MARGIN = 96  # canvas margin around a cell, so a shifted frame never clips
@@ -73,7 +73,7 @@ NEAR = 10  # sheet px: a speck this close to the creature belongs to it
 
 def keyed_sheet(path: str, soft: bool, cache: str | None) -> np.ndarray:
     with open(path, "rb") as fh:
-        digest = hashlib.sha1(fh.read()).hexdigest()
+        digest = hashlib.sha1(fh.read(), usedforsecurity=False).hexdigest()  # a cache file's name
     saved = os.path.join(cache, f"{digest}-{int(soft)}-{KEYER}.npy") if cache else None
     if saved and os.path.exists(saved):
         return np.load(saved)

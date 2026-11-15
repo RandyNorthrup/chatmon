@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import os
 import time
-from typing import Callable
+from collections.abc import Callable
 
 from PyQt6.QtCore import QMetaType, QObject, pyqtSignal, pyqtSlot
 from PyQt6.QtDBus import QDBus, QDBusArgument, QDBusConnection, QDBusMessage, QDBusPendingCallWatcher, QDBusPendingReply
@@ -102,7 +102,7 @@ class SessionWatcher(QObject):
                 continue
             # One message with a timeout of its own: an interface object would ask logind to describe itself first.
             message = QDBusMessage.createMethodCall(LOGIN1, "/org/freedesktop/login1", "org.freedesktop.login1.Manager", method)
-            message.setArguments([QDBusArgument(arg, QMetaType.Type.UInt.value) if method == "GetSessionByPID" else arg])
+            message.setArguments([QDBusArgument(arg, QMetaType.Type.UInt.value) if method == "GetSessionByPID" else arg])  # type: ignore[call-overload]  # PyQt6's stub types the member's int value as the enum
             reply = system.call(message, QDBus.CallMode.Block, 1000)
             if reply.type() == QDBusMessage.MessageType.ReplyMessage and reply.arguments():
                 found = _value(reply.arguments()[0])

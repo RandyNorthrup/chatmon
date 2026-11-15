@@ -12,9 +12,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import ed25519_sign  # noqa: E402
+import ed25519_sign
 
-from chatmon import ed25519, releasecheck  # noqa: E402
+from chatmon import ed25519, releasecheck
 
 DEB = "chatmon_9.0.0-1_all.deb"
 
@@ -127,7 +127,7 @@ def test_an_older_or_the_same_version_is_refused(release, installed):
 def test_the_installed_version_is_the_checking_chatmons_own(release, monkeypatch):
     package, sums, signature = release()
     monkeypatch.setattr(releasecheck, "__version__", "9.0.0")
-    with pytest.raises(releasecheck.Refused, match="isn't newer than the 9.0.0 installed"):
+    with pytest.raises(releasecheck.Refused, match=r"isn't newer than the 9\.0\.0 installed"):
         releasecheck.check("deb", package, sums, signature)
 
 

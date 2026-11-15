@@ -20,6 +20,7 @@ winrt/windows.data.xml.dom.h, 10.0.26100)."""
 from __future__ import annotations
 
 import ctypes
+import logging
 import re
 import sys
 import uuid
@@ -31,6 +32,8 @@ from PyQt6.QtCore import QObject, pyqtSignal
 
 from . import winrt
 from .i18n import N_, _
+
+logger = logging.getLogger(__name__)
 
 GROUP = "chatmon"  # every toast Chatmon shows is in this group, so clear() takes only Chatmon's own
 MAX_BUTTONS = 5  # Windows shows at most five actions
@@ -154,7 +157,8 @@ def process_app_id() -> str | None:
             return out.value or None
         finally:
             ole32.CoTaskMemFree(ctypes.cast(out, ctypes.c_void_p))
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't ask Windows for the process's app ID: %s", exc)
         return None
 
 
@@ -167,6 +171,8 @@ def _registration_key(app_id: str) -> str:
 def register_app_id(app_id: str, display_name: str, icon: str | None = None) -> None:
     """Tell Windows the name (and icon, a .png or .ico) to show on this app ID's toasts, for a Chatmon with no Start
     menu shortcut carrying the ID. Per user; OSError if it can't be written."""
+    if sys.platform != "win32":
+        raise OSError("there's no registry to write to outside Windows")
     import winreg
 
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, _registration_key(app_id)) as key:
@@ -177,6 +183,8 @@ def register_app_id(app_id: str, display_name: str, icon: str | None = None) -> 
 
 def unregister_app_id(app_id: str) -> bool:
     """Remove what register_app_id wrote; False if there was nothing to remove."""
+    if sys.platform != "win32":
+        return False  # nothing was written: there's no registry
     import winreg
 
     try:
@@ -184,6 +192,11 @@ def unregister_app_id(app_id: str) -> bool:
     except FileNotFoundError:
         return False
     return True
+
+
+def _handler(heard: Callable[[str, int], None], tag: str) -> Callable[[int, int], None]:
+    """What a toast's delegate calls with (sender, args): `heard(tag, args)`."""
+    return lambda sender, args: heard(tag, args)
 
 
 @dataclass
@@ -222,10 +235,11 @@ class Toaster(QObject):
         return self._statics
 
     def _get_notifier(self) -> int | None:
-        if self._notifier is None and self.app_id and self._manager():
+        statics = self._manager() if self._notifier is None and self.app_id else None
+        if statics and self.app_id:
             out = ctypes.c_void_p()
             with winrt.HString(self.app_id) as app:
-                winrt.method(self._statics, STATICS_CREATE_NOTIFIER_WITH_ID, ctypes.c_void_p, _P)(self._statics, app.handle, ctypes.byref(out))
+                winrt.method(statics, STATICS_CREATE_NOTIFIER_WITH_ID, ctypes.c_void_p, _P)(statics, app.handle, ctypes.byref(out))
             self._notifier = out.value or None
         return self._notifier
 
@@ -238,11 +252,13 @@ class Toaster(QObject):
             value = ctypes.c_int()
             winrt.method(notifier, NOTIFIER_GET_SETTING, ctypes.POINTER(ctypes.c_int))(notifier, ctypes.byref(value))
             return value.value
-        except OSError:
+        except OSError as exc:
+            logger.debug("Windows didn't say whether Chatmon's notifications are on: %s", exc)
             return None
 
     def _history(self) -> int | None:
-        statics2 = winrt.query(self._statics, IID_MANAGER_STATICS2) if self._manager() else None
+        statics = self._manager()
+        statics2 = winrt.query(statics, IID_MANAGER_STATICS2) if statics else None
         if statics2 is None:
             return None
         try:
@@ -263,6 +279,8 @@ class Toaster(QObject):
             with winrt.HString(self.app_id) as app:
                 winrt.method(history2, HISTORY2_GET_HISTORY_WITH_ID, ctypes.c_void_p, _P)(history2, app.handle, ctypes.byref(out))
             view = out.value
+            if not view:  # a call that succeeded hands one back
+                return tags
             size = ctypes.c_uint32()
             winrt.method(view, VECTOR_GET_SIZE, ctypes.POINTER(ctypes.c_uint32))(view, ctypes.byref(size))
             for i in range(size.value):
@@ -275,8 +293,8 @@ class Toaster(QObject):
                     tags.append(winrt.take_text(tag))
                 winrt.release(toast2)
                 winrt.release(item.value)
-        except OSError:
-            pass
+        except OSError as exc:
+            logger.debug("couldn't read which toasts Windows still has: %s", exc)
         finally:
             for obj in (view, history2, history):
                 winrt.release(obj)
@@ -317,7 +335,7 @@ class Toaster(QObject):
             document = winrt.activate(XML_DOCUMENT)
             io = winrt.query(document, IID_XML_IO) if document else None
             toast_factory = winrt.factory(TOAST, IID_TOAST_FACTORY)
-            if notifier is None or io is None or toast_factory is None:
+            if notifier is None or document is None or io is None or toast_factory is None:  # io is None without a document
                 self.why_not = _("This Windows has no toasts.")
                 return False
             with winrt.HString(xml) as text:
@@ -326,6 +344,8 @@ class Toaster(QObject):
             out = ctypes.c_void_p()
             winrt.method(toast_factory, FACTORY_CREATE, ctypes.c_void_p, _P)(toast_factory, xml_document, ctypes.byref(out))
             toast = out.value
+            if not toast:  # a call that succeeded hands one back
+                raise OSError("Windows made no toast")
             toast2 = winrt.query(toast, IID_TOAST2)
             if toast2:
                 with winrt.HString(tag) as value:
@@ -340,7 +360,7 @@ class Toaster(QObject):
             for add, remove, iid, heard in ((TOAST_ADD_ACTIVATED, TOAST_REMOVE_ACTIVATED, IID_ON_ACTIVATED, self._on_activated),
                                             (TOAST_ADD_DISMISSED, TOAST_REMOVE_DISMISSED, IID_ON_DISMISSED, self._on_dismissed),
                                             (TOAST_ADD_FAILED, TOAST_REMOVE_FAILED, IID_ON_FAILED, self._on_failed)):
-                delegate = winrt.Delegate(iid, lambda sender, args, heard=heard: heard(tag, args))
+                delegate = winrt.Delegate(iid, _handler(heard, tag))
                 token = winrt.EventToken()
                 try:
                     winrt.method(shown.toast, add, ctypes.c_void_p, ctypes.POINTER(winrt.EventToken))(shown.toast, delegate.pointer, ctypes.byref(token))
@@ -350,7 +370,8 @@ class Toaster(QObject):
             winrt.method(notifier, NOTIFIER_SHOW, ctypes.c_void_p)(notifier, shown.toast)
             self._keep_few()
             return True
-        except OSError:
+        except OSError as exc:  # what failed, never what the toast says
+            logger.debug("Windows couldn't show a toast: %s", exc)
             self.why_not = _("Windows couldn't show the notification.")
             self._forget(tag)
             return False
@@ -420,7 +441,8 @@ class Toaster(QObject):
         try:
             winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)
             return True
-        except OSError:
+        except OSError as exc:
+            logger.debug("Windows couldn't take a toast back: %s", exc)
             return False
 
     def clear(self) -> None:
@@ -431,8 +453,8 @@ class Toaster(QObject):
             if history and self.app_id:
                 with winrt.HString(GROUP) as group, winrt.HString(self.app_id) as app:
                     winrt.method(history, HISTORY_REMOVE_GROUP_WITH_ID, ctypes.c_void_p, ctypes.c_void_p)(history, group.handle, app.handle)
-        except OSError:
-            pass
+        except OSError as exc:
+            logger.debug("couldn't clear Chatmon's toasts from Action Center: %s", exc)
         finally:
             winrt.release(history)
         for tag in list(self._shown):

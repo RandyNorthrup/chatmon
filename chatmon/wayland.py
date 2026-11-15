@@ -14,12 +14,16 @@ from __future__ import annotations
 
 import array
 import collections
+import logging
 import os
 import select
 import socket
 import struct
+import sys
 import time
-from typing import Callable
+from collections.abc import Callable
+
+logger = logging.getLogger(__name__)
 
 DISPLAY_ID = 1
 HEADER = struct.Struct("<II")
@@ -149,13 +153,16 @@ class Connection:
 
     @classmethod
     def open(cls, env=os.environ) -> Connection | None:
+        if not sys.platform.startswith("linux"):  # Wayland is Linux's (macOS has no SOCK_CLOEXEC, Windows no AF_UNIX)
+            return None
         path = socket_path(env)
         if not path:
             return None
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM | socket.SOCK_CLOEXEC)
         try:
             sock.connect(path)
-        except OSError:
+        except OSError as exc:
+            logger.debug("couldn't connect to the Wayland compositor at %s: %s", path, exc)
             sock.close()
             return None
         return cls(sock)
@@ -212,6 +219,8 @@ class Connection:
         while self._out and not self.closed:
             try:
                 if self._out_fds:
+                    if sys.platform == "win32":  # file descriptors travel over Unix sockets (and Wayland is Linux's)
+                        raise OSError("file descriptors can't be sent on Windows")
                     sent = self.sock.sendmsg([self._out], [(socket.SOL_SOCKET, socket.SCM_RIGHTS, array.array("i", self._out_fds))])
                     for fd in self._out_fds:
                         os.close(fd)
@@ -232,6 +241,8 @@ class Connection:
         """Read and dispatch whatever has arrived; False once the connection is gone."""
         while not self.closed:
             try:
+                if sys.platform == "win32":  # as in flush()
+                    raise OSError("file descriptors can't be received on Windows")
                 data, ancdata, _flags, _addr = self.sock.recvmsg(65536, socket.CMSG_SPACE(MAX_FDS * 4), _CLOEXEC)
             except (BlockingIOError, InterruptedError):
                 break

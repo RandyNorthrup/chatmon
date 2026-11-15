@@ -3,6 +3,7 @@ real cues are M9's, in chatmon/sounds/)."""
 
 import array
 import io
+import logging
 import os
 import sys
 import time
@@ -110,6 +111,18 @@ def test_the_next_player_is_tried_when_one_cant(cues):
     s = sound.Sounds(cues, players=[broken, ears])
     assert s.play("focus-done") and ears.played == [("focus-done", 0.7)] and s.player == "recorder"
     assert not sound.Sounds(cues, players=[Recorder(works=False)]).play("focus-done")
+
+
+def test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays(cues, monkeypatch, caplog):
+    """A Linux player gone since it was found (uninstalled, or PATH changed): why it couldn't start is in the
+    debug log, and the next player sounds the cue as before."""
+    caplog.set_level(logging.DEBUG, logger="chatmon.sound")
+    monkeypatch.setenv("PATH", str(cues))  # nothing to run there: starting pw-play fails for real
+    ears = Recorder()
+    s = sound.Sounds(cues, players=[sound.CommandPlayer("pw-play"), ears])
+    assert s.play("needs-you") and s.player == "recorder" and ears.played == [("needs-you", 0.7)]
+    logged = [r.getMessage() for r in caplog.records if r.name == "chatmon.sound" and r.levelno == logging.DEBUG]
+    assert len(logged) == 1 and logged[0].startswith("couldn't start pw-play: ")
 
 
 # -- for players without a volume of their own

@@ -81,7 +81,7 @@ def test_chats_go_in_only_when_asked_and_the_file_is_yours_alone(tmp_path):
     import os
     import stat
 
-    state, mem, book = _here(tmp_path)
+    state, mem, _book = _here(tmp_path)
     made = backup.export(tmp_path / "out" / "b.zip", state, mem)
     assert made.chats == [] and not [n for n in zipfile.ZipFile(tmp_path / "out" / "b.zip").namelist() if n.startswith("chats/")]
     if os.name == "posix":
@@ -115,7 +115,7 @@ def _zip(path, files: dict, manifest: dict | None = None):
     ],
 )
 def test_a_backup_that_isnt_right_is_refused_whole_and_nothing_changes(tmp_path, files, manifest, said):
-    state, mem, book = _here(tmp_path / "here")
+    _state, _mem, _book = _here(tmp_path / "here")
     before = (tmp_path / "here" / "state.json").read_bytes(), (tmp_path / "here" / "memory.json").read_bytes()
     with pytest.raises(backup.BackupError, match=None) as refused:
         backup.read(_zip(tmp_path / "b.zip", files, manifest))

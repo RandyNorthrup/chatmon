@@ -21,14 +21,17 @@ notifications; Orca reads GNOME's). `announce()` picks.
 from __future__ import annotations
 
 import ctypes
+import logging
 import re
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
-from PyQt6.QtCore import QObject, QProcess, Qt
+from PyQt6.QtCore import QCoreApplication, QObject, QProcess, Qt
 
 from .i18n import _, either
+
+logger = logging.getLogger(__name__)
 
 ORCA = (("org.gnome.Orca1.Service", "/org/gnome/Orca1/Service"), ("org.gnome.Orca.Service", "/org/gnome/Orca/Service"))
 SPI_GETSCREENREADER = 0x0046  # set by NVDA, JAWS and others; Narrator doesn't set it
@@ -49,7 +52,8 @@ def reader() -> Reader | None:
         if sys.platform == "darwin":
             return _mac()
         return _linux()
-    except (OSError, AttributeError, ImportError, ValueError):
+    except (OSError, AttributeError, ImportError, ValueError) as exc:
+        logger.debug("couldn't tell whether a screen reader is running: %s", exc)
         return None
 
 
@@ -77,7 +81,8 @@ def _uia_say(words: str, important: bool) -> bool:
         return False
     try:
         from . import winuia
-    except (ImportError, OSError):
+    except (ImportError, OSError) as exc:  # what failed, never the words
+        logger.debug("couldn't load UI Automation: %s", exc)
         return False
     return winuia.in_front() and winuia.say(words, important)
 
@@ -119,14 +124,19 @@ def _linux() -> Reader | None:
     if not bus.isConnected():
         return None
     interface = bus.interface()
+    if interface is None:  # a connected bus always has one
+        return None
     for service, path in ORCA:
         if interface.isServiceRegistered(service).value():
-            return Reader("Orca", lambda text, important, s=service, p=path: _orca(bus, s, p, text))
+            def speak(text: str, important: bool, s: str = service, p: str = path) -> None:
+                _orca(bus, s, p, text)
+
+            return Reader("Orca", speak)
     # An older Orca, or another screen reader: at-spi says one's on (where it still keeps ScreenReaderEnabled).
     message = QDBusMessage.createMethodCall("org.a11y.Bus", "/org/a11y/bus", "org.freedesktop.DBus.Properties", "Get")
     message.setArguments(["org.a11y.Status", "ScreenReaderEnabled"])
     reply = bus.call(message, QDBus.CallMode.Block, 500)
-    value = reply.arguments()[0] if reply.type() == QDBusMessage.MessageType.ReplyMessage and reply.arguments() else None
+    value: object = reply.arguments()[0] if reply.type() == QDBusMessage.MessageType.ReplyMessage and reply.arguments() else None
     while hasattr(value, "variant"):
         value = value.variant()
     return Reader("a screen reader") if value is True else None
@@ -144,6 +154,8 @@ def _orca(bus, service: str, path: str, text: str) -> None:
 
 
 def _windows() -> Reader | None:
+    if sys.platform != "win32":  # asked on Windows alone
+        return None
     on = ctypes.c_int(0)
     if ctypes.windll.user32.SystemParametersInfoW(SPI_GETSCREENREADER, 0, ctypes.byref(on), 0) and on.value:
         found = Reader("a screen reader")
@@ -168,6 +180,8 @@ class _PROCESSENTRY32W(ctypes.Structure):
 
 def _running(exe: str) -> bool:
     """A program of that name is running (for Narrator, which tells Windows nothing else)."""
+    if sys.platform != "win32":
+        return False
     kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
     kernel32.CreateToolhelp32Snapshot.restype = ctypes.c_void_p
     snapshot = kernel32.CreateToolhelp32Snapshot(0x2, 0)  # TH32CS_SNAPPROCESS
@@ -196,7 +210,7 @@ def _mac() -> Reader | None:
     if rt is None:
         return None
     workspace = rt.obj(rt.cls("NSWorkspace"), rt.sel("sharedWorkspace"))
-    on = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value)
+    on = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(rt.send)
     if not workspace or not rt.responds(workspace, rt.sel("respondsToSelector:"), rt.sel("isVoiceOverEnabled")):
         return None
     return Reader("VoiceOver", voiceover().say) if on(workspace, rt.sel("isVoiceOverEnabled")) else None
@@ -230,8 +244,8 @@ class VoiceOver(QObject):
         self.held: list[tuple[str, bool]] = []
         self._voice: QProcess | None = None
         self._to_say: list[str] = []
-        app = QGuiApplication.instance()
-        if app is not None:
+        app: QCoreApplication | None = QGuiApplication.instance()
+        if isinstance(app, QGuiApplication):  # only a GUI application has a state (and Chatmon's always is one)
             app.applicationStateChanged.connect(self.state_changed)
 
     def say(self, text: str, important: bool = False) -> None:
@@ -240,7 +254,7 @@ class VoiceOver(QObject):
         elif _speech_fallback:
             self._speak(text)
         else:
-            self.held = (self.held + [(text, important)])[-self.HELD:]
+            self.held = [*self.held, (text, important)][-self.HELD:]
 
     def state_changed(self, state) -> None:
         if state == Qt.ApplicationState.ApplicationActive and self.held:
@@ -279,7 +293,7 @@ def _voiceover(text: str, important: bool) -> None:
     if rt is None:
         return
     appkit = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
-    send = ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value
+    send = rt.send
     string = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p)(send)
     number = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_long)(send)
     dictionary = ctypes.CFUNCTYPE(
