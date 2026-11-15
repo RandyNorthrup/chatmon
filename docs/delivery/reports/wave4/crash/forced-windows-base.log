@@ -1,0 +1,26 @@
+# forced_repro.py on Windows 11, Python 3.14.10, PyQt6 6.11.0, Qt 6.11.0, offscreen; source: bf9d8ac (base)
+## run 1
+ 0.75 s: two companion tests done; top-level windows 28
+ 3.39 s: 14 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+ 3.39 s: setWindowIcon's loops done; windows freed inside them: 14
+# exit 0
+## run 2
+ 0.74 s: two companion tests done; top-level windows 28
+ 3.41 s: 14 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+ 3.41 s: setWindowIcon's loops done; windows freed inside them: 14
+# exit 0
+## run 3
+ 0.75 s: two companion tests done; top-level windows 28
+ 3.38 s: 14 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+ 3.38 s: setWindowIcon's loops done; windows freed inside them: 14
+# exit 0
+## run 4
+ 0.79 s: two companion tests done; top-level windows 28
+ 3.44 s: 14 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+ 3.44 s: setWindowIcon's loops done; windows freed inside them: 14
+# exit 0
+## run 5
+ 0.74 s: two companion tests done; top-level windows 28
+ 3.40 s: 14 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+ 3.40 s: setWindowIcon's loops done; windows freed inside them: 14
+# exit 0
