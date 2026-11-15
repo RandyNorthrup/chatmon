@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sys
 import threading
@@ -11,6 +12,8 @@ from datetime import datetime
 
 from . import __version__, events, i18n, paths
 from .i18n import N_, _
+
+logger = logging.getLogger(__name__)
 
 # Translators: the commands and flags stay as they are (they're what to type); the words after them are yours.
 USAGE = N_("""\
@@ -90,14 +93,20 @@ def _language_setting() -> str | None:
 
     try:
         overrides = json.loads(paths.state_file().read_text(encoding="utf-8")).get("settings")
-    except (OSError, ValueError, AttributeError):
+    except FileNotFoundError:
+        overrides = None  # no state kept yet: nothing chosen in Settings
+    except (OSError, ValueError, AttributeError) as exc:
+        logger.debug("couldn't read the language from the state file: %s", exc)
         overrides = None
     picked = overrides.get(i18n.SETTING) if isinstance(overrides, dict) else None
     if isinstance(picked, str) and picked:
         return picked
     try:
         written = tomllib.loads(paths.config_file().read_text(encoding="utf-8")).get(i18n.SETTING)
-    except (OSError, ValueError):
+    except FileNotFoundError:
+        return None  # no settings file yet: Chatmon writes it the first time it runs
+    except (OSError, ValueError) as exc:
+        logger.debug("couldn't read the language from the settings file: %s", exc)
         return None
     return written if isinstance(written, str) and written else None
 
@@ -114,7 +123,7 @@ def remind(args: list[str]) -> int:
     from . import reminders
 
     text = " ".join(args)
-    command = reminders.parse_command("remind me " + text, datetime.now())
+    command = reminders.parse_command("remind me " + text, datetime.now())  # noqa: DTZ005 - reminders are set in your local wall time
     if command is None or command.kind != "reminder":
         why = reminders.explain(command, markdown=False) if command is not None and command.kind == "unclear" else ""
         said = _("Couldn't tell when to remind you ({text}).").format(text=repr(text)) if text else _("Couldn't tell when to remind you.")
@@ -145,7 +154,8 @@ def _let_chatmon_come_forward() -> bool:
     target = pid if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0 else ASFW_ANY
     try:
         return bool(ctypes.windll.user32.AllowSetForegroundWindow(ctypes.c_ulong(target)))
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't let Chatmon come forward: %s", exc)
         return False
 
 
@@ -199,8 +209,8 @@ def _read_stdin() -> str:
     def read() -> None:
         try:
             chunks.append(sys.stdin.buffer.read(STDIN_LIMIT))
-        except (OSError, ValueError):
-            pass
+        except (OSError, ValueError) as exc:
+            logger.debug("couldn't read the hook's payload from stdin: %s", exc)
 
     reader = threading.Thread(target=read, daemon=True)
     reader.start()
@@ -262,8 +272,8 @@ def hooks(args: list[str]) -> int:
         print("\n" + _("Connect one with: chatmon hooks connect NAME   (or: all)"))
         return 0
     if action == "show":
-        agent = agents.find(target or "")
-        print(agent.manual() if agent else agents.generic())
+        found = agents.find(target or "")
+        print(found.manual() if found else agents.generic())
         return 0
     if action not in ("connect", "disconnect") or not target:
         print(_(USAGE), end="", file=sys.stderr)
@@ -273,11 +283,12 @@ def hooks(args: list[str]) -> int:
         if not chosen:
             print(_("No coding agents found here.") if action == "connect" else _("No coding agents are connected."))
     else:
-        chosen = [agents.find(target)]
-    if chosen == [None]:
-        known = ", ".join(a.name for a in agents.AGENTS)
-        print(_("Unknown agent {name}. Known: {known}").format(name=repr(target), known=known), file=sys.stderr)
-        return 2
+        found = agents.find(target)
+        if found is None:
+            known = ", ".join(a.name for a in agents.AGENTS)
+            print(_("Unknown agent {name}. Known: {known}").format(name=repr(target), known=known), file=sys.stderr)
+            return 2
+        chosen = [found]
     failed = 0
     for agent in chosen:
         try:

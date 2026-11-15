@@ -9,10 +9,10 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtNetwork import QLocalServer  # noqa: E402
-from PyQt6.QtWidgets import QApplication, QMenu  # noqa: E402
+from PyQt6.QtNetwork import QLocalServer
+from PyQt6.QtWidgets import QApplication, QMenu
 
-from app_harness import PretendBrain, PretendDesk, make_companion, spin, until  # noqa: E402
+from app_harness import PretendBrain, PretendDesk, make_companion, spin, until
 
 
 @pytest.fixture
@@ -355,7 +355,7 @@ def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
 
     click("Model", "claude-sonnet-5-5")
     click("Effort", "medium")
-    off = [a for a in subs["Thinking"].actions() if a.text().startswith("Off")][0]
+    off = next(a for a in subs["Thinking"].actions() if a.text().startswith("Off"))
     assert off.isEnabled() is False and "always thinks" in off.text()  # still Opus 5.5 when the menu was made
     brain = c._brain()
     assert (brain.name, brain.model, brain.effort) == ("anthropic-api", "claude-sonnet-5-5", "medium")
@@ -536,36 +536,28 @@ def test_hook_connections_past_the_cap_are_turned_away(companion, monkeypatch):
     assert late.state() != unconnected
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="file modes are POSIX's; on Windows the log is in your own profile folder")
-def test_the_log_file_is_yours_alone(tmp_path, monkeypatch):
-    import stat
+def test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback(tmp_path, monkeypatch):
+    """What reaches sys.excepthook (PyQt would abort the app over it) is in chatmon.log, traceback and all, as it is
+    whether or not there's a console. The log itself (private, rotated, never a key) is log.py's: test_log.py."""
+    import logging
 
-    from chatmon import app as appmod
+    from chatmon import app as appmod, log
 
     monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "state"))
-    monkeypatch.setenv("HOME", str(tmp_path))
-    log = appmod.log_file()
-    old_umask = os.umask(0o022)
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "state"))
+    monkeypatch.setattr(appmod, "_problem", None)  # no Companion here to offer a report
+    path = log.setup()
     try:
-        for before in ("an older Chatmon's log\n", None):  # one made at the umask, then none at all
-            if before is None:
-                log.unlink()
-            else:
-                log.parent.mkdir(parents=True)
-                log.write_text(before)
-                os.chmod(log, 0o644)
-            saved = sys.stdout, sys.stderr
-            sys.stderr = None  # no console, as autostart runs it
-            try:
-                appmod._log_without_a_console()
-                assert sys.stderr is not None and sys.stderr is sys.stdout
-                print("something went wrong")
-                sys.stderr.close()
-            finally:
-                sys.stdout, sys.stderr = saved
-            assert stat.S_IMODE(log.stat().st_mode) == 0o600 and "something went wrong" in log.read_text()
+        try:
+            raise ValueError("boom in a slot")
+        except ValueError:
+            appmod._log_exception(*sys.exc_info())
+        for handler in logging.getLogger("chatmon").handlers:
+            handler.flush()
+        text = path.read_text(encoding="utf-8")
     finally:
-        os.umask(old_umask)
+        log.reset()
+    assert "ERROR chatmon.app: something went wrong" in text and "Traceback" in text and "ValueError: boom in a slot" in text
 
 
 def test_looks_at_the_agents_one_look_at_a_time(companion, monkeypatch):
@@ -716,7 +708,7 @@ def test_a_problem_inside_chatmon_offers_to_report_it_once(companion):
     except ValueError:
         appmod._log_exception(*sys.exc_info())
     assert until(lambda: c.stage.bubble.title == "Something went wrong in me")  # once the greeting has been read
-    assert [b.label for b in c.stage.bubble.buttons][0] == "Report it"
+    assert next(b.label for b in c.stage.bubble.buttons) == "Report it"
     c.stage.dismiss_message()
     appmod._log_exception(ValueError, ValueError("again"), None)
     spin(0.1)
@@ -760,7 +752,7 @@ def test_what_you_attach_goes_with_the_question(companion, monkeypatch, qapp):
     assert until(lambda: [a.kind for a in c.attached] == ["text", "image"]) and c.ask_box.chips.isVisibleTo(c.ask_box)
     c.ask_box.entry.clear()
     c.submit("status")  # a word Chatmon knows, but with something attached it's a question
-    history, question, sent = brain.asked[-1]
+    _history, question, sent = brain.asked[-1]
     assert question == "status" and [a.name for a in sent] == ["pasted text", "pasted image"]
     assert c.attached == [] and not c.ask_box.chips.isVisibleTo(c.ask_box)
     brain.answer("All good.")
@@ -1020,7 +1012,7 @@ def test_every_command_in_the_table_does_what_it_did(companion, monkeypatch):
     monkeypatch.setattr(appmod.QDesktopServices, "openUrl", lambda url: opened.append(url.toString()))
     monkeypatch.setattr(c, "check_for_updates", lambda: checked.append(True))
     monkeypatch.setattr(c, "open_settings", lambda: shown.append("settings"))
-    monkeypatch.setattr(c, "_popup", lambda menu, pos: shown.append([a.text() for a in menu.actions() if a.text()][0]))
+    monkeypatch.setattr(c, "_popup", lambda menu, pos: shown.append(next(a.text() for a in menu.actions() if a.text())))
     c.open_ask()
     c.submit("rename chat")  # nothing to name yet: a question after all
     assert brain.asked[-1][1] == "rename chat"
@@ -1507,11 +1499,11 @@ def test_settings_shows_whats_in_use_and_saving_applies_it_and_keeps_it(companio
     c.behavior.set_walk(c._walks(), c._now())
     c.open_settings()
     w = c._settings_window
-    assert w.isVisible() and w.size.value() == int(c.config["size"]) and w.walk.isChecked() == c.behavior.walk_enabled
+    assert w.isVisible() and w.size_box.value() == int(c.config["size"]) and w.walk.isChecked() == c.behavior.walk_enabled
     c.open_settings()
     assert c._settings_window is w  # one window, brought forward
     w.walk.setChecked(False)
-    w.size.setValue(150)
+    w.size_box.setValue(150)
     w.battery_low.setValue(30)
     w.instructions.setPlainText("Be brief.")
     w.new_memory.setText("I use Arch")
@@ -1657,7 +1649,7 @@ def test_saving_settings_never_sets_it_walking_against_reduced_motion(companion,
     c.behavior.set_walk(c._walks(), c._now())
     assert not c.behavior.walk_enabled
     c.open_settings()
-    c._settings_window.size.setValue(140)  # something else entirely
+    c._settings_window.size_box.setValue(140)  # something else entirely
     c._settings_window._save()
     assert not c.behavior.walk_enabled  # still standing
     c.reload(quietly=True)

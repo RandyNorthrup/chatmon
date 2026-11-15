@@ -135,9 +135,12 @@ class MessageQueue:
             return True
         if best.background and now - self.shown_at < MIN_SHOWN:
             return False
-        if _same(best, showing) or best.priority < showing.priority:
+        if _same(best, showing):
             return True
-        return best.priority == showing.priority and (best.priority == PLAIN or (showing.background and not best.background))
+        mine, theirs = best.priority, showing.priority
+        if mine is None or theirs is None:  # never: __post_init__ gives every message one
+            return False
+        return mine < theirs or (mine == theirs and (mine == PLAIN or (showing.background and not best.background)))
 
     def next(self, now: float, visible: bool = True) -> Message | None:
         """The message to show now, if any; it's then the one showing. `visible`: whether the bubble the queue

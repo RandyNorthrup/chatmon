@@ -339,6 +339,15 @@ class Sounds:
                 return True
         return False
 
+    def close(self) -> None:
+        """As Chatmon quits: each player let go of (a Linux player still sounding is left to finish, then reaped, so
+        none is left behind), and found again should another sound play."""
+        players, self._players = self._players or [], None
+        for player in players:
+            close = getattr(player, "close", None)
+            if close is not None:
+                close()
+
 
 _sounds = Sounds()
 
@@ -350,3 +359,8 @@ def configure(enabled: bool = True, volume: float = DEFAULT_VOLUME, cues: Mappin
 
 def play(cue: str) -> bool:
     return _sounds.play(cue)
+
+
+def close() -> None:
+    """Let go of the players, as Chatmon quits (Sounds.close)."""
+    _sounds.close()

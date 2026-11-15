@@ -107,7 +107,8 @@ class SettingsWindow(QDialog):
         buttons.accepted.connect(self._save)
         buttons.rejected.connect(self.reject)
         file_button = buttons.addButton(_("Open the settings file"), QDialogButtonBox.ButtonRole.ResetRole)
-        file_button.clicked.connect(self.open_file.emit)
+        if file_button is not None:  # never None: Qt makes the button it's asked for
+            file_button.clicked.connect(self.open_file.emit)
         layout = QVBoxLayout(self)
         layout.addWidget(self.tabs)
         layout.addWidget(buttons)
@@ -128,7 +129,7 @@ class SettingsWindow(QDialog):
         languages = [("", _("System default"))] + [(code, QLocale(code).nativeLanguageName() or code) for code in c.get("languages") or ["en"]]
         self.language = _combo(languages, v["language"])
         # Translators: units after a number in a box, each with its space before it: pixels here, then minutes.
-        self.size = _spin(60, 400, v["size"], _(" px"), 10)
+        self.size_box = _spin(60, 400, v["size"], _(" px"), 10)
         self.walk = QCheckBox(_("Walk around along the bottom of the screen"))
         self.walk.setChecked(v["walk"])
         self.follow_screen = QCheckBox(_("Follow me to another monitor"))
@@ -145,7 +146,7 @@ class SettingsWindow(QDialog):
         form.addRow(_("Companion"), self.companion)
         form.addRow(_("Language"), self.language)
         form.addRow("", _note(_("Chatmon speaks it from the next time it starts.")))
-        form.addRow(_("Size"), self.size)
+        form.addRow(_("Size"), self.size_box)
         form.addRow("", self.walk)
         form.addRow("", self.follow_screen)
         form.addRow(_("Falls asleep after"), self.sleep_after)
@@ -249,8 +250,8 @@ class SettingsWindow(QDialog):
         bring_back.setToolTip(_("A backup from this or another computer: checked, and what's in it said, before anything changes"))
         back_up.clicked.connect(lambda: self.backup_requested.emit(self.backup_chats.isChecked()))
         bring_back.clicked.connect(self.restore_requested.emit)
-        for w in (back_up, self.backup_chats, bring_back):
-            backup_layout.addWidget(w)
+        for part in (back_up, self.backup_chats, bring_back):
+            backup_layout.addWidget(part)
         backup_layout.addStretch(1)
         layout.addWidget(backup)
         return page
@@ -321,6 +322,8 @@ class SettingsWindow(QDialog):
             self.hotkey.setMaximumSequenceLength(1)
         self.hotkey.setClearButtonEnabled(True)
         self.hotkey.setAccessibleName(_("Hotkey to open the ask box"))
+        self.hotkey_bound = _note("")  # how the desktop has it, where that isn't just the keys above (Wayland)
+        self.hotkey_bound.setVisible(False)
         self.sound = QCheckBox(_("Play sounds"))
         self.sound.setChecked(v["sound"])
         self.volume = QSlider(Qt.Orientation.Horizontal)
@@ -352,6 +355,7 @@ class SettingsWindow(QDialog):
         form.addRow("", self.speech_fallback)
         form.addRow(_("Hotkey to ask"), self.hotkey)
         form.addRow("", _note(_("Opens the ask box from anywhere; pressed again, closes it. Clear it for none.")))
+        form.addRow("", self.hotkey_bound)
         form.addRow("", self.sound)
         form.addRow(_("Volume"), self.volume)
         form.addRow("", sounds)
@@ -383,6 +387,16 @@ class SettingsWindow(QDialog):
         name = self._brain_name()
         self.test_requested.emit(name, self.key.text().strip() if name in self._keys else "")
 
+    def show_hotkey_bound(self, description: str | None) -> None:
+        """How the desktop has the hotkey, in its own words (Wayland's shortcuts portal, where the desktop has the last
+        word on the keys): shown when that isn't simply the keys in the box."""
+        keys = self.hotkey.keySequence()
+        typed = {keys.toString(f).replace(" ", "").lower() for f in (QKeySequence.SequenceFormat.PortableText, QKeySequence.SequenceFormat.NativeText)}
+        shown = bool(description) and (description or "").replace(" ", "").lower() not in typed
+        # Translators: {keys} is how the desktop says the hotkey is pressed, in its own words ("Press Super+Space").
+        self.hotkey_bound.setText(_("Your desktop has it as: {keys}").format(keys=description) if shown else "")
+        self.hotkey_bound.setVisible(shown)
+
     def show_test(self, ok: bool, text: str, _seconds: float) -> None:
         """The test's result: how long the answer took, or what went wrong (never the key)."""
         self.test_button.setEnabled(True)
@@ -404,10 +418,14 @@ class SettingsWindow(QDialog):
 
     def _add_memory(self) -> None:
         text = " ".join(self.new_memory.text().split())
-        existing = {self.memory.item(i).text().lower() for i in range(self.memory.count())}
+        existing = {text.lower() for text in self._memories()}
         if text and text.lower() not in existing:
             self.memory.addItem(text)
         self.new_memory.clear()
+
+    def _memories(self) -> list[str]:
+        """What the memory list holds, in its order."""
+        return [item.text() for i in range(self.memory.count()) if (item := self.memory.item(i)) is not None]
 
     def values(self) -> dict:
         key = self.key.text().strip()
@@ -415,7 +433,7 @@ class SettingsWindow(QDialog):
             "name": self.name.text().strip(),
             "companion": self.companion.currentData(),
             "language": self.language.currentData(),
-            "size": self.size.value(),
+            "size": self.size_box.value(),
             "walk": self.walk.isChecked(),
             "follow_screen": self.follow_screen.isChecked(),
             "sleep_after_minutes": self.sleep_after.value(),
@@ -431,7 +449,7 @@ class SettingsWindow(QDialog):
             "keep_chats": self.keep_chats.isChecked(),
             "context_tokens": self.context_tokens.value(),
             "instructions": self.instructions.toPlainText().strip(),
-            "memory": [self.memory.item(i).text() for i in range(self.memory.count())],
+            "memory": self._memories(),
             "reminder_snooze": self.reminder_snooze.value(),
             "break_reminders": self.break_reminders.isChecked(),
             "breaks_every": self.breaks_every.value(),

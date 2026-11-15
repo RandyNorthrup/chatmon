@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import copy
 import json
+import logging
 import math
 import os
 import sys
@@ -17,6 +18,8 @@ from typing import Any
 
 from . import paths
 from .i18n import _
+
+logger = logging.getLogger(__name__)
 
 DEFAULTS: dict[str, Any] = {
     "name": "",
@@ -282,7 +285,7 @@ def write_private(path: Path, text: str) -> None:
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
     fd = os.open(tmp, flags, 0o600)
     try:
-        if os.name == "posix":
+        if sys.platform != "win32":  # POSIX, said the way mypy knows os.fchmod is there
             os.fchmod(fd, 0o600)  # the umask can take bits away from 0600, never add them; this puts back any it took
         data = memoryview(text.encode("utf-8"))
         while data:
@@ -297,12 +300,13 @@ def write_private(path: Path, text: str) -> None:
     if os.name == "posix":  # the rename itself, on the disk too
         try:
             folder = os.open(path.parent, os.O_RDONLY)
-        except OSError:
+        except OSError as exc:
+            logger.debug("couldn't open %s to sync the rename: %s", path.parent, exc)
             return
         try:
             os.fsync(folder)
-        except OSError:
-            pass
+        except OSError as exc:
+            logger.debug("couldn't sync the rename in %s: %s", path.parent, exc)
         finally:
             os.close(folder)
 
@@ -321,23 +325,25 @@ def read_kept(path: Path, valid: Callable[[Any], bool], limit: int = 64 * 2**20)
         raw = path.read_bytes() if path.stat().st_size <= limit else None
     except FileNotFoundError:
         return None, None
-    except OSError:
+    except OSError as exc:
+        logger.debug("couldn't read %s: %s", path, exc)
         raw = None
     data = _parsed(raw, valid)
     backup = path.with_name(path.name + BACKUP)
     if data is not None:
         try:
-            if not backup.exists() or backup.read_bytes() != raw:
+            if raw is not None and (not backup.exists() or backup.read_bytes() != raw):  # raw is there whenever data is
                 write_private(backup, raw.decode("utf-8"))
-        except OSError:
-            pass  # no backup this time: the file itself is fine
+        except OSError as exc:
+            logger.debug("couldn't keep a backup of %s: %s", path, exc)  # no backup this time: the file itself is fine
         return data, None
     kept = _set_aside(path)
     try:
         good = _parsed(backup.read_bytes(), valid)
-        when = datetime.fromtimestamp(backup.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
-    except OSError:
-        good = None
+        when = datetime.fromtimestamp(backup.stat().st_mtime).strftime("%Y-%m-%d %H:%M")  # noqa: DTZ006 - the copy's time on your clock
+    except OSError as exc:
+        logger.debug("couldn't go back to %s: %s", backup, exc)
+        good, when = None, ""
     if good is not None:
         if kept:
             said = _("{file} was damaged, so I kept it as {kept} and went back to the copy from {when}.")
@@ -535,7 +541,7 @@ class State:
         self.problem = problem
 
     @classmethod
-    def load(cls, path: Path | None = None) -> "State":
+    def load(cls, path: Path | None = None) -> State:
         path = path or paths.state_file()
         data, problem = read_kept(path, lambda d: isinstance(d, dict))
         return cls(path, data or {}, problem)

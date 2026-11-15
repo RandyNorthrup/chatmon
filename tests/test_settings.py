@@ -1,3 +1,4 @@
+import logging
 import os
 import stat
 import tomllib
@@ -114,6 +115,21 @@ def test_a_damaged_file_with_no_good_copy_starts_afresh_and_says_so(tmp_path):
     state = State.load(path)
     assert state.data == {} and "started it afresh" in state.problem and list(tmp_path.glob("state.json.bad-*"))
     assert State.load(tmp_path / "missing.json").problem is None  # a first run is no problem
+
+
+def test_a_state_file_that_cant_be_read_is_logged_and_started_afresh(tmp_path, caplog):
+    """M6B-03: why it couldn't be read goes in the log at debug; Chatmon carries on as it always has."""
+    caplog.set_level(logging.DEBUG, logger="chatmon.settings")
+    path = tmp_path / "state.json"
+    path.mkdir()  # there, but a folder: reading it fails
+    state = State.load(path)
+    assert state.data == {} and "state.json was damaged" in state.problem and "started it afresh" in state.problem
+    assert list(tmp_path.glob("state.json.bad-*")) and not path.exists()  # set aside, as a damaged file is
+    logged = [r for r in caplog.records if r.name == "chatmon.settings" and r.levelno == logging.DEBUG]
+    assert any(r.getMessage().startswith(f"couldn't read {path}: ") for r in logged), [r.getMessage() for r in logged]
+    assert any(r.getMessage().startswith(f"couldn't go back to {path}.bak: ") for r in logged)  # and why there was no copy to use
+    caplog.clear()
+    assert State.load(path).problem is None and not caplog.records  # the next start finds nothing there: a first run, nothing wrong
 
 
 def test_a_damaged_memory_file_is_never_written_over(tmp_path):

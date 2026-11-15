@@ -507,6 +507,37 @@ def low_power_mode() -> bool | None:
     return bool(flag(info, rt.sel("isLowPowerModeEnabled")))
 
 
+# NSActivityOptions (a uint64): user-initiated work that still lets the system sleep when it's idle. Held, it keeps
+# App Nap from slowing Chatmon's timers while none of its windows can be seen.
+ACTIVITY_USER_INITIATED_ALLOWING_IDLE_SYSTEM_SLEEP = 0x00FFFFFF & ~(1 << 20)
+_activity: int | None = None  # the system's token for that activity, kept for as long as Chatmon runs
+
+
+def keep_time(reason: str) -> bool:
+    """Ask macOS not to App Nap Chatmon, for as long as it runs (NSProcessInfo's beginActivityWithOptions:reason:).
+    Napped, an app none of whose windows can be seen (hidden, behind a full-screen app, on another Space; or run
+    offscreen, as the tests are) has its timers held back by seconds, so a reminder or a bubble waiting its turn comes
+    late. The system may still sleep when idle. True if asked, now or before."""
+    global _activity
+    if _activity is not None:
+        return True
+    rt = _rt()
+    if rt is None:
+        return False
+    info = rt.obj(rt.cls("NSProcessInfo"), rt.sel("processInfo"))
+    if not info:
+        return False
+    string = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p)(rt.send)
+    begin = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint64, ctypes.c_void_p)(rt.send)
+    why = string(rt.cls("NSString"), rt.sel("stringWithUTF8String:"), reason.encode("utf-8"))
+    token = begin(info, rt.sel("beginActivityWithOptions:reason:"), ACTIVITY_USER_INITIATED_ALLOWING_IDLE_SYSTEM_SLEEP, why)
+    if not token:
+        logger.debug("macOS didn't begin the activity that holds off App Nap")
+        return False
+    _activity = rt.obj(token, rt.sel("retain"))  # kept: the activity lasts until its token is ended, or Chatmon quits
+    return True
+
+
 class _Observers:
     """The class ChatmonWorkspaceObserver, made once: a method for each notification, which tells the
     WorkspaceWatcher whose observer it is."""

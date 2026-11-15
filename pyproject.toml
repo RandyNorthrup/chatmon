@@ -92,13 +92,9 @@ minversion = "7.4"  # Ubuntu 24.04's, which CI's distribution job runs
 required_plugins = ["pytest-timeout"]  # the `timeout` below is its setting
 addopts = ["-rs", "--strict-markers"]  # say why each test skipped; a mistyped mark is an error, not a new mark
 timeout = 120  # pytest-timeout: a test that hangs fails, with every thread's stack, instead of holding up the run
-filterwarnings = [
-    "error",
-    # Unclosed sockets, files and processes are reported by the garbage collector in whichever test happens to be
-    # running, not the one that left them, so they're shown in the summary rather than failing that test.
-    # docs/delivery/m6a-ci-tooling.md lists the ones left to close.
-    "default::ResourceWarning",
-]
+# Every warning fails the test it's raised in, ResourceWarning too: an unclosed socket, file or process is one to
+# close where it's made (M6B closed the last of them).
+filterwarnings = ["error"]
 
 [tool.coverage.run]
 branch = true
@@ -141,19 +137,6 @@ max-complexity = 15
 "docs/delivery/reports/m4b/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
 "docs/delivery/reports/m6a/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
 "docs/delivery/reports/m7/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-# Until M6B phase B: M8 is translating these files' strings meanwhile, and phase B fixes their findings after it merges.
-"chatmon/app.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-"chatmon/settingswin.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-"chatmon/cli.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-"chatmon/menus.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-"chatmon/messages.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-"chatmon/asking.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-"chatmon/commands.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-"chatmon/settings.py" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
-"tests/app_harness.py" = ["UP", "C4", "PIE", "PERF", "RUF", "BLE", "C90"]
-"tests/test_app_smoke.py" = ["UP", "C4", "PIE", "PERF", "RUF", "BLE", "C90"]
-"tests/test_app_reminders.py" = ["UP", "C4", "PIE", "PERF", "RUF", "BLE", "C90"]
-"tests/test_i18n.py" = ["UP", "C4", "PIE", "PERF", "RUF", "BLE", "C90"]
 
 [tool.mypy]
 python_version = "3.11"
@@ -164,9 +147,3 @@ strict_equality = true
 # Not warn_unreachable: CI checks each platform (--platform), and code for the others reads as unreachable. Not
 # explicit-override: @override needs Python 3.12, or typing_extensions, a new dependency, on 3.11.
 enable_error_code = ["redundant-expr", "truthy-bool", "unused-awaitable", "exhaustive-match", "ignore-without-code", "possibly-undefined"]
-
-[[tool.mypy.overrides]]
-# Until M6B phase B: the hub files M8 is translating meanwhile, which don't pass mypy yet on Linux, Windows and macOS
-# alike (assessment item M6B-02). Every other module is checked, and CI fails on any error in one.
-module = ["chatmon.app", "chatmon.cli", "chatmon.commands", "chatmon.menus", "chatmon.messages", "chatmon.settings", "chatmon.settingswin"]
-ignore_errors = true

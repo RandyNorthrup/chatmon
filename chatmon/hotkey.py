@@ -467,6 +467,7 @@ class Hotkey(QObject):
         self.combo: Combo | None = None
         self.on_pressed: Callable[[], None] | None = None
         self.on_failed: Callable[[str], None] | None = None
+        self.on_bound: Callable[[str], None] | None = None
         self._backend: _Backend | None = None
         # Queued even from this thread: never inside another library's event dispatch (Carbon's, Windows').
         self._heard.connect(self._hear, Qt.ConnectionType.QueuedConnection)  # type: ignore[call-arg]  # PyQt6 6.11's stub leaves out connect's type, which it takes
@@ -507,8 +508,13 @@ class Hotkey(QObject):
         if error is None:
             self.combo = combo
             if self.kind != "portal":  # the portal says what the desktop chose, once it has
-                self.bound.emit(combo.text())
+                self._bound(combo.text())
         return error
+
+    def _bound(self, description: str) -> None:
+        self.bound.emit(description)
+        if self.on_bound is not None:
+            self.on_bound(description)
 
     def unregister(self) -> None:
         if self._backend is not None:
@@ -526,7 +532,7 @@ class Hotkey(QObject):
             if self.on_failed is not None:
                 self.on_failed(detail)
         elif what == "bound":
-            self.bound.emit(detail)
+            self._bound(detail)
 
     def close(self) -> None:
         self.unregister()
@@ -538,13 +544,16 @@ class Hotkey(QObject):
 _hotkey: Hotkey | None = None
 
 
-def register(sequence: str, callback: Callable[[], None], failed: Callable[[str], None] | None = None) -> str | None:
+def register(sequence: str, callback: Callable[[], None], failed: Callable[[str], None] | None = None,
+             bound: Callable[[str], None] | None = None) -> str | None:
     """The app's one shortcut: `callback()` runs on the Qt thread when it's pressed. A sentence saying why it
-    couldn't be set, or None; `failed(sentence)` hears a refusal that comes later (a desktop asking first)."""
+    couldn't be set, or None; `failed(sentence)` hears a refusal that comes later (a desktop asking first), and
+    `bound(description)` how to press it once it's set, in the desktop's own words where it has them (Wayland's
+    shortcuts portal, where the desktop has the last word on the keys), else as Qt writes the keys."""
     global _hotkey
     if _hotkey is None:
         _hotkey = Hotkey()
-    _hotkey.on_pressed, _hotkey.on_failed = callback, failed
+    _hotkey.on_pressed, _hotkey.on_failed, _hotkey.on_bound = callback, failed, bound
     return _hotkey.register(sequence)
 
 

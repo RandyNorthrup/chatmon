@@ -9,9 +9,9 @@ import time
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QEventLoop, QPoint, QTimer  # noqa: E402
-from PyQt6.QtNetwork import QLocalServer  # noqa: E402
-from PyQt6.QtWidgets import QApplication  # noqa: E402
+from PyQt6.QtCore import QEventLoop, QPoint, QTimer
+from PyQt6.QtNetwork import QLocalServer
+from PyQt6.QtWidgets import QApplication
 
 
 def spin(seconds: float) -> None:
@@ -68,7 +68,7 @@ def make_companion(tmp_path, monkeypatch):
     # replaced them once registered Ctrl+Alt+Space for the rest of the run): hotkey.py and sound.py have their own tests.
     from chatmon import hotkey, sound
 
-    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None: None)
+    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None, bound=None: None)
     monkeypatch.setattr(hotkey, "unregister", lambda: None)
     monkeypatch.setattr(sound, "play", lambda cue: False)
     if sys.platform == "win32":  # never a toast in the computer's Action Center: the tray's balloon, which tests stand in for

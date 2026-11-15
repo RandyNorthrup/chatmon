@@ -500,11 +500,11 @@ def test_autostart_you_set_up_yourself_is_left_alone(run_key, monkeypatch):
 
 
 def test_without_a_console_it_keeps_a_log(tmp_path):
-    """pythonw has no stdout or stderr; what Chatmon says about problems goes to a log file instead."""
+    """pythonw has no stdout or stderr; what Chatmon says about problems goes to its log file all the same."""
     code = (
-        "import sys; sys.path.insert(0, sys.argv[1]);"
-        "from chatmon import app; app._log_without_a_console();"
-        "print('a warning', file=sys.stderr); sys.stderr.flush()"
+        "import logging, sys; sys.path.insert(0, sys.argv[1]);"
+        "from chatmon import log; log.setup();"
+        "logging.getLogger('chatmon.app').warning('a warning')"
     )
     pythonw = os.path.join(os.path.dirname(sys.executable), "pythonw.exe")
     if not os.path.exists(pythonw):

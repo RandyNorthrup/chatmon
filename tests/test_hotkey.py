@@ -8,6 +8,7 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 
 import pytest
@@ -88,6 +89,38 @@ def wait_for(qapp, done, seconds: float = 5.0) -> bool:
         qapp.processEvents()
         time.sleep(0.01)
     return bool(done())
+
+
+class Desktop:
+    """A backend that takes any shortcut, and (as the portal does) says a moment later how the desktop has it, from
+    its own thread."""
+
+    def __init__(self, tell, words: str | None):
+        self.tell, self.words = tell, words
+
+    def grab(self, combo):
+        if self.words is not None:
+            threading.Timer(0.05, self.tell, ("bound", self.words)).start()
+
+    def release(self):
+        pass
+
+    def close(self):
+        pass
+
+
+def test_the_apps_one_shortcut_says_how_the_desktop_has_it(qapp, monkeypatch):
+    """register()'s `bound` hears how to press the shortcut: at once as Qt writes the keys where Chatmon claims them
+    itself, and the desktop's own words where the desktop has the last word (Wayland's portal)."""
+    for kind, words, expected in (("portal", "Press Super+Space", ["Press Super+Space"]), ("x11", None, ["Ctrl+Alt+Space"])):
+        monkeypatch.setattr(hotkey.Hotkey, "_make_backend", lambda self, words=words: Desktop(self._tell, words))
+        monkeypatch.setattr(hotkey, "_hotkey", hotkey.Hotkey(kind=kind))
+        said = []
+        try:
+            assert hotkey.register("Ctrl+Alt+Space", lambda: None, bound=said.append) is None
+            assert wait_for(qapp, lambda said=said: said) and said == expected, kind
+        finally:
+            hotkey._hotkey.close()
 
 
 # -- Windows
