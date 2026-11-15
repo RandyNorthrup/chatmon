@@ -1,0 +1,14 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 3586a0d's files
+$ /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider -rA tests/test_sway.py -k screen_reader or orca or window_of_its_own or reaches_atspi
+.......                                                                  [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses
+PASSED tests/test_sway.py::test_a_screen_reader_finds_the_box_its_field_its_buttons_and_the_conversation
+PASSED tests/test_sway.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[auto-True]
+PASSED tests/test_sway.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[off-False]
+PASSED tests/test_sway.py::test_what_changes_in_the_box_reaches_atspi_listeners
+PASSED tests/test_sway.py::test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said
+PASSED tests/test_sway.py::test_with_orca_the_box_drawn_on_the_overlay_is_neither_announced_nor_echoed
+7 passed, 13 deselected in 75.10s (0:01:15)
+# exit 0
