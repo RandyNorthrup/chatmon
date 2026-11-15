@@ -1,0 +1,38 @@
+{"t": 1794785591.489, "at": "23:33:11.489", "speaking": "[LangChangeCommand ('en_US'), 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794785591.489, "at": "23:33:11.489", "speaking": "[LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', CancellableSpeech (still valid)]"}
+{"t": 1794785607.53, "at": "23:33:27.529", "speaking": "[LangChangeCommand ('en_US'), \"New notification from Chatmon, Hi, I'm Chatmon!, Hi, I'm Chatmon! Click me to ask anything... 1 of 1\", 'window', CancellableSpeech (still valid)]"}
+{"t": 1794785628.08, "at": "23:33:48.080", "speaking": "[LangChangeCommand ('en_US'), 'Ask Chatmon', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794785628.08, "at": "23:33:48.080", "speaking": "[LangChangeCommand ('en_US'), 'Ask Chatmon', 'edit', 'Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work', CancellableSpeech (still valid), 'blank']"}
+{"t": 1794785637.352, "at": "23:33:57.351", "speaking": "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']"}
+{"t": 1794785665.419, "at": "23:34:25.419", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.419, "at": "23:34:25.419", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'o', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.419, "at": "23:34:25.419", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.419, "at": "23:34:25.419", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.67, "at": "23:34:25.670", "speaking": "[LangChangeCommand ('en_US'), 'colon', EndUtteranceCommand()]"}
+{"t": 1794785665.67, "at": "23:34:25.670", "speaking": "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"}
+{"t": 1794785665.67, "at": "23:34:25.670", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'w', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.67, "at": "23:34:25.670", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'a', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.921, "at": "23:34:25.921", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.921, "at": "23:34:25.921", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.921, "at": "23:34:25.921", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785665.921, "at": "23:34:25.921", "speaking": "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"}
+{"t": 1794785666.172, "at": "23:34:26.171", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785666.172, "at": "23:34:26.171", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'h', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785666.172, "at": "23:34:26.171", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785666.172, "at": "23:34:26.171", "speaking": "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"}
+{"t": 1794785666.422, "at": "23:34:26.422", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'f', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785666.422, "at": "23:34:26.422", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785666.422, "at": "23:34:26.422", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785666.422, "at": "23:34:26.422", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785666.673, "at": "23:34:26.673", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 's', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794785667.676, "at": "23:34:27.675", "speaking": "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']"}
+{"t": 1794785692.736, "at": "23:34:52.736", "speaking": "[LangChangeCommand ('en_US'), 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794785692.736, "at": "23:34:52.736", "speaking": "[LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', CancellableSpeech (still valid)]"}
+{"t": 1794785697.247, "at": "23:34:57.246", "speaking": "[LangChangeCommand ('en_US'), 'nvda - File Explorer', CancellableSpeech (still valid)]"}
+{"t": 1794785697.497, "at": "23:34:57.497", "speaking": "[LangChangeCommand ('en_US'), 'Items View', 'list', CancellableSpeech (still valid)]"}
+{"t": 1794785697.497, "at": "23:34:57.497", "speaking": "[LangChangeCommand ('en_US'), 'chatmon-stdout', 'not selected', '1 of 5', CancellableSpeech (still valid)]"}
+{"t": 1794785697.497, "at": "23:34:57.497", "speaking": "[LangChangeCommand ('en_US'), 'nvda', 'tab', 'selected', '1 of 1', CancellableSpeech (still valid)]"}
+{"t": 1794785704.013, "at": "23:35:04.013", "speaking": "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Chatmon, Chatmon. Probe two: the tests passed while Chatmon was behind... 1 of 1', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794785742.355, "at": "23:35:42.355", "speaking": "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Claude needs you, Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat... . Actions. 1 of 1', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794785777.695, "at": "23:36:17.694", "speaking": "[LangChangeCommand ('en_US'), 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794785777.695, "at": "23:36:17.694", "speaking": "[LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', CancellableSpeech (still valid)]"}

@@ -197,7 +197,8 @@ must keep holding bubbles:
 The new tests are red on 65ed989, green with the change. ruff and mypy are clean. The presence, app smoke,
 reminders, M7 and platform-events tests pass offscreen (170 passed).
 
-This fix is not tested on a real desktop, and it doesn't fix (b). **(b) is open:** the stage must stop looking
+This fix is not tested on a real desktop, and it doesn't fix (b). **(b) was fixed later at its root** (the stage marked
+`NonRudeHWND`; measured 5 throughout, fixes/README.md). As written then, **(b) is open:** the stage must stop looking
 full-screen to Windows. A stage one pixel short of the monitor (HYPOTHESIS) still gave busy 11 of 25 and 18 of 25
 times, against 24-25 of 25, with stray busy readings around runs ([quns2](testpc2/runs/quns2/quns.log), quns4-6).
 That's inconclusive, so no diff is proposed for it.
