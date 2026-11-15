@@ -1,0 +1,130 @@
+{
+ "readiness_method": "Requirements review, final round, at 45a17b3 (readiness.md): M0-01 to M0-13 and M0-CLI re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and the quit guard's changes to chatmon/app.py and tests/test_app_smoke.py (a system watcher's late callback does nothing after quit); no conflict or gap.",
+ "windows_note": "M0-13.A1 is left out: its test is POSIX-only and skips here (CI's and WSL's receipts cover it). M0-03.A3 is in: tests/test_app_smoke.py::test_the_chats_menu_lists_chats_without_reading_any_whole, the coordinator's new menu-level test, and test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window passed here.",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "task_changes_add": {
+  "T-M0-13": [
+   {
+    "path": "chatmon/log.py",
+    "action": "modify"
+   },
+   {
+    "path": "tests/test_log.py",
+    "action": "modify"
+   }
+  ],
+  "T-M0-05": [
+   {
+    "path": "chatmon/offline.py",
+    "action": "modify"
+   }
+  ]
+ },
+ "drill_acceptance": {
+  "W4-M0-01-priority": [
+   "M0-01.A1"
+  ],
+  "W4-M0-04-appearance": [
+   "M0-04.A1",
+   "M0-04.A2"
+  ],
+  "W4-M0-04-reload-under-help": [
+   "M0-04.A3"
+  ],
+  "W4-M0-05-hide-not-kept": [
+   "M0-05.A1"
+  ],
+  "W4-M0-09-password-read-out": [
+   "M0-09.A1"
+  ],
+  "W4-M0-12-come-forward": [
+   "M0-12.A2"
+  ],
+  "W4-M0-03-light-limit": [
+   "M0-03.A3"
+  ],
+  "W4-M0-13-log-left-at-the-umask": [
+   "M0-13.A1"
+  ],
+  "W4-M0-13-log-followed-through-a-link": [
+   "M0-13.A1"
+  ],
+  "W4-M0-05-language-table-ignored": [
+   "M0-05.A2"
+  ],
+  "W4-M0-05-english-loses": [
+   "M0-05.A2"
+  ],
+  "W4-M0-03-light-copies-v2": [
+   "M0-03.A3"
+  ]
+ },
+ "tests_add": {
+  "M0-12.A1": [
+   "tests/test_app_smoke.py::test_chatmon_ask_from_a_terminal_reaches_it"
+  ],
+  "M0-13.A1": [
+   "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+  ]
+ },
+ "ci": [
+  {
+   "id": "W4E-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132902559367-test-ubuntu-24.04-3.15.log",
+   "acceptance": [
+    "M0-12.A1",
+    "M0-13.A1"
+   ],
+   "method": "CI run 43743804662 on 45a17b3, job test (ubuntu-24.04, 3.15), every test under xvfb-run: tests/test_app_smoke.py::test_chatmon_ask_from_a_terminal_reaches_it (M0-12.A1: chatmon ask from a terminal reaches the running Chatmon) and tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link (M0-13.A1: the log made 0600, an older one at the umask made 0600, never opened through a link) passed. Both also passed on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the ubuntu:24.04, debian:trixie and fedora:44 containers; both skip on Windows."
+  },
+  {
+   "id": "W4E-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132902559594-test-macos-latest-3.14.log",
+   "acceptance": [
+    "M0-12.A1",
+    "M0-13.A1"
+   ],
+   "method": "CI run 43743804662 on 45a17b3, job test (macos-latest, 3.14): the same two POSIX tests (M0-12.A1, M0-13.A1) passed on macOS, as on the 3.11 and 3.15 legs."
+  }
+ ],
+ "receipts": [],
+ "pending": [],
+ "next_action": "None in M0 on 45a17b3.",
+ "windows_acceptance": [
+  "M0-01.A1",
+  "M0-01.A2",
+  "M0-01.A3",
+  "M0-01.A4",
+  "M0-01.A5",
+  "M0-02.A1",
+  "M0-02.A2",
+  "M0-02.A3",
+  "M0-02.A4",
+  "M0-03.A1",
+  "M0-03.A2",
+  "M0-03.A3",
+  "M0-04.A1",
+  "M0-04.A2",
+  "M0-04.A3",
+  "M0-05.A1",
+  "M0-05.A2",
+  "M0-06.A1",
+  "M0-06.A2",
+  "M0-07.A1",
+  "M0-08.A1",
+  "M0-08.A2",
+  "M0-09.A1",
+  "M0-10.A1",
+  "M0-10.A2",
+  "M0-11.A1",
+  "M0-12.A1",
+  "M0-12.A2",
+  "M0-12.A3",
+  "M0-CLI.A1"
+ ]
+}

@@ -1,0 +1,30 @@
+{
+  "drills": [
+    {
+      "id": "W4-M0-05-language-table-ignored",
+      "requirement": "M0-05.A2",
+      "file": "chatmon/commands.py",
+      "find": "self.phrases = phrases or offline.phrases()",
+      "replace": "self.phrases = offline.phrases()",
+      "test": [
+        "tests/test_commands.py::test_another_languages_phrases_join_english_which_stays"
+      ],
+      "expect": [
+        "test_another_languages_phrases_join_english_which_stays"
+      ]
+    },
+    {
+      "id": "W4-M0-05-english-loses",
+      "requirement": "M0-05.A2",
+      "file": "chatmon/offline.py",
+      "find": "for source in (_table(own, \"commands\"), known):",
+      "replace": "for source in (known, _table(own, \"commands\")):",
+      "test": [
+        "tests/test_commands.py::test_another_languages_phrases_join_english_which_stays"
+      ],
+      "expect": [
+        "test_another_languages_phrases_join_english_which_stays"
+      ]
+    }
+  ]
+}
