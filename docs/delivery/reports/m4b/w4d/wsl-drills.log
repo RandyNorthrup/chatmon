@@ -1,0 +1,224 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/mac-drills/docs/delivery/reports/m4b/wave4b/wsl-drill-spec.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-1lwn8v_s
+copied 310 files
+
+=== drill L-00B-eager-objc (AC-00B) on chatmon/sound.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_m4b_imports.py::test_it_imports_here
+-- green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.03s
+-- red: exit 1
+.F......                                                                 [100%]
+=================================== FAILURES ===================================
+_________________________ test_it_imports_here[sound] __________________________
+
+module = 'sound'
+
+    @pytest.mark.parametrize("module", MODULES)
+    def test_it_imports_here(module):
+        env = dict(os.environ, PYTHONPATH=str(ROOT), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", f"import chatmon.{module}"], cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+>       assert out.returncode == 0, out.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             import chatmon.sound
+E           File "/var/tmp/chatmon-wsl-drill-1lwn8v_s/chatmon/sound.py", line 353, in <module>
+E             MacPlayer()
+E             ~~~~~~~~~^^
+E           File "/var/tmp/chatmon-wsl-drill-1lwn8v_s/chatmon/sound.py", line 195, in __init__
+E             ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
+E             ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/usr/lib/python3.14/ctypes/__init__.py", line 554, in LoadLibrary
+E             return self._dlltype(name)
+E                    ~~~~~~~~~~~~~^^^^^^
+E           File "/usr/lib/python3.14/ctypes/__init__.py", line 433, in __init__
+E             self._handle = self._load_library(name, mode, handle, winmode)
+E                            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/usr/lib/python3.14/ctypes/__init__.py", line 475, in _load_library
+E             return _dlopen(name, mode)
+E         OSError: /System/Library/Frameworks/AppKit.framework/AppKit: cannot open shared object file: No such file or directory
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/var/tmp/plans-venv/bin/python', '-c', 'import chatmon.sound'], returncode=1, stdout='', stder...rror: /System/Library/Frameworks/AppKit.framework/AppKit: cannot open shared object file: No such file or directory\n').returncode
+
+tests/test_m4b_imports.py:19: AssertionError
+1 failed, 7 passed in 0.98s
+-- restored green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 0.95s
+
+=== drill L-01E-numlock (AC-01E) on chatmon/hotkey.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.08s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x749d86ced1d0>, xvfb = ':0'
+
+    def test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict(qapp, xvfb):
+        keyboard = Keyboard(xvfb)
+        hk = hotkey.Hotkey(kind="x11")
+        pressed = []
+        hk.pressed.connect(lambda: pressed.append(True))
+        try:
+            assert hk.register("Ctrl+Alt+Space") is None
+            keyboard.press("Control_L", "Alt_L", "space")
+            assert wait_for(qapp, lambda: len(pressed) == 1)
+            keyboard.press("Control_L", "space")  # not the shortcut
+            keyboard.press("Num_Lock")  # NumLock on: X counts it as a modifier
+            keyboard.press("Control_L", "Alt_L", "space")
+>           assert wait_for(qapp, lambda: len(pressed) == 2)
+E           assert False
+E            +  where False = wait_for(<PyQt6.QtWidgets.QApplication object at 0x749d86ced1d0>, <function test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict.<locals>.<lambda> at 0x749d86d14930>)
+
+tests/test_hotkey.py:364: AssertionError
+1 failed in 5.78s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.05s
+
+=== drill L-01E-conflict (AC-01E) on chatmon/hotkey.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.02s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7367afef1130>, xvfb = ':0'
+
+    def test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict(qapp, xvfb):
+        keyboard = Keyboard(xvfb)
+        hk = hotkey.Hotkey(kind="x11")
+        pressed = []
+        hk.pressed.connect(lambda: pressed.append(True))
+        try:
+            assert hk.register("Ctrl+Alt+Space") is None
+            keyboard.press("Control_L", "Alt_L", "space")
+            assert wait_for(qapp, lambda: len(pressed) == 1)
+            keyboard.press("Control_L", "space")  # not the shortcut
+            keyboard.press("Num_Lock")  # NumLock on: X counts it as a modifier
+            keyboard.press("Control_L", "Alt_L", "space")
+            assert wait_for(qapp, lambda: len(pressed) == 2)
+            keyboard.press("Num_Lock")
+            qapp.processEvents()
+            assert len(pressed) == 2
+    
+            keyboard.grab("F5", hotkey._X11.FLAGS["ctrl"] | hotkey._X11.FLAGS["shift"])  # another app holds Ctrl+Shift+F5
+>           assert hk.register("Ctrl+Shift+F5") == hotkey.CONFLICT.format(combo="Ctrl+Shift+F5")
+E           AssertionError: assert None == 'Ctrl+Shift+F5 is already used by another app. Pick another shortcut.'
+E            +  where None = register('Ctrl+Shift+F5')
+E            +    where register = <chatmon.hotkey.Hotkey object at 0x7367afef13b0>.register
+E            +  and   'Ctrl+Shift+F5 is already used by another app. Pick another shortcut.' = <built-in method format of str object at 0x7367b03c51b0>(combo='Ctrl+Shift+F5')
+E            +    where <built-in method format of str object at 0x7367b03c51b0> = '{combo} is already used by another app. Pick another shortcut.'.format
+E            +      where '{combo} is already used by another app. Pick another shortcut.' = hotkey.CONFLICT
+
+tests/test_hotkey.py:370: AssertionError
+1 failed in 0.88s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.99s
+
+=== drill L-01F-its-own-session (AC-01F) on chatmon/shortcutportal.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.70s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-644/test_the_portal_binds_it_and_i0')
+
+    @needs_a_bus
+    def test_the_portal_binds_it_and_its_presses_reach_chatmon(tmp_path):
+        got, asked, monitor = run_on_a_private_bus(tmp_path, "accept")
+>       assert got == {"pressed": 1, "bound": ["Ctrl+Alt+Space"], "failed": [], "register": None}  # another session's press ignored
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert {'pressed': 2...gister': None} == {'pressed': 1...gister': None}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'pressed': 2} != {'pressed': 1}
+E         Use -v to get more diff
+
+tests/test_hotkey_portal.py:98: AssertionError
+1 failed in 3.65s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.68s
+
+=== drill L-01F-response (AC-01F) on chatmon/shortcutportal.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.65s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-647/test_the_portal_binds_it_and_i0')
+
+    @needs_a_bus
+    def test_the_portal_binds_it_and_its_presses_reach_chatmon(tmp_path):
+        got, asked, monitor = run_on_a_private_bus(tmp_path, "accept")
+>       assert got == {"pressed": 1, "bound": ["Ctrl+Alt+Space"], "failed": [], "register": None}  # another session's press ignored
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert {'pressed': 0...gister': None} == {'pressed': 1...gister': None}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'failed': ["Your desktop couldn't set the shortcut."]} != {'failed': []}
+E         {'bound': []} != {'bound': ['Ctrl+Alt+Space']}
+E         {'pressed': 0} != {'pressed': 1}
+E         Use -v to get more diff
+
+tests/test_hotkey_portal.py:98: AssertionError
+1 failed in 1.99s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.68s
+
+=== drill L-01F-carries-on (AC-01F) on chatmon/shortcutportal.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_hotkey_portal.py::test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.50s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-650/test_a_portal_answering_nonsen0')
+
+    @needs_a_bus
+    def test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked(tmp_path):
+        got, asked, _ = run_on_a_private_bus(tmp_path, "garbled", again=True)
+>       assert got["failed"] == [shortcutportal.BROKEN, shortcutportal.BROKEN] and got["again"] is None and got["pressed"] == 0
+E       assert ([] == ['Your deskto...he shortcut.']
+E         
+E         Right contains 2 more items, first extra item: "Your desktop couldn't set the shortcut."
+E         Use -v to get more diff)
+
+tests/test_hotkey_portal.py:122: AssertionError
+1 failed in 15.81s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.48s
+
+=== summary
+PASS L-00B-eager-objc
+PASS L-01E-numlock
+PASS L-01E-conflict
+PASS L-01F-its-own-session
+PASS L-01F-response
+PASS L-01F-carries-on

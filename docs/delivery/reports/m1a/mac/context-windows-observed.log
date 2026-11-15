@@ -1,4 +1,4 @@
-# Observed 2026-11-15T17:04:34Z on the Windows 11 workstation, for binding the macOS drill (3586a0d)
+# Observed 2026-11-15T17:32:36Z on the Windows 11 workstation, for binding the macOS drills (a4fe9f8)
 $ python verify-delivery.py --observe-context
 {
   "platform": "windows",
@@ -9,6 +9,6 @@ $ python verify-delivery.py --observe-context
 $ .venv python -c (test tool versions)
 python 3.14.10
 pytest 9.2.0
-PyQt6 6.11.0
+PyQt6 6.11.0 Qt 6.11.2
 $ ruff --version
 ruff 0.17.4

@@ -1,0 +1,1082 @@
+[
+  {
+    "id": "D-01A-alone",
+    "requirement": "AC-01A",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "and key not in ALONE:",
+      "replace": "and key in ALONE:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why"
+    ],
+    "expected": [
+      "test_what_isnt_a_shortcut_says_why"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "05b8ad844c7784433db0d2e801155b40547cc0fce4300f785b8c8bcd1485acd3",
+    "mutated_exit": 1,
+    "observed": "__________ test_what_isnt_a_shortcut_says_why[A-would take that key] __________",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-01A-order",
+    "requirement": "AC-01A",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "[MODIFIER_NAMES[m] for m in MODIFIERS if m in self.modifiers]",
+      "replace": "[MODIFIER_NAMES[m] for m in sorted(self.modifiers)]"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it"
+    ],
+    "expected": [
+      "test_a_shortcut_is_read_as_qt_writes_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "8a1e2e591ec44c32e6635b1cec46e36886b6b2b02ef0ccbe08fda8af383c995e",
+    "mutated_exit": 1,
+    "observed": "___ test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Space-Ctrl+Alt+Space] ____",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-01B-message-only",
+    "requirement": "AC-01B",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "HWND_MESSAGE = -3",
+      "replace": "HWND_MESSAGE = 0"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+    ],
+    "expected": [
+      "test_windows_registers_it_on_a_message_only_window_and_hears_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "0491aa31b178d9476fcf1df9ae43224fc8b330376f501b4171ca08f0404edafd",
+    "mutated_exit": 1,
+    "observed": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-01B-filter",
+    "requirement": "AC-01B",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "msg.message == self.WM_HOTKEY",
+      "replace": "msg.message == self.WM_HOTKEY + 1"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+    ],
+    "expected": [
+      "test_windows_registers_it_on_a_message_only_window_and_hears_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "b34ff8da512992b9777d45ccc648cdbc962b3255cc2efbc3bf748a2d6d2690ec",
+    "mutated_exit": 1,
+    "observed": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-01B-its-own-id",
+    "requirement": "AC-01B",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "msg.wParam == self.id",
+      "replace": "msg.wParam >= self.id"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+    ],
+    "expected": [
+      "assert [True, True] == [True]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "1c56b8d0029150ca9aa51a41fc85349906c7a3f8665ed4e655ef16baaf58d7bf",
+    "mutated_exit": 1,
+    "observed": "E           assert [True, True] == [True]",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-01B-given-back",
+    "requirement": "AC-01B",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "            self._user32.UnregisterHotKey(self.hwnd, self.id)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+    ],
+    "expected": [
+      "test_windows_registers_it_on_a_message_only_window_and_hears_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "b81706df2e772b9c6944e7c49ea3eb0e0d6ec4e36a79a6d81a99203cc49b6cf4",
+    "mutated_exit": 1,
+    "observed": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-01C-conflict",
+    "requirement": "AC-01C",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "if error == self.ERROR_HOTKEY_ALREADY_REGISTERED:",
+      "replace": "if error != self.ERROR_HOTKEY_ALREADY_REGISTERED:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had"
+    ],
+    "expected": [
+      "wouldn't set up Ctrl+Alt+Shift+F23"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "ffa0805c11ccbc3e9da4fe1759a995b123e77330c9d042a6bb2800e99fb8d0fd",
+    "mutated_exit": 1,
+    "observed": "E             + Windows wouldn't set up Ctrl+Alt+Shift+F23 (error 1409).",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-01C-keeps-old",
+    "requirement": "AC-01C",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "        new_id = 2 if self.id == 1 else 1  # the old one stays until the new one is in\n",
+      "replace": "        self.release()\n        new_id = 2 if self.id == 1 else 1\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had"
+    ],
+    "expected": [
+      "test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "500cf0d69ccf3541289e2aabc1bac7fc8927b91b8efac4c33d7cea2c65c6dd81",
+    "mutated_exit": 1,
+    "observed": "________ test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had ________",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-01F-trigger",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "[KEYS[combo.key].x11]",
+      "replace": "[combo.key]"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format"
+    ],
+    "expected": [
+      "CTRL+ALT+Space"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2",
+    "baseline_exit": 0,
+    "mutated_sha256": "ba614a7dbab62fb2bae73b7d763c3fe500d43367ced327e2fc15921189bc1f3b",
+    "mutated_exit": 1,
+    "observed": "E       AssertionError: assert 'CTRL+ALT+Space' == 'CTRL+ALT+space'",
+    "after_sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02A-volume",
+    "requirement": "AC-02A",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "        effect.setVolume(volume)\n",
+      "replace": "        effect.setVolume(1.0)\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting"
+    ],
+    "expected": [
+      "test_qsoundeffect_plays_it_without_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "b954190ff3c409cb6b9bdec58aa5363e3ae27a8db8ff5986280a287e05a14b4f",
+    "mutated_exit": 1,
+    "observed": "_________________ test_qsoundeffect_plays_it_without_waiting __________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02A-plays",
+    "requirement": "AC-02A",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "        effect.play()\n",
+      "replace": "        effect.stop()\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting"
+    ],
+    "expected": [
+      "never played"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "12b620e37a4d592dd03a0dbe947bfb553455c32347ea79b991b27b965c247b46",
+    "mutated_exit": 1,
+    "observed": ">       assert True in playing or effect.isPlaying(), f\"never played (status {effect.status()})\"",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02B-quiet",
+    "requirement": "AC-02B",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "if self._quiet is not None and self._quiet():",
+      "replace": "if self._quiet is not None and not self._quiet():"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+    ],
+    "expected": [
+      "test_nothing_sounds_when_it_shouldnt"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "7e6249feea388651873d860313b9eae332b0fc8b63ed1c5fd6b2485651e7bcad",
+    "mutated_exit": 1,
+    "observed": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02B-one-switch",
+    "requirement": "AC-02B",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "if not (self.enabled and self.cues[cue] and self.volume > 0):",
+      "replace": "if not (self.cues[cue] and self.volume > 0):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+    ],
+    "expected": [
+      "test_nothing_sounds_when_it_shouldnt"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "89b0f466ddacab6c19b42d53cdcbe894fd9bb11eb2c40aa86049ec6936100a24",
+    "mutated_exit": 1,
+    "observed": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02B-cue-off",
+    "requirement": "AC-02B",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "if not (self.enabled and self.cues[cue] and self.volume > 0):",
+      "replace": "if not (self.enabled and self.volume > 0):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+    ],
+    "expected": [
+      "test_nothing_sounds_when_it_shouldnt"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "4abb06ee373791233269f6cb00e8ea853e26dd06dbe4b9c36c3690ae3d313615",
+    "mutated_exit": 1,
+    "observed": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02C-defaults",
+    "requirement": "AC-02C",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "ON_BY_DEFAULT = frozenset({\"needs-you\", \"reminder\", \"focus-done\"})",
+      "replace": "ON_BY_DEFAULT = frozenset({\"needs-you\", \"reminder\", \"focus-done\", \"pop\"})"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_only_the_alerts_sound_until_you_turn_the_others_on"
+    ],
+    "expected": [
+      "test_only_the_alerts_sound_until_you_turn_the_others_on"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "5155c072fe2f475c82ff5634afde42b7fec6c615f7e6f37f9fae73dbe08ee0a3",
+    "mutated_exit": 1,
+    "observed": "___________ test_only_the_alerts_sound_until_you_turn_the_others_on ___________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02D-own-thread",
+    "requirement": "AC-02D",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "        self._queue.put(data)\n        return True\n",
+      "replace": "        import winsound\n        winsound.PlaySound(data, winsound.SND_MEMORY | winsound.SND_NODEFAULT)\n        return True\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_playsound_plays_on_its_own_thread"
+    ],
+    "expected": [
+      "test_playsound_plays_on_its_own_thread"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "80825dbb1405cde03125cd43e7e93faa119c0181252285f931b13596809635a5",
+    "mutated_exit": 1,
+    "observed": "___________________ test_playsound_plays_on_its_own_thread ____________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02A-stopped-at-exit",
+    "requirement": "AC-02A",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "        atexit.register(self.close)\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_quitting_while_a_sound_plays_ends_cleanly"
+    ],
+    "expected": [
+      "test_quitting_while_a_sound_plays_ends_cleanly"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "01b4d3b7edc0a1a3456b3ab38ee7999d999a2b1ba7c027d30c580c7f7fba3844",
+    "mutated_exit": 1,
+    "observed": "_______________ test_quitting_while_a_sound_plays_ends_cleanly ________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02D-scaled",
+    "requirement": "AC-02D",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "(round(v * volume) for v in values)",
+      "replace": "(round(v) for v in values)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_samples_are_scaled_for_the_volume"
+    ],
+    "expected": [
+      "test_samples_are_scaled_for_the_volume"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "4b414fee67fb04d77ca08172cbba18d4e608ab79f5caaf4b64822fd5db346818",
+    "mutated_exit": 1,
+    "observed": "___________________ test_samples_are_scaled_for_the_volume ____________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-02D-without-qt",
+    "requirement": "AC-02D",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "except ImportError:  # QtMultimedia not installed (a distribution's PyQt6 without it)\n            return False",
+      "replace": "except ImportError:  # QtMultimedia not installed (a distribution's PyQt6 without it)\n            return True"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_without_qtmultimedia_the_systems_own_player_is_used"
+    ],
+    "expected": [
+      "test_without_qtmultimedia_the_systems_own_player_is_used"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "049d7d0c2431e4b0d65a60c4180ab93991a8146047569094f097cb861f0bb7a0",
+    "mutated_exit": 1,
+    "observed": "__________ test_without_qtmultimedia_the_systems_own_player_is_used ___________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03A-escaped",
+    "requirement": "AC-03A",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "return ET.tostring(toast, encoding=\"unicode\")",
+      "replace": "return ET.tostring(toast, encoding=\"unicode\").replace(\"&lt;\", \"<\").replace(\"&gt;\", \">\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+    ],
+    "expected": [
+      "test_text_from_an_agent_is_text_never_markup"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "7846bd59156595fe5a8ad37b0fcd1a2eb215cb6293157ec5a074cabbc72c6603",
+    "mutated_exit": 1,
+    "observed": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03A-control-chars",
+    "requirement": "AC-03A",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "return NOT_XML.sub(\"\", str(text))",
+      "replace": "return str(text)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+    ],
+    "expected": [
+      "test_text_from_an_agent_is_text_never_markup"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "4563873bb19df6529440afd29be9116cbdfe6deab43678387b1b46d13126d7c8",
+    "mutated_exit": 1,
+    "observed": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03A-reminder-button",
+    "requirement": "AC-03A",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "        if not buttons:  # Windows' own Dismiss, so the scenario holds",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_reminder_stays_until_answered"
+    ],
+    "expected": [
+      "test_a_reminder_stays_until_answered"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "5be8549db801c4f83d129237cd921219216fcb3faa51e5b618c980e4d87ec0c4",
+    "mutated_exit": 1,
+    "observed": "____________________ test_a_reminder_stays_until_answered _____________________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03A-five-buttons",
+    "requirement": "AC-03A",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "if len(buttons) > MAX_BUTTONS:",
+      "replace": "if len(buttons) >= MAX_BUTTONS:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused"
+    ],
+    "expected": [
+      "test_too_many_buttons_or_an_unknown_scenario_is_refused"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "970473229a83ffee2577e349d8b438e63620a8d4bca1668dbd48c0f359078239",
+    "mutated_exit": 1,
+    "observed": "___________ test_too_many_buttons_or_an_unknown_scenario_is_refused ___________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03B-setting",
+    "requirement": "AC-03B",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "        if setting in WHY_NOT:\n",
+      "replace": "        if setting != ENABLED:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried"
+    ],
+    "expected": [
+      "test_only_a_real_no_keeps_a_toast_from_being_tried"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "fe1d2cf3103080b90b717a6d4fbbffe1c4734fe3dcf71b82511dba75235e073a",
+    "mutated_exit": 1,
+    "observed": "_____________ test_only_a_real_no_keeps_a_toast_from_being_tried ______________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03B-real-no",
+    "requirement": "AC-03B",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "        if setting in WHY_NOT:\n",
+      "replace": "        if setting == OFF_BY_POLICY:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+    ],
+    "expected": [
+      "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "f0bbc8acf013e431712968c128619f4898342959addcf8065899cb01b5bf27ec",
+    "mutated_exit": 1,
+    "observed": "_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03C-settled",
+    "requirement": "AC-03C",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "        if shown is None:\n            # Settled already",
+      "replace": "        if False:\n            # Settled already"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_what_windows_says_after_a_toast_is_settled_is_not_news"
+    ],
+    "expected": [
+      "test_what_windows_says_after_a_toast_is_settled_is_not_news"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "3ebc0d07e5a8c99461abb7e4c5ab44df9c1875fb6c5e8a9a178134891daefbed",
+    "mutated_exit": 1,
+    "observed": "_________ test_what_windows_says_after_a_toast_is_settled_is_not_news _________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03C-qt-thread",
+    "requirement": "AC-03C",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "self._heard.emit(\"failed\", tag, code.value)",
+      "replace": "self.failed.emit(tag, code.value)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+    ],
+    "expected": [
+      "test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "7471923cb1c1f4d04426e417dd497479cc6b7249406675c4fcc0bb8b8aa11e38",
+    "mutated_exit": 1,
+    "observed": "________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03C-button",
+    "requirement": "AC-03C",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "                    index = parsed[1]\n",
+      "replace": "                    index = BODY\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+    ],
+    "expected": [
+      "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "43adc1a200b45eecd4f763038f019a85bf2effa0277bf53e1d9b561b28d8b6e2",
+    "mutated_exit": 1,
+    "observed": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03C-action",
+    "requirement": "AC-03C",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "                action()\n",
+      "replace": "                pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+    ],
+    "expected": [
+      "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "008d67a858b86dd0b80faee36b4c608d28dd1719b6b46515c8f7d507b1dfcca5",
+    "mutated_exit": 1,
+    "observed": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03D-icon",
+    "requirement": "AC-03D",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "        if icon:\n",
+      "replace": "        if not icon:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon"
+    ],
+    "expected": [
+      "test_a_pip_install_tells_windows_its_name_and_icon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "29b73e052b3fc6eaf3722b77f5b81e83c2e4ce319f098d61d5c9a9e0e3ffe6ce",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_pip_install_tells_windows_its_name_and_icon ______________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-04A-position",
+    "requirement": "AC-04A",
+    "file": "chatmon/wincaret.py",
+    "mutation": {
+      "find": "user32.SetCaretPos(int(x), int(y))",
+      "replace": "user32.SetCaretPos(int(y), int(x))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+    ],
+    "expected": [
+      "test_a_new_bubble_gets_the_caret_magnifier_follows"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f",
+    "baseline_exit": 0,
+    "mutated_sha256": "1e4d26212015b5b691208b2c4a8b330c93678914637bf2ae757d822ce07dbd2a",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+    "after_sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-04A-bubble-size",
+    "requirement": "AC-04A",
+    "file": "chatmon/wincaret.py",
+    "mutation": {
+      "find": "max(1, int(width)), max(1, int(height))",
+      "replace": "max(1, int(width) // 2), max(1, int(height))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+    ],
+    "expected": [
+      "test_a_new_bubble_gets_the_caret_magnifier_follows"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f",
+    "baseline_exit": 0,
+    "mutated_sha256": "b3fc8857befca4ccfe3113500cb7799a069458692749e65c99116535c583ab98",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+    "after_sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-04A-cleared",
+    "requirement": "AC-04A",
+    "file": "chatmon/wincaret.py",
+    "mutation": {
+      "find": "            _api().DestroyCaret()\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+    ],
+    "expected": [
+      "test_a_new_bubble_gets_the_caret_magnifier_follows"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f",
+    "baseline_exit": 0,
+    "mutated_sha256": "6414dd57e8cb0f25483ca3b7821e631bcc3342b675f31ff2f32ee03c5ebe689f",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+    "after_sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-04B-magnifier",
+    "requirement": "AC-04B",
+    "file": "chatmon/wincaret.py",
+    "mutation": {
+      "find": "return bool(_api().FindWindowW(MAGNIFIER_CLASS, None))",
+      "replace": "return not _api().FindWindowW(MAGNIFIER_CLASS, None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wincaret.py::test_the_caret_is_only_for_when_magnifier_runs"
+    ],
+    "expected": [
+      "test_the_caret_is_only_for_when_magnifier_runs"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f",
+    "baseline_exit": 0,
+    "mutated_sha256": "fed9fa96be583b504d0e861a13657b7097e6b251c48268fac1c0de4269ee133f",
+    "mutated_exit": 1,
+    "observed": "_______________ test_the_caret_is_only_for_when_magnifier_runs ________________",
+    "after_sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-00A-lazy-library",
+    "requirement": "AC-00A",
+    "file": "chatmon/libdbus.py",
+    "mutation": {
+      "find": "def _text(raw: bytes | None) -> str:",
+      "replace": "lib()\n\n\ndef _text(raw: bytes | None) -> str:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_m4b_imports.py::test_it_imports_here"
+    ],
+    "expected": [
+      "test_it_imports_here[libdbus]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953",
+    "baseline_exit": 0,
+    "mutated_sha256": "323893af479d977b37de5a7a0301758a1d6a270aefc656399fae5133f73a4941",
+    "mutated_exit": 1,
+    "observed": "________________________ test_it_imports_here[libdbus] ________________________",
+    "after_sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-00A-eager-objc",
+    "requirement": "AC-00A",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "_sounds = Sounds()\n",
+      "replace": "_sounds = Sounds()\nMacPlayer()\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_m4b_imports.py::test_it_imports_here"
+    ],
+    "expected": [
+      "test_it_imports_here[sound]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "4287d58a512459251c8717ac2be048b21782a15ede6dc515280eb5ea637cf0b5",
+    "mutated_exit": 1,
+    "observed": "_________________________ test_it_imports_here[sound] _________________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  }
+]

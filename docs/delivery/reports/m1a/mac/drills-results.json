@@ -27,7 +27,7 @@
     "baseline_exit": 0,
     "mutated_sha256": "12088f2c04cd9bcbd1f6c76c1cb560052434de485f5ecab595c92e29587d018b",
     "mutated_exit": 1,
-    "observed": "E         app=\\'/U...t-of-user/pytest-21/test_mac_an_app_others_could_c0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')",
+    "observed": "E         app=\\'/U...st-of-user/pytest-1/test_mac_an_app_others_could_c0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')",
     "after_sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57",
     "restored_exit": 0
   },

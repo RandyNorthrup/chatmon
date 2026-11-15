@@ -1,0 +1,182 @@
+[
+  {
+    "id": "L-00B-eager-objc",
+    "requirement": "AC-00B",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "_sounds = Sounds()\n",
+      "replace": "_sounds = Sounds()\nMacPlayer()\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_m4b_imports.py::test_it_imports_here"
+    ],
+    "expected": [
+      "test_it_imports_here[sound]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "4287d58a512459251c8717ac2be048b21782a15ede6dc515280eb5ea637cf0b5",
+    "mutated_exit": 1,
+    "observed": "_________________________ test_it_imports_here[sound] __________________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01E-numlock",
+    "requirement": "AC-01E",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "(key.keycode, key.state & ~(self.LOCK | self.NUM_LOCK))",
+      "replace": "(key.keycode, key.state)"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+    ],
+    "expected": [
+      "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "f596b8b3febdf6a0d07f947df962da80877b4e0111c96befb34e5cef4e01ac8d",
+    "mutated_exit": 1,
+    "observed": "________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01E-conflict",
+    "requirement": "AC-01E",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "            if display == self.display:\n",
+      "replace": "            if False:\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+    ],
+    "expected": [
+      "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "baseline_exit": 0,
+    "mutated_sha256": "74c9772df0d354b81b1a32717de012444b0ac656864c24d70b77987be8bb3c9b",
+    "mutated_exit": 1,
+    "observed": "________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________",
+    "after_sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01F-its-own-session",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "if self._session and str(message.args[0]) == self._session and message.args[1] == SHORTCUT_ID:",
+      "replace": "if self._session and message.args[1] == SHORTCUT_ID:"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon"
+    ],
+    "expected": [
+      "test_the_portal_binds_it_and_its_presses_reach_chatmon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2",
+    "baseline_exit": 0,
+    "mutated_sha256": "b17b7c1d1d9be8740a46be244776bdd331794cb57f22c6c6e3fca1e0d57e13d2",
+    "mutated_exit": 1,
+    "observed": "____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________",
+    "after_sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01F-response",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "            then(code, results)\n",
+      "replace": "            then(1, results)\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon"
+    ],
+    "expected": [
+      "test_the_portal_binds_it_and_its_presses_reach_chatmon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2",
+    "baseline_exit": 0,
+    "mutated_sha256": "08c6ca81900f76667f18579fb19e8a6704a596b5b139644114766e88c600da6e",
+    "mutated_exit": 1,
+    "observed": "____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________",
+    "after_sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-01F-carries-on",
+    "requirement": "AC-01F",
+    "file": "chatmon/shortcutportal.py",
+    "mutation": {
+      "find": "except (libdbus.Failure, TypeError, ValueError, KeyError, IndexError, AttributeError):",
+      "replace": "except libdbus.Failure:"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey_portal.py::test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked"
+    ],
+    "expected": [
+      "test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2",
+    "baseline_exit": 0,
+    "mutated_sha256": "9f42d27dc3af0596a3d67b83dccfc9f125f22df77fc994779ef7e79fb0f1ec23",
+    "mutated_exit": 1,
+    "observed": "_ test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked _",
+    "after_sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2",
+    "restored_exit": 0
+  }
+]
