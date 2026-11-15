@@ -1,0 +1,275 @@
+red drills from docs\delivery\reports\release\screen-readers\fixes\drill-spec.json
+python: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-6dtn9weg
+copied 310 files
+
+=== drill SR-1-held-posted-at-activation (screen-readers problem 1) on chatmon/a11y.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_voiceover_holds_announcements_until_chatmon_is_in_front
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.47s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_voiceover_holds_announcements_until_chatmon_is_in_front _________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001AF578D5630>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AF579A43E0>
+
+    def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypatch):
+        from PyQt6.QtCore import Qt
+    
+        from chatmon import a11y
+    
+        monkeypatch.setattr(a11y.VoiceOver, "SETTLE_MS", 300, raising=False)
+        active, posted, spoken = [False], [], []
+        queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=spoken.append)
+        for i in range(7):
+            queue.say(f"Message {i}.", important=(i == 3))
+        assert posted == [] and len(queue.held) == a11y.VoiceOver.HELD  # the last few, not a backlog
+        queue.state_changed(Qt.ApplicationState.ApplicationInactive)
+        assert posted == []
+        active[0] = True
+        queue.state_changed(Qt.ApplicationState.ApplicationActive)  # you came to Chatmon
+        _pump(qapp, 0.1)
+>       assert posted == []  # VoiceOver is still moving to Chatmon, and would drop it
+        ^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert [('Message 2....ge 6.', True)] == []
+E         
+E         Left contains one more item: ('Message 2. Message 3. Message 4. Message 5. Message 6.', True)
+E         Use -v to get more diff
+
+tests\test_platform_events.py:234: AssertionError
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.37s
+
+=== drill SR-1-said-at-once-while-just-active (screen-readers problem 1) on chatmon/a11y.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_voiceover_waits_after_chatmon_comes_in_front
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.39s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_voiceover_waits_after_chatmon_comes_in_front ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002031CAB5630>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002031CB84180>
+
+    def test_voiceover_waits_after_chatmon_comes_in_front(qapp, monkeypatch):
+        """What's said just as Chatmon becomes active (or starts active) waits until VoiceOver has moved to it; going
+        behind again meanwhile keeps it held."""
+        from PyQt6.QtCore import Qt
+    
+        from chatmon import a11y
+    
+        monkeypatch.setattr(a11y.VoiceOver, "SETTLE_MS", 300, raising=False)
+        active, posted = [True], []
+        queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=lambda _: None)
+        queue.say("Hi.")  # made while active, as at the start: not yet
+>       assert posted == [] and queue.held == [("Hi.", False)]
+E       AssertionError: assert ([('Hi.', False)] == []
+E         
+E         Left contains one more item: ('Hi.', False)
+E         Use -v to get more diff)
+
+tests\test_platform_events.py:263: AssertionError
+1 failed in 0.46s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.40s
+
+=== drill SR-1-a-second-only (screen-readers problem 1) on chatmon/a11y.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_voiceover_is_given_the_time_it_was_measured_to_need
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.32s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_voiceover_is_given_the_time_it_was_measured_to_need ___________
+
+    def test_voiceover_is_given_the_time_it_was_measured_to_need():
+        """Posted as Chatmon became active, or a second after, VoiceOver dropped every announcement; 2.5 s after, it said
+        each one (macOS 26.7, the screen-reader probe before 0.10.0). Shorter is what it dropped."""
+        from chatmon import a11y
+    
+>       assert a11y.VoiceOver.SETTLE_MS >= 2500
+E       AssertionError: assert 1000 >= 2500
+E        +  where 1000 = <class 'chatmon.a11y.VoiceOver'>.SETTLE_MS
+E        +    where <class 'chatmon.a11y.VoiceOver'> = <module 'chatmon.a11y' from 'C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-drill-6dtn9weg\\chatmon\\a11y.py'>.VoiceOver
+
+tests\test_platform_events.py:249: AssertionError
+1 failed in 0.44s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.32s
+
+=== drill SR-2-title-takes-the-keyboard (screen-readers problem 2) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py::test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.55s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field ______
+
+box = <chatmon.bubble.AskBox object at 0x000001BCDB7396D0>
+
+    def test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field(box):
+        """VoiceOver's cursor lands on the title first and, with "keyboard focus follows the VoiceOver cursor", gives the
+        title the focus: typing must still reach the field."""
+        open_chat(box, activate=True)
+        box.activateWindow()
+        spin(0.05)
+        box.title.setFocus(Qt.FocusReason.OtherFocusReason)
+        spin(0.01)
+>       assert QApplication.focusWidget() is box.entry  # the title "has" it only through its proxy
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert <PyQt6.QtWidgets.QLabel object at 0x000001BCDB739D10> is <chatmon.bubble.Entry object at 0x000001BCDB73AD50>
+E        +  where <PyQt6.QtWidgets.QLabel object at 0x000001BCDB739D10> = <built-in method focusWidget of PyQt6.sip.wrappertype object at 0x000001BCDAA95E40>()
+E        +    where <built-in method focusWidget of PyQt6.sip.wrappertype object at 0x000001BCDAA95E40> = QApplication.focusWidget
+E        +  and   <chatmon.bubble.Entry object at 0x000001BCDB73AD50> = <chatmon.bubble.AskBox object at 0x000001BCDB7396D0>.entry
+
+tests\test_ask_box.py:94: AssertionError
+1 failed in 0.72s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.63s
+
+=== drill SR-3-stage-left-rude (screen-readers problem 3) on chatmon/clickthrough.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_clickthrough.py::test_the_stage_isnt_taken_for_a_full_screen_app tests/test_clickthrough.py::test_a_new_native_window_is_marked_too
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.32s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_______________ test_the_stage_isnt_taken_for_a_full_screen_app _______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000025E8D8E4EB0>
+user32 = <WinDLL 'user32', handle 7fff6c820000 at 0x25e8d9375c0>
+hwnd = 33622658
+
+    @windows_only
+    def test_the_stage_isnt_taken_for_a_full_screen_app(qapp, user32, hwnd):
+        """The stage covers the whole monitor and stays on top: Explorer counted it as a full-screen app, so Windows said
+        it was busy (QUNS_BUSY) for as long as Chatmon ran, holding Chatmon's bubbles back and hiding every app's
+        notification banners. NonRudeHWND tells Explorer it isn't one."""
+        user32.GetPropW.restype, user32.GetPropW.argtypes = ctypes.c_void_p, [ctypes.c_void_p, ctypes.c_wchar_p]
+        clickthrough.WindowsPointerToggle(Widget(hwnd))
+>       assert user32.GetPropW(hwnd, "NonRudeHWND") == 1
+E       AssertionError: assert None == 1
+E        +  where None = <_FuncPtr object at 0x0000025E8D5CF690>(33622658, 'NonRudeHWND')
+E        +    where <_FuncPtr object at 0x0000025E8D5CF690> = <WinDLL 'user32', handle 7fff6c820000 at 0x25e8d9375c0>.GetPropW
+
+tests\test_clickthrough.py:96: AssertionError
+___________________ test_a_new_native_window_is_marked_too ____________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000025E8D8E4EB0>
+user32 = <WinDLL 'user32', handle 7fff6c820000 at 0x25e8d8d9eb0>
+hwnd = 33688194
+
+    @windows_only
+    def test_a_new_native_window_is_marked_too(qapp, user32, hwnd):
+        """Qt can give the stage a new native window (a screen of another scale, say): it's marked on the next frame."""
+        user32.GetPropW.restype, user32.GetPropW.argtypes = ctypes.c_void_p, [ctypes.c_void_p, ctypes.c_wchar_p]
+        first = user32.CreateWindowExW(WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST, "STATIC", "chatmon test", WS_POPUP, 0, 0, 64, 64, None, None, None, None)
+        widget = Widget(first)
+        try:
+            toggle = clickthrough.WindowsPointerToggle(widget)
+            widget.hwnd = hwnd  # as winId() answers after Qt made the window again
+            toggle.follow_pointer(lambda pos: NOWHERE)
+>           assert user32.GetPropW(hwnd, "NonRudeHWND") == 1
+E           AssertionError: assert None == 1
+E            +  where None = <_FuncPtr object at 0x0000025E8D5CF850>(33688194, 'NonRudeHWND')
+E            +    where <_FuncPtr object at 0x0000025E8D5CF850> = <WinDLL 'user32', handle 7fff6c820000 at 0x25e8d8d9eb0>.GetPropW
+
+tests\test_clickthrough.py:109: AssertionError
+2 failed in 0.54s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.42s
+
+=== drill SR-3-busy-not-quiet (screen-readers problem 3) on chatmon/presence.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_a_full_screen_app_still_holds_bubbles_on_windows
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.42s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_a_full_screen_app_still_holds_bubbles_on_windows ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B889FADE00>
+
+    @windows
+    def test_a_full_screen_app_still_holds_bubbles_on_windows(monkeypatch):
+        """Windows says busy (QUNS_BUSY) while a full-screen app is in front. Chatmon's own stage no longer makes it say
+        so (it's marked NonRudeHWND, clickthrough.py), so busy is a real full-screen app again: bubbles that come on their
+        own wait for it."""
+        import ctypes
+    
+        def busy(state):
+            state._obj.value = 2  # byref(c_int): the int Windows writes
+            return 0
+    
+        monkeypatch.setattr(ctypes.windll.shell32, "SHQueryUserNotificationState", busy)
+>       assert presence._win_quiet() == "a full-screen app"
+E       AssertionError: assert None == 'a full-screen app'
+E        +  where None = <function _win_quiet at 0x000001B889FA7060>()
+E        +    where <function _win_quiet at 0x000001B889FA7060> = presence._win_quiet
+
+tests\test_presence.py:86: AssertionError
+1 failed in 0.45s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.47s
+
+=== drill SR-4-ask-leaves-it-behind (screen-readers problem 4) on chatmon/cli.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_cli.py::test_on_macos_ask_makes_chatmon_the_active_app_once_the_box_is_open
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_on_macos_ask_makes_chatmon_the_active_app_once_the_box_is_open _____
+
+sent = []
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FF1BE276F0>
+
+    def test_on_macos_ask_makes_chatmon_the_active_app_once_the_box_is_open(sent, monkeypatch):
+        """macOS 14 and later won't let Chatmon make itself active on a script's or launcher's word (cooperative
+        activation): the command asks for it, after the box is open, by the process id Chatmon answers with."""
+        from chatmon import macnative
+    
+        order = []
+        monkeypatch.setattr(sys, "platform", "darwin")
+        monkeypatch.setattr(events, "send", lambda message, timeout=0.5: order.append(("send", message["type"])) or True)
+        monkeypatch.setattr(events, "request", lambda message, timeout=2.0: order.append(("ask", message["type"])) or {"type": "status", "pid": 4242})
+        monkeypatch.setattr(macnative, "activate_app", lambda pid: order.append(("activate", pid)) or True)
+        assert cli.main(["ask", "hello"]) == 0
+>       assert order == [("send", "ask"), ("ask", "status"), ("activate", 4242)]
+E       AssertionError: assert [('send', 'ask')] == [('send', 'as...ivate', 4242)]
+E         
+E         Right contains 2 more items, first extra item: ('ask', 'status')
+E         Use -v to get more diff
+
+tests\test_cli.py:122: AssertionError
+1 failed in 0.65s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== summary
+PASS SR-1-held-posted-at-activation
+PASS SR-1-said-at-once-while-just-active
+PASS SR-1-a-second-only
+PASS SR-2-title-takes-the-keyboard
+PASS SR-3-stage-left-rude
+PASS SR-3-busy-not-quiet
+PASS SR-4-ask-leaves-it-behind

@@ -1,0 +1,160 @@
+22:31:33.925Z VoiceOver verification: Chatmon 0.10.0 with wave5/screen-readers' fixes, from /Users/runner/work/chatmon/chatmon
+22:31:39.883Z osascript (Finder activate): exit 0
+22:31:44.215Z Chatmon (source) running, pid 3000
+22:31:55.256Z CASE source/G: VoiceOver said "Hi, I'm Chatmon! Click me to ask anything." 5.3 s after
+22:31:55.256Z == source/A1: Finder in front; the shortcut opens the ask box; a hook's message comes
+22:31:55.301Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:31:55.366Z osascript (Esc): exit 0
+22:31:56.457Z osascript (Finder activate): exit 0
+22:31:59.531Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:31:59.619Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+22:32:02.722Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:32:07.815Z $ chatmon say "Probe source A1, said while Chatmon is in front." (source): exit 0 in 0.07 s
+22:32:15.910Z CASE source/A1: VoiceOver said 'Chatmon. Probe source A1, said while Chatmon is in front.' 0.15 s after
+22:32:15.910Z == source/A2: `version` typed in the ask box (the shortcut), Return
+22:32:16.046Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+22:32:16.107Z osascript (keystroke version): exit 0
+22:32:16.733Z osascript (Return): exit 0
+22:32:24.846Z CASE source/A2: VoiceOver said "I'm Chatmon 0.10.0." 0.77 s after
+22:32:24.846Z == source/B1: behind, a say comes; then shortcut
+22:32:24.889Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:32:24.946Z osascript (Esc): exit 0
+22:32:26.068Z osascript (Finder activate): exit 0
+22:32:29.156Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:32:29.212Z $ chatmon say "Probe source B1, held while Chatmon is behind." (source): exit 0 in 0.06 s
+22:32:39.358Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+22:32:41.973Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:32:49.962Z CASE source/B1: VoiceOver said 'Chatmon. Probe source B1, held while Chatmon is behind.' 12.79 s after; held while behind: True
+22:32:50.174Z == source/B3: behind, a say comes; then system events
+22:32:50.234Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:32:50.316Z osascript (Esc): exit 0
+22:32:51.460Z osascript (Finder activate): exit 0
+22:32:54.564Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:32:54.620Z $ chatmon say "Probe source B3, held while Chatmon is behind." (source): exit 0 in 0.06 s
+22:33:04.757Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+22:33:07.372Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:33:15.389Z CASE source/B3: VoiceOver said 'Chatmon. Probe source B3, held while Chatmon is behind.' 12.75 s after; held while behind: True
+22:33:15.497Z == source/C1: behind, a alert comes; then system events
+22:33:15.541Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:33:15.607Z osascript (Esc): exit 0
+22:33:16.699Z osascript (Finder activate): exit 0
+22:33:19.758Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:33:19.900Z $ chatmon notify needs-you --source claude --message "Probe source C1, waiting for your approval." (source): exit 0 in 0.14 s
+22:33:29.985Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+22:33:32.581Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:33:40.765Z CASE source/C1: VoiceOver said 'Claude needs you. Probe source C1, waiting for your approval. To answer, type “OK” in the chat.' 12.94 s after; held while behind: True
+22:33:40.850Z == source/C2: behind, a alert comes; then shortcut
+22:33:40.894Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:33:40.957Z osascript (Esc): exit 0
+22:33:42.105Z osascript (Finder activate): exit 0
+22:33:45.186Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:33:45.247Z $ chatmon notify needs-you --source claude --message "Probe source C2, waiting for your approval." (source): exit 0 in 0.06 s
+22:33:55.312Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+22:33:57.924Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:34:05.901Z CASE source/C2: VoiceOver said 'Claude needs you. Probe source C2, waiting for your approval. To answer, type “OK” in the chat.' 12.65 s after; held while behind: True
+22:34:05.966Z == source/D1: behind, a say comes; then chatmon ask
+22:34:06.008Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:34:06.065Z osascript (Esc): exit 0
+22:34:07.168Z osascript (Finder activate): exit 0
+22:34:10.304Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:34:10.357Z $ chatmon say "Probe source D1, held while Chatmon is behind." (source): exit 0 in 0.05 s
+22:34:20.510Z $ chatmon ask (source): exit 0 in 0.14 s
+22:34:23.122Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:34:31.208Z CASE source/D1: VoiceOver said 'Chatmon. Probe source D1, held while Chatmon is behind.' 12.9 s after; held while behind: True
+22:34:31.277Z == source/D2: `version` typed in the ask box (`chatmon ask` from a script), Return
+22:34:31.416Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+22:34:31.482Z osascript (keystroke version): exit 0
+22:34:32.044Z osascript (Return): exit 0
+22:34:40.161Z CASE source/D2: VoiceOver said "I'm Chatmon 0.10.0." 0.69 s after
+22:34:40.161Z == source/S1: `settings` typed in the ask box; where the keyboard is in the window it opens
+22:34:40.206Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:34:40.256Z osascript (Esc): exit 0
+22:34:41.383Z osascript (Finder activate): exit 0
+22:34:44.505Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:34:44.569Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+22:34:48.705Z osascript (keystroke settings): exit 0
+22:34:49.341Z osascript (Return): exit 0
+22:34:55.528Z Chatmon's focused element: AXRadioButton |  | value: missing value
+22:34:55.529Z CASE source/S1: focused 'AXRadioButton |  | value: missing value'; Qt focus ["QTabBar 'qt_tabwidget_tabbar' accessible '' in 'Chatmon Settings'"]; on a label: False
+22:34:55.663Z osascript (Esc (the window closes)): exit 0
+22:34:57.728Z == source/S2: `history` typed in the ask box; where the keyboard is in the window it opens
+22:34:57.765Z frontmost app (AppKit): 3000 org.python.python policy 0
+22:34:57.815Z osascript (Esc): exit 0
+22:34:58.902Z osascript (Finder activate): exit 0
+22:35:02.019Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:35:02.067Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+22:35:06.198Z osascript (keystroke history): exit 0
+22:35:06.797Z osascript (Return): exit 0
+22:35:12.933Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+22:35:12.933Z CASE source/S2: focused 'AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:'; Qt focus not traced; on a label: False
+22:35:13.099Z osascript (Esc (the window closes)): exit 0
+22:35:15.187Z $ chatmon quit (source): exit 0 in 0.06 s
+22:35:17.351Z osascript (Finder activate): exit 0
+22:35:21.315Z Chatmon (bundle) running, pid 9081
+22:35:32.347Z CASE bundle/G: VoiceOver said "Hi, I'm Chatmon! Click me to ask anything." 4.92 s after
+22:35:32.347Z == bundle/A1: Finder in front; the shortcut opens the ask box; a hook's message comes
+22:35:32.382Z frontmost app (AppKit): 9081 io.github.randynorthrup.chatmon policy 1
+22:35:32.432Z osascript (Esc): exit 0
+22:35:33.492Z osascript (Finder activate): exit 0
+22:35:36.560Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:35:36.609Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+22:35:39.723Z frontmost app (AppKit): 9081 io.github.randynorthrup.chatmon policy 1
+22:35:44.916Z $ chatmon say "Probe bundle A1, said while Chatmon is in front." (bundle): exit 0 in 0.13 s
+22:35:53.033Z CASE bundle/A1: VoiceOver said 'Chatmon. Probe bundle A1, said while Chatmon is in front.' 0.19 s after
+22:35:53.033Z == bundle/A2: `version` typed in the ask box (the shortcut), Return
+22:35:53.152Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+22:35:53.203Z osascript (keystroke version): exit 0
+22:35:53.768Z osascript (Return): exit 0
+22:36:01.914Z CASE bundle/A2: VoiceOver said "I'm Chatmon 0.10.0." 0.71 s after
+22:36:01.914Z == bundle/B3: behind, a say comes; then system events
+22:36:01.959Z frontmost app (AppKit): 9081 io.github.randynorthrup.chatmon policy 1
+22:36:02.010Z osascript (Esc): exit 0
+22:36:03.127Z osascript (Finder activate): exit 0
+22:36:06.174Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:36:06.289Z $ chatmon say "Probe bundle B3, held while Chatmon is behind." (bundle): exit 0 in 0.11 s
+22:36:16.366Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+22:36:18.917Z frontmost app (AppKit): 9081 io.github.randynorthrup.chatmon policy 1
+22:36:26.960Z CASE bundle/B3: VoiceOver said 'Chatmon. Probe bundle B3, held while Chatmon is behind.' 12.7 s after; held while behind: True
+22:36:27.057Z == bundle/C1: behind, a alert comes; then system events
+22:36:27.102Z frontmost app (AppKit): 9081 io.github.randynorthrup.chatmon policy 1
+22:36:27.178Z osascript (Esc): exit 0
+22:36:28.249Z osascript (Finder activate): exit 0
+22:36:31.307Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:36:31.556Z $ chatmon notify needs-you --source claude --message "Probe bundle C1, waiting for your approval." (bundle): exit 0 in 0.25 s
+22:36:41.717Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+22:36:44.340Z frontmost app (AppKit): 9081 io.github.randynorthrup.chatmon policy 1
+22:36:52.415Z CASE bundle/C1: VoiceOver said 'Claude needs you. Probe bundle C1, waiting for your approval. To answer, type “OK” in the chat.' 13.1 s after; held while behind: True
+22:36:52.484Z == bundle/D1: behind, a say comes; then chatmon ask
+22:36:52.525Z frontmost app (AppKit): 9081 io.github.randynorthrup.chatmon policy 1
+22:36:52.601Z osascript (Esc): exit 0
+22:36:53.662Z osascript (Finder activate): exit 0
+22:36:56.763Z frontmost app (AppKit): 358 com.apple.finder policy 0
+22:36:56.883Z $ chatmon say "Probe bundle D1, held while Chatmon is behind." (bundle): exit 0 in 0.12 s
+22:37:07.062Z $ chatmon ask (bundle): exit 0 in 0.17 s
+22:37:09.614Z frontmost app (AppKit): 9081 io.github.randynorthrup.chatmon policy 1
+22:37:17.730Z CASE bundle/D1: VoiceOver said 'Chatmon. Probe bundle D1, held while Chatmon is behind.' 12.88 s after; held while behind: True
+22:37:17.812Z == bundle/D2: `version` typed in the ask box (`chatmon ask` from a script), Return
+22:37:17.934Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+22:37:17.998Z osascript (keystroke version): exit 0
+22:37:18.585Z osascript (Return): exit 0
+22:37:26.739Z CASE bundle/D2: VoiceOver said "I'm Chatmon 0.10.0." 0.73 s after
+22:37:26.880Z $ chatmon quit (bundle): exit 0 in 0.14 s
+22:37:31.058Z VoiceOver's last phrase was read 2415 times (1 failed); 110 phrases kept
+22:37:31.121Z source/G: heard=True spoken="Hi, I'm Chatmon! Click me to ask anything." on_label=None
+22:37:31.121Z source/A1: heard=True spoken='Chatmon. Probe source A1, said while Chatmon is in front.' on_label=None
+22:37:31.121Z source/A2: heard=True spoken="I'm Chatmon 0.10.0." on_label=None
+22:37:31.121Z source/B1: heard=True spoken='Chatmon. Probe source B1, held while Chatmon is behind.' on_label=None
+22:37:31.121Z source/B3: heard=True spoken='Chatmon. Probe source B3, held while Chatmon is behind.' on_label=None
+22:37:31.121Z source/C1: heard=True spoken='Claude needs you. Probe source C1, waiting for your approval. To answer, type “OK” in the chat.' on_label=None
+22:37:31.121Z source/C2: heard=True spoken='Claude needs you. Probe source C2, waiting for your approval. To answer, type “OK” in the chat.' on_label=None
+22:37:31.122Z source/D1: heard=True spoken='Chatmon. Probe source D1, held while Chatmon is behind.' on_label=None
+22:37:31.122Z source/D2: heard=True spoken="I'm Chatmon 0.10.0." on_label=None
+22:37:31.122Z source/S1: heard=None spoken=None on_label=False
+22:37:31.122Z source/S2: heard=None spoken=None on_label=False
+22:37:31.122Z bundle/G: heard=True spoken="Hi, I'm Chatmon! Click me to ask anything." on_label=None
+22:37:31.122Z bundle/A1: heard=True spoken='Chatmon. Probe bundle A1, said while Chatmon is in front.' on_label=None
+22:37:31.122Z bundle/A2: heard=True spoken="I'm Chatmon 0.10.0." on_label=None
+22:37:31.122Z bundle/B3: heard=True spoken='Chatmon. Probe bundle B3, held while Chatmon is behind.' on_label=None
+22:37:31.122Z bundle/C1: heard=True spoken='Claude needs you. Probe bundle C1, waiting for your approval. To answer, type “OK” in the chat.' on_label=None
+22:37:31.122Z bundle/D1: heard=True spoken='Chatmon. Probe bundle D1, held while Chatmon is behind.' on_label=None
+22:37:31.122Z bundle/D2: heard=True spoken="I'm Chatmon 0.10.0." on_label=None

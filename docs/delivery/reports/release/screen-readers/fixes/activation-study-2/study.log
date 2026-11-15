@@ -1,0 +1,99 @@
+22:21:04 $ sw_vers -productVersion -> 0: 26.7.2
+22:21:04 study on 26.7.2
+22:21:15 source Chatmon pid 3327 (launcher 3327)
+22:21:20 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:21:23 $ pgrep -fl Python|python|Chatmon -> 0: 3327 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:21:23 RESULT source none #1: AppKit front '355 com.apple.finder policy 0'; LaunchServices 'ASN:0x0-0xc00c: "LSDisplayName"="Finder"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): False
+22:21:29 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:21:32 $ pgrep -fl Python|python|Chatmon -> 0: 3327 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:21:32 RESULT source none #2: AppKit front '355 com.apple.finder policy 0'; LaunchServices 'ASN:0x0-0xc00c: "LSDisplayName"="Finder"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): False
+22:21:38 pressed Cmd+Shift+Space (System Events)
+22:21:41 $ pgrep -fl Python|python|Chatmon -> 0: 3327 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:21:41 RESULT source shortcut #1: AppKit front '3327 org.python.python policy 0'; LaunchServices 'ASN:0x0-0x27027: "LSDisplayName"="Python"'; System Events 'Python 3327'; Chatmon frontmost (AppKit): True
+22:21:45 pressed Cmd+Shift+Space (System Events)
+22:21:48 $ pgrep -fl Python|python|Chatmon -> 0: 3327 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:21:48 RESULT source shortcut #2: AppKit front '3327 org.python.python policy 0'; LaunchServices 'ASN:0x0-0x27027: "LSDisplayName"="Python"'; System Events 'Python 3327'; Chatmon frontmost (AppKit): True
+22:21:52 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:21:52 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py options 3327 -> 0: app 3327: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | activateWithOptions: -> True | after: active False
+22:21:55 $ pgrep -fl Python|python|Chatmon -> 0: 3327 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:21:55 RESULT source options #1: AppKit front '3327 org.python.python policy 0'; LaunchServices 'ASN:0x0-0x27027: "LSDisplayName"="Python"'; System Events 'Python 3327'; Chatmon frontmost (AppKit): True
+22:21:59 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:21:59 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py options 3327 -> 0: app 3327: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | activateWithOptions: -> True | after: active False
+22:22:02 $ pgrep -fl Python|python|Chatmon -> 0: 3327 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:22:02 RESULT source options #2: AppKit front '3327 org.python.python policy 0'; LaunchServices 'ASN:0x0-0x27027: "LSDisplayName"="Python"'; System Events 'Python 3327'; Chatmon frontmost (AppKit): True
+22:22:06 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:22:09 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py workspace 3327 -> 0: app 3327: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | openApplicationAtURL:configuration:completionHandler: sent | after: active False
+22:22:11 $ pgrep -fl Python|python|Chatmon -> 0: 3327 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:22:11 RESULT source workspace #1: AppKit front '3327 org.python.python policy 0'; LaunchServices 'ASN:0x0-0x27027: "LSDisplayName"="Python"'; System Events 'Python 3327'; Chatmon frontmost (AppKit): True
+22:22:16 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon ask -> 0
+22:22:18 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py workspace 3327 -> 0: app 3327: bundle 'org.python.python' at '/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app', activation policy 0, active False | openApplicationAtURL:configuration:completionHandler: sent | after: active False
+22:22:21 $ pgrep -fl Python|python|Chatmon -> 0: 3327 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py
+22:22:21 RESULT source workspace #2: AppKit front '3327 org.python.python policy 0'; LaunchServices 'ASN:0x0-0x27027: "LSDisplayName"="Python"'; System Events 'Python 3327'; Chatmon frontmost (AppKit): True
+22:22:21 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m chatmon quit -> 0
+22:22:24 $ /usr/bin/open -a /Applications/Chatmon.app -> 0
+22:22:35 bundled Chatmon pid 5451
+22:22:39 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:22:42 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:22:42 RESULT bundle none #1: AppKit front '355 com.apple.finder policy 0'; LaunchServices 'ASN:0x0-0xc00c: "LSDisplayName"="Finder"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): False
+22:22:48 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:22:51 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:22:51 RESULT bundle none #2: AppKit front '355 com.apple.finder policy 0'; LaunchServices 'ASN:0x0-0xc00c: "LSDisplayName"="Finder"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): False
+22:22:57 pressed Cmd+Shift+Space (System Events)
+22:23:00 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:23:00 RESULT bundle shortcut #1: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:23:04 pressed Cmd+Shift+Space (System Events)
+22:23:07 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:23:07 RESULT bundle shortcut #2: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:23:11 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:23:11 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py options 5451 -> 0: app 5451: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | activateWithOptions: -> True | after: active False
+22:23:14 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:23:14 RESULT bundle options #1: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:23:18 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:23:18 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py options 5451 -> 0: app 5451: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | activateWithOptions: -> True | after: active False
+22:23:21 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:23:21 RESULT bundle options #2: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:23:25 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:23:25 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py from-current 5451 -> 0: app 5451: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | activateFromApplication:options: -> True | after: active False
+22:23:29 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:23:29 RESULT bundle from-current #1: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:23:34 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:23:34 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py from-current 5451 -> 0: app 5451: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | activateFromApplication:options: -> True | after: active False
+22:23:37 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:23:37 RESULT bundle from-current #2: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:23:41 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:23:43 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py workspace 5451 -> 0: app 5451: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | openApplicationAtURL:configuration:completionHandler: sent | after: active False
+22:23:46 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:23:46 RESULT bundle workspace #1: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:23:50 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:23:52 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py workspace 5451 -> 0: app 5451: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | openApplicationAtURL:configuration:completionHandler: sent | after: active False
+22:23:55 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:23:55 RESULT bundle workspace #2: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:23:59 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:24:00 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py open-a 5451 -> 0: app 5451: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | open -a /Applications/Chatmon.app: exit 0   | after: active False
+22:24:02 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:24:02 RESULT bundle open-a #1: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:24:07 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon ask -> 0
+22:24:07 $ /Library/Frameworks/Python.framework/Versions/3.14/bin/python /Users/runner/work/_temp/probe/activate_try.py open-a 5451 -> 0: app 5451: bundle 'io.github.randynorthrup.chatmon' at '/Applications/Chatmon.app', activation policy 1, active False | open -a /Applications/Chatmon.app: exit 0   | after: active False
+22:24:10 $ pgrep -fl Python|python|Chatmon -> 0: 5451 /Applications/Chatmon.app/Contents/MacOS/Chatmon
+22:24:10 RESULT bundle open-a #2: AppKit front '5451 io.github.randynorthrup.chatmon policy 1'; LaunchServices 'ASN:0x0-0x56056: "LSDisplayName"="Chatmon"'; System Events 'Finder 355'; Chatmon frontmost (AppKit): True
+22:24:10 $ /Applications/Chatmon.app/Contents/MacOS/Chatmon quit -> 0
+22:24:10 source none         #1: Chatmon frontmost False
+22:24:10 source none         #2: Chatmon frontmost False
+22:24:10 source shortcut     #1: Chatmon frontmost True
+22:24:10 source shortcut     #2: Chatmon frontmost True
+22:24:10 source options      #1: Chatmon frontmost True
+22:24:10 source options      #2: Chatmon frontmost True
+22:24:10 source workspace    #1: Chatmon frontmost True
+22:24:10 source workspace    #2: Chatmon frontmost True
+22:24:10 bundle none         #1: Chatmon frontmost False
+22:24:10 bundle none         #2: Chatmon frontmost False
+22:24:10 bundle shortcut     #1: Chatmon frontmost True
+22:24:10 bundle shortcut     #2: Chatmon frontmost True
+22:24:10 bundle options      #1: Chatmon frontmost True
+22:24:10 bundle options      #2: Chatmon frontmost True
+22:24:10 bundle from-current #1: Chatmon frontmost True
+22:24:10 bundle from-current #2: Chatmon frontmost True
+22:24:10 bundle workspace    #1: Chatmon frontmost True
+22:24:10 bundle workspace    #2: Chatmon frontmost True
+22:24:10 bundle open-a       #1: Chatmon frontmost True
+22:24:10 bundle open-a       #2: Chatmon frontmost True

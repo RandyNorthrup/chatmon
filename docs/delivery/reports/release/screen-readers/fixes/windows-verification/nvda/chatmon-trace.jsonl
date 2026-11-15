@@ -1,0 +1,32 @@
+{"t": 1794785604.331, "event": "start", "pid": 7528, "platform": "win32", "python": "3.14.10"}
+{"t": 1794785606.154, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794785606.154, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794785606.159, "event": "reader", "found": "a screen reader"}
+{"t": 1794785606.16, "event": "uia-in-front", "value": false}
+{"t": 1794785606.175, "event": "toast", "title": "Hi, I'm Chatmon!", "text": "Hi, I'm Chatmon! Click me to ask anything.", "buttons": [], "tag": "c6ac109385804ab4"}
+{"t": 1794785606.176, "event": "announce", "reader": "a screen reader", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "notification"}
+{"t": 1794785628.012, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794785637.115, "event": "queue-add", "title": "Chatmon", "text": "Probe one: the build finished while Chatmon was in front.", "background": true, "yours": true, "alert": false, "holds": [], "passes": true}
+{"t": 1794785637.115, "event": "queue-next", "shown": "Chatmon", "waiting": [], "holds": [], "showing": "Chatmon", "visible": false}
+{"t": 1794785637.116, "event": "reader", "found": "a screen reader"}
+{"t": 1794785637.116, "event": "uia-in-front", "value": true}
+{"t": 1794785637.117, "event": "uia-say", "text": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "raised": true}
+{"t": 1794785637.117, "event": "announce", "reader": "a screen reader", "words": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "route": "uia"}
+{"t": 1794785667.511, "event": "reader", "found": "a screen reader"}
+{"t": 1794785667.511, "event": "uia-in-front", "value": true}
+{"t": 1794785667.511, "event": "uia-say", "text": "Noted (note 1). delete note 1 takes it back.", "important": false, "raised": true}
+{"t": 1794785667.511, "event": "announce", "reader": "a screen reader", "words": "Noted (note 1). delete note 1 takes it back.", "important": false, "route": "uia"}
+{"t": 1794785692.554, "event": "focus", "widget": null}
+{"t": 1794785703.854, "event": "queue-add", "title": "Chatmon", "text": "Probe two: the tests passed while Chatmon was behind.", "background": true, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794785703.854, "event": "queue-next", "shown": "Chatmon", "waiting": [], "holds": [], "showing": "Chatmon", "visible": false}
+{"t": 1794785703.855, "event": "reader", "found": "a screen reader"}
+{"t": 1794785703.855, "event": "uia-in-front", "value": false}
+{"t": 1794785703.861, "event": "toast", "title": "Chatmon", "text": "Chatmon. Probe two: the tests passed while Chatmon was behind.", "buttons": [], "tag": "ac8bfa8e146d4c26"}
+{"t": 1794785703.861, "event": "announce", "reader": "a screen reader", "words": "Chatmon. Probe two: the tests passed while Chatmon was behind.", "important": false, "route": "notification"}
+{"t": 1794785742.033, "event": "queue-add", "title": "Claude needs you", "text": "Probe three: Claude is waiting for your approval.", "background": true, "yours": false, "alert": true, "holds": [], "passes": true}
+{"t": 1794785742.033, "event": "queue-next", "shown": "Claude needs you", "waiting": [], "holds": [], "showing": "Claude needs you", "visible": false}
+{"t": 1794785742.035, "event": "reader", "found": "a screen reader"}
+{"t": 1794785742.035, "event": "uia-in-front", "value": false}
+{"t": 1794785742.04, "event": "toast", "title": "Claude needs you", "text": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.", "buttons": ["OK"], "tag": "b4a3561c8bb042dc"}
+{"t": 1794785742.04, "event": "announce", "reader": "a screen reader", "words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.", "important": true, "route": "notification"}
+{"t": 1794785777.483, "event": "exit", "code": 0}

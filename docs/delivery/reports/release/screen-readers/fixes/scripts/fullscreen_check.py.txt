@@ -1,0 +1,78 @@
+"""With Chatmon's stage no longer taken for a full-screen app, does a real one still hold Chatmon's bubbles? Chatmon
+runs (the shim traces its message queue); another process shows a real full-screen window in front; `chatmon say`;
+the full-screen window closes. Windows' notification state is read throughout. No screen reader.
+
+usage: fullscreen_check.py OUT_DIR SOURCE_TREE SHIM
+"""
+
+import ctypes
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+OUT, SRC, SHIM = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
+OUT.mkdir(parents=True, exist_ok=True)
+log = open(OUT / "fullscreen.log", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+WINDOW = r"""
+import sys
+from PyQt6.QtWidgets import QApplication, QLabel
+app = QApplication(sys.argv)
+w = QLabel("a full-screen app")
+w.setStyleSheet("background: black; color: white; font-size: 40px")
+w.showFullScreen()
+w.raise_()
+w.activateWindow()
+app.exec()
+"""
+
+
+def state() -> int:
+    value = ctypes.c_int(0)
+    ctypes.windll.shell32.SHQueryUserNotificationState(ctypes.byref(value))
+    return value.value
+
+
+def say(text: str) -> None:
+    line = time.strftime("%H:%M:%S ") + text
+    print(line, flush=True)
+    log.write(line + "\n")
+
+
+def traced(since: float) -> list[dict]:
+    path = OUT / "chatmon-trace.jsonl"
+    lines = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
+    return [e for e in map(json.loads, lines) if e["t"] >= since and e["event"].startswith(("queue", "quiet", "announce", "toast"))]
+
+
+env = dict(os.environ, PROBE_SRC=str(SRC), PROBE_TRACE=str(OUT / "chatmon-trace.jsonl"), PROBE_QUEUE="1")
+app = subprocess.Popen([sys.executable, str(SHIM)], cwd=SRC, env=env, stdout=open(OUT / "chatmon-stdout.log", "w"), stderr=subprocess.STDOUT)  # noqa: SIM115
+time.sleep(15)
+say(f"Chatmon running: state {state()}")
+full = subprocess.Popen([sys.executable, "-c", WINDOW], cwd=SRC, env=dict(os.environ, QT_QPA_PLATFORM="windows"))
+for _ in range(8):
+    time.sleep(1)
+    say(f"full-screen window up: state {state()}")
+said = time.time()
+subprocess.run([sys.executable, "-m", "chatmon", "say", "Probe FS: said while a full-screen app was in front."], cwd=SRC, timeout=60)
+time.sleep(8)
+held = traced(said)
+say(f"while full screen: {json.dumps(held)}")
+full.kill()
+full.wait(10)
+closed = time.time()
+for _ in range(10):
+    time.sleep(1)
+    say(f"full-screen window closed: state {state()}")
+after = traced(closed)
+say(f"after it closed: {json.dumps(after)}")
+subprocess.run([sys.executable, "-m", "chatmon", "quit"], cwd=SRC, timeout=60)
+app.wait(30)
+added = [e for e in held if e["event"] == "queue-add" and "Probe FS" in (e.get("text") or "")]
+shown_after = [e for e in after if e["event"] == "queue-next" and e.get("shown") == "Chatmon"]
+result = {"held_while_full_screen": bool(added) and added[0].get("passes") is False, "shown_after_it_closed": bool(shown_after)}
+(OUT / "results.json").write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
+say(f"RESULT {result}")
+sys.exit(0 if all(result.values()) else 1)

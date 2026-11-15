@@ -1,0 +1,31 @@
+﻿job narrator1 in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+13:14:30.431 probe started: Chatmon 0.10.0 from W:\chatmon-sr\src, Python 3.14.10, reader narrator, session 1
+13:14:30.439 Live captions started, pid 8016
+13:14:38.441 Live captions windows: [{'hwnd': 16058376, 'pid': 3060, 'title': 'Live Captions', 'class': 'LiveCaptionsDesktopWindow', 'rect': [40, 12, 1560, 92]}]
+Traceback (most recent call last):
+  File "W:\chatmon-sr\rec\drive_windows.py", line 412, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "W:\chatmon-sr\rec\drive_windows.py", line 288, in main
+    narrator = subprocess.Popen([r"C:\Windows\System32\Narrator.exe"])
+  File "C:\Python314\Lib\subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\subprocess.py", line 1553, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                             # no special security
+                             ^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                             cwd,
+                             ^^^^
+                             startupinfo)
+                             ^^^^^^^^^^^^
+OSError: [WinError 740] The requested operation requires elevation

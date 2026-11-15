@@ -1,0 +1,4 @@
+﻿job narratoroff in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+Narrator before: [8952]
+13:37:26.929 pressed Ctrl+Win+Enter (SendInput: 6)
+Narrator after: [8952]

@@ -1,0 +1,78 @@
+23:33:09.232    [step] probe started: Chatmon 0.10.0 from D:\a\chatmon\chatmon, Python 3.14.10, reader nvda, session 2
+23:33:09.236    [step] NVDA started: D:\a\_temp/nvda/nvda.exe --log-level=12 --log-file=D:\a\_temp\out\nvda\nvda.log --minimal, pid 5280
+23:33:11.489 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]
+23:33:11.489 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', CancellableSpeech (still valid)]
+23:33:24.237    [step] foreground window: pid 5688, class 'CASCADIA_HOSTING_WINDOW_CLASS', title 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent'
+23:33:24.240    [step] Chatmon started from source through run_chatmon.py, pid 7528, below normal priority
+23:33:27.529 NVDA SPEAKING: [LangChangeCommand ('en_US'), "New notification from Chatmon, Hi, I'm Chatmon!, Hi, I'm Chatmon! Click me to ask anything... 1 of 1", 'window', CancellableSpeech (still valid)]
+23:33:27.842    [step] python -m chatmon status: Chatmon is running.
+23:33:47.892    [step] CASE G: notification state 5; banner none; routes ['notification']; heard '[LangChangeCommand (\'en_US\'), "New notification from Chatmon, Hi, I\'m Chatmon!, Hi, I\'m Chatmon! Click me to ask anything... 1 of 1", \'window\', CancellableSpeech (still valid)]' 3.29 s after
+23:33:47.893    [step] Chatmon's own process: pid 7528; its windows: [{'hwnd': 459256, 'pid': 7528, 'title': 'Chatmon', 'class': 'Qt6112QWindowToolSaveBits', 'rect': [0, 0, 1024, 768]}, {'hwnd': 721482, 'pid': 7528, 'title': 'Chatmon', 'class': 'Qt6112QWindowToolSaveBits', 'rect': [0, 0, 1, 1]}]
+23:33:47.893    [step] == A1: Chatmon in front, a message comes (chatmon say, as a script or hook sends one)
+23:33:47.893    [step] $ python -m chatmon ask
+23:33:48.031    [step]   exit 0
+23:33:48.080 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'Ask Chatmon', 'edit', 'Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work', CancellableSpeech (still valid), 'blank']
+23:33:48.080 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'Ask Chatmon', 'window', CancellableSpeech (still valid)]
+23:33:51.031    [step] foreground window: pid 7528, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+23:33:57.032    [step] $ python -m chatmon say "Probe one: the build finished while Chatmon was in front."
+23:33:57.128    [step]   exit 0
+23:33:57.351 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']
+23:34:22.188    [step] CASE A1: notification state 5; banner none; routes ['uia']; heard "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']" 0.32 s after
+23:34:22.188    [step] == A2: Chatmon in front, a command typed in the ask box (note: water the ferns, Enter)
+23:34:25.189    [step] foreground window: pid 7528, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+23:34:25.419 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.419 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.419 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'o', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.419 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.670 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'a', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.670 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'w', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.670 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'colon', EndUtteranceCommand()]
+23:34:25.670 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]
+23:34:25.921 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.921 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.921 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:25.921 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]
+23:34:26.171 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:26.171 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'h', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:26.171 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:26.171 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]
+23:34:26.422 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:26.422 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'f', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:26.422 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:26.422 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:26.483    [step] typed 'note: water the ferns' (SendInput)
+23:34:26.673 NVDA SPEAKING: [CharacterModeCommand(True), LangChangeCommand ('en_US'), 's', EndUtteranceCommand(), CharacterModeCommand(False)]
+23:34:27.486    [step] pressed Enter (SendInput: 2)
+23:34:27.675 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']
+23:34:52.551    [step] CASE A2: notification state 5; banner none; routes ['uia']; heard "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']" 2.49 s after
+23:34:52.551    [step] == B: Chatmon behind (File Explorer in front), a message comes
+23:34:52.553    [step] pressed Esc (SendInput: 2)
+23:34:52.736 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]
+23:34:52.736 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', CancellableSpeech (still valid)]
+23:34:57.246 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'nvda - File Explorer', CancellableSpeech (still valid)]
+23:34:57.497 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'Items View', 'list', CancellableSpeech (still valid)]
+23:34:57.497 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'chatmon-stdout', 'not selected', '1 of 5', CancellableSpeech (still valid)]
+23:34:57.497 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'nvda', 'tab', 'selected', '1 of 1', CancellableSpeech (still valid)]
+23:34:57.556    [step] File Explorer windows: [{'hwnd': 66252, 'pid': 7308, 'title': 'nvda - File Explorer', 'class': 'CabinetWClass', 'rect': [122, 70, 922, 670]}]
+23:34:57.774    [step] clicked (522, 78): File Explorer's title bar (SendInput: 2)
+23:34:59.775    [step] foreground window: pid 7308, class 'CabinetWClass', title 'nvda - File Explorer'
+23:35:03.775    [step] $ python -m chatmon say "Probe two: the tests passed while Chatmon was behind."
+23:35:03.874    [step]   exit 0
+23:35:04.013 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'New notification from Chatmon, Chatmon, Chatmon. Probe two: the tests passed while Chatmon was behind... 1 of 1', 'window', CancellableSpeech (still valid)]
+23:35:33.952    [step] CASE B: notification state 5; banner none; routes ['notification']; heard "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Chatmon, Chatmon. Probe two: the tests passed while Chatmon was behind... 1 of 1', 'window', CancellableSpeech (still valid)]" 0.24 s after
+23:35:33.952    [step] == C: Chatmon behind, an agent's needs-you alert comes
+23:35:41.953    [step] foreground window: pid 7308, class 'CabinetWClass', title 'nvda - File Explorer'
+23:35:41.953    [step] $ python -m chatmon notify needs-you --source claude --message "Probe three: Claude is waiting for your approval."
+23:35:42.163    [step]   exit 0
+23:35:42.355 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'New notification from Chatmon, Claude needs you, Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat... . Actions. 1 of 1', 'window', CancellableSpeech (still valid)]
+23:36:12.242    [step] CASE C: notification state 5; banner none; routes ['notification']; heard "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Claude needs you, Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat... . Actions. 1 of 1', 'window', CancellableSpeech (still valid)]" 0.4 s after
+23:36:17.243    [step] $ python -m chatmon quit
+23:36:17.336    [step]   exit 0
+23:36:17.546    [step] Chatmon exited: 0
+23:36:17.546    [step] explorer.exe 7452 (it hands the folder to the running Explorer and exits)
+23:36:17.694 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]
+23:36:17.694 NVDA SPEAKING: [LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', CancellableSpeech (still valid)]
+23:36:20.547    [step] $ D:\a\_temp/nvda/nvda.exe -q (NVDA quits)
+23:36:21.495    [step]   exit 0
+23:36:21.495    [step] NVDA exited: 0
+23:36:21.704    [step] transcript entries kept: 38; reader problem: none

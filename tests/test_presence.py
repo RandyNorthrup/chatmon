@@ -71,6 +71,27 @@ def test_focus_holds_bubbles_on_windows(monkeypatch):
     assert desk.quiet() == "a presentation"  # what SHQueryUserNotificationState says comes first
 
 
+@windows
+def test_a_full_screen_app_still_holds_bubbles_on_windows(monkeypatch):
+    """Windows says busy (QUNS_BUSY) while a full-screen app is in front. Chatmon's own stage no longer makes it say
+    so (it's marked NonRudeHWND, clickthrough.py), so busy is a real full-screen app again: bubbles that come on their
+    own wait for it."""
+    import ctypes
+
+    def busy(state):
+        state._obj.value = 2  # byref(c_int): the int Windows writes
+        return 0
+
+    monkeypatch.setattr(ctypes.windll.shell32, "SHQueryUserNotificationState", busy)
+    assert presence._win_quiet() == "a full-screen app"
+    desk = presence.Desk("windows")
+    try:
+        monkeypatch.setattr(desk, "_win_focus", lambda: False)
+        assert desk.quiet() == "a full-screen app"
+    finally:
+        desk.close()
+
+
 @macos
 def test_macos_readings():
     idle = presence._mac_idle()

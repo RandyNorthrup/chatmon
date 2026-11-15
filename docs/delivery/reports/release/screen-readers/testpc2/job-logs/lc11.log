@@ -1,0 +1,7 @@
+﻿job lc11 in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+text id='PrivacyInfoTitleTextBlock': 'Welcome to live captions'
+text id='AudioAndVideoPrivacyInfoTextBlock': 'Audio and video will be captioned in real time and appear on your screen.'
+text id='LocalDataPrivacyInfoForAgreeButtonTextBlock': 'By selecting Yes, continue, you agree to allow Microsoft to process your voice data on your device—this data won’t be shared to the cloud. You also agree to allow network data to be used for necessary services, like downloading live caption language files and more.'
+text id='': 'More about live captions'
+text id='': 'Privacy Statement'
+text id='CaptionsTextBlock': 'Testing live captions on this computer. One. Two three'

@@ -1,0 +1,5 @@
+chatmon: Chatmon 0.10.0 started
+chatmon: couldn't ask Claude Code for its plugins: Claude Code's settings are here (C:\Users\Technician\.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+chatmon: couldn't ask Claude Code for its plugins: Claude Code's settings are here (C:\Users\Technician\.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+chatmon: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+chatmon: couldn't ask Muse Code for its plugins: Muse Code isn't installed.

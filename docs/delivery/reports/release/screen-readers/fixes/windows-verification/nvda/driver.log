@@ -1,0 +1,45 @@
+23:33:09.232 probe started: Chatmon 0.10.0 from D:\a\chatmon\chatmon, Python 3.14.10, reader nvda, session 2
+23:33:09.236 NVDA started: D:\a\_temp/nvda/nvda.exe --log-level=12 --log-file=D:\a\_temp\out\nvda\nvda.log --minimal, pid 5280
+23:33:24.237 foreground window: pid 5688, class 'CASCADIA_HOSTING_WINDOW_CLASS', title 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent'
+23:33:24.240 Chatmon started from source through run_chatmon.py, pid 7528, below normal priority
+23:33:27.842 python -m chatmon status: Chatmon is running.
+23:33:47.892 CASE G: notification state 5; banner none; routes ['notification']; heard '[LangChangeCommand (\'en_US\'), "New notification from Chatmon, Hi, I\'m Chatmon!, Hi, I\'m Chatmon! Click me to ask anything... 1 of 1", \'window\', CancellableSpeech (still valid)]' 3.29 s after
+23:33:47.893 Chatmon's own process: pid 7528; its windows: [{'hwnd': 459256, 'pid': 7528, 'title': 'Chatmon', 'class': 'Qt6112QWindowToolSaveBits', 'rect': [0, 0, 1024, 768]}, {'hwnd': 721482, 'pid': 7528, 'title': 'Chatmon', 'class': 'Qt6112QWindowToolSaveBits', 'rect': [0, 0, 1, 1]}]
+23:33:47.893 == A1: Chatmon in front, a message comes (chatmon say, as a script or hook sends one)
+23:33:47.893 $ python -m chatmon ask
+23:33:48.031   exit 0
+23:33:51.031 foreground window: pid 7528, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+23:33:57.032 $ python -m chatmon say "Probe one: the build finished while Chatmon was in front."
+23:33:57.128   exit 0
+23:34:22.188 CASE A1: notification state 5; banner none; routes ['uia']; heard "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']" 0.32 s after
+23:34:22.188 == A2: Chatmon in front, a command typed in the ask box (note: water the ferns, Enter)
+23:34:25.189 foreground window: pid 7528, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+23:34:26.483 typed 'note: water the ferns' (SendInput)
+23:34:27.486 pressed Enter (SendInput: 2)
+23:34:52.551 CASE A2: notification state 5; banner none; routes ['uia']; heard "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']" 2.49 s after
+23:34:52.551 == B: Chatmon behind (File Explorer in front), a message comes
+23:34:52.553 pressed Esc (SendInput: 2)
+23:34:57.556 File Explorer windows: [{'hwnd': 66252, 'pid': 7308, 'title': 'nvda - File Explorer', 'class': 'CabinetWClass', 'rect': [122, 70, 922, 670]}]
+23:34:57.774 clicked (522, 78): File Explorer's title bar (SendInput: 2)
+23:34:59.775 foreground window: pid 7308, class 'CabinetWClass', title 'nvda - File Explorer'
+23:35:03.775 $ python -m chatmon say "Probe two: the tests passed while Chatmon was behind."
+23:35:03.874   exit 0
+23:35:33.952 CASE B: notification state 5; banner none; routes ['notification']; heard "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Chatmon, Chatmon. Probe two: the tests passed while Chatmon was behind... 1 of 1', 'window', CancellableSpeech (still valid)]" 0.24 s after
+23:35:33.952 == C: Chatmon behind, an agent's needs-you alert comes
+23:35:41.953 foreground window: pid 7308, class 'CabinetWClass', title 'nvda - File Explorer'
+23:35:41.953 $ python -m chatmon notify needs-you --source claude --message "Probe three: Claude is waiting for your approval."
+23:35:42.163   exit 0
+23:36:12.242 CASE C: notification state 5; banner none; routes ['notification']; heard "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Claude needs you, Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat... . Actions. 1 of 1', 'window', CancellableSpeech (still valid)]" 0.4 s after
+23:36:17.243 $ python -m chatmon quit
+23:36:17.336   exit 0
+23:36:17.546 Chatmon exited: 0
+23:36:17.546 explorer.exe 7452 (it hands the folder to the running Explorer and exits)
+23:36:20.547 $ D:\a\_temp/nvda/nvda.exe -q (NVDA quits)
+23:36:21.495   exit 0
+23:36:21.495 NVDA exited: 0
+23:36:21.704 transcript entries kept: 38; reader problem: none
+23:36:21.706 G: heard=True routes=['notification'] transcript='[LangChangeCommand (\'en_US\'), "New notification from Chatmon, Hi, I\'m Chatmon!, Hi, I\'m Chatmon! Click me to ask anything... 1 of 1", \'window\', CancellableSpeech (still valid)]'
+23:36:21.706 A1: heard=True routes=['uia'] transcript="[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']"
+23:36:21.706 A2: heard=True routes=['uia'] transcript="[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']"
+23:36:21.706 B: heard=True routes=['notification'] transcript="[LangChangeCommand ('en_US'), 'New notification from Chatmon, Chatmon, Chatmon. Probe two: the tests passed while Chatmon was behind... 1 of 1', 'window', CancellableSpeech (still valid)]"
+23:36:21.706 C: heard=True routes=['notification'] transcript="[LangChangeCommand ('en_US'), 'New notification from Chatmon, Claude needs you, Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat... . Actions. 1 of 1', 'window', CancellableSpeech (still valid)]"

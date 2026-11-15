@@ -108,6 +108,33 @@ def test_on_windows_ask_lets_only_chatmon_come_forward_before_sending(sent, monk
     assert order == [("allow", cli.ASFW_ANY), ("send", "ask")]
 
 
+def test_on_macos_ask_makes_chatmon_the_active_app_once_the_box_is_open(sent, monkeypatch):
+    """macOS 14 and later won't let Chatmon make itself active on a script's or launcher's word (cooperative
+    activation): the command asks for it, after the box is open, by the process id Chatmon answers with."""
+    from chatmon import macnative
+
+    order = []
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(events, "send", lambda message, timeout=0.5: order.append(("send", message["type"])) or True)
+    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: order.append(("ask", message["type"])) or {"type": "status", "pid": 4242})
+    monkeypatch.setattr(macnative, "activate_app", lambda pid: order.append(("activate", pid)) or True)
+    assert cli.main(["ask", "hello"]) == 0
+    assert order == [("send", "ask"), ("ask", "status"), ("activate", 4242)]
+    order.clear()
+    monkeypatch.setattr(events, "request", lambda message, timeout=2.0: order.append(("ask", message["type"])) or None)  # too old to say
+    assert cli.main(["ask", "hello"]) == 0
+    assert order == [("send", "ask"), ("ask", "status")]  # nothing to activate by
+    order.clear()
+    monkeypatch.setattr(events, "send", lambda message, timeout=0.5: order.append(("send", message["type"])) and False)
+    assert cli.main(["ask", "hello"]) == 1
+    assert order == [("send", "ask")]  # not running: nothing more
+
+
+def test_making_chatmon_active_is_macos_only_and_never_fails():
+    made = cli._make_chatmon_active()  # the real call: on macOS, whether it took depends on a Chatmon running
+    assert isinstance(made, bool) and (made is False or sys.platform == "darwin")
+
+
 def test_letting_chatmon_come_forward_is_windows_only_and_never_fails():
     allowed = cli._let_chatmon_come_forward()  # the real call, on Windows: whether it took depends on the desktop
     assert isinstance(allowed, bool) and (allowed is False or sys.platform == "win32")

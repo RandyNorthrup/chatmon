@@ -1,0 +1,25 @@
+﻿job lc8 in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+UIA_WindowControlTypeId name='Live Captions' id='' class='LiveCaptionsDesktopWindow' rect=[40, 12, 1560, 92] enabled=1
+  UIA_PaneControlTypeId name='PopupHost' id='' class='Xaml_WindowedPopupClass' rect=[42, 14, 1558, 90] enabled=1
+    UIA_WindowControlTypeId name='Popup' id='' class='Popup' rect=[788, 95, 810, 104] enabled=1
+      UIA_GroupControlTypeId name='' id='ContentRootGrid' class='LandmarkTarget' rect=[640, 103, 960, 387] enabled=1
+        UIA_PaneControlTypeId name='' id='' class='ScrollViewer' rect=[641, 104, 959, 386] enabled=1
+          UIA_TextControlTypeId name='Welcome to live captions' id='PrivacyInfoTitleTextBlock' class='TextBlock' rect=[653, 116, 819, 135] enabled=1
+          UIA_TextControlTypeId name='Audio and video will be captioned in real time and appear on your screen.' id='AudioAndVideoPrivacyInfoTextBlock' class='TextBlock' rect=[653, 135, 915, 173] enabled=1
+          UIA_TextControlTypeId name='By selecting Yes, continue, you agree to allow Microsoft to process your voice data on your device—this data won’t be shared to the cloud. You also agree to allow network data to be used for necessary services, like downloading live caption language files and more.' id='LocalDataPrivacyInfoForAgreeButtonTextBlock' class='TextBlock' rect=[653, 189, 915, 320] enabled=1
+          UIA_TextControlTypeId name='More about live captions' id='' class='TextBlock' rect=[653, 336, 915, 355] enabled=1
+            UIA_HyperlinkControlTypeId name='More about live captions' id='' class='Hyperlink' rect=[653, 336, 806, 354] enabled=1
+          UIA_TextControlTypeId name='Privacy Statement' id='' class='TextBlock' rect=[653, 355, 915, 374] enabled=1
+            UIA_HyperlinkControlTypeId name='Privacy Statement' id='' class='Hyperlink' rect=[653, 355, 762, 373] enabled=1
+        UIA_ButtonControlTypeId name='Close' id='AlternateCloseButton' class='Button' rect=[919, 104, 959, 144] enabled=1
+  UIA_PaneControlTypeId name='' id='' class='LiveCaptionsDesktopGlassWindow' rect=[42, 14, 1558, 90] enabled=1
+  UIA_PaneControlTypeId name='' id='' class='Windows.UI.Input.InputSite.WindowClass' rect=[42, 14, 1558, 90] enabled=1
+    UIA_WindowControlTypeId name='Popup' id='' class='Popup' rect=[0, 0, 0, 0] enabled=1
+    UIA_TextControlTypeId name='Getting ready to show live captions in:' id='SelectionReadyToCaptionTextBlock' class='TextBlock' rect=[472, 42, 714, 62] enabled=1
+    UIA_ComboBoxControlTypeId name='Live captions language' id='SpeechModelDropDown' class='ComboBox' rect=[712, 32, 909, 72] enabled=1
+      UIA_ListItemControlTypeId name='English (United States)' id='' class='ComboBoxItem' rect=[728, 42, 867, 61] enabled=1
+        UIA_TextControlTypeId name='English (United States)' id='' class='TextBlock' rect=[728, 42, 867, 61] enabled=1
+    UIA_ButtonControlTypeId name='Continue' id='ContinueButton' class='Button' rect=[913, 36, 1033, 68] enabled=1
+    UIA_ButtonControlTypeId name='Settings' id='SettingsButton' class='Button' rect=[1474, 18, 1510, 54] enabled=1
+    UIA_ButtonControlTypeId name='Close live captions window' id='CloseButton' class='Button' rect=[1518, 18, 1554, 54] enabled=1
+    UIA_PaneControlTypeId name='' id='PrivacyTeachingTip' class='Microsoft.UI.Xaml.Controls.TeachingTip' rect=[0, 0, 0, 0] enabled=1

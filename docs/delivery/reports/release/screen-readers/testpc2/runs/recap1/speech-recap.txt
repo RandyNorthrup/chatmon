@@ -1,0 +1,20 @@
+Speech recap
+Narrator updates
+Narrator updates
+Close
+Review and edit faster in Word with Narrator
+Review and edit faster in Word with Narrator
+Narrator now helps you review and edit documents in Microsoft Word more efficiently, so you can check your writing and work through comments with fewer keystrokes.
+
+Check spelling and grammar: With Narrator on, press F7 to start spellcheck. Narrator announces the type of issue, the word in error, the surrounding context, and each available suggestion, and it slows down briefly when spelling out the misspelled word so it is easier to follow. To fix an issue, press 1 to apply the first suggestion, 2 to apply the second, and so on. Press i to ignore once, g to ignore all, or a to add the word to your dictionary.
+
+Read and work through comments: When your cursor is on text that contains a comment, press Alt+Shift+' to hear the full context of the comment, including the author's name, any assigned task, and the number of replies, without leaving your place in the document. To work with the comment, press Alt+F12 to move into the comment card, then press Alt+Shift+' again to hear the commented text, so you always know which part of the document the comment refers to. If there is no comment on the selected text, Narrator tells you clearly.
+
+These experiences work through Narrator extensions, which are turned on by default. If they do not work for you, make sure Enable Narrator extensions is turned on in Narrator settings.
+Narrator settings.
+1 of 4
+Next
+Close
+System
+System
+Close

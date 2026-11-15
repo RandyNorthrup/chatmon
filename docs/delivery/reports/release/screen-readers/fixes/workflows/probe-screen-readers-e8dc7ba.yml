@@ -1,0 +1,436 @@
+name: Probe screen readers
+
+# A throwaway probe before v0.10.0, on a branch of its own that holds only this file and is deleted afterwards. This
+# round: does Chatmon's own stage make Windows report a full-screen app (SHQueryUserNotificationState, QUNS_BUSY) on a
+# Windows runner, and does marking the stage window not "rude" (the NonRudeHWND property, or ITaskbarList2's
+# MarkFullscreenWindow(FALSE)) stop it? Silent: no screen reader. Chatmon's code is 65ed989's; the hypotheses are the
+# shim's (run_chatmon.py), each in a run of its own.
+on:
+  push:
+    branches: [probe/screen-readers]
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  quns:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-test.txt
+      - name: The scripts, and Chatmon's settings
+        run: |
+          mkdir -p "$RUNNER_TEMP/probe" "$RUNNER_TEMP/out"
+          cat > "$RUNNER_TEMP/probe/run_chatmon.py" <<'PY'
+          """Chatmon from source, as `python -m chatmon` starts it, with a trace of what it hands the screen reader.
+
+          Nothing in Chatmon is changed: each function wrapped here is called as it was, with what it was given, and what it
+          was given and gave back is written to PROBE_TRACE (a JSON line each). PROBE_SRC is the source tree to run.
+          """
+
+          import json
+          import os
+          import sys
+          import time
+
+          sys.path.insert(0, os.environ["PROBE_SRC"])
+
+          from chatmon import a11y  # noqa: E402
+
+          _trace = open(os.environ["PROBE_TRACE"], "a", encoding="utf-8", buffering=1)  # noqa: SIM115 - open for the whole run
+
+
+          def note(event: str, **said) -> None:
+              _trace.write(json.dumps({"t": round(time.time(), 3), "event": event, **said}, ensure_ascii=False) + "\n")
+
+
+          note("start", pid=os.getpid(), platform=sys.platform, python=sys.version.split()[0])
+
+          _announce = a11y.announce
+
+
+          def announce(found, words, important=False, notify=None):
+              route = _announce(found, words, important, notify)
+              note("announce", reader=found.name if found else None, words=words, important=important, route=route)
+              return route
+
+
+          a11y.announce = announce
+
+          _reader = a11y.reader
+
+
+          def reader():
+              found = _reader()
+              note("reader", found=found.name if found else None)
+              return found
+
+
+          a11y.reader = reader
+
+          SETTLE_MS = int(os.environ.get("PROBE_SETTLE_MS") or 0)
+          if sys.platform == "darwin" and SETTLE_MS:
+              # A HYPOTHESIS, NOT CHATMON'S CODE: what's held, and what's said in the first SETTLE_MS after Chatmon becomes the
+              # active app (or after the queue is made while it's active), is posted SETTLE_MS after that moment, once
+              # VoiceOver has moved to Chatmon, instead of at once. Run only in the probe's second pass, to test a proposed fix.
+              from PyQt6.QtCore import Qt, QTimer
+
+              note("hypothesis", settle_ms=SETTLE_MS)
+              _shipped_init, _shipped_say = a11y.VoiceOver.__init__, a11y.VoiceOver.say
+
+              def _flush(self):
+                  if self.held and self._active() and self._settled_at is not None and time.monotonic() >= self._settled_at - 0.02:
+                      held, self.held = self.held, []
+                      self._post(" ".join(text for text, _ in held), any(important for _, important in held))
+
+              def _settled_init(self, *args, **kwargs):
+                  _shipped_init(self, *args, **kwargs)
+                  self._settled_at = time.monotonic() + SETTLE_MS / 1000 if self._active() else None
+
+              def _settled_say(self, text, important=False):
+                  if self._active() and self._settled_at is not None and time.monotonic() < self._settled_at:
+                      self.held = [*self.held, (text, important)][-self.HELD:]
+                      QTimer.singleShot(int((self._settled_at - time.monotonic()) * 1000) + 20, lambda: _flush(self))
+                  else:
+                      _shipped_say(self, text, important)
+
+              def _settled_state_changed(self, state):
+                  if state == Qt.ApplicationState.ApplicationActive:
+                      self._settled_at = time.monotonic() + SETTLE_MS / 1000
+                      if self.held:
+                          QTimer.singleShot(SETTLE_MS + 20, lambda: _flush(self))
+                  else:
+                      self._settled_at = None
+
+              a11y.VoiceOver.__init__ = _settled_init
+              a11y.VoiceOver.say = _settled_say
+              a11y.VoiceOver.state_changed = _settled_state_changed
+
+          if sys.platform == "darwin":
+              _post = a11y._voiceover
+
+              def post(text, important):
+                  note("voiceover-post", text=text, important=important)  # NSAccessibilityAnnouncementRequestedNotification, now
+                  return _post(text, important)
+
+              a11y._voiceover = post  # VoiceOver() takes it as its default `post` when it's made, after this
+
+              _say = a11y.VoiceOver.say
+
+              def voiceover_say(self, text, important=False):
+                  active = bool(self._active())
+                  _say(self, text, important)
+                  note("voiceover-say", text=text, important=important, active=active, fallback=a11y._speech_fallback,
+                       held=[held for held, _ in self.held])
+
+              a11y.VoiceOver.say = voiceover_say
+
+              _changed = a11y.VoiceOver.state_changed
+
+              def state_changed(self, state):
+                  note("app-state", state=getattr(state, "name", str(state)), held=[held for held, _ in self.held])
+                  return _changed(self, state)
+
+              a11y.VoiceOver.state_changed = state_changed  # connected when VoiceOver() is made, after this
+
+          if sys.platform == "win32" and os.environ.get("PROBE_QUEUE"):
+              # Why a bubble shows or waits: the message queue's holds, what's added, and what next() gives back.
+              from chatmon import messages as _messages
+
+              _hold, _release, _add, _next = (_messages.MessageQueue.hold, _messages.MessageQueue.release, _messages.MessageQueue.add,
+                                              _messages.MessageQueue.next)
+
+              def _traced_hold(self, reason, passes):
+                  if reason not in self._holds:
+                      note("queue-hold", reason=reason)
+                  return _hold(self, reason, passes)
+
+              def _traced_release(self, reason):
+                  note("queue-release", reason=reason)
+                  return _release(self, reason)
+
+              def _traced_add(self, message):
+                  note("queue-add", title=message.title, text=message.text, background=message.background, yours=message.yours,
+                       alert=message.alert, holds=sorted(self._holds), passes=self.passes(message))
+                  return _add(self, message)
+
+              def _traced_next(self, now, visible=True):
+                  got = _next(self, now, visible)
+                  if got is not None or self.waiting:
+                      note("queue-next", shown=got.title if got else None, waiting=[m.title for m in self.waiting], holds=sorted(self._holds),
+                           showing=self.showing.title if self.showing else None, visible=visible)
+                  return got
+
+              _messages.MessageQueue.hold, _messages.MessageQueue.release = _traced_hold, _traced_release
+              _messages.MessageQueue.add, _messages.MessageQueue.next = _traced_add, _traced_next
+              from chatmon import presence as _presence
+
+              _quiet = _presence._win_quiet
+
+              def _traced_quiet():
+                  import ctypes
+
+                  said = _quiet()
+                  if said:
+                      state = ctypes.c_int(0)
+                      ctypes.windll.shell32.SHQueryUserNotificationState(ctypes.byref(state))
+                      note("quiet", said=said, state=state.value)
+                  return said
+
+              _presence._win_quiet = _traced_quiet
+
+          if sys.platform == "win32":
+              from chatmon import winuia, wintoast
+
+              _in_front = winuia.in_front
+
+              def in_front():
+                  front = _in_front()
+                  note("uia-in-front", value=front)
+                  return front
+
+              winuia.in_front = in_front
+
+              _uia_say = winuia.say
+
+              def uia_say(text, important=False):
+                  raised = _uia_say(text, important)
+                  note("uia-say", text=text, important=important, raised=raised)  # UiaRaiseNotificationEvent's S_OK
+                  return raised
+
+              winuia.say = uia_say
+
+              _show = wintoast.show
+
+              def show(title, text="", buttons=(), scenario=None):
+                  tag = _show(title, text, buttons, scenario)
+                  note("toast", title=title, text=text, buttons=[label for label, _ in buttons], tag=tag)
+                  return tag
+
+              wintoast.show = show
+
+          if os.environ.get("PROBE_TITLE_PROXY"):
+              # A HYPOTHESIS, NOT CHATMON'S CODE: the ask box's title label hands keyboard focus to the entry
+              # (QWidget.setFocusProxy), so VoiceOver landing on the title, with "keyboard focus follows the VoiceOver cursor",
+              # leaves typing in the entry. Run only in the probe's "proposed" pass.
+              from chatmon import bubble as _bubble
+
+              _ask_init = _bubble.AskBox.__init__
+
+              def _proxied_init(self, *args, **kwargs):
+                  _ask_init(self, *args, **kwargs)
+                  self.title.setFocusProxy(self.entry)
+
+              _bubble.AskBox.__init__ = _proxied_init
+              note("hypothesis", title_focus_proxy=True)
+
+          if os.environ.get("PROBE_STAGE_INSET"):
+              # A HYPOTHESIS, NOT CHATMON'S CODE: the stage one pixel short of the monitor's bottom edge, so Windows doesn't take
+              # it for a full-screen app (SHQueryUserNotificationState's QUNS_BUSY). Run only in the silent notification-state check.
+              from chatmon import penguin as _penguin
+
+              _use_screen = _penguin.Stage._use_screen
+
+              def _inset_use_screen(self, screen, again=False):
+                  _use_screen(self, screen, again)
+                  if self._geo == screen.geometry():
+                      self._geo = screen.geometry().adjusted(0, 0, 0, -1)
+                      self.surface.set_screen(screen, self._geo)
+                      self._floor()
+
+              _penguin.Stage._use_screen = _inset_use_screen
+              note("hypothesis", stage_inset_px=1)
+
+          if sys.platform == "win32" and (os.environ.get("PROBE_NONRUDE") or os.environ.get("PROBE_MARKFS")):
+              # A HYPOTHESIS, NOT CHATMON'S CODE: tell Explorer the stage isn't a full-screen ("rude") window, on its native window
+              # as clickthrough.WindowsPointerToggle first takes it, before the stage is shown. PROBE_NONRUDE: the window property
+              # NonRudeHWND; PROBE_MARKFS: ITaskbarList2::MarkFullscreenWindow(hwnd, FALSE).
+              import ctypes as _ctypes
+
+              from chatmon import clickthrough as _clickthrough
+
+              _toggle_init = _clickthrough.WindowsPointerToggle.__init__
+
+              def _mark_fs_false(hwnd: int) -> int:
+                  ole32 = _ctypes.WinDLL("ole32")
+                  ole32.CoInitializeEx(None, 2)  # apartment-threaded, as Qt's thread is
+                  clsid, iid = (_ctypes.c_byte * 16)(), (_ctypes.c_byte * 16)()
+                  ole32.CLSIDFromString("{56FDF344-FD6D-11d0-958A-006097C9A090}", clsid)  # CLSID_TaskbarList
+                  ole32.CLSIDFromString("{602D4995-B13A-429b-A66E-1935E44F4317}", iid)  # IID_ITaskbarList2
+                  taskbar = _ctypes.c_void_p()
+                  hr = ole32.CoCreateInstance(clsid, None, 1, iid, _ctypes.byref(taskbar))  # CLSCTX_INPROC_SERVER
+                  if hr != 0 or not taskbar:
+                      return hr
+                  vtable = _ctypes.cast(_ctypes.cast(taskbar, _ctypes.POINTER(_ctypes.c_void_p))[0], _ctypes.POINTER(_ctypes.c_void_p))
+                  _ctypes.WINFUNCTYPE(_ctypes.c_long, _ctypes.c_void_p)(vtable[3])(taskbar)  # HrInit
+                  hr = _ctypes.WINFUNCTYPE(_ctypes.c_long, _ctypes.c_void_p, _ctypes.c_void_p, _ctypes.c_int)(vtable[8])(taskbar, hwnd, 0)
+                  return hr
+
+              def _not_rude_init(self, widget):
+                  _toggle_init(self, widget)
+                  hwnd = int(widget.winId())
+                  if os.environ.get("PROBE_NONRUDE"):
+                      user32 = _ctypes.WinDLL("user32")
+                      user32.SetPropW.argtypes = [_ctypes.c_void_p, _ctypes.c_wchar_p, _ctypes.c_void_p]
+                      note("hypothesis", non_rude_hwnd=bool(user32.SetPropW(hwnd, "NonRudeHWND", 1)), hwnd=hwnd)
+                  if os.environ.get("PROBE_MARKFS"):
+                      note("hypothesis", mark_fullscreen_false_hr=_mark_fs_false(hwnd), hwnd=hwnd)
+
+              _clickthrough.WindowsPointerToggle.__init__ = _not_rude_init
+
+          import chatmon.app as _chatmon_app  # noqa: E402
+          from PyQt6.QtWidgets import QApplication  # noqa: E402
+
+
+          def _describe(widget) -> str | None:
+              if widget is None:
+                  return None
+              return f"{type(widget).__name__} {widget.objectName()!r} accessible {widget.accessibleName()!r} in {widget.window().windowTitle()!r}"
+
+
+          class _TracedApplication(QApplication):
+              """Qt's own application, with its keyboard focus changes noted (where typing goes)."""
+
+              def __init__(self, *args):
+                  super().__init__(*args)
+                  self.focusChanged.connect(lambda old, new: note("focus", widget=_describe(new)))
+
+
+          _chatmon_app.QApplication = _TracedApplication  # app.run() makes the application with the name it imported
+
+          from chatmon.cli import main  # noqa: E402
+
+          code = main([])
+          note("exit", code=code)
+          sys.exit(code)
+          PY
+          cat > "$RUNNER_TEMP/probe/quns_check.py" <<'PY'
+          """Does Chatmon's own overlay make Windows say a full-screen app is running? No screen reader runs, so nothing is
+          spoken. Windows' notification state (SHQueryUserNotificationState) is read every second: before Chatmon starts, while
+          it runs (with its windows' rectangles and styles), and after it quits.
+
+          usage: quns_check.py OUT_DIR SOURCE_TREE SHIM [inset] [nonrude] [markfs]
+            the shim's hypotheses: inset, the stage one pixel short of the monitor's bottom edge; nonrude, the stage window's
+            NonRudeHWND property; markfs, ITaskbarList2::MarkFullscreenWindow(stage, FALSE)
+          """
+
+          import ctypes
+          import json
+          import os
+          import subprocess
+          import sys
+          import time
+          from ctypes import wintypes
+          from pathlib import Path
+
+          OUT, SRC, SHIM = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
+          OUT.mkdir(parents=True, exist_ok=True)
+          user32 = ctypes.WinDLL("user32")
+          user32.GetWindowLongW.restype = ctypes.c_long
+          WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+          NAMES = {1: "not present", 2: "busy (full-screen app)", 3: "Direct3D full screen", 4: "presentation", 5: "accepts notifications",
+                   6: "quiet time", 7: "app"}
+          log = open(OUT / "quns.log", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+
+          def say(text: str) -> None:
+              line = time.strftime("%H:%M:%S ") + text
+              print(line, flush=True)
+              log.write(line + "\n")
+
+
+          def state() -> str:
+              value = ctypes.c_int(0)
+              ctypes.windll.shell32.SHQueryUserNotificationState(ctypes.byref(value))
+              fg = user32.GetForegroundWindow()
+              pid, title = wintypes.DWORD(0), ctypes.create_unicode_buffer(128)
+              user32.GetWindowThreadProcessId(fg, ctypes.byref(pid))
+              user32.GetWindowTextW(fg, title, 128)
+              return f"state {value.value} ({NAMES.get(value.value, '?')}); foreground pid {pid.value} {title.value!r}"
+
+
+          def windows(pid: int) -> list[str]:
+              found = []
+
+              def each(hwnd, _):
+                  owner = wintypes.DWORD(0)
+                  user32.GetWindowThreadProcessId(hwnd, ctypes.byref(owner))
+                  if owner.value == pid and user32.IsWindowVisible(hwnd):
+                      rect = wintypes.RECT()
+                      user32.GetWindowRect(hwnd, ctypes.byref(rect))
+                      ex = user32.GetWindowLongW(hwnd, -20) & 0xFFFFFFFF  # GWL_EXSTYLE
+                      found.append(f"hwnd {hwnd} rect {[rect.left, rect.top, rect.right, rect.bottom]} exstyle {ex:#010x}"
+                                   f"{' TOPMOST' if ex & 0x8 else ''}{' TRANSPARENT' if ex & 0x20 else ''}{' LAYERED' if ex & 0x80000 else ''}"
+                                   f"{' NOACTIVATE' if ex & 0x08000000 else ''}{' TOOLWINDOW' if ex & 0x80 else ''}")
+                  return True
+
+              user32.EnumWindows(WNDENUMPROC(each), 0)
+              return found
+
+
+          for _ in range(10):
+              say("before Chatmon: " + state())
+              time.sleep(1)
+          FLAGS = {"inset": "PROBE_STAGE_INSET", "nonrude": "PROBE_NONRUDE", "markfs": "PROBE_MARKFS"}
+          env = dict(os.environ, PROBE_SRC=str(SRC), PROBE_TRACE=str(OUT / "chatmon-trace.jsonl"), PROBE_QUEUE="1",
+                     **{var: "1" if flag in sys.argv[4:] else "" for flag, var in FLAGS.items()})
+          say(f"hypotheses: {[flag for flag in FLAGS if flag in sys.argv[4:]] or 'none (Chatmon as it is)'}")
+          app = subprocess.Popen([sys.executable, str(SHIM)], cwd=SRC, env=env, stdout=open(OUT / "chatmon-stdout.log", "w"), stderr=subprocess.STDOUT,  # noqa: SIM115
+                                 creationflags=0x4000)
+          say(f"Chatmon started (launcher pid {app.pid})")
+          pid = None
+          for i in range(25):
+              time.sleep(1)
+              if pid is None and (OUT / "chatmon-trace.jsonl").exists():
+                  starts = [json.loads(line) for line in (OUT / "chatmon-trace.jsonl").read_text(encoding="utf-8").splitlines()]
+                  pid = next((e["pid"] for e in starts if e["event"] == "start"), None)
+              say("Chatmon running: " + state())
+              if pid and i in (5, 15):
+                  for line in windows(pid):
+                      say(f"  Chatmon's window: {line}")
+          subprocess.run([sys.executable, "-m", "chatmon", "quit"], cwd=SRC, capture_output=True, timeout=60)
+          app.wait(30)
+          say("Chatmon quit")
+          for _ in range(10):
+              time.sleep(1)
+              say("after Chatmon: " + state())
+          PY
+          conf="$(cygpath -u "$LOCALAPPDATA")/chatmon"
+          mkdir -p "$conf"
+          printf '%s\n' 'name = "Chatmon"' '[updates]' 'check = false' '[breaks]' 'remind = false' '[heads_up]' 'updates = false' > "$conf/config.toml"
+          sha256sum "$RUNNER_TEMP/probe/"*.py | tee "$RUNNER_TEMP/out/scripts.sha256"
+      - name: Windows' notification state with Chatmon as it is, and with each hypothesis
+        run: |
+          for run in plain-1 nonrude-1 markfs-1 plain-2 nonrude-2 markfs-2; do
+            flag="${run%-*}"; [ "$flag" = plain ] && flag=""
+            python "$RUNNER_TEMP/probe/quns_check.py" "$RUNNER_TEMP/out/$run" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/probe/run_chatmon.py" $flag
+            for phase in "before Chatmon" "Chatmon running" "after Chatmon"; do
+              echo "SUMMARY $run $phase: $(grep "$phase: state" "$RUNNER_TEMP/out/$run/quns.log" | grep -o 'state [0-9]' | sort | uniq -c | tr '\n' ' ')"
+            done | tee -a "$RUNNER_TEMP/out/summary.txt"
+          done
+      - if: ${{ always() }}
+        run: cmd //c ver > "$RUNNER_TEMP/out/environment.txt" 2>&1
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: quns
+          path: ${{ runner.temp }}/out
+          if-no-files-found: error
+          retention-days: 30

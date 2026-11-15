@@ -1,0 +1,19 @@
+{"t": 1794776089.552, "event": "start", "pid": 5940, "platform": "win32", "python": "3.14.10"}
+{"t": 1794776094.348, "event": "reader", "found": "a screen reader"}
+{"t": 1794776094.348, "event": "uia-in-front", "value": false}
+{"t": 1794776094.376, "event": "toast", "title": "Hi, I'm Chatmon!", "text": "Hi, I'm Chatmon! Click me to ask anything.", "buttons": [], "tag": "9fb89ae8991f4789"}
+{"t": 1794776094.376, "event": "announce", "reader": "a screen reader", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "notification"}
+{"t": 1794776106.209, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794776115.335, "event": "reader", "found": "a screen reader"}
+{"t": 1794776115.336, "event": "uia-in-front", "value": true}
+{"t": 1794776115.336, "event": "uia-say", "text": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "raised": true}
+{"t": 1794776115.336, "event": "announce", "reader": "a screen reader", "words": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "route": "uia"}
+{"t": 1794776120.944, "event": "uia-in-front", "value": true}
+{"t": 1794776120.944, "event": "uia-say", "text": "Noted (note 1). delete note 1 takes it back.", "important": false, "raised": true}
+{"t": 1794776120.945, "event": "announce", "reader": "a screen reader", "words": "Noted (note 1). delete note 1 takes it back.", "important": false, "route": "uia"}
+{"t": 1794776121.158, "event": "focus", "widget": null}
+{"t": 1794776170.634, "event": "reader", "found": "a screen reader"}
+{"t": 1794776170.634, "event": "uia-in-front", "value": false}
+{"t": 1794776170.64, "event": "toast", "title": "Claude needs you", "text": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.", "buttons": ["OK"], "tag": "6141527d90e14ba7"}
+{"t": 1794776170.64, "event": "announce", "reader": "a screen reader", "words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.", "important": true, "route": "notification"}
+{"t": 1794776205.844, "event": "exit", "code": 0}

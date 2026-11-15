@@ -1,0 +1,181 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+== identity
+computer: TESTPC2  user: testpc2\technician
+os: Microsoft Windows 11 Pro 10.0.26200 build 26200 UBR 9711
+last boot: 2026-11-12 11:59:51  now: 2026-11-15 12:24:11 -08:00
+uuid: F595FFDB-68BD-49E6-95FA-8EF69242F488
+== claims
+--- C:\TESTLAB_CLAIMS\sak-utility-secfix.txt (121 bytes, 11/15/2026 12:01:01)
+fix6 cpu (round 6: Release build, ctest -j 6 and drills; tree under W:\fix6) 2026-11-15T12:01:01 to 2026-11-15T20:01:01
+--- C:\TESTLAB_CLAIMS\WinAppMigrator.txt (192 bytes, 11/15/2026 11:10:41)
+console  start 2026-11-15T10:34:55  expected end +3h  (WinAppMigrator issue #2 repro: installer GUI driven by UIA)
+console  start 2026-11-15T11:10:41  +30m  (Hyper-V WIN7X64 screenshot run)
+== sessions
+ USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME
+ technician            console             1  Active      none   11/12/2026 12:00 PM
+== disks
+
+Number FriendlyName                   SerialNumber                                      Size BusType IsBoot IsSystem
+------ ------------                   ------------                                      ---- ------- ------ --------
+     0 SAMSUNG MZVL2512HCJQ-00BH1     0025_38B8_21B7_37C0.                      512110190592 NVMe     False    False
+     1 WDC PC SN730 SDBPNTY-512G-1006 E823_8FA6_BF53_0001_001B_448B_4585_391D.  512110190592 NVMe      True     True
+     2 Seagate Expansion Desk                     NAAA3QVK                     8001563221504 USB      False    False
+     3 Samsung Flash Drive            AA00000000000489                          256641603584 USB      False    False
+
+
+
+
+DriveLetter FileSystemLabel FileSystem         Size SizeRemaining
+----------- --------------- ----------         ---- -------------
+          W WORK            NTFS       512093057024  493254541312
+          C OS              NTFS       506333229056  181399982080
+
+
+
+== W: top level
+
+Mode   LastWriteTime          Name                     
+----   -------------          ----                     
+d----- 11/15/2026 12:02:59 PM fix6                     
+d----- 11/15/2026 10:47:21 AM rc2v                     
+d--hs- 11/15/2026 12:58:05 AM System Volume Information
+
+
+
+== audio
+
+Name                  Status StartType
+----                  ------ ---------
+AudioEndpointBuilder Running Automatic
+Audiosrv             Running Automatic
+
+
+
+
+Name                          Status Manufacturer        
+----                          ------ ------------        
+Realtek High Definition Audio OK     Microsoft           
+Intel(R) Display Audio        OK     Intel(R) Corporation
+
+
+
+
+Status  FriendlyName                           InstanceId                                                          
+------  ------------                           ----------                                                          
+Unknown Microphone (4- DX-340 )                SWD\MMDEVAPI\{0.0.1.00000000}.{91D6E067-B53B-4499-A516-779DAA48B6E8}
+Unknown Microphone (HD Pro Webcam C920)        SWD\MMDEVAPI\{0.0.1.00000000}.{4589E2F9-F2E8-41ED-80B3-C806929CE9A8}
+Unknown VG248 (Intel(R) Display Audio)         SWD\MMDEVAPI\{0.0.0.00000000}.{168CC180-C893-43D0-BB8E-95953B7DF6D9}
+Unknown ASUS VG35V (Intel(R) Display Audio)    SWD\MMDEVAPI\{0.0.0.00000000}.{E4B5CE12-C32A-4089-BDAB-7C32B79C64FD}
+Unknown ASUS VG35V (Intel(R) Display Audio)    SWD\MMDEVAPI\{0.0.0.00000000}.{6238EF6B-AAB3-4D36-9CF7-1D26FC828C4F}
+Unknown NS-55F301NA22 (Intel(R) Display Audio) SWD\MMDEVAPI\{0.0.0.00000000}.{575DB87F-3913-4356-A93A-9FF205747C27}
+Unknown Microphone (2- DX-340 )                SWD\MMDEVAPI\{0.0.1.00000000}.{8BFBC4FC-3D3E-4FF9-8308-BA25BFB43EDA}
+OK      Speakers (Realtek(R) Audio)            SWD\MMDEVAPI\{0.0.0.00000000}.{8C281BE5-2316-4261-8A2D-07F43962A800}
+Unknown ASUS VG35V (Intel(R) Display Audio)    SWD\MMDEVAPI\{0.0.0.00000000}.{CAF884D6-5E64-4A4E-A595-0D805DB06398}
+Unknown VG248 (Intel(R) Display Audio)         SWD\MMDEVAPI\{0.0.0.00000000}.{142ABC3F-3A22-4C1B-A47E-547E667D23AC}
+
+
+
+render endpoints (MMDevices, state 1 = active):
+  state 536870916  VG248  (Intel(R) Display Audio)  {00bb4b88-586b-4cbc-b550-7b5d5c8d5e16}
+  state 4  VG248  (Intel(R) Display Audio)  {142abc3f-3a22-4c1b-a47e-547e667d23ac}
+  state 4  VG248  (Intel(R) Display Audio)  {168cc180-c893-43d0-bb8e-95953b7df6d9}
+  state 8  Headphones  (Realtek(R) Audio)  {41683f24-6e7d-45a9-83ef-d1ae98fd0f3f}
+  state 4  NS-55F301NA22 -2  (Intel(R) Display Audio)  {416d17b7-22f8-46fa-9142-394c25cc96d2}
+  state 4  NS-55F301NA22  (Intel(R) Display Audio)  {575db87f-3913-4356-a93a-9ff205747c27}
+  state 536870916  VG248 -4  (Intel(R) Display Audio)  {5f80c2cd-fc3c-416d-8fd2-3b2b1e54569c}
+  state 4  ASUS VG35V  (Intel(R) Display Audio)  {6238ef6b-aab3-4d36-9cf7-1d26fc828c4f}
+  state 553648132  SONY PJ  (Intel(R) Display Audio)  {65a9d3f1-8933-437e-9976-9ae9703882d0}
+  state 8  Headset  (Jabra Evolve2 65 Hands-Free)  {779580e1-599b-478b-a246-e614683c3c9c}
+  state 4  VG248 -4  (Intel(R) Display Audio)  {78e3102a-bd04-43a3-b4ba-72527eee70dd}
+  state 8  Headphones  (Jabra Evolve2 65)  {7b71adc2-f931-473c-b936-4ded17bd0c8f}
+  state 553648132  Speakers  (Jabra Link 380)  {81d8e014-c6f2-49df-8018-e6298a7f015d}
+  state 1  Speakers  (Realtek(R) Audio)  {8c281be5-2316-4261-8a2d-07f43962a800}
+  state 553648132  SONY PJ  (Intel(R) Display Audio)  {908fb9b6-418e-47e2-9a9d-c23f1584484d}
+  state 553648132  SONY PJ  (Intel(R) Display Audio)  {936a0ec4-b693-401d-a720-ca235cf1a5c9}
+  state 536870916  N1F PRO  (Intel(R) Display Audio)  {95db7092-bb9f-4158-a2dc-22dceab48020}
+  state 553648132  VG248  (Intel(R) Display Audio)  {99513efd-845a-4966-8200-527a11c275f1}
+  state 8  Headphones  (DA2112)  {ab86c2f8-b1eb-4f0f-82ac-34fe7c312cee}
+  state 553648132  SONY PJ  (Intel(R) Display Audio)  {c39cc5ec-4db7-4601-ab89-0d518bceb220}
+  state 4  ASUS VG35V  (Intel(R) Display Audio)  {caf884d6-5e64-4a4e-a595-0d805db06398}
+  state 4  ASUS VG35V  (Intel(R) Display Audio)  {e4b5ce12-c32a-4089-bdab-7c32b79c64fd}
+  state 553648132  SONY PJ  (Intel(R) Display Audio)  {f7ef7528-0b9d-4ea3-9d76-e3b933ce23fe}
+== Narrator
+
+--- HKCU:\Software\Microsoft\Narrator
+
+--- HKCU:\Software\Microsoft\Narrator\NoRoam
+
+
+RunningState : 0
+
+
+
+
+--- HKCU:\Software\Microsoft\Narrator\NarratorHome missing
+--- HKCU:\Software\Microsoft\Narrator\QuickStart missing
+Narrator.exe: True
+== Live captions
+LiveCaptions.exe: True
+--- HKCU:\Software\Microsoft\LiveCaptions missing
+--- HKCU:\Software\Microsoft\LiveCaptions\UI missing
+
+Name                              Version     
+----                              -------     
+Microsoft.XboxSpeechToTextOverlay 1.97.17002.0
+
+
+
+
+== NVDA
+C:\Program Files (x86)\NVDA : False
+C:\Program Files\NVDA : False
+C:\Users\Technician\AppData\Roaming\nvda : False
+== screen reader flag (SPI_GETSCREENREADER) from this session is not the console's; skipped
+== foreground lock
+
+
+ForegroundLockTimeout : 200000
+ForegroundFlashCount  : 7
+PSPath                : Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\Control Panel\Desktop
+PSParentPath          : Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\Control Panel
+PSChildName           : Desktop
+PSDrive               : HKCU
+PSProvider            : Microsoft.PowerShell.Core\Registry
+
+
+
+
+== notifications (HKCU of testpc2\technician)
+
+
+DatabaseMigrationCompleted : 1
+
+
+
+
+== Chatmon traces for Technician
+LOCALAPPDATA\chatmon: False  APPDATA\chatmon: False
+--- HKCU:\Software\Classes\AppUserModelId (Chatmon)
+--- HKCU:\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings (Chatmon)
+Run key values: Mozilla-Firefox-308046B0AF4A39CB, MicrosoftEdgeAutoLaunch_F551FB7C33CC702E7F136D8102E6A39D
+== scheduled tasks under \
+
+TaskName                                                                 State
+--------                                                                 -----
+Adobe Acrobat Update Task                                                Ready
+MicrosoftEdgeUpdateTaskMachineCore{53515101-CC38-4C45-A154-25B3684270EF} Ready
+MicrosoftEdgeUpdateTaskMachineUA{FC3BDEF7-60DB-49FA-9628-FD89A255B951}   Ready
+SAKCapture                                                               Ready
+SAKCaptureElevated                                                       Ready
+SAKCertClient                                                            Ready
+SAKOpsProofRunner                                                        Ready
+
+
+
+== tools
+Python 3.14.10
+git version 2.56.0.windows.4
+== console session's desktop
+

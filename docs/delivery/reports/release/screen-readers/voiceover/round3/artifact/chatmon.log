@@ -1,0 +1,20 @@
+2026-11-15 20:44:43,144 INFO chatmon.app: Chatmon 0.10.0 started
+2026-11-15 20:44:48,434 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (/Users/runner/.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:44:48,435 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (/Users/runner/.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:44:48,436 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+2026-11-15 20:44:48,436 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+2026-11-15 20:47:54,374 INFO chatmon.app: Chatmon 0.10.0 started
+2026-11-15 20:47:58,081 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (/Users/runner/.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:47:58,081 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (/Users/runner/.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:47:58,081 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+2026-11-15 20:47:58,082 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+2026-11-15 20:49:18,988 INFO chatmon.app: Chatmon 0.10.0 started
+2026-11-15 20:49:22,675 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (/Users/runner/.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:49:22,675 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (/Users/runner/.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:49:22,676 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+2026-11-15 20:49:22,676 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+2026-11-15 20:50:56,379 INFO chatmon.app: Chatmon 0.10.0 started
+2026-11-15 20:50:59,769 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (/Users/runner/.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:50:59,770 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (/Users/runner/.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:50:59,771 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+2026-11-15 20:50:59,771 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: Muse Code isn't installed.

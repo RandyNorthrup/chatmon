@@ -87,6 +87,31 @@ def test_clicks_go_through_from_the_start(qapp, user32, hwnd):
 
 
 @windows_only
+def test_the_stage_isnt_taken_for_a_full_screen_app(qapp, user32, hwnd):
+    """The stage covers the whole monitor and stays on top: Explorer counted it as a full-screen app, so Windows said
+    it was busy (QUNS_BUSY) for as long as Chatmon ran, holding Chatmon's bubbles back and hiding every app's
+    notification banners. NonRudeHWND tells Explorer it isn't one."""
+    user32.GetPropW.restype, user32.GetPropW.argtypes = ctypes.c_void_p, [ctypes.c_void_p, ctypes.c_wchar_p]
+    clickthrough.WindowsPointerToggle(Widget(hwnd))
+    assert user32.GetPropW(hwnd, "NonRudeHWND") == 1
+
+
+@windows_only
+def test_a_new_native_window_is_marked_too(qapp, user32, hwnd):
+    """Qt can give the stage a new native window (a screen of another scale, say): it's marked on the next frame."""
+    user32.GetPropW.restype, user32.GetPropW.argtypes = ctypes.c_void_p, [ctypes.c_void_p, ctypes.c_wchar_p]
+    first = user32.CreateWindowExW(WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST, "STATIC", "chatmon test", WS_POPUP, 0, 0, 64, 64, None, None, None, None)
+    widget = Widget(first)
+    try:
+        toggle = clickthrough.WindowsPointerToggle(widget)
+        widget.hwnd = hwnd  # as winId() answers after Qt made the window again
+        toggle.follow_pointer(lambda pos: NOWHERE)
+        assert user32.GetPropW(hwnd, "NonRudeHWND") == 1
+    finally:
+        user32.DestroyWindow(first)
+
+
+@windows_only
 def test_takes_the_mouse_only_over_the_chatmon_and_keeps_the_window_layered(qapp, user32, hwnd):
     toggle = clickthrough.WindowsPointerToggle(Widget(hwnd))
     others = WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST

@@ -137,7 +137,27 @@ def remind(args: list[str]) -> int:
 def ask(args: list[str]) -> int:
     """Open the running chatmon's ask box with `args` typed in, ready to type more (a hotkey, a launcher)."""
     _let_chatmon_come_forward()
-    return _send({"type": "ask", "text": " ".join(args)})
+    sent = _send({"type": "ask", "text": " ".join(args)})
+    if sent == 0:
+        _make_chatmon_active()
+    return sent
+
+
+def _make_chatmon_active() -> bool:
+    """macOS 14 and later activate apps cooperatively: Chatmon, opening its ask box on a script's or a launcher's
+    word, isn't let make itself the active app (the request isn't the person's own input), so the keyboard stayed
+    with the app you were in, and VoiceOver kept holding what Chatmon said. This command, run from that app, asks
+    for it instead, once the box is open, by the running Chatmon's process id (its answer to `status`): that's
+    taken, from source and as Chatmon.app (macOS 26.7). Elsewhere there's nothing to do. True if macOS took it."""
+    if sys.platform != "darwin":
+        return False
+    reply = events.request({"type": "status"}, timeout=1.0)
+    pid = reply.get("pid") if reply else None
+    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+        return False  # a Chatmon too old to say its id
+    from . import macnative
+
+    return macnative.activate_app(pid)
 
 
 def _let_chatmon_come_forward() -> bool:

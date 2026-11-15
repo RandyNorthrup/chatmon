@@ -138,6 +138,9 @@ class MacPointerToggle(PointerToggle):
 
 GWL_EXSTYLE = -20
 WS_EX_TRANSPARENT = 0x20  # on a layered window: every click goes through it, to the window below
+# A window property Explorer reads before it counts a window as a full-screen app (a "rude" window): with it set,
+# the window isn't one.
+NON_RUDE = "NonRudeHWND"
 _WinDLL = getattr(ctypes, "WinDLL", ctypes.CDLL)  # Windows' own loader; ctypes has it only there
 
 
@@ -150,7 +153,13 @@ class WindowsPointerToggle(PointerToggle):
     moment. Windows throws away a layered window's picture when it does, and the
     stage only redraws what changed, so the next frame put up just that patch:
     the chatmon vanished, and since a layered window lets clicks through
-    wherever it's transparent, it couldn't be clicked either."""
+    wherever it's transparent, it couldn't be clicked either.
+
+    It also marks the window NonRudeHWND. The stage is a topmost window over the
+    whole monitor, which Explorer otherwise takes for a full-screen app: for as
+    long as Chatmon ran, Windows said it was busy (SHQueryUserNotificationState's
+    QUNS_BUSY), so Chatmon held its own bubbles back and Windows showed no
+    notification banners, Chatmon's or any other app's."""
 
     def __init__(self, widget: QWidget):
         super().__init__(widget)
@@ -159,12 +168,17 @@ class WindowsPointerToggle(PointerToggle):
         self._get_style.restype, self._get_style.argtypes = ctypes.c_ssize_t, [ctypes.c_void_p, ctypes.c_int]
         self._set_style = user32.SetWindowLongPtrW
         self._set_style.restype, self._set_style.argtypes = ctypes.c_ssize_t, [ctypes.c_void_p, ctypes.c_int, ctypes.c_ssize_t]
+        self._set_prop = user32.SetPropW
+        self._set_prop.restype, self._set_prop.argtypes = ctypes.c_int, [ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_void_p]
+        self._not_rude = 0  # the native window marked NonRudeHWND
         self._accept(False)  # the window covers the screen: clicks go through it from the start
 
     def _accept(self, accepting: bool) -> None:
         # The style is read every frame, not remembered: if Qt ever sets the window's styles again, the
         # next frame puts this one back.
         hwnd = int(self._widget.winId())
+        if hwnd and hwnd != self._not_rude and self._set_prop(hwnd, NON_RUDE, 1):  # a new native window: marked too
+            self._not_rude = hwnd
         style = self._get_style(hwnd, GWL_EXSTYLE)
         wanted = style & ~WS_EX_TRANSPARENT if accepting else style | WS_EX_TRANSPARENT
         if style and wanted != style:

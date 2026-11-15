@@ -1,0 +1,353 @@
+"""VoiceOver with the fixed Chatmon (wave5/screen-readers' changes, applied to the checkout): from source through the
+probe's tracing shim, and as the installed Chatmon.app built from the same tree. What VoiceOver says is polled from
+its AppleScript (`content of last phrase`); which app is in front is AppKit's word, asked from a fresh process.
+
+usage: verify_voiceover.py OUT_DIR SOURCE_TREE SHIM FRONT_SCRIPT
+"""
+
+import json
+import os
+import re
+import subprocess
+import sys
+import threading
+import time
+from pathlib import Path
+
+OUT, SRC, SHIM, FRONT_PY = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]), Path(sys.argv[4])
+OUT.mkdir(parents=True, exist_ok=True)
+PY = sys.executable
+APP = "/Applications/Chatmon.app"
+APP_CLI = f"{APP}/Contents/MacOS/Chatmon"  # what /usr/local/bin/chatmon links to
+VERSION = re.search(r'__version__ = "([^"]+)"', (SRC / "chatmon" / "__init__.py").read_text(encoding="utf-8")).group(1)
+LAST_PHRASE = 'tell application "VoiceOver" to get content of last phrase'
+SHORTCUT = 'tell application "System Events" to key code 49 using {command down, shift down}'  # Ctrl+Shift+Space (Command)
+timeline: list[tuple[float, str]] = []
+results: list[dict] = []
+_log = open(OUT / "driver.log", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+
+def stamp(t: float) -> str:
+    return time.strftime("%H:%M:%S", time.gmtime(t)) + f".{int(t % 1 * 1000):03d}Z"
+
+
+def note(text: str) -> None:
+    t = time.time()
+    timeline.append((t, text))
+    line = f"{stamp(t)} {text}"
+    print(line, flush=True)
+    _log.write(line + "\n")
+
+
+def osa(script: str, timeout: float = 15) -> tuple[int, str, str]:
+    try:
+        r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return 124, "", "timed out"
+    return r.returncode, r.stdout.strip(), r.stderr.strip()
+
+
+def act(script: str, label: str) -> None:
+    code, out, err = osa(script)
+    note(f"osascript ({label}): exit {code}" + (f", {out}" if out else "") + (f", {err}" if err else ""))
+
+
+def keys(text: str) -> None:
+    act(f'tell application "System Events" to keystroke "{text}"', f"keystroke {text}")
+    time.sleep(0.5)
+    act('tell application "System Events" to key code 36', "Return")
+
+
+def shot(name: str) -> None:
+    subprocess.run(["screencapture", "-x", str(OUT / f"screen-{name}.png")], capture_output=True, timeout=30)
+
+
+class Heard(threading.Thread):
+    """VoiceOver's last phrase, asked for again and again; each new one kept with when it was first seen."""
+
+    def __init__(self) -> None:
+        super().__init__(daemon=True)
+        self.phrases: list[tuple[float, str]] = []
+        self.polls = self.errors = 0
+        self.stopping = False
+        self.file = open(OUT / "voiceover-phrases.jsonl", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+    def run(self) -> None:
+        last = None
+        while not self.stopping:
+            code, text, _err = osa(LAST_PHRASE, timeout=5)
+            t = time.time()
+            self.polls += 1
+            if code == 0 and text != last:
+                last = text
+                self.phrases.append((t, text))
+                self.file.write(json.dumps({"t": round(t, 3), "at": stamp(t), "phrase": text}, ensure_ascii=False) + "\n")
+            elif code != 0:
+                self.errors += 1
+            time.sleep(0.05)
+
+    def find(self, needle: str, since: float, until: float | None = None) -> tuple[float, str] | None:
+        return next(((t, x) for t, x in self.phrases if t >= since and (until is None or t <= until) and needle.lower() in x.lower()), None)
+
+    def wait_for(self, needle: str, since: float, seconds: float) -> tuple[float, str] | None:
+        end = time.time() + seconds
+        while time.time() < end:
+            found = self.find(needle, since)
+            if found:
+                return found
+            time.sleep(0.1)
+        return self.find(needle, since)
+
+
+class Run:
+    """One Chatmon: from source (traced) or the installed app; started, its cases, quit."""
+
+    def __init__(self, kind: str, heard: Heard) -> None:
+        self.kind, self.heard = kind, heard
+        self.trace = OUT / f"chatmon-trace-{kind}.jsonl"
+        self.pid = 0
+        self.process: subprocess.Popen | None = None
+        self.cli = [APP_CLI] if kind == "bundle" else [PY, "-m", "chatmon"]
+
+    def chatmon(self, *args: str) -> None:
+        shown = " ".join(a if re.fullmatch(r"[\w.-]+", a) else json.dumps(a) for a in args)
+        start = time.time()
+        r = subprocess.run([*self.cli, *args], capture_output=True, text=True, timeout=60, cwd=SRC)
+        out = (r.stdout + r.stderr).strip().replace("\n", " | ")
+        note(f"$ chatmon {shown} ({self.kind}): exit {r.returncode} in {time.time() - start:.2f} s" + (f": {out}" if out else ""))
+
+    def start(self) -> float:
+        started = time.time()
+        if self.kind == "bundle":
+            subprocess.run(["/usr/bin/open", "-a", APP], check=True, timeout=60)
+        else:
+            env = dict(os.environ, CHATMON_DEBUG="1", PROBE_SRC=str(SRC), PROBE_TRACE=str(self.trace))
+            with open(OUT / f"chatmon-stdout-{self.kind}.log", "w", encoding="utf-8") as console:
+                self.process = subprocess.Popen([PY, str(SHIM)], cwd=SRC, env=env, stdout=console, stderr=subprocess.STDOUT)
+        for _ in range(90):
+            r = subprocess.run([*self.cli, "status"], capture_output=True, text=True, timeout=60, cwd=SRC)
+            if r.stdout.startswith("Chatmon is running."):
+                break
+            time.sleep(1)
+        if self.kind == "bundle":
+            self.pid = int(subprocess.run(["pgrep", "-n", "-f", APP_CLI], capture_output=True, text=True).stdout.split()[0])
+        else:
+            self.pid = self.process.pid
+        note(f"Chatmon ({self.kind}) running, pid {self.pid}")
+        return started
+
+    def quit(self) -> None:
+        self.chatmon("quit")
+        if self.process is not None:
+            try:
+                self.process.wait(30)
+            except subprocess.TimeoutExpired:
+                self.process.kill()
+        time.sleep(2)
+
+    def front(self) -> str:
+        r = subprocess.run([PY, str(FRONT_PY)], capture_output=True, text=True, timeout=30)
+        said = r.stdout.strip() or r.stderr.strip()
+        note(f"frontmost app (AppKit): {said}")
+        return said
+
+    def active(self) -> bool:
+        return self.front().split()[:1] == [str(self.pid)]
+
+    def focused(self) -> str:
+        script = (f'tell application "System Events"\nset p to first application process whose unix id is {self.pid}\n'
+                  'set f to value of attribute "AXFocusedUIElement" of p\nset r to ""\n'
+                  'try\nset r to r & (role of f)\nend try\ntry\nset r to r & " | " & (description of f)\nend try\n'
+                  'try\nset r to r & " | value: " & (value of f)\nend try\nreturn r\nend tell')
+        code, out, err = osa(script)
+        said = out if code == 0 else f"unknown ({err})"
+        note(f"Chatmon's focused element: {said}")
+        return said
+
+    def to_front_by_system_events(self) -> None:
+        act(f'tell application "System Events" to set frontmost of (first application process whose unix id is {self.pid}) to true',
+            "System Events: Chatmon frontmost, as Cmd-Tab or the Dock would")
+
+    def to_finder(self) -> None:
+        if not self.active():
+            self.to_front_by_system_events()
+            time.sleep(1.5)
+        act('tell application "System Events" to key code 53', "Esc")
+        time.sleep(1)
+        act('tell application "Finder" to activate', "Finder activate")
+        time.sleep(3)
+        self.front()
+
+    def traced(self, since: float) -> list[dict]:
+        lines = self.trace.read_text(encoding="utf-8").splitlines() if self.trace.exists() else []
+        wanted = ("announce", "voiceover-say", "voiceover-post", "app-state", "focus")
+        return [e for e in map(json.loads, lines) if e["t"] >= since and e["event"] in wanted]
+
+
+def record(r: Run, case: str, how: str, expected: str, needle: str, said_at: float, *, fronted_at: float | None = None,
+           wait: float = 15, linger: float = 8, extra: dict | None = None) -> dict:
+    got = r.heard.wait_for(needle, said_at, wait)
+    entry = {"run": r.kind, "case": case, "how": how, "expected_words": expected, "needle": needle, "said_at": stamp(said_at),
+             "heard": bool(got), "spoken": got[1] if got else None, "spoken_at": stamp(got[0]) if got else None,
+             "seconds_after_said": round(got[0] - said_at, 2) if got else None, **(extra or {})}
+    if got:
+        time.sleep(max(0.0, got[0] + linger - time.time()))  # left alone: VoiceOver's next phrase, if any, is its own
+        later = [(t, x) for t, x in r.heard.phrases if t > got[0]]
+        entry["next_phrase"] = (round(later[0][0] - got[0], 2), later[0][1]) if later else None
+    if fronted_at is not None:
+        early = r.heard.find(needle, said_at, fronted_at)
+        entry.update(brought_to_front_at=stamp(fronted_at), held_while_behind=early is None,
+                     seconds_after_front=round(got[0] - fronted_at, 2) if got else None)
+    entry["trace"] = r.traced(said_at - 0.5)
+    entry["phrases_meanwhile"] = [(stamp(t), x) for t, x in r.heard.phrases if said_at - 0.5 <= t <= time.time()]
+    results.append(entry)
+    note(f"CASE {r.kind}/{case}: " + (f"VoiceOver said {got[1]!r} {entry['seconds_after_said']} s after" if got else "VoiceOver never said it")
+         + (f"; held while behind: {entry['held_while_behind']}" if fronted_at is not None else ""))
+    return entry
+
+
+def greeting(r: Run, started: float) -> None:
+    record(r, "G", "Chatmon just started: its greeting", "Hi, I'm Chatmon! Click me to ask anything.", "Hi, I'm Chatmon", started, wait=25)
+
+
+def in_front(r: Run) -> None:
+    note(f"== {r.kind}/A1: Finder in front; the shortcut opens the ask box; a hook's message comes")
+    r.to_finder()
+    act(SHORTCUT, "Cmd+Shift+Space, Chatmon's shortcut")
+    time.sleep(3)
+    activated = r.active()
+    time.sleep(5)
+    text = f"Probe {r.kind} A1, said while Chatmon is in front."
+    said = time.time()
+    r.chatmon("say", text)
+    record(r, "A1", "in front (the shortcut opened the ask box), then `chatmon say`", f"Chatmon. {text}", f"Probe {r.kind} A1", said,
+           extra={"chatmon_active_after_shortcut": activated})
+
+
+def typed(r: Run, case: str, opened_by: str) -> None:
+    """In front, `version` typed in the ask box and Return: the answer is read out."""
+    note(f"== {r.kind}/{case}: `version` typed in the ask box ({opened_by}), Return")
+    before = r.focused()
+    said = time.time()
+    keys("version")
+    time.sleep(0.5)
+    record(r, case, f"in front ({opened_by}): `version` typed in the ask box, Return", f"I'm Chatmon {VERSION}.", f"Chatmon {VERSION}", said,
+           extra={"focused_before_typing": before})
+
+
+def held(r: Run, case: str, kind: str, bring: str) -> None:
+    """Chatmon behind (Finder in front), something to say comes, then Chatmon is brought forward by `bring`."""
+    tag = f"Probe {r.kind} {case}"
+    if kind == "say":
+        text, expected = f"{tag}, held while Chatmon is behind.", f"Chatmon. {tag}, held while Chatmon is behind."
+    else:
+        text = f"{tag}, waiting for your approval."
+        expected = f"Claude needs you. {text} To answer, type “OK” in the chat."
+    note(f"== {r.kind}/{case}: behind, a {kind} comes; then {bring}")
+    r.to_finder()
+    said = time.time()
+    if kind == "say":
+        r.chatmon("say", text)
+    else:
+        r.chatmon("notify", "needs-you", "--source", "claude", "--message", text)
+    time.sleep(10)
+    fronted = time.time()
+    if bring == "shortcut":
+        act(SHORTCUT, "Cmd+Shift+Space, Chatmon's shortcut")
+    elif bring == "chatmon ask":
+        r.chatmon("ask")  # as a script or a launcher does
+    else:
+        r.to_front_by_system_events()
+    time.sleep(2.5)
+    activated = r.active()
+    record(r, case, f"behind: {kind}; then {bring}", expected, tag, said, fronted_at=fronted, extra={"chatmon_active_after_bringing": activated})
+    shot(f"{r.kind}-{case}")
+
+
+def windows_open(r: Run, word: str, case: str) -> None:
+    """The ask box open; `word` typed (settings, history): the window it opens, and where its keyboard focus lands."""
+    note(f"== {r.kind}/{case}: `{word}` typed in the ask box; where the keyboard is in the window it opens")
+    r.to_finder()
+    act(SHORTCUT, "Cmd+Shift+Space, Chatmon's shortcut")
+    time.sleep(4)
+    opened = time.time()
+    keys(word)
+    time.sleep(6)  # the window opens, and VoiceOver lands in it
+    focus = r.focused()
+    phrases = [(stamp(t), x) for t, x in r.heard.phrases if t >= opened]
+    qt_focus = [e.get("widget") for e in r.traced(opened) if e["event"] == "focus"]
+    on_label = "AXStaticText" in focus or any(w and w.startswith("QLabel") for w in qt_focus[-1:])
+    results.append({"run": r.kind, "case": case, "how": f"`{word}` typed in the ask box, Return", "focused_element": focus,
+                    "qt_focus_changes": qt_focus, "keyboard_on_a_label": on_label, "phrases": phrases})
+    note(f"CASE {r.kind}/{case}: focused {focus!r}; Qt focus {qt_focus[-1:] or 'not traced'}; on a label: {on_label}")
+    shot(f"{r.kind}-{case}")
+    act('tell application "System Events" to key code 53', "Esc (the window closes)")
+    time.sleep(2)
+
+
+def source_run(heard: Heard) -> None:
+    r = Run("source", heard)
+    act('tell application "Finder" to activate', "Finder activate")
+    time.sleep(2)
+    greeting(r, r.start())
+    in_front(r)
+    typed(r, "A2", "the shortcut")
+    held(r, "B1", "say", "shortcut")
+    held(r, "B3", "say", "system events")
+    held(r, "C1", "alert", "system events")
+    held(r, "C2", "alert", "shortcut")
+    held(r, "D1", "say", "chatmon ask")
+    typed(r, "D2", "`chatmon ask` from a script")
+    windows_open(r, "settings", "S1")
+    windows_open(r, "history", "S2")
+    r.quit()
+
+
+def bundle_run(heard: Heard) -> None:
+    if not Path(APP).exists():
+        note("no Chatmon.app installed: the bundle's cases weren't run")
+        return
+    r = Run("bundle", heard)
+    act('tell application "Finder" to activate', "Finder activate")
+    time.sleep(2)
+    greeting(r, r.start())
+    in_front(r)
+    typed(r, "A2", "the shortcut")
+    held(r, "B3", "say", "system events")
+    held(r, "C1", "alert", "system events")
+    held(r, "D1", "say", "chatmon ask")
+    typed(r, "D2", "`chatmon ask` from a script")
+    r.quit()
+
+
+def main() -> int:
+    note(f"VoiceOver verification: Chatmon {VERSION} with wave5/screen-readers' fixes, from {SRC}")
+    subprocess.run(["/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter"], capture_output=True, timeout=60)
+    deadline = time.time() + 120
+    while osa(LAST_PHRASE)[0] != 0:
+        if time.time() > deadline:
+            note("VoiceOver never answered its AppleScript")
+            return 2
+        time.sleep(1)
+    heard = Heard()
+    heard.start()
+    time.sleep(5)
+    try:
+        source_run(heard)
+        bundle_run(heard)
+    finally:
+        time.sleep(2)
+        heard.stopping = True
+        heard.join(10)
+        note(f"VoiceOver's last phrase was read {heard.polls} times ({heard.errors} failed); {len(heard.phrases)} phrases kept")
+        osa('tell application "VoiceOver" to quit')
+        (OUT / "results.json").write_text(json.dumps(results, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        events = sorted([(t, f"   [step] {x}") for t, x in timeline] + [(t, f"VO SAID: {x}") for t, x in heard.phrases])
+        (OUT / "transcript.txt").write_text("".join(f"{stamp(t)} {x}\n" for t, x in events), encoding="utf-8")
+    for e in results:
+        note(f"{e['run']}/{e['case']}: heard={e.get('heard')} spoken={e.get('spoken')!r} on_label={e.get('keyboard_on_a_label')}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

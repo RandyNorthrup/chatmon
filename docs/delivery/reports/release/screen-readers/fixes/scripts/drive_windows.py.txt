@@ -1,0 +1,449 @@
+"""The Windows probe, run in Technician's signed-in console session on testpc2: a screen reader on, Chatmon
+started, Chatmon made to announce things the ways a person meets them, and what the screen reader said kept.
+
+usage: drive_windows.py OUT_DIR SOURCE_TREE SHIM narrator|nvda [NVDA_EXE]
+  narrator: Narrator speaks; Windows 11's Live captions (already set up) captions the speakers, and its window's text
+            is read through UI Automation as it changes (captions.jsonl).
+  nvda:     NVDA (a portable copy) speaks, with its log at the input/output level; its "Speaking" lines are the
+            transcript (nvda.log, nvda-speech.jsonl).
+Writes driver.log, results.json, transcript.txt; Chatmon's trace (run_chatmon.py) goes to chatmon-trace.jsonl.
+Only this session's input is used (SendInput: typing in Chatmon's ask box, a click on a window's title bar).
+"""
+
+import sys
+
+sys.coinit_flags = 0  # the multithreaded apartment: the caption reader asks UI Automation from a thread of its own
+
+import ctypes  # noqa: E402
+import json  # noqa: E402
+import os  # noqa: E402
+import re  # noqa: E402
+import subprocess  # noqa: E402
+import threading  # noqa: E402
+import time  # noqa: E402
+from ctypes import wintypes  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+import comtypes  # noqa: E402
+import comtypes.client  # noqa: E402
+
+OUT, SRC, SHIM, READER = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]), sys.argv[4]
+NVDA_EXE = sys.argv[5] if len(sys.argv) > 5 else ""
+OUT.mkdir(parents=True, exist_ok=True)
+PY = sys.executable
+BELOW_NORMAL = 0x4000  # BELOW_NORMAL_PRIORITY_CLASS: the PC is shared
+VERSION = re.search(r'__version__ = "([^"]+)"', (SRC / "chatmon" / "__init__.py").read_text(encoding="utf-8")).group(1)
+UIA = comtypes.client.GetModule("UIAutomationCore.dll")
+timeline: list[tuple[float, str]] = []
+_log = open(OUT / "driver.log", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+user32 = ctypes.WinDLL("user32", use_last_error=True)
+user32.GetForegroundWindow.restype = wintypes.HWND
+user32.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+user32.GetWindowTextW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
+user32.GetClassNameW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
+user32.GetWindowRect.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.RECT)]
+user32.IsWindowVisible.argtypes = [wintypes.HWND]
+user32.PostMessageW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
+WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+user32.EnumWindows.argtypes = [WNDENUMPROC, wintypes.LPARAM]
+
+
+def stamp(t: float) -> str:
+    return time.strftime("%H:%M:%S", time.localtime(t)) + f".{int(t % 1 * 1000):03d}"
+
+
+def note(text: str) -> None:
+    t = time.time()
+    timeline.append((t, text))
+    line = f"{stamp(t)} {text}"
+    print(line, flush=True)
+    _log.write(line + "\n")
+
+
+def run(args: list[str], timeout: float = 60, show: str | None = None) -> subprocess.CompletedProcess:
+    note("$ " + (show or " ".join(args)))
+    r = subprocess.run(args, capture_output=True, text=True, timeout=timeout, cwd=SRC, creationflags=BELOW_NORMAL,
+                       encoding="utf-8", errors="replace")
+    out = (r.stdout + r.stderr).strip()
+    note(f"  exit {r.returncode}" + (": " + out.replace("\n", " | ") if out else ""))
+    return r
+
+
+def chatmon(*args: str) -> subprocess.CompletedProcess:
+    shown = " ".join(a if re.fullmatch(r"[\w.-]+", a) else json.dumps(a) for a in args)
+    return run([PY, "-m", "chatmon", *args], show=f"python -m chatmon {shown}")
+
+
+# -- windows and input (this session's own)
+
+def window_info(hwnd) -> dict:
+    pid = wintypes.DWORD(0)
+    user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+    title, cls, rect = ctypes.create_unicode_buffer(256), ctypes.create_unicode_buffer(256), wintypes.RECT()
+    user32.GetWindowTextW(hwnd, title, 256)
+    user32.GetClassNameW(hwnd, cls, 256)
+    user32.GetWindowRect(hwnd, ctypes.byref(rect))
+    return {"hwnd": hwnd or 0, "pid": pid.value, "title": title.value, "class": cls.value,
+            "rect": [rect.left, rect.top, rect.right, rect.bottom]}
+
+
+def front() -> dict:
+    info = window_info(user32.GetForegroundWindow())
+    note(f"foreground window: pid {info['pid']}, class {info['class']!r}, title {info['title']!r}")
+    return info
+
+
+def windows_of(pid: int | None = None, cls: str | None = None) -> list[dict]:
+    found = []
+
+    def each(hwnd, _):
+        if user32.IsWindowVisible(hwnd):
+            info = window_info(hwnd)
+            if (pid is None or info["pid"] == pid) and (cls is None or info["class"] == cls):
+                found.append(info)
+        return True
+
+    user32.EnumWindows(WNDENUMPROC(each), 0)
+    return found
+
+
+class KEYBDINPUT(ctypes.Structure):
+    _fields_ = [("wVk", wintypes.WORD), ("wScan", wintypes.WORD), ("dwFlags", wintypes.DWORD), ("time", wintypes.DWORD),
+                ("dwExtraInfo", ctypes.c_size_t)]
+
+
+class MOUSEINPUT(ctypes.Structure):
+    _fields_ = [("dx", wintypes.LONG), ("dy", wintypes.LONG), ("mouseData", wintypes.DWORD), ("dwFlags", wintypes.DWORD),
+                ("time", wintypes.DWORD), ("dwExtraInfo", ctypes.c_size_t)]
+
+
+class _Either(ctypes.Union):
+    _fields_ = [("ki", KEYBDINPUT), ("mi", MOUSEINPUT), ("pad", ctypes.c_byte * 32)]
+
+
+class INPUT(ctypes.Structure):
+    _fields_ = [("type", wintypes.DWORD), ("u", _Either)]
+
+
+KEYUP, UNICODE = 0x2, 0x4
+VK_RETURN, VK_ESCAPE, VK_CONTROL, VK_LWIN = 0x0D, 0x1B, 0x11, 0x5B
+LEFTDOWN, LEFTUP = 0x2, 0x4
+
+
+def _send(*inputs: INPUT) -> int:
+    array = (INPUT * len(inputs))(*inputs)
+    return user32.SendInput(len(inputs), array, ctypes.sizeof(INPUT))
+
+
+def _key(vk: int = 0, scan: int = 0, flags: int = 0) -> INPUT:
+    return INPUT(1, _Either(ki=KEYBDINPUT(vk, scan, flags, 0, 0)))
+
+
+def press(*vks: int, label: str = "") -> None:
+    sent = _send(*[_key(vk) for vk in vks], *[_key(vk, flags=KEYUP) for vk in reversed(vks)])
+    note(f"pressed {label or vks} (SendInput: {sent})")
+
+
+def type_text(text: str) -> None:
+    for ch in text:
+        _send(_key(scan=ord(ch), flags=UNICODE), _key(scan=ord(ch), flags=UNICODE | KEYUP))
+        time.sleep(0.06)
+    note(f"typed {text!r} (SendInput)")
+
+
+def click(x: int, y: int, why: str) -> None:
+    user32.SetCursorPos(x, y)
+    time.sleep(0.2)
+    sent = _send(INPUT(0, _Either(mi=MOUSEINPUT(0, 0, 0, LEFTDOWN, 0, 0))), INPUT(0, _Either(mi=MOUSEINPUT(0, 0, 0, LEFTUP, 0, 0))))
+    note(f"clicked ({x}, {y}): {why} (SendInput: {sent})")
+
+
+# -- what the screen reader said
+
+class Captions(threading.Thread):
+    """Live captions' window, read through UI Automation: the caption text as it changes, each change kept."""
+
+    def __init__(self) -> None:
+        super().__init__(daemon=True)
+        self.seen: list[tuple[float, str]] = []
+        self.stopping = False
+        self.problem = ""
+        self.file = open(OUT / "captions.jsonl", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+    def _text_element(self, automation):
+        root = automation.GetRootElement()
+        window = root.FindFirst(UIA.TreeScope_Children, automation.CreatePropertyCondition(UIA.UIA_ClassNamePropertyId, "LiveCaptionsDesktopWindow"))
+        if not window:
+            return None
+        walker = automation.ControlViewWalker  # walked: FindFirst doesn't reach into its XAML island
+
+        def walk(element, depth=0):
+            if element.CurrentAutomationId == "CaptionsTextBlock":
+                return element
+            child = walker.GetFirstChildElement(element) if depth < 14 else None
+            while child:
+                found = walk(child, depth + 1)
+                if found:
+                    return found
+                child = walker.GetNextSiblingElement(child)
+            return None
+
+        return walk(window)
+
+    def run(self) -> None:
+        comtypes.CoInitializeEx(comtypes.COINIT_MULTITHREADED)
+        automation = comtypes.client.CreateObject(UIA.CUIAutomation8, interface=UIA.IUIAutomation5)
+        element, last = None, None
+        while not self.stopping:
+            try:
+                element = element or self._text_element(automation)
+                text = element.CurrentName if element else None
+            except comtypes.COMError as exc:
+                element, text = None, None
+                self.problem = str(exc)
+            t = time.time()
+            if text is not None and text != last:
+                last = text
+                self.seen.append((t, text))
+                self.file.write(json.dumps({"t": round(t, 3), "at": stamp(t), "text": text}, ensure_ascii=False) + "\n")
+            time.sleep(0.25)
+
+    def find(self, needles: list[str], since: float) -> tuple[float, str] | None:
+        for t, text in self.seen:
+            if t >= since and all(n.lower() in text.lower() for n in needles):
+                return t, text
+        return None
+
+
+class NvdaLog(threading.Thread):
+    """NVDA's log at the input/output level: each "Speaking [...]" entry, as NVDA wrote it, kept."""
+
+    def __init__(self, path: Path) -> None:
+        super().__init__(daemon=True)
+        self.path = path
+        self.seen: list[tuple[float, str]] = []
+        self.stopping = False
+        self.problem = ""
+        self.file = open(OUT / "nvda-speech.jsonl", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+    def run(self) -> None:
+        offset = 0
+        while not self.stopping:
+            if self.path.exists():
+                with open(self.path, encoding="utf-8", errors="replace") as log:
+                    log.seek(offset)
+                    chunk = log.read()
+                    offset = log.tell()
+                t = time.time()
+                for spoken in re.findall(r"^Speaking (\[.*?\])\s*$", chunk, flags=re.M):
+                    self.seen.append((t, spoken))
+                    self.file.write(json.dumps({"t": round(t, 3), "at": stamp(t), "speaking": spoken}, ensure_ascii=False) + "\n")
+            time.sleep(0.25)
+
+    def find(self, needles: list[str], since: float) -> tuple[float, str] | None:
+        for t, text in self.seen:
+            if t >= since and all(n.lower() in text.lower() for n in needles):
+                return t, text
+        return None
+
+
+def narrator_running() -> list[int]:
+    import psutil
+
+    return [p.pid for p in psutil.process_iter(["name"]) if (p.info["name"] or "").lower() == "narrator.exe"]
+
+
+def traced(since: float, *events: str) -> list[dict]:
+    path = OUT / "chatmon-trace.jsonl"
+    lines = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
+    return [e for e in map(json.loads, lines) if e["t"] >= since and (not events or e["event"] in events)]
+
+
+results: list[dict] = []
+
+
+def quns() -> int:
+    """Windows' notification state (SHQueryUserNotificationState): 5 accepts notifications, 2 busy (a full-screen app)."""
+    value = ctypes.c_int(0)
+    ctypes.windll.shell32.SHQueryUserNotificationState(ctypes.byref(value))
+    return value.value
+
+
+def banners() -> list[str]:
+    """Windows' notification banners on screen now: its toast window, as the shell shows one."""
+    return [w["title"] for w in windows_of(cls="Windows.UI.Core.CoreWindow") if "notification" in w["title"].lower()]
+
+
+def record(heard, case: str, how: str, expected: str, needles: list[str], said_at: float, wait: float = 25) -> None:
+    end = time.time() + wait
+    state = quns()
+    got = heard.find(needles, said_at)
+    shown: list[tuple[str, str]] = []
+    while (got is None or not shown) and time.time() < end:
+        time.sleep(0.25)
+        got = heard.find(needles, said_at)
+        if not shown:
+            shown = [(stamp(time.time()), title) for title in banners()]
+    trace = traced(said_at - 0.5, "announce", "uia-say", "uia-in-front", "toast", "reader", "queue-add", "queue-next", "queue-hold",
+                   "queue-release", "quiet")
+    routes = [e.get("route") for e in trace if e["event"] == "announce"]
+    results.append({
+        "case": case, "how": how, "expected_words": expected, "needles": needles, "said_at": stamp(said_at),
+        "heard": bool(got), "transcript": got[1] if got else None, "heard_at": stamp(got[0]) if got else None,
+        "seconds_after_said": round(got[0] - said_at, 2) if got else None, "chatmon_routes": routes, "trace": trace,
+        "windows_notification_state": state, "banner_seen": shown[:1],
+        "transcript_meanwhile": [(stamp(t), x) for t, x in heard.seen if said_at - 0.5 <= t <= time.time()],
+    })
+    note(f"CASE {case}: notification state {state}; banner {shown[:1] or 'none'}; routes {routes}; "
+         + (f"heard {got[1]!r} {round(got[0] - said_at, 2)} s after" if got else "not heard"))
+
+
+def main() -> int:
+    note(f"probe started: Chatmon {VERSION} from {SRC}, Python {sys.version.split()[0]}, reader {READER}, "
+         f"session {os.getpid() and ctypes.windll.kernel32.WTSGetActiveConsoleSessionId()}")
+    started: list[subprocess.Popen] = []
+    if READER == "narrator":
+        heard = Captions()
+        heard.start()
+        captions = subprocess.Popen([r"C:\Windows\System32\LiveCaptions.exe"])
+        note(f"Live captions started, pid {captions.pid}")
+        time.sleep(8)
+        note(f"Live captions windows: {windows_of(cls='LiveCaptionsDesktopWindow')}")
+        press(VK_CONTROL, VK_LWIN, VK_RETURN, label="Ctrl+Win+Enter (Narrator on, as a person turns it on)")
+        for _ in range(20):
+            if narrator_running():
+                break
+            time.sleep(0.5)
+        else:
+            note("Narrator didn't start from its shortcut: started through ShellExecute instead")
+            os.startfile(r"C:\Windows\System32\Narrator.exe")  # a uiAccess program: CreateProcess is refused (740)
+        time.sleep(15)
+        note(f"Narrator running: {narrator_running()}")
+    else:
+        log = OUT / "nvda.log"
+        heard = NvdaLog(log)
+        heard.start()
+        nvda = subprocess.Popen([NVDA_EXE, "--log-level=12", f"--log-file={log}", "--minimal"])
+        note(f"NVDA started: {NVDA_EXE} --log-level=12 --log-file={log} --minimal, pid {nvda.pid}")
+        time.sleep(15)
+    front()
+
+    env = dict(os.environ, CHATMON_DEBUG="1", PROBE_SRC=str(SRC), PROBE_TRACE=str(OUT / "chatmon-trace.jsonl"),
+               PROBE_QUEUE="1")
+    with open(OUT / "chatmon-stdout.log", "w", encoding="utf-8") as console:
+        app = subprocess.Popen([PY, str(SHIM)], cwd=SRC, env=env, stdout=console, stderr=subprocess.STDOUT, creationflags=BELOW_NORMAL)
+    started.append(app)
+    began = time.time()
+    note(f"Chatmon started from source through run_chatmon.py, pid {app.pid}, below normal priority")
+    for _ in range(90):
+        r = subprocess.run([PY, "-m", "chatmon", "status"], capture_output=True, text=True, timeout=60, cwd=SRC, creationflags=BELOW_NORMAL)
+        if r.stdout.startswith("Chatmon is running."):
+            break
+        time.sleep(1)
+    note(f"python -m chatmon status: {r.stdout.splitlines()[0] if r.stdout else r.stderr.strip()}")
+    record(heard, "G", "Chatmon just started (behind: the notification route): its greeting", "Hi, I'm Chatmon! Click me to ask anything.",
+           ["Hi, I'm Chatmon"], began, wait=20)
+    starts = traced(0, "start")
+    pid = starts[0]["pid"] if starts else app.pid  # a venv's python.exe is a launcher: Chatmon runs in its child
+    note(f"Chatmon's own process: pid {pid}; its windows: {windows_of(pid=pid)}")
+
+    # A1: Chatmon in front (its ask box open and focused), and a hook's message comes.
+    note("== A1: Chatmon in front, a message comes (chatmon say, as a script or hook sends one)")
+    chatmon("ask")
+    time.sleep(3)
+    if front()["pid"] != pid:
+        boxes = [w for w in windows_of(pid=pid) if w["rect"][2] - w["rect"][0] > 100 and w["rect"][3] - w["rect"][1] > 60]
+        note(f"Chatmon isn't in front after `chatmon ask`; its windows now: {boxes}")
+        box = max(boxes, key=lambda w: w["rect"][1], default=None) if boxes else None
+        ask = [w for w in boxes if "ask" in w["title"].lower()] or ([box] if box else [])
+        if ask:
+            left, top, right, bottom = ask[0]["rect"]
+            click((left + right) // 2, top + 12, "the ask box's top edge, as a person clicks into it")
+            time.sleep(2)
+            front()
+    time.sleep(6)  # the screen reader says where it's landed first
+    text = "Probe one: the build finished while Chatmon was in front."
+    said = time.time()
+    chatmon("say", text)
+    record(heard, "A1", "in front: the ask box open, then `chatmon say`", f"Chatmon. {text}", ["build finished"], said)
+
+    # A2: in front, typing a command in the ask box: Chatmon's own answer is read out.
+    note("== A2: Chatmon in front, a command typed in the ask box (note: water the ferns, Enter)")
+    time.sleep(3)
+    front()
+    said = time.time()
+    type_text("note: water the ferns")
+    time.sleep(1)
+    press(VK_RETURN, label="Enter")
+    record(heard, "A2", "in front: `note: water the ferns` typed in the ask box, Enter",
+           "Noted (note 1). delete note 1 takes it back.", ["takes it back"], said)
+
+    # B: Chatmon behind (File Explorer in front), a message comes: the notification route.
+    note("== B: Chatmon behind (File Explorer in front), a message comes")
+    press(VK_ESCAPE, label="Esc")
+    time.sleep(1)
+    explorer = subprocess.Popen(["explorer.exe", str(OUT)])
+    time.sleep(4)
+    shells = windows_of(cls="CabinetWClass")
+    note(f"File Explorer windows: {shells}")
+    if shells:
+        left, top, right, _ = shells[0]["rect"]
+        click((left + right) // 2, top + 8, "File Explorer's title bar")
+        time.sleep(2)
+    if front()["pid"] == pid:
+        note("Chatmon is still in front: case B can't be what it says")
+    time.sleep(4)
+    text = "Probe two: the tests passed while Chatmon was behind."
+    said = time.time()
+    chatmon("say", text)
+    record(heard, "B", "behind: File Explorer in front, then `chatmon say`", f"Chatmon. {text}", ["tests passed"], said, wait=30)
+
+    # C: an agent needs you while Chatmon is behind (an alert: important, with its button).
+    note("== C: Chatmon behind, an agent's needs-you alert comes")
+    time.sleep(8)
+    front()
+    text = "Probe three: Claude is waiting for your approval."
+    said = time.time()
+    chatmon("notify", "needs-you", "--source", "claude", "--message", text)
+    record(heard, "C", "behind: File Explorer in front, then `chatmon notify needs-you`",
+           f"Claude needs you. {text} To answer, type “OK” in the chat.", ["approval"], said, wait=30)
+
+    time.sleep(5)
+    chatmon("quit")
+    try:
+        app.wait(30)
+    except subprocess.TimeoutExpired:
+        app.kill()
+    note(f"Chatmon exited: {app.returncode}")
+    for shell in windows_of(cls="CabinetWClass"):
+        if str(OUT).lower().rstrip("\\").split("\\")[-1] in shell["title"].lower():
+            user32.PostMessageW(shell["hwnd"], 0x0010, 0, 0)  # WM_CLOSE: the window this opened
+    note(f"explorer.exe {explorer.pid} (it hands the folder to the running Explorer and exits)")
+    if READER == "narrator":
+        press(VK_CONTROL, VK_LWIN, VK_RETURN, label="Ctrl+Win+Enter (Narrator off)")
+        time.sleep(5)
+        note(f"Narrator running after Ctrl+Win+Enter: {narrator_running()}")
+    else:
+        time.sleep(3)  # its last words reach the log
+        run([NVDA_EXE, "-q"], show=f"{NVDA_EXE} -q (NVDA quits)")
+        try:
+            nvda.wait(30)
+        except subprocess.TimeoutExpired:
+            nvda.kill()
+        note(f"NVDA exited: {nvda.returncode}")
+    heard.stopping = True
+    heard.join(5)
+    note(f"transcript entries kept: {len(heard.seen)}; reader problem: {heard.problem or 'none'}")
+
+    (OUT / "results.json").write_text(json.dumps(results, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    label = "CAPTION" if READER == "narrator" else "NVDA SPEAKING"
+    events = sorted([(t, f"   [step] {x}") for t, x in timeline] + [(t, f"{label}: {x}") for t, x in heard.seen])
+    (OUT / "transcript.txt").write_text("".join(f"{stamp(t)} {x}\n" for t, x in events), encoding="utf-8")
+    for r in results:
+        note(f"{r['case']}: heard={r['heard']} routes={r['chatmon_routes']} transcript={r['transcript']!r}")
+    return 0 if all(r["heard"] for r in results) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

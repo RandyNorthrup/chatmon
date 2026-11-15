@@ -1,0 +1,594 @@
+INFO - __main__ (23:33:09.553) - MainThread (532):
+Starting NVDA version 2026.3.1 AMD64
+INFO - core.main (23:33:09.590) - MainThread (532):
+Config dir: D:\a\_temp\nvda\userConfig
+INFO - config.ConfigManager._loadConfig (23:33:09.594) - MainThread (532):
+Loading config: D:\a\_temp\nvda\userConfig\nvda.ini
+DEBUGWARNING - languageHandler._createGettextTranslation (23:33:09.600) - MainThread (532):
+couldn't set the translation service locale to en_US
+DEBUGWARNING - Python warning (23:33:10.134) - MainThread (532):
+hwIo\ble\_io.pyc:21: DeprecationWarning: importing WinRTClientArgs from bleak.backends.winrt.client is deprecated, use bleak.args.winrt instead
+INFO - core.main (23:33:10.601) - MainThread (532):
+Windows version: Windows 11 24H2 (10.0.26100.33674) server AMD64
+INFO - core.main (23:33:10.601) - MainThread (532):
+Using Python version 3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]
+INFO - core.main (23:33:10.601) - MainThread (532):
+Using comtypes version 1.4.16
+INFO - core.main (23:33:10.603) - MainThread (532):
+Using configobj version 5.1.0 with validate version 1.0.1
+INFO - _asyncioEventLoop.initialize (23:33:10.636) - MainThread (532):
+Initializing asyncio event loop
+WARNING - nvwave.WavePlayer.open (23:33:10.748) - MainThread (532):
+Couldn't open specified or default audio device. There may be no audio devices.
+WARNING - tones.initialize (23:33:10.748) - MainThread (532):
+Failed to initialize audio for tones
+Traceback (most recent call last):
+  File "tones.pyc", line 24, in initialize
+  File "nvwave.pyc", line 250, in __init__
+  File "nvwave.pyc", line 299, in open
+  File "_ctypes/callproc.c", line 1034, in GetResult
+OSError: [WinError -2147023728] Element not found
+ERROR - audio.soundSplit.initialize (23:33:10.749) - MainThread (532):
+Could not initialize audio session manager
+Traceback (most recent call last):
+  File "audio\soundSplit.pyc", line 97, in initialize
+  File "pycaw\utils.pyc", line 242, in GetAudioSessionManager
+  File "pycaw\utils.pyc", line 222, in GetSpeakers
+_ctypes.COMError: (-2147023728, 'Element not found.', (None, None, None, 0, None))
+INFO - NVDAHelperLocal (23:33:10.755) - MainThread (532):
+Thread 532, build\x86_64\localWin10\oneCoreSpeech.cpp, ocSpeech_initialize, 215:
+ocSpeech_initialize
+
+INFO - NVDAHelperLocal (23:33:10.755) - MainThread (532):
+Thread 532, build\x86_64\localWin10\oneCoreSpeech.cpp, OcSpeechState::activate, 89:
+Activating
+
+INFO - NVDAHelperLocal (23:33:10.807) - MainThread (532):
+Thread 532, build\x86_64\localWin10\oneCoreSpeech.cpp, preventEndUtteranceSilence_, 447:
+AppendedSilence supported
+
+INFO - speechDictHandler.dictFormatUpgrade._doSynthVoiceDictBackupAndMove (23:33:10.813) - MainThread (532):
+Upgrading voice dictionaries for espeak
+INFO - speechDictHandler.dictFormatUpgrade._doSynthVoiceDictBackupAndMove (23:33:10.813) - MainThread (532):
+Upgrading voice dictionaries for oneCore
+INFO - synthDriverHandler.setSynth (23:33:10.814) - MainThread (532):
+Loaded synthDriver oneCore
+INFO - mathPres.MathCAT.MathCAT.MathCAT.__init__ (23:33:10.825) - MainThread (532):
+MathCAT 0.7.2 installed. Using rules dir: D:\a\_temp\nvda\include\nvda-mathcat\assets\Rules
+INFO - core._setUpWxApp (23:33:10.829) - MainThread (532):
+Using wx version 4.2.4 msw (phoenix) wxWidgets 3.2.8
+INFO - braille.input.initialize (23:33:10.831) - MainThread (532):
+Braille input initialized
+INFO - braille.initialize (23:33:10.831) - MainThread (532):
+Using liblouis version 3.39.0
+INFO - braille.initialize (23:33:10.831) - MainThread (532):
+Using pySerial version 3.5
+INFO - braille.brailleHandler.BrailleHandler._setDisplay (23:33:10.834) - MainThread (532):
+Loaded braille display driver 'noBraille', current display has 0 cells.
+DEBUGWARNING - RPC process 5688 (WindowsTerminal.exe) (23:33:10.880) - Dummy-3 (8148):
+Thread 980, build\x86_64\remote\ia2Support.cpp, IA2Support_inProcess_initialize, 161:
+Not installing IA2 support as  process is suspendable
+
+DEBUGWARNING - appModuleHandler.getProcessHandleFromProcessId (23:33:10.896) - MainThread (532):
+Unable to open process for processId 7784
+Traceback (most recent call last):
+  File "appModuleHandler.pyc", line 201, in getProcessHandleFromProcessId
+PermissionError: [WinError 5] Access is denied.
+DEBUGWARNING - appModuleHandler.getProcessHandleFromProcessId (23:33:10.897) - MainThread (532):
+Unable to get process handle for process 7784 using window enumeration and subsequently getting process handle from that window
+Traceback (most recent call last):
+  File "appModuleHandler.pyc", line 214, in getProcessHandleFromProcessId
+RuntimeError: No window handle found for process 7784 to create process handle
+INFO - core.main (23:33:10.995) - MainThread (532):
+Java Access Bridge support initialized
+INFO - UIAHandler.UIAHandler.MTAThreadFunc (23:33:11.179) - UIAHandler.UIAHandler.MTAThread (3548):
+UIAutomation: IUIAutomation6
+DEBUGWARNING - inputCore.InputManager.loadLocaleGestureMap (23:33:11.209) - MainThread (532):
+No locale gesture map for language en
+DEBUGWARNING - inputCore.InputManager.loadUserGestureMap (23:33:11.209) - MainThread (532):
+No user gesture map
+DEBUGWARNING - touchHandler.touchSupported (23:33:11.224) - MainThread (532):
+Touch only supported on installed copies
+DEBUGWARNING - updateCheck.initialize (23:33:11.226) - MainThread (532):
+Couldn't retrieve update state
+Traceback (most recent call last):
+  File "updateCheck.pyc", line 1038, in initialize
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\a\\_temp\\nvda\\userConfig\\updateCheckState.pickle'
+INFO - core.main (23:33:11.227) - MainThread (532):
+NVDA initialized
+INFO - updateCheck.AutoUpdateChecker._started (23:33:11.246) - MainThread (532):
+Performing automatic update check
+IO - speech.speech.speak (23:33:11.328) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]
+DEBUGWARNING - characterProcessing._getSpeechSymbolsForLocale (23:33:11.330) - MainThread (532):
+Error loading 'cldr' symbols for locale 'en_US'
+Traceback (most recent call last):
+  File "characterProcessing.pyc", line 419, in _getSpeechSymbolsForLocale
+  File "characterProcessing.pyc", line 817, in getSymbols
+  File "characterProcessing.pyc", line 66, in fetchLocaleData
+  File "characterProcessing.pyc", line 825, in _initSymbols
+FileNotFoundError: No 'cldr' data for locale 'en_US'
+DEBUGWARNING - characterProcessing._getSpeechSymbolsForLocale (23:33:11.331) - MainThread (532):
+Error loading 'builtin' symbols for locale 'en_US'
+Traceback (most recent call last):
+  File "characterProcessing.pyc", line 419, in _getSpeechSymbolsForLocale
+  File "characterProcessing.pyc", line 817, in getSymbols
+  File "characterProcessing.pyc", line 66, in fetchLocaleData
+  File "characterProcessing.pyc", line 825, in _initSymbols
+FileNotFoundError: No 'builtin' data for locale 'en_US'
+IO - speech.speech.speak (23:33:11.381) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', CancellableSpeech (still valid)]
+WARNING - nvwave.WavePlayer.open (23:33:11.392) - Dummy-6 (5076):
+Couldn't open specified or default audio device. There may be no audio devices.
+ERROR - Exception ignored on calling ctypes callback function <bound method OneCoreSynthDriver._callback of OneCoreSynthDriver('oneCore')>: None (23:33:11.392) - Dummy-6 (5076):
+Traceback (most recent call last):
+  File "synthDrivers\oneCore.pyc", line 475, in _callback
+  File "synthDrivers\oneCore.pyc", line 274, in _maybeInitPlayer
+  File "nvwave.pyc", line 250, in __init__
+  File "nvwave.pyc", line 299, in open
+  File "_ctypes/callproc.c", line 1034, in GetResult
+OSError: [WinError -2147023728] Element not found
+IO - speech.speech.speak (23:33:27.370) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), "New notification from Chatmon, Hi, I'm Chatmon!, Hi, I'm Chatmon! Click me to ask anything... 1 of 1", 'window', CancellableSpeech (still valid)]
+IO - speech.speech.speak (23:33:48.055) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'Ask Chatmon', 'window', CancellableSpeech (still valid)]
+IO - speech.speech.speak (23:33:48.070) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'Ask Chatmon', 'edit', 'Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work', CancellableSpeech (still valid), 'blank']
+IO - speech.speech.speak (23:33:57.133) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']
+IO - inputCore.InputManager.executeGesture (23:34:25.190) - winInputHook (7444):
+Input: kb(desktop):n
+IO - speech.speech.speak (23:34:25.206) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.252) - winInputHook (7444):
+Input: kb(desktop):o
+IO - speech.speech.speak (23:34:25.259) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'o', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.314) - winInputHook (7444):
+Input: kb(desktop):t
+IO - speech.speech.speak (23:34:25.323) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.376) - winInputHook (7444):
+Input: kb(desktop):e
+IO - speech.speech.speak (23:34:25.385) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.437) - winInputHook (7444):
+Input: kb(desktop)::
+IO - speech.speech.speakTypedCharacters (23:34:25.448) - MainThread (532):
+typed word: note
+IO - speech.speech.speak (23:34:25.449) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'colon', EndUtteranceCommand()]
+IO - inputCore.InputManager.executeGesture (23:34:25.499) - winInputHook (7444):
+Input: kb(desktop): 
+IO - speech.speech.speak (23:34:25.512) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]
+IO - inputCore.InputManager.executeGesture (23:34:25.560) - winInputHook (7444):
+Input: kb(desktop):w
+IO - speech.speech.speak (23:34:25.572) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'w', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.622) - winInputHook (7444):
+Input: kb(desktop):a
+IO - speech.speech.speak (23:34:25.634) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'a', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.683) - winInputHook (7444):
+Input: kb(desktop):t
+IO - speech.speech.speak (23:34:25.697) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.745) - winInputHook (7444):
+Input: kb(desktop):e
+IO - speech.speech.speak (23:34:25.763) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.806) - winInputHook (7444):
+Input: kb(desktop):r
+IO - speech.speech.speak (23:34:25.823) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.868) - winInputHook (7444):
+Input: kb(desktop): 
+IO - speech.speech.speakTypedCharacters (23:34:25.884) - MainThread (532):
+typed word: water
+IO - speech.speech.speak (23:34:25.884) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]
+IO - inputCore.InputManager.executeGesture (23:34:25.929) - winInputHook (7444):
+Input: kb(desktop):t
+IO - speech.speech.speak (23:34:25.947) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:25.991) - winInputHook (7444):
+Input: kb(desktop):h
+IO - speech.speech.speak (23:34:26.011) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'h', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:26.053) - winInputHook (7444):
+Input: kb(desktop):e
+IO - speech.speech.speak (23:34:26.071) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:26.114) - winInputHook (7444):
+Input: kb(desktop): 
+IO - speech.speech.speakTypedCharacters (23:34:26.137) - MainThread (532):
+typed word: the
+IO - speech.speech.speak (23:34:26.138) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]
+IO - inputCore.InputManager.executeGesture (23:34:26.176) - winInputHook (7444):
+Input: kb(desktop):f
+IO - speech.speech.speak (23:34:26.181) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'f', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:26.237) - winInputHook (7444):
+Input: kb(desktop):e
+IO - speech.speech.speak (23:34:26.242) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:26.299) - winInputHook (7444):
+Input: kb(desktop):r
+IO - speech.speech.speak (23:34:26.308) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:26.360) - winInputHook (7444):
+Input: kb(desktop):n
+IO - speech.speech.speak (23:34:26.369) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:26.422) - winInputHook (7444):
+Input: kb(desktop):s
+IO - speech.speech.speak (23:34:26.433) - MainThread (532):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en_US'), 's', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (23:34:27.485) - winInputHook (7444):
+Input: kb(desktop):enter
+IO - speech.speech.speakTypedCharacters (23:34:27.594) - MainThread (532):
+typed word: ferns
+IO - speech.speech.speak (23:34:27.612) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']
+IO - inputCore.InputManager.executeGesture (23:34:52.552) - winInputHook (7444):
+Input: kb(desktop):escape
+IO - speech.speech.speak (23:34:52.616) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]
+IO - speech.speech.speak (23:34:52.622) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', CancellableSpeech (still valid)]
+DEBUGWARNING - IAccessibleHandler.internalWinEventHandler._shouldGetEvents (23:34:53.905) - MainThread (532):
+Foreground took too long to change. Foreground still 196966 (CASCADIA_HOSTING_WINDOW_CLASS). Should be 66252 (CabinetWClass)
+INFO - watchdog.waitForFreezeRecovery (23:34:54.665) - watchdog (2056):
+Starting freeze recovery after 0.5001565000002302 seconds.
+DEBUGWARNING - watchdog.waitForFreezeRecovery (23:34:54.667) - watchdog (2056):
+Listing stacks for Python threads:
+Python stack for thread 1932 (Dynamic__DiffBasedWinTerminalUIAXamlEditableTextEditableTextWithAutoSelectDetectionUIA._monitorThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "NVDAObjects\behaviors.pyc", line 476, in _monitor
+  File "threading.pyc", line 660, in wait
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 3376 (watchdog.CancellableCallThread.execute(<WinFunctionType object at 0x000001476DB47930>)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "watchdog.pyc", line 396, in run
+
+Python stack for thread 2056 (watchdog):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "watchdog.pyc", line 168, in _watcher
+  File "watchdog.pyc", line 175, in waitForFreezeRecovery
+  File "logHandler.pyc", line 66, in getFormattedStacksForAllThreads
+
+Python stack for thread 7444 (winInputHook):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "winInputHook.pyc", line 123, in hookThreadFunc
+
+Python stack for thread 3548 (UIAHandler.UIAHandler.MTAThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "UIAHandler\__init__.pyc", line 576, in MTAThreadFunc
+  File "queue.pyc", line 199, in get
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 8772 (ThreadPoolExecutor-0_0):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "concurrent\futures\thread.pyc", line 90, in _worker
+
+Python stack for thread 8308 (hwIo.ioThread.IoThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "hwIo\ioThread.pyc", line 265, in run
+
+Python stack for thread 4464 (Thread-2 (run_forever)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "asyncio\base_events.pyc", line 684, in run_forever
+  File "asyncio\base_events.pyc", line 2023, in _run_once
+  File "asyncio\windows_events.pyc", line 446, in select
+  File "asyncio\windows_events.pyc", line 778, in _poll
+
+Python stack for thread 3476 (ScheduleThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "utils\schedule.pyc", line 88, in run
+
+Python stack for thread 532 (MainThread):
+  File "nvda.pyw", line 310, in <module>
+  File "core.pyc", line 1094, in main
+  File "wx\core.pyc", line 2254, in MainLoop
+  File "core.pyc", line 1032, in Notify
+  File "IAccessibleHandler\__init__.pyc", line 1091, in pumpAll
+  File "IAccessibleHandler\__init__.pyc", line 675, in processGenericWinEvent
+  File "IAccessibleHandler\__init__.pyc", line 582, in winEventToNVDAEvent
+  File "UIAHandler\__init__.pyc", line 1375, in isUIAWindow
+  File "UIAHandler\__init__.pyc", line 1279, in _isUIAWindowHelper
+  File "watchdog.pyc", line 426, in cancellableExecute
+  File "watchdog.pyc", line 362, in execute
+
+INFO - watchdog.waitForFreezeRecovery (23:34:54.718) - watchdog (2056):
+Recovered from freeze after 0.5530950000002122 seconds.
+INFO - watchdog.waitForFreezeRecovery (23:34:55.172) - watchdog (2056):
+Starting freeze recovery after 0.5002125000000888 seconds.
+DEBUGWARNING - watchdog.waitForFreezeRecovery (23:34:55.174) - watchdog (2056):
+Listing stacks for Python threads:
+Python stack for thread 7124 (watchdog.CancellableCallThread.execute(<WinFunctionType object at 0x000001476DB47930>)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "watchdog.pyc", line 393, in run
+  File "threading.pyc", line 660, in wait
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 1932 (Dynamic__DiffBasedWinTerminalUIAXamlEditableTextEditableTextWithAutoSelectDetectionUIA._monitorThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "NVDAObjects\behaviors.pyc", line 476, in _monitor
+  File "threading.pyc", line 660, in wait
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 3376 (watchdog.CancellableCallThread.execute(<WinFunctionType object at 0x000001476DB47930>)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "watchdog.pyc", line 396, in run
+
+Python stack for thread 2056 (watchdog):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "watchdog.pyc", line 168, in _watcher
+  File "watchdog.pyc", line 175, in waitForFreezeRecovery
+  File "logHandler.pyc", line 66, in getFormattedStacksForAllThreads
+
+Python stack for thread 7444 (winInputHook):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "winInputHook.pyc", line 123, in hookThreadFunc
+
+Python stack for thread 3548 (UIAHandler.UIAHandler.MTAThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "UIAHandler\__init__.pyc", line 576, in MTAThreadFunc
+  File "queue.pyc", line 199, in get
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 8772 (ThreadPoolExecutor-0_0):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "concurrent\futures\thread.pyc", line 90, in _worker
+
+Python stack for thread 8308 (hwIo.ioThread.IoThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "hwIo\ioThread.pyc", line 265, in run
+
+Python stack for thread 4464 (Thread-2 (run_forever)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "asyncio\base_events.pyc", line 684, in run_forever
+  File "asyncio\base_events.pyc", line 2023, in _run_once
+  File "asyncio\windows_events.pyc", line 446, in select
+  File "asyncio\windows_events.pyc", line 778, in _poll
+
+Python stack for thread 3476 (ScheduleThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "utils\schedule.pyc", line 88, in run
+
+Python stack for thread 532 (MainThread):
+  File "nvda.pyw", line 310, in <module>
+  File "core.pyc", line 1094, in main
+  File "wx\core.pyc", line 2254, in MainLoop
+  File "wx\core.pyc", line 3425, in <lambda>
+  File "core.pyc", line 1017, in processRequest
+  File "core.pyc", line 1032, in Notify
+  File "IAccessibleHandler\__init__.pyc", line 1091, in pumpAll
+  File "IAccessibleHandler\__init__.pyc", line 675, in processGenericWinEvent
+  File "IAccessibleHandler\__init__.pyc", line 599, in winEventToNVDAEvent
+  File "NVDAObjects\IAccessible\__init__.pyc", line 81, in getNVDAObjectFromEvent
+  File "IAccessibleHandler\__init__.pyc", line 353, in accessibleObjectFromEvent
+  File "oleacc.pyc", line 295, in AccessibleObjectFromEvent
+
+DEBUGWARNING - core.CorePump.Notify (23:34:55.326) - MainThread (532):
+errors in this core pump cycle
+Traceback (most recent call last):
+  File "core.pyc", line 1032, in Notify
+  File "IAccessibleHandler\__init__.pyc", line 1091, in pumpAll
+  File "IAccessibleHandler\__init__.pyc", line 675, in processGenericWinEvent
+  File "IAccessibleHandler\__init__.pyc", line 599, in winEventToNVDAEvent
+  File "NVDAObjects\IAccessible\__init__.pyc", line 87, in getNVDAObjectFromEvent
+  File "NVDAObjects\__init__.pyc", line 105, in __call__
+  File "NVDAObjects\IAccessible\__init__.pyc", line 800, in __init__
+  File "IAccessibleHandler\__init__.pyc", line 1116, in getIAccIdentity
+  File "comtypes\_post_coinit\unknwn.pyc", line 406, in QueryInterface
+  File "monkeyPatches\comtypesMonkeyPatches.pyc", line 40, in __call__
+exceptions.CallCancelled: COM call cancelled
+INFO - watchdog.waitForFreezeRecovery (23:34:55.427) - watchdog (2056):
+Recovered from freeze after 0.7552424999998948 seconds.
+DEBUGWARNING - UIAHandler.UIAHandler.getNearestWindowHandle (23:34:56.273) - Dummy-46 (5224):
+error walking up to an element with a valid windowHandle
+Traceback (most recent call last):
+  File "UIAHandler\__init__.pyc", line 1438, in getNearestWindowHandle
+_ctypes.COMError: (-2147220991, 'An event was unable to invoke any of the subscribers', (None, None, None, 0, None))
+INFO - watchdog.waitForFreezeRecovery (23:34:56.368) - watchdog (2056):
+Starting freeze recovery after 0.5000982999999906 seconds.
+DEBUGWARNING - watchdog.waitForFreezeRecovery (23:34:56.370) - watchdog (2056):
+Listing stacks for Python threads:
+Python stack for thread 5224 (Dummy-47):
+  File "comtypes\_vtbl.pyc", line 166, in call_without_this
+  File "UIAHandler\__init__.pyc", line 887, in IUIAutomationFocusChangedEventHandler_HandleFocusChangedEvent
+  File "UIAHandler\__init__.pyc", line 1535, in isNativeUIAElement
+  File "UIAHandler\__init__.pyc", line 1438, in getNearestWindowHandle
+
+Python stack for thread 7124 (watchdog.CancellableCallThread.execute(<WinFunctionType object at 0x000001476DB47930>)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "watchdog.pyc", line 393, in run
+  File "threading.pyc", line 660, in wait
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 1932 (Dynamic__DiffBasedWinTerminalUIAXamlEditableTextEditableTextWithAutoSelectDetectionUIA._monitorThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "NVDAObjects\behaviors.pyc", line 476, in _monitor
+  File "threading.pyc", line 660, in wait
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 2056 (watchdog):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "watchdog.pyc", line 168, in _watcher
+  File "watchdog.pyc", line 175, in waitForFreezeRecovery
+  File "logHandler.pyc", line 66, in getFormattedStacksForAllThreads
+
+Python stack for thread 7444 (winInputHook):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "winInputHook.pyc", line 123, in hookThreadFunc
+
+Python stack for thread 3548 (UIAHandler.UIAHandler.MTAThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "UIAHandler\__init__.pyc", line 576, in MTAThreadFunc
+  File "queue.pyc", line 199, in get
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 8772 (ThreadPoolExecutor-0_0):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "concurrent\futures\thread.pyc", line 90, in _worker
+
+Python stack for thread 8308 (hwIo.ioThread.IoThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "hwIo\ioThread.pyc", line 265, in run
+
+Python stack for thread 4464 (Thread-2 (run_forever)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "asyncio\base_events.pyc", line 684, in run_forever
+  File "asyncio\base_events.pyc", line 2023, in _run_once
+  File "asyncio\windows_events.pyc", line 446, in select
+  File "asyncio\windows_events.pyc", line 778, in _poll
+
+Python stack for thread 3476 (ScheduleThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "utils\schedule.pyc", line 88, in run
+
+Python stack for thread 532 (MainThread):
+  File "nvda.pyw", line 310, in <module>
+  File "core.pyc", line 1094, in main
+  File "wx\core.pyc", line 2254, in MainLoop
+  File "core.pyc", line 1032, in Notify
+  File "IAccessibleHandler\__init__.pyc", line 1091, in pumpAll
+  File "IAccessibleHandler\__init__.pyc", line 675, in processGenericWinEvent
+  File "IAccessibleHandler\__init__.pyc", line 599, in winEventToNVDAEvent
+  File "NVDAObjects\IAccessible\__init__.pyc", line 87, in getNVDAObjectFromEvent
+  File "NVDAObjects\__init__.pyc", line 112, in __call__
+  File "NVDAObjects\IAccessible\__init__.pyc", line 586, in findOverlayClasses
+  File "baseObject.pyc", line 57, in __get__
+  File "baseObject.pyc", line 165, in _getPropertyViaCache
+  File "NVDAObjects\IAccessible\__init__.pyc", line 1054, in _get_IAccessibleRole
+  File "comtypes\_memberspec.pyc", line 617, in __call__
+
+DEBUGWARNING - NVDAObjects.IAccessible.IAccessible._get_IAccessibleRole (23:34:56.371) - MainThread (532):
+accRole failed: (-2147418110, 'Call was canceled by the message filter.', (None, None, None, 0, None))
+DEBUGWARNING - NVDAObjects.IAccessible.IAccessible._get_IAccessibleRole (23:34:56.523) - MainThread (532):
+accRole failed: (-2147418110, 'Call was canceled by the message filter.', (None, None, None, 0, None))
+DEBUGWARNING - NVDAObjects.IAccessible.IAccessible._get_IAccessibleRole (23:34:56.625) - MainThread (532):
+accRole failed: (-2147024809, 'The parameter is incorrect.', (None, None, None, 0, None))
+DEBUGWARNING - NVDAObjects.IAccessible.IAccessible._get_IAccessibleRole (23:34:56.627) - MainThread (532):
+accRole failed: (-2147024809, 'The parameter is incorrect.', (None, None, None, 0, None))
+INFO - watchdog.waitForFreezeRecovery (23:34:56.674) - watchdog (2056):
+Recovered from freeze after 0.805562000000009 seconds.
+IO - speech.speech.speak (23:34:57.209) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'nvda - File Explorer', CancellableSpeech (still valid)]
+DEBUGWARNING - NVDAObjects.UIA.UIA._prefetchUIACacheForPropertyIDs (23:34:57.215) - MainThread (532):
+IUIAutomationElement.buildUpdatedCache failed given IDs of {30086, 30103, 30001, 30006, 30007, 30009, 30010, 30138, 30013, 30019, 30022, 30152, 30153, 30154, 30025, 30155, 30159, 30036, 30045, 30046, 30047, 30060, 30070, 30079}
+DEBUGWARNING - NVDAObjects.UIA.UIA._prefetchUIACacheForPropertyIDs (23:34:57.218) - MainThread (532):
+IUIAutomationElement.buildUpdatedCache failed given IDs of {30019, 30022, 30086, 30025, 30155, 30060, 30010, 30036, 30070, 30103, 30009, 30138, 30046, 30079}
+DEBUGWARNING - eventHandler.executeEvent (23:34:57.232) - MainThread (532):
+error executing event: gainFocus on <NVDAObjects.UIA.UIA object at 0x0000014776722C50> with extra args of {}
+Traceback (most recent call last):
+  File "eventHandler.pyc", line 357, in executeEvent
+  File "eventHandler.pyc", line 119, in __init__
+  File "eventHandler.pyc", line 128, in next
+  File "appModules\explorer.pyc", line 451, in event_gainFocus
+  File "eventHandler.pyc", line 128, in next
+  File "NVDAObjects\UIA\__init__.pyc", line 1626, in event_gainFocus
+  File "NVDAObjects\__init__.pyc", line 1369, in event_gainFocus
+  File "NVDAObjects\__init__.pyc", line 1206, in reportFocus
+  File "speech\speech.pyc", line 850, in speakObject
+  File "speech\speech.pyc", line 890, in getObjectSpeech
+  File "speech\speech.pyc", line 741, in getObjectPropertiesSpeech
+  File "baseObject.pyc", line 57, in __get__
+  File "baseObject.pyc", line 165, in _getPropertyViaCache
+  File "NVDAObjects\UIA\__init__.pyc", line 1937, in _get_keyboardShortcut
+  File "NVDAObjects\UIA\__init__.pyc", line 1183, in _getUIACacheablePropertyValue
+_ctypes.COMError: (-2147220991, 'An event was unable to invoke any of the subscribers', (None, None, None, 0, None))
+IO - speech.speech.speak (23:34:57.250) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'Items View', 'list', CancellableSpeech (still valid)]
+IO - speech.speech.speak (23:34:57.261) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'chatmon-stdout', 'not selected', '1 of 5', CancellableSpeech (still valid)]
+IO - speech.speech.speak (23:34:57.336) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'nvda', 'tab', 'selected', '1 of 1', CancellableSpeech (still valid)]
+IO - speech.speech.speak (23:35:03.982) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'New notification from Chatmon, Chatmon, Chatmon. Probe two: the tests passed while Chatmon was behind... 1 of 1', 'window', CancellableSpeech (still valid)]
+IO - speech.speech.speak (23:35:42.185) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'New notification from Chatmon, Claude needs you, Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat... . Actions. 1 of 1', 'window', CancellableSpeech (still valid)]
+DEBUGWARNING - appModuleHandler.getProcessHandleFromProcessId (23:36:17.496) - MainThread (532):
+Unable to open process for processId 0
+Traceback (most recent call last):
+  File "appModuleHandler.pyc", line 201, in getProcessHandleFromProcessId
+OSError: [WinError 87] The parameter is incorrect.
+DEBUGWARNING - appModuleHandler.getProcessHandleFromProcessId (23:36:17.496) - MainThread (532):
+Unable to get process handle for process 0 using window enumeration and subsequently getting process handle from that window
+Traceback (most recent call last):
+  File "appModuleHandler.pyc", line 214, in getProcessHandleFromProcessId
+RuntimeError: No window handle found for process 0 to create process handle
+DEBUGWARNING - appModuleHandler.AppModule._get_isAlive (23:36:17.609) - MainThread (532):
+Process handle 0 for AppModule(appModuleHandler, appName='[system process]', processID=0) is invalid, assuming process is dead.
+IO - speech.speech.speak (23:36:17.647) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]
+IO - speech.speech.speak (23:36:17.653) - MainThread (532):
+Speaking [LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent', CancellableSpeech (still valid)]
+INFO - core.main (23:36:20.807) - MainThread (532):
+Exiting
+INFO - config.ConfigManager.save (23:36:20.811) - MainThread (532):
+Base configuration saved
+DEBUGWARNING - UIAHandler.UIAHandler.terminate (23:36:21.015) - MainThread (532):
+Timeout or error while waiting for UIAHandler MTA thread
+INFO - NVDAHelperLocal (23:36:21.018) - MainThread (532):
+Thread 532, build\x86_64\localWin10\oneCoreSpeech.cpp, ocSpeech_terminate, 236:
+ocSpeech_terminate, token: 000001476E884190
+
+INFO - NVDAHelperLocal (23:36:21.019) - MainThread (532):
+Thread 532, build\x86_64\localWin10\oneCoreSpeech.cpp, OcSpeechState::terminate, 106:
+Terminating
+
+INFO - _asyncioEventLoop.terminate (23:36:21.023) - MainThread (532):
+Terminating asyncio event loop
+INFO - __main__ (23:36:21.243) - MainThread (532):
+NVDA exit

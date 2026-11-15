@@ -1,0 +1,242 @@
+[
+ {
+  "case": "A1",
+  "how": "in front: the ask box open, then `chatmon say`",
+  "expected_words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+  "needles": [
+   "build finished"
+  ],
+  "said_at": "20:55:15.232",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']",
+  "heard_at": "20:55:15.513",
+  "seconds_after_said": 0.28,
+  "chatmon_routes": [
+   "uia"
+  ],
+  "trace": [
+   {
+    "t": 1794776115.335,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794776115.336,
+    "event": "uia-in-front",
+    "value": true
+   },
+   {
+    "t": 1794776115.336,
+    "event": "uia-say",
+    "text": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "raised": true
+   },
+   {
+    "t": 1794776115.336,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "route": "uia"
+   }
+  ],
+  "transcript_meanwhile": [
+   [
+    "20:55:15.513",
+    "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']"
+   ]
+  ]
+ },
+ {
+  "case": "A2",
+  "how": "in front: `note: water the ferns` typed in the ask box, Enter",
+  "expected_words": "Noted (note 1). delete note 1 takes it back.",
+  "needles": [
+   "takes it back"
+  ],
+  "said_at": "20:55:18.601",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']",
+  "heard_at": "20:55:21.027",
+  "seconds_after_said": 2.43,
+  "chatmon_routes": [
+   "uia"
+  ],
+  "trace": [
+   {
+    "t": 1794776120.944,
+    "event": "uia-in-front",
+    "value": true
+   },
+   {
+    "t": 1794776120.944,
+    "event": "uia-say",
+    "text": "Noted (note 1). delete note 1 takes it back.",
+    "important": false,
+    "raised": true
+   },
+   {
+    "t": 1794776120.945,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Noted (note 1). delete note 1 takes it back.",
+    "important": false,
+    "route": "uia"
+   }
+  ],
+  "transcript_meanwhile": [
+   [
+    "20:55:18.770",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:18.770",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'o', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:18.770",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.021",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.021",
+    "[LangChangeCommand ('en_US'), 'colon', EndUtteranceCommand()]"
+   ],
+   [
+    "20:55:19.021",
+    "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "20:55:19.021",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'w', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.272",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'a', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.272",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.272",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.272",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.523",
+    "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "20:55:19.523",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.523",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'h', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.523",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.773",
+    "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "20:55:19.773",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'f', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.773",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:19.773",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:20.024",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:20.024",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 's', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "20:55:21.027",
+    "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']"
+   ]
+  ]
+ },
+ {
+  "case": "B",
+  "how": "behind: File Explorer in front, then `chatmon say`",
+  "expected_words": "Chatmon. Probe two: the tests passed while Chatmon was behind.",
+  "needles": [
+   "tests passed"
+  ],
+  "said_at": "20:55:32.379",
+  "heard": false,
+  "transcript": null,
+  "heard_at": null,
+  "seconds_after_said": null,
+  "chatmon_routes": [],
+  "trace": [],
+  "transcript_meanwhile": []
+ },
+ {
+  "case": "C",
+  "how": "behind: File Explorer in front, then `chatmon notify needs-you`",
+  "expected_words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+  "needles": [
+   "approval"
+  ],
+  "said_at": "20:56:10.528",
+  "heard": false,
+  "transcript": null,
+  "heard_at": null,
+  "seconds_after_said": null,
+  "chatmon_routes": [
+   "notification"
+  ],
+  "trace": [
+   {
+    "t": 1794776170.634,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794776170.634,
+    "event": "uia-in-front",
+    "value": false
+   },
+   {
+    "t": 1794776170.64,
+    "event": "toast",
+    "title": "Claude needs you",
+    "text": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+    "buttons": [
+     "OK"
+    ],
+    "tag": "6141527d90e14ba7"
+   },
+   {
+    "t": 1794776170.64,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+    "important": true,
+    "route": "notification"
+   }
+  ],
+  "transcript_meanwhile": []
+ }
+]
