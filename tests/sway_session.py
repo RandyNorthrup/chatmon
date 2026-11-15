@@ -164,6 +164,7 @@ class Session:
         self.env["WAYLAND_DISPLAY"] = str(socket)
         self.env["SWAYSOCK"] = str(next(self.run.glob("sway-ipc.*.sock")))
         self._wait(lambda: bool(self.outputs()), "sway's output")
+        self.background = self._background()
 
     def _start_atspi(self) -> None:
         # As on a desktop: the session bus starts AT-SPI's bus launcher when it's first asked for the
@@ -223,6 +224,23 @@ class Session:
         )
         address = out.stdout.strip()
         return address if out.returncode == 0 and address.startswith("unix:") else None
+
+    def _background(self) -> tuple[int, int, int]:
+        """The colour sway shows where nothing is drawn, read off the whole output before any client draws: black in
+        sway 1.12, dark grey (63, 63, 63) in Ubuntu 24.04's 1.9. Read, not set: swaybg, the way to set it, draws its
+        black unevenly at a fractional scale under 1.9 (46 in a corner, 14 in the middle, at 1.5), and the tests
+        tell the overlay's pixels from this colour, so it has to be one colour across the output; anything else fails
+        here. Not at the very edge: at a fractional scale 1.9 draws the last row and column a shade off (62 for 63)."""
+        shot = subprocess.run(["grim", "-o", OUTPUT, "-t", "ppm", "-"], capture_output=True, timeout=60, env=self.env, check=True).stdout
+        magic, width, height, _maxval, pixels = shot.split(maxsplit=4)  # P6, then the bytes, three a pixel
+        w, h = int(width), int(height)
+        assert magic == b"P6" and len(pixels) == w * h * 3, "grim's PPM wasn't what it should be"
+        points = [(x, y) for x in (4, w // 3, w // 2, w - 5) for y in (4, h // 2, 2 * h // 3, h - 5)]
+        seen = {tuple(pixels[(y * w + x) * 3 : (y * w + x) * 3 + 3]) for x, y in points}
+        if len(seen) != 1:
+            raise RuntimeError(f"sway's empty output isn't one colour: {sorted(seen)}")
+        r, g, b = seen.pop()
+        return r, g, b
 
     # -- looking
 
