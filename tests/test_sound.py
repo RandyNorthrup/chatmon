@@ -125,6 +125,22 @@ def test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays(cues, m
     assert len(logged) == 1 and logged[0].startswith("couldn't start pw-play: ")
 
 
+def test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind(cues, tmp_path, monkeypatch):
+    """As Chatmon quits (sound.close): a player still sounding is let finish, then reaped, never left running; the
+    next sound finds the players again."""
+    done = tmp_path / "done"
+    # The player's command line: a sound half a second long, which says when it's over.
+    monkeypatch.setattr(sound, "player_command", lambda player, path, volume: [sys.executable, "-c", f"import time; time.sleep(0.5); open({str(done)!r}, 'w').close()"])
+    player = sound.CommandPlayer("pw-play")
+    s = sound.Sounds(cues, players=[player, Recorder()])
+    monkeypatch.setattr(sound, "_sounds", s)
+    assert s.play("needs-you") and s.player == "pw-play" and not done.exists()
+    running = list(player._running)
+    sound.close()
+    assert done.exists() and running and all(p.poll() is not None for p in running) and player._running == []
+    assert s._players is None  # found again for the next sound
+
+
 # -- for players without a volume of their own
 
 

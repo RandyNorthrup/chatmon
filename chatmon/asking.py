@@ -95,8 +95,7 @@ def tail(questions: Questions, thinking: str) -> list[str]:
     if questions.current is not None:
         current = questions.current
         parts.append(_you(current) if current.partial else f"{_you(current)}\n\n*{thinking}*")
-    for waiting in questions.waiting:
-        parts.append(f"{_you(waiting)}\n\n" + _("*Waiting for the answer on its way: this one goes next (Stop ends that one).*"))
+    parts.extend(f"{_you(waiting)}\n\n" + _("*Waiting for the answer on its way: this one goes next (Stop ends that one).*") for waiting in questions.waiting)
     return parts
 
 

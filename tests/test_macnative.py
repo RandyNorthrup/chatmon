@@ -17,6 +17,15 @@ def cocoa(qapp):
     return qapp
 
 
+def test_app_nap_is_held_off_so_timers_keep_their_time():
+    """Chatmon asks macOS not to App Nap it (any platform plugin: it's Foundation's), once, for as long as it runs."""
+    from chatmon import macnative
+
+    assert macnative.keep_time("Chatmon's tests keep their time") and macnative._activity
+    held = macnative._activity
+    assert macnative.keep_time("again") and macnative._activity == held  # the first one is kept
+
+
 def test_the_stage_floats_on_every_space_but_not_in_full_screen_apps(cocoa):
     from PyQt6.QtCore import Qt
     from PyQt6.QtWidgets import QWidget

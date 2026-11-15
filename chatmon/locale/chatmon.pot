@@ -900,7 +900,7 @@ msgid "No log yet"
 msgstr ""
 
 #: chatmon/app.py
-msgid "I write one when I run without a terminal, and nothing has gone wrong in it so far."
+msgid "I keep one in my state folder, and couldn't write it there."
 msgstr ""
 
 #: chatmon/app.py
@@ -3800,6 +3800,12 @@ msgstr ""
 
 #: chatmon/settingswin.py
 msgid "Asking…"
+msgstr ""
+
+#. Translators: {keys} is how the desktop says the hotkey is pressed, in its own words ("Press Super+Space").
+#: chatmon/settingswin.py
+#, python-brace-format
+msgid "Your desktop has it as: {keys}"
 msgstr ""
 
 #: chatmon/shortcutportal.py

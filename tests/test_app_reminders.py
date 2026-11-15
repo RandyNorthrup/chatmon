@@ -119,7 +119,7 @@ def test_each_reminder_in_the_menu_can_be_changed_repeated_or_cancelled(companio
     rules = [a.text() for a in repeat.actions()]
     at = datetime.fromtimestamp(r.due).strftime("%H:%M")
     shown = [reminders.describe_repeat(rule) for rule in (f"daily@{at}", f"weekdays@{at}")]
-    assert rules == ["Never", *(s[:1].upper() + s[1:] for s in shown)] + rules[3:]  # "9:00 AM" as written, not str.capitalize()
+    assert rules == ["Never", *(s[:1].upper() + s[1:] for s in shown), *rules[3:]]  # "9:00 AM" as written, not str.capitalize()
     next(a for a in repeat.actions() if a.text().startswith("Every weekday")).trigger()
     assert c.reminders.get(r.id).repeat == f"weekdays@{at}" and saved(c)[0]["repeat"] == f"weekdays@{at}"
     next(a for a in reminder_item(c, "call Sam").actions() if a.text() == "Repeat").menu().actions()[0].trigger()  # Never
@@ -163,8 +163,11 @@ def test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time(compani
     c.handle({"type": "remind", "text": "every monday at 9 to plan the week"})
     assert next(r for r in c.reminders.upcoming() if r.text == "plan the week").repeat == "mon@09:00"
     assert until(lambda: c.stage.bubble.title == "Reminder set") and reminders.describe_repeat("mon@09:00") in c.stage.bubble.doc.toPlainText()
+    # Closed first: with nothing on screen, a script's message shows at once, rather than MIN_SHOWN later on a timer
+    # (whose waiting turn is messages.py's to test), which a CI runner's macOS held back past the wait once.
+    c.stage.dismiss_message()
     c.handle({"type": "remind", "text": "on 3/4 to call Sam"})  # a script's own message, unclear: said, not set
-    assert until(lambda: c.stage.bubble.title == "Reminder not set")
+    assert c.stage.bubble.title == "Reminder not set"
     assert not any(r.text == "call Sam" for r in c.reminders.upcoming())
 
 

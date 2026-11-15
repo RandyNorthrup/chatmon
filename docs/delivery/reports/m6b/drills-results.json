@@ -111,12 +111,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "72892d038208b59e3b93ad5ff3fd82a62e5a2de108c902dd9bb412e7bf4c64e2",
+    "before_sha256": "16e517f52d77c50f8646c06bb1d65d90832616f8205f25834b9710e207c8e661",
     "baseline_exit": 0,
-    "mutated_sha256": "abc7f5758d3e72557ff61db6b3328aaaddde0eeb31801382e53b521c0443cea4",
+    "mutated_sha256": "4f68f5d651f5a651379c9ab46e91b34d29fd8ff01e08f41e36bac20c98eee4d1",
     "mutated_exit": 1,
     "observed": "E       AssertionError: chatmon.macnative doesn't import on win32:",
-    "after_sha256": "72892d038208b59e3b93ad5ff3fd82a62e5a2de108c902dd9bb412e7bf4c64e2",
+    "after_sha256": "16e517f52d77c50f8646c06bb1d65d90832616f8205f25834b9710e207c8e661",
     "restored_exit": 0
   },
   {
@@ -561,12 +561,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "abb6ba19e1c692f034488b5a133c96b580eaa0c80480852ba8a8f399b579bf53",
+    "before_sha256": "3305a54fd329318da21f447a75552adeda28cd374c6824e00a050c8cdcc01762",
     "baseline_exit": 0,
-    "mutated_sha256": "dd99b8232d8181e74614890d0d5c8dfd57fb642c50658c7702ed936791122122",
+    "mutated_sha256": "d8866ffa3244bee58464ce4aeef83a07f04fef3687f66dd8e5fa349b4f090410",
     "mutated_exit": 1,
     "observed": "____ test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays _____",
-    "after_sha256": "abb6ba19e1c692f034488b5a133c96b580eaa0c80480852ba8a8f399b579bf53",
+    "after_sha256": "3305a54fd329318da21f447a75552adeda28cd374c6824e00a050c8cdcc01762",
     "restored_exit": 0
   },
   {
@@ -629,7 +629,7 @@
     "baseline_exit": 0,
     "mutated_sha256": "0234967f0b7016e6c74e7c1343690ed471c69e99a869bce00b25fd271491de8c",
     "mutated_exit": 1,
-    "observed": "E           ResourceWarning: unclosed <socket.socket fd=820, family=2, type=1, proto=0, laddr=('127.0.0.1', 57721)>",
+    "observed": "E           ResourceWarning: unclosed <socket.socket fd=960, family=2, type=1, proto=0, laddr=('127.0.0.1', 56312)>",
     "after_sha256": "190cf8e64240bd536ec025a88317ae6efe7857c23498d1915642ce3b60c6dc2b",
     "restored_exit": 0
   }

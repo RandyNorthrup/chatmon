@@ -44,7 +44,7 @@ def run(c, text: str, table: Table | None = None) -> bool:
         c._offline(text, memory_reply(c.memory, *asked))
         c._menu_changed()
         return True
-    command = reminders.parse_command(text, datetime.now())
+    command = reminders.parse_command(text, datetime.now())  # noqa: DTZ005 - times are typed in local wall time
     if command is not None and command.kind == "unclear":
         rest = re.match(r"^(?:please\s+)?remind me\b[\s,:]*(.*)$", text.strip(), re.I | re.S)
         if rest and offline.reminder_or_question(rest.group(1)):
@@ -60,7 +60,7 @@ def run(c, text: str, table: Table | None = None) -> bool:
     if made is not None:  # shown in the box once; a screen reader is told only that it's there
         c._offline(text, made, spoken=_(PASSWORD_MADE) if "`" in made else None)
         return True
-    reply = offline.answer(text, datetime.now())
+    reply = offline.answer(text, datetime.now())  # noqa: DTZ005 - "what time is it" is local
     if reply is not None:
         c._offline(text, reply)
         return True
@@ -74,7 +74,7 @@ def _remind(c, text: str, command: reminders.Command) -> None:
     elif command.kind == "focus":
         c.ask_box.dismiss()
         c.start_focus(command.minutes or float(c.config["focus"]["minutes"]))
-    else:
+    elif command.due is not None:  # a reminder or a timer: parse_command always gives it a time
         r = c.reminders.add(command.due.timestamp(), command.text, command.kind, repeat=command.repeat)
         c.save()
         when = reminders.describe(r.due, time.time())
@@ -266,10 +266,8 @@ def status_lines(battery: tuple[float, bool] | None, disks: list[tuple[str, floa
     if battery:
         charge = f"{battery[0]:.0f}"
         lines.append("- " + (_("Battery: {percent}% (plugged in)") if battery[1] else _("Battery: {percent}%")).format(percent=charge))
-    for folder, percent in disks:
-        lines.append("- " + _("Disk for {folder}: {percent}% full").format(folder=folder, percent=f"{percent:.0f}"))
-    for r in upcoming[:5]:
-        lines.append(f"- {reminder_line(r, now)}")
+    lines.extend("- " + _("Disk for {folder}: {percent}% full").format(folder=folder, percent=f"{percent:.0f}") for folder, percent in disks)
+    lines.extend(f"- {reminder_line(r, now)}" for r in upcoming[:5])
     if not upcoming:
         lines.append("- " + _("No reminders set"))
     if not brain:

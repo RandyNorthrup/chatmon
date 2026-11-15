@@ -330,16 +330,65 @@ def test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet(c
     assert quiet()
 
 
+def test_status_names_the_brain_from_the_finder_and_never_waits_for_one(companion, monkeypatch):
+    """*status* asks the brain finder as a question does: the model servers here are looked at on the finder's
+    thread, if at all, and nothing waits for a brain (the status worker used to, and probed them all over again)."""
+    from chatmon import brains
+
+    c = companion
+    waited, real = [], brains.choose
+
+    def choose(loaded, configured, picked, wait=True, prefer=None):
+        waited.append(wait)
+        return real(loaded, configured, picked, wait=wait, prefer=prefer)
+
+    monkeypatch.setattr(brains, "choose", choose)
+    c.open_ask()
+    c.submit("status")
+    assert until(lambda: "Brain:" in c.ask_box.answer.toPlainText())
+    assert waited and True not in waited
+
+
+def test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words(companion, monkeypatch):
+    """On Wayland the desktop has the last word on the keys, and says them its own way (hotkey.py's `bound`): Settings
+    › Accessibility shows that beside the keys you picked, and nothing extra where it's just those keys."""
+    from chatmon import hotkey
+
+    c = companion
+    told = {}
+    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None, bound=None: told.update(bound=bound))
+    c._override(("hotkey",), "Ctrl+Alt+Space")
+    c.reload(quietly=True)
+    told["bound"]("Press Super+Space")  # the portal's answer, a moment later
+    c.open_settings("accessibility")
+    w = c._settings_window
+    assert not w.hotkey_bound.isHidden() and w.hotkey_bound.text() == "Your desktop has it as: Press Super+Space"
+    told["bound"]("Logo+Alt+Space")  # changed in the desktop's own settings, while Settings is open
+    assert w.hotkey_bound.text() == "Your desktop has it as: Logo+Alt+Space"
+    told["bound"]("Ctrl+Alt+Space")  # just the keys picked (X11, Windows, macOS): nothing more to say
+    assert w.hotkey_bound.isHidden()
+
+
+def test_quitting_lets_go_of_the_sound_players(companion, monkeypatch):
+    """A Linux player still sounding as Chatmon quits is waited for and reaped (sound.close), never left behind."""
+    from chatmon import sound
+
+    closed = []
+    monkeypatch.setattr(sound, "close", lambda: closed.append(True))
+    companion.quit()
+    assert closed == [True]
+
+
 def test_the_hotkey_is_registered_from_settings_toggles_the_box_and_a_problem_is_said_once(companion, monkeypatch):
     from chatmon import hotkey
 
     c = companion
     calls = []
-    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None: calls.append(("register", sequence, callback, failed)) or None)
+    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None, bound=None: calls.append(("register", sequence, callback, failed, bound)) or None)
     monkeypatch.setattr(hotkey, "unregister", lambda: calls.append(("unregister",)))
     c._override(("hotkey",), "Ctrl+Alt+K")
     c.reload(quietly=True)
-    assert calls == [("register", "Ctrl+Alt+K", c._hotkey_pressed, c._hotkey_failed)]
+    assert calls == [("register", "Ctrl+Alt+K", c._hotkey_pressed, c._hotkey_failed, c._hotkey_bound)]
     c.reload(quietly=True)
     assert len(calls) == 1  # unchanged: not again
     calls[0][2]()
@@ -347,7 +396,7 @@ def test_the_hotkey_is_registered_from_settings_toggles_the_box_and_a_problem_is
     calls[0][2]()
     assert not c.ask_box.isVisible()  # pressed again: closed
     out_of_the_way(c)
-    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None: "Ctrl+Alt+J is already used by another app. Pick another shortcut.")
+    monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None, bound=None: "Ctrl+Alt+J is already used by another app. Pick another shortcut.")
     c._override(("hotkey",), "Ctrl+Alt+J")
     c.reload(quietly=True)
     assert until(lambda: c.stage.bubble.title == "The hotkey to ask didn't work") and "already used" in c.stage.bubble.doc.toPlainText()

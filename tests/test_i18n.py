@@ -317,7 +317,7 @@ def test_the_extractor_finds_marked_strings_with_plurals_comments_and_formats():
     ],
 )
 def test_the_extractor_refuses_a_string_that_couldnt_be_translated(source, why):
-    found, problems = extractor().scan(source, "chatmon/x.py")
+    _found, problems = extractor().scan(source, "chatmon/x.py")
     assert len(problems) == 1 and why in problems[0] and problems[0].startswith("chatmon/x.py:"), problems
 
 
