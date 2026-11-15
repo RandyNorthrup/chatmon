@@ -1532,6 +1532,18 @@ msgstr ""
 msgid "Copy code"
 msgstr ""
 
+#: chatmon/settingswin.py
+msgid "System default"
+msgstr ""
+
+#: chatmon/settingswin.py
+msgid "Language"
+msgstr ""
+
+#: chatmon/settingswin.py
+msgid "Chatmon speaks it from the next time it starts."
+msgstr ""
+
 #: chatmon/shortcutportal.py
 msgid "Open Chatmon's ask box"
 msgstr ""

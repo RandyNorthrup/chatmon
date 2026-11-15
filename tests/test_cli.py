@@ -189,3 +189,22 @@ def test_hooks_says_what_it_cant_do(capsys, home):
     (home / ".gemini" / "settings.json").write_text("{not json")
     assert cli.main(["hooks", "connect", "gemini"]) == 1  # left alone, and said why
     assert "isn't valid JSON" in capsys.readouterr().err and (home / ".gemini" / "settings.json").read_text() == "{not json"
+
+
+def test_the_command_line_speaks_the_language_chosen_without_writing_anything(monkeypatch, home):
+    """M8: `chatmon` picks the language before printing, from Settings (the state file) or the settings file."""
+    from chatmon import i18n
+
+    chosen = []
+    monkeypatch.setattr(i18n, "setup", lambda choice=None, folder=None: chosen.append(choice) or "en")
+    assert cli.main(["--version"]) == 0 and chosen == [None]  # nothing chosen: the system's
+    assert not paths.config_file().exists() and not paths.state_file().exists()  # and nothing written to find out
+    paths.config_file().parent.mkdir(parents=True, exist_ok=True)
+    paths.config_file().write_text('language = "pt_BR"\n', encoding="utf-8")
+    assert cli.main(["--version"]) == 0 and chosen[-1] == "pt_BR"
+    paths.state_file().parent.mkdir(parents=True, exist_ok=True)
+    paths.state_file().write_text(json.dumps({"settings": {"language": "de"}}), encoding="utf-8")
+    assert cli.main(["--version"]) == 0 and chosen[-1] == "de"  # Settings wins, as in Chatmon
+    paths.config_file().write_text("language = [", encoding="utf-8")  # broken: read as nothing, never fatal
+    paths.state_file().write_text("{", encoding="utf-8")
+    assert cli.main(["--version"]) == 0 and chosen[-1] is None

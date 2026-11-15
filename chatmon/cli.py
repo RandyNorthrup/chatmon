@@ -9,7 +9,7 @@ import threading
 import time
 from datetime import datetime
 
-from . import __version__, events, paths
+from . import __version__, events, i18n, paths
 
 USAGE = """\
 usage: chatmon [command]
@@ -43,6 +43,7 @@ ASFW_ANY = 0xFFFFFFFF  # AllowSetForegroundWindow's "any process": only when the
 def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     paths.migrate()  # settings and state from before the rename, the first time it runs
+    i18n.setup(_language_setting())  # before anything is printed (Qt isn't loaded for this)
     if not args:
         from .app import run
 
@@ -76,6 +77,26 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     print(USAGE, end="", file=sys.stderr)
     return 2
+
+
+def _language_setting() -> str | None:
+    """The language chosen in Settings (kept in the state file) or the settings file, read without writing either;
+    None follows the system's."""
+    import json
+    import tomllib
+
+    try:
+        overrides = json.loads(paths.state_file().read_text(encoding="utf-8")).get("settings")
+    except (OSError, ValueError, AttributeError):
+        overrides = None
+    picked = overrides.get(i18n.SETTING) if isinstance(overrides, dict) else None
+    if isinstance(picked, str) and picked:
+        return picked
+    try:
+        written = tomllib.loads(paths.config_file().read_text(encoding="utf-8")).get(i18n.SETTING)
+    except (OSError, ValueError):
+        return None
+    return written if isinstance(written, str) and written else None
 
 
 def _send(message: dict) -> int:

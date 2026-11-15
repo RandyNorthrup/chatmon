@@ -13,7 +13,9 @@ from __future__ import annotations
 
 import sys
 
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import QLocale, Qt, pyqtSignal
+
+from .i18n import _
 from PyQt6.QtGui import QKeySequence
 from PyQt6.QtWidgets import (
     QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QHBoxLayout, QKeySequenceEdit, QLabel, QLineEdit,
@@ -34,7 +36,7 @@ CUES = [("needs-you", "An agent needs me"), ("reminder", "A reminder"), ("focus-
 DEFAULTS = {
     "reminder_snooze": 10, "text_scale": 100, "bubble_time": "normal", "reduced_motion": "system", "accessible_ask_box": "auto",
     "sound": True, "volume": 70, "cues": {name: name in ("needs-you", "reminder", "focus-done") for name, _ in CUES}, "hotkey": "",
-    "follow_screen": False, "magnifier_follows": True, "speech_fallback": False,
+    "follow_screen": False, "magnifier_follows": True, "speech_fallback": False, "language": "",
     "api_key": None,
 }
 
@@ -115,6 +117,8 @@ class SettingsWindow(QDialog):
         self.name.setMaxLength(40)
         self.name.setPlaceholderText("What your chatmon is called")
         self.companion = _combo(c["companions"], v["companion"])
+        languages = [("", _("System default"))] + [(code, QLocale(code).nativeLanguageName() or code) for code in c.get("languages") or ["en"]]
+        self.language = _combo(languages, v["language"])
         self.size = _spin(60, 400, v["size"], " px", 10)
         self.walk = QCheckBox("Walk around along the bottom of the screen")
         self.walk.setChecked(v["walk"])
@@ -130,6 +134,8 @@ class SettingsWindow(QDialog):
         self.check_updates.setChecked(v["check_updates"])
         form.addRow("Name", self.name)
         form.addRow("Companion", self.companion)
+        form.addRow(_("Language"), self.language)
+        form.addRow("", _note(_("Chatmon speaks it from the next time it starts.")))
         form.addRow("Size", self.size)
         form.addRow("", self.walk)
         form.addRow("", self.follow_screen)
@@ -391,6 +397,7 @@ class SettingsWindow(QDialog):
         return {
             "name": self.name.text().strip(),
             "companion": self.companion.currentData(),
+            "language": self.language.currentData(),
             "size": self.size.value(),
             "walk": self.walk.isChecked(),
             "follow_screen": self.follow_screen.isChecked(),

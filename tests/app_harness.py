@@ -113,6 +113,9 @@ def make_companion(tmp_path, monkeypatch):
         c.quit()
         server.close()
         keychain.use(real_keychain)
+        from chatmon import i18n
+
+        i18n.reset()  # the Companion chose a language as it started: English again for the next test
 
 
 class PretendNotifier:

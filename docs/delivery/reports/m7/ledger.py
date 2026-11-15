@@ -152,6 +152,10 @@ REQS: list[tuple[str, str, str, list[tuple[str, str, str, str]]]] = [
          "More is pressed, the box is made bigger and reopened, a question with line breaks is asked",
          "More opens the whole text in the box; the size is remembered; the hint says Shift+Enter; the question keeps its lines"),
     ]),
+    ("INT-M8", "M8's notes for M7: the language setting, chosen at start and in the command line, offered in Settings", "normal", [
+        ("AC-M8-1", "A language chosen in Settings or the settings file", "Chatmon or the chatmon command starts",
+         "It's set up before any window is built or anything printed (the command line reading it without writing anything); Settings offers System default and each shipped language by its own name"),
+    ]),
     ("INT-M5", "M5's integration notes outside reminders: dates in chats follow the locale", "low", [
         ("AC-M5-1", "A chat's date and 'today 3:04 PM'", "They're shown", "They follow the locale's clock and dates (localefmt)"),
     ]),
@@ -208,6 +212,11 @@ TASKS: list[tuple[str, str, list[str], list[str], list[tuple[str, str]]]] = [
      ["AC-11-7"], ["TASK-STAGE-M4B"],
      [(C + "app.py", "modify"), (C + "settings.py", "modify"), (C + "settingswin.py", "modify"), (T + "app_harness.py", "modify"),
       (T + "test_app_m7.py", "modify"), (T + "test_app_smoke.py", "modify")]),
+    ("TASK-I18N", "M8's language setting wired: settings, i18n.setup in the app and the CLI, the Settings window's list",
+     ["AC-M8-1"], ["TASK-SETTINGS"],
+     [(C + "app.py", "modify"), (C + "cli.py", "modify"), (C + "settings.py", "modify"), (C + "settingswin.py", "modify"),
+      ("chatmon/locale/chatmon.pot", "modify"), (T + "app_harness.py", "modify"), (T + "test_app_m7.py", "modify"), (T + "test_cli.py", "modify"),
+      (T + "test_settingswin.py", "modify")]),
     ("TASK-NEWCHAT", "New chat after 15 idle minutes, said, with carry on", ["AC-12-1"], ["TASK-COMMANDS"],
      [(C + "app.py", "modify"), (C + "commands.py", "modify"), (C + "phrases/en.json", "modify"), (T + "test_app_m7.py", "modify")]),
     ("TASK-HELLO", "A first-unlock hello", ["AC-13-1"], ["TASK-REMINDERS"], [(C + "app.py", "modify"), (T + "test_app_m7.py", "modify")]),

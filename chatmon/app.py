@@ -21,7 +21,7 @@ from PyQt6.QtGui import QColor, QDesktopServices, QFontMetricsF, QGuiApplication
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
 
-from . import __version__, a11y, agents, asking, attachments, autostart, backup, brains, changelog, chats, commands, companions, context, events, heads_up, keychain, memory, menus, messages, offline, paths, presence, reminders, report, styles, sysnotify, updates
+from . import __version__, a11y, agents, asking, i18n, attachments, autostart, backup, brains, changelog, chats, commands, companions, context, events, heads_up, keychain, memory, menus, messages, offline, paths, presence, reminders, report, styles, sysnotify, updates
 from .behavior import Behavior
 from .bubble import AskBox, TimeoutPolicy, clipboard_contents, overlay_contents
 from .penguin import Stage
@@ -102,6 +102,7 @@ class Companion(QObject):
         self.server_problem = server_problem  # why hooks can't reach it, if they can't
         self.state = State.load()
         self.config, self.config_error = self._load_config()
+        i18n.setup(self.config.get(i18n.SETTING) or None)  # before any window is built (a change applies at the next start)
         self._trust_saved_servers()
         self._settings_window = None
         self._chats_window = None
@@ -2705,6 +2706,7 @@ class Companion(QObject):
         "accessible_ask_box": ("accessibility", "accessible_ask_box"), "sound": ("sound", "enabled"), "volume": ("sound", "volume"),
         "cues": ("sound", "cues"), "hotkey": ("hotkey",), "follow_screen": ("follow_screen",),
         "magnifier_follows": ("accessibility", "magnifier_follows"), "speech_fallback": ("accessibility", "speech_fallback"),
+        "language": (i18n.SETTING,),
     }
 
     def _settings_values(self) -> tuple[dict, dict]:
@@ -2731,6 +2733,7 @@ class Companion(QObject):
             "hotkey": str(c["hotkey"]), "follow_screen": bool(c["follow_screen"]), "api_key": None,
             "magnifier_follows": bool(c["accessibility"]["magnifier_follows"]),
             "speech_fallback": bool(c["accessibility"]["speech_fallback"]),
+            "language": str(c.get(i18n.SETTING) or ""),
         }
         current = self._brain(wait=False)
         matching = styles.get(self._companion().bubble_style).label.split(" (")[0].lower()
@@ -2742,6 +2745,7 @@ class Companion(QObject):
             # An API brain's key: whether one is saved in the keychain, else where it would come from (never the key).
             "keys": {b.name: _key_status(b) for b in self.brains.values() if b.type != "command" and not b.local and b.api_key_env},
             "key_store": keychain.where(),
+            "languages": i18n.available(),
         }
         return values, choices
 

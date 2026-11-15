@@ -129,3 +129,16 @@ def test_backup_and_bring_back_ask_the_companion(window):
     next(b for b in w.findChildren(type(w.test_button)) if b.text() == "Back up…").click()
     next(b for b in w.findChildren(type(w.test_button)) if b.text() == "Bring back…").click()
     assert backups == [False] and restores == [1]
+
+
+def test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start(qapp):
+    """M8's setting: "System default", then each language Chatmon can be shown in, by its own name."""
+    w = SettingsWindow({**VALUES, "language": ""}, {**CHOICES, "languages": ["en", "de"]})
+    got = []
+    w.saved.connect(got.append)
+    assert [w.language.itemData(i) for i in range(w.language.count())] == ["", "en", "de"]
+    assert w.language.itemText(0) == "System default" and w.language.itemText(2) == "Deutsch"
+    w.language.setCurrentIndex(2)
+    w._save()
+    assert got == [{"language": "de"}]
+    w.deleteLater()

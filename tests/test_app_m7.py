@@ -738,3 +738,25 @@ def test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits(c
     c._check_quiet()
     c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
     assert c._notifier.alerts[-1][3] == sysnotify.URGENCY_NORMAL  # urgent would show through GNOME's Do Not Disturb
+
+
+def test_chatmon_starts_in_the_language_set_before_any_window(companion, monkeypatch):
+    """M8: the language setting is read as Chatmon starts, before a window is built; Settings keeps a change for the
+    next start."""
+    from PyQt6.QtNetwork import QLocalServer
+
+    from chatmon import app as appmod, i18n
+
+    c = companion
+    c._apply_settings({"language": "de"})
+    assert c.config["language"] == "de" and c.state.get("settings")["language"] == "de"
+    chosen = []
+    monkeypatch.setattr(i18n, "setup", lambda choice=None, folder=None: chosen.append(choice) or "de")
+    built = []
+    real_stage = appmod.Stage
+    monkeypatch.setattr(appmod, "Stage", lambda *a, **k: built.append(list(chosen)) or real_stage(*a, **k))
+    again = appmod.Companion(c.app, QLocalServer())  # the next start
+    try:
+        assert chosen == ["de"] and built == [["de"]]  # chosen before the stage (the first window) was made
+    finally:
+        again.quit()

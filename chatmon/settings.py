@@ -19,6 +19,7 @@ from . import paths
 
 DEFAULTS: dict[str, Any] = {
     "name": "",
+    "language": "",  # i18n.SETTING: a language code ("de", "pt_BR"); empty follows the system
     "size": 120,
     "walk": True,
     "sleep_after_minutes": 10,
@@ -60,6 +61,9 @@ TEMPLATE = """\
 
 # What your companion is called. Empty: it asks the first time it runs.
 name = ""
+
+# The language Chatmon speaks: a code such as "de" or "pt_BR". Empty: your system's.
+language = ""
 
 # Height of your chatmon on screen, in pixels.
 size = 120
