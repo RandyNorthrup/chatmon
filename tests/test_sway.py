@@ -17,7 +17,6 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 import sway_session  # tests/ is on the path: pytest's rootdir import mode
 from sway_session import BTN_RIGHT, Input, Probe, Session
 
-BACKGROUND = (0, 0, 0)  # sway's own, with no wallpaper: what shows wherever the overlay draws nothing
 DESK = "#334466"  # the plain window some tests open under the overlay, as on a desktop with a window open
 
 SETUP = """
@@ -95,7 +94,7 @@ def colour(image, x, y, scale=1) -> tuple[int, int, int]:
     return c.red(), c.green(), c.blue()
 
 
-def drawn_columns(image, rect, scale=1, background=BACKGROUND) -> list[int]:
+def drawn_columns(image, rect, background, scale=1) -> list[int]:
     """The x of every column (layout pixels) in `rect`'s rows, across the whole output, where anything is drawn."""
     _x, y, _w, h = rect
     rows = range(round(y * scale), round((y + h) * scale), max(1, round(scale)))
@@ -132,9 +131,10 @@ def test_the_overlay_is_a_layer_surface_sway_draws_and_keeps_out_of_its_windows(
     assert sway.views() == []  # not a window: sway neither tiles nor focuses it
     shot = sway.screenshot()
     rect = penguin(chatmon)
-    assert colour(shot, *centre(rect)) != BACKGROUND  # the chatmon, composited by sway
-    assert colour(shot, 20, 20) == BACKGROUND and colour(shot, 640, 100) == BACKGROUND  # nothing anywhere else
-    columns = drawn_columns(shot, rect)
+    empty = sway.background  # what sway shows where nothing is drawn (Session._background)
+    assert colour(shot, *centre(rect)) != empty  # the chatmon, composited by sway
+    assert colour(shot, 20, 20) == empty and colour(shot, 640, 100) == empty  # nothing anywhere else
+    columns = drawn_columns(shot, rect, empty)
     assert columns and min(columns) >= rect[0] - 2 and max(columns) <= rect[0] + rect[2] + 2
 
 
@@ -177,7 +177,7 @@ def test_the_penguins_menu_opens_on_the_overlay_and_works_from_the_keyboard_and_
     chatmon.call("settled()")
     shot = sway.screenshot()
     mx, my, mw, _mh = menu[0]
-    assert colour(shot, mx + mw / 2, my + 4) != BACKGROUND  # drawn, over everything
+    assert colour(shot, mx + mw / 2, my + 4) != sway.background  # drawn, over everything
     hands.key("Down")  # the first item: "Ask ..."
     look = chatmon.call("result = stage.menu.hover")
     assert look == [0, 0]
@@ -240,7 +240,7 @@ def test_when_its_screen_goes_it_comes_back_on_the_one_left(sway, chatmon):
                        settle=0.5)
     assert got["screen"] == "HEADLESS-2" and got["size"] == got["qt"]  # a layer surface of its own there, configured to it
     x, y, w, h = chatmon.call("result = list(stage._penguin.getRect())")  # the stage's own coordinates: that output's
-    assert colour(sway.screenshot("second", output="HEADLESS-2"), x + w / 2, y + h / 2) != BACKGROUND
+    assert colour(sway.screenshot("second", output="HEADLESS-2"), x + w / 2, y + h / 2) != sway.background
 
 
 # -- M3-04: buffers the size of what's shown
@@ -268,8 +268,8 @@ def test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales(tmp_p
             probe.call("settled()")
             shot = session.screenshot()
             rect = penguin(probe)
-            assert colour(shot, *centre(rect), scale=scale) != BACKGROUND
-            assert colour(shot, rect[0] - 40, rect[1] + rect[3] / 2, scale=scale) == BACKGROUND
+            assert colour(shot, *centre(rect), scale=scale) != session.background
+            assert colour(shot, rect[0] - 40, rect[1] + rect[3] / 2, scale=scale) == session.background
         finally:
             probe.close()
     finally:
@@ -289,10 +289,13 @@ def test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else
         chatmon.call("settled()", settle=0.15)
         shot = sway.screenshot(f"drag-{step}")
         now = penguin(chatmon)
-        columns = drawn_columns(shot, (0, now[1] + now[3] * 0.3, 1280, now[3] * 0.4))
+        columns = drawn_columns(shot, (0, now[1] + now[3] * 0.3, 1280, now[3] * 0.4), sway.background)
         seen.append((now, min(columns), max(columns)))
         assert now[0] < rect[0] - 100 * step + 20  # it moved with the pointer
         assert min(columns) >= now[0] - 2 and max(columns) <= now[0] + now[2] + 2, (step, now, columns[:3], columns[-3:])
+        # The chatmon itself, half its frame's width at least, not just the pointer over it: sway 1.9 puts its
+        # cursor in screenshots (1.12 doesn't), some 10 to 16 px of it in these rows.
+        assert max(columns) - min(columns) >= now[2] / 2, (step, now, columns[:3], columns[-3:])
     hands.button(sway_session.BTN_LEFT, False)
     moved = chatmon.call("result = dict(box=list(surface._box.getRect()), buffers=len(surface._buffers))")
     assert moved["buffers"] <= 2
@@ -337,7 +340,7 @@ def test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_fo
         bx, by, bw, bh = probe.call("result = list(stage._bubble_box.getRect())")
         assert bx + bw <= r["x"] or bx >= r["x"] + r["width"] or by + bh <= r["y"] or by >= r["y"] + r["height"]
         shot = session.screenshot()
-        assert colour(shot, r["x"] + r["width"] / 2, r["y"] + r["height"] / 2) != BACKGROUND  # the box, drawn by sway
+        assert colour(shot, r["x"] + r["width"] / 2, r["y"] + r["height"] / 2) != session.background  # the box, drawn by sway
     finally:
         hands.close()
         probe.close()
