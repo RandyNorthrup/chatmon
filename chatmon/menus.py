@@ -156,7 +156,7 @@ class Menus:
         if c.updater.ready is not None and c.updater.release is not None:
             m.addAction(_("Update to Chatmon {version}").format(version=c.updater.release.version), c._update_now)
         m.addAction(_("Settings…"), c.open_settings)
-        help_menu(c, _submenu(m, _("Help & updates")))
+        help_menu(c, _submenu(m, _("Help && updates")))
         m.addAction(_("Quit"), c.quit)
         c._look_again()
 

@@ -104,11 +104,11 @@ def test_hide_menu_and_reload(companion):
     c.menus.fill()
     labels = [a.text() for a in c.menu.actions() if a.text()]
     assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
-                      "Hide (peek now and then)", "Settings…", "Help & updates", "Quit"]
+                      "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
     submenu = {a.text(): a.menu() for a in c.menu.actions() if a.menu()}
     appearance = [a.text() for a in submenu["Appearance"].actions()]
     assert appearance == ["Companion", "Bubble style", "Walk around", "Start when I log in"]
-    help_items = {a.text(): a for a in submenu["Help & updates"].actions()}
+    help_items = {a.text(): a for a in submenu["Help && updates"].actions()}
     focus_items = [a.text() for a in submenu["Focus and notes"].actions() if a.text()]
     assert focus_items == ["Focus timer", "15 minutes", "25 minutes", "50 minutes", "Notes", "Add a note…"]
     help_items["Reload settings file"].trigger()
@@ -685,7 +685,7 @@ def test_the_help_menu_and_its_words_in_the_ask_box(companion, monkeypatch):
     opened = []
     monkeypatch.setattr(appmod.QDesktopServices, "openUrl", lambda url: opened.append(url.toString()))
     c.menus.fill()
-    help_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Help & updates")
+    help_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Help && updates")
     labels = [a.text() for a in help_menu.actions() if a.text()]
     assert labels[:3] == [f"What's new in {appmod.__version__}", "Check for updates now", "Check for updates every day"]
     assert "Report a problem…" in labels and "Open the log" in labels

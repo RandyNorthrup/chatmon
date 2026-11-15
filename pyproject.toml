@@ -138,6 +138,7 @@ max-complexity = 15
 "docs/delivery/reports/m4b/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
 "docs/delivery/reports/m6a/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
 "docs/delivery/reports/m7/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/wave4/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90", "B905", "B023"]
 
 [tool.mypy]
 python_version = "3.11"

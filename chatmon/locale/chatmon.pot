@@ -2752,7 +2752,7 @@ msgid "Settings…"
 msgstr ""
 
 #: chatmon/menus.py
-msgid "Help & updates"
+msgid "Help && updates"
 msgstr ""
 
 #: chatmon/menus.py
