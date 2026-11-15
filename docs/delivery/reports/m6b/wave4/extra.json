@@ -63,13 +63,13 @@
    "id": "W4-BEH-CI-LINUX",
    "leg": "ubu3.15",
    "log": "ci-132699632422-test-ubuntu-24.04-3.15.log",
-   "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15), every test under xvfb-run. Every warning is an error there (pyproject.toml), and every test these criteria's drills name passed: the log's 0600 and no-link test, tests/test_imports.py on Linux, the overlay's keymap and debug-log tests in tests/test_wayland.py, and the suite's own ResourceWarning-free run. That is integration note 1's Linux xvfb run. The Qt 6.4-era distribution containers (ubuntu:24.04, debian:trixie, fedora:44 on their own PyQt6) passed the whole suite too."
+   "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15), every test under xvfb-run. Every warning is an error there (pyproject.toml), and every test these criteria's drills name passed, apart from the Windows-only installer test (tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change), which skips there: the log's 0600 and no-link test, tests/test_imports.py on Linux, the overlay's keymap and debug-log tests in tests/test_wayland.py, and the suite's own ResourceWarning-free run. That is integration note 1's Linux xvfb run. The Qt 6.4-era distribution containers (ubuntu:24.04, debian:trixie, fedora:44 on their own PyQt6) passed the whole suite too."
   },
   {
    "id": "W4-BEH-CI-MACOS",
    "leg": "mac3.14",
    "log": "ci-132699632411-test-macos-latest-3.14.log",
-   "method": "CI run 43677128712 on fb19cb9, job test (macos-latest, 3.14): the same tests passed on macOS, with every warning an error, as on the 3.11 and 3.15 legs. fb19cb9's own change keeps the log tests to themselves on macOS. That is integration note 1's macOS run."
+   "method": "CI run 43677128712 on fb19cb9, job test (macos-latest, 3.14): the same tests passed on macOS (the Windows-only installer test skipping there too), with every warning an error, as on the 3.11 and 3.15 legs. fb19cb9's own change keeps the log tests to themselves on macOS. That is integration note 1's macOS run."
   }
  ],
  "receipts": [
