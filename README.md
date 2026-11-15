@@ -531,8 +531,8 @@ The pictures and animations on this page are drawn by Chatmon's own code:
 `python art/tools/readme_media.py` makes them again (it needs `ffmpeg`).
 
 The overlay is tested on Hyprland 0.57; KDE Plasma 6.4 (Wayland) was tested with the window, before the
-overlay. CI runs the tests, including a headless run of the whole app and the overlay against a pretend
-compositor, on Linux (x64 and Arm), Windows and macOS with Python 3.11, 3.14 (what the installers carry) and
+overlay. CI runs the tests, including a headless run of the whole app, the overlay against a pretend
+compositor and on a real one (a headless sway, with AT-SPI and Orca where the system has them), on Linux (x64 and Arm), Windows and macOS with Python 3.11, 3.14 (what the installers carry) and
 3.15, and on Ubuntu 24.04, Debian 13 and Fedora 44 with their own PyQt6; it also type-checks with mypy for each
 platform and combines the coverage from each OS.
 

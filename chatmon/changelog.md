@@ -34,8 +34,10 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Far less power when idle**: the chatmon's clock sleeps until the next thing on it changes (about 100 wake-ups a minute standing still, down from 1,800), and nothing is drawn while the screen is locked, asleep or off. It moves at your screen's own refresh rate, and animated bubble edges rest after a loop.
 - **Every bubble style meets WCAG AA contrast**, the plain style follows your desktop's colours (high contrast included), every control shows a focus outline, and text follows your desktop's font size.
 - **High contrast and reduced motion are followed on every platform**, Linux and macOS included, and changes apply at once. With reduced motion the chatmon holds still poses and skips its waves, hops and peeks.
+- **The Wayland overlay draws only what's shown**: its buffers are the size of the chatmon and its bubble, under 8 MB instead of 63 MB on a 4K screen at 2x, and a drag shows the new place and pixels in the same frame.
 - **Overlay menus work from the keyboard** (Esc, arrows, Home/End, Page Up/Down, Left/Right, Enter, letters), scroll when long, and wait a moment before switching submenus. Shortcuts in the ask box work under Russian, Greek and other non-Latin layouts.
 - **Screen readers**: on Windows, Narrator, NVDA and JAWS hear Chatmon directly while it's in front; VoiceOver no longer misses what's said in the background; Linux read-aloud notifications stay out of the history and carry the bubble's buttons. A generated password is never read out.
+- **Linux finds a screen reader again** with at-spi2-core 2.62 (which dropped the old signal): Orca, Odilia, Fenrir, or GNOME's screen-reader setting, and starting or stopping one moves the ask box to a window, or back, at once.
 - **Do Not Disturb** is respected with dunst, mako, SwayNotificationCenter and xfce4-notifyd too. On Linux the chatmon draws less on battery; on macOS, in Low Power Mode.
 - **Messages are never lost**: a bubble with buttons stays until you answer it, alerts and reminders are never dropped, and anything that arrives meanwhile waits its turn. During a focus session, agents' and scripts' messages wait until it's over.
 - **Windows:** settings, state and chats moved from the roaming profile to this computer (`%LOCALAPPDATA%\chatmon`), automatically, the first time this version starts.
@@ -62,6 +64,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - "in 2 hours" is two real hours, even across a daylight-saving change.
 - Codex settings with an array of arrays across lines can be connected.
 - With two monitors on X11, a full-screen app on the other monitor no longer hides the chatmon; with X11 display scaling, clicks land exactly on it.
+- On sway, the ask box keeps the keyboard until you close it; before, typing could go to the window behind it. A copy from the ask box pastes at once into Chatmon's own windows, and with a screen reader the chatmon's menu still works from the keyboard and bubbles no longer cover the ask box.
 - Hovering a walking chatmon stops it mid-step instead of snapping it round.
 - The fairy style's highlighted button label could not be seen.
 - pip and pipx installs include the sounds and offline phrases.
