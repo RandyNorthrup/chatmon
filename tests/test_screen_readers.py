@@ -258,3 +258,15 @@ def test_gnomes_setting_turns_the_screen_reader_on_and_off(tmp_path):
     seen, out = _session(tmp_path, f'{set_to.format("false")}; until_seen "changed.*null" || true', seconds=8, env=env)
     assert ["start", "a screen reader", False] in seen, out
     assert seen[-1] == ["changed", None, False], out
+
+
+@linux_bus
+def test_orca_starting_and_stopping_while_chatmon_runs_is_heard(tmp_path):
+    """Orca's remote controller registering after Chatmon started, then going (tests/fake_orca.py, as Orca 51 names
+    itself): heard as it happens, and spoken through while it's there."""
+    said = tmp_path / "said.txt"
+    steps = (f'"{sys.executable}" "{HERE / "fake_orca.py"}" "{said}" > "{tmp_path}/orca.out" 2>&1 & orca=$!; '
+             'until_seen "changed.*Orca"; kill $orca; wait $orca 2>/dev/null; until_seen "changed.*null" || true')
+    seen, out = _session(tmp_path, steps, seconds=8)
+    assert seen[0] == ["start", None, False], out
+    assert ["changed", "Orca", True] in seen and seen[-1] == ["changed", None, False], out
