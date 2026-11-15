@@ -1,0 +1,284 @@
+[
+  {
+    "id": "PINS-skip",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "    Skip(\"PyQt6\", \"6.12.0\", \"its own QtDBus.pyi has a syntax error that stops mypy before it reads anything, so every types job \"\n         \"would fail; 6.12.1 fixes it (docs/delivery/m10-followups.md)\"),\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why"
+    ],
+    "expected": [
+      "test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why",
+      "PyQt6 moved, though 6.12.0 is skipped"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "419e6213b03087738e9612d578481f235d7bb524d1d7d3395114c6f075f216ac",
+    "mutated_exit": 1,
+    "observed": "___________ test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why ___________",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "PINS-qt-group",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "        found = {**disagreements(proposed), **qt_apart(lists, proposed), **backwards(lists, proposed)}",
+      "replace": "        found = {**disagreements(proposed), **backwards(lists, proposed)}"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_pyqt6_and_its_qt_stay_on_one_release_line"
+    ],
+    "expected": [
+      "test_pyqt6_and_its_qt_stay_on_one_release_line",
+      "the Qt group split"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "422e68107d420e722f3a4855cc169adc29d7c6e3f5cd4c28580efd03e46d3f0a",
+    "mutated_exit": 1,
+    "observed": "_______________ test_pyqt6_and_its_qt_stay_on_one_release_line ________________",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "PINS-universal",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "            uv.run([*compile_args(lst.header, plan.cutoff, plan.exempt), \"--quiet\"], lst.txt.parent)",
+      "replace": "            uv.run([*(a for a in compile_args(lst.header, plan.cutoff, plan.exempt) if a != \"--universal\"), \"--quiet\"], lst.txt.parent)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command"
+    ],
+    "expected": [
+      "test_apply_moves_the_pins_and_locks_each_list_with_its_own_command",
+      "came out unlike the report"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "915355887f360939bd62c2fa143ab61ba47947b77bc33d868f82368c25fdd39d",
+    "mutated_exit": 1,
+    "observed": "_____ test_apply_moves_the_pins_and_locks_each_list_with_its_own_command ______",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "PINS-cooldown",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "COOLDOWN = dt.timedelta(days=14)",
+      "replace": "COOLDOWN = dt.timedelta(days=0)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_each_pin_moves_to_its_newest_release_two_weeks_old",
+      "tests/test_pins.py::test_the_cutoff_is_fourteen_days_back"
+    ],
+    "expected": [
+      "test_each_pin_moves_to_its_newest_release_two_weeks_old",
+      "| nuitka | 4.3.1 | 4.3.5 |",
+      "test_the_cutoff_is_fourteen_days_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "1cf3e53a700c39013ab46e24d5de5bb473c87247d19d61aa89cdd791abf440c4",
+    "mutated_exit": 1,
+    "observed": "___________ test_each_pin_moves_to_its_newest_release_two_weeks_old ___________",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "PINS-cutoff-to-uv",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "    args += [\"--exclude-newer\", cutoff]",
+      "replace": "    args += []"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_each_pin_moves_to_its_newest_release_two_weeks_old"
+    ],
+    "expected": [
+      "test_each_pin_moves_to_its_newest_release_two_weeks_old",
+      "| nuitka | 4.3.1 | 4.3.5 |"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "8443d9339719ee113ebd48a0def370e06c57829cda28a0d96f7f166bfdb1f966",
+    "mutated_exit": 1,
+    "observed": "___________ test_each_pin_moves_to_its_newest_release_two_weeks_old ___________",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "PINS-backwards",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "        found = {**disagreements(proposed), **qt_apart(lists, proposed), **backwards(lists, proposed)}",
+      "replace": "        found = {**disagreements(proposed), **qt_apart(lists, proposed)}"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_nothing_moves_backwards"
+    ],
+    "expected": [
+      "test_nothing_moves_backwards",
+      "nuitka went backwards"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "78d7bcf7d42179239f4faff67eb84793d4f485afd51405c499e644fbef906eac",
+    "mutated_exit": 1,
+    "observed": "________________________ test_nothing_moves_backwards _________________________",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "PINS-one-version",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "        found = {**disagreements(proposed), **qt_apart(lists, proposed), **backwards(lists, proposed)}",
+      "replace": "        found = {**qt_apart(lists, proposed), **backwards(lists, proposed)}"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_a_package_in_more_than_one_lock_stays_at_one_version"
+    ],
+    "expected": [
+      "test_a_package_in_more_than_one_lock_stays_at_one_version",
+      "psutil would be at two versions"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "458687ad2a31236fd1f1f71a0d32f295d78dbf2314e53d021f91ce4aea351dd6",
+    "mutated_exit": 1,
+    "observed": "__________ test_a_package_in_more_than_one_lock_stays_at_one_version __________",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "PINS-dev-extra",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "            moved = moved_dev_extra(text, versions)",
+      "replace": "            moved = text"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command",
+      "tests/test_pins.py::test_after_apply_the_lists_agree_as_tests_test_requirements_wants"
+    ],
+    "expected": [
+      "test_apply_moves_the_pins_and_locks_each_list_with_its_own_command",
+      "test_after_apply_the_lists_agree_as_tests_test_requirements_wants"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "445b2d89d07cdeaedc130a425cd5b85d31345ad51401ec6b4c0dcb30dd0b37d5",
+    "mutated_exit": 1,
+    "observed": "_____ test_apply_moves_the_pins_and_locks_each_list_with_its_own_command ______",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  },
+  {
+    "id": "PINS-seed",
+    "requirement": "P-DEPENDABOT",
+    "file": "packaging/pins.py",
+    "mutation": {
+      "find": "            change(lst.txt, plan.texts[lst.stem])  # uv keeps the versions it finds in the lock it's writing",
+      "replace": "            saved.setdefault(lst.txt, lst.txt.read_bytes())"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command"
+    ],
+    "expected": [
+      "test_apply_moves_the_pins_and_locks_each_list_with_its_own_command",
+      "preferences"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "7f8c17b2c7f59d6719269a77504ff4ec025b6c2beb6a9ce7e250a0a0129fb3da",
+    "mutated_exit": 1,
+    "observed": "_____ test_apply_moves_the_pins_and_locks_each_list_with_its_own_command ______",
+    "after_sha256": "0557011eb8534ed39cd657126fc29ceb3a231b410821708f8768eaa532ddb0b1",
+    "restored_exit": 0
+  }
+]

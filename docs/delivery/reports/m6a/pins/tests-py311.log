@@ -1,0 +1,10 @@
+# tests/test_pins.py and tests/test_requirements.py on Python 3.11 (CI's oldest leg), at 806bb34, 2026-11-15T20:52:02Z
+# a scratch venv: uv venv --python 3.11; uv pip install pytest==9.2.0 pytest-timeout==2.4.0 (packaging comes with pytest)
+$ python --version
+Python 3.11.16
+$ python -m pytest -q -p no:cacheprovider tests/test_pins.py tests/test_requirements.py   (CHATMON_INSTANCE=pins-py311-1)
+......................s......                                            [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_pins.py:443: runs the real uv against PyPI: set CHATMON_PINS_NETWORK=1 to run it
+28 passed, 1 skipped in 18.40s
+# exit 0
