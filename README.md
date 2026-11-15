@@ -214,7 +214,7 @@ still. Overlay menus work from the keyboard. **Settings › Accessibility** has 
 to "until I close them"), sounds and their volume, the shortcut, less movement, the ask box as its own window for
 screen readers, and Magnifier following bubbles (Windows). With a screen reader running, bubbles and answers are
 read out: by Orca 49+ itself; by Narrator, NVDA and JAWS through UI Automation while Chatmon is in front, else a
-notification; by VoiceOver when you come back to Chatmon, or at once in macOS's own voice if you turn that on.
+notification; by VoiceOver a moment after you come back to Chatmon, or at once in macOS's own voice if you turn that on.
 Typing a bubble's button in the chat presses it.
 
 ## Brains: what answers your questions

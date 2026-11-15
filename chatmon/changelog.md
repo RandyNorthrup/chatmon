@@ -25,7 +25,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Your chatmon can follow you to another monitor** (Windows, macOS, X11).
 - **Settings shows how your desktop set the shortcut**: on Wayland, where the desktop has the last word, Settings › Accessibility names the keys it chose.
 - **The first unlock of the day** says what's waiting: today's reminders, agents waiting for you, updates.
-- `chatmon ask [TEXT]` opens the ask box, filled in; `chatmon status` prints the brain, your reminders and your agents.
+- `chatmon ask [TEXT]` opens the ask box, filled in, with the keyboard in it (on macOS 14 and later too, from a script or a launcher); `chatmon status` prints the brain, your reminders and your agents.
 - **Chatmon keeps a log** of what went wrong, `chatmon.log` in its state folder, readable only by you; **Open the log** opens it, and `CHATMON_DEBUG=1` keeps the details. No key, chat or typed text ever goes into it: a provider that repeats your key has it blanked out.
 - **Chatmon can be translated**: every word it shows, in its bubbles, menus, Settings and the `chatmon` command, comes from a translation when there's one for your language, or the one you pick in Settings, and Qt's own buttons follow it. Only English ships so far, and a new language is a single file. Times and dates follow your system's regional settings.
 
@@ -36,7 +36,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **High contrast and reduced motion are followed on every platform**, Linux and macOS included, and changes apply at once. With reduced motion the chatmon holds still poses and skips its waves, hops and peeks.
 - **The Wayland overlay draws only what's shown**: its buffers are the size of the chatmon and its bubble, under 8 MB instead of 63 MB on a 4K screen at 2x, and a drag shows the new place and pixels in the same frame.
 - **Overlay menus work from the keyboard** (Esc, arrows, Home/End, Page Up/Down, Left/Right, Enter, letters), scroll when long, and wait a moment before switching submenus. Shortcuts in the ask box work under Russian, Greek and other non-Latin layouts.
-- **Screen readers**: on Windows, Narrator, NVDA and JAWS hear Chatmon directly while it's in front; VoiceOver no longer misses what's said in the background; Linux read-aloud notifications stay out of the history and carry the bubble's buttons. A generated password is never read out.
+- **Screen readers**: on Windows, Narrator, NVDA and JAWS hear Chatmon directly while it's in front; VoiceOver no longer misses what's said in the background, or the greeting: it says them a moment after you come to Chatmon, and typing in the ask box works with VoiceOver on; Linux read-aloud notifications stay out of the history and carry the bubble's buttons. A generated password is never read out.
 - **Linux finds a screen reader again** with at-spi2-core 2.62 (which dropped the old signal): Orca, Odilia, Fenrir, or GNOME's screen-reader setting, and starting or stopping one moves the ask box to a window, or back, at once.
 - **Do Not Disturb** is respected with dunst, mako, SwayNotificationCenter and xfce4-notifyd too. On Linux the chatmon draws less on battery; on macOS, in Low Power Mode.
 - **Messages are never lost**: a bubble with buttons stays until you answer it, alerts and reminders are never dropped, and anything that arrives meanwhile waits its turn. During a focus session, agents' and scripts' messages wait until it's over.
@@ -67,6 +67,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - On sway, the ask box keeps the keyboard until you close it; before, typing could go to the window behind it. A copy from the ask box pastes at once into Chatmon's own windows, and with a screen reader the chatmon's menu still works from the keyboard and bubbles no longer cover the ask box.
 - **KDE Plasma:** closing the ask box gives the keyboard back to the window you were typing in (before, typing went nowhere until you clicked one), so a full-screen video comes back in front of the chatmon too, and what you copy in the ask box pastes into Chatmon's own windows. When a monitor is unplugged and the desktop moves the one left, the chatmon follows at once (on sway too).
 - **Hyprland:** dragging the chatmon quickly no longer drops it on the way, or opens the ask box instead.
+- **Windows:** notification banners show while Chatmon runs. Windows took the chatmon's overlay for a full-screen app, so it showed no app's banners, and Chatmon held its own bubbles back as if you were in one.
 - Hovering a walking chatmon stops it mid-step instead of snapping it round.
 - The fairy style's highlighted button label could not be seen.
 - pip and pipx installs include the sounds and offline phrases.
