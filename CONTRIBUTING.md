@@ -32,8 +32,8 @@ python -m pytest
 ```
 
 The tests need no screen: `tests/conftest.py` picks Qt's offscreen platform, and gives the run a Chatmon address
-of its own, so no test reaches a Chatmon you have running. `pyproject.toml` turns warnings into errors (all but
-`ResourceWarning`, which is listed at the end instead), stops any test that runs past two minutes (pytest-timeout,
+of its own, so no test reaches a Chatmon you have running. `pyproject.toml` turns every warning into an error
+(`ResourceWarning` too: an unclosed file, socket or process fails its test), stops any test that runs past two minutes (pytest-timeout,
 which the tests require), and prints why each skipped test skipped. Each platform's own tests run on that platform
 and skip elsewhere, which is why CI runs on Linux, Windows and macOS.
 

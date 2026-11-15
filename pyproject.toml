@@ -106,7 +106,7 @@ relative_files = true  # each OS's data names files the same way, so CI can comb
 chatmon = ["chatmon", "*/chatmon", '*\chatmon']
 
 [tool.coverage.report]
-fail_under = 72  # Windows alone measured 74.9%, and Windows with Linux 82.7% (2026-11-14); CI combines three OSes
+fail_under = 84  # CI's combined Linux, Windows and macOS figure was 86.2% (run 43694278702, 2026-11-15); raise it as tests improve
 precision = 1
 
 [tool.ruff]
