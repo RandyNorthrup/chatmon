@@ -838,7 +838,7 @@
       "id": "M5-chat-times-12h",
       "requirement": "AC-M5-1",
       "file": "chatmon/chats.py",
-      "find": "        return f\"today {localefmt.time_of_day(d)}\"",
+      "find": "        return _(\"today {time}\").format(time=localefmt.time_of_day(d))",
       "replace": "        return f\"today {(d.hour % 12) or 12}:{d.minute:02d} {'AM' if d.hour < 12 else 'PM'}\"",
       "test": [
         "tests/test_chatswin.py::test_chat_times_follow_the_locale"
@@ -1001,6 +1001,45 @@
       ],
       "expect": [
         "test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits"
+      ]
+    },
+    {
+      "id": "M8-app-language-ignored",
+      "requirement": "AC-M8-1",
+      "file": "chatmon/app.py",
+      "find": "        i18n.setup(self.config.get(i18n.SETTING) or None)",
+      "replace": "        i18n.setup(None)",
+      "test": [
+        "tests/test_app_m7.py::test_chatmon_starts_in_the_language_set_before_any_window"
+      ],
+      "expect": [
+        "test_chatmon_starts_in_the_language_set_before_any_window"
+      ]
+    },
+    {
+      "id": "M8-cli-language-ignored",
+      "requirement": "AC-M8-1",
+      "file": "chatmon/cli.py",
+      "find": "    i18n.setup(_language_setting())",
+      "replace": "    i18n.setup(None)",
+      "test": [
+        "tests/test_cli.py::test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+      ],
+      "expect": [
+        "test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+      ]
+    },
+    {
+      "id": "M8-window-language-dropped",
+      "requirement": "AC-M8-1",
+      "file": "chatmon/settingswin.py",
+      "find": "            \"language\": self.language.currentData(),\r\n",
+      "replace": "",
+      "test": [
+        "tests/test_settingswin.py::test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
+      ],
+      "expect": [
+        "test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
       ]
     },
     {

@@ -21,12 +21,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2",
+    "before_sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd",
     "baseline_exit": 0,
-    "mutated_sha256": "acd9819b4847c433037e44fb49bc3e162875f8df15178ffcee1ca5fdee59b081",
+    "mutated_sha256": "6b190bc3cc76ad13c50615c78a619bfa711aa408773cf7fbf3d3ed11762db4f9",
     "mutated_exit": 1,
     "observed": "____________ test_the_computer_the_tests_run_on_holds_nothing_back ____________",
-    "after_sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2",
+    "after_sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd",
     "restored_exit": 0
   },
   {
@@ -113,12 +113,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b",
+    "before_sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af",
     "baseline_exit": 0,
-    "mutated_sha256": "5f874521019eea2ec0102fcb1478d4e2567783ec3a9abcb8f1aa0e208ed34f2b",
+    "mutated_sha256": "fc60ebfa58ebd48c40101b3e68c4ed0bedc382a405cabcbdf72e2bd5cc4114ff",
     "mutated_exit": 1,
     "observed": ">       assert box._frames.isActive() and box.anim_key(now) != -1, \"new words: it moves again\"",
-    "after_sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b",
+    "after_sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af",
     "restored_exit": 0
   },
   {
@@ -143,12 +143,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b",
+    "before_sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af",
     "baseline_exit": 0,
-    "mutated_sha256": "d8f7a5ab56158a0e7d556a7c5c3fbe2a98a0c346bb9fd99ad6d113f9dc0651a5",
+    "mutated_sha256": "60f29925d53fd13062906b789855d4561cb75adaaf764802a6408933bbb16a1c",
     "mutated_exit": 1,
     "observed": ">       assert box._frames.isActive(), \"a frame drawn at strength 0 is the start of the rise, not the end of it\"",
-    "after_sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b",
+    "after_sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af",
     "restored_exit": 0
   },
   {
@@ -173,12 +173,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "34fb08ad0dbbc182825fe0b5e5a88283a9fbfe7e728522d2079b3f15f3ece051",
+    "mutated_sha256": "4492a81cc158d83773502230aad75696f2491ca8089bd27c12ad8c64f9473813",
     "mutated_exit": 1,
     "observed": "_ test_an_answer_shows_as_it_streams_in_and_survives_the_box_being_drawn_again _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -203,12 +203,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "838d76ea001e72960e463adb07e16dd20b84072b1fc560910ac0f6f89f69b318",
+    "mutated_sha256": "c83fbb3aaa4cce17d0c9e96d3584e0e97dcb50f25ddfa7918851fb828d803af7",
     "mutated_exit": 1,
     "observed": "____ test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came ____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -233,12 +233,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "bfa6b3dab153569f831d2ae1f5407b3b7f15338b28404c3f75faf2cfe9d70edb",
+    "mutated_sha256": "14ff2e590c8ead4e3c5e84e7e4e8636e48c974b897f1bfe1b53d19eb9a304e22",
     "mutated_exit": 1,
     "observed": "____ test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came ____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -263,12 +263,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "e5ed99db3b937f476a1139c988ca3191c87756cc6c26ca856814c58f0187acd6",
+    "mutated_sha256": "0ebb02ea8d96180872bde37256ab31da207306560621bccb7a96515796d94928",
     "mutated_exit": 1,
     "observed": "_____________ test_the_box_says_who_is_answering_and_stop_ends_it _____________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -293,12 +293,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "1283a9959f1f6f6b48b6e8ecdaa3e96d7248817724c2de5dd43d752ba6cf4849",
+    "mutated_sha256": "6db21788c16295f4547f58741ac7c5c93cbd561283e8c5cc34b2d6ab731abd6a",
     "mutated_exit": 1,
     "observed": "_____________ test_the_box_says_who_is_answering_and_stop_ends_it _____________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -323,12 +323,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "3f6430d9bd5b6bf657aa4aa8999a8f9d878225c7f6ab7e021ad6b232723c1d3a",
+    "mutated_sha256": "827ad8b65d89f89c7be32ad1df178e93e4dfd23858fcd9482d7f28935cb3a4eb",
     "mutated_exit": 1,
     "observed": "_ test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -353,12 +353,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "c36daac667ee23feea2a14bf7765d40e45429a298cee98813261601be3852262",
+    "mutated_sha256": "008764c276b0264ea87863721bd5f6ca9fa19200a75876995e63bf259ea9b029",
     "mutated_exit": 1,
     "observed": "____ test_a_brain_picked_that_cant_answer_is_announced_once_for_that_pick _____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -383,12 +383,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "4494e7ac9a88449f2f15200b251c79835d46313d741cbbdcfa94569acafc2f17",
+    "mutated_sha256": "951f2151535c327990af069ab4ca24a8e378b69610b79ba314bd3d63957b8bf5",
     "mutated_exit": 1,
     "observed": "___ test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up ____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -413,12 +413,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "504c7e04ef71d5104cc66486d1e5f392b65c875e75dae567dd25384a05704fc9",
+    "mutated_sha256": "46c93fbae63b7f811f4be24fee6df7450cfe3ad3e0b8c724e09eb35e2b62e060",
     "mutated_exit": 1,
     "observed": "_ test_a_model_server_that_isnt_yours_is_offered_once_and_kept_once_confirmed _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -443,12 +443,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "0240a3470c52dd702b05ca25a4926b91a25ecbae2258d92095d9b53324563d96",
+    "mutated_sha256": "72dfbc0f9ffe8c22e942a15916b2fbfcd93a6aefa89f6004f8c8c32537a341e6",
     "mutated_exit": 1,
     "observed": "___________ test_a_key_saved_in_settings_goes_to_the_keychain_only ____________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -473,12 +473,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef",
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "baseline_exit": 0,
-    "mutated_sha256": "e905aa91ae2591477cf377f54c788f39dee3c4e62724efd748cff676a2a05fc2",
+    "mutated_sha256": "69d7dab72865a0e7830bda699c48d317159f3486c742891e473d58b3c731282c",
     "mutated_exit": 1,
     "observed": "_ test_the_key_field_shows_only_for_an_api_brain_and_a_key_typed_is_handed_back_once _",
-    "after_sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "restored_exit": 0
   },
   {
@@ -503,12 +503,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef",
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "baseline_exit": 0,
-    "mutated_sha256": "2109707766f4d2f8f1d21487d668b46ec9b933191ff6b76adcd5da682eb46932",
+    "mutated_sha256": "3d8072cc0797d5608eb825c9b5c56ee1a2ecdda959fa9db223dbdc22a13b2094",
     "mutated_exit": 1,
     "observed": "_________________ test_test_and_remove_key_ask_the_companion __________________",
-    "after_sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "restored_exit": 0
   },
   {
@@ -533,12 +533,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "23c024a0c56e4bd23c59703ad02a1e71a5dfe5480ab5cbfd3b0c3dbd9597c33d",
+    "mutated_sha256": "04bff04b3c930746b59296cf519f16cb48f0ce4b04129bf4d04871af6a99df96",
     "mutated_exit": 1,
     "observed": "___________ test_text_size_and_how_long_bubbles_stay_apply_at_once ____________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -563,12 +563,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef",
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "baseline_exit": 0,
-    "mutated_sha256": "15dae5b574bd6d524f7df7229d1557c78a3e725ce869cac758459cebbc2f2ece",
+    "mutated_sha256": "d5a1c046d8d3b9bf2850dada7d377a059da40a1a554dc26e5676da9164bbdc9a",
     "mutated_exit": 1,
     "observed": "_____________ test_the_accessibility_tab_hands_back_what_was_set ______________",
-    "after_sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "restored_exit": 0
   },
   {
@@ -593,12 +593,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "c860ca39da5883dce66a138e882ede6173801322b9e26ea554b06767c63fe86f",
+    "mutated_sha256": "97aff18cb248d9848601e546ab416935755c0520e6659e788798cf676e6c59e0",
     "mutated_exit": 1,
     "observed": "__________ test_reminders_snooze_by_their_own_setting_not_the_breaks __________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -623,12 +623,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "f7cbfc3182a05e0d564b98e48f2d26fec49537d9ae348c703108b5e71aaab1bc",
+    "mutated_sha256": "72a1a20391f3daaf777787c84315e4a3300be15517683422ce9d1f23143f4356",
     "mutated_exit": 1,
     "observed": "__________ test_the_update_check_interval_applies_without_a_restart ___________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -653,12 +653,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef",
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "baseline_exit": 0,
-    "mutated_sha256": "fe3a1d7f36f9fc418370b299c93b105a9ff711e6a741fd6a6783c963d1eda2b7",
+    "mutated_sha256": "013da72845928c09da535b4e70102b018d4fa2f51342a09d574c6a90945f6d3b",
     "mutated_exit": 1,
     "observed": "____ test_reminders_have_their_own_snooze_and_almost_empty_stays_below_low ____",
-    "after_sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "restored_exit": 0
   },
   {
@@ -683,12 +683,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78",
+    "before_sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f",
     "baseline_exit": 0,
-    "mutated_sha256": "15793db21f7796e6bd2bf94338ab222c8496b5860c8b6b0025f06ed99f8753a1",
+    "mutated_sha256": "0660ae380f0c2c2f853b403f3f3ed1ae59307e04fc569faa1ca67ae3b6f8b0a5",
     "mutated_exit": 1,
     "observed": "___________ test_almost_empty_stays_below_low_in_the_settings_file ____________",
-    "after_sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78",
+    "after_sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f",
     "restored_exit": 0
   },
   {
@@ -713,12 +713,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "6d443ec6b7da4d7fbdf2732ddd148aa6ea2a158ff1fa93630e73cbe4d8d17ba4",
+    "mutated_sha256": "5632a3ed148ac86fc5b6c6fd2d20de595bd0aabdfdc4b8e8f333f7cc9a3b2d4f",
     "mutated_exit": 1,
     "observed": "_________ test_a_reminder_that_comes_due_waits_until_done_or_snoozed __________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -743,12 +743,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "67900f2165b4eae9c634a95b2e14427cda1b49ad075c740120b9264bb1d30822",
+    "mutated_sha256": "b35fbe39d6dd84d4e617d2ef33a007d294ce498c98fad87ea39e2de01355f73d",
     "mutated_exit": 1,
     "observed": "_ test_a_repeating_reminder_moves_on_when_done_and_later_offers_every_snooze __",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -773,12 +773,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "6557374f9e9943efe2d878a38e036ea5b573501a0939fb7cdec8d14bc6c6b24b",
+    "mutated_sha256": "3f1d3fbbd24495846eb1613c4879f6449ffea0bab7975d9a61661cd087c9eb1b",
     "mutated_exit": 1,
     "observed": "________ test_reminders_fired_and_not_done_come_back_at_the_next_start ________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -803,12 +803,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "a8a45666458f9c787ec2c029e025239284fb734b2d72ad095a349fb38938108b",
+    "mutated_sha256": "f5b14b39b24ddf1463182cb5203b6d583700dc6ffee22d83377d9b1e4929432f",
     "mutated_exit": 1,
     "observed": "________ test_reminders_fired_and_not_done_come_back_at_the_next_start ________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -833,12 +833,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "6a8fa8bd83b7914342629ea68b165c263d23f8da4e4c88a0f308ecf17b20cc5e",
+    "mutated_sha256": "4ed540f95658fdeed50762f6f5f1c8badef2a86cafcbf87aa1e92b0356d47856",
     "mutated_exit": 1,
     "observed": "_____ test_each_reminder_in_the_menu_can_be_changed_repeated_or_cancelled _____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -893,12 +893,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071",
+    "before_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
     "baseline_exit": 0,
-    "mutated_sha256": "de704444bd76867791c8fe85406c13184f82d1f51aa3b29e1f5afefccba1274b",
+    "mutated_sha256": "b5169748ae3a1aa86996d1c2dcfbb8177bed9f8b59f50df02b04c9c700ad5b77",
     "mutated_exit": 1,
     "observed": "______________ test_a_reminder_it_cant_read_says_so_and_exits_2 _______________",
-    "after_sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071",
+    "after_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
     "restored_exit": 0
   },
   {
@@ -923,12 +923,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "dd08f1186eb2aef5fa6afec018ab597b1317155b991a47585e237cfd0e9e7e4f",
+    "mutated_sha256": "dbfe63fff9b2daacc2fa462697c5a8647bbe9e1c06e7ce57fc3e9b4fd6b94a47",
     "mutated_exit": 1,
     "observed": "_ test_a_focus_session_holds_what_comes_on_its_own_until_its_over_then_sums_it_up _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -953,12 +953,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "4599d6b1fd36973b0da3fe663c0d03909e92e8f02ba9142c48355476893297bd",
+    "mutated_sha256": "ea4c1a2fd9e474df3a8e9b95689a0eaf1e31dc6106fca91f11c93fe913582f43",
     "mutated_exit": 1,
     "observed": "_____________ test_recent_messages_are_in_the_menu_and_show_again _____________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -983,12 +983,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "f3aed57d1300cf98af8ce5a3b0d3d09752281255acb3c563ee5b725a636552ff",
+    "mutated_sha256": "d4f5b3eafcdcf0d5440289e2cfd123b93dd3473ad727488d67c526e030059fd6",
     "mutated_exit": 1,
     "observed": "___ test_a_bubble_that_went_by_while_you_were_away_comes_back_with_a_click ____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1013,12 +1013,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "65f4469770a7654da6f51173c86d6b8eed7b44a97eeebd75cc8469268208541c",
+    "mutated_sha256": "5d06aef3b4232a80ad13d65b993dafbf13471d2a63a8dc2c265b7921d3e93dff",
     "mutated_exit": 1,
     "observed": "____________ test_plain_bubbles_the_queue_dropped_count_as_missed _____________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1043,12 +1043,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "a71ff11bf81719838c96caee54eedda74b0fb8089f1afe40e6dac5f1f8fbaff9",
+    "mutated_sha256": "40d5d878e983f1de12753c85b695cfeb8fdd341c96252d39ed1c83b0e9df93a5",
     "mutated_exit": 1,
     "observed": "_ test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1073,12 +1073,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "8168924cc97a147acd4d81f96bd39961dd5384528de7f99978e83d55ee806a71",
+    "mutated_sha256": "46e4a721182d184bb964b29b914d1d59100edd711e63665f5e0603ca5243ed74",
     "mutated_exit": 1,
     "observed": "_ test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1133,12 +1133,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "d004e391e7f30f98ac1827671a3ef86d211bd47963b7211d791d54e1888ab948",
+    "mutated_sha256": "082e005039090dfa6fffcd270fd2642f36d75e9adc1eddcc2735222f3313cb27",
     "mutated_exit": 1,
     "observed": "_____ test_chatmon_status_hears_the_live_states_from_the_running_chatmon ______",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1163,12 +1163,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071",
+    "before_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
     "baseline_exit": 0,
-    "mutated_sha256": "ab9c6dfefb053b92125cee3385c9fc935747341f7fb2753e341a11d05f80de43",
+    "mutated_sha256": "97591d410682545599966e258131360223d9b86be25bd49970869b803c6f565e",
     "mutated_exit": 1,
     "observed": "_____ test_status_says_whether_its_running_the_brain_reminders_and_agents _____",
-    "after_sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071",
+    "after_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
     "restored_exit": 0
   },
   {
@@ -1193,12 +1193,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "caec2214b5c4c48d9802f21fe33c9f35c878d2cc0241d2f3596d6ec504f6b599",
+    "mutated_sha256": "92715392d1c3570af1fe01a9b837ee4a8eef1870fede858e64721758e1f0ae94",
     "mutated_exit": 1,
     "observed": "_ test_quick_actions_attach_the_clipboard_only_when_chosen_and_type_the_prompt _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1283,12 +1283,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "e3a699957bf7f13c003b86216915fec7172f5b238cca6c26bf685ffbad9af58a",
+    "mutated_sha256": "683edea0c09f262fa8a239c5f263cd2129a540087d3bdeb609e938cd5eeb9230",
     "mutated_exit": 1,
     "observed": "_ test_a_chat_keeps_its_brain_and_another_brain_can_answer_the_last_question __",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1313,12 +1313,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "ba72845d80fba78f0bb4215ba9101357a668db888397bf6d113d817f578c1cbb",
+    "mutated_sha256": "e6af7676a558a866befd1c74ffc4f32285dd382b8669ca1a3d325bf559dc1d20",
     "mutated_exit": 1,
     "observed": "______ test_carrying_a_chat_on_asks_its_own_brain_before_the_one_picked _______",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1343,12 +1343,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "86237da33760c6afafe1eafbe44ba7b30bab3cfeda7c5f38929b2835ad6d57d7",
+    "mutated_sha256": "e6e8ade23fda3a403dcfdf6d7926eab4d3fe5ca6cb8c87aa57a022998e1bed3c",
     "mutated_exit": 1,
     "observed": "__________________ test_back_up_and_bring_back_from_settings __________________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1373,12 +1373,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421",
+    "before_sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3",
     "baseline_exit": 0,
-    "mutated_sha256": "689634f076e95ad76bd55c99e3d08a4c518dac8e5e05ecfe6c49c171f919b918",
+    "mutated_sha256": "d069dc6f73a09a85815384b6763d1010d3ccfecf4d7ecd41402ca63a381a6673",
     "mutated_exit": 1,
     "observed": "________ test_the_listing_reads_each_file_once_while_it_doesnt_change _________",
-    "after_sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421",
+    "after_sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3",
     "restored_exit": 0
   },
   {
@@ -1403,12 +1403,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "015ec6f115dc6a3fd790ba13c6054afa9fb372bf3219c60556792747eb792ede",
+    "mutated_sha256": "a2076212c473e84573181af7df69db55c1c8d7fdbf8e80f7518edd9064855a9a",
     "mutated_exit": 1,
     "observed": "__________________ test_copy_puts_an_answer_on_the_clipboard __________________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1433,12 +1433,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "0fec9d15e275c0519e0b5952581974eca97f612ac9fd628a86600ca262631317",
+    "mutated_sha256": "d93bd6ee0afeb2010bdb7b96871c212087d559ceb80a839f2787530d7d6bf118",
     "mutated_exit": 1,
     "observed": "____ test_ctrl_and_a_number_press_a_bubbles_buttons_while_the_box_is_open _____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1463,12 +1463,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "b2eeafdb29d241a8cec6152282e69596702df64a4fd6693773053df19053415a",
+    "mutated_sha256": "45bc0a9fd5e50d8ff2215f2a20842de105702205fc46ff03c7253b430cc4789b",
     "mutated_exit": 1,
     "observed": "_ test_a_buttons_label_typed_after_its_bubble_went_is_answerable_for_a_while __",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1493,12 +1493,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "1bf563669e432cda84e7a4d30455826b0eb8cef54ad3d6292e26a620fb0c6748",
+    "mutated_sha256": "ac7136af403ef0fc6907bccd45b45832e6a3e01cede7cb42b5e27531596899c7",
     "mutated_exit": 1,
     "observed": "_ test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1523,12 +1523,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "3f12db831dfa6b9f8b68bffab158a4dfc2e5bc822d4bf1b33638f016bf113a12",
+    "mutated_sha256": "6a8407f4ed0fbd3f6c82d69220f25d33b004664b8adfd49c1abf6097586c852c",
     "mutated_exit": 1,
     "observed": "_ test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1553,12 +1553,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "2fa4a1aae97565fb019dd6f1772f8be3c4c90c0702e8e0f0afa955e252921a67",
+    "mutated_sha256": "b477243a0c7d8df77d1983ecff735b0d363413f8cf90e0fcf9bad608934b00e3",
     "mutated_exit": 1,
     "observed": "_________ test_the_desktops_colours_and_reduced_motion_apply_at_once __________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1583,12 +1583,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "b96ee6cc7b4400ca2c2b8ee43c4f1e8fc7557ff90676c4a7a5a50221d7cefe75",
+    "mutated_sha256": "ae94f9ee46fcf56110550cb01df9e046bb0c3e08fd54b029f52b1467d97516ce",
     "mutated_exit": 1,
     "observed": "_ test_sounds_play_for_alerts_only_unless_turned_on_and_never_in_quiet_or_focus _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1613,12 +1613,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "15ddb598b168e751081c67944a4eea4d2f8c531c389204d758e9f27865b16e12",
+    "mutated_sha256": "b8e5d4b7028e9627390820e8c174de5e6ca69bfeee36f0486434d86481c65091",
     "mutated_exit": 1,
     "observed": "____ test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back ____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1643,12 +1643,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "9fe7461330f00355fc529dd047e22b1be4978c429b44a99ccedc3d26fbbd42ed",
+    "mutated_sha256": "14a5e63f430ec4924e77ae33ef12cf65850487f812beea4f4e3ba3da288734c4",
     "mutated_exit": 1,
     "observed": "____ test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back ____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1673,12 +1673,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "e16e516195d2ffaf29a043496da600005a29c9d1ee02a227da6b0876abda50fe",
+    "mutated_sha256": "bc4bb22cc3215d38c4413ce45a8fe916219d2e54d2301192ddbf0cdeef612ece",
     "mutated_exit": 1,
     "observed": "__ test_the_first_unlock_of_the_day_names_reminders_agents_and_updates_once ___",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1733,12 +1733,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "56973dbfd8bf1f57030c2e857617d33e7fcd861864a64c61b2601bd82180448a",
+    "mutated_sha256": "0007b5fad0fda55187d92b48ea2aacbd027cb3b1ed4c94b3d87c8dad4535f2d3",
     "mutated_exit": 1,
     "observed": "_______ test_asking_never_waits_on_the_screens_thread_to_find_the_brain _______",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1763,12 +1763,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "92437742460fed58419c969c077e5040f2d5069d43d21ff0df25dab54c794aad",
+    "mutated_sha256": "51d77c6dd8febb0bb6f4184cf46f9a787111a56e2f024de8d60819a16ee38be2",
     "mutated_exit": 1,
     "observed": "___________ test_on_windows_each_connection_is_checked_to_be_yours ____________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1793,12 +1793,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071",
+    "before_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
     "baseline_exit": 0,
-    "mutated_sha256": "3ecd109fa553881455259c38a064f952d651c3862d03de3aea8c5636dd601561",
+    "mutated_sha256": "ab6c6f06f3a9e8ebfa3b4f04891447920d0689215445cb162a462787c75773e3",
     "mutated_exit": 1,
     "observed": "______ test_on_windows_ask_lets_only_chatmon_come_forward_before_sending ______",
-    "after_sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071",
+    "after_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
     "restored_exit": 0
   },
   {
@@ -1823,12 +1823,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "1f9eeecb0f9ae1d3af7591a4174fb1331caa1a943cb3a2d27fe880e684b0cfa5",
+    "mutated_sha256": "9788ec757c01e402f5a89e7dfe2a847fb9822df1b9af7688d375976683f58a55",
     "mutated_exit": 1,
     "observed": "____ test_a_brain_that_reads_files_gets_only_its_own_answers_and_summaries ____",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1853,12 +1853,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "9cbb6d472d36413e505ec035be5b9bc0195d4534427b7c8d5159e2131e8cb355",
+    "mutated_sha256": "cfd3890d65b9bfc1052160b57d769513adc579201f1da077e55dc52d291aef31",
     "mutated_exit": 1,
     "observed": "_________ test_wrong_settings_are_named_one_by_one_and_the_rest_apply _________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1883,12 +1883,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "47976d0a90fba59bfbbb447e0d74c1bc37df176408583c1e01f0420e6f280a1c",
+    "mutated_sha256": "14ee37b380ac04cdd50935f53706080fab0daa2ad27c24a709ef5ced9a9321d0",
     "mutated_exit": 1,
     "observed": "_______________ test_a_damaged_file_recovered_at_start_is_said ________________",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1913,12 +1913,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "9c9ee51484c3636380e260e9cfc5185fbb7a31d7a873795d7176646ee58f7a68",
+    "mutated_sha256": "54c19c2a0b96df7fa24f7d11dc97632cb8b490103e9aa1ff9564bf2c4ff4588d",
     "mutated_exit": 1,
     "observed": "_ test_more_opens_the_whole_text_and_the_box_remembers_its_size_and_says_shift_enter _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -1926,7 +1926,7 @@
     "requirement": "AC-M5-1",
     "file": "chatmon/chats.py",
     "mutation": {
-      "find": "        return f\"today {localefmt.time_of_day(d)}\"",
+      "find": "        return _(\"today {time}\").format(time=localefmt.time_of_day(d))",
       "replace": "        return f\"today {(d.hour % 12) or 12}:{d.minute:02d} {'AM' if d.hour < 12 else 'PM'}\""
     },
     "command": [
@@ -1943,12 +1943,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421",
+    "before_sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3",
     "baseline_exit": 0,
-    "mutated_sha256": "08bda2385b267c5404d783687cd5bc304b027d4a7a6a64574f5465ad25b404a0",
+    "mutated_sha256": "159886b7c605dff9861b178c625dd03e081475c420a251fd0c70964adcc78f27",
     "mutated_exit": 1,
     "observed": "______________________ test_chat_times_follow_the_locale ______________________",
-    "after_sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421",
+    "after_sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3",
     "restored_exit": 0
   },
   {
@@ -1973,12 +1973,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "a3ea35e0b80eb2fc382f7c0cb1c8fddfaf68d1e711ae026837877b83d8510a17",
+    "mutated_sha256": "117c1c76ef436b9a7e440e10a97d2e369185bfa8ca3f88a3b6909885d37681c3",
     "mutated_exit": 1,
     "observed": "_ test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2003,12 +2003,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "64f5b9cf58be113df6be2f0269ba9a034a5dad289e3be2332a80ec2cd2f86dd7",
+    "mutated_sha256": "a2c81e89efa9bc189407e77a89297dca23743b87b1c489e065593517135d8b86",
     "mutated_exit": 1,
     "observed": "_ test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet __",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2033,12 +2033,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "fbc22210a8aec70e775015d81a8a6b957f55fa3c9458ea7dd3a2fb68ff241fa3",
+    "mutated_sha256": "48c43d73516c121c2264012281c0d3acb190abedd9eb67a499006e8e43da75aa",
     "mutated_exit": 1,
     "observed": "_ test_the_hotkey_is_registered_from_settings_toggles_the_box_and_a_problem_is_said_once _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2063,12 +2063,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "de4d648808e42df61982d1a97369ad06f70458497f5b2a6ed3f5e9a2f128fb0c",
+    "mutated_sha256": "ee60aebe017787e90c504d6c732efc535699d29543e0106cc52ef50710db93ff",
     "mutated_exit": 1,
     "observed": "_ test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2093,12 +2093,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "c11d5a66d17285433e5261e7129ce2be514f1cfd6cfcd0776e01d7c2bbb1c65b",
+    "mutated_sha256": "a60fdd4f9e335c17216f3b3c813f115e4e6a4e7405a8191cedf6fe00a16a42e1",
     "mutated_exit": 1,
     "observed": "_ test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2123,12 +2123,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "bac8204d384cd0a3531efd48d558a837585fcc679370a6e577579b2f4c01fa81",
+    "mutated_sha256": "67f8cc0bfda6ae83e972673590698fb47d3822c783245becf4b16b03d50539ab",
     "mutated_exit": 1,
     "observed": "_ test_the_ask_box_is_a_window_with_a_screen_reader_where_the_overlay_draws_it _",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2151,10 +2151,15 @@
     "expected": [
       "test_follow_me_across_monitors_is_a_setting"
     ],
-    "status": "fail",
-    "reason": "baseline is not green (or no test ran)",
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
-    "baseline_exit": 1
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "0307e34f91a4f6ed5592fd29b46dd8302ba98528b16e8cd9e1bd7346da03fa03",
+    "mutated_exit": 1,
+    "observed": "_________________ test_follow_me_across_monitors_is_a_setting _________________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
   },
   {
     "id": "M4A-desk-changes-unheard",
@@ -2176,10 +2181,15 @@
     "expected": [
       "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
     ],
-    "status": "fail",
-    "reason": "baseline is not green (or no test ran)",
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
-    "baseline_exit": 1
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "fdca77b85ea327ba9ef5ee0bcabec08c5ad6edac21821c07a44a483395d913df",
+    "mutated_exit": 1,
+    "observed": "__ test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change ___",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
   },
   {
     "id": "M4A-reader-not-looked-again",
@@ -2203,12 +2213,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "b198ffec07906440878a55b39ae4b0e382b16084ce9e40531079ed41f42a55a5",
+    "mutated_sha256": "0fdf9600e749c4ffba927bfcad46ae3d8ed41b69f9345f5ee18599b6fdd08e45",
     "mutated_exit": 1,
     "observed": "__ test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change ___",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2233,12 +2243,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "59d66f85ed480353195e5e1840a94b5814c8362b91cda3ff89817b4ac6809927",
+    "mutated_sha256": "7e43f6ef20f1a739e17694259ed965a0909be6b997cc8f49bac95aac4e6da417",
     "mutated_exit": 1,
     "observed": "_____ test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard ______",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2263,12 +2273,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "3072af901804ce969388d0ee730b3cc6af6b11c3772f0f9cd61759c588430ca4",
+    "mutated_sha256": "726b83136c08361644d5ebc16a87395d572a41a34a5881a032391ed4139a6817",
     "mutated_exit": 1,
     "observed": "_____ test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard ______",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   },
   {
@@ -2293,12 +2303,102 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "9aad93808e9277da5862092521e39baa04180787d9e11e8c251af1bad292563d",
+    "mutated_sha256": "7eec721f64c3ef6528a13e89261ecb402007f4d2c74b7cfdd3c2e8204ca4ed83",
     "mutated_exit": 1,
     "observed": "_ test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits __",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-app-language-ignored",
+    "requirement": "AC-M8-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        i18n.setup(self.config.get(i18n.SETTING) or None)",
+      "replace": "        i18n.setup(None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_chatmon_starts_in_the_language_set_before_any_window"
+    ],
+    "expected": [
+      "test_chatmon_starts_in_the_language_set_before_any_window"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "f06aef6a45bf1b61f051d38ac5afadada73b0bdeec5a1512f26cb81dd2ac181b",
+    "mutated_exit": 1,
+    "observed": "__________ test_chatmon_starts_in_the_language_set_before_any_window __________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-cli-language-ignored",
+    "requirement": "AC-M8-1",
+    "file": "chatmon/cli.py",
+    "mutation": {
+      "find": "    i18n.setup(_language_setting())",
+      "replace": "    i18n.setup(None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_cli.py::test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+    ],
+    "expected": [
+      "test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "baseline_exit": 0,
+    "mutated_sha256": "ce0396752396b8b2ccc1e2d66cd31fae29c90cdc66cccde6c6c4489fca75c0f0",
+    "mutated_exit": 1,
+    "observed": "__ test_the_command_line_speaks_the_language_chosen_without_writing_anything __",
+    "after_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-window-language-dropped",
+    "requirement": "AC-M8-1",
+    "file": "chatmon/settingswin.py",
+    "mutation": {
+      "find": "            \"language\": self.language.currentData(),\r\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settingswin.py::test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
+    ],
+    "expected": [
+      "test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "baseline_exit": 0,
+    "mutated_sha256": "d1cb999d37045e5ce5af3f3154fd4254675631e1ea6f34b1fea105f2e3eb7cf9",
+    "mutated_exit": 1,
+    "observed": "_ test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start _",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
     "restored_exit": 0
   },
   {
@@ -2323,12 +2423,12 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "baseline_exit": 0,
-    "mutated_sha256": "97b6d632e3611ee595a61833d50bc840f0f3fb2f6d09e543fde0a1498baa727e",
+    "mutated_sha256": "ea588eec6e42bcad3369c3492dbe9449ec21672970d6e7931a2297ed4ae2faed",
     "mutated_exit": 1,
     "observed": "__ test_on_windows_magnifier_goes_to_each_bubble_and_lets_go_when_it_closes ___",
-    "after_sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
     "restored_exit": 0
   }
 ]

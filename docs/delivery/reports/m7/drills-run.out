@@ -71,10 +71,13 @@ PASS M7-11-hotkey-unregistered
 PASS M7-11-balloon-not-toast
 PASS M7-11-refused-toast-unsaid
 PASS M7-11-box-always-hosted
-FAIL M7-11-follow-ignored: baseline is not green (or no test ran)
-FAIL M4A-desk-changes-unheard: baseline is not green (or no test ran)
+PASS M7-11-follow-ignored
+PASS M4A-desk-changes-unheard
 PASS M4A-reader-not-looked-again
 PASS M4A-mac-sleep-unheard
 PASS M4A-low-power-not-read
 PASS M4A-urgent-through-dnd
+PASS M8-app-language-ignored
+PASS M8-cli-language-ignored
+PASS M8-window-language-dropped
 PASS M7-11-magnifier-not-placed

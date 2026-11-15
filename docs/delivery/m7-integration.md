@@ -6,7 +6,8 @@ and for every integration note the merged wave-1 plans address to M7 or "the app
 [M2](m2-bubbles-askbox.md#integration-notes) and [M5](m5-reminders-offline-locale.md#integration-notes). Ordered and
 bounded by [ROADMAP.md](ROADMAP.md). Branch `wave2/m7`, from `improve/assessment-fixes` at `4827b0c`, with `81af7c7`,
 then M3 (`25dd7cd`), M4B (`c6ca786`), M6A (`8b4c9fc`: stricter pytest, mypy) and M4A (`d352359`) merged as the
-coordinator said they were ready, and M4B's toast fix (`b401cc7`): wave 1 is complete, and nothing of M7 waits on it. Reports, logs, the drills'
+coordinator said they were ready, M4B's toast fix (`b401cc7`), and M8's phase A (`0de0af1`, the translation layer):
+wave 1 is complete, and nothing of M7 waits on it. Reports, logs, the drills'
 generator (`drills_m7.py`) and the ledger's (`ledger.py`, `receipt.py`) are in [reports/m7](reports/m7/).
 
 ## Rationale
@@ -142,6 +143,19 @@ Windows CI (runs 43638268829 and 43638815195) failed `test_greets_and_reacts_to_
   with the last one"; *carry on* goes back to it.
 - **Hello (M7-13).** The first unlock each day (and the first start of the day): one bubble with today's reminders,
   agents waiting and updates pending, if there are any.
+- **Language (M8's notes for M7).** `language = ""` in the defaults and the template (`i18n.SETTING`). The Companion
+  calls `i18n.setup(config["language"] or None)` right after reading its settings, before the stage or any widget
+  is made, so the command table (`commands.Table()`, built afterwards) takes that language's phrases too. `chatmon`
+  calls `i18n.setup` before printing, reading the setting from the state file's Settings or `config.toml` without
+  writing either. Settings' General tab offers "System default" and each of `i18n.available()` by
+  `QLocale(code).nativeLanguageName()`, applied at the next start. The three strings this adds go through `_()`
+  and the template was regenerated (`packaging/extract_strings.py`).
+- **Left to M8's phase B.** M7 doesn't wrap the strings it wrote before M8 merged, nor make M8's listed fix-ups in
+  M7-owned files (the system prompt's `label_en`, `updates`' flags in place of English text, `agents.status_words()`,
+  the brain and reason templates, `keychain.where()` in sentences, the transcript's `**You:**`/`Attached:` with
+  `richtext.TURN`, `winfiles.Dropped.problem`): phase B wraps every user-facing string in the eight files at once,
+  with whole-sentence templates, and these go with it. The new M7 strings that are sentences built from pieces are
+  listed for it under Integration notes.
 
 ### Changes outside M7's files
 
@@ -158,6 +172,8 @@ Windows CI (runs 43638268829 and 43638815195) failed `test_greets_and_reacts_to_
 | `chatmon/phrases/en.json` | the *carry on* command's phrases | M7-12 (a translatable phrase, as M5's data wants) |
 | `tests/test_settings.py` | nonsense for the new numeric settings; battery order; the new choices | M1B's file; the settings M7 adds |
 | `tests/test_commands.py` | the table on M5's ids | M0's file; M0's note 6 |
+| `chatmon/locale/chatmon.pot` | regenerated for the language list's three strings | M8 (tests/test_i18n.py checks it's current) |
+| `chatmon/chats.py` | merged with M8's own change to the same lines (its wrapped strings kept, `ChatBook.listing` added back) | Merge of `0de0af1` |
 | `tests/test_wintoast.py` | two tests accept a CI runner's Windows refusing toasts by its own setting (said, with why) or expiring one before Chatmon hides it | Coordinator: "include test_wintoast in your Windows-CI look" |
 
 ### Wave 1's APIs, all wired
@@ -191,15 +207,16 @@ already run off the screen's thread (`Background`), which M4A's notes allow.
   Windows' reasons), and it said a toast timed out before Chatmon hid it. The two tests now accept Windows refusing by
   its own setting (and say `why_not` otherwise) and its expiry before the hiding; the next Windows CI run either
   passes or names the reason.
-- Results on the final source (`3c85918`): the whole suite, 1171 passed and 145 skipped
-  ([final-pytest.log](reports/m7/final-pytest.log); 959 and 101 on the base before M7, with M3, M4A, M4B and M6A's
-  tests since); ruff clean ([final-ruff.log](reports/m7/final-ruff.log)); mypy clean on win32, linux and darwin, with
-  M4A's `winuia.py` exempted by the coordinator (`cac0047`) ([final-mypy.log](reports/m7/final-mypy.log)). 78 red drills, every one green, red and
-  green again: 76 in [drills.log](reports/m7/drills.log) ([drills-results.json](reports/m7/drills-results.json)) and
-  two re-run in [drills-rerun.log](reports/m7/drills-rerun.log), whose first baselines timed out (120 s) inside
-  M1B's `brains.remove_stale_folders()`, which lists `%TEMP%` (34,507 entries on this machine, with several workers'
-  drill copies) the first time an `Asker` is made. The CI fix's first drills are in [drills-ci.log](reports/m7/drills-ci.log)
-  (run again in the full set on the final source). Closure validation: [validate-closure.txt](reports/m7/validate-closure.txt).
+- Results on the final source (`41cd4fd`): the whole suite, 1208 passed and 145 skipped
+  ([final-pytest.log](reports/m7/final-pytest.log); 959 and 101 on the base before M7, with M3, M4A, M4B, M6A and
+  M8's tests since); ruff clean ([final-ruff.log](reports/m7/final-ruff.log)); mypy clean on win32, linux and darwin,
+  with M4A's `winuia.py` exempted by the coordinator (`cac0047`) ([final-mypy.log](reports/m7/final-mypy.log)); the
+  string template current. 81 red drills, every one green, red and green again, in one run
+  ([drills.log](reports/m7/drills.log), [drills-results.json](reports/m7/drills-results.json)) with TEMP pointed at an
+  empty folder: in an earlier run two baselines timed out (120 s) inside M1B's `brains.remove_stale_folders()`, which
+  lists `%TEMP%` (34,507 entries on this machine, with several workers' drill copies) the first time an `Asker` is
+  made. The CI fix's first drills are in [drills-ci.log](reports/m7/drills-ci.log) (run again in the full set).
+  Closure validation: [validate-closure.txt](reports/m7/validate-closure.txt).
 
 ## Integration notes
 
@@ -224,9 +241,12 @@ APIs M7 adds or changes, for the milestones after it (M8, M6B) and the consolida
 
 For others:
 
-- **M8 (translation).** New user-facing strings are in `app.py`, `settingswin.py`, `chatswin.py`, `menus.py`,
-  `commands.py` and `cli.py`; *carry on* is phrase data. Sentences built from fragments to make whole: the agents'
-  "is/are waiting" in `_hello`, and the failure bubble's "Ask <brain>".
+- **M8 (translation, phase B).** M7's strings in `app.py`, `settingswin.py`, `chatswin.py`, `menus.py`, `commands.py`
+  and `cli.py` aren't wrapped yet (only the language list's are); *carry on* is phrase data. Pieces to make whole
+  sentences: `_hello`'s "{agents} is/are waiting for you" and "{n} system update(s)", the failure bubble's
+  "Ask {brain}", the snooze button's "Snooze {length}", `reminder_line`'s "{kind} {when}: {text} ({repeat})", the
+  Chats window's and the chats menu's "{title} · {when} (this one)", the tray tooltip's "Chatmon\n{states}", and
+  `_key_status`'s sentences around `keychain.where()`. The phase-B fix-ups in M8's table are left to phase B.
 - **M6A (CI).** Windows CI's smoke failures were the runner's "quiet" desktop leaking into tests: fixed in the
   harness. Pending on Linux and macOS: the POSIX branch of `events.request`, `test_a_locked_session_stops_drawing…`
   (runs everywhere, platform faked), and the Settings and Chats windows' tests with other fonts.
@@ -278,6 +298,7 @@ For others:
   the moment they change. On Linux an alert waiting under Do Not Disturb no longer shows through it. On macOS,
   announcements can be spoken in macOS's own voice while Chatmon is in the background (a setting, off by default).
 - After 15 minutes the ask box opens on a new chat and says so: *carry on* goes back to the last one.
+- Settings can choose the language Chatmon speaks (from its next start), and the `chatmon` command follows it.
 - The first unlock of the day says what's waiting: today's reminders, agents waiting for you, updates.
 - Settings that are wrong are named one by one, and a damaged file Chatmon recovered is said at start.
 - **Security (Windows):** each connection to Chatmon is checked to come from your own processes, and `chatmon ask`
@@ -294,7 +315,8 @@ For others:
   new chat goes back to the last one.
 - Brains: save an API key in Settings (your keychain, never the settings file), **Test** a brain, **Ask another
   brain**; Automatic asks before using a model server that isn't yours.
-- Settings: the Accessibility tab; reminders' own snooze; Back up and Bring back.
+- Settings: the Accessibility tab; reminders' own snooze; Back up and Bring back; the Language (System default, or a
+  translation Chatmon has), from the next start; `language = "de"` in `config.toml` does the same.
 - Sounds: alerts only by default (needs-you, reminders, focus done), never during Do Not Disturb, Focus, full screen
   or a focus session; one switch for all.
 - AI agents: `chatmon status` shows what your agents are doing now (from the running Chatmon).
@@ -523,6 +545,15 @@ For others:
       "priority": "normal",
       "acceptance": [
         "AC-M2-1"
+      ],
+      "superseded_by": null
+    },
+    {
+      "id": "INT-M8",
+      "statement": "M8's notes for M7: the language setting, chosen at start and in the command line, offered in Settings",
+      "priority": "normal",
+      "acceptance": [
+        "AC-M8-1"
       ],
       "superseded_by": null
     },
@@ -1131,6 +1162,18 @@ For others:
       "given": "A cut-short bubble, the bigger box, a multi-line question",
       "when": "More is pressed, the box is made bigger and reopened, a question with line breaks is asked",
       "then": "More opens the whole text in the box; the size is remembered; the hint says Shift+Enter; the question keeps its lines",
+      "checks": [
+        "behavior",
+        "red"
+      ],
+      "manual_reason": null
+    },
+    {
+      "id": "AC-M8-1",
+      "requirement": "INT-M8",
+      "given": "A language chosen in Settings or the settings file",
+      "when": "Chatmon or the chatmon command starts",
+      "then": "It's set up before any window is built or anything printed (the command line reading it without writing anything); Settings offers System default and each shipped language by its own name",
       "checks": [
         "behavior",
         "red"
@@ -1828,8 +1871,8 @@ For others:
         "RED-M7-11-balloon-not-toast",
         "RED-M7-11-refused-toast-unsaid",
         "RED-M7-11-box-always-hosted",
-        "RED-M7-11-magnifier-not-placed",
-        "RED-M7-11-follow-ignored"
+        "RED-M7-11-follow-ignored",
+        "RED-M7-11-magnifier-not-placed"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1873,11 +1916,69 @@ For others:
       "evidence": [
         "RDY-1",
         "BEH-SUITE",
+        "RED-M4A-desk-changes-unheard",
         "RED-M4A-reader-not-looked-again",
         "RED-M4A-mac-sleep-unheard",
         "RED-M4A-low-power-not-read",
-        "RED-M4A-urgent-through-dnd",
-        "RED-M4A-desk-changes-unheard"
+        "RED-M4A-urgent-through-dnd"
+      ],
+      "blocker": null,
+      "superseded_by": null
+    },
+    {
+      "id": "TASK-I18N",
+      "purpose": "M8's language setting wired: settings, i18n.setup in the app and the CLI, the Settings window's list",
+      "acceptance": [
+        "AC-M8-1"
+      ],
+      "depends_on": [
+        "TASK-SETTINGS"
+      ],
+      "changes": [
+        {
+          "path": "chatmon/app.py",
+          "action": "modify"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "action": "modify"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "action": "modify"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "action": "modify"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "action": "modify"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "action": "modify"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "action": "modify"
+        },
+        {
+          "path": "tests/test_cli.py",
+          "action": "modify"
+        },
+        {
+          "path": "tests/test_settingswin.py",
+          "action": "modify"
+        }
+      ],
+      "status": "verified",
+      "evidence": [
+        "RDY-1",
+        "BEH-SUITE",
+        "RED-M8-app-language-ignored",
+        "RED-M8-cli-language-ignored",
+        "RED-M8-window-language-dropped"
       ],
       "blocker": null,
       "superseded_by": null
@@ -2096,6 +2197,7 @@ For others:
         "AC-M1B-9",
         "AC-M1B-10",
         "AC-M2-1",
+        "AC-M8-1",
         "AC-M5-1"
       ],
       "kind": "readiness",
@@ -2127,7 +2229,7 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/conftest.py",
@@ -2138,7 +2240,7 @@ For others:
           "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
         }
       ],
-      "scope_sha256": "6b91484a874ddda585fcf22be4e8f871548dddf8ac80a8f6e44045345fea1d91",
+      "scope_sha256": "e0bed30be8b7760b1f38fc3d3659feb5e96f882502608e71901632acb6c06022",
       "red": null,
       "reason": null
     },
@@ -2195,6 +2297,7 @@ For others:
         "AC-M1B-9",
         "AC-M1B-10",
         "AC-M2-1",
+        "AC-M8-1",
         "AC-M5-1"
       ],
       "kind": "behavior",
@@ -2220,12 +2323,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/final-pytest.log",
-        "sha256": "2f5dc1ef2817d8b15194d259c75fda9dc8eb940fa3668e6a4a9e196baf2ea1ff"
+        "sha256": "cf444f3d74a56446be989a8ba8959452890ff608320746e9cb8e55600b4c94c5"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -2233,11 +2336,11 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/chats.py",
-          "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+          "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
         },
         {
           "path": "chatmon/chatswin.py",
@@ -2245,7 +2348,7 @@ For others:
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -2254,6 +2357,10 @@ For others:
         {
           "path": "chatmon/events.py",
           "sha256": "a849300cbe173d5996052e021575090bd77ed05f0b31c4ef0ea4252ec458b8f2"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "7371614c5f0315d19f805df16694d5ca4f8b599cc6127b891c4a3f836d50b149"
         },
         {
           "path": "chatmon/menus.py",
@@ -2265,7 +2372,7 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/phrases/en.json",
@@ -2273,15 +2380,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -2297,11 +2404,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -2317,7 +2424,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_reminders.py",
@@ -2341,7 +2448,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -2361,14 +2468,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "6b91484a874ddda585fcf22be4e8f871548dddf8ac80a8f6e44045345fea1d91",
+      "scope_sha256": "e0bed30be8b7760b1f38fc3d3659feb5e96f882502608e71901632acb6c06022",
       "red": null,
       "reason": null
     },
@@ -2401,12 +2508,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -2422,11 +2529,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -2453,7 +2560,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b1eb60087c89ba4a3fea5a56b05b1d9fb92eb1947961c87cfc81eac09d3915f7",
+      "scope_sha256": "7cba23fc33f4752c905eedff1ce3a44cb97a32c336df75f0e660d05c867b2fa7",
       "red": {
         "mutation": "CI-01-host-desk-read: in tests/app_harness.py, '    c.desk = PretendDesk()' became \"    pass  # the computer's own desk, as before\"",
         "baseline_exit": 0,
@@ -2464,19 +2571,19 @@ For others:
         "before": [
           {
             "path": "tests/app_harness.py",
-            "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+            "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
           }
         ],
         "mutated": [
           {
             "path": "tests/app_harness.py",
-            "sha256": "acd9819b4847c433037e44fb49bc3e162875f8df15178ffcee1ca5fdee59b081"
+            "sha256": "6b190bc3cc76ad13c50615c78a619bfa711aa408773cf7fbf3d3ed11762db4f9"
           }
         ],
         "after": [
           {
             "path": "tests/app_harness.py",
-            "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+            "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
           }
         ]
       },
@@ -2512,12 +2619,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -2533,7 +2640,7 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/conftest.py",
@@ -2560,7 +2667,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "cc7e9c164823c32883ac05a3464dfac759ba21c6dbc10750301f865408170807",
+      "scope_sha256": "65e6105a4fa372892ce8815d26cb0b9105625a3f2d7ae8efe8c055eb073e1256",
       "red": {
         "mutation": "CI-02-queue-best-only: in chatmon/messages.py, 'best = next((m for m in self._ready() if self._takes_over(m, now)), None)' became 'best = next((m for m in self._ready()[:1] if self._takes_over(m, now)), None)'",
         "baseline_exit": 0,
@@ -2618,12 +2725,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -2639,7 +2746,7 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/conftest.py",
@@ -2666,7 +2773,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "cc7e9c164823c32883ac05a3464dfac759ba21c6dbc10750301f865408170807",
+      "scope_sha256": "65e6105a4fa372892ce8815d26cb0b9105625a3f2d7ae8efe8c055eb073e1256",
       "red": {
         "mutation": "CI-03-wake-best-only: in chatmon/messages.py, 'times = [at for m in self._ready() if' became 'times = [at for m in self._ready()[:1] if'",
         "baseline_exit": 0,
@@ -2724,12 +2831,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -2745,7 +2852,7 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/conftest.py",
@@ -2772,7 +2879,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "cc7e9c164823c32883ac05a3464dfac759ba21c6dbc10750301f865408170807",
+      "scope_sha256": "65e6105a4fa372892ce8815d26cb0b9105625a3f2d7ae8efe8c055eb073e1256",
       "red": {
         "mutation": "CI-04-askbox-wakes-by-strength: in chatmon/bubble.py, '        if drawn_here and self._moving(time.monotonic()):' became '        if drawn_here and self.effects(time.monotonic()) > 0.0:'",
         "baseline_exit": 0,
@@ -2783,19 +2890,19 @@ For others:
         "before": [
           {
             "path": "chatmon/bubble.py",
-            "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+            "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/bubble.py",
-            "sha256": "5f874521019eea2ec0102fcb1478d4e2567783ec3a9abcb8f1aa0e208ed34f2b"
+            "sha256": "fc60ebfa58ebd48c40101b3e68c4ed0bedc382a405cabcbdf72e2bd5cc4114ff"
           }
         ],
         "after": [
           {
             "path": "chatmon/bubble.py",
-            "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+            "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
           }
         ]
       },
@@ -2830,12 +2937,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -2851,7 +2958,7 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/conftest.py",
@@ -2878,7 +2985,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "cc7e9c164823c32883ac05a3464dfac759ba21c6dbc10750301f865408170807",
+      "scope_sha256": "65e6105a4fa372892ce8815d26cb0b9105625a3f2d7ae8efe8c055eb073e1256",
       "red": {
         "mutation": "CI-05-askbox-frame-stops-at-zero: in chatmon/bubble.py, '        if not self._moving(time.monotonic()):' became '        if self.effects(time.monotonic()) <= 0.0:'",
         "baseline_exit": 0,
@@ -2889,19 +2996,19 @@ For others:
         "before": [
           {
             "path": "chatmon/bubble.py",
-            "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+            "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/bubble.py",
-            "sha256": "d8f7a5ab56158a0e7d556a7c5c3fbe2a98a0c346bb9fd99ad6d113f9dc0651a5"
+            "sha256": "60f29925d53fd13062906b789855d4561cb75adaaf764802a6408933bbb16a1c"
           }
         ],
         "after": [
           {
             "path": "chatmon/bubble.py",
-            "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+            "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
           }
         ]
       },
@@ -2936,12 +3043,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -2949,7 +3056,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -2965,11 +3072,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -3004,7 +3111,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
+      "scope_sha256": "307d24f97f367c690cf893e3a8e6c312107423f212104b718efb656239c5bf1f",
       "red": {
         "mutation": "M7-01-only-newest-piece: in chatmon/app.py, 'first, q.partial = not q.partial, q.partial + text' became 'first, q.partial = not q.partial, text'",
         "baseline_exit": 0,
@@ -3015,19 +3122,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "34fb08ad0dbbc182825fe0b5e5a88283a9fbfe7e728522d2079b3f15f3ece051"
+            "sha256": "4492a81cc158d83773502230aad75696f2491ca8089bd27c12ad8c64f9473813"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -3062,12 +3169,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -3075,7 +3182,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -3091,11 +3198,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -3130,7 +3237,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
+      "scope_sha256": "307d24f97f367c690cf893e3a8e6c312107423f212104b718efb656239c5bf1f",
       "red": {
         "mutation": "M7-01-closing-drops: in chatmon/app.py, '        # A question on its way carries on: its answer is kept in the chat, and a bubble says it came (_answered).' became '        self.asker.cancel()\\r\\n        self.questions.drop()'",
         "baseline_exit": 0,
@@ -3141,19 +3248,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "838d76ea001e72960e463adb07e16dd20b84072b1fc560910ac0f6f89f69b318"
+            "sha256": "c83fbb3aaa4cce17d0c9e96d3584e0e97dcb50f25ddfa7918851fb828d803af7"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -3188,12 +3295,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -3201,7 +3308,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -3217,11 +3324,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -3256,7 +3363,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
+      "scope_sha256": "307d24f97f367c690cf893e3a8e6c312107423f212104b718efb656239c5bf1f",
       "red": {
         "mutation": "M7-01-answered-unsaid: in chatmon/app.py, 'self.say(f\"{label or \\'The AI\\'} answered\", buttons=[(\"Read\", self._read_answer)]' became 'self._read_aloud(f\"{label or \\'The AI\\'} answered\", buttons=[(\"Read\", self._read_answer)]'",
         "baseline_exit": 0,
@@ -3267,19 +3374,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "bfa6b3dab153569f831d2ae1f5407b3b7f15338b28404c3f75faf2cfe9d70edb"
+            "sha256": "14ff2e590c8ead4e3c5e84e7e4e8636e48c974b897f1bfe1b53d19eb9a304e22"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -3314,12 +3421,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -3327,7 +3434,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -3343,11 +3450,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -3382,7 +3489,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
+      "scope_sha256": "307d24f97f367c690cf893e3a8e6c312107423f212104b718efb656239c5bf1f",
       "red": {
         "mutation": "M7-01-stop-loses-what-came: in chatmon/app.py, '        if q.partial.strip():\\r\\n' became '        if False:\\r\\n'",
         "baseline_exit": 0,
@@ -3393,19 +3500,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "e5ed99db3b937f476a1139c988ca3191c87756cc6c26ca856814c58f0187acd6"
+            "sha256": "0ebb02ea8d96180872bde37256ab31da207306560621bccb7a96515796d94928"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -3440,12 +3547,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -3453,7 +3560,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -3469,11 +3576,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -3508,7 +3615,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9f3a7499bbb1e3e002d80fbb0b7b493bf661ca792ea2788d5148ac888c0daf44",
+      "scope_sha256": "307d24f97f367c690cf893e3a8e6c312107423f212104b718efb656239c5bf1f",
       "red": {
         "mutation": "M7-01-no-busy: in chatmon/app.py, '        self.ask_box.set_busy(brain.label, q.started)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -3519,19 +3626,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "1283a9959f1f6f6b48b6e8ecdaa3e96d7248817724c2de5dd43d752ba6cf4849"
+            "sha256": "6db21788c16295f4547f58741ac7c5c93cbd561283e8c5cc34b2d6ab731abd6a"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -3566,12 +3673,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -3579,7 +3686,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -3595,11 +3702,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -3634,7 +3741,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
+      "scope_sha256": "eff80296798f27b428ad17a3140777d79bc11e5ed9764f97c05ecc69b17c564e",
       "red": {
         "mutation": "M7-02-no-next-brain: in chatmon/app.py, '        if other is not None:\\r\\n            buttons.append' became '        if False:\\r\\n            buttons.append'",
         "baseline_exit": 0,
@@ -3645,19 +3752,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "3f6430d9bd5b6bf657aa4aa8999a8f9d878225c7f6ab7e021ad6b232723c1d3a"
+            "sha256": "827ad8b65d89f89c7be32ad1df178e93e4dfd23858fcd9482d7f28935cb3a4eb"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -3692,12 +3799,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -3705,7 +3812,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -3721,11 +3828,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -3760,7 +3867,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
+      "scope_sha256": "eff80296798f27b428ad17a3140777d79bc11e5ed9764f97c05ecc69b17c564e",
       "red": {
         "mutation": "M7-02-fallback-every-time: in chatmon/app.py, '        if self._fallback_told == picked:\\r\\n' became '        if False:\\r\\n'",
         "baseline_exit": 0,
@@ -3771,19 +3878,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "c36daac667ee23feea2a14bf7765d40e45429a298cee98813261601be3852262"
+            "sha256": "008764c276b0264ea87863721bd5f6ca9fa19200a75876995e63bf259ea9b029"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -3818,12 +3925,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -3831,7 +3938,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -3847,11 +3954,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -3886,7 +3993,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
+      "scope_sha256": "eff80296798f27b428ad17a3140777d79bc11e5ed9764f97c05ecc69b17c564e",
       "red": {
         "mutation": "M7-02-welcome-without-brain: in chatmon/app.py, 'line = f\"Your questions go to **{brain.label}**; **Brain** in my menu picks another.\"' became 'line = \"\"'",
         "baseline_exit": 0,
@@ -3897,19 +4004,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "4494e7ac9a88449f2f15200b251c79835d46313d741cbbdcfa94569acafc2f17"
+            "sha256": "951f2151535c327990af069ab4ca24a8e378b69610b79ba314bd3d63957b8bf5"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -3944,12 +4051,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -3957,7 +4064,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -3973,11 +4080,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -4012,7 +4119,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
+      "scope_sha256": "eff80296798f27b428ad17a3140777d79bc11e5ed9764f97c05ecc69b17c564e",
       "red": {
         "mutation": "M7-02-server-not-kept: in chatmon/app.py, '        self.state.set(\"trusted_servers\", brains.confirmed_servers())\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -4023,19 +4130,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "504c7e04ef71d5104cc66486d1e5f392b65c875e75dae567dd25384a05704fc9"
+            "sha256": "46c93fbae63b7f811f4be24fee6df7450cfe3ad3e0b8c724e09eb35e2b62e060"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -4070,16 +4177,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -4087,11 +4194,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -4103,11 +4210,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -4135,14 +4242,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-key-not-saved: in chatmon/app.py, '            problem = keychain.set(name, key)\\r\\n' became '            problem = None\\r\\n'",
         "baseline_exit": 0,
@@ -4153,19 +4260,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "0240a3470c52dd702b05ca25a4926b91a25ecbae2258d92095d9b53324563d96"
+            "sha256": "72dfbc0f9ffe8c22e942a15916b2fbfcd93a6aefa89f6004f8c8c32537a341e6"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -4200,16 +4307,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -4217,11 +4324,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -4233,11 +4340,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -4265,14 +4372,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-key-not-handed-back: in chatmon/settingswin.py, '\"api_key\": (self._brain_name(), key) if key and self._brain_name() in self._keys else None,' became '\"api_key\": None,'",
         "baseline_exit": 0,
@@ -4283,19 +4390,19 @@ For others:
         "before": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "e905aa91ae2591477cf377f54c788f39dee3c4e62724efd748cff676a2a05fc2"
+            "sha256": "69d7dab72865a0e7830bda699c48d317159f3486c742891e473d58b3c731282c"
           }
         ],
         "after": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ]
       },
@@ -4330,16 +4437,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -4347,11 +4454,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -4363,11 +4470,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -4395,14 +4502,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-test-without-typed-key: in chatmon/settingswin.py, 'self.test_requested.emit(name, self.key.text().strip() if name in self._keys else \"\")' became 'self.test_requested.emit(name, \"\")'",
         "baseline_exit": 0,
@@ -4413,19 +4520,19 @@ For others:
         "before": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "2109707766f4d2f8f1d21487d668b46ec9b933191ff6b76adcd5da682eb46932"
+            "sha256": "3d8072cc0797d5608eb825c9b5c56ee1a2ecdda959fa9db223dbdc22a13b2094"
           }
         ],
         "after": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ]
       },
@@ -4460,16 +4567,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -4477,11 +4584,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -4493,11 +4600,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -4525,14 +4632,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-text-scale-unapplied: in chatmon/app.py, '        self.stage.bubble.set_text_scale(scale)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -4543,19 +4650,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "23c024a0c56e4bd23c59703ad02a1e71a5dfe5480ab5cbfd3b0c3dbd9597c33d"
+            "sha256": "04bff04b3c930746b59296cf519f16cb48f0ce4b04129bf4d04871af6a99df96"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -4590,16 +4697,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -4607,11 +4714,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -4623,11 +4730,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -4655,14 +4762,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-cues-not-handed-back: in chatmon/settingswin.py, '\"cues\": {name: box.isChecked() for name, box in self.cues.items()},' became '\"cues\": {},'",
         "baseline_exit": 0,
@@ -4673,19 +4780,19 @@ For others:
         "before": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "15dae5b574bd6d524f7df7229d1557c78a3e725ce869cac758459cebbc2f2ece"
+            "sha256": "d5a1c046d8d3b9bf2850dada7d377a059da40a1a554dc26e5676da9164bbdc9a"
           }
         ],
         "after": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ]
       },
@@ -4720,16 +4827,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -4737,11 +4844,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -4753,11 +4860,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -4785,14 +4892,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-snooze-from-breaks: in chatmon/app.py, '        return float(self.config[\"reminders\"][\"snooze_minutes\"])' became '        return float(self.config[\"breaks\"][\"snooze_minutes\"])'",
         "baseline_exit": 0,
@@ -4803,19 +4910,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "c860ca39da5883dce66a138e882ede6173801322b9e26ea554b06767c63fe86f"
+            "sha256": "97aff18cb248d9848601e546ab416935755c0520e6659e788798cf676e6c59e0"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -4850,16 +4957,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -4867,11 +4974,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -4883,11 +4990,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -4915,14 +5022,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-interval-needs-restart: in chatmon/app.py, '        self._updates_timer.setInterval(' became '        (lambda ms: None)('",
         "baseline_exit": 0,
@@ -4933,19 +5040,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "f7cbfc3182a05e0d564b98e48f2d26fec49537d9ae348c703108b5e71aaab1bc"
+            "sha256": "72a1a20391f3daaf777787c84315e4a3300be15517683422ce9d1f23143f4356"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -4980,16 +5087,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -4997,11 +5104,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -5013,11 +5120,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -5045,14 +5152,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-battery-order-window: in chatmon/settingswin.py, 'self.battery_critical.setMaximum(max(1, low - 1) if low else 50)' became 'self.battery_critical.setMaximum(50)'",
         "baseline_exit": 0,
@@ -5063,19 +5170,19 @@ For others:
         "before": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "fe3a1d7f36f9fc418370b299c93b105a9ff711e6a741fd6a6783c963d1eda2b7"
+            "sha256": "013da72845928c09da535b4e70102b018d4fa2f51342a09d574c6a90945f6d3b"
           }
         ],
         "after": [
           {
             "path": "chatmon/settingswin.py",
-            "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ]
       },
@@ -5110,16 +5217,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -5127,11 +5234,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -5143,11 +5250,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -5175,14 +5282,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "c2655ce90e2f21ae5d77b207a5792d05ede1926e09c450a8cc47b53fa56b9705",
+      "scope_sha256": "0ef46abd49148651a55d9cbc783fadaebb0f4a4ab4c870c609ebfa176e6aa7be",
       "red": {
         "mutation": "M7-03-battery-order-file: in chatmon/settings.py, '0 < heads_up.get(\"battery_low\", 0) <= heads_up.get(\"battery_critical\", 0)' became 'False'",
         "baseline_exit": 0,
@@ -5193,19 +5300,19 @@ For others:
         "before": [
           {
             "path": "chatmon/settings.py",
-            "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+            "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/settings.py",
-            "sha256": "15793db21f7796e6bd2bf94338ab222c8496b5860c8b6b0025f06ed99f8753a1"
+            "sha256": "0660ae380f0c2c2f853b403f3f3ed1ae59307e04fc569faa1ca67ae3b6f8b0a5"
           }
         ],
         "after": [
           {
             "path": "chatmon/settings.py",
-            "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+            "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
           }
         ]
       },
@@ -5240,20 +5347,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -5269,15 +5376,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -5289,11 +5396,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -5317,7 +5424,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -5333,14 +5440,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
+      "scope_sha256": "22d8327c7456f03af9cec85507b61665ca1b274e40ccaf339c354005ae04df23",
       "red": {
         "mutation": "M7-04-done-keeps-it: in chatmon/app.py, '        if self.reminders.acknowledge(rid, time.time()):' became '        if self.reminders.get(rid):'",
         "baseline_exit": 0,
@@ -5351,19 +5458,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "6d443ec6b7da4d7fbdf2732ddd148aa6ea2a158ff1fa93630e73cbe4d8d17ba4"
+            "sha256": "5632a3ed148ac86fc5b6c6fd2d20de595bd0aabdfdc4b8e8f333f7cc9a3b2d4f"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -5398,20 +5505,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -5427,15 +5534,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -5447,11 +5554,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -5475,7 +5582,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -5491,14 +5598,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
+      "scope_sha256": "22d8327c7456f03af9cec85507b61665ca1b274e40ccaf339c354005ae04df23",
       "red": {
         "mutation": "M7-04-later-missing: in chatmon/app.py, '            (\"Later…\", partial(self._offer_snoozes, r.id)),\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -5509,19 +5616,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "67900f2165b4eae9c634a95b2e14427cda1b49ad075c740120b9264bb1d30822"
+            "sha256": "b35fbe39d6dd84d4e617d2ef33a007d294ce498c98fad87ea39e2de01355f73d"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -5556,20 +5663,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -5585,15 +5692,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -5605,11 +5712,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -5633,7 +5740,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -5649,14 +5756,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
+      "scope_sha256": "22d8327c7456f03af9cec85507b61665ca1b274e40ccaf339c354005ae04df23",
       "red": {
         "mutation": "M7-04-not-restored: in chatmon/app.py, '        self._show_due_reminders()  # fired and not yet done or snoozed' became '        pass  # fired and not yet done or snoozed'",
         "baseline_exit": 0,
@@ -5667,19 +5774,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "6557374f9e9943efe2d878a38e036ea5b573501a0939fb7cdec8d14bc6c6b24b"
+            "sha256": "3f1d3fbbd24495846eb1613c4879f6449ffea0bab7975d9a61661cd087c9eb1b"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -5714,20 +5821,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -5743,15 +5850,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -5763,11 +5870,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -5791,7 +5898,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -5807,14 +5914,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
+      "scope_sha256": "22d8327c7456f03af9cec85507b61665ca1b274e40ccaf339c354005ae04df23",
       "red": {
         "mutation": "M7-04-focus-held-forever: in chatmon/app.py, '        for r in [r for r in due if r.kind == \"focus\"]:\\r\\n' became '        for r in []:\\r\\n'",
         "baseline_exit": 0,
@@ -5825,19 +5932,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "a8a45666458f9c787ec2c029e025239284fb734b2d72ad095a349fb38938108b"
+            "sha256": "f5b14b39b24ddf1463182cb5203b6d583700dc6ffee22d83377d9b1e4929432f"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -5872,20 +5979,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -5901,15 +6008,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -5921,11 +6028,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -5949,7 +6056,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -5965,14 +6072,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
+      "scope_sha256": "22d8327c7456f03af9cec85507b61665ca1b274e40ccaf339c354005ae04df23",
       "red": {
         "mutation": "M7-04-edit-ignores-time: in chatmon/app.py, '            changes[\"when\"] = when.due.timestamp()\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -5983,19 +6090,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "6a8fa8bd83b7914342629ea68b165c263d23f8da4e4c88a0f308ecf17b20cc5e"
+            "sha256": "4ed540f95658fdeed50762f6f5f1c8badef2a86cafcbf87aa1e92b0356d47856"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -6030,20 +6137,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -6059,15 +6166,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -6079,11 +6186,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -6107,7 +6214,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -6123,14 +6230,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
+      "scope_sha256": "22d8327c7456f03af9cec85507b61665ca1b274e40ccaf339c354005ae04df23",
       "red": {
         "mutation": "M7-04-repeat-dropped: in chatmon/commands.py, 'command.kind, repeat=command.repeat)' became 'command.kind, repeat=None)'",
         "baseline_exit": 0,
@@ -6188,20 +6295,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -6217,15 +6324,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -6237,11 +6344,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -6265,7 +6372,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -6281,14 +6388,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "9a817dffa8a5656bc81637e8c3b9189ef55bd83ff6ae896ad30d5c4d5a66c33f",
+      "scope_sha256": "22d8327c7456f03af9cec85507b61665ca1b274e40ccaf339c354005ae04df23",
       "red": {
         "mutation": "M7-04-cli-no-explanation: in chatmon/cli.py, 'why = reminders.explain(command, markdown=False) if command is not None and command.kind == \"unclear\" else \"\"' became 'why = \"\"'",
         "baseline_exit": 0,
@@ -6299,19 +6406,19 @@ For others:
         "before": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+            "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "de704444bd76867791c8fe85406c13184f82d1f51aa3b29e1f5afefccba1274b"
+            "sha256": "b5169748ae3a1aa86996d1c2dcfbb8177bed9f8b59f50df02b04c9c700ad5b77"
           }
         ],
         "after": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+            "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
           }
         ]
       },
@@ -6346,20 +6453,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -6375,15 +6482,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -6395,11 +6502,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -6423,7 +6530,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -6439,14 +6546,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "f09b6606de5e1cf21fa2bef10aead9d9621b10f56324af809cd5982731dcfee5",
+      "scope_sha256": "3676da33ed511c55a37a5e3cb679bc02e85bd32025a3b1592322e62fca7c865e",
       "red": {
         "mutation": "M7-05-no-summary: in chatmon/app.py, '        return self.messages.take(lambda m: m in held and not m.buttons)' became '        return []'",
         "baseline_exit": 0,
@@ -6457,19 +6564,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "dd08f1186eb2aef5fa6afec018ab597b1317155b991a47585e237cfd0e9e7e4f"
+            "sha256": "dbfe63fff9b2daacc2fa462697c5a8647bbe9e1c06e7ce57fc3e9b4fd6b94a47"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -6504,16 +6611,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/menus.py",
@@ -6533,11 +6640,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -6549,7 +6656,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -6568,7 +6675,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0849df8caf5d01cbf79989317ec4821f63cb35d8cae48086a108f95445929a84",
+      "scope_sha256": "d5c2f4228a737c833bac1cc19ac3b5386bde65b6bf57f60d4f2ace4b1c09b7d1",
       "red": {
         "mutation": "M7-06-not-recent: in chatmon/app.py, '        self._recent.append((time.time(), message))\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -6579,19 +6686,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "4599d6b1fd36973b0da3fe663c0d03909e92e8f02ba9142c48355476893297bd"
+            "sha256": "ea4c1a2fd9e474df3a8e9b95689a0eaf1e31dc6106fca91f11c93fe913582f43"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -6626,16 +6733,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/menus.py",
@@ -6655,11 +6762,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -6671,7 +6778,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -6690,7 +6797,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0849df8caf5d01cbf79989317ec4821f63cb35d8cae48086a108f95445929a84",
+      "scope_sha256": "d5c2f4228a737c833bac1cc19ac3b5386bde65b6bf57f60d4f2ace4b1c09b7d1",
       "red": {
         "mutation": "M7-06-click-ignores-missed: in chatmon/app.py, '        elif self._missed and not self.stage.message_visible():' became '        elif False:'",
         "baseline_exit": 0,
@@ -6701,19 +6808,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "f3aed57d1300cf98af8ce5a3b0d3d09752281255acb3c563ee5b725a636552ff"
+            "sha256": "d4f5b3eafcdcf0d5440289e2cfd123b93dd3473ad727488d67c526e030059fd6"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -6748,16 +6855,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/menus.py",
@@ -6777,11 +6884,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -6793,7 +6900,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -6812,7 +6919,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0849df8caf5d01cbf79989317ec4821f63cb35d8cae48086a108f95445929a84",
+      "scope_sha256": "d5c2f4228a737c833bac1cc19ac3b5386bde65b6bf57f60d4f2ace4b1c09b7d1",
       "red": {
         "mutation": "M7-06-dropped-not-missed: in chatmon/app.py, 'self._missed += [m for m in self.messages.add(message) if m is not message]' became 'self.messages.add(message)'",
         "baseline_exit": 0,
@@ -6823,19 +6930,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "65f4469770a7654da6f51173c86d6b8eed7b44a97eeebd75cc8469268208541c"
+            "sha256": "5d06aef3b4232a80ad13d65b993dafbf13471d2a63a8dc2c265b7921d3e93dff"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -6870,20 +6977,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -6899,15 +7006,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -6923,11 +7030,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -6939,7 +7046,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -6951,7 +7058,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -6967,14 +7074,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-07-no-tooltip: in chatmon/app.py, '        self.tray.setToolTip(f\"Chatmon\\\\n{states}\" if states else \"Chatmon\")' became '        self.tray.setToolTip(\"Chatmon\")'",
         "baseline_exit": 0,
@@ -6985,19 +7092,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "a71ff11bf81719838c96caee54eedda74b0fb8089f1afe40e6dac5f1f8fbaff9"
+            "sha256": "40d5d878e983f1de12753c85b695cfeb8fdd341c96252d39ed1c83b0e9df93a5"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -7032,20 +7139,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -7061,15 +7168,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -7085,11 +7192,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -7101,7 +7208,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -7113,7 +7220,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -7129,14 +7236,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-07-no-badge: in chatmon/app.py, '            return QIcon(_with_badge(frame.pixmap) if self._tray_badge else frame.pixmap)' became '            return QIcon(frame.pixmap)'",
         "baseline_exit": 0,
@@ -7147,19 +7254,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "8168924cc97a147acd4d81f96bd39961dd5384528de7f99978e83d55ee806a71"
+            "sha256": "46e4a721182d184bb964b29b914d1d59100edd711e63665f5e0603ca5243ed74"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -7194,20 +7301,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -7235,11 +7342,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -7251,7 +7358,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -7263,7 +7370,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -7278,7 +7385,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "a637278dfa2b2d4212f534116263ca45f701efdf4770559e084af4fdf1611eaf",
+      "scope_sha256": "f59b52b9b7db883584ed637009d9fc8cd3ef093fa3573516a6a8d0ec6aa33c12",
       "red": {
         "mutation": "M7-07-agents-command-is-help: in chatmon/commands.py, '\"agents\": _agents,' became '\"agents\": _help,'",
         "baseline_exit": 0,
@@ -7336,20 +7443,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -7377,11 +7484,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -7393,7 +7500,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -7405,7 +7512,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -7420,7 +7527,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "a637278dfa2b2d4212f534116263ca45f701efdf4770559e084af4fdf1611eaf",
+      "scope_sha256": "f59b52b9b7db883584ed637009d9fc8cd3ef093fa3573516a6a8d0ec6aa33c12",
       "red": {
         "mutation": "M7-07-no-reply: in chatmon/app.py, '                            sock.write(events.reply_line(reply))' became '                            pass'",
         "baseline_exit": 0,
@@ -7431,19 +7538,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "d004e391e7f30f98ac1827671a3ef86d211bd47963b7211d791d54e1888ab948"
+            "sha256": "082e005039090dfa6fffcd270fd2642f36d75e9adc1eddcc2735222f3313cb27"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -7478,20 +7585,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -7519,11 +7626,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -7535,7 +7642,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -7547,7 +7654,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -7562,7 +7669,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "a637278dfa2b2d4212f534116263ca45f701efdf4770559e084af4fdf1611eaf",
+      "scope_sha256": "f59b52b9b7db883584ed637009d9fc8cd3ef093fa3573516a6a8d0ec6aa33c12",
       "red": {
         "mutation": "M7-07-cli-ignores-live: in chatmon/cli.py, '    if live is not None:\\r\\n' became '    if False:\\r\\n'",
         "baseline_exit": 0,
@@ -7573,19 +7680,19 @@ For others:
         "before": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+            "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "ab9c6dfefb053b92125cee3385c9fc935747341f7fb2753e341a11d05f80de43"
+            "sha256": "97591d410682545599966e258131360223d9b86be25bd49970869b803c6f565e"
           }
         ],
         "after": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+            "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
           }
         ]
       },
@@ -7620,16 +7727,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/menus.py",
@@ -7649,11 +7756,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -7665,7 +7772,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -7684,7 +7791,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "0ae4650d3149a036c2f93e1579b08041bb8351b2f9303ce598e931d7a43225dc",
+      "scope_sha256": "a8a9358207bbf3ff9dad8d13168c71a28cb43d91544cbb75658db9c04d717f08",
       "red": {
         "mutation": "M7-08-text-not-attached: in chatmon/app.py, '            self._attach(lambda: attachments.from_text(payload))  # attached, however short' became '            pass  # attached, however short'",
         "baseline_exit": 0,
@@ -7695,19 +7802,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "caec2214b5c4c48d9802f21fe33c9f35c878d2cc0241d2f3596d6ec504f6b599"
+            "sha256": "92715392d1c3570af1fe01a9b837ee4a8eef1870fede858e64721758e1f0ae94"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -7742,12 +7849,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -7755,11 +7862,11 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/chats.py",
-          "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+          "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
         },
         {
           "path": "chatmon/chatswin.py",
@@ -7775,11 +7882,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -7791,11 +7898,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -7835,14 +7942,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
+      "scope_sha256": "16614abf8935b828ba3c463a243fe5f36b2e397edf7b420d6611be2e2c1430f7",
       "red": {
         "mutation": "M7-09-no-search-inside: in chatmon/chatswin.py, '                inside.add(listed.id)\\n' became '                pass\\n'",
         "baseline_exit": 0,
@@ -7900,12 +8007,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -7913,11 +8020,11 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/chats.py",
-          "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+          "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
         },
         {
           "path": "chatmon/chatswin.py",
@@ -7933,11 +8040,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -7949,11 +8056,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -7993,14 +8100,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
+      "scope_sha256": "16614abf8935b828ba3c463a243fe5f36b2e397edf7b420d6611be2e2c1430f7",
       "red": {
         "mutation": "M7-09-no-all-chats: in chatmon/menus.py, '    sub.addAction(\"All chats…\", c.open_chats)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -8058,12 +8165,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -8071,7 +8178,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/menus.py",
@@ -8091,11 +8198,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -8130,7 +8237,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "35794591979efdae3ac06f56e083bfdbe0023cb33429cf38cf4238450f2a3de9",
+      "scope_sha256": "17abeed3258d72fdc41913b91fd22939dd27f1a12ae09745c31bbd10ea66cde6",
       "red": {
         "mutation": "M7-09-answer-not-by: in chatmon/app.py, 'self.chat.add(chats.Message(\"assistant\", answer, brain=label, by=name))' became 'self.chat.add(chats.Message(\"assistant\", answer, brain=label))'",
         "baseline_exit": 0,
@@ -8141,19 +8248,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "e3a699957bf7f13c003b86216915fec7172f5b238cca6c26bf685ffbad9af58a"
+            "sha256": "683edea0c09f262fa8a239c5f263cd2129a540087d3bdeb609e938cd5eeb9230"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -8188,12 +8295,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -8201,7 +8308,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/menus.py",
@@ -8221,11 +8328,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -8260,7 +8367,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "35794591979efdae3ac06f56e083bfdbe0023cb33429cf38cf4238450f2a3de9",
+      "scope_sha256": "17abeed3258d72fdc41913b91fd22939dd27f1a12ae09745c31bbd10ea66cde6",
       "red": {
         "mutation": "M7-09-chat-brain-ignored: in chatmon/app.py, 'picked, prefer = self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), self.chat.brain or None' became 'picked, prefer = self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), None'",
         "baseline_exit": 0,
@@ -8271,19 +8378,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "ba72845d80fba78f0bb4215ba9101357a668db888397bf6d113d817f578c1cbb"
+            "sha256": "e6af7676a558a866befd1c74ffc4f32285dd382b8669ca1a3d325bf559dc1d20"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -8318,12 +8425,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -8331,11 +8438,11 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/chats.py",
-          "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+          "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
         },
         {
           "path": "chatmon/chatswin.py",
@@ -8351,11 +8458,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -8367,11 +8474,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -8411,14 +8518,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
+      "scope_sha256": "16614abf8935b828ba3c463a243fe5f36b2e397edf7b420d6611be2e2c1430f7",
       "red": {
         "mutation": "M7-09-restore-not-reread: in chatmon/app.py, '        self.reminders = reminders.ReminderBook.from_list(self.state.get(\"reminders\", []))\\r\\n        self._sync_focus_hold()\\r\\n        self.reload(quietly=True)' became '        self.reload(quietly=True)'",
         "baseline_exit": 0,
@@ -8429,19 +8536,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "86237da33760c6afafe1eafbe44ba7b30bab3cfeda7c5f38929b2835ad6d57d7"
+            "sha256": "e6e8ade23fda3a403dcfdf6d7926eab4d3fe5ca6cb8c87aa57a022998e1bed3c"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -8476,12 +8583,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -8489,11 +8596,11 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/chats.py",
-          "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+          "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
         },
         {
           "path": "chatmon/chatswin.py",
@@ -8509,11 +8616,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -8525,11 +8632,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -8569,14 +8676,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
+      "scope_sha256": "16614abf8935b828ba3c463a243fe5f36b2e397edf7b420d6611be2e2c1430f7",
       "red": {
         "mutation": "M7-09-listing-rereads: in chatmon/chats.py, '            if seen is None or seen[:2] != (info.st_mtime_ns, info.st_size):' became '            if True:'",
         "baseline_exit": 0,
@@ -8587,19 +8694,19 @@ For others:
         "before": [
           {
             "path": "chatmon/chats.py",
-            "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+            "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/chats.py",
-            "sha256": "689634f076e95ad76bd55c99e3d08a4c518dac8e5e05ecfe6c49c171f919b918"
+            "sha256": "d069dc6f73a09a85815384b6763d1010d3ccfecf4d7ecd41402ca63a381a6673"
           }
         ],
         "after": [
           {
             "path": "chatmon/chats.py",
-            "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+            "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
           }
         ]
       },
@@ -8634,16 +8741,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -8659,11 +8766,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -8675,7 +8782,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -8694,7 +8801,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "8390ae35c685db3694369736fb2f72d6eb5378a2b5b10527aee986b00f909cb5",
+      "scope_sha256": "961a8ac0ad536540bc05978c2e04678753fbba4954735701de3d95d28756240a",
       "red": {
         "mutation": "M7-10-copy-unwired: in chatmon/app.py, '        self.ask_box.copy_requested.connect(self._copy)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -8705,19 +8812,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "015ec6f115dc6a3fd790ba13c6054afa9fb372bf3219c60556792747eb792ede"
+            "sha256": "a2076212c473e84573181af7df69db55c1c8d7fdbf8e80f7518edd9064855a9a"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -8752,16 +8859,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -8777,11 +8884,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -8793,7 +8900,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -8812,7 +8919,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "8390ae35c685db3694369736fb2f72d6eb5378a2b5b10527aee986b00f909cb5",
+      "scope_sha256": "961a8ac0ad536540bc05978c2e04678753fbba4954735701de3d95d28756240a",
       "red": {
         "mutation": "M7-10-ctrl-number-ignored: in chatmon/app.py, '                return self._press_bubble_button(key - Qt.Key.Key_1.value)' became '                return False'",
         "baseline_exit": 0,
@@ -8823,19 +8930,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "0fec9d15e275c0519e0b5952581974eca97f612ac9fd628a86600ca262631317"
+            "sha256": "d93bd6ee0afeb2010bdb7b96871c212087d559ceb80a839f2787530d7d6bf118"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -8870,16 +8977,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -8895,11 +9002,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -8911,7 +9018,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -8930,7 +9037,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "8390ae35c685db3694369736fb2f72d6eb5378a2b5b10527aee986b00f909cb5",
+      "scope_sha256": "961a8ac0ad536540bc05978c2e04678753fbba4954735701de3d95d28756240a",
       "red": {
         "mutation": "M7-10-expired-unanswerable: in chatmon/app.py, '            self._answerable = (now, list(message.buttons))\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -8941,19 +9048,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b2eeafdb29d241a8cec6152282e69596702df64a4fd6693773053df19053415a"
+            "sha256": "45bc0a9fd5e50d8ff2215f2a20842de105702205fc46ff03c7253b430cc4789b"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -8988,16 +9095,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -9005,11 +9112,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -9021,11 +9128,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -9037,7 +9144,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -9057,14 +9164,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "8913caaf56491b864ff7c79dac4fe7b8a2032060969ca81dc18769863d1fa9d1",
+      "scope_sha256": "8ca7e7dd770fba4542d1289ecb43c42f76240e07e087403347485831dc619293",
       "red": {
         "mutation": "M7-11-lock-keeps-drawing: in chatmon/app.py, '            self.stage.set_drawing(not locked)  # nothing is drawn while nobody can see it' became '            pass'",
         "baseline_exit": 0,
@@ -9075,19 +9182,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "1bf563669e432cda84e7a4d30455826b0eb8cef54ad3d6292e26a620fb0c6748"
+            "sha256": "ac7136af403ef0fc6907bccd45b45832e6a3e01cede7cb42b5e27531596899c7"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -9122,16 +9229,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -9139,11 +9246,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -9155,11 +9262,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -9171,7 +9278,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -9191,14 +9298,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "8913caaf56491b864ff7c79dac4fe7b8a2032060969ca81dc18769863d1fa9d1",
+      "scope_sha256": "8ca7e7dd770fba4542d1289ecb43c42f76240e07e087403347485831dc619293",
       "red": {
         "mutation": "M7-11-box-ignores-saver: in chatmon/app.py, '        self.ask_box.set_power_saving(on)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -9209,19 +9316,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "3f12db831dfa6b9f8b68bffab158a4dfc2e5bc822d4bf1b33638f016bf113a12"
+            "sha256": "6a8407f4ed0fbd3f6c82d69220f25d33b004664b8adfd49c1abf6097586c852c"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -9256,16 +9363,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -9273,11 +9380,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -9289,11 +9396,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -9305,7 +9412,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -9325,14 +9432,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "8913caaf56491b864ff7c79dac4fe7b8a2032060969ca81dc18769863d1fa9d1",
+      "scope_sha256": "8ca7e7dd770fba4542d1289ecb43c42f76240e07e087403347485831dc619293",
       "red": {
         "mutation": "M7-11-palette-ignored: in chatmon/app.py, '            QTimer.singleShot(0, self._palette_changed)\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -9343,19 +9450,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "2fa4a1aae97565fb019dd6f1772f8be3c4c90c0702e8e0f0afa955e252921a67"
+            "sha256": "b477243a0c7d8df77d1983ecff735b0d363413f8cf90e0fcf9bad608934b00e3"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -9390,20 +9497,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -9419,15 +9526,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -9443,11 +9550,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -9459,7 +9566,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -9471,7 +9578,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -9487,14 +9594,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-11-sound-in-quiet: in chatmon/app.py, '        if self._quiet or self.reminders.focus() is not None:\\r\\n            return False\\r\\n        return self._play(name)' became '        return self._play(name)'",
         "baseline_exit": 0,
@@ -9505,19 +9612,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b96ee6cc7b4400ca2c2b8ee43c4f1e8fc7557ff90676c4a7a5a50221d7cefe75"
+            "sha256": "ae94f9ee46fcf56110550cb01df9e046bb0c3e08fd54b029f52b1467d97516ce"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -9552,16 +9659,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/commands.py",
@@ -9585,11 +9692,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -9601,7 +9708,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -9624,7 +9731,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "6f89b1f20875367f6cdf060c19517d59f4684ca12080f0fcdaddac270292f496",
+      "scope_sha256": "55f740ed553717b7a599bd7495bf3fd1bbf380872509c8747fc2e6d9ac41a376",
       "red": {
         "mutation": "M7-12-carry-on-forgotten: in chatmon/app.py, '            self._set_aside = set_aside\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -9635,19 +9742,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "15ddb598b168e751081c67944a4eea4d2f8c531c389204d758e9f27865b16e12"
+            "sha256": "b8e5d4b7028e9627390820e8c174de5e6ca69bfeee36f0486434d86481c65091"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -9682,16 +9789,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/commands.py",
@@ -9715,11 +9822,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -9731,7 +9838,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -9754,7 +9861,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "6f89b1f20875367f6cdf060c19517d59f4684ca12080f0fcdaddac270292f496",
+      "scope_sha256": "55f740ed553717b7a599bd7495bf3fd1bbf380872509c8747fc2e6d9ac41a376",
       "red": {
         "mutation": "M7-12-drops-question: in chatmon/app.py, 'and bool(self.chat.messages) and self.questions.current is None and' became 'and bool(self.chat.messages) and'",
         "baseline_exit": 0,
@@ -9765,19 +9872,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "9fe7461330f00355fc529dd047e22b1be4978c429b44a99ccedc3d26fbbd42ed"
+            "sha256": "14a5e63f430ec4924e77ae33ef12cf65850487f812beea4f4e3ba3da288734c4"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -9812,20 +9919,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -9841,15 +9948,15 @@ For others:
         },
         {
           "path": "chatmon/reminders.py",
-          "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+          "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -9861,11 +9968,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -9877,7 +9984,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_reminders.py",
@@ -9893,7 +10000,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_messages.py",
@@ -9909,14 +10016,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "ea8c49fb583e2e591400f5143e23d99435dad98f16c80181f1262f7bf47de747",
+      "scope_sha256": "e24af9ea07eba1aff8b14d717c1aa8187d93cd0573b1fa6ecf93b9c3d027a6e6",
       "red": {
         "mutation": "M7-13-hello-every-unlock: in chatmon/app.py, '        if self.state.get(\"hello_day\") == today.isoformat():\\r\\n            return False\\r\\n' became ''",
         "baseline_exit": 0,
@@ -9927,19 +10034,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "e16e516195d2ffaf29a043496da600005a29c9d1ee02a227da6b0876abda50fe"
+            "sha256": "bc4bb22cc3215d38c4413ce45a8fe916219d2e54d2301192ddbf0cdeef612ece"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -9974,12 +10081,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/commands.py",
@@ -9999,11 +10106,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -10034,7 +10141,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "d58fbad5edf94e483bcc0462d58102206a8db3e68ec924c3cf44c9192981eca6",
+      "scope_sha256": "93de17910e21bb29fc63323a47f45a253ca7871bb88e5b98d8b4f66182886d92",
       "red": {
         "mutation": "M0-06-table-unfiltered: in chatmon/commands.py, '        return command if command in COMMANDS else None' became '        return command'",
         "baseline_exit": 0,
@@ -10092,12 +10199,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -10105,7 +10212,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -10121,11 +10228,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -10160,7 +10267,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "5f434bdde291090b5a34ebfe492f0887a1c654ac5d21417bad0d18a0e75b2d06",
+      "scope_sha256": "eff80296798f27b428ad17a3140777d79bc11e5ed9764f97c05ecc69b17c564e",
       "red": {
         "mutation": "M0-07-waits-for-brain: in chatmon/app.py, 'quick = brains.choose(self.brains, configured, picked, wait=False, prefer=prefer)' became 'quick = brains.choose(self.brains, configured, picked, wait=True, prefer=prefer)'",
         "baseline_exit": 0,
@@ -10171,19 +10278,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "56973dbfd8bf1f57030c2e857617d33e7fcd861864a64c61b2601bd82180448a"
+            "sha256": "0007b5fad0fda55187d92b48ea2aacbd027cb3b1ed4c94b3d87c8dad4535f2d3"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -10218,20 +10325,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -10259,11 +10366,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -10275,7 +10382,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -10287,7 +10394,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -10302,7 +10409,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "ccd219ef58ffd0f6c6ff64e27721e2fa3b8308826b5d5d48e2999426bb9d35b3",
+      "scope_sha256": "a7807b0373c8be02bf8fa18b0e20b3a34756e3a290628ee7bcc1e22fb6e738b5",
       "red": {
         "mutation": "M0-08-connections-unchecked: in chatmon/app.py, '            if sys.platform == \"win32\" and not _client_is_me(sock):' became '            if False:'",
         "baseline_exit": 0,
@@ -10313,19 +10420,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "92437742460fed58419c969c077e5040f2d5069d43d21ff0df25dab54c794aad"
+            "sha256": "51d77c6dd8febb0bb6f4184cf46f9a787111a56e2f024de8d60819a16ee38be2"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -10360,20 +10467,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -10401,11 +10508,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -10417,7 +10524,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -10429,7 +10536,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -10444,7 +10551,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "ccd219ef58ffd0f6c6ff64e27721e2fa3b8308826b5d5d48e2999426bb9d35b3",
+      "scope_sha256": "a7807b0373c8be02bf8fa18b0e20b3a34756e3a290628ee7bcc1e22fb6e738b5",
       "red": {
         "mutation": "M0-10-any-process-forward: in chatmon/cli.py, '    target = pid if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0 else ASFW_ANY' became '    target = ASFW_ANY'",
         "baseline_exit": 0,
@@ -10455,19 +10562,19 @@ For others:
         "before": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+            "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "3ecd109fa553881455259c38a064f952d651c3862d03de3aea8c5636dd601561"
+            "sha256": "ab6c6f06f3a9e8ebfa3b4f04891447920d0689215445cb162a462787c75773e3"
           }
         ],
         "after": [
           {
             "path": "chatmon/cli.py",
-            "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+            "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
           }
         ]
       },
@@ -10502,12 +10609,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -10515,7 +10622,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/menus.py",
@@ -10535,11 +10642,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -10574,7 +10681,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "35794591979efdae3ac06f56e083bfdbe0023cb33429cf38cf4238450f2a3de9",
+      "scope_sha256": "17abeed3258d72fdc41913b91fd22939dd27f1a12ae09745c31bbd10ea66cde6",
       "red": {
         "mutation": "M1B-07-files-brain-sees-all: in chatmon/app.py, 'pairs = chat.history(brain.label, name=brain.name, own_only=guard, before=q.before)' became 'pairs = chat.history(brain.label, name=brain.name, own_only=False, before=q.before)'",
         "baseline_exit": 0,
@@ -10585,19 +10692,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "1f9eeecb0f9ae1d3af7591a4174fb1331caa1a943cb3a2d27fe880e684b0cfa5"
+            "sha256": "9788ec757c01e402f5a89e7dfe2a847fb9822df1b9af7688d375976683f58a55"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -10632,16 +10739,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -10649,11 +10756,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -10665,11 +10772,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -10681,7 +10788,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -10701,14 +10808,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "8ad9fc576a70ecf0aee6eb9e0e2e3d5eaa002e7527961e0e29d7c30150ab560a",
+      "scope_sha256": "605ac613971236ed701063a0454a668eeff01688e58967fa82908232449704ab",
       "red": {
         "mutation": "M1B-09-overrides-unchecked: in chatmon/app.py, '            config, more = coerce(merge(config, overrides))' became '            config, more = merge(config, overrides), []'",
         "baseline_exit": 0,
@@ -10719,19 +10826,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "9cbb6d472d36413e505ec035be5b9bc0195d4534427b7c8d5159e2131e8cb355"
+            "sha256": "cfd3890d65b9bfc1052160b57d769513adc579201f1da077e55dc52d291aef31"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -10766,16 +10873,16 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -10783,11 +10890,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -10799,11 +10906,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -10815,7 +10922,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -10835,14 +10942,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "8ad9fc576a70ecf0aee6eb9e0e2e3d5eaa002e7527961e0e29d7c30150ab560a",
+      "scope_sha256": "605ac613971236ed701063a0454a668eeff01688e58967fa82908232449704ab",
       "red": {
         "mutation": "M1B-10-damage-unsaid: in chatmon/app.py, '        for problem in (self.state.problem, self.memory.problem):' became '        for problem in ():'",
         "baseline_exit": 0,
@@ -10853,19 +10960,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "47976d0a90fba59bfbbb447e0d74c1bc37df176408583c1e01f0420e6f280a1c"
+            "sha256": "14ee37b380ac04cdd50935f53706080fab0daa2ad27c24a709ef5ced9a9321d0"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -10900,12 +11007,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -10913,7 +11020,7 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/messages.py",
@@ -10929,11 +11036,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -10949,7 +11056,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -10972,7 +11079,7 @@ For others:
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "e686568c5c66f52519549b4eefcf00cfca1113d81ca31ad79dfa758ed16561bd",
+      "scope_sha256": "68f1743ac49a26862709bb05dd2f3183c5fd849cb79380d9bf4180b374101814",
       "red": {
         "mutation": "M2-more-unwired: in chatmon/app.py, '        self.stage.bubble.on_more = self._show_more' became '        pass'",
         "baseline_exit": 0,
@@ -10983,19 +11090,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "9c9ee51484c3636380e260e9cfc5185fbb7a31d7a873795d7176646ee58f7a68"
+            "sha256": "54c19c2a0b96df7fa24f7d11dc97632cb8b490103e9aa1ff9564bf2c4ff4588d"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -11030,12 +11137,12 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/asking.py",
@@ -11043,11 +11150,11 @@ For others:
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/chats.py",
-          "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+          "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
         },
         {
           "path": "chatmon/chatswin.py",
@@ -11063,11 +11170,11 @@ For others:
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "docs/delivery/ASSESSMENT.md",
@@ -11079,11 +11186,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -11123,16 +11230,16 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "b8f47d3e3726b2b88cdd13ecb9cc787b678ba62bd56ce4f7d79c53076fcc1403",
+      "scope_sha256": "16614abf8935b828ba3c463a243fe5f36b2e397edf7b420d6611be2e2c1430f7",
       "red": {
-        "mutation": "M5-chat-times-12h: in chatmon/chats.py, '        return f\"today {localefmt.time_of_day(d)}\"' became '        return f\"today {(d.hour % 12) or 12}:{d.minute:02d} {\\'AM\\' if d.hour < 12 else \\'PM\\'}\"'",
+        "mutation": "M5-chat-times-12h: in chatmon/chats.py, '        return _(\"today {time}\").format(time=localefmt.time_of_day(d))' became '        return f\"today {(d.hour % 12) or 12}:{d.minute:02d} {\\'AM\\' if d.hour < 12 else \\'PM\\'}\"'",
         "baseline_exit": 0,
         "mutated_exit": 1,
         "restored_exit": 0,
@@ -11141,19 +11248,19 @@ For others:
         "before": [
           {
             "path": "chatmon/chats.py",
-            "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+            "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/chats.py",
-            "sha256": "08bda2385b267c5404d783687cd5bc304b027d4a7a6a64574f5465ad25b404a0"
+            "sha256": "159886b7c605dff9861b178c625dd03e081475c420a251fd0c70964adcc78f27"
           }
         ],
         "after": [
           {
             "path": "chatmon/chats.py",
-            "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+            "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
           }
         ]
       },
@@ -11188,20 +11295,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -11217,15 +11324,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -11241,11 +11348,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -11257,7 +11364,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -11269,7 +11376,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -11285,14 +11392,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-07-no-stage-badge: in chatmon/app.py, '        self.stage.set_badge(sum(1 for state, _ in self.agents.values() if state == \"working\"), waiting)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -11303,19 +11410,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "a3ea35e0b80eb2fc382f7c0cb1c8fddfaf68d1e711ae026837877b83d8510a17"
+            "sha256": "117c1c76ef436b9a7e440e10a97d2e369185bfa8ca3f88a3b6909885d37681c3"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -11350,20 +11457,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -11379,15 +11486,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -11403,11 +11510,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -11419,7 +11526,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -11431,7 +11538,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -11447,14 +11554,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-11-player-never-quiet: in chatmon/app.py, 'quiet=lambda: self._quiet or self.reminders.focus() is not None)' became 'quiet=lambda: False)'",
         "baseline_exit": 0,
@@ -11465,19 +11572,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "64f5b9cf58be113df6be2f0269ba9a034a5dad289e3be2332a80ec2cd2f86dd7"
+            "sha256": "a2c81e89efa9bc189407e77a89297dca23743b87b1c489e065593517135d8b86"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -11512,20 +11619,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -11541,15 +11648,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -11565,11 +11672,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -11581,7 +11688,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -11593,7 +11700,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -11609,14 +11716,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-11-hotkey-unregistered: in chatmon/app.py, '        error = hotkey.register(sequence, self._hotkey_pressed, failed=self._hotkey_failed)' became '        error = None'",
         "baseline_exit": 0,
@@ -11627,19 +11734,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "fbc22210a8aec70e775015d81a8a6b957f55fa3c9458ea7dd3a2fb68ff241fa3"
+            "sha256": "48c43d73516c121c2264012281c0d3acb190abedd9eb67a499006e8e43da75aa"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -11674,20 +11781,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -11703,15 +11810,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -11727,11 +11834,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -11743,7 +11850,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -11755,7 +11862,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -11771,14 +11878,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-11-balloon-not-toast: in chatmon/app.py, '            if tag is None:  # no toast here' became '            if True:  # no toast here'",
         "baseline_exit": 0,
@@ -11789,19 +11896,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "de4d648808e42df61982d1a97369ad06f70458497f5b2a6ed3f5e9a2f128fb0c"
+            "sha256": "ee60aebe017787e90c504d6c732efc535699d29543e0106cc52ef50710db93ff"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -11836,20 +11943,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -11865,15 +11972,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -11889,11 +11996,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -11905,7 +12012,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -11917,7 +12024,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -11933,14 +12040,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-11-refused-toast-unsaid: in chatmon/app.py, '            self._balloon(*notice)\\r\\n' became '            pass\\r\\n'",
         "baseline_exit": 0,
@@ -11951,19 +12058,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "c11d5a66d17285433e5261e7129ce2be514f1cfd6cfcd0776e01d7c2bbb1c65b"
+            "sha256": "a60fdd4f9e335c17216f3b3c813f115e4e6a4e7405a8191cedf6fe00a16a42e1"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -11998,20 +12105,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -12027,15 +12134,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -12051,11 +12158,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -12067,7 +12174,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -12079,7 +12186,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -12095,14 +12202,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-11-box-always-hosted: in chatmon/app.py, '            self.stage.set_hosting(not self._ask_box_as_window())' became '            pass'",
         "baseline_exit": 0,
@@ -12113,19 +12220,343 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "bac8204d384cd0a3531efd48d558a837585fcc679370a6e577579b2f4c01fa81"
+            "sha256": "67f8cc0bfda6ae83e972673590698fb47d3822c783245becf4b16b03d50539ab"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "RED-M7-11-follow-ignored",
+      "acceptance": [
+        "AC-11-5"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_follow_me_across_monitors_is_a_setting"
+      ],
+      "method": "Red drill M7-11-follow-ignored through tests/drills/run.py in a temporary copy: green, the defect put in, the named tests failing for that reason, the file's bytes put back and green again.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "PyQt6": "6.11.0",
+          "pytest": "9.2.0",
+          "python": "3.14.10",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m7/drills.log",
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "a849300cbe173d5996052e021575090bd77ed05f0b31c4ef0ea4252ec458b8f2"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "f7e4fdafc15b570e5ad1bc93db79659d4e109392355b4a3781a14d8039d4975f"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "06d7b95c1f4389b3561b5386b9c1c46f710fbe679455ce0796ff558a04c8cc25"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "cf518260b3712784afcc637eab674e4d399e0411ced3a5af38e1d5cf2e4cf8ab"
+        },
+        {
+          "path": "tests/test_cli.py",
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
+        },
+        {
+          "path": "tests/test_commands.py",
+          "sha256": "26ef2c7258c42a71deb3857b12b1254a9f1f4389f2a46d524dc11b54386b5123"
+        },
+        {
+          "path": "tests/test_messages.py",
+          "sha256": "bcab5a8a3aad45a68e577e13ce4e08dd434e4c71ddfb42a3932b25a54c5ecbad"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "6e216304e491a8967266b248e4acf41cef7e124906d52d0bf71afc2d82c2df60"
+        },
+        {
+          "path": "tests/test_settingswin.py",
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
+        }
+      ],
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
+      "red": {
+        "mutation": "M7-11-follow-ignored: in chatmon/app.py, '        self.stage.follow_pointer_screen(bool(self.config[\"follow_screen\"]))' became '        self.stage.follow_pointer_screen(False)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_follow_me_across_monitors_is_a_setting",
+        "observed_diagnostic": "_________________ test_follow_me_across_monitors_is_a_setting _________________",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "0307e34f91a4f6ed5592fd29b46dd8302ba98528b16e8cd9e1bd7346da03fa03"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "RED-M4A-desk-changes-unheard",
+      "acceptance": [
+        "AC-11-7"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+      ],
+      "method": "Red drill M4A-desk-changes-unheard through tests/drills/run.py in a temporary copy: green, the defect put in, the named tests failing for that reason, the file's bytes put back and green again.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "PyQt6": "6.11.0",
+          "pytest": "9.2.0",
+          "python": "3.14.10",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m7/drills.log",
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "a849300cbe173d5996052e021575090bd77ed05f0b31c4ef0ea4252ec458b8f2"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "f7e4fdafc15b570e5ad1bc93db79659d4e109392355b4a3781a14d8039d4975f"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "06d7b95c1f4389b3561b5386b9c1c46f710fbe679455ce0796ff558a04c8cc25"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "cf518260b3712784afcc637eab674e4d399e0411ced3a5af38e1d5cf2e4cf8ab"
+        },
+        {
+          "path": "tests/test_cli.py",
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
+        },
+        {
+          "path": "tests/test_commands.py",
+          "sha256": "26ef2c7258c42a71deb3857b12b1254a9f1f4389f2a46d524dc11b54386b5123"
+        },
+        {
+          "path": "tests/test_messages.py",
+          "sha256": "bcab5a8a3aad45a68e577e13ce4e08dd434e4c71ddfb42a3932b25a54c5ecbad"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "6e216304e491a8967266b248e4acf41cef7e124906d52d0bf71afc2d82c2df60"
+        },
+        {
+          "path": "tests/test_settingswin.py",
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
+        }
+      ],
+      "scope_sha256": "93bfcd2364148f956db06931d38244d62a8b79e69e618c6241dff0a1e8d85e6f",
+      "red": {
+        "mutation": "M4A-desk-changes-unheard: in chatmon/app.py, '        desk.settings_changed.connect(self._check_accessibility)\\r\\n' became '\\r\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change",
+        "observed_diagnostic": "__ test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change ___",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "fdca77b85ea327ba9ef5ee0bcabec08c5ad6edac21821c07a44a483395d913df"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -12160,20 +12591,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -12189,15 +12620,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -12213,11 +12644,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -12229,7 +12660,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -12241,7 +12672,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -12257,14 +12688,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
+      "scope_sha256": "93bfcd2364148f956db06931d38244d62a8b79e69e618c6241dff0a1e8d85e6f",
       "red": {
         "mutation": "M4A-reader-not-looked-again: in chatmon/app.py, '        self._reader_seen = float(\"-inf\")\\r\\n        self._check_hosting()' became '        self._check_hosting()'",
         "baseline_exit": 0,
@@ -12275,19 +12706,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b198ffec07906440878a55b39ae4b0e382b16084ce9e40531079ed41f42a55a5"
+            "sha256": "0fdf9600e749c4ffba927bfcad46ae3d8ed41b69f9345f5ee18599b6fdd08e45"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -12322,20 +12753,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -12351,15 +12782,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -12375,11 +12806,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -12391,7 +12822,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -12403,7 +12834,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -12419,14 +12850,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
+      "scope_sha256": "93bfcd2364148f956db06931d38244d62a8b79e69e618c6241dff0a1e8d85e6f",
       "red": {
         "mutation": "M4A-mac-sleep-unheard: in chatmon/app.py, '            watcher.slept.connect(self._sleeping)\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -12437,19 +12868,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "59d66f85ed480353195e5e1840a94b5814c8362b91cda3ff89817b4ac6809927"
+            "sha256": "7e43f6ef20f1a739e17694259ed965a0909be6b997cc8f49bac95aac4e6da417"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -12484,20 +12915,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -12513,15 +12944,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -12537,11 +12968,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -12553,7 +12984,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -12565,7 +12996,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -12581,14 +13012,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
+      "scope_sha256": "93bfcd2364148f956db06931d38244d62a8b79e69e618c6241dff0a1e8d85e6f",
       "red": {
         "mutation": "M4A-low-power-not-read: in chatmon/app.py, '            self._power_saving(bool(macnative.low_power_mode()))\\r\\n' became '\\r\\n'",
         "baseline_exit": 0,
@@ -12599,19 +13030,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "3072af901804ce969388d0ee730b3cc6af6b11c3772f0f9cd61759c588430ca4"
+            "sha256": "726b83136c08361644d5ebc16a87395d572a41a34a5881a032391ed4139a6817"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -12646,20 +13077,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -12675,15 +13106,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -12699,11 +13130,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -12715,7 +13146,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -12727,7 +13158,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -12743,14 +13174,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
+      "scope_sha256": "93bfcd2364148f956db06931d38244d62a8b79e69e618c6241dff0a1e8d85e6f",
       "red": {
         "mutation": "M4A-urgent-through-dnd: in chatmon/app.py, 'urgency = sysnotify.URGENCY_NORMAL if self._quiet == \"Do Not Disturb\" else sysnotify.URGENCY_CRITICAL' became 'urgency = sysnotify.URGENCY_CRITICAL'",
         "baseline_exit": 0,
@@ -12761,19 +13192,457 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "9aad93808e9277da5862092521e39baa04180787d9e11e8c251af1bad292563d"
+            "sha256": "7eec721f64c3ef6528a13e89261ecb402007f4d2c74b7cfdd3c2e8204ca4ed83"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "RED-M8-app-language-ignored",
+      "acceptance": [
+        "AC-M8-1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_chatmon_starts_in_the_language_set_before_any_window"
+      ],
+      "method": "Red drill M8-app-language-ignored through tests/drills/run.py in a temporary copy: green, the defect put in, the named tests failing for that reason, the file's bytes put back and green again.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "PyQt6": "6.11.0",
+          "pytest": "9.2.0",
+          "python": "3.14.10",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m7/drills.log",
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "7371614c5f0315d19f805df16694d5ca4f8b599cc6127b891c4a3f836d50b149"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "06d7b95c1f4389b3561b5386b9c1c46f710fbe679455ce0796ff558a04c8cc25"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "cf518260b3712784afcc637eab674e4d399e0411ced3a5af38e1d5cf2e4cf8ab"
+        },
+        {
+          "path": "tests/test_cli.py",
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
+        },
+        {
+          "path": "tests/test_messages.py",
+          "sha256": "bcab5a8a3aad45a68e577e13ce4e08dd434e4c71ddfb42a3932b25a54c5ecbad"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "6e216304e491a8967266b248e4acf41cef7e124906d52d0bf71afc2d82c2df60"
+        },
+        {
+          "path": "tests/test_settingswin.py",
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
+        }
+      ],
+      "scope_sha256": "7d5fd3ca98ea9dec977f7dc5c353522500406a8bbd61e5c272518c9f21fb39df",
+      "red": {
+        "mutation": "M8-app-language-ignored: in chatmon/app.py, '        i18n.setup(self.config.get(i18n.SETTING) or None)' became '        i18n.setup(None)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_chatmon_starts_in_the_language_set_before_any_window",
+        "observed_diagnostic": "__________ test_chatmon_starts_in_the_language_set_before_any_window __________",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "f06aef6a45bf1b61f051d38ac5afadada73b0bdeec5a1512f26cb81dd2ac181b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "RED-M8-cli-language-ignored",
+      "acceptance": [
+        "AC-M8-1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_cli.py::test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+      ],
+      "method": "Red drill M8-cli-language-ignored through tests/drills/run.py in a temporary copy: green, the defect put in, the named tests failing for that reason, the file's bytes put back and green again.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "PyQt6": "6.11.0",
+          "pytest": "9.2.0",
+          "python": "3.14.10",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m7/drills.log",
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "7371614c5f0315d19f805df16694d5ca4f8b599cc6127b891c4a3f836d50b149"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "06d7b95c1f4389b3561b5386b9c1c46f710fbe679455ce0796ff558a04c8cc25"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "cf518260b3712784afcc637eab674e4d399e0411ced3a5af38e1d5cf2e4cf8ab"
+        },
+        {
+          "path": "tests/test_cli.py",
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
+        },
+        {
+          "path": "tests/test_messages.py",
+          "sha256": "bcab5a8a3aad45a68e577e13ce4e08dd434e4c71ddfb42a3932b25a54c5ecbad"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "6e216304e491a8967266b248e4acf41cef7e124906d52d0bf71afc2d82c2df60"
+        },
+        {
+          "path": "tests/test_settingswin.py",
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
+        }
+      ],
+      "scope_sha256": "7d5fd3ca98ea9dec977f7dc5c353522500406a8bbd61e5c272518c9f21fb39df",
+      "red": {
+        "mutation": "M8-cli-language-ignored: in chatmon/cli.py, '    i18n.setup(_language_setting())' became '    i18n.setup(None)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_command_line_speaks_the_language_chosen_without_writing_anything",
+        "observed_diagnostic": "__ test_the_command_line_speaks_the_language_chosen_without_writing_anything __",
+        "before": [
+          {
+            "path": "chatmon/cli.py",
+            "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/cli.py",
+            "sha256": "ce0396752396b8b2ccc1e2d66cd31fae29c90cdc66cccde6c6c4489fca75c0f0"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/cli.py",
+            "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "RED-M8-window-language-dropped",
+      "acceptance": [
+        "AC-M8-1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_settingswin.py::test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
+      ],
+      "method": "Red drill M8-window-language-dropped through tests/drills/run.py in a temporary copy: green, the defect put in, the named tests failing for that reason, the file's bytes put back and green again.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "PyQt6": "6.11.0",
+          "pytest": "9.2.0",
+          "python": "3.14.10",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m7/drills.log",
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "7371614c5f0315d19f805df16694d5ca4f8b599cc6127b891c4a3f836d50b149"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "06d7b95c1f4389b3561b5386b9c1c46f710fbe679455ce0796ff558a04c8cc25"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "cf518260b3712784afcc637eab674e4d399e0411ced3a5af38e1d5cf2e4cf8ab"
+        },
+        {
+          "path": "tests/test_cli.py",
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
+        },
+        {
+          "path": "tests/test_messages.py",
+          "sha256": "bcab5a8a3aad45a68e577e13ce4e08dd434e4c71ddfb42a3932b25a54c5ecbad"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "6e216304e491a8967266b248e4acf41cef7e124906d52d0bf71afc2d82c2df60"
+        },
+        {
+          "path": "tests/test_settingswin.py",
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
+        }
+      ],
+      "scope_sha256": "7d5fd3ca98ea9dec977f7dc5c353522500406a8bbd61e5c272518c9f21fb39df",
+      "red": {
+        "mutation": "M8-window-language-dropped: in chatmon/settingswin.py, '            \"language\": self.language.currentData(),\\r\\n' became ''",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start",
+        "observed_diagnostic": "_ test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start _",
+        "before": [
+          {
+            "path": "chatmon/settingswin.py",
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/settingswin.py",
+            "sha256": "d1cb999d37045e5ce5af3f3154fd4254675631e1ea6f34b1fea105f2e3eb7cf9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/settingswin.py",
+            "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
           }
         ]
       },
@@ -12808,20 +13677,20 @@ For others:
       "exit_code": 0,
       "artifact": {
         "path": "docs/delivery/reports/m7/drills.log",
-        "sha256": "01fdf474172311290a64e626faaccdffbab0a699f6ba4a652a0114d13cfe7627"
+        "sha256": "a8961d72a440adab5b5e4922edb05c928ac545ceaca5d46f0820c925b5acb7a6"
       },
       "inputs": [
         {
           "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+          "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
         },
         {
           "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+          "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
         },
         {
           "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+          "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
         },
         {
           "path": "chatmon/commands.py",
@@ -12837,15 +13706,15 @@ For others:
         },
         {
           "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+          "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
         },
         {
           "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+          "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
         },
         {
           "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+          "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
         },
         {
           "path": "chatmon/winpipe.py",
@@ -12861,11 +13730,11 @@ For others:
         },
         {
           "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+          "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
         },
         {
           "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+          "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
         },
         {
           "path": "tests/conftest.py",
@@ -12877,7 +13746,7 @@ For others:
         },
         {
           "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+          "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
         },
         {
           "path": "tests/test_app_smoke.py",
@@ -12889,7 +13758,7 @@ For others:
         },
         {
           "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+          "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
         },
         {
           "path": "tests/test_commands.py",
@@ -12905,14 +13774,14 @@ For others:
         },
         {
           "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+          "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
         },
         {
           "path": "tests/test_wintoast.py",
           "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
         }
       ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
+      "scope_sha256": "f6a09bac042388d63b21af89e8d297a6cd2fc57d83356d90a1bd633bd8e178ed",
       "red": {
         "mutation": "M7-11-magnifier-not-placed: in chatmon/app.py, '        wincaret.place(self.stage.native_window(),' became '        (lambda *a: None)(self.stage.native_window(),'",
         "baseline_exit": 0,
@@ -12923,343 +13792,19 @@ For others:
         "before": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ],
         "mutated": [
           {
             "path": "chatmon/app.py",
-            "sha256": "97b6d632e3611ee595a61833d50bc840f0f3fb2f6d09e543fde0a1498baa727e"
+            "sha256": "ea588eec6e42bcad3369c3492dbe9449ec21672970d6e7931a2297ed4ae2faed"
           }
         ],
         "after": [
           {
             "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
-          }
-        ]
-      },
-      "reason": null
-    },
-    {
-      "id": "RED-M7-11-follow-ignored",
-      "acceptance": [
-        "AC-11-5"
-      ],
-      "kind": "red",
-      "status": "pass",
-      "command": [
-        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
-        "-m",
-        "pytest",
-        "-q",
-        "-p",
-        "no:cacheprovider",
-        "tests/test_app_m7.py::test_follow_me_across_monitors_is_a_setting"
-      ],
-      "method": "Red drill M7-11-follow-ignored through tests/drills/run.py in a temporary copy: green, the defect put in, the named tests failing for that reason, the file's bytes put back and green again.",
-      "environment": {
-        "platform": "windows",
-        "tools": {
-          "PyQt6": "6.11.0",
-          "pytest": "9.2.0",
-          "python": "3.14.10",
-          "ruff": "0.17.4"
-        }
-      },
-      "exit_code": 0,
-      "artifact": {
-        "path": "docs/delivery/reports/m7/drills-rerun.log",
-        "sha256": "145b18ae419ab207920e972b33aa5c5064116a9ee722ece24fed1e889c079b1f"
-      },
-      "inputs": [
-        {
-          "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
-        },
-        {
-          "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
-        },
-        {
-          "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
-        },
-        {
-          "path": "chatmon/commands.py",
-          "sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90"
-        },
-        {
-          "path": "chatmon/events.py",
-          "sha256": "a849300cbe173d5996052e021575090bd77ed05f0b31c4ef0ea4252ec458b8f2"
-        },
-        {
-          "path": "chatmon/messages.py",
-          "sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d"
-        },
-        {
-          "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
-        },
-        {
-          "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
-        },
-        {
-          "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
-        },
-        {
-          "path": "chatmon/winpipe.py",
-          "sha256": "f7e4fdafc15b570e5ad1bc93db79659d4e109392355b4a3781a14d8039d4975f"
-        },
-        {
-          "path": "docs/delivery/ASSESSMENT.md",
-          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
-        },
-        {
-          "path": "docs/delivery/ROADMAP.md",
-          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
-        },
-        {
-          "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
-        },
-        {
-          "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
-        },
-        {
-          "path": "tests/conftest.py",
-          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
-        },
-        {
-          "path": "tests/drills/run.py",
-          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
-        },
-        {
-          "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
-        },
-        {
-          "path": "tests/test_app_smoke.py",
-          "sha256": "06d7b95c1f4389b3561b5386b9c1c46f710fbe679455ce0796ff558a04c8cc25"
-        },
-        {
-          "path": "tests/test_bubble_styles.py",
-          "sha256": "cf518260b3712784afcc637eab674e4d399e0411ced3a5af38e1d5cf2e4cf8ab"
-        },
-        {
-          "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
-        },
-        {
-          "path": "tests/test_commands.py",
-          "sha256": "26ef2c7258c42a71deb3857b12b1254a9f1f4389f2a46d524dc11b54386b5123"
-        },
-        {
-          "path": "tests/test_messages.py",
-          "sha256": "bcab5a8a3aad45a68e577e13ce4e08dd434e4c71ddfb42a3932b25a54c5ecbad"
-        },
-        {
-          "path": "tests/test_settings.py",
-          "sha256": "6e216304e491a8967266b248e4acf41cef7e124906d52d0bf71afc2d82c2df60"
-        },
-        {
-          "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
-        },
-        {
-          "path": "tests/test_wintoast.py",
-          "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
-        }
-      ],
-      "scope_sha256": "7428464255eb1006d313ef87f95f28884d24c3b82c62588715813243eb895e48",
-      "red": {
-        "mutation": "M7-11-follow-ignored: in chatmon/app.py, '        self.stage.follow_pointer_screen(bool(self.config[\"follow_screen\"]))' became '        self.stage.follow_pointer_screen(False)'",
-        "baseline_exit": 0,
-        "mutated_exit": 1,
-        "restored_exit": 0,
-        "expected_diagnostic": "test_follow_me_across_monitors_is_a_setting",
-        "observed_diagnostic": "_________________ test_follow_me_across_monitors_is_a_setting _________________",
-        "before": [
-          {
-            "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
-          }
-        ],
-        "mutated": [
-          {
-            "path": "chatmon/app.py",
-            "sha256": "d95c48d1cecfb57ca7b088a12c90f755c0662bdcd52dcf9efceac30b3965ed61"
-          }
-        ],
-        "after": [
-          {
-            "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
-          }
-        ]
-      },
-      "reason": null
-    },
-    {
-      "id": "RED-M4A-desk-changes-unheard",
-      "acceptance": [
-        "AC-11-7"
-      ],
-      "kind": "red",
-      "status": "pass",
-      "command": [
-        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
-        "-m",
-        "pytest",
-        "-q",
-        "-p",
-        "no:cacheprovider",
-        "tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
-      ],
-      "method": "Red drill M4A-desk-changes-unheard through tests/drills/run.py in a temporary copy: green, the defect put in, the named tests failing for that reason, the file's bytes put back and green again.",
-      "environment": {
-        "platform": "windows",
-        "tools": {
-          "PyQt6": "6.11.0",
-          "pytest": "9.2.0",
-          "python": "3.14.10",
-          "ruff": "0.17.4"
-        }
-      },
-      "exit_code": 0,
-      "artifact": {
-        "path": "docs/delivery/reports/m7/drills-rerun.log",
-        "sha256": "145b18ae419ab207920e972b33aa5c5064116a9ee722ece24fed1e889c079b1f"
-      },
-      "inputs": [
-        {
-          "path": "chatmon/app.py",
-          "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
-        },
-        {
-          "path": "chatmon/bubble.py",
-          "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
-        },
-        {
-          "path": "chatmon/cli.py",
-          "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
-        },
-        {
-          "path": "chatmon/commands.py",
-          "sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90"
-        },
-        {
-          "path": "chatmon/events.py",
-          "sha256": "a849300cbe173d5996052e021575090bd77ed05f0b31c4ef0ea4252ec458b8f2"
-        },
-        {
-          "path": "chatmon/messages.py",
-          "sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d"
-        },
-        {
-          "path": "chatmon/penguin.py",
-          "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
-        },
-        {
-          "path": "chatmon/settings.py",
-          "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
-        },
-        {
-          "path": "chatmon/settingswin.py",
-          "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
-        },
-        {
-          "path": "chatmon/winpipe.py",
-          "sha256": "f7e4fdafc15b570e5ad1bc93db79659d4e109392355b4a3781a14d8039d4975f"
-        },
-        {
-          "path": "docs/delivery/ASSESSMENT.md",
-          "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
-        },
-        {
-          "path": "docs/delivery/ROADMAP.md",
-          "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
-        },
-        {
-          "path": "pyproject.toml",
-          "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
-        },
-        {
-          "path": "tests/app_harness.py",
-          "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
-        },
-        {
-          "path": "tests/conftest.py",
-          "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
-        },
-        {
-          "path": "tests/drills/run.py",
-          "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
-        },
-        {
-          "path": "tests/test_app_m7.py",
-          "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
-        },
-        {
-          "path": "tests/test_app_smoke.py",
-          "sha256": "06d7b95c1f4389b3561b5386b9c1c46f710fbe679455ce0796ff558a04c8cc25"
-        },
-        {
-          "path": "tests/test_bubble_styles.py",
-          "sha256": "cf518260b3712784afcc637eab674e4d399e0411ced3a5af38e1d5cf2e4cf8ab"
-        },
-        {
-          "path": "tests/test_cli.py",
-          "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
-        },
-        {
-          "path": "tests/test_commands.py",
-          "sha256": "26ef2c7258c42a71deb3857b12b1254a9f1f4389f2a46d524dc11b54386b5123"
-        },
-        {
-          "path": "tests/test_messages.py",
-          "sha256": "bcab5a8a3aad45a68e577e13ce4e08dd434e4c71ddfb42a3932b25a54c5ecbad"
-        },
-        {
-          "path": "tests/test_settings.py",
-          "sha256": "6e216304e491a8967266b248e4acf41cef7e124906d52d0bf71afc2d82c2df60"
-        },
-        {
-          "path": "tests/test_settingswin.py",
-          "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
-        },
-        {
-          "path": "tests/test_wintoast.py",
-          "sha256": "7f5706e98b335c2536d5c7266486576b59698d2ac8070daec32540ea5209765f"
-        }
-      ],
-      "scope_sha256": "3a83f0b042753d74b090df484565c70e8e8a644629a93fe399b422d0b5a3edfe",
-      "red": {
-        "mutation": "M4A-desk-changes-unheard: in chatmon/app.py, '        desk.settings_changed.connect(self._check_accessibility)\\r\\n' became '\\r\\n'",
-        "baseline_exit": 0,
-        "mutated_exit": 1,
-        "restored_exit": 0,
-        "expected_diagnostic": "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change",
-        "observed_diagnostic": "__ test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change ___",
-        "before": [
-          {
-            "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
-          }
-        ],
-        "mutated": [
-          {
-            "path": "chatmon/app.py",
-            "sha256": "433aa48990ea2b30b2056c1700a2b379389179dd8decfe7b41be3526b5539a50"
-          }
-        ],
-        "after": [
-          {
-            "path": "chatmon/app.py",
-            "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+            "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
           }
         ]
       },
@@ -13267,11 +13812,11 @@ For others:
     }
   ],
   "checkpoint": {
-    "scope_sha256": "6b91484a874ddda585fcf22be4e8f871548dddf8ac80a8f6e44045345fea1d91",
+    "scope_sha256": "e0bed30be8b7760b1f38fc3d3659feb5e96f882502608e71901632acb6c06022",
     "inputs": [
       {
         "path": "chatmon/app.py",
-        "sha256": "b17d25988e4bb5ea51edd3a2bed9c348a1f11137fc0ac57b5d6a2831cd2906ff"
+        "sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532"
       },
       {
         "path": "chatmon/asking.py",
@@ -13279,11 +13824,11 @@ For others:
       },
       {
         "path": "chatmon/bubble.py",
-        "sha256": "f3a39cccc3f43d4540a5c1b62d40343e570c1acc04e9cd1e70046c03d0985e8b"
+        "sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af"
       },
       {
         "path": "chatmon/chats.py",
-        "sha256": "30b3ddaf5eea5d1c46e37c4a6acfed237b14d8f5e2710a0573b13292e7f74421"
+        "sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3"
       },
       {
         "path": "chatmon/chatswin.py",
@@ -13291,7 +13836,7 @@ For others:
       },
       {
         "path": "chatmon/cli.py",
-        "sha256": "d77a8a7f1b2899f00fb55743008572e81801f065553ec5098323832c81837071"
+        "sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815"
       },
       {
         "path": "chatmon/commands.py",
@@ -13300,6 +13845,10 @@ For others:
       {
         "path": "chatmon/events.py",
         "sha256": "a849300cbe173d5996052e021575090bd77ed05f0b31c4ef0ea4252ec458b8f2"
+      },
+      {
+        "path": "chatmon/locale/chatmon.pot",
+        "sha256": "7371614c5f0315d19f805df16694d5ca4f8b599cc6127b891c4a3f836d50b149"
       },
       {
         "path": "chatmon/menus.py",
@@ -13311,7 +13860,7 @@ For others:
       },
       {
         "path": "chatmon/penguin.py",
-        "sha256": "d3cb157bf676cbc81923a0c5de1d71847fe23014c9f3f3b028f8fa7101ef1158"
+        "sha256": "c9748102e3e1063b9e769e535af9cea8ec905abae66ff988fb109b5f1d496562"
       },
       {
         "path": "chatmon/phrases/en.json",
@@ -13319,15 +13868,15 @@ For others:
       },
       {
         "path": "chatmon/reminders.py",
-        "sha256": "218f47bb757fb4c6ba7618812b3564d38d7bc536fa3ec0bb609f376b6b95bb72"
+        "sha256": "a4c6d141f6f6b4ec78449cc5adbaafbf99418c6a421ba9341722aa81b4079a50"
       },
       {
         "path": "chatmon/settings.py",
-        "sha256": "12551b822769c945ed1757fd2eb5f84b44504f7e4150a63b0ddb9bad20c26d78"
+        "sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f"
       },
       {
         "path": "chatmon/settingswin.py",
-        "sha256": "cc0440d1cae229be7d77d7ff45f0ef75fd07897b80944e75ed618e4b7e37bbef"
+        "sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c"
       },
       {
         "path": "chatmon/winpipe.py",
@@ -13343,11 +13892,11 @@ For others:
       },
       {
         "path": "pyproject.toml",
-        "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        "sha256": "0ab2f7fe3fdeb1864856d09bda90df0de23cb5a87877ea427560f358ca9bac4b"
       },
       {
         "path": "tests/app_harness.py",
-        "sha256": "b5fd8ee79f98f36f6635615c68361a29acfea05eeee08817bbdbb0c48cabe1f2"
+        "sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd"
       },
       {
         "path": "tests/conftest.py",
@@ -13363,7 +13912,7 @@ For others:
       },
       {
         "path": "tests/test_app_m7.py",
-        "sha256": "ad20fccfc5a226a02d1ee812f637e551e1b5cd0ac4a2b5e94ebb69d6d0e05581"
+        "sha256": "9e337c0cc0d40f03051445accc98805b77d45154b6104c1099449cd40f9cfb20"
       },
       {
         "path": "tests/test_app_reminders.py",
@@ -13387,7 +13936,7 @@ For others:
       },
       {
         "path": "tests/test_cli.py",
-        "sha256": "5506fbf1fdf7f978b1ee2b65c68f840a7e67e0e2f7594ac3b91da41e52600537"
+        "sha256": "5feb6584bfffd558430543c3364c37a6cc6957e9ff061cfe2e0b559a59f58756"
       },
       {
         "path": "tests/test_commands.py",
@@ -13407,7 +13956,7 @@ For others:
       },
       {
         "path": "tests/test_settingswin.py",
-        "sha256": "5746cb0e0228dfc95e8cefff9b711b06e17c95fe7dc9f34d8eeaa79ed7e3377d"
+        "sha256": "066f1d944ad08853a53eddcf019aaee790126b32348474784684db75b14a0819"
       },
       {
         "path": "tests/test_wintoast.py",
@@ -13434,6 +13983,7 @@ For others:
       "TASK-FOCUS",
       "TASK-HARNESS",
       "TASK-HELLO",
+      "TASK-I18N",
       "TASK-IPC",
       "TASK-KEYS",
       "TASK-M2NOTES",
@@ -13460,7 +14010,7 @@ For others:
       }
     ],
     "next_action": "Wire M4A's sleep and live accessibility events once it is merged into improve/assessment-fixes; read the Linux and macOS CI results.",
-    "source_revision": "d668220538741d05567ee93f882a140309f761b1"
+    "source_revision": "41cd4fd0a7301c8dd764d02ed7250fefde300b99"
   }
 }
 ```
