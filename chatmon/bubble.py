@@ -1030,6 +1030,9 @@ class AskBox(QWidget):
         self.attach_button.clicked.connect(lambda: self.attach_requested.emit(self._below(self.attach_button)))
         row.addWidget(self.attach_button, 0, Qt.AlignmentFlag.AlignBottom)
         self.entry = Entry()
+        # VoiceOver lands on the title first, and with "keyboard focus follows the VoiceOver cursor" (on by default) its
+        # focus would leave the field, so what you type went nowhere (macOS 26.7, with the shortcut): the title passes it on.
+        self.title.setFocusProxy(self.entry)
         self.entry.returnPressed.connect(self._submit)
         self.entry.paste_requested.connect(self.paste_clipboard)
         self.entry.resized.connect(self._refit)
