@@ -19937,7 +19937,7 @@ them.
       "T-IMPORTS"
     ],
     "pending_operations": [],
-    "next_action": "Four red drills remain, each needing a place to run, not new code. AC-00C, AC-01D and AC-02F need macOS (Randy on a Mac, or the coordinator through a CI run of a drill branch). AC-03E needs a Windows desktop with notifications on (see W4-RED-AC-03E-deferred). Then T-IMPORTS-POSIX, T-HOTKEY-MAC, T-SOUND-MAC and T-TOAST-SHOWN can be verified and M4B closed. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
+    "next_action": "Four red drills remain, each needing a place to run, not new code. AC-00C, AC-01D and AC-02F need macOS (Randy on a Mac, or the coordinator through a CI run of a drill branch). AC-03E needs a Windows desktop with notifications on (see W4-RED-AC-03E-deferred). Then T-IMPORTS-POSIX, T-HOTKEY-MAC, T-SOUND-MAC and T-TOAST-SHOWN can be verified and M4B closed. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4b/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
     "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545"
   }
 }

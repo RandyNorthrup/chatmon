@@ -11903,7 +11903,7 @@ them.
       "T-14-notes-pin"
     ],
     "pending_operations": [],
-    "next_action": "AC-01-MACOS's red drill on macOS (W4-RED-AC-01-MACOS says how): Randy on a Mac, or the coordinator through a CI run of a drill branch; then T-03-macos-root is verified and M1A can close. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
+    "next_action": "AC-01-MACOS's red drill on macOS (W4-RED-AC-01-MACOS says how): Randy on a Mac, or the coordinator through a CI run of a drill branch; then T-03-macos-root is verified and M1A can close. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4b/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
     "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545"
   }
 }

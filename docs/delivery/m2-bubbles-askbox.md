@@ -19174,7 +19174,7 @@ them. M2 is closed on bf9d8ac.
       "T-M2-08"
     ],
     "pending_operations": [],
-    "next_action": "None in M2 on bf9d8ac. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill spec in wave4/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
+    "next_action": "None in M2 on bf9d8ac. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill spec in wave4b/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
     "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545"
   }
 }
