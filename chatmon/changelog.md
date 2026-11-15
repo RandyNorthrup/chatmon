@@ -70,6 +70,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - pip and pipx installs include the sounds and offline phrases.
 - **macOS:** reminders and bubbles keep their time while Chatmon's windows are out of sight; App Nap no longer holds them back.
 - *status* no longer waits on finding a brain, and a sound still playing at quit finishes cleanly.
+- Quitting stops everything Chatmon had waiting: no update check, agent look or late answer runs after it.
 - A repeating reminder reads "Every day at 9:00 AM", and one-of-a-kind counts read right ("1 minute", "1 hook script").
 
 ## 0.9.2
