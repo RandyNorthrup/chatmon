@@ -1,0 +1,64 @@
+Nuitka 4.3.1 (MSVC cl 14.3, PyQt6 6.11.0, Qt 6.11.2, Python 3.14.10) on Windows 11, in a throwaway venv (%TEMP%\m10-build)
+installed as packaging/README.md says: requirements-build.txt with --require-hashes, then requirements.txt with
+--no-build-isolation. On a scratch copy of the tree with a throwaway chatmon/locale/de.po, packaging/build.py's own
+nuitka() built the program (all of its own options), given windows()'s --experimental=force-dependencies-pefile and a
+console (not the icon, names and versions), with packaging/entry.py replaced by the probe below: Chatmon's own entry
+would start the whole app.
+
+=== the build (probe_build.py: build.qt_translations(), then build.nuitka(BUILD/'probe', 'standalone', ...))
+qt_translations: [WindowsPath('C:/Users/Randy/AppData/Local/Temp/m10-build/Lib/site-packages/PyQt6/Qt6/translations/qtbase_de.qm')]
++ C:\Users\Randy\AppData\Local\Temp\m10-build\Scripts\python.exe -m nuitka --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-data-files=C:\Users\Randy\AppData\Local\Temp\m10-build\Lib\site-packages\PyQt6\Qt6\translations\qtbase_de.qm=PyQt6/Qt6/translations/qtbase_de.qm --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=C:\Users\Randy\AppData\Local\Temp\m10-nuitka-src\build\probe --experimental=force-dependencies-pefile --windows-console-mode=force --output-filename=probe.exe C:\Users\Randy\AppData\Local\Temp\m10-nuitka-src\packaging\entry.py
+...
+Nuitka: Successfully created '~\AppData\Local\Temp\m10-nuitka-src\build\probe\entry.dist\probe.exe'.
+build exit 0
+
+=== Qt translations in the built program
+$ find entry.dist -name '*.qm'
+C:\Users\Randy\AppData\Local\Temp/m10-nuitka-src/build/probe/entry.dist/PyQt6/Qt6/translations/qtbase_de.qm
+$ ls entry.dist/chatmon/locale
+chatmon.pot
+de.po
+
+=== the program, run
+$ entry.dist/probe.exe
+frozen: True
+i18n.LOCALE: C:\Users\Randy\AppData\Local\Temp\m10-nuitka-src\build\probe\entry.dist\chatmon\locale ['chatmon.pot', 'de.po']
+Qt's own folder (QLibraryInfo): C:/Users/Randy/AppData/Local/Temp/M10-NU~1/build/probe/ENTRY~1.DIS/PyQt6/Qt6/translations
+folders looked in: ['C:\\Users\\Randy\\AppData\\Local\\Temp\\M10-NU~1\\build\\probe\\ENTRY~1.DIS\\PyQt6\\Qt6\\translations', 'C:\\Users\\Randy\\AppData\\Local\\Temp\\m10-nuitka-src\\build\\probe\\entry.dist\\PyQt6\\Qt6\\translations']
+language: de
+Stop: Anhalten
+Cancel: Abbrechen
+Qt translation loaded from: C:\Users\Randy\AppData\Local\Temp\M10-NU~1\build\probe\ENTRY~1.DIS\PyQt6\Qt6\translations/qtbase_de.qm
+exit 0
+
+=== the probe (packaging/entry.py in the copy)
+"""A probe in place of Chatmon's entry: what an installer's build finds of Qt's own translations."""
+import os
+
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication
+
+from chatmon import i18n, paths
+
+app = QApplication([])
+print("frozen:", paths.frozen())
+print("i18n.LOCALE:", i18n.LOCALE, sorted(p.name for p in i18n.LOCALE.iterdir()))
+print("Qt's own folder (QLibraryInfo):", QtCore.QLibraryInfo.path(QtCore.QLibraryInfo.LibraryPath.TranslationsPath))
+print("folders looked in:", i18n.qt_folders(QtCore))
+print("language:", i18n.setup("de"))
+print("Stop:", i18n._("Stop"))
+print("Cancel:", QtCore.QCoreApplication.translate("QPlatformTheme", "Cancel"))
+translator = i18n._qt_translator
+print("Qt translation loaded from:", translator.filePath() if translator is not None else None)
+
+=== probe_build.py
+import importlib.util
+import sys
+from pathlib import Path
+
+spec = importlib.util.spec_from_file_location("chatmon_build", Path(__file__).parent / "packaging" / "build.py")
+build = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(build)
+print("qt_translations:", build.qt_translations(), flush=True)
+build.nuitka(build.BUILD / "probe", "standalone", "--experimental=force-dependencies-pefile", "--windows-console-mode=force", "--output-filename=probe.exe")

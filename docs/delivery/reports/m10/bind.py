@@ -154,6 +154,15 @@ def main() -> int:
     receipts += drill_receipts("drill-spec.json", "drills-results.json", "drills.log")
     receipts += drill_receipts("drill-spec-ci-venv.json", "drills-ci-venv-results.json", "drills-ci-venv.log")
     receipts += gate_receipts()
+    # A passing receipt already in the ledger that this run binds again to a changed scope stays, as stale history.
+    fresh = {r["id"]: r for r in receipts}
+    history = [r for r in ledger["evidence"] if r["status"] == "stale"]
+    for old in ledger["evidence"]:
+        new = fresh.get(old["id"])
+        if old["status"] == "pass" and new is not None and new["scope_sha256"] != old["scope_sha256"]:
+            history.append(dict(old, id=f"{old['id']}.{old['scope_sha256'][:8]}", status="stale",
+                                reason="Bound to an earlier scope (the plan or a file it covers changed since); the check was run or "
+                                       f"reviewed again on the current scope as {old['id']}. Next action: none."))
     by_ac: dict[str, set[str]] = {}
     for r in receipts:
         for a in r["acceptance"]:
@@ -165,7 +174,7 @@ def main() -> int:
             task["status"] = "verified"
         elif task["evidence"]:
             task["status"] = "implemented"
-    ledger["evidence"] = receipts
+    ledger["evidence"] = receipts + [r for r in history if r["id"] not in fresh]
     if final:
         snap = snapshot()
         revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip() or None  # noqa: S607 - git, fixed

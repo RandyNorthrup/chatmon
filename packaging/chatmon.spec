@@ -4,6 +4,7 @@
 # Windows' is compiled with Nuitka instead (build.py), which doesn't support PyQt6 on macOS; see
 # packaging/README.md for why Windows needs it and macOS doesn't.
 
+import importlib.util
 import sys
 from pathlib import Path
 
@@ -12,6 +13,11 @@ from PyInstaller.utils.hooks import collect_data_files
 ROOT = Path(SPECPATH).parent  # noqa: F821 (SPECPATH is PyInstaller's)
 sys.path.insert(0, str(ROOT))
 import chatmon  # noqa: E402
+
+# packaging/build.py, which runs this, decides which of Qt's translations the app carries, as it does for Windows.
+_build_spec = importlib.util.spec_from_file_location("chatmon_build", ROOT / "packaging" / "build.py")
+build = importlib.util.module_from_spec(_build_spec)
+_build_spec.loader.exec_module(build)
 
 NAME = "Chatmon"
 VERSION = chatmon.__version__
@@ -27,6 +33,8 @@ a = Analysis(  # noqa: F821
     hiddenimports=["chatmon.app", "chatmon.agents", "chatmon.autostart", "chatmon.releasecheck"],
     excludes=["tkinter", "unittest", "pydoc_data", "test"],
 )
+# Qt's own words in the languages Chatmon speaks, and no others: PyQt6's hooks collect every language Qt has.
+a.datas = build.pyinstaller_datas(a.datas)
 pyz = PYZ(a.pure)  # noqa: F821
 
 program = EXE(pyz, a.scripts, [], exclude_binaries=True, name=NAME, console=False, argv_emulation=False, upx=False)  # noqa: F821
