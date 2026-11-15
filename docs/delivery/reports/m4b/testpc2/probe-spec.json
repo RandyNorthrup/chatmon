@@ -1,0 +1,31 @@
+{
+  "drills": [
+    {
+      "id": "P-03E-hide-lies",
+      "requirement": "AC-03E",
+      "file": "chatmon/wintoast.py",
+      "find": "            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\n",
+      "replace": "",
+      "test": [
+        "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ],
+      "expect": [
+        "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ]
+    },
+    {
+      "id": "P-03E-hide-lies-heard",
+      "requirement": "AC-03E",
+      "file": "chatmon/wintoast.py",
+      "find": "            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\n",
+      "replace": "",
+      "test": [
+        "tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+      ],
+      "expect": [
+        "test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread",
+        "hidden in heard"
+      ]
+    }
+  ]
+}

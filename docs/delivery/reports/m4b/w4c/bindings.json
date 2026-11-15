@@ -1,0 +1,234 @@
+{
+  "plan": "docs/delivery/m4b-hotkey-sound-toasts.md",
+  "stale_reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here",
+  "receipts": [
+    {
+      "id": "W4C-BEH-WINDOWS",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-00A",
+        "AC-01A",
+        "AC-01B",
+        "AC-01C",
+        "AC-02A",
+        "AC-02B",
+        "AC-02C",
+        "AC-02D",
+        "AC-03A",
+        "AC-03B",
+        "AC-03C",
+        "AC-03D",
+        "AC-04A",
+        "AC-04B"
+      ],
+      "artifact": "docs/delivery/reports/m4b/w4c/suite-windows.log",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "exit_code": 0,
+      "method": "The whole suite on 8c24b1c's files (the log's header has HEAD, the staged change and the source digest) on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0. Notifications are off for this user (ToastEnabled 0), so the toast tests take their declining branch, which passed. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-BEH-LINUX",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-00B",
+        "AC-01E",
+        "AC-01F",
+        "AC-02E"
+      ],
+      "artifact": "docs/delivery/reports/m4b/w4c/linux-tests.log",
+      "command": [
+        "wsl.exe",
+        "-d",
+        "archlinux",
+        "--",
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-v",
+        "-rA",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_m4b_imports.py",
+        "tests/test_hotkey.py",
+        "tests/test_hotkey_portal.py",
+        "tests/test_sound.py"
+      ],
+      "exit_code": 0,
+      "method": "In WSL (Arch Linux; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11.0, Qt 6.11.2, pytest 9.2.0) on 8c24b1c's files, through docs/delivery/reports/m4b/w4c/run-wsl.sh: the tests CI's Linux job had shown for these criteria, which can't be re-run without a push. Passed: tests/test_m4b_imports.py::test_it_imports_here for each of the 8 modules (AC-00B), tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict on its own Xvfb with XTest (AC-01E), all 7 tests in tests/test_hotkey_portal.py against the pretend GlobalShortcuts portal on a private bus (AC-01F), and tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait (AC-02E); 58 passed, 7 skipped (Windows or macOS only), exit 0, every warning an error (pyproject.toml). The receipt's environment is the plan's profile; the run's own versions head the log (ROADMAP: evidence from elsewhere). Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-BEH-TESTPC2-TOASTS",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "artifact": "docs/delivery/reports/m4b/w4c/testpc2/plain-test.log",
+      "command": [
+        "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-v",
+        "-rA",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py"
+      ],
+      "exit_code": 0,
+      "method": "tests/test_wintoast.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: testpc2/probe.log), 8c24b1c's files from git archive (its tree checked against 8c24b1c's, 73fd28a5), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0), in place of CI's Windows run, which can't be re-run without a push. The toast tests take their notifications-on branch: test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon saw the toast in Windows' history under its tag and gone after hide(), test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread heard Dismissed(HIDDEN_BY_CHATMON) on the Qt thread as the last word, and the fixture found nothing left in the history. 12 passed, 1 skipped (the test for other systems), exit 0. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03E-hide-kept",
+      "kind": "red",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/testpc2/drills-results.json",
+      "drill": "D-03E-hide-kept",
+      "artifact": "docs/delivery/reports/m4b/w4c/testpc2/drills.log",
+      "method": "Red drill D-03E-hide-kept through tests/drills/run.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: testpc2/probe.log), 8c24b1c's files from git archive (its tree checked against 8c24b1c's, 73fd28a5), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0), in a temporary copy of those files. Green; then hide() made to leave the toast where it is (on screen and in Action Center) and return False; the named test failing with pytest's tests-failed exit at tests/test_wintoast.py:118, 'assert toaster.hide(tag)' ('AssertionError: assert False'), after the test had seen the toast in Windows' history under its tag; the file's bytes put back (checked by SHA-256) and green again. The command is the one run there; this receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03E-hide-noop",
+      "kind": "red",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/testpc2/drills-results.json",
+      "drill": "D-03E-hide-noop",
+      "artifact": "docs/delivery/reports/m4b/w4c/testpc2/drills.log",
+      "method": "Red drill D-03E-hide-noop through tests/drills/run.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: testpc2/probe.log), 8c24b1c's files from git archive (its tree checked against 8c24b1c's, 73fd28a5), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0), in a temporary copy of those files. Green; then hide() made to leave the toast where it is and still return True (Windows' Hide call taken out: the mutation that survived the test before 8c24b1c); the named test failing with pytest's tests-failed exit at tests/test_wintoast.py:120, 'AssertionError: the hidden toast is still in Action Center', after the test had seen the toast in Windows' history under its tag; the file's bytes put back (checked by SHA-256) and green again. The command is the one run there; this receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-00A-eager-objc",
+      "kind": "red",
+      "acceptance": [
+        "AC-00A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-00A-eager-objc",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-00A-eager-objc through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03A-control-chars",
+      "kind": "red",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03A-control-chars",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03A-control-chars through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03A-escaped",
+      "kind": "red",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03A-escaped",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03A-escaped through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03A-five-buttons",
+      "kind": "red",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03A-five-buttons",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03A-five-buttons through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03A-reminder-button",
+      "kind": "red",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03A-reminder-button",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03A-reminder-button through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03B-setting",
+      "kind": "red",
+      "acceptance": [
+        "AC-03B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03B-setting",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03B-setting through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03C-action",
+      "kind": "red",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03C-action",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03C-action through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03C-button",
+      "kind": "red",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03C-button",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03C-button through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03C-qt-thread",
+      "kind": "red",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03C-qt-thread",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03C-qt-thread through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-D-03D-icon",
+      "kind": "red",
+      "acceptance": [
+        "AC-03D"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/drills-results.json",
+      "drill": "D-03D-icon",
+      "artifact": "docs/delivery/reports/m4b/w4c/drills.log",
+      "method": "Red drill D-03D-icon through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    },
+    {
+      "id": "W4C-RED-L-00B-eager-objc",
+      "kind": "red",
+      "acceptance": [
+        "AC-00B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4c/wsl-drills-results.json",
+      "drill": "L-00B-eager-objc",
+      "artifact": "docs/delivery/reports/m4b/w4c/wsl-drills.log",
+      "method": "Red drill L-00B-eager-objc in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 8c24b1c's files (the list in w4c/files.lst), from docs/delivery/reports/m4b/w4c/run-wsl.sh: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center."
+    }
+  ],
+  "tasks": {},
+  "pending": [],
+  "next_action": "Three red drills remain, each needing macOS, not new code: AC-00C, AC-01D and AC-02F (Randy on a Mac, or the coordinator through a CI run of a drill branch). CI's macOS behavior receipt W4B-BEH-CI-MACOS went stale when tests/test_wintoast.py changed (8c24b1c), so that Mac or CI run must also run the macOS tests again (the imports, Carbon's hotkey, NSSound). Then T-IMPORTS-POSIX, T-HOTKEY-MAC and T-SOUND-MAC can be verified and M4B closed. Every other task is verified at 8c24b1c: the workstation's suite and drills, WSL's Linux tests and drill, and testpc2's signed-in desktop for the toasts Windows shows (reports/m4b/w4c/README.md).",
+  "source_revision": "8c24b1c1b17b977cee967695670a9b7802896c3e"
+}

@@ -1,0 +1,21 @@
+{
+  "plan": "docs/delivery/m4b-hotkey-sound-toasts.md",
+  "stale_reason": "Stale after the testpc2 drill (2026-11-15): a file it was bound to changed by 3586a0d",
+  "receipts": [
+    {
+      "id": "TP2-RED-D-03E-hide-kept",
+      "kind": "red",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "results": "docs/delivery/reports/m4b/testpc2/drills-results.json",
+      "drill": "D-03E-hide-kept",
+      "artifact": "docs/delivery/reports/m4b/testpc2/drills.log",
+      "method": "Red drill D-03E-hide-kept through tests/drills/run.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5), in a temporary copy of 3586a0d's files (from git archive, its tree checked against 3586a0d's, 2d3c01b), with a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0). Green; then hide() made to leave the toast where it is (on screen and in Action Center) and return False; the named test failing with pytest's tests-failed exit at tests/test_wintoast.py:118, 'assert toaster.hide(tag)' ('AssertionError: assert False'), after its two assertions before had seen the toast in Windows' history under its tag; the file's bytes put back (checked by SHA-256) and green again. Before it, testpc2/probe.log showed a toast in Windows' history under its tag and gone after hide(), and testpc2/plain-test.log the whole test file green. A hide() that does nothing yet answers True survives this test and is caught by test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread (testpc2/probe-drills.log). The command is the one run there; this receipt's environment is the plan's profile, the workstation that bound it (ROADMAP: evidence from elsewhere). Every file it binds has the same bytes at 3586a0d as at bf9d8ac."
+    }
+  ],
+  "tasks": {},
+  "pending": [],
+  "next_action": "Three red drills remain, each needing macOS, not new code: AC-00C, AC-01D and AC-02F (Randy on a Mac, or the coordinator through a CI run of a drill branch). Then T-IMPORTS-POSIX, T-HOTKEY-MAC and T-SOUND-MAC can be verified and M4B closed. AC-03E's drill ran on testpc2 (TP2-RED-D-03E-hide-kept), so T-TOAST-SHOWN is verified. For the coordinator, optional: tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon could also wait for the tag to leave in_action_center() after hide(); a hide() that answers True without hiding survives it, though AC-03E's other test catches it (reports/m4b/testpc2/README.md). That change would make every receipt bound to tests/test_wintoast.py stale. wave4/crash, merged at 3586a0d, changes none of the files this plan's receipts bind.",
+  "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
+}

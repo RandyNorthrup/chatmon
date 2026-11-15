@@ -1,0 +1,412 @@
+red drills from docs\delivery\reports\m4b\wave4b\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-k7ntvd78
+copied 310 files
+
+=== drill D-03A-escaped (AC-03A) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.24s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_text_from_an_agent_is_text_never_markup _________________
+
+    def test_text_from_an_agent_is_text_never_markup():
+        xml = wintoast.toast_xml('<b>Fish & "chips"</b>', "a\x01b <script>x</script>", tag="abc")
+        texts = [t.text for t in ET.fromstring(xml).iter("text")]
+>       assert texts == ['<b>Fish & "chips"</b>', "ab <script>x</script>"]  # escaped, and the control character dropped
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert [None, 'ab '] == ['<b>Fish & "...t>x</script>']
+E         
+E         At index 0 diff: None != '<b>Fish & "chips"</b>'
+E         Use -v to get more diff
+
+tests\test_wintoast.py:28: AssertionError
+1 failed in 0.94s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+
+=== drill D-03A-control-chars (AC-03A) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.25s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_text_from_an_agent_is_text_never_markup _________________
+
+    def test_text_from_an_agent_is_text_never_markup():
+        xml = wintoast.toast_xml('<b>Fish & "chips"</b>', "a\x01b <script>x</script>", tag="abc")
+>       texts = [t.text for t in ET.fromstring(xml).iter("text")]
+                                 ^^^^^^^^^^^^^^^^^^
+
+tests\test_wintoast.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = '<toast launch="chatmon:abc:-1" activationType="foreground"><visual><binding template="ToastGeneric"><text>&lt;b&gt;Fish &amp; "chips"&lt;/b&gt;</text><text>a\x01b &lt;script&gt;x&lt;/script&gt;</text></binding></visual></toast>'
+parser = <xml.etree.ElementTree.XMLParser object at 0x000001A626BD4040>
+
+    def XML(text, parser=None):
+        """Parse XML document from string constant.
+    
+        This function can be used to embed "XML Literals" in Python code.
+    
+        *text* is a string containing XML data, *parser* is an
+        optional parser instance, defaulting to the standard XMLParser.
+    
+        Returns an Element instance.
+    
+        """
+        if not parser:
+            parser = XMLParser(target=TreeBuilder())
+>       parser.feed(text)
+E       xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 157
+
+C:\Python314\Lib\xml\etree\ElementTree.py:1362: ParseError
+1 failed in 0.34s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.23s
+
+=== drill D-03A-reminder-button (AC-03A) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_reminder_stays_until_answered
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.26s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_a_reminder_stays_until_answered _____________________
+
+    def test_a_reminder_stays_until_answered():
+        with_buttons = wintoast.toast_xml("Reminder", "Stretch", ["Snooze 10 min", "Done"], "reminder", tag="9")
+        assert ET.fromstring(with_buttons).get("scenario") == "reminder" and len(actions(with_buttons)) == 2
+        # Windows holds a reminder on screen only when it has a button: without one, its own Dismiss.
+        bare = wintoast.toast_xml("Reminder", "Stretch", (), "reminder", tag="9")
+>       assert actions(bare) == [{"content": "", "arguments": "dismiss", "activationType": "system"}]
+E       AssertionError: assert [] == [{'content': ...e': 'system'}]
+E         
+E         Right contains one more item: {'content': '', 'arguments': 'dismiss', 'activationType': 'system'}
+E         Use -v to get more diff
+
+tests\test_wintoast.py:47: AssertionError
+1 failed in 0.32s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.29s
+
+=== drill D-03A-five-buttons (AC-03A) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_too_many_buttons_or_an_unknown_scenario_is_refused ___________
+
+    def test_too_many_buttons_or_an_unknown_scenario_is_refused():
+>       assert len(actions(wintoast.toast_xml("t", buttons=[str(i) for i in range(5)]))) == 5
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_wintoast.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+title = 't', text = '', buttons = ['0', '1', '2', '3', '4'], scenario = None
+tag = '0', silent = False
+
+    def toast_xml(title: str, text: str = "", buttons: Sequence[Button] = (), scenario: str | None = None, tag: str = "0",
+                  silent: bool = False) -> str:
+        """The toast's XML. ElementTree escapes the text, which may come from an agent: it's never markup. A button's
+        arguments say which toast and which button; `launch` says the toast itself was clicked."""
+        if scenario not in SCENARIOS:
+            raise ValueError(f"A toast's scenario is one of {', '.join(str(s) for s in SCENARIOS)}, not {scenario!r}.")
+        if len(buttons) >= MAX_BUTTONS:
+>           raise ValueError(f"A toast has at most {MAX_BUTTONS} buttons, not {len(buttons)}.")
+E           ValueError: A toast has at most 5 buttons, not 5.
+
+chatmon\wintoast.py:125: ValueError
+1 failed in 0.30s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.25s
+
+=== drill D-03B-setting (AC-03B) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_only_a_real_no_keeps_a_toast_from_being_tried ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002303A4CB6B0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002303A82E060>
+
+    @windows
+    def test_only_a_real_no_keeps_a_toast_from_being_tried(qapp, monkeypatch):
+        """Windows' answer decides, not its silence: on CI's runners it gave none for an app ID without a Start menu
+        shortcut, yet showed the toast. Only notifications turned off (for the app, the user or by policy) mean the
+        balloon instead. Windows' own handing over is stood in for here: the decision is what's tested."""
+        toaster = wintoast.Toaster("RandyNorthrup.Chatmon.Test")
+        handed = []
+    
+        def post(xml, tag, suppress_popup=False):
+            handed.append(tag)
+            toaster._shown[tag] = wintoast._Shown(toast=0)
+            return True
+    
+        monkeypatch.setattr(toaster, "_post", post)
+        for answer in (wintoast.ENABLED, None, wintoast.OFF_BY_MANIFEST):
+            monkeypatch.setattr(toaster, "setting", lambda answer=answer: answer)
+>           assert toaster.show("Chatmon test") is not None and toaster.why_not is None, answer
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_wintoast.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <chatmon.wintoast.Toaster object at 0x000002303A4CB610>
+title = 'Chatmon test', text = '', buttons = (), scenario = None, silent = False
+
+    def show(self, title: str, text: str = "", buttons: Sequence[Button] = (), scenario: str | None = None,
+             silent: bool = False) -> str | None:
+        """Show a toast; its tag, or None (with `why_not` saying why) where none could be shown, for the caller to
+        use the tray balloon. Windows can still refuse a toast it was handed: `failed` says so, and the caller can
+        use the balloon then. `buttons` are labels, or (label, action) pairs whose action runs when it's pressed.
+        A bad scenario or too many buttons is a ValueError."""
+        tag = uuid.uuid4().hex[:16]
+        xml = toast_xml(title, text, buttons, scenario, tag, silent)
+        self.why_not = None
+        if sys.platform != "win32":
+            self.why_not = _("Toasts are Windows' own.")
+            return None
+        if not self.app_id:
+            self.why_not = _("Chatmon has no app ID for Windows to show its notifications under.")
+            return None
+        setting = self.setting()
+        if setting != ENABLED:
+>           self.why_not = _(WHY_NOT[setting])
+                             ^^^^^^^^^^^^^^^^
+E           KeyError: None
+
+chatmon\wintoast.py:323: KeyError
+1 failed in 0.37s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.29s
+
+=== drill D-03C-qt-thread (AC-03C) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________
+
+toaster = <chatmon.wintoast.Toaster object at 0x000001833721B610>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001833721B6B0>
+
+    @windows
+    def test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread(toaster, qapp):
+        """Posted straight to Action Center. Where notifications are off Windows refuses it (Failed); where they're on
+        it's there until Chatmon hides it (Dismissed). Either way Windows calls back on a thread of its own. Sent
+        straight to Action Center, a toast may also count as timed out (CI's runners say so); hidden is the last word."""
+        heard = []
+        main = threading.get_ident()
+        toaster.failed.connect(lambda tag, code: heard.append(("failed", tag, code, threading.get_ident() == main)))
+        toaster.dismissed.connect(lambda tag, why: heard.append(("dismissed", tag, why, threading.get_ident() == main)))
+        tag = "a1b2c3"
+        assert toaster._post(wintoast.toast_xml("Chatmon test", "Removed at once.", ["OK"], "reminder", tag, silent=True), tag, suppress_popup=True)
+        assert toaster.listening == [tag]
+        if notifications_on():
+            assert wait_for(qapp, lambda: tag in toaster.in_action_center())
+            assert toaster.hide(tag)
+            hidden = ("dismissed", tag, wintoast.HIDDEN_BY_CHATMON, True)
+            assert wait_for(qapp, lambda: hidden in heard), heard
+            wait_for(qapp, lambda: False, 0.5)  # whatever Windows says after: nothing more is reported
+            assert heard[-1] == hidden and all(h == ("dismissed", tag, wintoast.TIMED_OUT, True) for h in heard[:-1]), heard
+        else:
+            assert wait_for(qapp, lambda: heard)
+            WPN_E_NOTIFICATION_TYPE_DISABLED = -0x7FC1FEEC  # 0x803E0114
+            assert heard == [("failed", tag, WPN_E_NOTIFICATION_TYPE_DISABLED, True)]
+>       assert toaster.listening == []  # its handlers removed, the toast let go of
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ['a1b2c3'] == []
+E         
+E         Left contains one more item: 'a1b2c3'
+E         Use -v to get more diff
+
+tests\test_wintoast.py:174: AssertionError
+1 failed in 0.38s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.35s
+
+=== drill D-03C-button (AC-03C) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.62s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000207F07FB610>
+
+    @windows
+    def test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread(qapp):
+        toaster = wintoast.Toaster("RandyNorthrup.Chatmon.Test")
+        main = threading.get_ident()
+        pressed, ran = [], []
+        toaster.activated.connect(lambda tag, button: pressed.append((tag, button, threading.get_ident() == main)))
+        tag = "00ff"
+        toaster._shown[tag] = wintoast._Shown(toast=0, actions=[None, lambda: ran.append(threading.get_ident() == main)])
+        clicks = [_FakeArgs("chatmon:00ff:1"), _FakeArgs("chatmon:00ff:-1")]
+        worker = threading.Thread(target=lambda: toaster._on_activated(tag, clicks[0].pointer))  # as Windows would: another thread
+        worker.start()
+        worker.join()
+        assert wait_for(qapp, lambda: pressed)
+>       assert pressed == [(tag, 1, True)] and ran == [True] and toaster.listening == []
+E       AssertionError: assert ([('00ff', -1, True)] == [('00ff', 1, True)]
+E         
+E         At index 0 diff: ('00ff', -1, True) != ('00ff', 1, True)
+E         Use -v to get more diff)
+
+tests\test_wintoast.py:224: AssertionError
+1 failed in 0.33s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.58s
+
+=== drill D-03C-action (AC-03C) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.62s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000024228DBB610>
+
+    @windows
+    def test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread(qapp):
+        toaster = wintoast.Toaster("RandyNorthrup.Chatmon.Test")
+        main = threading.get_ident()
+        pressed, ran = [], []
+        toaster.activated.connect(lambda tag, button: pressed.append((tag, button, threading.get_ident() == main)))
+        tag = "00ff"
+        toaster._shown[tag] = wintoast._Shown(toast=0, actions=[None, lambda: ran.append(threading.get_ident() == main)])
+        clicks = [_FakeArgs("chatmon:00ff:1"), _FakeArgs("chatmon:00ff:-1")]
+        worker = threading.Thread(target=lambda: toaster._on_activated(tag, clicks[0].pointer))  # as Windows would: another thread
+        worker.start()
+        worker.join()
+        assert wait_for(qapp, lambda: pressed)
+>       assert pressed == [(tag, 1, True)] and ran == [True] and toaster.listening == []
+E       AssertionError: assert ([('00ff', 1, True)] == [('00ff', 1, True)]
+E         
+E         Use -v to get more diff and [] == [True]
+E         
+E         Right contains one more item: True
+E         Use -v to get more diff)
+
+tests\test_wintoast.py:224: AssertionError
+1 failed in 0.33s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.59s
+
+=== drill D-03D-icon (AC-03D) on chatmon/wintoast.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.22s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_pip_install_tells_windows_its_name_and_icon ______________
+
+    @windows
+    def test_a_pip_install_tells_windows_its_name_and_icon():
+        import winreg
+    
+        app_id = f"RandyNorthrup.Chatmon.Test{uuid.uuid4().hex[:8]}"
+        key = rf"Software\Classes\AppUserModelId\{app_id}"
+        wintoast.register_app_id(app_id, "Chatmon", r"C:\icons\chatmon.png")
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key) as k:
+                assert winreg.QueryValueEx(k, "DisplayName")[0] == "Chatmon"
+>               assert winreg.QueryValueEx(k, "IconUri")[0] == r"C:\icons\chatmon.png"
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+tests\test_wintoast.py:265: FileNotFoundError
+1 failed in 0.30s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.24s
+
+=== drill D-00A-eager-objc (AC-00A) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_m4b_imports.py::test_it_imports_here
+-- green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.06s
+-- red: exit 1
+.F......                                                                 [100%]
+================================== FAILURES ===================================
+_________________________ test_it_imports_here[sound] _________________________
+
+module = 'sound'
+
+    @pytest.mark.parametrize("module", MODULES)
+    def test_it_imports_here(module):
+        env = dict(os.environ, PYTHONPATH=str(ROOT), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", f"import chatmon.{module}"], cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+>       assert out.returncode == 0, out.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             import chatmon.sound
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-k7ntvd78\chatmon\sound.py", line 353, in <module>
+E             MacPlayer()
+E             ~~~~~~~~~^^
+E           File "C:\Users\Randy\AppData\Local\Temp\chatmon-drill-k7ntvd78\chatmon\sound.py", line 194, in __init__
+E             objc = ctypes.cdll.LoadLibrary(ctypes.util.find_library("objc") or "/usr/lib/libobjc.dylib")
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 554, in LoadLibrary
+E             return self._dlltype(name)
+E                    ~~~~~~~~~~~~~^^^^^^
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 433, in __init__
+E             self._handle = self._load_library(name, mode, handle, winmode)
+E                            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "C:\Python314\Lib\ctypes\__init__.py", line 451, in _load_library
+E             return _LoadLibrary(self._name, winmode)
+E         FileNotFoundError: Could not find module 'C:\usr\lib\libobjc.dylib' (or one of its dependencies). Try using the full path with constructor syntax.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe', '-c', 'import chatmon.sound'],...dule \'C:\\usr\\lib\\libobjc.dylib\' (or one of its dependencies). Try using the full path with constructor syntax.\n').returncode
+
+tests\test_m4b_imports.py:19: AssertionError
+1 failed, 7 passed in 1.07s
+-- restored green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.05s
+
+=== summary
+PASS D-03A-escaped
+PASS D-03A-control-chars
+PASS D-03A-reminder-button
+PASS D-03A-five-buttons
+PASS D-03B-setting
+PASS D-03C-qt-thread
+PASS D-03C-button
+PASS D-03C-action
+PASS D-03D-icon
+PASS D-00A-eager-objc

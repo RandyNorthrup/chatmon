@@ -1,0 +1,62 @@
+[
+  {
+    "id": "P-03E-hide-lies",
+    "requirement": "AC-03E",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\n",
+      "replace": ""
+    },
+    "command": [
+      "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+    ],
+    "expected": [
+      "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+    ],
+    "status": "fail",
+    "reason": "mutated run exited 0, not 1 (tests failed)",
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "9e6561d48b2544819e3bb8525baf47c699f1c6d53862e74a7317c3b7fd2011ab",
+    "mutated_exit": 0,
+    "observed": "",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+  },
+  {
+    "id": "P-03E-hide-lies-heard",
+    "requirement": "AC-03E",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\n",
+      "replace": ""
+    },
+    "command": [
+      "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+    ],
+    "expected": [
+      "test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread",
+      "hidden in heard"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "9e6561d48b2544819e3bb8525baf47c699f1c6d53862e74a7317c3b7fd2011ab",
+    "mutated_exit": 1,
+    "observed": "________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  }
+]

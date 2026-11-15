@@ -1,0 +1,21 @@
+== cleanup 2026-11-15 09:12:53 -08:00, testpc2\technician
+last boot: 2026-11-12 11:59:51 (unchanged means no restart happened)
+task ChatmonM4BToastDrill still registered: False
+processes from the work folder: 0
+HKCU:\Software\Classes\AppUserModelId : Chatmon app IDs now 0, before the run 0
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Test02686ac5 (made during the run)
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Test124973ff (made during the run)
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Test142142d4 (made during the run)
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Test5a14fed0 (made during the run)
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Test60558f57 (made during the run)
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Test754f98f6 (made during the run)
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Test92177a41 (made during the run)
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Testa59f078b (made during the run)
+removing HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon.Testf0ae176e (made during the run)
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings : Chatmon app IDs now 0, before the run 0
+ToastEnabled now: absent (on), as before; never changed
+W:\chatmon-m4b exists: False
+W:\ now holds: System Volume Information
+claim file exists: False; claims left: 
+C:\Users\Technician\chatmon-survey exists: False
+cleanup done

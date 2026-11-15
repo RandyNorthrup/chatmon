@@ -116,6 +116,8 @@ def test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon(toaster, qapp
         assert tag is not None and toaster.why_not is None, f"declined: setting {toaster.setting()}, {toaster.why_not}"
         assert wait_for(qapp, lambda: tag in toaster.in_action_center()), "Windows never had the toast"
         assert toaster.hide(tag)
+        # Hidden means gone from Action Center, not just an answer of True: the fixture's clear() would take it out anyway.
+        assert wait_for(qapp, lambda: tag not in toaster.in_action_center()), "the hidden toast is still in Action Center"
     else:
         assert tag is None and toaster.why_not == wintoast.WHY_NOT[wintoast.OFF_FOR_USER]
         assert toaster.setting() == wintoast.OFF_FOR_USER and toaster.listening == []
