@@ -1,0 +1,79 @@
+red drills from docs\delivery\reports\m7\wave4b\drill-spec-new.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-phdb_p1z
+copied 310 files
+
+=== drill W4-M7-02-no-next-brain (AC-02-1) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_answers.py::test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.68s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings _
+
+companion = <chatmon.app.Companion object at 0x00000221193CB430>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022117C61A70>
+
+    def test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings(companion, monkeypatch):
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        monkeypatch.setattr(c, "brains", {"pretend": brain.brain, "other": api("other", "Other API")})
+        spin(1.8)
+        c.stage.dismiss_message()
+        c.open_ask()
+        c.submit("explain")
+        c._failed("Pretend API: invalid x-api-key (HTTP 401). Check its key.")
+        assert c.ask_box.entry.text() == "explain"  # back in the box, as before
+        assert until(lambda: c.stage.bubble.title == "Pretend API couldn't answer")
+>       assert labels(c) == ["Try again", "Ask Other API", "Settings"] and "HTTP 401" in c.stage.bubble.doc.toPlainText()
+E       AssertionError: assert (['Try again', 'Settings'] == ['Try again',...', 'Settings']
+E         
+E         At index 1 diff: 'Settings' != 'Ask Other API'
+E         Right contains one more item: 'Settings'
+E         Use -v to get more diff)
+
+tests\test_app_answers.py:127: AssertionError
+1 failed in 2.59s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.66s
+
+=== drill W4-M7-02-welcome-without-brain (AC-02-3) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_answers.py::test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.76s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up ____
+
+companion = <chatmon.app.Companion object at 0x000002C68FAEF250>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002C68E461A70>
+
+    def test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up(companion, monkeypatch):
+        c = companion
+        PretendBrain(c, monkeypatch)
+        c._asking_name = True
+        c.open_ask(focus=False)
+        c.submit("Pip")
+        assert until(lambda: c.stage.bubble.title == "Pip! I love it.")
+>       assert "Your questions go to Pretend API" in c.stage.bubble.doc.toPlainText()
+E       AssertionError: assert 'Your questions go to Pretend API' in 'Click me to ask anything, drag me anywhere, right-click for the menu.\nI also do plenty without any AI, like remind me in 20m to stretch, timer 10 min, note: buy milk, 5 km in miles or roll 2d6. Ask me help to see it all.'
+E        +  where 'Click me to ask anything, drag me anywhere, right-click for the menu.\nI also do plenty without any AI, like remind me in 20m to stretch, timer 10 min, note: buy milk, 5 km in miles or roll 2d6. Ask me help to see it all.' = <built-in method toPlainText of SafeDocument object at 0x000002C68FAEFED0>()
+E        +    where <built-in method toPlainText of SafeDocument object at 0x000002C68FAEFED0> = <chatmon.richtext.SafeDocument object at 0x000002C68FAEFED0>.toPlainText
+E        +      where <chatmon.richtext.SafeDocument object at 0x000002C68FAEFED0> = <chatmon.bubble.SpeechBubble object at 0x000002C68FB57B60>.doc
+E        +        where <chatmon.bubble.SpeechBubble object at 0x000002C68FB57B60> = <chatmon.penguin.Stage object at 0x000002C68FAEFE30>.bubble
+E        +          where <chatmon.penguin.Stage object at 0x000002C68FAEFE30> = <chatmon.app.Companion object at 0x000002C68FAEF250>.stage
+
+tests\test_app_answers.py:187: AssertionError
+1 failed in 0.82s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.81s
+
+=== summary
+PASS W4-M7-02-no-next-brain
+PASS W4-M7-02-welcome-without-brain
