@@ -25,3 +25,5 @@ results. The W4E- receipts are kept as stale history.
 
 **Receipts.** The stale ones are kept as history, with their hashes untouched; the W4F- receipts replace
 them. M6B is closed on 45a17b3.
+
+**Archived history.** The ledger's 108 oldest receipts (round one's `W4-` and the original `E-`, all stale) are in [reports/m6b/history/](reports/m6b/history/README.md), moved out for the validator's 4 MiB plan limit.
