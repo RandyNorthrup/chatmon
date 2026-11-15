@@ -1,0 +1,34 @@
+{
+ "plan": "docs/delivery/m6a-ci-tooling.md",
+ "section": "",
+ "rules": {},
+ "inputs_add": [],
+ "task_changes_add": {},
+ "stale_reason": "Stale at wave 4's final round (2026-11-15): files it was bound to changed by 45a17b3",
+ "receipts": [
+  {
+   "id": "W4E-MAN-DOCS",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-10.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4e/docs-review.md",
+   "method": "SECURITY.md, CONTRIBUTING.md and the issue chooser read claim by claim against 45a17b3 and the repository's settings (docs-review.md). Every claim holds, the one round three found false among them: 'It also passes with the next PyQt6's stubs (6.12.1)', which mypy 2.4.1 with PyQt6 6.12.1 confirms on linux, win32 and darwin, in WSL (mypy-pyqt6-6.12.1-*.log) and here (../m10/wave4e/mypy-6121.log), now that the quit guard gave chatmon/app.py's removeEventFilter(self) its arg-type ignore with the reason. Evidence for 45a17b3."
+  }
+ ],
+ "tasks": {},
+ "pending": [
+  {
+   "id": "P-RELEASE",
+   "description": "The first tag-pushed release (0.10.0) will be the first to draft, attest and publish through the new jobs. PR #18's Packages run 43743804716 at 45a17b3 (reports/wave4e/ci/packages-43743804716.json) ran every build job and, as designed for a run that isn't a tag, skipped sign-windows, test-signed-windows, checksums, attest and publish. No v0.10.0 tag exists yet (the newest is v0.9.2; reports/wave4e/github-settings.txt).",
+   "next_action": "At the 0.10.0 release (Randy or the coordinator): push the tag, watch attest and publish, then run gh attestation verify <file> --repo RandyNorthrup/chatmon on one file."
+  },
+  {
+   "id": "P-DEPENDABOT",
+   "description": "Dependabot's first run, including whether it relocks the uv-compiled, hash-locked packaging/requirements*.txt from their .in files, is not observed. Dependabot reads .github/dependabot.yml from main, which doesn't have it yet (reports/wave4e/github-settings.txt, 2026-11-15). The owner turned on Dependabot alerts and security updates on 2026-11-14.",
+   "next_action": "After the PR reaches main (the coordinator), read Dependabot's first pull requests. If it can't relock the uv-made files, lock them by hand on its proposals (CONTRIBUTING.md has the command)."
+  }
+ ],
+ "next_action": "Two outcomes remain, neither in reach before a tag and a merge: the 0.10.0 tag (P-RELEASE, Randy or the coordinator) and Dependabot's first run once .github/dependabot.yml is on main (P-DEPENDABOT, the coordinator).",
+ "source_revision": "45a17b37fb25590a62fe3391379f7c8d2870da29"
+}

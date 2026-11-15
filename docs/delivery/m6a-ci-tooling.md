@@ -1232,7 +1232,7 @@ them.
           "action": "modify"
         }
       ],
-      "status": "blocked",
+      "status": "verified",
       "evidence": [
         "M-DEPENDABOT",
         "M-DOCS",
@@ -1244,9 +1244,10 @@ them.
         "W4B-MAN-DOCS",
         "W4C-READY",
         "W4C-MAN-DEPENDABOT",
-        "W4C-MAN-DOCS"
+        "W4C-MAN-DOCS",
+        "W4E-MAN-DOCS"
       ],
-      "blocker": "mypy with PyQt6 6.12.1's stubs fails at 3586a0d on linux, win32 and darwin: chatmon/app.py:3173: error: Argument 1 to \"removeEventFilter\" of \"QObject\" has incompatible type \"Companion\"; expected \"AskBox\"  [arg-type], the crash fix's new widget.removeEventFilter(self) in Companion._stop_for_good. 6.12.1's stubs type the filter as Self, the watched object, the stub bug CONTRIBUTING.md's third workaround covers; the line has no # type: ignore[arg-type]. CI is green because its types jobs lock 6.11's stubs. CONTRIBUTING.md's 'It also passes with the next PyQt6's stubs (6.12.1)' is false until then (M6A-10.A1). Next: the coordinator adds # type: ignore[arg-type] with the reason on chatmon/app.py:3173 (product code, not this reconciliation's to change); then mypy with 6.12.1's stubs runs again.",
+      "blocker": null,
       "superseded_by": null
     }
   ],
@@ -18271,6 +18272,131 @@ them.
         ]
       },
       "reason": null
+    },
+    {
+      "id": "W4E-MAN-DOCS",
+      "acceptance": [
+        "M6A-10.A1"
+      ],
+      "kind": "manual",
+      "status": "pass",
+      "command": [],
+      "method": "SECURITY.md, CONTRIBUTING.md and the issue chooser read claim by claim against 45a17b3 and the repository's settings (docs-review.md). Every claim holds, the one round three found false among them: 'It also passes with the next PyQt6's stubs (6.12.1)', which mypy 2.4.1 with PyQt6 6.12.1 confirms on linux, win32 and darwin, in WSL (mypy-pyqt6-6.12.1-*.log) and here (../m10/wave4e/mypy-6121.log), now that the quit guard gave chatmon/app.py's removeEventFilter(self) its arg-type ignore with the reason. Evidence for 45a17b3.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "pyqt6": "6.11.0",
+          "pytest-timeout": "2.4.0",
+          "coverage": "7.17.0",
+          "mypy": "2.4.1",
+          "ruff": "0.17.4",
+          "zizmor": "1.31.1",
+          "actionlint": "1.7.12",
+          "uv": "0.12.7",
+          "shellcheck": "0.11.0",
+          "podman": "6.2.0"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m6a/wave4e/docs-review.md",
+        "sha256": "e73216a107cf857480e46d46e5fbf9b5697ce4bbcc7331899a55bc3bb937869d"
+      },
+      "inputs": [
+        {
+          "path": ".github/ISSUE_TEMPLATE/config.yml",
+          "sha256": "dfb4459764a36a156444342afc57092d314a4072359bf87a219d186c134b4af0"
+        },
+        {
+          "path": ".github/dependabot.yml",
+          "sha256": "91ae644a18999583a7d99128ed0eee5ac891fa2dd8deeb040fca818ef2a32172"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1f7c6d84755fadc007d43edb37d8a196ea947201c82039bfa5bdc3d7fee179b2"
+        },
+        {
+          "path": "SECURITY.md",
+          "sha256": "4f70d856b2157dbe76ebd4e42157fe1e38efc5aa794867119cc147660f274427"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.in",
+          "sha256": "644e53fecb1cde0e8e18b45313781de0e894056e1c979ba347b25e97adbb7170"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.in",
+          "sha256": "7f076c6f27456a9a53fe8aea080ac0ec20f8ccf3b9d18f61ea95444b4eb1d630"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/gnome-session.sh",
+          "sha256": "f8cd51b37bbdf6e6ed55cef24d3e7bc94dbabdeb33ec3a9e3cce567d0c354268"
+        },
+        {
+          "path": "tests/test_cli.py",
+          "sha256": "d05913174b90ab7b1de137e33dac49e7c41cf68d2ca495d98602664adf6699f2"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "0be1e397090e56c2e8b7aa9b9a27b7522deaaa10ac0ffcf6d654f61728f78281"
+        }
+      ],
+      "scope_sha256": "53efbffae9afb93efffba94be0f86e84ad7aa682f446df2e9236670e7583bfd5",
+      "red": null,
+      "reason": null
     }
   ],
   "checkpoint": {
@@ -18412,22 +18538,23 @@ them.
       "T3",
       "T4",
       "T5",
-      "T6"
+      "T6",
+      "T7"
     ],
     "pending_operations": [
       {
         "id": "P-RELEASE",
-        "description": "The first tag-pushed release (0.10.0) will be the first to draft, attest and publish through the new jobs. PR #18's Packages run 43729628343 at 3586a0d ran every build job and, as designed for a run that isn't a tag, skipped sign-windows, test-signed-windows, checksums, attest and publish. No v0.10.0 tag exists yet (the newest is v0.9.2; reports/wave4c/github-settings.txt).",
+        "description": "The first tag-pushed release (0.10.0) will be the first to draft, attest and publish through the new jobs. PR #18's Packages run 43743804716 at 45a17b3 (reports/wave4e/ci/packages-43743804716.json) ran every build job and, as designed for a run that isn't a tag, skipped sign-windows, test-signed-windows, checksums, attest and publish. No v0.10.0 tag exists yet (the newest is v0.9.2; reports/wave4e/github-settings.txt).",
         "next_action": "At the 0.10.0 release (Randy or the coordinator): push the tag, watch attest and publish, then run gh attestation verify <file> --repo RandyNorthrup/chatmon on one file."
       },
       {
         "id": "P-DEPENDABOT",
-        "description": "Dependabot's first run, including whether it relocks the uv-compiled, hash-locked packaging/requirements*.txt from their .in files, is not observed. Dependabot reads .github/dependabot.yml from main, which doesn't have it yet (reports/wave4c/github-settings.txt, 2026-11-15). The owner turned on Dependabot alerts and security updates on 2026-11-14.",
+        "description": "Dependabot's first run, including whether it relocks the uv-compiled, hash-locked packaging/requirements*.txt from their .in files, is not observed. Dependabot reads .github/dependabot.yml from main, which doesn't have it yet (reports/wave4e/github-settings.txt, 2026-11-15). The owner turned on Dependabot alerts and security updates on 2026-11-14.",
         "next_action": "After the PR reaches main (the coordinator), read Dependabot's first pull requests. If it can't relock the uv-made files, lock them by hand on its proposals (CONTRIBUTING.md has the command)."
       }
     ],
-    "next_action": "M6A-10.A1 fails at 3586a0d on one CONTRIBUTING.md sentence: mypy with PyQt6 6.12.1's stubs finds chatmon/app.py:3173: error: Argument 1 to \"removeEventFilter\" of \"QObject\" has incompatible type \"Companion\"; expected \"AskBox\"  [arg-type]. Next: the coordinator adds # type: ignore[arg-type] with the reason on chatmon/app.py:3173 (product code, not this reconciliation's to change); then mypy with 6.12.1's stubs runs again, and docs-review.md is done again; then T7 can be verified. Two outcomes remain beyond that, neither in reach before a tag and a merge: the 0.10.0 tag (P-RELEASE, Randy or the coordinator) and Dependabot's first run once .github/dependabot.yml is on main (P-DEPENDABOT, the coordinator).",
-    "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
+    "next_action": "Two outcomes remain, neither in reach before a tag and a merge: the 0.10.0 tag (P-RELEASE, Randy or the coordinator) and Dependabot's first run once .github/dependabot.yml is on main (P-DEPENDABOT, the coordinator).",
+    "source_revision": "45a17b37fb25590a62fe3391379f7c8d2870da29"
   }
 }
 ```
