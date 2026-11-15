@@ -57,7 +57,9 @@ def test_a_repeating_reminder_moves_on_when_done_and_later_offers_every_snooze(c
     rep = c.reminders.add(time.time() - 1, "stand up", repeat="daily@09:00")
     c._check_reminders()
     assert until(lambda: c.stage.bubble.title == "Reminder")
-    assert reminders.describe_repeat("daily@09:00").capitalize() in c.stage.bubble.doc.toPlainText()
+    rule = reminders.describe_repeat("daily@09:00")
+    # Its first letter made a capital, the rest as written ("9:00 AM", and a translation's own capitals): not str.capitalize().
+    assert rule[:1].upper() + rule[1:] in c.stage.bubble.doc.toPlainText()
     assert c.stage.press_button("Done")
     moved = c.reminders.get(rep.id)
     assert moved is not None and not moved.fired and datetime.fromtimestamp(moved.due).hour == 9 and moved.due > time.time()
@@ -116,7 +118,8 @@ def test_each_reminder_in_the_menu_can_be_changed_repeated_or_cancelled(companio
     repeat = next(a.menu() for a in item.actions() if a.text() == "Repeat")
     rules = [a.text() for a in repeat.actions()]
     at = datetime.fromtimestamp(r.due).strftime("%H:%M")
-    assert rules == ["Never", *(reminders.describe_repeat(rule).capitalize() for rule in (f"daily@{at}", f"weekdays@{at}"))] + rules[3:]
+    shown = [reminders.describe_repeat(rule) for rule in (f"daily@{at}", f"weekdays@{at}")]
+    assert rules == ["Never", *(s[:1].upper() + s[1:] for s in shown)] + rules[3:]  # "9:00 AM" as written, not str.capitalize()
     next(a for a in repeat.actions() if a.text().startswith("Every weekday")).trigger()
     assert c.reminders.get(r.id).repeat == f"weekdays@{at}" and saved(c)[0]["repeat"] == f"weekdays@{at}"
     next(a for a in reminder_item(c, "call Sam").actions() if a.text() == "Repeat").menu().actions()[0].trigger()  # Never

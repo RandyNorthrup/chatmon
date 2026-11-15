@@ -154,3 +154,26 @@ def test_code_colours_read_on_the_code_panel_and_stand_apart(qapp, name):
     for kind in ("keyword", "string", "number", "comment"):
         assert wcag(getattr(colours, kind), c.code_fill) >= 4.5, (name, kind)
     assert len({colours.keyword.rgb(), colours.string.rgb(), colours.number.rgb(), colours.comment.rgb()}) == 4, name
+
+
+def test_turns_are_found_by_the_labels_the_chat_is_written_with_in_any_language(qapp, tmp_path):
+    """The chat's "You:" and "Attached:" are one pair of strings, written by question_markdown and looked for by
+    render: translated, the turns are still found, each answer apart from its question and what was attached."""
+    from chatmon import i18n
+    from chatmon.bubble import look
+
+    (tmp_path / "de.po").write_text(
+        'msgid ""\nmsgstr ""\n"Content-Type: text/plain; charset=UTF-8\\n"\n\n'
+        'msgid "You:"\nmsgstr "Du:"\n\nmsgid "Attached:"\nmsgstr "Anhang:"\n', encoding="utf-8")
+    colours = styles.get("electric").colours()
+    chat = "\n\n".join([richtext.question_markdown("first", ["a.txt"]), "First answer.", richtext.question_markdown("second"), "Second answer."])
+    try:
+        i18n.setup("de", tmp_path)
+        german = "\n\n".join([richtext.question_markdown("first", ["a.txt"]), "First answer.", richtext.question_markdown("second"), "Second answer."])
+        assert german.startswith("**Du:** first\n\n*Anhang: a.txt*")
+        found = richtext.render(QTextDocument(), german, look(colours, 10.0), copy_token="t")
+        assert found.answers == ["First answer.", "Second answer."]
+    finally:
+        i18n.reset()
+    assert chat.startswith("**You:** first\n\n*Attached: a.txt*")
+    assert richtext.render(QTextDocument(), chat, look(colours, 10.0), copy_token="t").answers == ["First answer.", "Second answer."]
