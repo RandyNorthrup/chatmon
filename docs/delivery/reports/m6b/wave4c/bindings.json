@@ -1,0 +1,789 @@
+{
+ "plan": "docs/delivery/m6b-static-analysis-logging.md",
+ "section": "docs/delivery/reports/m6b/wave4c/section.md",
+ "rules": {
+  "docs/delivery/ROADMAP.md": "3586a0d+wave4c",
+  "pyproject.toml": "3586a0d"
+ },
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "task_changes_add": {},
+ "stale_reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408",
+ "receipts": [
+  {
+   "id": "W4C-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "M6B-01.A1",
+    "M6B-01.A2",
+    "M6B-01.A3",
+    "M6B-02.A1",
+    "M6B-02.A2",
+    "M6B-02.A3",
+    "M6B-03.A1",
+    "M6B-03.A2",
+    "M6B-03.A3",
+    "M6B-03.A4",
+    "M6B-03.A5",
+    "M6B-03.A6",
+    "M6B-RW.A1",
+    "M6B-LEFT.A1",
+    "M6B-LEFT.A2",
+    "M6B-LEFT.A3",
+    "M6B-LEFT.A4"
+   ],
+   "artifact": "docs/delivery/reports/m6b/wave4c/readiness.md",
+   "method": "Requirements review, round three, at 3586a0d (readiness.md): M6B-01 to M6B-03, M6B-RW and M6B-LEFT re-read against ASSESSMENT.md, the amended ROADMAP.md, pyproject.toml as it is now and the M6A and M8 plans it takes as inputs (both re-bound in round three first); no conflict or gap; the 6.12 half of M6B-02.A1 is clear, and the receipts record that one line of the crash fix fails it."
+  },
+  {
+   "id": "W4C-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2",
+    "M6B-02.A2",
+    "M6B-03.A1",
+    "M6B-03.A2",
+    "M6B-03.A3",
+    "M6B-03.A4",
+    "M6B-03.A5",
+    "M6B-03.A6",
+    "M6B-LEFT.A1",
+    "M6B-LEFT.A2",
+    "M6B-LEFT.A3",
+    "M6B-LEFT.A4",
+    "M6B-RW.A1"
+   ],
+   "artifact": "docs/delivery/reports/wave4c/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 3586a0d's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Every criterion's tests ran here; the Linux-only overlay and log-mode tests skip on Windows, and CI's and WSL's receipts add them. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-TEMPLATE",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "artifact": "docs/delivery/reports/wave4c/extract-strings-check.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "packaging/extract_strings.py",
+    "--check"
+   ],
+   "exit_code": 0,
+   "method": "packaging/extract_strings.py --check at 3586a0d on this workstation, exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes, so the split-out helpers changed no marked string."
+  },
+  {
+   "id": "W4C-BEH-WSL-MYPY-6121",
+   "kind": "behavior",
+   "status": "fail",
+   "acceptance": [
+    "M6B-02.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4c/mypy-pyqt6-6.12.1-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/m4a-venv/bin/python",
+    "-m",
+    "mypy",
+    "--platform",
+    "linux",
+    "--no-incremental",
+    "--cache-dir",
+    "/var/tmp/plans3-mypy-linux"
+   ],
+   "exit_code": 1,
+   "method": "M6B-02.A1's 6.12 half: mypy 2.4.1 with PyQt6 6.12.1's stubs (/var/tmp/m4a-venv in WSL Arch) on 3586a0d's files, --platform linux; win32 and darwin the same (mypy-pyqt6-6.12.1-win32.log, -darwin.log), and so did M10's run here (../m10/wave4c/mypy-6121.log). One error each.",
+   "reason": "chatmon/app.py:3173: error: Argument 1 to \"removeEventFilter\" of \"QObject\" has incompatible type \"Companion\"; expected \"AskBox\"  [arg-type]: the crash fix's new widget.removeEventFilter(self) in Companion._stop_for_good. 6.12.1's stubs type the filter as Self, the watched object, the stub bug CONTRIBUTING.md's third workaround covers; the line has no # type: ignore[arg-type]. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator adds # type: ignore[arg-type] with the reason on chatmon/app.py:3173 (product code, not this reconciliation's to change); then mypy with 6.12.1's stubs runs again."
+  },
+  {
+   "id": "W4C-BEH-CI-LINT",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A1",
+    "M6B-01.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-132858987766-lint.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987766",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job lint. It ran ruff check . with pyproject.toml's settings: the eleven families, max-complexity 15, RUF001-003 ignored, S101 allowed only in tests, and no per-file exemption left for the eight hub files. The result was 'All checks passed!', and the job succeeded. ruff is pinned in packaging/requirements-dev.txt, which the job installed with --require-hashes. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-TYPES-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-132858987764-types-linux.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987764",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job types (linux): mypy --platform linux on [tool.mypy], which has no overrides and no exemption list. It passed with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt), and the job succeeded. That is M6B-02.A1's 6.11 half; its 6.12 half fails at 3586a0d (W4C-BEH-WSL-MYPY-6121). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-TYPES-WIN32",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-132858987773-types-win32.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987773",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job types (win32): mypy --platform win32 passed with no module exempt. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-TYPES-DARWIN",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-132858987792-types-darwin.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987792",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job types (darwin): mypy --platform darwin passed with no module exempt. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2",
+    "M6B-02.A2",
+    "M6B-03.A1",
+    "M6B-03.A2",
+    "M6B-03.A3",
+    "M6B-03.A4",
+    "M6B-03.A5",
+    "M6B-03.A6",
+    "M6B-RW.A1",
+    "M6B-LEFT.A1",
+    "M6B-LEFT.A2",
+    "M6B-LEFT.A3",
+    "M6B-LEFT.A4"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-132858987756-test-ubuntu-24.04-3.15.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987756",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job test (ubuntu-24.04, 3.15), every test under xvfb-run. Every warning is an error there (pyproject.toml), and every test these criteria's drills name passed, apart from the Windows-only installer test (tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change), which skips there: the log's 0600 and no-link test, tests/test_imports.py on Linux, the overlay's keymap and debug-log tests in tests/test_wayland.py, and the suite's own ResourceWarning-free run. That is integration note 1's Linux xvfb run. The Qt 6.4-era distribution containers (ubuntu:24.04, debian:trixie, fedora:44 on their own PyQt6) passed the whole suite too. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-MACOS",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2",
+    "M6B-02.A2",
+    "M6B-03.A1",
+    "M6B-03.A2",
+    "M6B-03.A3",
+    "M6B-03.A4",
+    "M6B-03.A5",
+    "M6B-03.A6",
+    "M6B-RW.A1",
+    "M6B-LEFT.A1",
+    "M6B-LEFT.A2",
+    "M6B-LEFT.A3",
+    "M6B-LEFT.A4"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-132858987797-test-macos-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987797",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job test (macos-latest, 3.14): the same tests passed on macOS (the Windows-only installer test skipping there too), with every warning an error, as on the 3.11 and 3.15 legs. fb19cb9's change keeps the log tests to themselves on macOS, and they still do. That is integration note 1's macOS run. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-01-bubble-not-clear-of-the-box",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-01-bubble-not-clear-of-the-box",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-01-bubble-not-clear-of-the-box through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-01-extractor-misses-import-time",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-01-extractor-misses-import-time",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-01-extractor-misses-import-time through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-01-menu-end-key-goes-home",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-01-menu-end-key-goes-home",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-01-menu-end-key-goes-home through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-02-a-module-loads-macos-on-import",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-02-a-module-loads-macos-on-import",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-02-a-module-loads-macos-on-import through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-autostart-warning-printed",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A4"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-autostart-warning-printed",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-autostart-warning-printed through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-brain-failure-not-logged",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-brain-failure-not-logged",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-brain-failure-not-logged through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-brain-key-not-scrubbed",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-brain-key-not-scrubbed",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-brain-key-not-scrubbed through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-chat-failure-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-chat-failure-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-chat-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-console-not-blanked",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-console-not-blanked",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-console-not-blanked through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-debug-env-ignored",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-debug-env-ignored",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-debug-env-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-keys-not-blanked",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-keys-not-blanked",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-keys-not-blanked through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-limit-ten-times",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-limit-ten-times",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-limit-ten-times through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-no-stderr",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-no-stderr",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-no-stderr through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-package-manager-failure-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-package-manager-failure-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-package-manager-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-phrases-failure-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-phrases-failure-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-phrases-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-player-failure-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-player-failure-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-player-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-reminder-words-logged",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-reminder-words-logged",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-reminder-words-logged through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-rotated-as-dot-1",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-rotated-as-dot-1",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-rotated-as-dot-1 through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-03-setup-twice-doubles",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-03-setup-twice-doubles",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-03-setup-twice-doubles through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-desktops-words-not-shown",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-desktops-words-not-shown",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-desktops-words-not-shown through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-escaped-exception-not-in-the-log",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A6"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-escaped-exception-not-in-the-log",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-escaped-exception-not-in-the-log through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-hotkey-bound-kept-private",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-hotkey-bound-kept-private",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-hotkey-bound-kept-private through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-leak-fails-without-a-flag",
+   "kind": "red",
+   "acceptance": [
+    "M6B-RW.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-leak-fails-without-a-flag",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-leak-fails-without-a-flag through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-player-not-closed",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-player-not-closed",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-player-not-closed through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-players-left-at-quit",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-players-left-at-quit",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-players-left-at-quit through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-status-waits-for-the-brain",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-status-waits-for-the-brain",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-status-waits-for-the-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-unclear-script-reminder-unsaid",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A4"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-unclear-script-reminder-unsaid",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-unclear-script-reminder-unsaid through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-B-unreadable-settings-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A6"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-b-results.json",
+   "drill": "M6B-B-unreadable-settings-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills-b.log",
+   "method": "Red drill M6B-B-unreadable-settings-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-RW-http-error-left-open",
+   "kind": "red",
+   "acceptance": [
+    "M6B-RW.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-RW-http-error-left-open",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-RW-http-error-left-open through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M6B-RW-release-server-left-open",
+   "kind": "red",
+   "acceptance": [
+    "M6B-RW.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/drills-results.json",
+   "drill": "M6B-RW-release-server-left-open",
+   "artifact": "docs/delivery/reports/m6b/wave4c/drills.log",
+   "method": "Red drill M6B-RW-release-server-left-open through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-mypy-app",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "mypy-app",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill mypy-app through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-mypy-brains",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "mypy-brains",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill mypy-brains through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-mypy-menus",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "mypy-menus",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill mypy-menus through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-mypy-winpipe",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "mypy-winpipe",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill mypy-winpipe through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-BLE",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-BLE",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-BLE through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-C4",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-C4",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-C4 through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-C90",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-C90",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-C90 through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-DTZ",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-DTZ",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-DTZ through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-PERF",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-PERF",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-PERF through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-PIE",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-PIE",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-PIE through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-RUF",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-RUF",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-RUF through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-S",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-S",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-S through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-S101-in-chatmon",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-S101-in-chatmon",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-S101-in-chatmon through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-UP",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-UP",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-UP through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-app",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-app",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-app through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-ruff-app-test",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave4c/gate-drills-results.json",
+   "drill": "ruff-app-test",
+   "artifact": "docs/delivery/reports/m6b/wave4c/gate-drills.log",
+   "method": "Red drill ruff-app-test through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4c/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  }
+ ],
+ "tasks": {
+  "T4-mypy": {
+   "status": "blocked",
+   "blocker": "mypy with PyQt6 6.12.1's stubs fails at 3586a0d on linux, win32 and darwin: chatmon/app.py:3173: error: Argument 1 to \"removeEventFilter\" of \"QObject\" has incompatible type \"Companion\"; expected \"AskBox\"  [arg-type], the crash fix's new widget.removeEventFilter(self) in Companion._stop_for_good. 6.12.1's stubs type the filter as Self, the watched object, the stub bug CONTRIBUTING.md's third workaround covers; the line has no # type: ignore[arg-type]. CI is green because its types jobs lock 6.11's stubs. That is M6B-02.A1's 6.12 half. Next: the coordinator adds # type: ignore[arg-type] with the reason on chatmon/app.py:3173 (product code, not this reconciliation's to change); then mypy with 6.12.1's stubs runs again."
+  },
+  "T6-phase-b": {
+   "status": "blocked",
+   "blocker": "Waits for T4-mypy, which it depends on and which is blocked at 3586a0d (mypy with PyQt6 6.12.1's stubs fails on chatmon/app.py:3173). Its own criteria's receipts all pass at 3586a0d; it can be verified again once T4-mypy is."
+  },
+  "T7-leftovers": {
+   "status": "blocked",
+   "blocker": "Waits for T6-phase-b, which it depends on and which waits for T4-mypy (mypy with PyQt6 6.12.1's stubs fails on chatmon/app.py:3173 at 3586a0d). Its own criteria's receipts all pass at 3586a0d; it can be verified again once T6-phase-b is."
+  }
+ },
+ "pending": [],
+ "next_action": "M6B-02.A1's 6.12 half fails at 3586a0d: mypy with PyQt6 6.12.1's stubs finds chatmon/app.py:3173: error: Argument 1 to \"removeEventFilter\" of \"QObject\" has incompatible type \"Companion\"; expected \"AskBox\"  [arg-type], the crash fix's new widget.removeEventFilter(self) in Companion._stop_for_good. 6.12.1's stubs type the filter as Self, the watched object, the stub bug CONTRIBUTING.md's third workaround covers; the line has no # type: ignore[arg-type]. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator adds # type: ignore[arg-type] with the reason on chatmon/app.py:3173 (product code, not this reconciliation's to change); then mypy with 6.12.1's stubs runs again; then T4-mypy can be verified, T6-phase-b and T7-leftovers, which depend on it and whose own receipts pass, with it, and M6B closed. The 6.11 half and every other criterion pass.",
+ "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
+}

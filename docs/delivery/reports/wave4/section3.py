@@ -170,8 +170,8 @@ PLANS: dict[str, dict[str, str]] = {
         ),
         "remains": (
             "**What remains.** The coordinator adds `# type: ignore[arg-type]` with the reason to `chatmon/app.py:3173`.\n"
-            "Then mypy with 6.12.1's stubs runs again, and T4-mypy can be verified. It is product code, not this work's to\n"
-            "change."
+            "Then mypy with 6.12.1's stubs runs again, and T4-mypy can be verified. T6-phase-b and T7-leftovers depend on\n"
+            "it, so they are blocked with it, though their own receipts pass. It is product code, not this work's to change."
         ),
         "closed": "",
     },
