@@ -819,7 +819,7 @@ them.
           "action": "modify"
         }
       ],
-      "status": "implemented",
+      "status": "verified",
       "evidence": [
         "R-BEH-WIN",
         "R-BEH-MAC",
@@ -836,7 +836,8 @@ them.
         "W4B-RED-AC-01-MACOS",
         "W4B-BEH-CI-MACOS",
         "W4B-BEH-PKG-MACOS",
-        "W4B-RED-AC-01-USER-handoff"
+        "W4B-RED-AC-01-USER-handoff",
+        "MAC-RED-AC-01-MACOS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -11728,6 +11729,136 @@ them.
         ]
       },
       "reason": null
+    },
+    {
+      "id": "MAC-RED-AC-01-MACOS",
+      "acceptance": [
+        "AC-01-MACOS"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/Users/user/chatmon-drills-tmp/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root"
+      ],
+      "method": "Red drill MAC-AC-01-MACOS-writable on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), launched from here over ssh with docs/delivery/reports/m1a/mac/job.sh's drills step: tests/drills/run.py, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; reports/m1a/mac/context-observed.txt), in a temporary copy of 3586a0d's files (git archive). Green; then in _MACOS_ROOT '-o -perm +022' became '-o -name nothing', so find no longer reports a file that group or others can write, and test_mac_an_app_others_could_change_is_never_run_as_root failed in its own body (tests/test_install_update.py:287): the root script exited 0, having run the copied app's install-update and installed, where 3 and the refusal were asserted; the file's bytes were put back (SHA-256 checked) and it passed again. The plan's own text for this drill (W4B-RED-AC-01-MACOS: '! -user root -o -perm +022' becoming '-name nothing') was run too, as MAC-AC-01-MACOS-plan-text in the same log: it also takes out the '! -user root' the test's fixture puts the test user's uid into, so the test errors at setup on that guard (\"'! -user root' isn't in the script any more\") before the script runs. That proves the guard, not the check, so this receipt binds the drill that keeps that text. The '! -user root' half itself can't be drilled by this test: every file in the test's copy is the test user's own, and only root can make one someone else's.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1a/mac/drills.log",
+        "sha256": "b20f3318c6ccf886d224692d2769d2d9cbf175b28fdfcce97a1fe9e385dacf2e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/releasecheck.py",
+          "sha256": "245c8badc1fcf2d32cc7ead09b40a3e71d1adf0ac0de17c67b9f1aff97163655"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "packaging/macos/install-update",
+          "sha256": "2aeb3dbea121e55bb3f50652e813a194571d532cfdfa13ba73ad6b2dee384b9b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        }
+      ],
+      "scope_sha256": "11091cdd7020d1280c42a73cad0466b011e1539b2b37dfc49066d8d3a671e6f4",
+      "red": {
+        "mutation": "MAC-AC-01-MACOS-writable: in chatmon/updates.py, '-o -perm +022' became '-o -name nothing'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "returncode=0, stdout='', stderr=''",
+        "observed_diagnostic": "E         app=\\'/U...t-of-user/pytest-21/test_mac_an_app_others_could_c0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')",
+        "before": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "12088f2c04cd9bcbd1f6c76c1cb560052434de485f5ecab595c92e29587d018b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ]
+      },
+      "reason": null
     }
   ],
   "checkpoint": {
@@ -11890,6 +12021,7 @@ them.
     "verified_tasks": [
       "T-01-releasecheck",
       "T-02-linux-root",
+      "T-03-macos-root",
       "T-04-postinstall",
       "T-05-pipe-client",
       "T-06-elevated",
@@ -11903,8 +12035,8 @@ them.
       "T-14-notes-pin"
     ],
     "pending_operations": [],
-    "next_action": "AC-01-MACOS's red drill on macOS (W4-RED-AC-01-MACOS says how): Randy on a Mac, or the coordinator through a CI run of a drill branch; then T-03-macos-root is verified and M1A can close. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4b/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
-    "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545"
+    "next_action": "None for M1A: every task is verified at 3586a0d. The narrative above still says AC-01-MACOS's red drill needs a Mac; it ran on the owner's MacBook Pro on 2026-11-15 (MAC-RED-AC-01-MACOS, docs/delivery/reports/m1a/mac/README.md). The narrative is left as it is because the scope fingerprint hashes it: editing it would make every receipt here stale, so the next round that re-binds this plan should note the drill there. A merge that changes a file these receipts bind needs that file's checks run again.",
+    "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
   }
 }
 ```

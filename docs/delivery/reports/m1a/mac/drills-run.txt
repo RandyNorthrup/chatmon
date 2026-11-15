@@ -1,0 +1,5 @@
+
+=== summary
+PASS MAC-AC-01-MACOS-writable
+PASS MAC-AC-01-MACOS-plan-text
+harness exit 0
