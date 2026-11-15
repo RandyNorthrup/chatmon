@@ -6,8 +6,9 @@ git stores them (ROADMAP.md, *Canonical bytes*). Two other workers were changing
 worker is changing `ci.yml`. The followups worker is changing packaging, the requirements and the mypy settings in
 `pyproject.toml`. Their merges will make many of these receipts stale again.
 
-**What the runs answered.** CI run 43677128712 on fb19cb9 and Packages run 43675230966 on d3f6a6e (the same
-`.github/`, `packaging/` and `pyproject.toml`). Their logs and job lists are in
+**What the runs answered.** CI run 43677128712 on fb19cb9, Packages run 43675230966 on d3f6a6e (the same `.github/`,
+`packaging/` and `pyproject.toml`), and PR #18's own checks. The PR's test merge has fb19cb9's tree, and its 23 checks
+passed, with the 5 release jobs skipped. That includes Packages run 43677664360 on exactly these files. Their logs and job lists are in
 [reports/wave4/ci/](reports/wave4/ci/), and the review is [wave4/ci-review.md](reports/m6a/wave4/ci-review.md).
 
 - **P-CI-FIRST: resolved.** All 18 jobs succeeded: lint, types ×3, test ×9, distro ×3, gnome and coverage. They are the

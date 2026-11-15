@@ -127,23 +127,25 @@
   {
    "id": "W4-BEH-PKG-INSTALL",
    "leg": "ubu3.15",
-   "log": "pkg-132693794338-windows.log",
+   "log": "pkgpr-132701246110-windows.log",
    "acceptance": [
     "M6A-06.A2"
    ],
    "no_cilog": true,
-   "method": "Packages run 43675230966 (d3f6a6e, whose packaging/ and pyproject.toml are fb19cb9's), job windows, step 'What the installers are built with, hash-locked'. It ran python -m pip install --require-hashes -r packaging/requirements-build.txt, then --require-hashes --no-build-isolation -r packaging/requirements.txt, and both succeeded. The macos-latest and macos-15-intel jobs, whose logs are in wave4/ci/, ran the same step."
+   "method": "Packages run 43677664360, the pull_request run on PR #18. Its head is fb19cb9, and its test merge with main (df72534) has fb19cb9's own tree, 5d0d6b2 (reports/wave4/ci/pr18-checks.txt), so it built exactly these files. Job windows, from log line 206. It ran python -m pip install --require-hashes -r packaging/requirements-build.txt, then --require-hashes --no-build-isolation -r packaging/requirements.txt, and both succeeded. The macos-latest and macos-15-intel jobs ran the same installs. The earlier workflow_dispatch run 43675230966 on d3f6a6e (the same packaging/ and pyproject.toml) gave the same results; its logs are in reports/wave4/ci/ too.",
+   "run": "43677664360"
   },
   {
    "id": "W4-BEH-PKG-WHEEL",
    "leg": "ubu3.15",
-   "log": "pkg-132693794229-python.log",
+   "log": "pkgpr-132701246303-python.log",
    "acceptance": [
     "M6A-08.A2",
     "M6A-09.A1"
    ],
    "no_cilog": true,
-   "method": "Packages run 43675230966, job python, on d3f6a6e: its pyproject.toml and chatmon/ package data are fb19cb9's, since fb19cb9 changed only two lines of chatmon/settings.py and tests/test_log.py. The job built the wheel and sdist without isolation on the hash-locked setuptools, ran twine check --strict dist/* (passed), and ran tests/test_package_data.py on what was built (passed). Those tests check that every tracked file under chatmon/ is in the wheel and that the only console script is chatmon. This resolves P-PACKAGES-PR, with the windows, macos and linux jobs, which also succeeded."
+   "method": "Packages run 43677664360, the pull_request run on PR #18. Its head is fb19cb9, and its test merge with main (df72534) has fb19cb9's own tree, 5d0d6b2 (reports/wave4/ci/pr18-checks.txt), so it built exactly these files. Job python. It dated the build by the commit (SOURCE_DATE_EPOCH) and built the wheel and sdist without isolation on the hash-locked setuptools. twine check --strict passed for both (log lines 1155-1156). tests/test_package_data.py then passed on what was built (line 1183: 5 passed); those tests check that every tracked file under chatmon/ is in the wheel and that the only console script is chatmon. This resolves P-PACKAGES-PR, with the windows, macos and linux jobs, which also succeeded. The earlier workflow_dispatch run 43675230966 on d3f6a6e (the same packaging/ and pyproject.toml) gave the same results; its logs are in reports/wave4/ci/ too.",
+   "run": "43677664360"
   },
   {
    "id": "W4-BEH-CI-TYPES",
@@ -183,7 +185,7 @@
     "M6A-I1.A2"
    ],
    "artifact": "docs/delivery/reports/m6a/wave4/ci-review.md",
-   "method": "Each criterion read again, line by line in ci-review.md, against ci.yml and packages.yml at fb19cb9, then against what the workflows' first runs did (CI run 43677128712 and Packages run 43675230966; their logs are in wave4/ci/). That covers: timeouts, triggers and concurrency; the coverage legs, their upload and the combine; the 3.14 legs and hash-checked installs; the sparse checkouts; the release jobs as written (their tagged run is still P-RELEASE); and the Linux packages installed, run, checked and removed."
+   "method": "Each criterion read again, line by line in ci-review.md, against ci.yml and packages.yml at fb19cb9, then against what the workflows' first runs did (CI run 43677128712, PR #18's Packages run 43677664360 on fb19cb9's tree, and the earlier Packages run 43675230966; their logs are in wave4/ci/). That covers: timeouts, triggers and concurrency; the coverage legs, their upload and the combine; the 3.14 legs and hash-checked installs; the sparse checkouts; the release jobs as written (their tagged run is still P-RELEASE); and the Linux packages installed, run, checked and removed."
   },
   {
    "id": "W4-MAN-DEPENDABOT",
@@ -227,7 +229,7 @@
  "pending": [
   {
    "id": "P-RELEASE",
-   "description": "The first tag-pushed release (0.10.0) will be the first to draft, attest and publish through the new jobs. Packages run 43675230966 ran every build job and, as designed for a run that isn't a tag, skipped sign-windows, test-signed-windows, checksums, attest and publish.",
+   "description": "The first tag-pushed release (0.10.0) will be the first to draft, attest and publish through the new jobs. Packages runs 43675230966 and 43677664360 (PR #18) ran every build job and, as designed for a run that isn't a tag, skipped sign-windows, test-signed-windows, checksums, attest and publish.",
    "next_action": "At the 0.10.0 release (Randy or the coordinator): push the tag, watch attest and publish, then run gh attestation verify <file> --repo RandyNorthrup/chatmon on one file."
   },
   {
