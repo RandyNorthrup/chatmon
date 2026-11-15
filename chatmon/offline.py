@@ -15,6 +15,7 @@ from __future__ import annotations
 import ast
 import functools
 import json
+import logging
 import math
 import operator
 import re
@@ -25,9 +26,12 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
+from typing import Any
 
 from . import localefmt
 from .i18n import N_, _, ngettext
+
+logger = logging.getLogger(__name__)
 
 # -- the calculator: arithmetic only, from a parsed tree (never eval)
 
@@ -40,12 +44,12 @@ _BINARY = {
     ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv,
     ast.FloorDiv: operator.floordiv, ast.Mod: operator.mod, ast.Pow: operator.pow,
 }
-_UNARY = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+_UNARY: dict[type[ast.unaryop], Callable[[Any], Any]] = {ast.UAdd: operator.pos, ast.USub: operator.neg}
 _NAMES = {"pi": math.pi, "π": math.pi, "e": math.e, "tau": math.tau}
-_FUNCTIONS = {
+_FUNCTIONS: dict[str, Callable[..., Any]] = {
     "sqrt": math.sqrt, "sin": math.sin, "cos": math.cos, "tan": math.tan, "asin": math.asin, "acos": math.acos,
     "atan": math.atan, "log": math.log, "ln": math.log, "log10": math.log10, "log2": math.log2, "exp": math.exp,
-    "abs": abs, "round": round, "floor": math.floor, "ceil": math.ceil, "factorial": None,
+    "abs": abs, "round": round, "floor": math.floor, "ceil": math.ceil, "factorial": math.factorial,  # factorial: within limits, below
 }
 _MATH_TEXT = re.compile(r"[\d\s.+\-*/%^()×÷,πa-z]+", re.I)
 
@@ -58,7 +62,8 @@ def _number(node: ast.AST, budget: list[int]) -> float | int:
     budget[0] -= 1
     if budget[0] < 0:
         raise _NotMath
-    if isinstance(node, ast.Constant) and type(node.value) in (int, float):
+    # A number: True and False are ints to Python, but no numbers here.
+    if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)) and not isinstance(node.value, bool):
         return node.value
     if isinstance(node, ast.Name) and node.id in _NAMES:
         return _NAMES[node.id]
@@ -130,7 +135,7 @@ def _checked(value: float | int | complex) -> float | int:
 
 
 def show_number(value: float | int) -> str:
-    if isinstance(value, int) or (isinstance(value, float) and value.is_integer() and abs(value) < 1e15):
+    if isinstance(value, int) or (value.is_integer() and abs(value) < 1e15):
         return f"{int(value):,}"
     text = f"{value:.10g}"
     return text if "e" in text else text.rstrip("0").rstrip(".")
@@ -454,7 +459,7 @@ class Phrases:
     def asks(self, text: str) -> bool:
         """Whether a sentence starts by asking something: "should I use …", "how do …"."""
         first = re.match(r"\w+", text.strip().casefold())
-        return bool(first) and first.group(0) in self.question_words
+        return first is not None and first.group(0) in self.question_words
 
     def help(self) -> str:
         """What Chatmon does without any AI, as Markdown, in this language."""
@@ -476,37 +481,40 @@ def load_phrases(language: str = "en", folder: Path = PHRASES) -> Phrases:
     english = _read(folder / "en.json")
     own: dict = {}
     found = "en"
-    for name in _candidates(language):
+    for candidate in _candidates(language):
         try:
-            own = _read(folder / f"{name}.json")
-        except (OSError, ValueError):
+            own = _read(folder / f"{candidate}.json")
+        except FileNotFoundError:  # no file for it: the next, or English
             continue
-        found = name
+        except (OSError, ValueError) as exc:
+            logger.debug("couldn't read the phrases in %s: %s", folder / f"{candidate}.json", exc)
+            continue
+        found = candidate
         break
     known = _table(english, "commands")
     commands: dict[str, str] = {}
     for source in (_table(own, "commands"), known):  # English last: its phrases always mean what they mean in English
-        for command, said in source.items():
+        for command, ways in source.items():
             if command in known:
-                commands.update({normal(s): command for s in said})
+                commands.update({normal(s): command for s in ways})
     templates = []
     english_templates = _table(english, "templates")
     for source in (english_templates, _table(own, "templates")):
-        for command, said in source.items():
-            for s in said:
+        for command, ways in source.items():
+            for s in ways:
                 compiled = _template(s) if command in english_templates else None
                 if compiled:
                     templates.append((command, *compiled))
     words = {key: frozenset(w.casefold() for w in _strings(english.get(key)) + _strings(own.get(key))) for key in ("question_words", "remind_me_questions")}
-    help_en = english.get("help") if isinstance(english.get("help"), dict) else {}
-    help_own = own.get("help") if isinstance(own.get("help"), dict) else {}
+    help_en: dict = english["help"] if isinstance(english.get("help"), dict) else {}
+    help_own: dict = own["help"] if isinstance(own.get("help"), dict) else {}
     translated = {s["id"]: s for s in help_own.get("sections", []) if isinstance(s, dict) and isinstance(s.get("id"), str)}
     sections = []
     for section in help_en.get("sections", []):
         mine = translated.get(section["id"], {})
-        name = mine.get("name") if isinstance(mine.get("name"), str) else section["name"]
+        name = mine["name"] if isinstance(mine.get("name"), str) else section["name"]
         examples = tuple(_strings(mine.get("examples")) or _strings(section.get("examples")))
-        after = mine.get("after") if isinstance(mine.get("after"), str) else section.get("after", "")
+        after = mine["after"] if isinstance(mine.get("after"), str) else section.get("after", "")
         sections.append(HelpSection(section["id"], name, examples, after))
 
     def said(key: str) -> str:
@@ -542,7 +550,7 @@ def help_text(language: str | None = None) -> str:
 def reminder_or_question(rest: str) -> bool:
     """"remind me how decorators work" is a question for the AI, not a reminder without a time."""
     first = re.match(r"\w+", rest.strip().casefold())
-    return "?" in rest or (bool(first) and first.group(0) in phrases().remind_me_questions)
+    return "?" in rest or (first is not None and first.group(0) in phrases().remind_me_questions)
 
 
 @dataclass

@@ -15,8 +15,10 @@ Only ctypes and the Windows API; imported on Windows alone."""
 from __future__ import annotations
 
 import ctypes
+import sys
 import time
 from ctypes import wintypes
+from typing import Any
 
 # What `deliver` found at the pipe's name, in events.py's words.
 SENT, ABSENT, FOREIGN = "sent", "absent", "foreign"
@@ -47,33 +49,55 @@ ERROR_IO_PENDING = 997
 WAIT_OBJECT_0 = 0
 REPLY_MAX = 64 * 1024  # bytes of an answer read at most (events.MAX_MESSAGE)
 
-_kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-_advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+# ctypes' Windows-only helpers, through getattr so this module imports, and is checked, on every OS: nothing here
+# runs elsewhere (the first call into a DLL refuses before either is needed).
+_get_last_error = getattr(ctypes, "get_last_error", lambda: 0)
+_WinError = getattr(ctypes, "WinError", OSError)
+_dlls: dict[str, Any] = {}
 
 
-def _declare(fn, restype, *argtypes):
-    fn.restype, fn.argtypes = restype, list(argtypes)
-    return fn
+def _dll(name: str) -> Any:
+    """kernel32 or advapi32, loaded the first time it's needed: importing this module loads nothing."""
+    if sys.platform != "win32":
+        raise OSError(f"{name}.dll is Windows'")
+    if name not in _dlls:
+        _dlls[name] = ctypes.WinDLL(name, use_last_error=True)
+    return _dlls[name]
 
 
-_GetNamedPipeServerProcessId = _declare(_kernel32.GetNamedPipeServerProcessId, wintypes.BOOL, wintypes.HANDLE, ctypes.POINTER(wintypes.ULONG))
-_GetNamedPipeClientProcessId = _declare(_kernel32.GetNamedPipeClientProcessId, wintypes.BOOL, wintypes.HANDLE, ctypes.POINTER(wintypes.ULONG))
-_OpenProcess = _declare(_kernel32.OpenProcess, wintypes.HANDLE, wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
-_GetCurrentProcess = _declare(_kernel32.GetCurrentProcess, wintypes.HANDLE)
-_CloseHandle = _declare(_kernel32.CloseHandle, wintypes.BOOL, wintypes.HANDLE)
-_OpenProcessToken = _declare(_advapi32.OpenProcessToken, wintypes.BOOL, wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE))
-_GetTokenInformation = _declare(
-    _advapi32.GetTokenInformation, wintypes.BOOL, wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)
+class _Function:
+    """A function of a Windows DLL, found and declared (the types of its result and arguments) when it's first called."""
+
+    def __init__(self, dll: str, name: str, restype: Any, *argtypes: Any):
+        self.dll, self.name, self.restype, self.argtypes = dll, name, restype, list(argtypes)
+        self._fn: Any = None
+
+    def __call__(self, *args: Any) -> Any:
+        if self._fn is None:
+            fn = getattr(_dll(self.dll), self.name)
+            fn.restype, fn.argtypes = self.restype, self.argtypes
+            self._fn = fn
+        return self._fn(*args)
+
+
+_GetNamedPipeServerProcessId = _Function("kernel32", "GetNamedPipeServerProcessId", wintypes.BOOL, wintypes.HANDLE, ctypes.POINTER(wintypes.ULONG))
+_GetNamedPipeClientProcessId = _Function("kernel32", "GetNamedPipeClientProcessId", wintypes.BOOL, wintypes.HANDLE, ctypes.POINTER(wintypes.ULONG))
+_OpenProcess = _Function("kernel32", "OpenProcess", wintypes.HANDLE, wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+_GetCurrentProcess = _Function("kernel32", "GetCurrentProcess", wintypes.HANDLE)
+_CloseHandle = _Function("kernel32", "CloseHandle", wintypes.BOOL, wintypes.HANDLE)
+_OpenProcessToken = _Function("advapi32", "OpenProcessToken", wintypes.BOOL, wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE))
+_GetTokenInformation = _Function(
+    "advapi32", "GetTokenInformation", wintypes.BOOL, wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)
 )
-_IsValidSid = _declare(_advapi32.IsValidSid, wintypes.BOOL, ctypes.c_void_p)
-_GetLengthSid = _declare(_advapi32.GetLengthSid, wintypes.DWORD, ctypes.c_void_p)
-_EqualSid = _declare(_advapi32.EqualSid, wintypes.BOOL, ctypes.c_void_p, ctypes.c_void_p)
-_ConvertSidToStringSid = _declare(_advapi32.ConvertSidToStringSidW, wintypes.BOOL, ctypes.c_void_p, ctypes.POINTER(wintypes.LPWSTR))
-_ConvertStringSecurityDescriptorToSecurityDescriptor = _declare(
-    _advapi32.ConvertStringSecurityDescriptorToSecurityDescriptorW,
+_IsValidSid = _Function("advapi32", "IsValidSid", wintypes.BOOL, ctypes.c_void_p)
+_GetLengthSid = _Function("advapi32", "GetLengthSid", wintypes.DWORD, ctypes.c_void_p)
+_EqualSid = _Function("advapi32", "EqualSid", wintypes.BOOL, ctypes.c_void_p, ctypes.c_void_p)
+_ConvertSidToStringSid = _Function("advapi32", "ConvertSidToStringSidW", wintypes.BOOL, ctypes.c_void_p, ctypes.POINTER(wintypes.LPWSTR))
+_ConvertStringSecurityDescriptorToSecurityDescriptor = _Function(
+    "advapi32", "ConvertStringSecurityDescriptorToSecurityDescriptorW",
     wintypes.BOOL, wintypes.LPCWSTR, wintypes.DWORD, ctypes.POINTER(ctypes.c_void_p), ctypes.POINTER(wintypes.ULONG),
 )
-_LocalFree = _declare(_kernel32.LocalFree, ctypes.c_void_p, ctypes.c_void_p)
+_LocalFree = _Function("kernel32", "LocalFree", ctypes.c_void_p, ctypes.c_void_p)
 
 
 class _SidAndAttributes(ctypes.Structure):
@@ -84,8 +108,8 @@ class _SecurityAttributes(ctypes.Structure):
     _fields_ = [("nLength", wintypes.DWORD), ("lpSecurityDescriptor", ctypes.c_void_p), ("bInheritHandle", wintypes.BOOL)]
 
 
-_CreateNamedPipe = _declare(
-    _kernel32.CreateNamedPipeW,
+_CreateNamedPipe = _Function(
+    "kernel32", "CreateNamedPipeW",
     wintypes.HANDLE, wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, wintypes.DWORD, wintypes.DWORD, wintypes.DWORD, wintypes.DWORD,
     ctypes.POINTER(_SecurityAttributes),
 )
@@ -96,17 +120,17 @@ class _Overlapped(ctypes.Structure):
                 ("OffsetHigh", wintypes.DWORD), ("hEvent", wintypes.HANDLE)]
 
 
-_CreateFile = _declare(
-    _kernel32.CreateFileW,
+_CreateFile = _Function(
+    "kernel32", "CreateFileW",
     wintypes.HANDLE, wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE,
 )
-_WaitNamedPipe = _declare(_kernel32.WaitNamedPipeW, wintypes.BOOL, wintypes.LPCWSTR, wintypes.DWORD)
-_WriteFile = _declare(_kernel32.WriteFile, wintypes.BOOL, wintypes.HANDLE, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD), ctypes.POINTER(_Overlapped))
-_ReadFile = _declare(_kernel32.ReadFile, wintypes.BOOL, wintypes.HANDLE, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD), ctypes.POINTER(_Overlapped))
-_GetOverlappedResult = _declare(_kernel32.GetOverlappedResult, wintypes.BOOL, wintypes.HANDLE, ctypes.POINTER(_Overlapped), ctypes.POINTER(wintypes.DWORD), wintypes.BOOL)
-_CancelIoEx = _declare(_kernel32.CancelIoEx, wintypes.BOOL, wintypes.HANDLE, ctypes.POINTER(_Overlapped))
-_CreateEvent = _declare(_kernel32.CreateEventW, wintypes.HANDLE, ctypes.c_void_p, wintypes.BOOL, wintypes.BOOL, wintypes.LPCWSTR)
-_WaitForSingleObject = _declare(_kernel32.WaitForSingleObject, wintypes.DWORD, wintypes.HANDLE, wintypes.DWORD)
+_WaitNamedPipe = _Function("kernel32", "WaitNamedPipeW", wintypes.BOOL, wintypes.LPCWSTR, wintypes.DWORD)
+_WriteFile = _Function("kernel32", "WriteFile", wintypes.BOOL, wintypes.HANDLE, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD), ctypes.POINTER(_Overlapped))
+_ReadFile = _Function("kernel32", "ReadFile", wintypes.BOOL, wintypes.HANDLE, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD), ctypes.POINTER(_Overlapped))
+_GetOverlappedResult = _Function("kernel32", "GetOverlappedResult", wintypes.BOOL, wintypes.HANDLE, ctypes.POINTER(_Overlapped), ctypes.POINTER(wintypes.DWORD), wintypes.BOOL)
+_CancelIoEx = _Function("kernel32", "CancelIoEx", wintypes.BOOL, wintypes.HANDLE, ctypes.POINTER(_Overlapped))
+_CreateEvent = _Function("kernel32", "CreateEventW", wintypes.HANDLE, ctypes.c_void_p, wintypes.BOOL, wintypes.BOOL, wintypes.LPCWSTR)
+_WaitForSingleObject = _Function("kernel32", "WaitForSingleObject", wintypes.DWORD, wintypes.HANDLE, wintypes.DWORD)
 
 
 def my_identity() -> str | None:
@@ -125,7 +149,8 @@ def my_identity() -> str | None:
     finally:
         _LocalFree(ctypes.cast(text, ctypes.c_void_p))
     session = wintypes.DWORD()
-    if not _kernel32.ProcessIdToSessionId(_kernel32.GetCurrentProcessId(), ctypes.byref(session)):
+    kernel32 = _dll("kernel32")
+    if not kernel32.ProcessIdToSessionId(kernel32.GetCurrentProcessId(), ctypes.byref(session)):
         return None
     return f"{me}-{session.value}"
 
@@ -144,7 +169,7 @@ def claim(name: str) -> int | None:
         raise OSError("can't read the current user's SID")
     text = wintypes.LPWSTR()
     if not _ConvertSidToStringSid(sid, ctypes.byref(text)):
-        raise ctypes.WinError(ctypes.get_last_error())
+        raise _WinError(_get_last_error())
     try:
         me = text.value
     finally:
@@ -152,7 +177,7 @@ def claim(name: str) -> int | None:
     descriptor = ctypes.c_void_p()
     # The same as QLocalServer's UserAccessOption: you own it, and you alone have any access.
     if not _ConvertStringSecurityDescriptorToSecurityDescriptor(f"O:{me}D:(A;;FA;;;{me})", SDDL_REVISION_1, ctypes.byref(descriptor), None):
-        raise ctypes.WinError(ctypes.get_last_error())
+        raise _WinError(_get_last_error())
     try:
         attributes = _SecurityAttributes(ctypes.sizeof(_SecurityAttributes), descriptor, False)
         handle = _CreateNamedPipe(
@@ -162,13 +187,13 @@ def claim(name: str) -> int | None:
             PIPE_UNLIMITED_INSTANCES, 0, 0, 0,
             ctypes.byref(attributes),
         )
-        error = ctypes.get_last_error()
+        error = _get_last_error()
     finally:
         _LocalFree(descriptor)
     if handle in (None, INVALID_HANDLE_VALUE):
         if error in (ERROR_ACCESS_DENIED, ERROR_PIPE_BUSY):
             return None
-        raise ctypes.WinError(error)
+        raise _WinError(error)
     return handle
 
 
@@ -191,7 +216,7 @@ def deliver(name: str, data: bytes, timeout_ms: int, reply: bytearray | None = N
                              FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION, None)
         if handle not in (None, INVALID_HANDLE_VALUE):
             break
-        error = ctypes.get_last_error()
+        error = _get_last_error()
         if error == ERROR_ACCESS_DENIED:
             return FOREIGN  # your own Chatmon always lets you in
         left = int((deadline - time.monotonic()) * 1000)
@@ -233,7 +258,7 @@ def _transfer(handle: int, operation, address: int, size: int, deadline: float) 
     moved = wintypes.DWORD()
     try:
         if not operation(handle, address, size, None, ctypes.byref(overlapped)):
-            if ctypes.get_last_error() != ERROR_IO_PENDING:
+            if _get_last_error() != ERROR_IO_PENDING:
                 return 0
             left = max(0, int((deadline - time.monotonic()) * 1000))
             if _WaitForSingleObject(event, left) != WAIT_OBJECT_0:
@@ -284,7 +309,7 @@ def _user_sid(process: int) -> ctypes.Array | None:
     try:
         size = wintypes.DWORD()
         _GetTokenInformation(token, TOKEN_USER, None, 0, ctypes.byref(size))
-        if ctypes.get_last_error() != ERROR_INSUFFICIENT_BUFFER or not size.value:
+        if _get_last_error() != ERROR_INSUFFICIENT_BUFFER or not size.value:
             return None
         info = ctypes.create_string_buffer(size.value)
         if not _GetTokenInformation(token, TOKEN_USER, info, size, ctypes.byref(size)):

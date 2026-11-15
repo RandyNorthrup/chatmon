@@ -2,6 +2,7 @@
 surface talking to a pretend compositor over a socket pair."""
 
 import array
+import logging
 import mmap
 import os
 import socket
@@ -714,6 +715,41 @@ def test_input_methods_get_the_field_and_send_text(qapp):
     assert stage.calls[-1] == ("im", "", None, "", 0, 0)  # anything half-typed goes
     surf.close()
     server.sock.close()
+
+
+@linux_only
+def test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log(qapp, caplog):
+    from chatmon.layer import TextState
+
+    caplog.set_level(logging.DEBUG, logger="chatmon.layer")
+    conn, server, stage, surf, ids = _configured(qapp)
+    ti = ids["text_input"]
+    field, composing, committed = "my password is hunter2", "ひみつ", "swordfish"
+    server.send(ti, layer.EV_TI_ENTER, "o", ids["surface"])
+    conn.read()
+    surf.set_text_input(TextState(field, 7, 7, QRect(10, 20, 2, 16)))  # the text around the cursor goes to the input method
+    server.send(ti, layer.EV_TI_PREEDIT, "sii", composing, 3, 3)
+    server.send(ti, layer.EV_TI_COMMIT_STRING, "s", committed)
+    server.send(ti, layer.EV_TI_DONE, "u", 1)
+    conn.read()
+    assert stage.calls[-1][0] == "im"  # it was typed, all the same
+    logged = [f"{r.getMessage()} {r.args!r}" for r in caplog.records if r.name == "chatmon.layer"]
+    for typed in (field, "hunter2", composing, committed):
+        assert not any(typed in line for line in logged), typed
+    assert any(line.startswith("text input enable: cursor 7, anchor 7, 22 bytes of text") for line in logged)  # where, and how much
+    assert any(line.startswith(f"text input event {layer.EV_TI_COMMIT_STRING}, ") for line in logged)  # the event, by its number and size
+    surf.close()
+    server.sock.close()
+
+
+@linux_only
+def test_a_compositor_that_isnt_there_is_logged_and_the_overlay_not_offered(tmp_path, caplog):
+    caplog.set_level(logging.DEBUG, logger="chatmon.wayland")
+    gone = tmp_path / "wayland-9"  # a socket nobody listens on
+    assert wayland.Connection.open({"WAYLAND_DISPLAY": str(gone)}) is None
+    assert not layer.offered({"WAYLAND_DISPLAY": str(gone)})  # Qt goes through XWayland, as before
+    said = [r.getMessage() for r in caplog.records if r.name == "chatmon.wayland" and r.levelno == logging.DEBUG]
+    assert said and said[0].startswith(f"couldn't connect to the Wayland compositor at {gone}: ")
 
 
 def test_byte_offsets_become_qt_positions():

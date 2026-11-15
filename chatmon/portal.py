@@ -87,8 +87,8 @@ class FileChooser(QObject):
         if reply.type() != QDBusMessage.MessageType.ReplyMessage:
             self._give_up()
             return
-        handle = reply.arguments()[0] if reply.arguments() else None
-        handle = handle.path() if hasattr(handle, "path") else str(handle or "")
+        answer: object = reply.arguments()[0] if reply.arguments() else None
+        handle = answer.path() if hasattr(answer, "path") else str(answer or "")
         if handle and handle != self._path:  # an older portal makes its own path: listen there instead
             self._bus.disconnect(SERVICE, self._path, REQUEST, "Response", self._response)
             self._path = handle

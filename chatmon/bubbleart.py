@@ -13,6 +13,7 @@ lightning, sparkles, embers, a caterpillar) placed and faded on a fixed timeline
 from __future__ import annotations
 
 import json
+import logging
 import math
 from dataclasses import dataclass
 from functools import cache
@@ -21,6 +22,8 @@ from PyQt6.QtCore import QPointF, QRectF, QSizeF, Qt
 from PyQt6.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QPen, QPixmap, QPolygonF, QRadialGradient, QTransform
 
 from . import paths
+
+logger = logging.getLogger(__name__)
 
 TAU = 2 * math.pi
 
@@ -69,6 +72,9 @@ class Frame:
 class Rim:
     """The border's centre line for one bubble size: a rounded rectangle walked clockwise from the start
     of the top edge. Distances are display pixels along it."""
+
+    key: tuple[int, int]  # the text size it's for, which what's worked out from it is cached by (BubbleArt.rim)
+    tip: int  # where the notch's tip is now, display px from the left (BubbleArt.rim)
 
     def __init__(self, x0: float, y0: float, x1: float, y1: float, r: float, notch: tuple[float, float]):
         self.x0, self.y0, self.x1, self.y1 = x0, y0, x1, y1
@@ -313,7 +319,7 @@ class Scroll(Layer):
     def corners(self, rim: Rim, top: float, bottom: float) -> list[tuple[QPainterPath, float, float, float, float, float]]:
         """The corner slices for this border: (wedge to clip to, x, y, turn in degrees, half width, distance
         along the border of its middle). Worked out once per bubble size."""
-        key = (rim.key, top, bottom)  # type: ignore[attr-defined]
+        key = (rim.key, top, bottom)
         if key not in self._corners:
             if len(self._corners) > 6:
                 self._corners.clear()
@@ -351,7 +357,7 @@ class Scroll(Layer):
         a pixmap that size, to cut the layer to. `offset`: where the band's middle is from the border line,
         outward (this layer's own, unless the band is several layers')."""
         offset = self.offset if offset is None else offset
-        key = (rim.key, band.width(), band.height(), ratio, offset)  # type: ignore[attr-defined]
+        key = (rim.key, band.width(), band.height(), ratio, offset)
         if key not in self._layouts:
             if len(self._layouts) > 6:
                 self._layouts.clear()
@@ -453,9 +459,8 @@ class Runner(Scroll):
         self.head = float(entry.get("head", 0.0))  # radius of the hot point on each head, display px; 0: none
         self.colour = QColor(entry.get("colour", "#ffffff"))
         self.plus = bool(entry.get("plus", True))
-        self._halo: tuple[tuple, QPixmap] | None = None  # (size, the halo as built): copied, never rebuilt
+        self._halo: tuple[tuple, QPixmap, QPixmap] | None = None  # (size, the halo as built, the band it's copied into)
         self._fades: dict[tuple, QPixmap] = {}  # a pulse's fade, per band height and length (`fade`)
-        self._halo_band: QPixmap | None = None
 
     def pulses(self, rim: Rim, t: float) -> list[tuple[float, float, float]]:
         """Each pulse at time `t` as (back, front, start) along the unrolled band, display px: its light
@@ -526,9 +531,8 @@ class Runner(Scroll):
             q = QPainter(built)
             q.fillRect(QRectF(0, 0, size[0], size[1]), across)
             q.end()
-            self._halo = (size, built)
-            self._halo_band = QPixmap(*size)
-        built, band = self._halo[1], self._halo_band
+            self._halo = (size, built, QPixmap(*size))
+        _, built, band = self._halo
         band.fill(Qt.GlobalColor.transparent)
         q = QPainter(band)
         q.setCompositionMode(QPainter.CompositionMode.CompositionMode_Source)
@@ -679,7 +683,7 @@ class Flames(Layer):
         self.fade = float(entry.get("fade", 26.0))  # display px over which the row fades out at each end
         self.reach = float(entry.get("reach", 6.0))  # how far past the straight edge the row runs, onto the corners
         self._layer: QPixmap | None = None
-        self._key = None
+        self._key: tuple[int, float] | None = None
 
     def paint(self, p: QPainter, rim: Rim, t: float, art: BubbleArt) -> None:
         x0, x1 = rim.x0 + rim.r - self.reach, rim.x1 - rim.r + self.reach
@@ -688,11 +692,11 @@ class Flames(Layer):
             return
         ratio = art.ratio
         key = (round(width * ratio), ratio)
-        if self._key != key:
-            self._layer = QPixmap(max(1, round(width * ratio)), max(1, round(self.height * ratio)))
-            self._layer.setDevicePixelRatio(ratio)
-            self._key = key
         layer = self._layer
+        if self._key != key or layer is None:  # None: never past the first frame, which made it with its key
+            layer = self._layer = QPixmap(max(1, round(width * ratio)), max(1, round(self.height * ratio)))
+            layer.setDevicePixelRatio(ratio)
+            self._key = key
         layer.fill(Qt.GlobalColor.transparent)
         f = (t / self.period) * len(self.frames)
         i = int(f) % len(self.frames)
@@ -801,7 +805,7 @@ class Wake(Sprites):
         self._places: tuple[tuple, list[float]] | None = None
 
     def places(self, rim: Rim) -> list[float]:
-        key = (rim.key, rim.notch)  # type: ignore[attr-defined]
+        key = (rim.key, rim.notch)
         if self._places is None or self._places[0] != key:
             n = max(3, round(0.62 * rim.length / self.spacing))  # about what the straight edges hold
             spots = [rim.on_straight((j + 0.2 + 0.6 * _h(self.seed, j, 1)) / n) for j in range(n)]
@@ -1004,11 +1008,11 @@ class BubbleArt:
             width, height = self._size(tw, th)
             l, t, r, b = (v * k for v in self.rim_inset)
             self._rims[key] = Rim(l, t, width - r, height - b, self.rim_radius * k, (0.0, 0.0))
-            self._rims[key].key = key  # type: ignore[attr-defined]
+            self._rims[key].key = key
         rim = self._rims[key]
         n0 = tip_x - (self.tip[0] - self.notch[0]) * k
         rim.notch = (n0, n0 + (self.notch[1] - self.notch[0]) * k)
-        rim.tip = round(tip_x)  # type: ignore[attr-defined]
+        rim.tip = round(tip_x)
         return rim
 
     def loop_period(self, text: QSizeF, tip_x: float | None = None) -> float:
@@ -1055,8 +1059,8 @@ class BubbleArt:
             if dx1 - dx0 > 0.01 and dy1 - dy0 > 0.01 and sx1 > sx0 and sy1 > sy0:
                 p.drawPixmap(QRectF(dx0, dy0, dx1 - dx0, dy1 - dy0), pix, QRectF(sx0, sy0, sx1 - sx0, sy1 - sy0))
 
-        rows = ((0, T, 0, dT), (T, sh - B, dT, H - dB))
-        for sy0, sy1, dy0, dy1 in rows:  # the top band and the middle: three columns each
+        bands = ((0, T, 0, dT), (T, sh - B, dT, H - dB))
+        for sy0, sy1, dy0, dy1 in bands:  # the top band and the middle: three columns each
             put(0, sy0, L, sy1, 0, dy0, dL, dy1)
             put(L, sy0, sw - R, sy1, dL, dy0, W - dR, dy1)
             put(sw - R, sy0, sw, sy1, W - dR, dy0, W, dy1)
@@ -1081,8 +1085,8 @@ class BubbleArt:
     def parts(self, pix: QPixmap, tag: str, rim: Rim) -> tuple[QPixmap, QPixmap, float]:
         """`pix` (the still, or art like it) composed round this rim's size and notch: (the picture above the notch's
         band, the band, the band's top in display px)."""
-        tw, th = rim.key  # type: ignore[attr-defined]
-        tip, ratio = rim.tip, self.ratio  # type: ignore[attr-defined]
+        tw, th = rim.key
+        tip, ratio = rim.tip, self.ratio
         first = self.band_top(th, ratio)
         upper = self._cache.get((tag, tw, th, ratio))
         if upper is None:
@@ -1100,8 +1104,8 @@ class BubbleArt:
     def _derived(self, tag: str, rim: Rim, make, source: tuple[QPixmap, QPixmap, float] | None = None) -> tuple[QPixmap, QPixmap, float]:
         """`source`'s parts (the still's, by default), each copied and changed by `make(pixmap, rows_top)`, and
         kept like the still's own: above the band once per size, the band once per notch place."""
-        tw, th = rim.key  # type: ignore[attr-defined]
-        tip, ratio = rim.tip, self.ratio  # type: ignore[attr-defined]
+        tw, th = rim.key
+        tip, ratio = rim.tip, self.ratio
         upper, lower, top = source if source is not None else self.parts(self.still, "still", rim)
         up = self._cache.get((tag, tw, th, ratio))
         if up is None:
@@ -1159,7 +1163,7 @@ class BubbleArt:
         """A band along the border line, strongest on it and fading to nothing either side: the same wherever
         the notch is, so it is stroked once per size (six wide strokes round the border cost more than all the
         rest of a notch's move)."""
-        tw, th = rim.key  # type: ignore[attr-defined]
+        tw, th = rim.key
         key = ("line mask", tw, th, self.ratio)
         if key not in self._cache:
             width, height = self._size(tw, th)
@@ -1214,8 +1218,8 @@ class BubbleArt:
         p.translate(origin_x, origin_y)
         base = p.opacity()
         p.setOpacity(base * min(1.0, effects))
-        for layer in under:  # flames stand behind the bubble's edge
-            layer.paint(p, rim, t, self)
+        for flames in under:  # flames stand behind the bubble's edge
+            flames.paint(p, rim, t, self)
         p.setOpacity(base)
         self.draw(p, still)
         p.setOpacity(base * min(1.0, effects))
@@ -1229,14 +1233,16 @@ class BubbleArt:
             q.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
             i = 0
             while i < len(strips):
-                run = [strips[i]]
-                while type(run[0]) is Scroll and i + len(run) < len(strips) and type(strips[i + len(run)]) is Scroll:
-                    run.append(strips[i + len(run)])
+                run: list[Scroll] = []  # the plain Scroll layers in a row from here
+                for strip in strips[i:]:
+                    if type(strip) is not Scroll:
+                        break
+                    run.append(strip)
                 if len(run) > 1:
                     Scroll.paint_together(run, q, rim, t, self)
                 else:
-                    run[0].paint(q, rim, t, self)
-                i += len(run)
+                    strips[i].paint(q, rim, t, self)
+                i += max(1, len(run))
             self.mask_notch(q, rim, height)
             q.end()
             p.drawPixmap(QPointF(0, 0), self._overlay)
@@ -1256,7 +1262,8 @@ PAD = {"leaf": 20}  # the ivy reaches into the leaf bubble's fill
 def _manifest() -> dict:
     try:
         return json.loads((paths.bubbles_dir() / "manifest.json").read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except (OSError, ValueError) as exc:
+        logger.debug("couldn't read the painted bubbles' manifest: %s", exc)
         return {}
 
 
@@ -1272,6 +1279,7 @@ def art(name: str, user: str = "") -> BubbleArt | None:
         entry = _manifest().get(name)
         try:
             _loaded[key] = BubbleArt(name, entry) if entry and "rim" in entry else None
-        except (FileNotFoundError, KeyError, TypeError, ValueError):
+        except (FileNotFoundError, KeyError, TypeError, ValueError) as exc:
+            logger.debug("couldn't load the %s bubble's art, so it's plain: %r", name, exc)
             _loaded[key] = None
     return _loaded[key]

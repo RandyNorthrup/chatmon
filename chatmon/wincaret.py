@@ -12,8 +12,11 @@ https://learn.microsoft.com/en-us/windows/win32/winauto/event-constants"""
 from __future__ import annotations
 
 import ctypes
+import logging
 import sys
 from ctypes import wintypes
+
+logger = logging.getLogger(__name__)
 
 MAGNIFIER_CLASS = "MagUIClass"  # the window class of Magnifier's own window (Magnify.exe)
 
@@ -42,7 +45,8 @@ def magnifier_running() -> bool:
         return False
     try:
         return bool(_api().FindWindowW(MAGNIFIER_CLASS, None))
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't tell whether Magnifier is open: %s", exc)
         return False
 
 

@@ -213,6 +213,21 @@ def test_a_chatmon_installed_by_the_system_says_which_package_manager(monkeypatc
     assert updates.install_kind() == updates.MANUAL
 
 
+def test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked(monkeypatch, tmp_path, caplog):
+    import logging
+
+    caplog.set_level(logging.DEBUG, logger="chatmon.updates")
+    monkeypatch.setattr(updates.paths, "frozen", lambda: False)
+    monkeypatch.setattr(updates.sys, "platform", "linux")
+    monkeypatch.setattr(updates, "SYSTEM_PACKAGE", Path(updates.__file__).resolve().parent.parent)  # this one, as if there
+    broken = tmp_path / "dpkg-query"
+    broken.mkdir()  # there, but no program: it can't be run
+    monkeypatch.setattr(updates, "PACKAGE_QUERIES", ((updates.DEB, [str(broken), "-W", "chatmon"]), (updates.RPM, [sys.executable, "-c", "raise SystemExit(0)"])))
+    assert updates.install_kind() == updates.RPM  # carried on to the next, as before
+    said = [r.getMessage() for r in caplog.records if r.name == "chatmon.updates" and r.levelno == logging.DEBUG]
+    assert len(said) == 1 and said[0].startswith(f"couldn't ask {broken} whether it installed Chatmon: "), said
+
+
 def test_each_kind_has_its_installer_and_its_way_back(monkeypatch, tmp_path):
     whl = tmp_path / "chatmon-9.0.0-py3-none-any.whl"
     monkeypatch.setattr(updates.shutil, "which", {"pipx": "/home/me/.local/bin/pipx", "chatmon": "/home/me/.local/bin/chatmon"}.get)
@@ -376,6 +391,7 @@ def github(tmp_path, monkeypatch):
 
     yield publish
     server.shutdown()
+    server.server_close()
 
 
 def run_updater(qapp, kind="deb"):

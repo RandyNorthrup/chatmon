@@ -139,8 +139,8 @@ def render(doc: QTextDocument, markdown: str, look: Look, copy_token: str = "", 
     inserts.extend((start - 1, "rule", None) for start in starts[1:])
     # Last first; where several go after the same block: the code's Copy, then the answer's, then the rule.
     rank = {"copy code": 0, "copy answer": 1, "rule": 2}
-    for position, kind, n in sorted(inserts, key=lambda i: (i[0], rank[i[1]]), reverse=True):
-        _insert_after(doc, position, kind, n, copy_token, look.link)
+    for position, kind, index in sorted(inserts, key=lambda i: (i[0], rank[i[1]]), reverse=True):
+        _insert_after(doc, position, kind, index, copy_token, look.link)
     for c in framing:
         _frame_code(c, look)
     out.turns = _turn_starts(doc)
@@ -289,6 +289,8 @@ def _insert_after(doc: QTextDocument, position: int, kind: str, n: int | None, t
 def _frame_code(c: QTextCursor, look: Look) -> None:
     """A code block on its own tinted panel, in a fixed-width font, wrapping rather than running off the edge."""
     doc = c.document()
+    if doc is None:  # a cursor made on a document always has it
+        return
     code = QTextBlockFormat(doc.findBlock(c.selectionStart()).blockFormat())
     code.setNonBreakableLines(False)
     code.setTopMargin(0)
@@ -305,6 +307,8 @@ def _frame_code(c: QTextCursor, look: Look) -> None:
     panel.setBottomMargin(CODE_SPACE)
     panel.setBorder(0)
     frame = c.insertFrame(panel)
+    if frame is None:  # only a cursor without a document makes none
+        return
     # A block's format is kept on the separator before it, and the frame's own marks are separators: the
     # code's format ends up on the marks, the code's first line without it. Put each where it belongs.
     fix = QTextCursor(doc)
@@ -321,7 +325,7 @@ def _frame_code(c: QTextCursor, look: Look) -> None:
 
 
 _HAIRLINE = QTextBlockFormat()  # the empty line a frame leaves either side of itself: as good as none
-_HAIRLINE.setLineHeight(1, QTextBlockFormat.LineHeightTypes.FixedHeight.value)
+_HAIRLINE.setLineHeight(1, QTextBlockFormat.LineHeightTypes.FixedHeight.value)  # type: ignore[arg-type]  # PyQt6's stub types the member's int value as the enum
 _HAIRLINE.setTopMargin(0)
 _HAIRLINE.setBottomMargin(0)
 

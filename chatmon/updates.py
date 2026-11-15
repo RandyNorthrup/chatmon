@@ -16,6 +16,7 @@ install of your own), it only says one is out, and how to get it.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import platform
 import re
@@ -27,6 +28,7 @@ import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import BinaryIO
 
 from PyQt6 import sip
 from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QTimer, QUrl, pyqtSignal
@@ -35,6 +37,8 @@ from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkReques
 from . import __version__, changelog, paths, releasecheck
 from .i18n import _
 from .releasecheck import DEB, MACOS, MANUAL, PIPX, RPM, SUMS, SUMS_SIG, WINDOWS, sha256, signed_sums
+
+logger = logging.getLogger(__name__)
 
 REPO = "RandyNorthrup/chatmon"
 LATEST = f"https://api.github.com/repos/{REPO}/releases/latest"
@@ -68,9 +72,9 @@ def newer(version: str, than: str = __version__) -> bool:
 
 def _editable() -> bool:
     """Installed from a folder you can edit (pip install -e, pipx install -e): yours to update."""
-    try:
-        from importlib.metadata import PackageNotFoundError, distribution
+    from importlib.metadata import PackageNotFoundError, distribution
 
+    try:
         info = json.loads(distribution("chatmon").read_text("direct_url.json") or "{}")
     except (PackageNotFoundError, ValueError, OSError):
         return False
@@ -95,8 +99,8 @@ def install_kind() -> str:
                 try:
                     if subprocess.run(query, capture_output=True, timeout=10).returncode == 0:  # noqa: S603 - a fixed package-manager query
                         return kind
-                except (OSError, subprocess.SubprocessError):
-                    pass
+                except (OSError, subprocess.SubprocessError) as exc:
+                    logger.debug("couldn't ask %s whether it installed Chatmon: %s", query[0], exc)
         return MANUAL
     if _editable():
         return MANUAL
@@ -356,7 +360,7 @@ class Updater(QObject):
         self._nam = QNetworkAccessManager(self)
         self._background = background  # runs slow work (hashing, the signature check) off the screen's thread
         self._reply: QNetworkReply | None = None
-        self._file = None
+        self._file: BinaryIO | None = None  # the download, as it's written
         self._got = 0
         self._by_hand = False  # you asked: download even on a metered connection
         self.kind: str | None = None
@@ -388,6 +392,8 @@ class Updater(QObject):
         self._get(LATEST, self._latest)
 
     def _kind_known(self, kind) -> None:
+        if not isinstance(kind, str):
+            logger.debug("couldn't tell how Chatmon was installed, so it's taken as by hand: %s", kind)
         self.kind = kind if isinstance(kind, str) else MANUAL
         self._get(LATEST, self._latest)
 
@@ -402,6 +408,8 @@ class Updater(QObject):
         """A small reply (MAX_REPLY at most), whole, to `then`."""
         reply = self._nam.get(self._request(url))
         self._reply = reply
+        if reply is None:  # never: Qt always makes one (PyQt6's stub allows None)
+            return
         reply.downloadProgress.connect(lambda got, _total: reply.abort() if got > MAX_REPLY else None)
         reply.finished.connect(lambda: self._got_reply(reply, then))
 
@@ -410,7 +418,7 @@ class Updater(QObject):
         reply.deleteLater()
         if reply.error() != QNetworkReply.NetworkError.NoError:
             return self._fail(_("couldn't reach GitHub ({error})").format(error=reply.errorString()))
-        raw = bytes(reply.readAll())
+        raw = reply.readAll().data()
         if len(raw) > MAX_REPLY:
             return self._fail(_("GitHub's answer was far bigger than it should be"))
         then(raw)
@@ -427,9 +435,10 @@ class Updater(QObject):
             self.up_to_date.emit()
             return
         self.release = release
-        name = asset_name(self.kind, release.version)
-        if name is None or name not in release.assets or not {SUMS, SUMS_SIG} <= set(release.assets) or installer_command(self.kind, folder() / name) is None:
-            return self._only_tell(how_to_update(self.kind, release.version))
+        kind = self.kind or MANUAL  # known by now: check() learns it before asking GitHub
+        name = asset_name(kind, release.version)
+        if name is None or name not in release.assets or not {SUMS, SUMS_SIG} <= set(release.assets) or installer_command(kind, folder() / name) is None:
+            return self._only_tell(how_to_update(kind, release.version))
         done = folder() / name
         if self.ready == done and self._expected and all(p.exists() for p in (done, *sums_for(done))):
             self.busy = False
@@ -437,7 +446,7 @@ class Updater(QObject):
             return
         if not self._by_hand and metered():
             return self._only_tell(_("You're on a metered connection, so I haven't downloaded it. **Check for updates now** in my menu downloads it anyway."))
-        self._get(release.assets[SUMS_SIG], lambda sig: self._get(release.assets[SUMS], lambda text: self._sums(text, sig, name)))
+        self._get(release.assets[SUMS_SIG], lambda sig: self._get(release.assets[SUMS], lambda text: self._sums(text, sig, name, release.assets[name])))
 
     def _only_tell(self, how: str) -> None:
         self.busy = False
@@ -445,7 +454,8 @@ class Updater(QObject):
 
     # -- downloading
 
-    def _sums(self, text: bytes, signature: bytes, name: str) -> None:
+    def _sums(self, text: bytes, signature: bytes, name: str, url: str) -> None:
+        """The signed list and its signature are in: check them, then download `name` from `url`."""
         sums = signed_sums(text, signature)
         if sums is None:
             return self._fail(_("its list of checksums isn't signed with Chatmon's release key"))
@@ -464,13 +474,15 @@ class Updater(QObject):
         except OSError as exc:
             return self._fail(_("couldn't save the download ({error})").format(error=exc.strerror or exc))
         self._got = 0
-        reply = self._nam.get(self._request(self.release.assets[name]))
+        reply = self._nam.get(self._request(url))
         self._reply = reply
+        if reply is None:  # never, as in _get
+            return
         reply.readyRead.connect(lambda: self._chunk(reply))
         reply.finished.connect(lambda: self._downloaded(reply, part, name, expected))
 
     def _chunk(self, reply: QNetworkReply) -> None:
-        data = bytes(reply.readAll())
+        data = reply.readAll().data()
         self._got += len(data)
         if self._got > MAX_DOWNLOAD:
             reply.abort()
@@ -478,7 +490,8 @@ class Updater(QObject):
         if self._file is not None:
             try:
                 self._file.write(data)
-            except OSError:
+            except OSError as exc:  # the person hears the download didn't finish; this is why
+                logger.debug("couldn't write the download: %s", exc)
                 reply.abort()
 
     def _downloaded(self, reply: QNetworkReply, part: Path, name: str, expected: str) -> None:
@@ -492,7 +505,7 @@ class Updater(QObject):
         if reply.error() != QNetworkReply.NetworkError.NoError or self._got > MAX_DOWNLOAD or not url.startswith(SECURE):
             part.unlink(missing_ok=True)
             return self._fail(_("the download didn't finish ({error})").format(error=reply.errorString()))
-        kind = self.kind
+        kind = self.kind or MANUAL  # known by now, as in _latest
         self._background.run(lambda: verify(part, expected, kind), lambda why: self._verified(why, part, folder() / name, expected))
 
     def _verified(self, why, part: Path, done: Path, expected: str) -> None:
@@ -522,11 +535,12 @@ class Updater(QObject):
         ready, and starts it again); elsewhere the system asks for your password, then Chatmon starts again."""
         if self.ready is None or self.release is None or not self.ready.exists() or self.busy:
             return self.failed.emit(_("There's no update ready to install."))
-        if installer_command(self.kind, self.ready) is None:
+        kind = self.kind or MANUAL  # known: a download is ready
+        if installer_command(kind, self.ready) is None:
             return self.failed.emit(_("This Chatmon can't install updates itself."))
         self.busy = True
         # Checked again, just before: it may have waited days for you to say yes.
-        ready, expected, kind = self.ready, self._expected, self.kind
+        ready, expected = self.ready, self._expected
         self._background.run(lambda: prepare(ready, expected, kind), self._install_checked)
 
     def _install_checked(self, prepared) -> None:
@@ -535,11 +549,18 @@ class Updater(QObject):
             return self.failed.emit(_("The update wasn't installed yet: {why}. Try again once you're online.").format(why=prepared))
         if not isinstance(prepared, Prepared):
             self.busy = False
-            self.ready.unlink(missing_ok=True)
+            if isinstance(prepared, Exception):
+                logger.debug("checking the update again before installing it failed", exc_info=prepared)
+            if self.ready is not None:  # always: install() had it
+                self.ready.unlink(missing_ok=True)
             self.ready = None
             why = prepared if not isinstance(prepared, Exception) else _("it could not be checked")
             return self.failed.emit(_("The update wasn't installed: {why}.").format(why=why))
-        program, args, env = installer_command(self.kind, prepared.path)
+        command = installer_command(self.kind or MANUAL, prepared.path)
+        if command is None:  # install() found one a moment ago: gone since (pipx uninstalled meanwhile, say)
+            self.busy = False
+            return self.failed.emit(_("This Chatmon can't install updates itself."))
+        program, args, env = command
         if self.kind == WINDOWS:
             # Chatmon stays: the installer asks it to quit (`chatmon quit`) once it's going ahead, and starts it
             # again after. Turned down (Windows asking to install for everyone, say), Chatmon is still here. Its
@@ -574,14 +595,15 @@ class Updater(QObject):
     def _installed(self, proc: QProcess, code: int) -> None:
         if sip.isdeleted(proc):  # Chatmon quitting while it ran
             return
-        err = bytes(proc.readAllStandardError()).decode("utf-8", errors="replace").strip()
+        err = proc.readAllStandardError().data().decode("utf-8", errors="replace").strip()
         proc.deleteLater()
         self.busy = False
+        ready = self.ready  # always there: install() had it
         if code != 0:
             if self.kind in (DEB, RPM) and code == 126:  # pkexec: the password prompt was dismissed
                 return self.failed.emit(_("The update wasn't installed: the password prompt was closed."))
-            if self.kind in (DEB, RPM) and code == 127:  # pkexec: no prompt to ask with, or not allowed
-                command = f"sudo {shlex.join([HELPER, str(self.ready), *map(str, sums_for(self.ready))])}"
+            if self.kind in (DEB, RPM) and code == 127 and ready is not None:  # pkexec: no prompt to ask with, or not allowed
+                command = f"sudo {shlex.join([HELPER, str(ready), *map(str, sums_for(ready))])}"
                 return self.failed.emit(
                     _("The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
                       "In a terminal: `{command}`").format(command=command)
@@ -592,10 +614,11 @@ class Updater(QObject):
             if detail.startswith("The update wasn't installed"):
                 return self.failed.emit(detail)
             return self.failed.emit(_("The update wasn't installed ({detail}).").format(detail=detail))
-        relaunch = relaunch_command(self.kind)
+        relaunch = relaunch_command(self.kind or MANUAL)
         if relaunch is not None:
             QProcess.startDetached(*relaunch)
-        self.ready.unlink(missing_ok=True)
+        if ready is not None:
+            ready.unlink(missing_ok=True)
         self.installing.emit()
 
     def _fail(self, why: str) -> None:

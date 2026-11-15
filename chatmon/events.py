@@ -62,7 +62,8 @@ def event_from(
     if name is None:
         return None
     if message is None:
-        nested = payload.get("notification") if isinstance(payload.get("notification"), dict) else {}  # Cline
+        notification = payload.get("notification")
+        nested = notification if isinstance(notification, dict) else {}  # Cline
         for value in [payload.get(key) for key in _MESSAGE_KEYS] + [nested.get("message")]:
             if isinstance(value, str) and value.strip():
                 message = value.strip()
@@ -164,6 +165,8 @@ def _connect(name: str, timeout: float) -> socket.socket:
     """A connection to the companion's socket. When its queue of connections not yet taken is full (about
     fifty, while it's busy drawing: several agents' hooks at once), that isn't nobody there: try again for
     a moment instead of saying it isn't running. No socket at all fails at once, as before."""
+    if sys.platform == "win32":  # never asked there: Windows has no AF_UNIX here, and talks through winpipe
+        raise OSError("no Unix sockets on Windows")
     deadline = time.monotonic() + QUEUE_FULL_WAIT
     while True:
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)

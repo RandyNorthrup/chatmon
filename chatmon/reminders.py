@@ -17,6 +17,7 @@ Words for a day or a time that can't all be placed ("friday tomorrow", "next wee
 
 from __future__ import annotations
 
+import logging
 import math
 import re
 import time as _time
@@ -26,6 +27,8 @@ from datetime import date, datetime, time, timedelta, tzinfo
 
 from . import localefmt
 from .i18n import N_, _, ngettext
+
+logger = logging.getLogger(__name__)
 
 _WORDS = {
     "a": 1, "an": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "ten": 10,
@@ -142,7 +145,7 @@ def _local(seconds: float, tz: tzinfo | None) -> datetime:
 _RULE_RE = re.compile(r"(daily|weekdays|mon|tue|wed|thu|fri|sat|sun)@([01]\d|2[0-3]):([0-5]\d)")
 
 
-def _rule(rule: str) -> tuple[tuple[int, ...], int, int]:
+def _rule(rule: object) -> tuple[tuple[int, ...], int, int]:
     """A repeat rule's weekdays (Monday is 0), hour and minute. ValueError for anything else."""
     m = _RULE_RE.fullmatch(rule) if isinstance(rule, str) else None
     if not m:
@@ -221,7 +224,8 @@ class _Words:
     """A phrase as it's read: what's left of it, and the time words taken out of it so far."""
 
     def __init__(self, text: str):
-        self.text, self.rest, self.seen = text, text, []
+        self.text, self.rest = text, text
+        self.seen: list[str] = []
 
     def take(self, pattern: re.Pattern, wanted=lambda m, rest: True) -> re.Match | None:
         """The first match of `pattern` that's wanted, taken out of what's left."""
@@ -510,7 +514,9 @@ class ReminderBook:
         for entry in data or []:
             try:
                 reminder = Reminder(float(entry["due"]), str(entry["text"]), str(entry.get("kind", "reminder")), str(entry.get("id") or uuid.uuid4().hex[:8]))
-            except (AttributeError, KeyError, TypeError, ValueError):
+            except (AttributeError, KeyError, TypeError, ValueError) as exc:
+                # What was wrong, never what it said: a reminder's words are what you typed.
+                logger.debug("skipped a saved reminder that can't be read (%s)", type(exc).__name__)
                 continue
             if not math.isfinite(reminder.due):
                 continue
@@ -591,7 +597,7 @@ class ReminderBook:
         if when is not None:
             r.due, r.fired = when, False
         if repeat is not _KEEP:
-            r.repeat = repeat
+            r.repeat = repeat if isinstance(repeat, str) else None  # a rule _rule passed, or None
         return True
 
     def upcoming(self) -> list[Reminder]:

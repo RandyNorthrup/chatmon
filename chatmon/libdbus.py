@@ -20,8 +20,10 @@ SESSION = 0  # DBUS_BUS_SESSION
 METHOD_CALL, METHOD_RETURN, ERROR, SIGNAL = 1, 2, 3, 4
 NAME_PRIMARY_OWNER = 1
 NAME_DO_NOT_QUEUE = 0x4
-BASIC = {"y": ctypes.c_ubyte, "b": ctypes.c_uint32, "n": ctypes.c_int16, "q": ctypes.c_uint16, "i": ctypes.c_int32,
-         "u": ctypes.c_uint32, "x": ctypes.c_int64, "t": ctypes.c_uint64, "d": ctypes.c_double, "h": ctypes.c_int32}
+BASIC: dict[str, type[ctypes._SimpleCData[Any]]] = {
+    "y": ctypes.c_ubyte, "b": ctypes.c_uint32, "n": ctypes.c_int16, "q": ctypes.c_uint16, "i": ctypes.c_int32,
+    "u": ctypes.c_uint32, "x": ctypes.c_int64, "t": ctypes.c_uint64, "d": ctypes.c_double, "h": ctypes.c_int32,
+}
 STRINGS = "sog"  # string, object path, signature
 CONTAINER = {"a": ord("a"), "(": ord("r"), "{": ord("e"), "v": ord("v")}  # DBUS_TYPE_ARRAY, STRUCT, DICT_ENTRY, VARIANT
 
@@ -180,15 +182,21 @@ def append(dbus, it: _Iter, signature: str, value: Any) -> None:
     elif c == "a":
         element = signature[1:]
         items = list(value.items()) if element.startswith("{") else list(value)
-        _container(dbus, it, "a", element.encode(), lambda sub: [append(dbus, sub, element, item) for item in items])
+        _container(dbus, it, "a", element.encode(), lambda sub: _append_each(dbus, sub, [(element, item) for item in items]))
     elif c in "({":
         fields = complete_types(signature[1:-1])
         values = list(value)
         if len(values) != len(fields):
             raise ValueError(f"{value!r} doesn't fit {signature!r}.")
-        _container(dbus, it, c, None, lambda sub: [append(dbus, sub, f, v) for f, v in zip(fields, values, strict=True)])
+        _container(dbus, it, c, None, lambda sub: _append_each(dbus, sub, list(zip(fields, values, strict=True))))
     else:
         raise ValueError(f"Can't write D-Bus type {signature!r}.")
+
+
+def _append_each(dbus, it: _Iter, typed: list[tuple[str, Any]]) -> None:
+    """Write each (signature, value), in order."""
+    for signature, value in typed:
+        append(dbus, it, signature, value)
 
 
 def _container(dbus, it: _Iter, kind: str, contained: bytes | None, fill) -> None:
@@ -209,9 +217,9 @@ def read(dbus, it: _Iter) -> Any:
         value = ctypes.cast(ctypes.byref(cell), ctypes.POINTER(BASIC[kind])).contents.value
         return bool(value) if kind == "b" else value
     if kind in STRINGS:
-        cell = ctypes.c_char_p()
-        dbus.dbus_message_iter_get_basic(ctypes.byref(it), ctypes.byref(cell))
-        text = _text(cell.value)
+        chars = ctypes.c_char_p()
+        dbus.dbus_message_iter_get_basic(ctypes.byref(it), ctypes.byref(chars))
+        text = _text(chars.value)
         return ObjectPath(text) if kind == "o" else text
     sub = _Iter()
     dbus.dbus_message_iter_recurse(ctypes.byref(it), ctypes.byref(sub))
@@ -248,7 +256,8 @@ class Message:
     """A message off the bus, read: `kind` (METHOD_CALL, SIGNAL...), where it's from and to, and its `args`."""
 
     def __init__(self, dbus, raw: int):
-        self._dbus, self.raw = dbus, raw
+        self._dbus = dbus
+        self.raw: int | None = raw  # None once freed
         self.kind = dbus.dbus_message_get_type(raw)
         self.path = _text(dbus.dbus_message_get_path(raw))
         self.interface = _text(dbus.dbus_message_get_interface(raw))

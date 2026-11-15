@@ -78,11 +78,15 @@ def test_notify_never_waits_on_an_open_stdin(monkeypatch):
     monkeypatch.setattr(events, "send", lambda m, timeout=0.5: sent.append(m) or True)
     monkeypatch.delenv(events.INTERNAL_ENV, raising=False)
     read_end, write_end = os.pipe()  # a hook runner that never closes stdin
-    monkeypatch.setattr("sys.stdin", os.fdopen(read_end, "r"))
-    started = time.monotonic()
-    assert cli.notify(["done", "--source", "x", "--stdin"]) == 0
-    assert time.monotonic() - started < 2 and sent[0]["event"] == "done"
-    os.close(write_end)
+    stdin = os.fdopen(read_end, "r")
+    monkeypatch.setattr("sys.stdin", stdin)
+    try:
+        started = time.monotonic()
+        assert cli.notify(["done", "--source", "x", "--stdin"]) == 0
+        assert time.monotonic() - started < 2 and sent[0]["event"] == "done"
+    finally:
+        os.close(write_end)  # the reader notify left waiting comes to the end of it, and lets go of the file
+        stdin.close()
 
 
 def test_payload_messages_from_other_agents():
@@ -297,6 +301,7 @@ def test_only_one_chatmon_holds_the_lock(tmp_path, monkeypatch):
     finally:
         holder.kill()
         holder.wait()
+        holder.stdout.close()
     monkeypatch.setattr(appmod, "_instance_lock", None)
     assert appmod._hold_instance_lock(lock) is True and appmod._instance_lock is not None
     os.close(appmod._instance_lock)

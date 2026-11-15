@@ -14,12 +14,14 @@ from __future__ import annotations
 
 import ctypes
 import ctypes.util
+import logging
 import math
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor, QGuiApplication, QRegion
 from PyQt6.QtWidgets import QWidget
 
+logger = logging.getLogger(__name__)
 
 
 def _key(rects) -> tuple:
@@ -136,6 +138,7 @@ class MacPointerToggle(PointerToggle):
 
 GWL_EXSTYLE = -20
 WS_EX_TRANSPARENT = 0x20  # on a layered window: every click goes through it, to the window below
+_WinDLL = getattr(ctypes, "WinDLL", ctypes.CDLL)  # Windows' own loader; ctypes has it only there
 
 
 class WindowsPointerToggle(PointerToggle):
@@ -151,7 +154,7 @@ class WindowsPointerToggle(PointerToggle):
 
     def __init__(self, widget: QWidget):
         super().__init__(widget)
-        user32 = ctypes.WinDLL("user32", use_last_error=True)
+        user32 = _WinDLL("user32", use_last_error=True)
         self._get_style = user32.GetWindowLongPtrW
         self._get_style.restype, self._get_style.argtypes = ctypes.c_ssize_t, [ctypes.c_void_p, ctypes.c_int]
         self._set_style = user32.SetWindowLongPtrW
@@ -198,7 +201,8 @@ def for_window(widget: QWidget):
     if platform == "xcb":
         try:
             return XShapeInput(widget)
-        except OSError:
+        except OSError as exc:
+            logger.debug("no X input shape, so Qt's window mask: %s", exc)
             return MaskInput(widget)
     if platform == "windows":
         return WindowsPointerToggle(widget)

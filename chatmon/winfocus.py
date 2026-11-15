@@ -10,10 +10,14 @@ own asks, never the screen's, and `active` is its latest answer."""
 from __future__ import annotations
 
 import ctypes
+import logging
+import sys
 import threading
 from ctypes import wintypes
 
 from . import winrt
+
+logger = logging.getLogger(__name__)
 
 CLASS = "Windows.UI.Shell.FocusSessionManager"
 IID_STATICS = "834df764-cb9a-5d0a-aa9f-73df4f249395"  # IFocusSessionManagerStatics
@@ -58,6 +62,8 @@ class Focus:
         self._thread.start()
 
     def _run(self) -> None:
+        if sys.platform != "win32":  # nothing to ask anywhere else: `active` stays None
+            return
         ole32 = ctypes.WinDLL("ole32")
         ole32.CoInitializeEx.argtypes = [ctypes.c_void_p, wintypes.DWORD]
         if ole32.CoInitializeEx(None, COINIT_MULTITHREADED) < 0:
@@ -71,8 +77,8 @@ class Focus:
                 except OSError:
                     self.active = None
                 self._stop.wait(self._every)
-        except (OSError, AttributeError, ValueError):  # a failed HRESULT raises OSError
-            pass
+        except (OSError, AttributeError, ValueError) as exc:  # a failed HRESULT raises OSError
+            logger.debug("couldn't ask Windows whether Focus is on: %s", exc)
         finally:
             self.active = None
             if focus is not None:

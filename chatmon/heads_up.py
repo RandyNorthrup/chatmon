@@ -45,7 +45,7 @@ def read_battery() -> tuple[float, bool] | None:
         if reading is not None:
             return reading
     try:
-        import psutil
+        import psutil  # type: ignore[import-untyped]  # psutil ships no type information, and types-psutil isn't a dependency
 
         battery = psutil.sensors_battery()
         if battery is not None:
@@ -67,7 +67,7 @@ def upower_battery() -> tuple[float, bool] | None:
         from .presence import _dbus_call
     except ImportError:
         return None
-    bus = QDBusConnection.systemBus()  # a connection QtDBus shares between threads
+    bus: QDBusConnection = QDBusConnection.systemBus()  # a connection QtDBus shares between threads
     if not bus.isConnected():
         return None
     return battery_from_upower(_dbus_call(bus, UPOWER, DISPLAY_DEVICE, "org.freedesktop.DBus.Properties", "GetAll", "org.freedesktop.UPower.Device"))
@@ -93,7 +93,7 @@ def _unwrapped(value):
 def sysfs_battery(base: Path = POWER_SUPPLY) -> tuple[float, bool] | None:
     """The kernel's batteries (not a mouse's or a headset's), combined as UPower does: by what each holds, when
     they all say it in the same unit, else their percentages averaged."""
-    found = []  # (percent, (unit, now, full) or None)
+    found: list[tuple[float, tuple[str, float, float] | None]] = []  # (percent, (unit, now, full) or None)
     plugged = True
     for bat in sorted(base.glob("BAT*")):
         try:
@@ -113,9 +113,10 @@ def sysfs_battery(base: Path = POWER_SUPPLY) -> tuple[float, bool] | None:
         found.append((percent, held))
     if not found:
         return None
-    units = {held[0] for _, held in found if held}
-    if len(units) == 1 and all(held for _, held in found) and sum(held[2] for _, held in found) > 0:
-        percent = 100.0 * sum(held[1] for _, held in found) / sum(held[2] for _, held in found)
+    holding = [held for _, held in found if held]
+    units = {held[0] for held in holding}
+    if len(units) == 1 and len(holding) == len(found) and sum(held[2] for held in holding) > 0:
+        percent = 100.0 * sum(held[1] for held in holding) / sum(held[2] for held in holding)
     else:
         percent = sum(p for p, _ in found) / len(found)
     return min(100.0, percent), plugged
@@ -275,7 +276,7 @@ class Watcher:
         return Notice("battery", _("Battery low"), _("Battery at {percent}%. Time to find the charger.").format(percent=f"{percent:.0f}"), urgent=True)
 
     def disks(self, readings: list[tuple[str, float]], today: date) -> list[Notice]:
-        out = []
+        out: list[Notice] = []
         if self.disk_full <= 0:
             return out
         for folder, percent in readings:

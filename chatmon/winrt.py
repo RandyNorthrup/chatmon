@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import ctypes
 import logging
+import sys
 import threading
 import time
 import uuid
@@ -134,9 +135,12 @@ RPC_E_CHANGED_MODE = -0x7FFEFEFA  # 0x80010106: the thread already joined COM, t
 def join_com() -> bool:
     """Have this thread join COM, single-threaded as Qt's windows platform does (OleInitialize), if nothing has
     yet: Qt's offscreen platform doesn't. True if COM can be used on it."""
+    if sys.platform != "win32":
+        return False
     try:
         ole32 = ctypes.WinDLL("ole32")
-    except (AttributeError, OSError):
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't load ole32: %s", exc)
         return False
     ole32.CoInitializeEx.argtypes = [ctypes.c_void_p, wintypes.DWORD]
     ole32.CoInitializeEx.restype = ctypes.c_long

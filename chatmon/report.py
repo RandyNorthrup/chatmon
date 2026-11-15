@@ -52,10 +52,12 @@ def system() -> str:
 
 def qt() -> str:
     try:
-        from PyQt6.QtCore import QT_VERSION_STR
+        from PyQt6.QtCore import QT_VERSION_STR, QCoreApplication
         from PyQt6.QtGui import QGuiApplication
 
-        name = QGuiApplication.platformName() if QGuiApplication.instance() else ""
+        # Typed here: PyQt6 6.12's stubs give instance() an unbound Self, which mypy reads as no type at all.
+        app: QCoreApplication | None = QGuiApplication.instance()
+        name = QGuiApplication.platformName() if app is not None else ""
         return f"Qt {QT_VERSION_STR}" + (f" ({name})" if name else "")
     except ImportError:
         return "Qt ?"

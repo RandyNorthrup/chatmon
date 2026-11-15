@@ -91,12 +91,13 @@ def setup() -> Path | None:
     level = logging.DEBUG if debugging() else logging.INFO
     root = logging.getLogger(paths.APP)
     root.setLevel(level)
-    path: Path | None = log_file()
+    path = log_file()
+    kept: _PrivateRotatingFile | None
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         kept = _PrivateRotatingFile(path)
     except OSError:
-        path = None
+        kept = None
     else:
         kept.setFormatter(_Blanking(FILE_FORMAT))
         _install(root, kept)
@@ -105,7 +106,7 @@ def setup() -> Path | None:
         console.setLevel(level if debugging() else logging.WARNING)
         console.setFormatter(_Blanking(CONSOLE_FORMAT))
         _install(root, console)
-    return path
+    return path if kept is not None else None
 
 
 def _install(root: logging.Logger, handler: logging.Handler) -> None:

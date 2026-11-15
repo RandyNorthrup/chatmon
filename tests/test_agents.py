@@ -1,5 +1,6 @@
 import itertools
 import json
+import logging
 import os
 import random
 import shutil
@@ -96,6 +97,22 @@ def test_broken_json_is_left_alone():
     with pytest.raises(agents.AgentError):
         gemini.connect()
     assert path.read_text() == "{ not json" and not backups(path)
+
+
+def test_a_settings_file_that_cant_be_read_is_logged_by_name_never_by_contents(caplog):
+    """Asking whether an agent is connected carries on past a file it can't read. The log names the agent and the
+    file and says what's wrong, never what the file holds: an agent's settings can hold a token."""
+    caplog.set_level(logging.DEBUG, logger="chatmon.agents")
+    gemini = agents.Gemini()
+    path = gemini.config_path()
+    path.parent.mkdir(parents=True)
+    path.write_text('{"apiKey": "sk-ant-not-a-real-key-0123456789", "hooks": ')
+    assert gemini.status() == "found"
+    logged = [r for r in caplog.records if r.name == "chatmon.agents"]
+    assert logged and {r.levelno for r in logged} == {logging.DEBUG}
+    said = logged[0].getMessage()
+    assert said.startswith("couldn't read Gemini CLI's hooks: ") and str(path) in said and "isn't valid JSON" in said
+    assert not any("apiKey" in r.getMessage() or "sk-ant" in r.getMessage() for r in logged)
 
 
 # -- Codex's notify line

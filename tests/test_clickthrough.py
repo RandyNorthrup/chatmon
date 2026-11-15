@@ -3,10 +3,12 @@ something of ours. On Windows that's WS_EX_TRANSPARENT on its native window, swi
 rest of the window's style, WS_EX_LAYERED above all, is left as it is."""
 
 import ctypes
+import logging
 import sys
 
 import pytest
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget
 
 from chatmon import clickthrough
 
@@ -111,6 +113,25 @@ def test_for_window_picks_it_on_windows(qapp, monkeypatch, hwnd):
 
     monkeypatch.setattr(clickthrough, "QGuiApplication", Gui)
     assert type(clickthrough.for_window(Widget(hwnd))) is clickthrough.WindowsPointerToggle
+
+
+def test_without_an_x_input_shape_qts_mask_lets_clicks_through_and_the_debug_log_says_why(qapp, monkeypatch, caplog):
+    class Gui:
+        @staticmethod
+        def platformName():
+            return "xcb"
+
+    monkeypatch.setattr(clickthrough, "QGuiApplication", Gui)
+    monkeypatch.setenv("DISPLAY", ":9999")  # no X server there (nor libX11 at all off Linux)
+    caplog.set_level(logging.DEBUG, logger="chatmon.clickthrough")
+    widget = QWidget()
+    try:
+        assert type(clickthrough.for_window(widget)) is clickthrough.MaskInput
+        assert not widget.mask().isEmpty()  # its one invisible pixel: clicks go through the rest
+    finally:
+        widget.deleteLater()
+    said = [r.getMessage() for r in caplog.records if r.name == "chatmon.clickthrough" and r.levelno == logging.DEBUG]
+    assert len(said) == 1 and said[0].startswith("no X input shape, so Qt's window mask: ")
 
 
 def test_the_x_input_shape_is_in_device_pixels_rounded_outward():

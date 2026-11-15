@@ -1,6 +1,7 @@
 """The platform's own readings, called for real on each CI runner: they answer, or say they can't (None),
 and never raise."""
 
+import logging
 import os
 import sys
 from typing import ClassVar
@@ -264,6 +265,21 @@ def test_windows_setting_changes_are_passed_on(qapp):
     assert settings == [True] * 3 and readers == []
     desk.windows_setting_changed(presence.SPI_SETSCREENREADER)
     assert readers == [True] and len(settings) == 3
+
+
+def test_an_x_library_that_wont_load_goes_to_the_log_and_x_says_nothing(tmp_path, monkeypatch, caplog):
+    """libX11 found but not loadable (here a corrupt file where it should be): why is in the debug log, and the X
+    readings say they can't, as before."""
+    import ctypes.util
+
+    caplog.set_level(logging.DEBUG, logger="chatmon.presence")
+    broken = tmp_path / "libX11.so.6"
+    broken.write_bytes(b"not a library at all")
+    monkeypatch.setattr(ctypes.util, "find_library", lambda name: str(broken))
+    x = presence._X11()
+    assert not x.ok and x.idle() is None and x.fullscreen_window() == 0
+    logged = [r.getMessage() for r in caplog.records if r.name == "chatmon.presence" and r.levelno == logging.DEBUG]
+    assert len(logged) == 1 and logged[0].startswith("couldn't reach the X server's libraries: ")
 
 
 def test_a_full_screen_window_counts_only_on_the_stages_screen():

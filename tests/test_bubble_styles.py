@@ -3,6 +3,7 @@ their animation is a loop that closes by construction."""
 
 import itertools
 import json
+import logging
 import re
 import time
 from pathlib import Path
@@ -272,6 +273,30 @@ def test_ask_box_wears_the_style_and_keeps_its_input_inside_the_bubble(qapp):
             box.dismiss()
     finally:
         box.deleteLater()
+
+
+def test_a_style_whose_art_cant_be_read_is_drawn_plain_and_the_debug_log_says_why(qapp, tmp_path, monkeypatch, caplog):
+    monkeypatch.setattr(paths, "bubbles_dir", lambda: tmp_path)
+    monkeypatch.setattr(bubbleart, "_loaded", {})
+    caplog.set_level(logging.DEBUG, logger="chatmon.bubbleart")
+    try:
+        (tmp_path / "manifest.json").write_text("{not json", encoding="utf-8")  # damaged
+        bubbleart._manifest.cache_clear()
+        assert bubbleart.art("electric") is None
+        (tmp_path / "manifest.json").write_text(json.dumps({"electric": {"rim": {}}}), encoding="utf-8")  # its pictures gone
+        bubbleart._manifest.cache_clear()
+        assert bubbleart.art("electric", "ask") is None
+        box = AskBox()
+        try:
+            box.set_style(styles.get("electric"), True)
+            assert box.art is None  # the plain bubble, drawn by Qt alone
+        finally:
+            box.deleteLater()
+    finally:
+        bubbleart._manifest.cache_clear()  # the real one again, for what follows
+    said = [r.getMessage() for r in caplog.records if r.name == "chatmon.bubbleart" and r.levelno == logging.DEBUG]
+    assert said[0].startswith("couldn't read the painted bubbles' manifest: ")
+    assert said[1] == "couldn't load the electric bubble's art, so it's plain: FileNotFoundError('electric-still.png')"
 
 
 def test_unknown_style_falls_back_to_electric(qapp):

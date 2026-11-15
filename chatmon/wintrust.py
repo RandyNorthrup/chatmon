@@ -15,8 +15,10 @@ https://learn.microsoft.com/en-us/windows/win32/api/wintrust/nf-wintrust-wthelpe
 from __future__ import annotations
 
 import ctypes
+import sys
 from ctypes import wintypes
 from pathlib import Path
+from typing import Any
 
 
 class GUID(ctypes.Structure):
@@ -88,31 +90,53 @@ class CERT_ENHKEY_USAGE(ctypes.Structure):
     _fields_ = [("cUsageIdentifier", wintypes.DWORD), ("rgpszUsageIdentifier", ctypes.POINTER(ctypes.c_char_p))]
 
 
-_wintrust = ctypes.WinDLL("wintrust", use_last_error=True)
-_crypt32 = ctypes.WinDLL("crypt32", use_last_error=True)
-_kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+# ctypes' Windows-only helpers, through getattr so this module imports, and is checked, on every OS: nothing here
+# runs elsewhere (the first call into a DLL refuses before either is needed).
+_get_last_error = getattr(ctypes, "get_last_error", lambda: 0)
+_WinError = getattr(ctypes, "WinError", OSError)
+_dlls: dict[str, Any] = {}
 
-_CreateFile = _kernel32.CreateFileW
-_CreateFile.restype = wintypes.HANDLE
-_CreateFile.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE]
-_CloseHandle = _kernel32.CloseHandle
-_CloseHandle.restype, _CloseHandle.argtypes = wintypes.BOOL, [wintypes.HANDLE]
+
+def _dll(name: str) -> Any:
+    """wintrust, crypt32 or kernel32, loaded the first time it's needed: importing this module loads nothing."""
+    if sys.platform != "win32":
+        raise OSError(f"{name}.dll is Windows'")
+    if name not in _dlls:
+        _dlls[name] = ctypes.WinDLL(name, use_last_error=True)
+    return _dlls[name]
+
+
+class _Function:
+    """A function of a Windows DLL, found and declared (the types of its result and arguments) when it's first called."""
+
+    def __init__(self, dll: str, name: str, restype: Any, *argtypes: Any):
+        self.dll, self.name, self.restype, self.argtypes = dll, name, restype, list(argtypes)
+        self._fn: Any = None
+
+    def __call__(self, *args: Any) -> Any:
+        if self._fn is None:
+            fn = getattr(_dll(self.dll), self.name)
+            fn.restype, fn.argtypes = self.restype, self.argtypes
+            self._fn = fn
+        return self._fn(*args)
+
+
+_CreateFile = _Function(
+    "kernel32", "CreateFileW",
+    wintypes.HANDLE, wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE,
+)
+_CloseHandle = _Function("kernel32", "CloseHandle", wintypes.BOOL, wintypes.HANDLE)
 INVALID_HANDLE = ctypes.c_void_p(-1).value
 
-_WinVerifyTrust = _wintrust.WinVerifyTrust
-_WinVerifyTrust.restype, _WinVerifyTrust.argtypes = wintypes.LONG, [wintypes.HANDLE, ctypes.POINTER(GUID), ctypes.POINTER(WINTRUST_DATA)]
-_ProvData = _wintrust.WTHelperProvDataFromStateData
-_ProvData.restype, _ProvData.argtypes = ctypes.c_void_p, [wintypes.HANDLE]
-_ProvSigner = _wintrust.WTHelperGetProvSignerFromChain
-_ProvSigner.restype, _ProvSigner.argtypes = ctypes.c_void_p, [ctypes.c_void_p, wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
-_ProvCert = _wintrust.WTHelperGetProvCertFromChain
-_ProvCert.restype, _ProvCert.argtypes = ctypes.POINTER(CRYPT_PROVIDER_CERT), [ctypes.c_void_p, wintypes.DWORD]
-_NameString = _crypt32.CertGetNameStringW
-_NameString.restype = wintypes.DWORD
-_NameString.argtypes = [ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p, wintypes.LPWSTR, wintypes.DWORD]
-_KeyUsage = _crypt32.CertGetEnhancedKeyUsage
-_KeyUsage.restype = wintypes.BOOL
-_KeyUsage.argtypes = [ctypes.c_void_p, wintypes.DWORD, ctypes.c_void_p, ctypes.POINTER(wintypes.DWORD)]
+_WinVerifyTrust = _Function("wintrust", "WinVerifyTrust", wintypes.LONG, wintypes.HANDLE, ctypes.POINTER(GUID), ctypes.POINTER(WINTRUST_DATA))
+_ProvData = _Function("wintrust", "WTHelperProvDataFromStateData", ctypes.c_void_p, wintypes.HANDLE)
+_ProvSigner = _Function("wintrust", "WTHelperGetProvSignerFromChain", ctypes.c_void_p, ctypes.c_void_p, wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+_ProvCert = _Function("wintrust", "WTHelperGetProvCertFromChain", ctypes.POINTER(CRYPT_PROVIDER_CERT), ctypes.c_void_p, wintypes.DWORD)
+_NameString = _Function(
+    "crypt32", "CertGetNameStringW",
+    wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p, wintypes.LPWSTR, wintypes.DWORD,
+)
+_KeyUsage = _Function("crypt32", "CertGetEnhancedKeyUsage", wintypes.BOOL, ctypes.c_void_p, wintypes.DWORD, ctypes.c_void_p, ctypes.POINTER(wintypes.DWORD))
 
 
 def _name(cert: int, issuer: bool) -> str:
@@ -143,7 +167,7 @@ def hold(path: Path) -> int:
     still be started from it, and anything can still read it. OSError if it can't be opened."""
     handle = _CreateFile(str(path), GENERIC_READ, FILE_SHARE_READ, None, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, None)
     if handle in (None, INVALID_HANDLE):
-        raise ctypes.WinError(ctypes.get_last_error())
+        raise _WinError(_get_last_error())
     return handle
 
 

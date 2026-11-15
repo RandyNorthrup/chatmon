@@ -1,4 +1,5 @@
 import json
+import logging
 import time
 from datetime import date, datetime, timedelta
 
@@ -389,6 +390,19 @@ def test_reminders_saved_before_repeats_read_back_unchanged():
 def test_broken_saved_reminders_are_skipped():
     book = ReminderBook.from_list([{"due": "nan", "text": "x"}, {"due": 5, "text": "ok", "repeat": "every day", "fired": "yes"}, "junk", None, {"text": "no due"}])
     assert [(r.text, r.repeat, r.fired) for r in book.items] == [("ok", None, False)]
+
+
+def test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words(caplog):
+    """Skipping one is an error Chatmon carries on past, so it's in the log for a bug report: what was wrong with
+    it, never what it said (a reminder's words are what you typed)."""
+    caplog.set_level(logging.DEBUG, logger="chatmon.reminders")
+    book = ReminderBook.from_list([{"text": "call the clinic about my results"}, {"due": "soon", "text": "pick up the keys"}, {"due": 5, "text": "ok"}])
+    assert [r.text for r in book.items] == ["ok"]
+    logged = [(r.levelno, r.getMessage()) for r in caplog.records if r.name == "chatmon.reminders"]
+    assert logged == [
+        (logging.DEBUG, "skipped a saved reminder that can't be read (KeyError)"),
+        (logging.DEBUG, "skipped a saved reminder that can't be read (ValueError)"),
+    ]
 
 
 # -- snoozing and editing (M5-04)

@@ -22,6 +22,7 @@ import atexit
 import ctypes
 import ctypes.util
 import io
+import logging
 import math
 import os
 import queue
@@ -33,6 +34,12 @@ import time
 import wave
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from PyQt6.QtMultimedia import QSoundEffect
+
+logger = logging.getLogger(__name__)
 
 CUES = ("needs-you", "reminder", "focus-done", "done", "success", "error", "pop")
 ON_BY_DEFAULT = frozenset({"needs-you", "reminder", "focus-done"})  # the alerts; the rest wait to be turned on
@@ -97,7 +104,7 @@ class QtPlayer:
     def __init__(self) -> None:
         from PyQt6.QtCore import QCoreApplication
 
-        self.effects: dict[Path, object] = {}
+        self.effects: dict[Path, QSoundEffect] = {}
         app = QCoreApplication.instance()
         if app is not None:
             app.aboutToQuit.connect(self.close)
@@ -151,12 +158,15 @@ class WindowsPlayer:
     def play(self, path: Path, volume: float) -> bool:
         try:
             data = scaled_wav(path.read_bytes(), volume)
-        except OSError:
+        except OSError as exc:
+            logger.debug("couldn't read the sound %s: %s", path, exc)
             return False
         self._queue.put(data)
         return True
 
     def _run(self) -> None:
+        if sys.platform != "win32":  # made on Windows alone
+            return
         import winsound
 
         while True:
@@ -166,7 +176,8 @@ class WindowsPlayer:
             try:
                 winsound.PlaySound(data, winsound.SND_MEMORY | winsound.SND_NODEFAULT)
                 self.played += 1
-            except RuntimeError:
+            except RuntimeError as exc:
+                logger.debug("Windows couldn't play a sound: %s", exc)
                 self.failed += 1
 
     def close(self) -> None:
@@ -186,6 +197,8 @@ class MacPlayer:
         objc.objc_getClass.argtypes = objc.sel_registerName.argtypes = [ctypes.c_char_p]
         self._cls, self._sel = objc.objc_getClass, lambda name: objc.sel_registerName(name.encode())
         send = ctypes.cast(objc.objc_msgSend, ctypes.c_void_p).value
+        if not send:  # a loaded function always has an address
+            raise OSError("objc_msgSend has no address")
         self._obj = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)
         self._with_text = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p)(send)
         self._init_file = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_bool)(send)
@@ -228,7 +241,8 @@ class CommandPlayer:
         try:
             self._running.append(subprocess.Popen(player_command(self.name, path, volume), stdin=subprocess.DEVNULL,  # noqa: S603 - a known player and a sound file of ours
                                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True))
-        except OSError:
+        except OSError as exc:
+            logger.debug("couldn't start %s: %s", self.name, exc)
             return False
         return True
 
@@ -246,10 +260,13 @@ class CommandPlayer:
 def linux_players(runtime_dir: str | None = None) -> list[CommandPlayer]:
     """The Linux players there are, best first: each sound server's own player only where that server is running
     (its socket is there; PipeWire's pipewire-pulse serves PulseAudio's too), then canberra-gtk-play."""
-    runtime = Path(runtime_dir or os.environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}")
-    servers = {"pw-play": runtime / "pipewire-0", "paplay": runtime / "pulse" / "native", "canberra-gtk-play": None}
+    runtime = runtime_dir or os.environ.get("XDG_RUNTIME_DIR")
+    if not runtime and sys.platform != "win32":  # Windows has no uid (and none of these players)
+        runtime = f"/run/user/{os.getuid()}"
+    folder = Path(runtime or "")
+    servers = {"pw-play": folder / "pipewire-0", "paplay": folder / "pulse" / "native", "canberra-gtk-play": None}
     return [CommandPlayer(name) for name in LINUX_PLAYERS
-            if shutil.which(name) and (servers[name] is None or servers[name].exists())]
+            if shutil.which(name) and ((socket := servers[name]) is None or socket.exists())]
 
 
 def default_players() -> list:
@@ -263,8 +280,8 @@ def default_players() -> list:
             players.append(MacPlayer())
         else:
             players.extend(linux_players())
-    except (AttributeError, OSError):  # a runtime without the system's own player
-        pass
+    except (AttributeError, OSError) as exc:  # a runtime without the system's own player
+        logger.debug("couldn't make the system's own sound player: %s", exc)
     return players
 
 

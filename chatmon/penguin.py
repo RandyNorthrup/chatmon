@@ -25,6 +25,7 @@ import math
 import os
 import sys
 import time
+from typing import Any, cast
 
 from PyQt6.QtCore import QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import (
@@ -47,7 +48,7 @@ from PyQt6.QtGui import (
     QTextCharFormat,
     QWheelEvent,
 )
-from PyQt6.QtWidgets import QApplication, QFrame, QGraphicsScene, QGraphicsView, QLineEdit, QMenu, QWidget
+from PyQt6.QtWidgets import QApplication, QFrame, QGraphicsProxyWidget, QGraphicsScene, QGraphicsView, QLineEdit, QMenu, QWidget
 
 from . import bubble as bubbles
 from . import clickthrough, layer
@@ -152,10 +153,10 @@ class StageWindow(QWidget):
         if self.cursor().shape() != cursor:
             self.setCursor(cursor)
 
-    def close(self) -> None:
+    def close(self) -> bool:
         self._closing = True
         self.input.close()
-        super().close()
+        return super().close()
 
     def closeEvent(self, event) -> None:
         # Only quitting closes the stage. A window manager's close (Super+C on
@@ -201,7 +202,7 @@ class Hosted(QObject):
         self.stage, self.widget = stage, widget
         self.scene = QGraphicsScene(self)
         shown = widget.isVisible()
-        self.proxy = self.scene.addWidget(widget)
+        self.proxy = cast(QGraphicsProxyWidget, self.scene.addWidget(widget))  # Qt always makes one; PyQt6 types it optional
         widget.setVisible(shown)  # addWidget shows it; it opens when the app opens it
         self.view = QGraphicsView(self.scene)
         self.view.setFrameShape(QFrame.Shape.NoFrame)
@@ -325,6 +326,8 @@ class Hosted(QObject):
         self._sync_view()
         local = gpos - QPointF(self.rect().topLeft())
         viewport = self.view.viewport()
+        if viewport is None:  # never: a scroll area always has one
+            return
         event = QMouseEvent(kind, local, viewport.mapToGlobal(local), button, buttons, QGuiApplication.keyboardModifiers())
         QApplication.sendEvent(viewport, event)
         if kind == QEvent.Type.MouseButtonPress and button == Qt.MouseButton.RightButton:
@@ -335,6 +338,8 @@ class Hosted(QObject):
         self._sync_view()
         local = gpos - QPointF(self.rect().topLeft())
         viewport = self.view.viewport()
+        if viewport is None:  # never, as in mouse()
+            return
         event = QWheelEvent(
             local, viewport.mapToGlobal(local), QPoint(), QPoint(dx, dy), Qt.MouseButton.NoButton,
             Qt.KeyboardModifier.NoModifier, Qt.ScrollPhase.NoScrollPhase, False,
@@ -377,7 +382,7 @@ class Hosted(QObject):
             length = len(preedit.encode("utf-16-le", errors="surrogatepass")) // 2
             attributes.append(QInputMethodEvent.Attribute(QInputMethodEvent.AttributeType.TextFormat, 0, length, underline))
         shown = cursor is not None
-        attributes.append(QInputMethodEvent.Attribute(QInputMethodEvent.AttributeType.Cursor, cursor[1] if shown else 0, 1 if shown else 0))
+        attributes.append(QInputMethodEvent.Attribute(QInputMethodEvent.AttributeType.Cursor, cursor[1] if cursor is not None else 0, 1 if shown else 0))
         event = QInputMethodEvent(preedit, attributes)
         if commit or before or after:
             event.setCommitString(commit, -before, before + after)
@@ -389,7 +394,7 @@ class Hosted(QObject):
         else:
             self.scene.clearFocus()
 
-    def _context_menu(self, child: QWidget, pos: QPoint) -> None:
+    def _context_menu(self, child: Any, pos: QPoint) -> None:  # a QTextEdit, a QLineEdit...: any widget with createStandardContextMenu
         try:
             menu = child.createStandardContextMenu(pos)
         except TypeError:
@@ -490,7 +495,7 @@ class Stage(QObject):
         self._penguin = QRectF()  # where the penguin was last drawn, local (on the device pixel grid)
         self._bubble_box = QRectF()
         self._head = QPoint()
-        self._key = None
+        self._key: tuple | None = None
         self._input_parts: tuple | None = None  # what the input region was last built from
         self._press: QPoint | None = None
         self._press_on: str | int | None = None
@@ -518,8 +523,12 @@ class Stage(QObject):
         self._cursor_pos = QCursor.pos  # where the pointer is, in Qt's screen coordinates
         self._screen_at = QGuiApplication.screenAt
         self.surface = surface_factory(self)
-        self._use_screen(self._screen_at(QPoint(int(behavior.x), 0)) or QGuiApplication.primaryScreen())
-        QGuiApplication.instance().screenRemoved.connect(self._screen_removed)
+        first = self._screen_at(QPoint(int(behavior.x), 0)) or QGuiApplication.primaryScreen()
+        if first is not None:  # none at all: no screen to cover until one comes (_tick)
+            self._use_screen(first)
+        app = QGuiApplication.instance()
+        if isinstance(app, QGuiApplication):  # always: a stage needs Qt's GUI
+            app.screenRemoved.connect(self._screen_removed)
         # One shot at a time, set each tick to the next change (see _next_tick); anything that happens wakes it.
         self._timer = QTimer(self)
         self._timer.setSingleShot(True)
@@ -744,7 +753,7 @@ class Stage(QObject):
         busy = self._dragging or self._press is not None or self.behavior.held or self.menu.is_open()
         busy = busy or (self._clear_of is not None and self._clear_of.isVisible())
         there = self._screen_at(self._cursor_pos())
-        if busy or there is None or there is self._screen:
+        if busy or there is None or self._screen is None or there is self._screen:
             self._away = None
             return
         if self._away is None or self._away[0] is not there:
@@ -974,11 +983,13 @@ class Stage(QObject):
         (its walking range brings it on screen), before Qt deletes the screen from under the stage."""
         if screen is self._screen:
             self._screen = None
-            self._use_screen(QGuiApplication.primaryScreen())
+            primary = QGuiApplication.primaryScreen()
+            if primary is not None:  # none left: it waits for one (_tick)
+                self._use_screen(primary)
 
     def _floor(self) -> int:
         """The floor's height on the stage, and keep the walking range current."""
-        avail = self._screen.availableGeometry()
+        avail = self._available()
         self.behavior.set_floor(avail.x() + EDGE, avail.x() + avail.width() - EDGE)
         return avail.y() + avail.height() - self._geo.y()
 
@@ -1068,7 +1079,7 @@ class Stage(QObject):
         x, y = round(x * k) / k, math.floor(y * k) / k  # down, never up: it stays clear of what is below it
         return QRectF(x, y, size.width(), size.height())
 
-    def _damage(self, key: tuple, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: list, pulse: int, origin: QPoint) -> None:
+    def _damage(self, key: tuple, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: tuple, pulse: int, origin: QPoint) -> None:
         """Draw again only the parts whose look (their part of `key`) changed since the last frame drawn."""
         old = self._key or (None, None, None, None, None)
         dirty = QRegion()
@@ -1361,5 +1372,9 @@ class Stage(QObject):
             set_cursor(shape)
 
     def _screen_floor(self) -> float:
-        avail = self._screen.availableGeometry()
+        avail = self._available()
         return avail.y() + avail.height()
+
+    def _available(self) -> QRect:
+        """The stage's screen less its panels; with no screen (between one going and the next), the last one's."""
+        return self._screen.availableGeometry() if self._screen is not None else QRect(self._geo)

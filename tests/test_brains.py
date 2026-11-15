@@ -344,8 +344,9 @@ def test_a_redirect_never_takes_the_key_anywhere(qapp):
         assert result and result[0][0] == "failed" and "redirect" in result[0][1], result
         assert seen == []  # the key never left
     finally:
-        local.shutdown()
-        elsewhere.shutdown()
+        for server in (local, elsewhere):
+            server.shutdown()
+            server.server_close()
 
 
 def test_only_this_computer_gets_plain_http_and_url_variables_stay_plain(monkeypatch):
@@ -425,6 +426,7 @@ def test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed(qapp)
         assert brains.context_window(brain) == 1024
     finally:
         server.shutdown()
+        server.server_close()
         brains._windows.clear()
     remote = brains.Brain("x", "openai", url="http://203.0.113.9/v1", model="m")
     assert brains.learn_window(remote) is None  # plain HTTP only to this computer
@@ -693,8 +695,10 @@ def test_ending_a_tree_on_windows_ends_the_brain_and_what_it_started_and_nothing
             time.sleep(0.05)
         assert not brains._alive(grandchild) and other.poll() is None and brains._alive(os.getpid())
     finally:
-        other.kill()
-        root.kill()
+        for process in (other, root):
+            process.kill()
+            process.wait(10)
+        root.stdout.close()
 
 
 LET_GO = r"""

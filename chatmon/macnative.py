@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import ctypes
 import ctypes.util
+import logging
 import os
 import re
 from collections.abc import Callable
@@ -28,6 +29,8 @@ from typing import NamedTuple
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from .i18n import _
+
+logger = logging.getLogger(__name__)
 
 # NSWindowCollectionBehavior
 CAN_JOIN_ALL_SPACES = 1 << 0
@@ -41,7 +44,7 @@ OVERLAY = CAN_JOIN_ALL_SPACES | STATIONARY | IGNORES_CYCLE | CAN_JOIN_ALL_APPLIC
 
 
 class _ObjC:
-    def __init__(self):
+    def __init__(self) -> None:
         lib = ctypes.cdll.LoadLibrary(ctypes.util.find_library("objc") or "/usr/lib/libobjc.dylib")
         ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
         lib.objc_getClass.restype = ctypes.c_void_p
@@ -50,6 +53,9 @@ class _ObjC:
         lib.sel_registerName.argtypes = [ctypes.c_char_p]
         self.lib = lib
         send = ctypes.cast(lib.objc_msgSend, ctypes.c_void_p).value
+        if not send:  # a loaded function always has an address
+            raise OSError("objc_msgSend has no address")
+        self.send = send  # objc_msgSend, which each prototype below calls as its own
         self.obj = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> id
         self.ulong = ctypes.CFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> NSUInteger
         self.long = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> NSInteger
@@ -75,7 +81,8 @@ def _rt() -> _ObjC | None:
     if _objc is None:
         try:
             _objc = _ObjC()
-        except (AttributeError, OSError):
+        except (AttributeError, OSError) as exc:
+            logger.debug("couldn't reach the Objective-C runtime: %s", exc)
             return None
     return _objc
 
@@ -83,33 +90,36 @@ def _rt() -> _ObjC | None:
 def _window(widget) -> int:
     """The NSWindow of a Qt window: its winId() is the NSView, whose -window is it."""
     rt = _rt()
-    view = int(widget.winId()) if rt else 0
+    if rt is None:
+        return 0
+    view = int(widget.winId())
     return rt.obj(view, rt.sel("window")) if view else 0
 
 
 def float_everywhere(widget) -> bool:
     """On every Space and outside Stage Manager's layout, not in full-screen apps' Spaces. True if done."""
     rt, window = _rt(), _window(widget)
-    if not window:
+    if rt is None or not window:  # no runtime: no window either
         return False
     try:
         behavior = rt.ulong(window, rt.sel("collectionBehavior"))
         behavior &= ~(MOVE_TO_ACTIVE_SPACE | FULL_SCREEN_PRIMARY | FULL_SCREEN_AUXILIARY)
         rt.set_ulong(window, rt.sel("setCollectionBehavior:"), behavior | OVERLAY)
         return True
-    except (ctypes.ArgumentError, OSError):
+    except (ctypes.ArgumentError, OSError) as exc:
+        logger.debug("couldn't have the window float on every Space: %s", exc)
         return False
 
 
 def collection_behavior(widget) -> int | None:
     rt, window = _rt(), _window(widget)
-    return rt.ulong(window, rt.sel("collectionBehavior")) if window else None
+    return rt.ulong(window, rt.sel("collectionBehavior")) if rt is not None and window else None
 
 
 def ignore_mouse(widget, on: bool) -> bool:
     """Clicks go through the window (on), or it takes them. True if done."""
     rt, window = _rt(), _window(widget)
-    if not window:
+    if rt is None or not window:
         return False
     rt.set_bool(window, rt.sel("setIgnoresMouseEvents:"), on)
     return True
@@ -200,7 +210,8 @@ def _windows() -> _WindowList | None:
     if _window_list is None:
         try:
             _window_list = _WindowList()
-        except (AttributeError, OSError, ValueError):
+        except (AttributeError, OSError, ValueError) as exc:
+            logger.debug("couldn't reach CoreGraphics' window list: %s", exc)
             return None
     return _window_list
 
@@ -223,7 +234,8 @@ def full_screen_over(view: int) -> bool:
             return False
         me = os.getpid()
         return fills_from_top(mine[0].bounds, [w for w in listed.windows(_ON_SCREEN_ONLY | _EXCLUDE_DESKTOP) if w.pid != me])
-    except (ctypes.ArgumentError, OSError):
+    except (ctypes.ArgumentError, OSError) as exc:
+        logger.debug("couldn't tell whether a full-screen app is over the stage: %s", exc)
         return False
 
 
@@ -253,7 +265,8 @@ def _main_app_service() -> tuple[_ObjC | None, int]:
         return None, 0
     try:
         ctypes.cdll.LoadLibrary("/System/Library/Frameworks/ServiceManagement.framework/ServiceManagement")
-    except OSError:
+    except OSError as exc:
+        logger.debug("couldn't load ServiceManagement: %s", exc)
         return None, 0
     cls = rt.cls("SMAppService")  # nil before macOS 13
     service = rt.obj(cls, rt.sel("mainAppService")) if cls else 0
@@ -305,7 +318,7 @@ class _Menus:
         lib.class_addMethod.restype = ctypes.c_bool
         lib.class_addMethod.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p]
         lib.objc_registerClassPair.argtypes = [ctypes.c_void_p]
-        send = ctypes.cast(lib.objc_msgSend, ctypes.c_void_p).value
+        send = rt.send
         self.rt = rt
         self.string = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p)(send)  # -> NSString
         self.make = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)  # (id) -> id
@@ -397,7 +410,8 @@ def _menus() -> _Menus | None:
         rt = _rt()
         try:
             _menus_made = _Menus(rt) if rt else None
-        except (AttributeError, OSError):
+        except (AttributeError, OSError) as exc:
+            logger.debug("couldn't make the native menus' target: %s", exc)
             return None
     return _menus_made
 
@@ -489,7 +503,7 @@ def low_power_mode() -> bool | None:
     info = rt.obj(rt.cls("NSProcessInfo"), rt.sel("processInfo"))
     if not info or not rt.responds(info, rt.sel("respondsToSelector:"), rt.sel("isLowPowerModeEnabled")):
         return None
-    flag = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value)
+    flag = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(rt.send)
     return bool(flag(info, rt.sel("isLowPowerModeEnabled")))
 
 
@@ -533,7 +547,8 @@ def _observers() -> _Observers | None:
         rt = _rt()
         try:
             _observers_made = _Observers(rt) if rt else None
-        except (AttributeError, OSError):
+        except (AttributeError, OSError) as exc:
+            logger.debug("couldn't make the workspace observers' class: %s", exc)
             return None
     return _observers_made
 
@@ -550,7 +565,7 @@ class WorkspaceWatcher(QObject):
     accessibility_changed = pyqtSignal()
     low_power_changed = pyqtSignal(bool)
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.listening = False
         self._observer = 0
@@ -562,15 +577,15 @@ class WorkspaceWatcher(QObject):
             foundation = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/Foundation.framework/Foundation")
             appkit = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
             names = {name: ctypes.c_void_p.in_dll(appkit if on_workspace else foundation, name).value for _, name, on_workspace in WORKSPACE_EVENTS}
-        except (OSError, ValueError):
+        except (OSError, ValueError) as exc:
+            logger.debug("couldn't find the workspace's notification names: %s", exc)
             return
         workspace = rt.obj(rt.cls("NSWorkspace"), rt.sel("sharedWorkspace"))
         mine, default = rt.obj(workspace, rt.sel("notificationCenter")) if workspace else 0, rt.obj(rt.cls("NSNotificationCenter"), rt.sel("defaultCenter"))
         if not mine or not default:
             return
-        send = ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value
         # addObserver:selector:name:object:
-        add = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)
+        add = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(rt.send)
         self._observer = rt.obj(rt.obj(observers.cls, rt.sel("alloc")), rt.sel("init"))
         observers.watchers[self._observer] = self
         for selector, name, on_workspace in WORKSPACE_EVENTS:
@@ -593,7 +608,7 @@ class WorkspaceWatcher(QObject):
         rt, observers = _rt(), _observers()
         if not self._observer or rt is None or observers is None:
             return
-        remove = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(ctypes.cast(rt.lib.objc_msgSend, ctypes.c_void_p).value)
+        remove = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(rt.send)
         for center in self._centers:
             remove(center, rt.sel("removeObserver:"), self._observer)
         observers.watchers.pop(self._observer, None)

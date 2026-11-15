@@ -248,6 +248,24 @@ def test_an_odd_or_damaged_chat_file_is_skipped(tmp_path):
     assert [c.id for c in book.recent()] == [good.id]
 
 
+def test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not(tmp_path, caplog):
+    import logging
+
+    caplog.set_level(logging.DEBUG, logger="chatmon.chats")
+    book = chats.ChatBook(tmp_path)
+    good = chats.Chat()
+    good.add(chats.Message("user", "a private question"))
+    book.save(good)
+    damaged = "d" * 32
+    (tmp_path / f"{damaged}.json").write_text('{"id": "' + damaged + '", "messages": [{"role": "user", "text": "secret words"')
+    assert book.load(damaged) is None and [c.id for c in book.listing()] == [good.id]  # carried on as before
+    said = [r.getMessage() for r in caplog.records if r.name == "chatmon.chats" and r.levelno == logging.DEBUG]
+    assert len(said) == 2 and all(damaged in line for line in said)  # loading it, and listing it: which chat failed
+    assert not any(words in line for line in said for words in ("private question", "secret words"))  # never what's in one
+    caplog.clear()
+    assert book.load("e" * 32) is None and not caplog.records  # a chat that isn't kept: that's the answer, not a failure
+
+
 def test_titles_are_short_and_on_one_line():
     chat = chats.Chat()
     chat.add(chats.Message("user", "a  question\nover  several lines " + "word " * 30))

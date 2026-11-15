@@ -91,7 +91,7 @@ def gather(state: State, memory: Memory, book: ChatBook | None = None) -> Conten
         settings=settings,
         memory=list(memory.items),
         notes=[n for n in notes if isinstance(n, dict) and isinstance(n.get("text"), str)],
-        reminders=[_reminder(r) for r in reminders if _reminder(r)],
+        reminders=[checked for checked in map(_reminder, reminders) if checked],
         chats=book.recent(limit=MAX_CHATS) if book is not None else [],
     )
 
@@ -102,8 +102,9 @@ def export(path: Path, state: State, memory: Memory, book: ChatBook | None = Non
     contents = gather(state, memory, book)
     from . import __version__
 
+    made = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     manifest = {
-        "format": FORMAT, "version": VERSION, "chatmon": __version__, "made": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "format": FORMAT, "version": VERSION, "chatmon": __version__, "made": made,
         "contains": [p.removesuffix(".json") for p in PARTS] + (["chats"] if book is not None else []),
     }
     path = Path(path)
@@ -127,7 +128,7 @@ def export(path: Path, state: State, memory: Memory, book: ChatBook | None = Non
     except BaseException:
         tmp.unlink(missing_ok=True)
         raise
-    contents.made = manifest["made"]
+    contents.made = made
     return contents
 
 

@@ -24,11 +24,16 @@ import ctypes.util
 import os
 import sys
 from collections.abc import Callable, Mapping
-from typing import ClassVar, NamedTuple
+from typing import ClassVar, NamedTuple, Protocol
 
 from PyQt6.QtCore import QAbstractNativeEventFilter, QCoreApplication, QObject, QSocketNotifier, Qt, pyqtSignal
 
 from .i18n import N_, _
+
+# Windows' DLLs and last error; CDLL and errno elsewhere only so the module imports on every OS (the Windows backend
+# is made on Windows alone).
+_WinDLL = getattr(ctypes, "WinDLL", ctypes.CDLL)
+_get_last_error = getattr(ctypes, "get_last_error", ctypes.get_errno)
 
 MODIFIERS = ("ctrl", "alt", "shift", "meta")  # Qt's ControlModifier, AltModifier, ShiftModifier, MetaModifier
 MODIFIER_NAMES = {"ctrl": "Ctrl", "alt": "Alt", "shift": "Shift", "meta": "Meta"}
@@ -152,7 +157,7 @@ class _Windows(QAbstractNativeEventFilter):
         super().__init__()
         from ctypes import wintypes
 
-        user32 = ctypes.WinDLL("user32", use_last_error=True)
+        user32 = _WinDLL("user32", use_last_error=True)
         user32.CreateWindowExW.restype = wintypes.HWND
         user32.CreateWindowExW.argtypes = [wintypes.DWORD, wintypes.LPCWSTR, wintypes.LPCWSTR, wintypes.DWORD, ctypes.c_int, ctypes.c_int,
                                            ctypes.c_int, ctypes.c_int, wintypes.HWND, wintypes.HMENU, wintypes.HINSTANCE, wintypes.LPVOID]
@@ -165,15 +170,17 @@ class _Windows(QAbstractNativeEventFilter):
         # A system class: no window procedure of Chatmon's own to keep alive.
         self.hwnd = user32.CreateWindowExW(0, "STATIC", "Chatmon shortcut", 0, 0, 0, 0, 0, wintypes.HWND(self.HWND_MESSAGE), None, None, None)
         if not self.hwnd:
-            raise OSError(ctypes.get_last_error(), _("Windows wouldn't make the shortcut's window"))
+            raise OSError(_get_last_error(), _("Windows wouldn't make the shortcut's window"))
         self.id: int | None = None  # the registration in force
-        QCoreApplication.instance().installNativeEventFilter(self)
+        app: QCoreApplication | None = QCoreApplication.instance()  # typed: PyQt6 6.12's stub says an unbound Self
+        if app is not None:  # there is one: shortcuts are set from Qt's event loop
+            app.installNativeEventFilter(self)
 
     def grab(self, combo: Combo) -> str | None:
         flags = sum(self.FLAGS[m] for m in combo.modifiers) | self.MOD_NOREPEAT
         new_id = 2 if self.id == 1 else 1  # the old one stays until the new one is in
         if not self._user32.RegisterHotKey(self.hwnd, new_id, flags, KEYS[combo.key].windows):
-            error = ctypes.get_last_error()
+            error = _get_last_error()
             if error == self.ERROR_HOTKEY_ALREADY_REGISTERED:
                 return _(CONFLICT).format(combo=combo.text())
             return _("Windows wouldn't set up {shortcut} (error {error}).").format(shortcut=combo.text(), error=error)
@@ -197,7 +204,9 @@ class _Windows(QAbstractNativeEventFilter):
 
     def close(self) -> None:
         self.release()
-        QCoreApplication.instance().removeNativeEventFilter(self)
+        app: QCoreApplication | None = QCoreApplication.instance()
+        if app is not None:  # gone only if Qt was shut down first
+            app.removeNativeEventFilter(self)
         if self.hwnd:
             self._user32.DestroyWindow(self.hwnd)
             self.hwnd = None
@@ -434,6 +443,14 @@ def backend_kind(platform: str = sys.platform, env: Mapping[str, str] | None = N
     return None
 
 
+class _Backend(Protocol):
+    """What each platform's way of claiming a shortcut does."""
+
+    def grab(self, combo: Combo) -> str | None: ...
+    def release(self) -> None: ...
+    def close(self) -> None: ...
+
+
 class Hotkey(QObject):
     """One global shortcut. `pressed` when it's pressed; `failed(sentence)` when a desktop turns it down after
     register() returned (the portal asks the user); `bound(description)` with how to press it, in the desktop's
@@ -450,15 +467,15 @@ class Hotkey(QObject):
         self.combo: Combo | None = None
         self.on_pressed: Callable[[], None] | None = None
         self.on_failed: Callable[[str], None] | None = None
-        self._backend = None
+        self._backend: _Backend | None = None
         # Queued even from this thread: never inside another library's event dispatch (Carbon's, Windows').
-        self._heard.connect(self._hear, Qt.ConnectionType.QueuedConnection)
+        self._heard.connect(self._hear, Qt.ConnectionType.QueuedConnection)  # type: ignore[call-arg]  # PyQt6 6.11's stub leaves out connect's type, which it takes
 
     def _tell(self, what: str = "pressed", detail: str = "") -> None:
         """What a backend heard, from whichever thread it heard it on."""
         self._heard.emit(what, detail)
 
-    def _make_backend(self):
+    def _make_backend(self) -> _Backend:
         tell = self._tell
         if self.kind == "windows":
             return _Windows(tell)

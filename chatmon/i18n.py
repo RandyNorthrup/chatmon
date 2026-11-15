@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import gettext
 import io
+import logging
 import os
 import re
 import string
@@ -42,6 +43,8 @@ from pathlib import Path
 from typing import Any
 
 from . import localefmt
+
+logger = logging.getLogger(__name__)
 
 LOCALE = Path(__file__).resolve().parent / "locale"
 SOURCE = "en"  # the language the strings are written in: always there, and never a file
@@ -172,7 +175,8 @@ def choose(wanted: list[str], folder: Path = LOCALE) -> tuple[str, gettext.NullT
             if path.is_file():
                 try:
                     return code, load_catalog(path)
-                except (OSError, UnicodeDecodeError, CatalogError):
+                except (OSError, UnicodeDecodeError, CatalogError) as exc:
+                    logger.debug("couldn't read the translation %s: %s", path, exc)
                     continue  # a translation that can't be read counts as not there
             if code == SOURCE:
                 return SOURCE, gettext.NullTranslations()

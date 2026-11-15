@@ -606,6 +606,7 @@ class SpeechBubble:
         metrics = QFontMetricsF(self._button_font)
         for i, b in enumerate(self.buttons):
             button = colours.primary if i == 0 else colours.other
+            fill: QColor | None  # an outline-only button has none
             if i == self.hover:  # lit up: filled with its outline colour
                 fill, label = button.hover_fill, button.hover_text
             else:
@@ -667,8 +668,8 @@ class Entry(PlainSelection, QTextEdit):
     def text(self) -> str:
         return self.toPlainText()
 
-    def setText(self, text: str) -> None:
-        self.setPlainText(self.lines(text))
+    def setText(self, text: str | None) -> None:
+        self.setPlainText(self.lines(text or ""))
         self.end(False)
 
     def insert(self, text: str) -> None:
@@ -696,10 +697,12 @@ class Entry(PlainSelection, QTextEdit):
         self.textCursor().removeSelectedText()
 
     def isUndoAvailable(self) -> bool:
-        return self.document().isUndoAvailable()
+        doc = self.document()  # never None: a QTextEdit always has one
+        return doc is not None and doc.isUndoAvailable()
 
     def isRedoAvailable(self) -> bool:
-        return self.document().isRedoAvailable()
+        doc = self.document()
+        return doc is not None and doc.isRedoAvailable()
 
     # -- lines
 
@@ -743,9 +746,12 @@ class Entry(PlainSelection, QTextEdit):
 
     def _fit(self) -> None:
         """One line high, growing with its text to MAX_LINES, then scrolling."""
+        doc = self.document()
+        if doc is None:  # never: a QTextEdit always has one
+            return
         line = QFontMetricsF(self.font()).lineSpacing()
-        margin = 2 * self.document().documentMargin()
-        text_h = min(max(self.document().size().height(), line + margin), line * self.MAX_LINES + margin)
+        margin = 2 * doc.documentMargin()
+        text_h = min(max(doc.size().height(), line + margin), line * self.MAX_LINES + margin)
         edges = self.contentsMargins()  # its border and padding (the same width focused or not: see AskBox._style)
         height = round(text_h + edges.top() + edges.bottom())
         if height != self.height() or self.minimumHeight() != height:
@@ -777,7 +783,9 @@ class Entry(PlainSelection, QTextEdit):
                 menu.addSeparator()
                 continue
             label, act, on = entry
-            menu.addAction(label, act).setEnabled(on)
+            action = menu.addAction(label, act)
+            if action is not None:  # always: Qt makes it
+                action.setEnabled(on)
         return menu
 
     def contextMenuEvent(self, event) -> None:
@@ -791,14 +799,16 @@ class Entry(PlainSelection, QTextEdit):
                 menu.exec(event.globalPos())
             menu.deleteLater()
             return
-        menu = self.createStandardContextMenu(event.pos())
-        for action in menu.actions():
+        standard = self.createStandardContextMenu(event.pos())
+        if standard is None:  # never: Qt always makes it
+            return
+        for action in standard.actions():
             if action.objectName() == "edit-paste":
                 action.triggered.disconnect()
                 action.triggered.connect(self.paste_requested.emit)
                 action.setEnabled(not self.isReadOnly())
-        menu.exec(event.globalPos())
-        menu.deleteLater()
+        standard.exec(event.globalPos())
+        standard.deleteLater()
 
 
 def clipboard_contents(mime: QMimeData | None) -> tuple[str, object] | None:
@@ -907,6 +917,10 @@ class AskBox(QWidget):
     EXPANDED_WIDTH = 1.5  # times as wide, expanded (within most of the screen)
     FADE_MS = 140
     PARTIAL_MS = 80  # streamed text is drawn at most this often
+
+    # The look it wears (styles.py). It hides QWidget.style(), which nothing calls on the box (Qt's own drawing
+    # reaches that from C++); the app and its tests read box.style.name, so the name stays.
+    style: styles.Style  # type: ignore[assignment]
 
     def __init__(self):
         super().__init__(None, Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
@@ -1038,7 +1052,9 @@ class AskBox(QWidget):
             self._margins = (round(left), round(top), round(right), round(bottom))
         else:
             self._margins = (16, 12, 16, 14 + TAIL)
-        self.layout().setContentsMargins(*self._margins)
+        layout = self.layout()
+        if layout is not None:  # always: __init__ lays the box out
+            layout.setContentsMargins(*self._margins)
         self._style()
         if self.isVisible():
             self._render()
@@ -1305,9 +1321,7 @@ class AskBox(QWidget):
         MAX_ANSWER (grown with the text), or less on a short screen, so expanding always gives it more."""
         screen = QGuiApplication.screenAt(self._anchor) or QGuiApplication.primaryScreen()
         share = self.SCREEN_SHARE * (screen.availableGeometry().height() if screen is not None else 1000)
-        layout = self.layout()
-        layout.activate()
-        rest = layout.totalSizeHint().height() - (self.answer.height() if not self.answer.isHidden() else 0)
+        rest = self._laid_out_height() - (self.answer.height() if not self.answer.isHidden() else 0)
         room = max(80, int(share - rest))
         return room if self.expanded else min(round(room * self.COLLAPSED), round(width_for(self.MAX_ANSWER, self._body_font())))
 
@@ -1350,7 +1364,8 @@ class AskBox(QWidget):
                 break
             text = metrics.elidedText(name, Qt.TextElideMode.ElideMiddle, max(space, 56)) + "  ✕"
             width = metrics.horizontalAdvance(text) + 22
-            chip = QToolButton(text=text)
+            chip = QToolButton()
+            chip.setText(text)
             chip.setObjectName("chip")
             chip.setToolTip(plain_tip(_("{attachment}: click to take it off").format(attachment=label)))
             chip.setAccessibleName(_("Remove {attachment}").format(attachment=label))
@@ -1358,25 +1373,26 @@ class AskBox(QWidget):
             self.chips_layout.addWidget(chip)
             used += width + 4
             shown += 1
-        shown = labels[:shown]
-        if len(labels) > len(shown):
-            hidden = len(labels) - len(shown)
-            more = QLabel(ngettext("+{n} more", "+{n} more", hidden).format(n=hidden))
-            more.setObjectName("hint")
-            self.chips_layout.addWidget(more)
+        if len(labels) > shown:
+            hidden = len(labels) - shown
+            rest = QLabel(ngettext("+{n} more", "+{n} more", hidden).format(n=hidden))
+            rest.setObjectName("hint")
+            self.chips_layout.addWidget(rest)
         self.chips_layout.addStretch(1)
         self.chips.setVisible(bool(labels))
         self._fit()
 
     def paste_clipboard(self) -> None:
         """Ctrl+V, or Paste: files and pictures attach; long text attaches; short text goes in the field."""
-        found = None
+        found: tuple[str, object] | None = None
         if sys.platform == "win32":  # files that aren't on disk (copied out of Outlook or a zip): never through Qt
             from . import windrop
 
             named = windrop.clipboard_named()
             found = ("named", named) if named else None
-        found = found or clipboard_contents(QGuiApplication.clipboard().mimeData())
+        if found is None:
+            clipboard = QGuiApplication.clipboard()  # never None in a GUI app
+            found = clipboard_contents(clipboard.mimeData() if clipboard is not None else None)
         if found is not None:
             self.take_paste(*found)
 
@@ -1464,13 +1480,21 @@ class AskBox(QWidget):
         self._size_answer()
         self._fit()
 
+    def _laid_out_height(self) -> int:
+        """The box's height as its layout has it now."""
+        layout = self.layout()
+        if layout is None:  # never: __init__ lays the box out
+            return self.height()
+        layout.activate()
+        return layout.totalSizeHint().height()
+
     def _fit(self) -> None:
         width = self.width()
         self.hint.setText(QFontMetricsF(self.hint.font()).elidedText(getattr(self, "_hint", ""), Qt.TextElideMode.ElideRight, self._content_width() - 2))
-        layout = self.layout()
-        layout.activate()
-        height = layout.totalSizeHint().height()
+        height = self._laid_out_height()
         screen = QGuiApplication.screenAt(self._anchor) or QGuiApplication.primaryScreen()
+        if screen is None:  # no screen at all: nowhere to put it until there is
+            return
         geo = screen.availableGeometry()
         x = min(max(self._anchor.x() - width // 2, geo.left() + 4), geo.right() - width - 4)
         y = max(self._anchor.y() - height, geo.top() + 4)

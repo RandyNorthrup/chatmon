@@ -2,6 +2,7 @@
 mentions a timer, a note or a sum is never taken for one."""
 
 import json
+import logging
 import random
 import shutil
 import time
@@ -329,6 +330,19 @@ def test_a_missing_or_broken_translation_leaves_english(tmp_path):
     (tmp_path / "en.json").unlink()
     with pytest.raises(OSError):
         offline.load_phrases("en", tmp_path)  # English is part of Chatmon: without it, something's broken
+
+
+def test_a_broken_translation_is_logged_and_a_missing_one_isnt(tmp_path, caplog):
+    """A phrase file that can't be read is an error Chatmon carries on past (in English): it's in the log, for a bug
+    report. One that isn't there is only a language with no translation yet."""
+    caplog.set_level(logging.DEBUG, logger="chatmon.offline")
+    shutil.copy(offline.PHRASES / "en.json", tmp_path / "en.json")
+    (tmp_path / "de.json").write_text("{not json", encoding="utf-8")
+    assert offline.load_phrases("de_DE", tmp_path).language == "en"
+    assert offline.load_phrases("pt_BR", tmp_path).language == "en"
+    logged = [(r.levelno, r.getMessage()) for r in caplog.records if r.name == "chatmon.offline"]
+    assert len(logged) == 1 and logged[0][0] == logging.DEBUG
+    assert logged[0][1].startswith(f"couldn't read the phrases in {tmp_path / 'de.json'}: ")
 
 
 # -- AI agents at a glance (M5-08)

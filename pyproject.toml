@@ -165,17 +165,7 @@ strict_equality = true
 enable_error_code = ["redundant-expr", "truthy-bool", "unused-awaitable", "exhaustive-match", "ignore-without-code", "possibly-undefined"]
 
 [[tool.mypy.overrides]]
-# Modules mypy doesn't pass yet on Linux, Windows and macOS alike: each comes off this list once it does
-# (assessment item M6B-02). Every module not listed is checked, and CI fails on any error in one.
-module = [
-    "chatmon.a11y", "chatmon.agents", "chatmon.app", "chatmon.attachments", "chatmon.backup", "chatmon.brains",
-    "chatmon.bubble", "chatmon.bubbleart", "chatmon.cli", "chatmon.clickthrough", "chatmon.commands",
-    "chatmon.context", "chatmon.ed25519", "chatmon.events", "chatmon.heads_up", "chatmon.hotkey", "chatmon.keychain",
-    "chatmon.layer", "chatmon.libdbus", "chatmon.linuxsession", "chatmon.macnative", "chatmon.menus",
-    "chatmon.messages", "chatmon.offline", "chatmon.packagekit", "chatmon.paths", "chatmon.penguin", "chatmon.portal",
-    "chatmon.portowner", "chatmon.presence", "chatmon.reminders", "chatmon.richtext", "chatmon.settings",
-    "chatmon.settingswin", "chatmon.sound", "chatmon.sprites", "chatmon.stagemenu", "chatmon.updates",
-    "chatmon.wayland", "chatmon.windrop", "chatmon.winfocus", "chatmon.winlock", "chatmon.winpipe", "chatmon.winrt",
-    "chatmon.wintoast", "chatmon.wintrust", "chatmon.winuia", "chatmon.xkb",
-]
+# Until M6B phase B: the hub files M8 is translating meanwhile, which don't pass mypy yet on Linux, Windows and macOS
+# alike (assessment item M6B-02). Every other module is checked, and CI fails on any error in one.
+module = ["chatmon.app", "chatmon.cli", "chatmon.commands", "chatmon.menus", "chatmon.messages", "chatmon.settings", "chatmon.settingswin"]
 ignore_errors = true

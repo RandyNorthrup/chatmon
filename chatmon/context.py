@@ -97,14 +97,15 @@ def plan(pairs: list[Pair], neutral: list[Pair], summary: str, summarized: int, 
     older = len(pairs) - len(recent)
     if older > summarized and fold:
         # Turns that fall out of the recent ones: into the summary first, as many at a time as a brain is sent.
-        fold, size = [], tokens(summary)
+        folded: list[Pair] = []
+        size = tokens(summary)
         for pair in neutral[summarized:older]:
             cost = pair_tokens(pair)
-            if fold and size + cost > max(room, 2_000):
+            if folded and size + cost > max(room, 2_000):
                 break
-            fold.append((clip(pair[0], max(room, 2_000) // 2), clip(pair[1], max(room, 2_000) // 2)))
+            folded.append((clip(pair[0], max(room, 2_000) // 2), clip(pair[1], max(room, 2_000) // 2)))
             size += cost
-        return Plan(recent, [], summary, fold, summarized, summarized + len(fold))
+        return Plan(recent, [], summary, folded, summarized, summarized + len(folded))
     recall_room = min(int(room * RECALL_SHARE), room - used - tokens(summary))
     return Plan(recent, recall(pairs[:older], question, recall_room), summary)
 
