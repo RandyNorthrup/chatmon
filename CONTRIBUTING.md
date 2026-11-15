@@ -63,8 +63,22 @@ actionlint                  # the workflows; CI also runs shellcheck on their sc
 zizmor --no-online-audits .github
 ```
 
-mypy checks every module but those `pyproject.toml` exempts (`ignore_errors`). Taking a module off that list,
-once it passes on all three platforms, is always welcome.
+mypy checks every module, with nothing exempted, on each platform. It also passes with the next PyQt6's stubs
+(6.12.1), which CI doesn't lock until the release is two weeks old. To check a change against them, in a venv of
+their own:
+
+```sh
+printf 'PyQt6==6.12.1\npsutil==7.2.2\nmypy==2.4.1\n' > /tmp/qt-next.in
+uv pip compile /tmp/qt-next.in -o /tmp/qt-next.txt --generate-hashes
+python -m venv /tmp/qt-next
+/tmp/qt-next/bin/python -m pip install --require-hashes -r /tmp/qt-next.txt   # Windows: Scripts\python
+/tmp/qt-next/bin/python -m mypy --platform linux                              # and win32, and darwin
+```
+
+6.12.1's stubs get a few things wrong, which the code works around in one way each: a signal is declared with the
+`pyqtSignal` of `chatmon/qtsignal.py`, not `PyQt6.QtCore`'s (its docstring says why); a value from a static
+constructor such as `QDBusConnection.sessionBus()` is given its type (`bus: QDBusConnection = ...`); and a parent,
+or another argument the stubs type as `Self`, gets `# type: ignore[arg-type]` with the reason.
 
 ## How the code is written
 

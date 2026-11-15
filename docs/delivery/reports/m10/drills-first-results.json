@@ -1,0 +1,268 @@
+[
+  {
+    "id": "M10-01-comtypes-on-every-platform",
+    "requirement": "M10-01.A1",
+    "file": "packaging/requirements-test.txt",
+    "mutation": {
+      "find": "comtypes==1.4.17 ; sys_platform == 'win32' \\",
+      "replace": "comtypes==1.4.17 \\"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client"
+    ],
+    "expected": [
+      "requirements-test.txt installs comtypes on ['win32', 'linux', 'darwin'], not on Windows alone"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b",
+    "baseline_exit": 0,
+    "mutated_sha256": "751fb1f89357494005610a336325ba5e0cdbf208cce6e3cb0f6050deeba63226",
+    "mutated_exit": 1,
+    "observed": "E           AssertionError: requirements-test.txt installs comtypes on ['win32', 'linux', 'darwin'], not on Windows alone: comtypes==1.4.17",
+    "after_sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b",
+    "restored_exit": 0
+  },
+  {
+    "id": "M10-01-comtypes-left-out-of-the-dev-lock",
+    "requirement": "M10-01.A1",
+    "file": "packaging/requirements-dev.txt",
+    "mutation": {
+      "find": "comtypes==1.4.17 ; sys_platform == 'win32' \\",
+      "replace": "comtypez==1.4.17 ; sys_platform == 'win32' \\"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client",
+      "tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names"
+    ],
+    "expected": [
+      "requirements-dev.txt doesn't lock comtypes",
+      "requirements-dev.txt doesn't lock these at the versions requirements-dev.in pins: {'comtypes': '1.4.17'}"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07",
+    "baseline_exit": 0,
+    "mutated_sha256": "175f9524053c95f13d54ca20991379d6a5e578b95b6d3b990bb48675856edaea",
+    "mutated_exit": 1,
+    "observed": "E           AssertionError: requirements-dev.txt doesn't lock comtypes",
+    "after_sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07",
+    "restored_exit": 0
+  },
+  {
+    "id": "M10-02-english-carries-qts-english",
+    "requirement": "M10-02.A1",
+    "file": "packaging/build.py",
+    "mutation": {
+      "find": "    for code in i18n.available(LOCALE)[1:]:",
+      "replace": "    for code in i18n.available(LOCALE):"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+    ],
+    "expected": [
+      "English alone: Qt's own language"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3184c599c5e3e7f1d2d9e05b2d92df27a719f4f5eaca62656b12bd4aafbbc489",
+    "baseline_exit": 0,
+    "mutated_sha256": "63b6b4a866a98aad2c901e68666424a5896748ccc5984a988b3f9e0a564308f3",
+    "mutated_exit": 1,
+    "observed": ">       assert build.qt_translations() == [], \"English alone: Qt's own language\"",
+    "after_sha256": "3184c599c5e3e7f1d2d9e05b2d92df27a719f4f5eaca62656b12bd4aafbbc489",
+    "restored_exit": 0
+  },
+  {
+    "id": "M10-02-pyinstaller-keeps-every-language",
+    "requirement": "M10-02.A1",
+    "file": "packaging/build.py",
+    "mutation": {
+      "find": "    kept = [d for d in datas if not (Path(d[0]).parent == i18n.QT_FROZEN and Path(d[0]).suffix == \".qm\")]",
+      "replace": "    kept = list(datas)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+    ],
+    "expected": [
+      "none of Qt's translations, and everything else kept"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3184c599c5e3e7f1d2d9e05b2d92df27a719f4f5eaca62656b12bd4aafbbc489",
+    "baseline_exit": 0,
+    "mutated_sha256": "80f79a525b7231a42d1565b378bd665291ef130023cdeefc24243e530bc5cd8c",
+    "mutated_exit": 1,
+    "observed": ">       assert build.pyinstaller_datas(hooked + own) == own, \"none of Qt's translations, and everything else kept\"",
+    "after_sha256": "3184c599c5e3e7f1d2d9e05b2d92df27a719f4f5eaca62656b12bd4aafbbc489",
+    "restored_exit": 0
+  },
+  {
+    "id": "M10-02-nuitka-left-without-them",
+    "requirement": "M10-02.A1",
+    "file": "packaging/build.py",
+    "mutation": {
+      "find": "\"--noinclude-qt-translations\", *nuitka_qt_translations(),",
+      "replace": "\"--noinclude-qt-translations\","
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+    ],
+    "expected": [
+      "assert [] == ['--include-data-files="
+    ],
+    "status": "fail",
+    "reason": "mutated run did not print [\"assert [] == ['--include-data-files=\"]",
+    "before_sha256": "3184c599c5e3e7f1d2d9e05b2d92df27a719f4f5eaca62656b12bd4aafbbc489",
+    "baseline_exit": 0,
+    "mutated_sha256": "cd45467f066cdc09218d9fa42977c7087024e72aaaecfea3c0383a017ac37f01",
+    "mutated_exit": 1,
+    "observed": "",
+    "after_sha256": "3184c599c5e3e7f1d2d9e05b2d92df27a719f4f5eaca62656b12bd4aafbbc489"
+  },
+  {
+    "id": "M10-02-frozen-app-folder-never-looked-in",
+    "requirement": "M10-02.A2",
+    "file": "chatmon/i18n.py",
+    "mutation": {
+      "find": "    if paths.frozen():\n        folders.append(str(_APP_FOLDER / QT_FROZEN))",
+      "replace": "    if False:\n        folders.append(str(_APP_FOLDER / QT_FROZEN))"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+    ],
+    "expected": [
+      "Qt's own folder first"
+    ],
+    "status": "fail",
+    "reason": "mutation text occurs 0 times, expected 1",
+    "before_sha256": "6370e91e9ed30c86febada42a4b8677521cb0f4343a3e6fb9901f61c3a5fae83",
+    "baseline_exit": 0
+  },
+  {
+    "id": "M10-02-app-folder-before-qts",
+    "requirement": "M10-02.A2",
+    "file": "chatmon/i18n.py",
+    "mutation": {
+      "find": "        folders.append(str(_APP_FOLDER / QT_FROZEN))",
+      "replace": "        folders.insert(0, str(_APP_FOLDER / QT_FROZEN))"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+    ],
+    "expected": [
+      "Qt's own folder first"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "6370e91e9ed30c86febada42a4b8677521cb0f4343a3e6fb9901f61c3a5fae83",
+    "baseline_exit": 0,
+    "mutated_sha256": "7ea6af071b6b4d872b65a32713625d574e2c4c71204297fbf1b75123f2771f12",
+    "mutated_exit": 1,
+    "observed": ">       assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], \"Qt's own folder first\"",
+    "after_sha256": "6370e91e9ed30c86febada42a4b8677521cb0f4343a3e6fb9901f61c3a5fae83",
+    "restored_exit": 0
+  },
+  {
+    "id": "M10-02-translator-only-asks-qt",
+    "requirement": "M10-02.A2",
+    "file": "chatmon/i18n.py",
+    "mutation": {
+      "find": "    translator = qt_translator(qtcore, code, qt_folders(qtcore))",
+      "replace": "    translator = qt_translator(qtcore, code, [_qt_library_folder(qtcore)])"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+    ],
+    "expected": [
+      "assert 'Cancel' == 'Abbrechen'"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "6370e91e9ed30c86febada42a4b8677521cb0f4343a3e6fb9901f61c3a5fae83",
+    "baseline_exit": 0,
+    "mutated_sha256": "19f39bc92cd43e4425fdab768d158b49d97ba14c22346c134bea86ee1a3c9323",
+    "mutated_exit": 1,
+    "observed": "E       AssertionError: assert 'Cancel' == 'Abbrechen'",
+    "after_sha256": "6370e91e9ed30c86febada42a4b8677521cb0f4343a3e6fb9901f61c3a5fae83",
+    "restored_exit": 0
+  },
+  {
+    "id": "M10-03-alias-not-pyqts-signal",
+    "requirement": "M10-03.A2",
+    "file": "chatmon/qtsignal.py",
+    "mutation": {
+      "find": "= QtCore.pyqtSignal\n",
+      "replace": "= lambda *types, **named: QtCore.pyqtSignal()\n"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal"
+    ],
+    "expected": [
+      "test_each_workspace_notification_is_its_own_signal"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf",
+    "baseline_exit": 0,
+    "mutated_sha256": "24ddab68965c23c232333bead93acddf23d5887716f93418a095604ff14e9293",
+    "mutated_exit": 1,
+    "observed": "_____________ test_each_workspace_notification_is_its_own_signal ______________",
+    "after_sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf",
+    "restored_exit": 0
+  }
+]

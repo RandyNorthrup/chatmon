@@ -120,7 +120,7 @@ def plain(text: str) -> str:
 def _linux() -> Reader | None:
     from PyQt6.QtDBus import QDBus, QDBusConnection, QDBusMessage
 
-    bus = QDBusConnection.sessionBus()
+    bus: QDBusConnection = QDBusConnection.sessionBus()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
     if not bus.isConnected():
         return None
     interface = bus.interface()
@@ -133,7 +133,7 @@ def _linux() -> Reader | None:
 
             return Reader("Orca", speak)
     # An older Orca, or another screen reader: at-spi says one's on (where it still keeps ScreenReaderEnabled).
-    message = QDBusMessage.createMethodCall("org.a11y.Bus", "/org/a11y/bus", "org.freedesktop.DBus.Properties", "Get")
+    message: QDBusMessage = QDBusMessage.createMethodCall("org.a11y.Bus", "/org/a11y/bus", "org.freedesktop.DBus.Properties", "Get")
     message.setArguments(["org.a11y.Status", "ScreenReaderEnabled"])
     reply = bus.call(message, QDBus.CallMode.Block, 500)
     value: object = reply.arguments()[0] if reply.type() == QDBusMessage.MessageType.ReplyMessage and reply.arguments() else None
@@ -145,7 +145,7 @@ def _linux() -> Reader | None:
 def _orca(bus, service: str, path: str, text: str) -> None:
     from PyQt6.QtDBus import QDBusMessage
 
-    message = QDBusMessage.createMethodCall(service, path, service, "PresentMessage")
+    message: QDBusMessage = QDBusMessage.createMethodCall(service, path, service, "PresentMessage")
     message.setArguments([text])
     bus.send(message)  # no waiting: it speaks when it can
 

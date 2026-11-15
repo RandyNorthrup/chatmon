@@ -34,6 +34,16 @@ def locked(stem: str) -> dict[str, tuple[str, list[str]]]:
     return entries
 
 
+def requirement(stem: str, name: str) -> Requirement | None:
+    """One of a lock file's requirements as pip reads it, with its environment marker; None when it isn't there."""
+    text = (PACKAGING / f"{stem}.txt").read_text(encoding="utf-8")
+    for line in re.sub(r"\\\r?\n", " ", text).splitlines():
+        line = line.split("#", 1)[0].split("--hash", 1)[0].strip()
+        if line and canonical(Requirement(line).name) == name:
+            return Requirement(line)
+    return None
+
+
 def pinned(stem: str) -> dict[str, str]:
     """The versions a .in file names, with those of the files it includes (-r)."""
     pins = {}
@@ -78,6 +88,16 @@ def test_a_package_in_more_than_one_lock_is_the_same_version_in_each():
     assert {"pyqt6", "pyqt6-qt6", "pyqt6-sip", "psutil"} <= {n for n, by in seen.items() if len(by) > 1}
     differ = {name: by for name, by in seen.items() if len(set(by.values())) > 1}
     assert not differ, f"locked at different versions: {differ}"
+
+
+def test_the_windows_test_legs_install_the_screen_readers_ui_automation_client():
+    """tests/uia_client.py listens to UI Automation through comtypes, which only Windows has a use for. Without it in
+    the test list, CI's Windows legs would skip the end-to-end screen-reader test instead of running it."""
+    for stem in ("requirements-test", "requirements-dev"):
+        comtypes = requirement(stem, "comtypes")
+        assert comtypes is not None, f"{stem}.txt doesn't lock comtypes"
+        where = [p for p in ("win32", "linux", "darwin") if comtypes.marker is None or comtypes.marker.evaluate({"sys_platform": p})]
+        assert where == ["win32"], f"{stem}.txt installs comtypes on {where}, not on Windows alone: {comtypes}"
 
 
 def test_the_dev_extra_pins_what_ci_runs():

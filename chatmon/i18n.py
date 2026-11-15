@@ -42,11 +42,16 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
-from . import localefmt
+from . import localefmt, paths
 
 logger = logging.getLogger(__name__)
 
 LOCALE = Path(__file__).resolve().parent / "locale"
+# Where an installer's build keeps Qt's translations of its own words, under the folder that holds the chatmon
+# package: PyQt6's own layout, where PyInstaller's app points Qt too. packaging/build.py puts them there, one for
+# each language in LOCALE.
+QT_FROZEN = Path("PyQt6", "Qt6", "translations")
+_APP_FOLDER = Path(__file__).resolve().parent.parent  # the folder that holds the chatmon package
 SOURCE = "en"  # the language the strings are written in: always there, and never a file
 SETTING = "language"  # config.toml's key: a language code, such as "de" or "pt_BR"; empty follows the system
 
@@ -215,10 +220,35 @@ def _install_qt_translation(qtcore: Any, code: str) -> None:
     app = qtcore.QCoreApplication.instance()
     if app is None or code == SOURCE:
         return
-    translator = qtcore.QTranslator()
-    folder = qtcore.QLibraryInfo.path(qtcore.QLibraryInfo.LibraryPath.TranslationsPath)
-    if translator.load(qtcore.QLocale(code), "qtbase", "_", folder) and app.installTranslator(translator):
+    translator = qt_translator(qtcore, code, qt_folders(qtcore))
+    if translator is not None and app.installTranslator(translator):
         _qt_translator = translator
+
+
+def qt_folders(qtcore: Any) -> list[str]:
+    """Where Qt's translations of its own words may be, in order: where Qt says they are (pip's PyQt6 keeps them in
+    its package; a Linux distribution's Qt, which the .deb and .rpm use, in the system's Qt folder), then, in an
+    installer's build, the app's own copy (QT_FROZEN), where Nuitka's PyQt6 may not point Qt."""
+    folders = [_qt_library_folder(qtcore)]
+    if paths.frozen():
+        folders.append(str(_APP_FOLDER / QT_FROZEN))
+    return list(dict.fromkeys(str(Path(folder)) for folder in folders))  # once each, however Qt spells it ("C:/…")
+
+
+def _qt_library_folder(qtcore: Any) -> str:
+    """Where Qt says its own translations are."""
+    return qtcore.QLibraryInfo.path(qtcore.QLibraryInfo.LibraryPath.TranslationsPath)
+
+
+def qt_translator(qtcore: Any, code: str, folders: Iterable[str]) -> Any:
+    """A QTranslator holding Qt's own words in the language `code`, from the first of `folders` that has them, or
+    None. Qt picks the file from the language's names, as it would for any app ("pt" is qtbase_pt_BR.qm, "zh"
+    qtbase_zh_CN.qm). packaging/build.py asks the same, so an installer carries the very file its app loads."""
+    for folder in folders:
+        translator = qtcore.QTranslator()
+        if translator.load(qtcore.QLocale(code), "qtbase", "_", folder):
+            return translator
+    return None
 
 
 def reset() -> None:

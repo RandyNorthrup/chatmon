@@ -26,9 +26,10 @@ import re
 from collections.abc import Callable
 from typing import NamedTuple
 
-from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtCore import QObject
 
 from .i18n import _
+from .qtsignal import pyqtSignal
 
 logger = logging.getLogger(__name__)
 

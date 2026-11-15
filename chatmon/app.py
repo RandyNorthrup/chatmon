@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar
 
 from PyQt6 import sip
-from PyQt6.QtCore import QEvent, QLocale, QObject, QPoint, QProcess, QRectF, Qt, QTimer, QUrl, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import QEvent, QLocale, QObject, QPoint, QProcess, QRectF, Qt, QTimer, QUrl, pyqtSlot
 from PyQt6.QtGui import QColor, QDesktopServices, QFontMetricsF, QGuiApplication, QIcon, QKeyEvent, QPainter, QPixmap
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMenu, QSystemTrayIcon
@@ -29,6 +29,7 @@ from .behavior import Behavior
 from .bubble import AskBox, TimeoutPolicy, clipboard_contents, overlay_contents
 from .i18n import N_, _, either, join, ngettext
 from .penguin import Stage
+from .qtsignal import pyqtSignal
 from .settings import State, coerce, merge, read_config
 from .sprites import Sprites, silhouette
 
@@ -252,7 +253,7 @@ class Companion(QObject):
         self.ask_box.set_expanded(bool(self.state.get("ask_box_expanded")))
         self.ask_box.expand_changed.connect(self._remember_expanded)
         for widget in (self.ask_box, self.ask_box.entry, self.ask_box.answer):
-            widget.installEventFilter(self)  # Ctrl+1 to Ctrl+9: a bubble's buttons, while you type
+            widget.installEventFilter(self)  # type: ignore[arg-type]  # Ctrl+1 to Ctrl+9: a bubble's buttons, while you type; PyQt6 6.12.1's stubs type the filter as Self, the widget's class
         scheme = getattr(self.app.styleHints(), "colorSchemeChanged", None)  # Qt 6.5 and later; Ubuntu 24.04 has 6.4
         if scheme is not None:
             scheme.connect(self._scheme_changed)  # light or dark: disconnected in quit()

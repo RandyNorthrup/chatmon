@@ -34,13 +34,14 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from PyQt6 import sip
-from PyQt6.QtCore import QByteArray, QObject, QProcess, QProcessEnvironment, QTimer, QUrl, pyqtSignal
+from PyQt6.QtCore import QByteArray, QObject, QProcess, QProcessEnvironment, QTimer, QUrl
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
 from . import attachments, paths
 from .attachments import IMAGE, PDF, Attachment
 from .events import INTERNAL_ENV
 from .i18n import N_, _
+from .qtsignal import pyqtSignal
 
 logger = logging.getLogger(__name__)
 
@@ -1518,7 +1519,7 @@ class Asker(QObject):
     partial = pyqtSignal(str)
 
     def __init__(self, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         global _tidied, _tidying
         if not _tidied:  # once, as Chatmon starts: what a Chatmon that was stopped mid-question left behind
             _tidied = True
@@ -1602,7 +1603,7 @@ class Asker(QObject):
                 # No longer this Asker's: Qt deletes it once it has ended, whatever becomes of the Asker. Deleted with
                 # the Asker while Qt still thought it was running, Qt would kill and wait for it inside the delete,
                 # which on Windows takes the whole app down.
-                proc.setParent(None)
+                proc.setParent(None)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type the parent as Self, and never None
                 sip.transferto(proc, None)  # type: ignore[arg-type]  # sip's stub leaves out None, which sip takes (owned by C++ alone)
                 proc.finished.connect(proc.deleteLater)
                 _stop(proc, leftovers)
@@ -1650,7 +1651,7 @@ class Asker(QObject):
                 arg = arg.replace("{prompt}", prompt)
             args.append(arg)
         proc = QProcess(self)
-        system = QProcessEnvironment.systemEnvironment()
+        system: QProcessEnvironment = QProcessEnvironment.systemEnvironment()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
         env = QProcessEnvironment()
         for name, value in command_environment(brain, {k: system.value(k) for k in system.keys()}).items():
             env.insert(name, value)
@@ -1882,7 +1883,7 @@ class Finder(QObject):
     _looked = pyqtSignal(object, object)
 
     def __init__(self, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self._looked.connect(self._hand_back)
         self.last: Brain | None = None  # the latest settled answer
 
@@ -1927,7 +1928,7 @@ class BrainTest(QObject):
     finished = pyqtSignal(bool, str, float)
 
     def __init__(self, brain: Brain, parent: QObject | None = None, timeout_s: float = TEST_TIMEOUT_S):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.brain, self._timeout = brain, timeout_s
         self._asker = Asker(self)
         self._asker.answered.connect(lambda text: self._done(True, text))

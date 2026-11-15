@@ -68,7 +68,10 @@ class AnimInfo:
 
 def _alpha_rows(img: QImage) -> list[bytes]:
     w, bpl = img.width(), img.bytesPerLine()
-    data = img.constBits().asstring(img.sizeInBytes())
+    bits = img.constBits()
+    if bits is None:  # a null image: no rows
+        return []
+    data = bits.asstring(img.sizeInBytes())
     return [data[y * bpl + 3 : y * bpl + 4 * w : 4] for y in range(img.height())]
 
 
@@ -110,7 +113,7 @@ def _outline(img: QImage, rows: list[bytes] | None = None) -> list[QRect]:
 def _frame(img: QImage, anchor: int, scale: float) -> SpriteFrame:
     rows = _solid_rows(img)
     img.setDevicePixelRatio(scale)  # before the pixmap is made: changing a pixmap's ratio afterwards can copy it
-    pixmap = QPixmap.fromImage(img)
+    pixmap: QPixmap = QPixmap.fromImage(img)  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
     outline = []
     for r in _outline(img, rows):  # device pixels to logical, rounding outward
         left, top = int(r.left() / scale), int(r.top() / scale)
@@ -134,7 +137,7 @@ def silhouette(frame: SpriteFrame) -> QPixmap:
     p.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceIn)  # keep each pixel's alpha, black
     p.fillRect(out.rect(), Qt.GlobalColor.black)
     p.end()
-    pixmap = QPixmap.fromImage(out)
+    pixmap: QPixmap = QPixmap.fromImage(out)
     pixmap.setDevicePixelRatio(frame.scale)
     return pixmap
 
