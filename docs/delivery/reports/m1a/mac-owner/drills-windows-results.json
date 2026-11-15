@@ -1,0 +1,32 @@
+[
+  {
+    "id": "AC-01-USER-handoff",
+    "requirement": "M1A-01",
+    "file": "chatmon/updates.py",
+    "mutation": {
+      "find": "        return PKEXEC, [HELPER, str(path), str(sums), str(signature)], {}",
+      "replace": "        return PKEXEC, [HELPER, str(path), sha256(path) if path.exists() else \"0\" * 64], {}"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_updates.py::test_root_is_handed_the_signed_list_never_a_checksum"
+    ],
+    "expected": [
+      "test_root_is_handed_the_signed_list_never_a_checksum"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57",
+    "baseline_exit": 0,
+    "mutated_sha256": "3f8fb0a17c5dcf0e8ae671cc836c6746331846bd125f81ef21c02ac22bfdd01f",
+    "mutated_exit": 1,
+    "observed": "____________ test_root_is_handed_the_signed_list_never_a_checksum _____________",
+    "after_sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57",
+    "restored_exit": 0
+  }
+]

@@ -1,0 +1,162 @@
+{
+  "plan": "docs/delivery/m1a-security-updates.md",
+  "section": null,
+  "rules": {},
+  "inputs_add": [],
+  "task_changes_add": {},
+  "stale_reason": "Stale at 3bcd857 (2026-11-15): tests/test_install_update.py, which it was bound to, gained the owner test; the W4D- receipts ran its check again on the workstation, in WSL or on the Mac, and the Packages workflow's runs can't be re-run without a push",
+  "receipts": [
+    {
+      "id": "W4D-BEH-WINDOWS",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-01-VERIFY",
+        "AC-01-USER",
+        "AC-03",
+        "AC-04",
+        "AC-05",
+        "AC-06",
+        "AC-07",
+        "AC-08",
+        "AC-09-ORDER",
+        "AC-09-REMOTE",
+        "AC-11",
+        "AC-12",
+        "AC-M6A-14"
+      ],
+      "artifact": "docs/delivery/reports/m1a/mac-owner/suite-windows.log",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "exit_code": 0,
+      "method": "The whole suite on 3bcd857's files (the log's header has HEAD and the source digest) on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 179 skipped (other platforms' tests, each skip with its reason; the new owner test is one of them), exit 0. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    },
+    {
+      "id": "W4D-BEH-LINUX",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-01-LINUX",
+        "AC-02",
+        "AC-07",
+        "AC-09-ORDER",
+        "AC-09-REMOTE"
+      ],
+      "artifact": "docs/delivery/reports/m1a/mac-owner/linux-tests.log",
+      "command": [
+        "wsl.exe",
+        "-d",
+        "archlinux",
+        "--",
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-v",
+        "-rA",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_install_update.py",
+        "tests/test_packaging.py",
+        "tests/test_agents.py",
+        "tests/test_attachments.py"
+      ],
+      "exit_code": 0,
+      "method": "In WSL (Arch Linux; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11.0, Qt 6.11.2, pytest 9.2.0) on 3bcd857's files, through docs/delivery/reports/m1a/mac-owner/run-wsl.sh, as a normal user: the Linux tests CI's Linux job had shown for these criteria, which can't be re-run without a push. Passed: tests/test_install_update.py's root-side tests (a signed newer package installed from root's own copy; a tampered list, a bad signature, an older release and a changed package refused; a caller's checksum never taken; the check loaded only from root's own files), tests/test_packaging.py's postinstall tests, tests/test_agents.py's private backups and tests/test_attachments.py's Linux mount and pipe tests: 76 passed, 11 skipped (macOS and Windows only), exit 0, every warning an error. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    },
+    {
+      "id": "W4D-BEH-MACOS",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-01-MACOS",
+        "AC-02",
+        "AC-09-REMOTE"
+      ],
+      "artifact": "docs/delivery/reports/m1a/mac-owner/suite-offscreen.log",
+      "command": [
+        "/Users/user/chatmon-drills-tmp/venv/bin/python",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "--deselect",
+        "tests/test_keychain.py::test_macos_keychain_keeps_replaces_and_forgets_a_key"
+      ],
+      "exit_code": 0,
+      "method": "The whole suite on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh with docs/delivery/reports/m1a/mac/job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m1a/mac-owner/context-observed.txt), in a temporary copy of 3bcd857's files (git archive; the unpacked tree checked against the commit's, 80fd2bd0), run in his signed-in Aqua session by m1a/mac/aqua.sh, offscreen as CI's macOS job runs it: 1236 passed, 201 skipped, 1 deselected (the test that writes to the owner's login keychain), exit 0. All 19 of tests/test_install_update.py's tests that run on macOS passed, the new test_mac_an_app_that_isnt_roots_is_never_run_as_root among them (the root code as shipped refuses an app root doesn't own), and so did tests/test_packaging.py's postinstall tests under BSD ls and tests/test_attachments.py's macOS statfs test; none of those is in the log's skip list. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    },
+    {
+      "id": "W4D-RED-AC-01-LINUX-launcher-owner",
+      "kind": "red",
+      "acceptance": [
+        "AC-01-LINUX"
+      ],
+      "results": "docs/delivery/reports/m1a/mac-owner/drills-linux-results.json",
+      "drill": "AC-01-LINUX-launcher-owner",
+      "artifact": "docs/delivery/reports/m1a/mac-owner/drills-linux.log",
+      "method": "Red drill AC-01-LINUX-launcher-owner in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3bcd857's files (mac-owner/files.lst), from mac-owner/run-wsl.sh: green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected ('_ test_the_check_isnt_loaded_from_anything_but_roots_own[group-writable module] _'); the file's bytes put back (checked by SHA-256) and green again. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    },
+    {
+      "id": "W4D-RED-AC-01-LINUX-refusal-stops",
+      "kind": "red",
+      "acceptance": [
+        "AC-01-LINUX"
+      ],
+      "results": "docs/delivery/reports/m1a/mac-owner/drills-linux-results.json",
+      "drill": "AC-01-LINUX-refusal-stops",
+      "artifact": "docs/delivery/reports/m1a/mac-owner/drills-linux.log",
+      "method": "Red drill AC-01-LINUX-refusal-stops in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3bcd857's files (mac-owner/files.lst), from mac-owner/run-wsl.sh: green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected ('___________________ test_a_tampered_list_is_refused_by_root ____________________'); the file's bytes put back (checked by SHA-256) and green again. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    },
+    {
+      "id": "W4D-RED-AC-01-LINUX-installs-the-copy",
+      "kind": "red",
+      "acceptance": [
+        "AC-01-LINUX"
+      ],
+      "results": "docs/delivery/reports/m1a/mac-owner/drills-linux-results.json",
+      "drill": "AC-01-LINUX-installs-the-copy",
+      "artifact": "docs/delivery/reports/m1a/mac-owner/drills-linux.log",
+      "method": "Red drill AC-01-LINUX-installs-the-copy in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3bcd857's files (mac-owner/files.lst), from mac-owner/run-wsl.sh: green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected ('_________ test_a_signed_newer_package_is_installed_from_roots_own_copy _________'); the file's bytes put back (checked by SHA-256) and green again. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    },
+    {
+      "id": "W4D-RED-AC-01-USER-handoff",
+      "kind": "red",
+      "acceptance": [
+        "AC-01-USER"
+      ],
+      "results": "docs/delivery/reports/m1a/mac-owner/drills-windows-results.json",
+      "drill": "AC-01-USER-handoff",
+      "artifact": "docs/delivery/reports/m1a/mac-owner/drills-windows.log",
+      "method": "Red drill AC-01-USER-handoff through tests/drills/run.py on this Windows workstation (wave4c/drill-spec.json --only AC-01-USER-handoff), in a temporary copy of 3bcd857's files: green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected ('____________ test_root_is_handed_the_signed_list_never_a_checksum _____________'); the file's bytes put back (checked by SHA-256) and green again. Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    },
+    {
+      "id": "W4D-RED-AC-01-MACOS-writable",
+      "kind": "red",
+      "acceptance": [
+        "AC-01-MACOS"
+      ],
+      "results": "docs/delivery/reports/m1a/mac-owner/drills-results.json",
+      "drill": "MAC-AC-01-MACOS-writable",
+      "artifact": "docs/delivery/reports/m1a/mac-owner/drills.log",
+      "method": "Red drill MAC-AC-01-MACOS-writable on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh with docs/delivery/reports/m1a/mac/job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m1a/mac-owner/context-observed.txt), in a temporary copy of 3bcd857's files (git archive; the unpacked tree checked against the commit's, 80fd2bd0): green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected (\"E         app=\\\\'/U...st-of-user/pytest-4/test_mac_an_app_others_could_c0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')\"); the file's bytes put back (checked by SHA-256) and green again. In _MACOS_ROOT, '-o -perm +022' became '-o -name nothing', so find no longer reports a file that group or others can write: test_mac_an_app_others_could_change_is_never_run_as_root failed in its own body at tests/test_install_update.py:300, the root script exiting 0 having installed, where 3 and the refusal were asserted. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    },
+    {
+      "id": "W4D-RED-AC-01-MACOS-owner",
+      "kind": "red",
+      "acceptance": [
+        "AC-01-MACOS"
+      ],
+      "results": "docs/delivery/reports/m1a/mac-owner/drills-results.json",
+      "drill": "MAC-AC-01-MACOS-owner",
+      "artifact": "docs/delivery/reports/m1a/mac-owner/drills.log",
+      "method": "Red drill MAC-AC-01-MACOS-owner on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh with docs/delivery/reports/m1a/mac/job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m1a/mac-owner/context-observed.txt), in a temporary copy of 3bcd857's files (git archive; the unpacked tree checked against the commit's, 80fd2bd0): green; the defect put in, the named test failing with pytest's tests-failed exit and printing what's expected (\"E         app=\\\\'/U...st-of-user/pytest-1/test_mac_an_app_that_isnt_root0/downloads/SHA256SUMS.txt.sig'], returncode=0, stdout='', stderr='')\"); the file's bytes put back (checked by SHA-256) and green again. In _MACOS_ROOT, '! -user root -o ' was taken out, so find no longer reports a file root doesn't own: test_mac_an_app_that_isnt_roots_is_never_run_as_root, which runs the root code as shipped (only the app's path changed) on an app only its owner, the test user, can write, failed in its own body at tests/test_install_update.py:319, the root script exiting 0 having run the copied app's install-update and installed, where 3 and the refusal were asserted. This is the half of the check MAC-RED-AC-01-MACOS's drill couldn't reach. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 3bcd857: improve/assessment-fixes (b5aa9d0) with the owner test added to tests/test_install_update.py."
+    }
+  ],
+  "tasks": {},
+  "pending": [],
+  "next_action": "None for M1A: every task is verified at 3bcd857. Both halves of _MACOS_ROOT's check now have a test that fails without them (W4D-RED-AC-01-MACOS-writable and -owner). The Packages workflow's container and .pkg receipts (W4C-BEH-PKG-*) are stale history now; its next run on PR #18 can be read for them again. The narrative is left as it is: the scope fingerprint hashes it, so editing it would make every receipt here stale. A merge that changes a file these receipts bind, or ROADMAP.md, needs those checks run again.",
+  "source_revision": "3bcd8574a181e96fe7dfcb4adb76ba8c47813bd1"
+}

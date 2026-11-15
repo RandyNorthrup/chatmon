@@ -1,0 +1,197 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2 pytest 9.2.0; the worktree's files at 2026-11-15T17:50:10Z, uid 1000
+$ /var/tmp/plans-venv/bin/python -m pytest -v -rA -p no:cacheprovider tests/test_install_update.py tests/test_packaging.py tests/test_agents.py tests/test_attachments.py
+============================= test session starts ==============================
+platform linux -- Python 3.14.9, pytest-9.2.0, pluggy-1.7.0 -- /var/tmp/plans-venv/bin/python
+hypothesis profile 'default'
+rootdir: /mnt/c/Users/Randy/Coding/chatmon-wt/mac-owner
+configfile: pyproject.toml
+plugins: hypothesis-6.170.14, timeout-2.4.0
+timeout: 120.0s
+timeout method: signal
+timeout func_only: False
+collecting ... collected 87 items
+
+tests/test_install_update.py::test_a_signed_newer_package_is_installed_from_roots_own_copy PASSED [  1%]
+tests/test_install_update.py::test_a_tampered_list_is_refused_by_root PASSED [  2%]
+tests/test_install_update.py::test_a_bad_signature_is_refused_by_root PASSED [  3%]
+tests/test_install_update.py::test_an_older_release_is_refused_by_root PASSED [  4%]
+tests/test_install_update.py::test_a_package_that_changed_since_it_was_listed_is_refused_by_root PASSED [  5%]
+tests/test_install_update.py::test_a_checksum_from_the_caller_is_never_taken PASSED [  6%]
+tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[group-writable module] PASSED [  8%]
+tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[others-writable folder] PASSED [  9%]
+tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[module is a link] PASSED [ 10%]
+tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[compiled copy writable] PASSED [ 11%]
+tests/test_install_update.py::test_only_root_runs_it PASSED              [ 12%]
+tests/test_install_update.py::test_the_package_installs_the_check_where_install_update_runs_it PASSED [ 13%]
+tests/test_install_update.py::test_mac_a_signed_newer_package_is_installed_from_a_checked_copy SKIPPED [ 14%]
+tests/test_install_update.py::test_mac_what_isnt_a_signed_newer_release_is_refused[list] SKIPPED [ 16%]
+tests/test_install_update.py::test_mac_what_isnt_a_signed_newer_release_is_refused[signature] SKIPPED [ 17%]
+tests/test_install_update.py::test_mac_what_isnt_a_signed_newer_release_is_refused[older] SKIPPED [ 18%]
+tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root SKIPPED [ 19%]
+tests/test_install_update.py::test_mac_an_app_that_isnt_roots_is_never_run_as_root SKIPPED [ 20%]
+tests/test_install_update.py::test_mac_the_applescript_hands_paths_over_as_data SKIPPED [ 21%]
+tests/test_packaging.py::test_the_command_is_written_whole_into_a_folder_root_alone_can_write PASSED [ 22%]
+tests/test_packaging.py::test_a_missing_bin_folder_is_made_root_only PASSED [ 24%]
+tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[others can write] PASSED [ 25%]
+tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[group can write] PASSED [ 26%]
+tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[holder others can write] PASSED [ 27%]
+tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[a link] PASSED [ 28%]
+tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[someone else's] PASSED [ 29%]
+tests/test_packaging.py::test_a_link_or_someone_elses_command_is_left_alone PASSED [ 31%]
+tests/test_packaging.py::test_release_notes_pin_the_pipx_install_to_the_release PASSED [ 32%]
+tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other PASSED [ 33%]
+tests/test_agents.py::test_gemini_keeps_your_hooks_and_settings PASSED   [ 34%]
+tests/test_agents.py::test_connect_twice_adds_nothing_and_disconnect_restores PASSED [ 35%]
+tests/test_agents.py::test_without_a_settings_file PASSED                [ 36%]
+tests/test_agents.py::test_broken_json_is_left_alone PASSED              [ 37%]
+tests/test_agents.py::test_a_settings_file_that_cant_be_read_is_logged_by_name_never_by_contents PASSED [ 39%]
+tests/test_agents.py::test_codex_connect_puts_notify_at_the_top_level PASSED [ 40%]
+tests/test_agents.py::test_codex_never_replaces_someone_elses_notify PASSED [ 41%]
+tests/test_agents.py::test_own_hooks_file[grok] PASSED                   [ 42%]
+tests/test_agents.py::test_own_hooks_file[copilot] PASSED                [ 43%]
+tests/test_agents.py::test_cursor_merges_into_its_hooks_file PASSED      [ 44%]
+tests/test_agents.py::test_cline_scripts_and_your_own_are_safe PASSED    [ 45%]
+tests/test_agents.py::test_claude_installs_its_plugin PASSED             [ 47%]
+tests/test_agents.py::test_claude_reads_the_marketplace_from_a_copy_an_upgrade_cant_take_away PASSED [ 48%]
+tests/test_agents.py::test_claude_switches_a_switched_off_plugin_back_on PASSED [ 49%]
+tests/test_agents.py::test_claude_status_takes_one_look PASSED           [ 50%]
+tests/test_agents.py::test_claude_needs_chatmon_on_path PASSED           [ 51%]
+tests/test_agents.py::test_claude_from_its_editor_extension_alone PASSED [ 52%]
+tests/test_agents.py::test_claude_with_no_command_line_anywhere_says_how_to_connect_it PASSED [ 54%]
+tests/test_agents.py::test_disconnect_all_touches_only_the_agents_connected PASSED [ 55%]
+tests/test_agents.py::test_a_windows_path_gains_only_what_it_lacks PASSED [ 56%]
+tests/test_agents.py::test_claude_plugin_files_match_the_installer PASSED [ 57%]
+tests/test_agents.py::test_muse_plugin_manifest PASSED                   [ 58%]
+tests/test_agents.py::test_every_agent_explains_itself PASSED            [ 59%]
+tests/test_agents.py::test_nothing_to_move_runs_nothing PASSED           [ 60%]
+tests/test_agents.py::test_json_hooks_move_to_the_new_name PASSED        [ 62%]
+tests/test_agents.py::test_codex_moves_to_the_new_name PASSED            [ 63%]
+tests/test_agents.py::test_own_hook_files_move_to_the_new_name PASSED    [ 64%]
+tests/test_agents.py::test_cursor_and_cline_move_to_the_new_name PASSED  [ 65%]
+tests/test_agents.py::test_claude_swaps_the_old_plugin_for_the_new PASSED [ 66%]
+tests/test_agents.py::test_claude_leaves_a_switched_off_old_plugin_off PASSED [ 67%]
+tests/test_agents.py::test_muse_swaps_the_old_plugin_for_the_new PASSED  [ 68%]
+tests/test_agents.py::test_a_hook_that_only_looks_like_ours_is_left_alone PASSED [ 70%]
+tests/test_agents.py::test_settings_are_never_briefly_readable_by_others PASSED [ 71%]
+tests/test_agents.py::test_cline_scripts_are_backed_up_before_they_change PASSED [ 72%]
+tests/test_agents.py::test_claude_keeps_the_old_plugin_until_chatmon_can_run PASSED [ 73%]
+tests/test_agents.py::test_our_command_is_known_in_every_form_we_write_it PASSED [ 74%]
+tests/test_agents.py::test_as_you_an_agents_command_line_does_run PASSED [ 75%]
+tests/test_agents.py::test_elevated_no_agents_command_line_ever_starts PASSED [ 77%]
+tests/test_agents.py::test_elevated_disconnecting_everything_edits_files_only PASSED [ 78%]
+tests/test_agents.py::test_elevation_is_read_from_this_process PASSED    [ 79%]
+tests/test_agents.py::test_backups_are_private_new_files_and_only_the_newest_five_are_kept PASSED [ 80%]
+tests/test_agents.py::test_every_change_keeps_a_backup_and_they_stop_piling_up PASSED [ 81%]
+tests/test_agents.py::test_codex_takes_a_config_with_arrays_inside_arrays PASSED [ 82%]
+tests/test_agents.py::test_codex_leaves_a_notify_line_in_a_table_alone PASSED [ 83%]
+tests/test_agents.py::test_codex_connect_then_disconnect_changes_nothing_but_notify PASSED [ 85%]
+tests/test_attachments.py::test_a_local_file_still_attaches PASSED       [ 86%]
+tests/test_attachments.py::test_a_folder_is_refused_without_being_opened PASSED [ 87%]
+tests/test_attachments.py::test_a_pipe_or_a_device_is_refused_without_being_opened PASSED [ 88%]
+tests/test_attachments.py::test_a_file_swapped_between_the_look_and_the_open_is_refused PASSED [ 89%]
+tests/test_attachments.py::test_a_file_swapped_for_a_pipe_is_refused_after_the_open PASSED [ 90%]
+tests/test_attachments.py::test_a_file_too_big_is_refused_before_its_opened PASSED [ 91%]
+tests/test_attachments.py::test_windows_shares_are_refused_untouched SKIPPED [ 93%]
+tests/test_attachments.py::test_windows_mapped_drives_are_refused_and_local_ones_taken SKIPPED [ 94%]
+tests/test_attachments.py::test_windows_a_link_to_a_share_is_the_share SKIPPED [ 95%]
+tests/test_attachments.py::test_linux_network_and_fuse_mounts_are_refused_but_not_fuseblk PASSED [ 96%]
+tests/test_attachments.py::test_linux_mountinfo_names_the_mount_a_path_is_on PASSED [ 97%]
+tests/test_attachments.py::test_mac_mounts_not_stored_here_are_refused SKIPPED [ 98%]
+tests/test_attachments.py::test_where_the_system_cant_say_the_file_itself_decides PASSED [100%]
+
+==================================== PASSES ====================================
+_ test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other _
+----------------------------- Captured stdout call -----------------------------
+Qt has no translation of its own words for eo in /var/tmp/plans-venv/lib/python3.14/site-packages/PyQt6/Qt6/translations: its buttons stay in English there
+Qt has no translation of its own words for eo in /var/tmp/plans-venv/lib/python3.14/site-packages/PyQt6/Qt6/translations: its buttons stay in English there
+__ test_a_settings_file_that_cant_be_read_is_logged_by_name_never_by_contents __
+------------------------------ Captured log call -------------------------------
+DEBUG    chatmon.agents:agents.py:284 couldn't read Gemini CLI's hooks: /tmp/pytest-of-randy/pytest-680/test_a_settings_file_that_cant0/.gemini/settings.json isn't valid JSON (Expecting value: line 1 column 57 (char 56)); not touching it.
+=========================== short test summary info ============================
+PASSED tests/test_install_update.py::test_a_signed_newer_package_is_installed_from_roots_own_copy
+PASSED tests/test_install_update.py::test_a_tampered_list_is_refused_by_root
+PASSED tests/test_install_update.py::test_a_bad_signature_is_refused_by_root
+PASSED tests/test_install_update.py::test_an_older_release_is_refused_by_root
+PASSED tests/test_install_update.py::test_a_package_that_changed_since_it_was_listed_is_refused_by_root
+PASSED tests/test_install_update.py::test_a_checksum_from_the_caller_is_never_taken
+PASSED tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[group-writable module]
+PASSED tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[others-writable folder]
+PASSED tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[module is a link]
+PASSED tests/test_install_update.py::test_the_check_isnt_loaded_from_anything_but_roots_own[compiled copy writable]
+PASSED tests/test_install_update.py::test_only_root_runs_it
+PASSED tests/test_install_update.py::test_the_package_installs_the_check_where_install_update_runs_it
+PASSED tests/test_packaging.py::test_the_command_is_written_whole_into_a_folder_root_alone_can_write
+PASSED tests/test_packaging.py::test_a_missing_bin_folder_is_made_root_only
+PASSED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[others can write]
+PASSED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[group can write]
+PASSED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[holder others can write]
+PASSED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[a link]
+PASSED tests/test_packaging.py::test_a_folder_not_roots_alone_gets_nothing[someone else's]
+PASSED tests/test_packaging.py::test_a_link_or_someone_elses_command_is_left_alone
+PASSED tests/test_packaging.py::test_release_notes_pin_the_pipx_install_to_the_release
+PASSED tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other
+PASSED tests/test_agents.py::test_gemini_keeps_your_hooks_and_settings
+PASSED tests/test_agents.py::test_connect_twice_adds_nothing_and_disconnect_restores
+PASSED tests/test_agents.py::test_without_a_settings_file
+PASSED tests/test_agents.py::test_broken_json_is_left_alone
+PASSED tests/test_agents.py::test_a_settings_file_that_cant_be_read_is_logged_by_name_never_by_contents
+PASSED tests/test_agents.py::test_codex_connect_puts_notify_at_the_top_level
+PASSED tests/test_agents.py::test_codex_never_replaces_someone_elses_notify
+PASSED tests/test_agents.py::test_own_hooks_file[grok]
+PASSED tests/test_agents.py::test_own_hooks_file[copilot]
+PASSED tests/test_agents.py::test_cursor_merges_into_its_hooks_file
+PASSED tests/test_agents.py::test_cline_scripts_and_your_own_are_safe
+PASSED tests/test_agents.py::test_claude_installs_its_plugin
+PASSED tests/test_agents.py::test_claude_reads_the_marketplace_from_a_copy_an_upgrade_cant_take_away
+PASSED tests/test_agents.py::test_claude_switches_a_switched_off_plugin_back_on
+PASSED tests/test_agents.py::test_claude_status_takes_one_look
+PASSED tests/test_agents.py::test_claude_needs_chatmon_on_path
+PASSED tests/test_agents.py::test_claude_from_its_editor_extension_alone
+PASSED tests/test_agents.py::test_claude_with_no_command_line_anywhere_says_how_to_connect_it
+PASSED tests/test_agents.py::test_disconnect_all_touches_only_the_agents_connected
+PASSED tests/test_agents.py::test_a_windows_path_gains_only_what_it_lacks
+PASSED tests/test_agents.py::test_claude_plugin_files_match_the_installer
+PASSED tests/test_agents.py::test_muse_plugin_manifest
+PASSED tests/test_agents.py::test_every_agent_explains_itself
+PASSED tests/test_agents.py::test_nothing_to_move_runs_nothing
+PASSED tests/test_agents.py::test_json_hooks_move_to_the_new_name
+PASSED tests/test_agents.py::test_codex_moves_to_the_new_name
+PASSED tests/test_agents.py::test_own_hook_files_move_to_the_new_name
+PASSED tests/test_agents.py::test_cursor_and_cline_move_to_the_new_name
+PASSED tests/test_agents.py::test_claude_swaps_the_old_plugin_for_the_new
+PASSED tests/test_agents.py::test_claude_leaves_a_switched_off_old_plugin_off
+PASSED tests/test_agents.py::test_muse_swaps_the_old_plugin_for_the_new
+PASSED tests/test_agents.py::test_a_hook_that_only_looks_like_ours_is_left_alone
+PASSED tests/test_agents.py::test_settings_are_never_briefly_readable_by_others
+PASSED tests/test_agents.py::test_cline_scripts_are_backed_up_before_they_change
+PASSED tests/test_agents.py::test_claude_keeps_the_old_plugin_until_chatmon_can_run
+PASSED tests/test_agents.py::test_our_command_is_known_in_every_form_we_write_it
+PASSED tests/test_agents.py::test_as_you_an_agents_command_line_does_run
+PASSED tests/test_agents.py::test_elevated_no_agents_command_line_ever_starts
+PASSED tests/test_agents.py::test_elevated_disconnecting_everything_edits_files_only
+PASSED tests/test_agents.py::test_elevation_is_read_from_this_process
+PASSED tests/test_agents.py::test_backups_are_private_new_files_and_only_the_newest_five_are_kept
+PASSED tests/test_agents.py::test_every_change_keeps_a_backup_and_they_stop_piling_up
+PASSED tests/test_agents.py::test_codex_takes_a_config_with_arrays_inside_arrays
+PASSED tests/test_agents.py::test_codex_leaves_a_notify_line_in_a_table_alone
+PASSED tests/test_agents.py::test_codex_connect_then_disconnect_changes_nothing_but_notify
+PASSED tests/test_attachments.py::test_a_local_file_still_attaches
+PASSED tests/test_attachments.py::test_a_folder_is_refused_without_being_opened
+PASSED tests/test_attachments.py::test_a_pipe_or_a_device_is_refused_without_being_opened
+PASSED tests/test_attachments.py::test_a_file_swapped_between_the_look_and_the_open_is_refused
+PASSED tests/test_attachments.py::test_a_file_swapped_for_a_pipe_is_refused_after_the_open
+PASSED tests/test_attachments.py::test_a_file_too_big_is_refused_before_its_opened
+PASSED tests/test_attachments.py::test_linux_network_and_fuse_mounts_are_refused_but_not_fuseblk
+PASSED tests/test_attachments.py::test_linux_mountinfo_names_the_mount_a_path_is_on
+PASSED tests/test_attachments.py::test_where_the_system_cant_say_the_file_itself_decides
+SKIPPED [1] tests/test_install_update.py:269: macOS's root code: ditto, BSD find, osascript
+SKIPPED [3] tests/test_install_update.py:280: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:295: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:309: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:323: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:125: Windows links
+SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+======================== 76 passed, 11 skipped in 3.52s ========================
+# exit 0

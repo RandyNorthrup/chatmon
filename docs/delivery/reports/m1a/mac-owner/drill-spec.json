@@ -1,0 +1,34 @@
+{
+  "drills": [
+    {
+      "id": "MAC-AC-01-MACOS-owner",
+      "requirement": "M1A-01",
+      "file": "chatmon/updates.py",
+      "find": "! -user root -o ",
+      "replace": "",
+      "test": [
+        "tests/test_install_update.py::test_mac_an_app_that_isnt_roots_is_never_run_as_root"
+      ],
+      "expect": [
+        "tests/test_install_update.py:319: AssertionError",
+        "returncode=0, stdout='', stderr=''",
+        "1 failed"
+      ]
+    },
+    {
+      "id": "MAC-AC-01-MACOS-writable",
+      "requirement": "M1A-01",
+      "file": "chatmon/updates.py",
+      "find": "-o -perm +022",
+      "replace": "-o -name nothing",
+      "test": [
+        "tests/test_install_update.py::test_mac_an_app_others_could_change_is_never_run_as_root"
+      ],
+      "expect": [
+        "tests/test_install_update.py:300: AssertionError",
+        "returncode=0, stdout='', stderr=''",
+        "1 failed"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+Command+Option+Shift+F17: exclusive registration 0, unregistered 0
+Command+Option+Shift+F18: exclusive registration 0, unregistered 0
+Command+Option+Shift+F19: exclusive registration 0, unregistered 0
+all free

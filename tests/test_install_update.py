@@ -225,30 +225,43 @@ exec "{python}" -I -S -c 'import sys; sys.path.append(sys.argv[1]); from chatmon
 """
 
 
-@pytest.fixture
-def mac(tmp_path):
-    if sys.platform != "darwin":
-        pytest.skip("macOS's root code: ditto, BSD find, osascript")
-    from chatmon import updates  # Qt, which macOS CI has
-
+def mac_app(tmp_path: Path) -> tuple[Release, Path, Path]:
+    """A copy of Chatmon.app as its .pkg installs it, with modes only its owner can write, but this test user's, in
+    tmp_path. Its install-update takes this user for root and runs a recorder for `installer`. Returns the release,
+    the app, and the folder where the recorder notes what it was asked to install."""
     release = Release(tmp_path / "downloads", "Chatmon-9.0.0-macos-arm64.pkg")
     record = tmp_path / "record"
     record.mkdir()
     app = tmp_path / "Applications" / "Chatmon.app"
-    uid = str(os.getuid())
     resources = app / "Contents" / "Resources"
     package_copy(resources, release.public)
     write(app / "Contents" / "MacOS" / "Chatmon", FAKE_APP.format(ran=tmp_path / "app-ran", python=sys.executable), 0o755)
     installer = write(tmp_path / "installer", RECORDER.format(record=record), 0o755)
     write(resources / "install-update", substituted(text(REPO / "packaging" / "macos" / "install-update"), **{
-        '[ "$(id -u)" = 0 ]': f'[ "$(id -u)" = {uid} ]', "installer -pkg": f"{installer} -pkg",
+        '[ "$(id -u)" = 0 ]': f'[ "$(id -u)" = {os.getuid()} ]', "installer -pkg": f"{installer} -pkg",
     }), 0o755)
     for folder in (app, app / "Contents", app / "Contents" / "MacOS", resources):
         folder.chmod(0o755)
-    root = substituted(updates._MACOS_ROOT, **{"app=/Applications/Chatmon.app": f"app='{app}'", "! -user root": f"! -user {uid}"})
+    return release, app, record
+
+
+def run_root(root: str, *args) -> subprocess.CompletedProcess:
+    """The root code as osascript hands it to sh, with the download, its list and the list's signature."""
+    return subprocess.run(["/bin/sh", "-c", root, "chatmon-update", *map(str, args)], capture_output=True, text=True, timeout=120)
+
+
+@pytest.fixture
+def mac(tmp_path):
+    """The root code with this test user taken for root as well, so the app mac_app() makes counts as root's own."""
+    if sys.platform != "darwin":
+        pytest.skip("macOS's root code: ditto, BSD find, osascript")
+    from chatmon import updates  # Qt, which macOS CI has
+
+    release, app, record = mac_app(tmp_path)
+    root = substituted(updates._MACOS_ROOT, **{"app=/Applications/Chatmon.app": f"app='{app}'", "! -user root": f"! -user {os.getuid()}"})
 
     def run(*args):
-        return subprocess.run(["/bin/sh", "-c", root, "chatmon-update", *map(str, args)], capture_output=True, text=True, timeout=120)
+        return run_root(root, *args)
 
     return release, app, record, run, root
 
@@ -284,6 +297,25 @@ def test_mac_an_app_others_could_change_is_never_run_as_root(mac, tmp_path):
     release, app, record, run, _root = mac
     (app / "Contents" / "Resources" / "chatmon" / "ed25519.py").chmod(0o664)
     out = run(release.package, release.sums, release.sig)
+    assert out.returncode == 3 and "isn't the system's own" in out.stderr, out
+    assert not (tmp_path / "app-ran").exists() and not (record / "args").exists()
+
+
+def test_mac_an_app_that_isnt_roots_is_never_run_as_root(tmp_path):
+    """The root code as shipped, only its app's path changed, on a Chatmon.app that nobody but its owner can write, but
+    whose owner is this test user rather than root: the .dmg's drag-installed app, or one a user put in its place.
+    Nothing of it runs, and nothing is installed."""
+    if sys.platform != "darwin":
+        pytest.skip("macOS's root code: ditto, BSD find, osascript")
+    if os.getuid() == 0:
+        pytest.skip("run as root, the app this test makes is root's own")
+    from chatmon import updates
+
+    release, app, record = mac_app(tmp_path)
+    entries = [app, *app.rglob("*")]
+    assert not [p for p in entries if p.lstat().st_mode & 0o022], "only its owner can write the app, so the owner is what's refused"
+    root = substituted(updates._MACOS_ROOT, **{"app=/Applications/Chatmon.app": f"app='{app}'"})
+    out = run_root(root, release.package, release.sums, release.sig)
     assert out.returncode == 3 and "isn't the system's own" in out.stderr, out
     assert not (tmp_path / "app-ran").exists() and not (record / "args").exists()
 
