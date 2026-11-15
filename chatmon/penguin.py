@@ -27,7 +27,7 @@ import sys
 import time
 from typing import Any, cast
 
-from PyQt6.QtCore import QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QCoreApplication, QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer
 from PyQt6.QtGui import (
     QColor,
     QContextMenuEvent,
@@ -56,6 +56,7 @@ from .behavior import Behavior, Frame
 from .i18n import _, ngettext
 from .bubble import SpeechBubble
 from .bubbleart import device_ratio
+from .qtsignal import pyqtSignal
 from .sprites import Sprites
 from .stagemenu import StageMenu
 
@@ -96,7 +97,7 @@ class StageWindow(QWidget):
         # On X11 the stage skips the window manager, so it stays above
         # everything, panels included, and never shows in the taskbar.
         flags |= Qt.WindowType.X11BypassWindowManagerHint if xcb else Qt.WindowType.Tool
-        super().__init__(None, flags)
+        super().__init__(None, flags)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type a widget's parent as Self, and never None
         self.stage = stage
         self.setAccessibleName("Chatmon")  # what a screen reader calls it; its bubble is its description
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -198,7 +199,7 @@ class Hosted(QObject):
     mouse events into scene events, as it would for one on screen."""
 
     def __init__(self, stage: Stage, widget: QWidget):
-        super().__init__(stage)
+        super().__init__(stage)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.stage, self.widget = stage, widget
         self.scene = QGraphicsScene(self)
         shown = widget.isVisible()
@@ -347,7 +348,7 @@ class Hosted(QObject):
         QApplication.sendEvent(viewport, event)
 
     def cursor_at(self, gpos: QPointF) -> str:
-        child = self.widget.childAt((gpos - QPointF(self.rect().topLeft())).toPoint())
+        child: QWidget | None = self.widget.childAt((gpos - QPointF(self.rect().topLeft())).toPoint())  # PyQt6 6.12.1's stubs say never None
         while child is not None and not child.testAttribute(Qt.WidgetAttribute.WA_SetCursor):
             child = child.parentWidget()
         if child is None:
@@ -526,7 +527,7 @@ class Stage(QObject):
         first = self._screen_at(QPoint(int(behavior.x), 0)) or QGuiApplication.primaryScreen()
         if first is not None:  # none at all: no screen to cover until one comes (_tick)
             self._use_screen(first)
-        app = QGuiApplication.instance()
+        app: QCoreApplication | None = QGuiApplication.instance()  # typed: PyQt6 6.12.1's stubs give instance() an unbound Self
         if isinstance(app, QGuiApplication):  # always: a stage needs Qt's GUI
             app.screenRemoved.connect(self._screen_removed)
         # One shot at a time, set each tick to the next change (see _next_tick); anything that happens wakes it.

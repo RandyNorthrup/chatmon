@@ -36,10 +36,11 @@ import os
 import sys
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer
 from PyQt6.QtGui import QGuiApplication, QImage, QPainter, QRegion, QScreen
 
 from . import wayland, xkb
+from .qtsignal import pyqtSignal
 from .wayland import DISPLAY_ID, Connection, decode
 
 logger = logging.getLogger(__name__)  # CHATMON_DEBUG: the overlay's focus changes too (log.setup)
@@ -270,7 +271,7 @@ class PipeReader(QObject):
     finished = pyqtSignal(bytes)
 
     def __init__(self, fd: int, limit: int, parent: QObject):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.fd, self.limit, self.data = fd, limit, bytearray()
         if sys.platform != "win32" or sys.version_info >= (3, 12):  # Windows' os has it from 3.12 (mypy checks 3.11)
             os.set_blocking(fd, False)
@@ -1469,36 +1470,38 @@ class LayerSurface(QObject):
     def _present_content(self) -> bool:
         """The subsurface moved, resized or drawn again as the stage changed, its new place and pixels sent for the
         layer surface's next commit to show together. True: there's something for that commit."""
-        c = self.conn
+        c, sub, subsurface, viewport = self.conn, self._sub, self._subsurface, self._sub_viewport
+        if sub is None or subsurface is None or viewport is None:  # never: asked only while there's a subsurface
+            return False
         box = self._content_box()
         if box is None:
             self._pending = QRegion()
             if self._box is None:
                 return False
             self._box = None  # nothing drawn at all: no subsurface shown
-            c.request(self._sub, SURFACE_ATTACH, "oii", 0, 0, 0)
-            c.request(self._sub, SURFACE_COMMIT)
+            c.request(sub, SURFACE_ATTACH, "oii", 0, 0, 0)
+            c.request(sub, SURFACE_COMMIT)
             return True
         if (box == self._box and self._pending.isEmpty()) or self._frame_pending:
             return False  # nothing new, or after the frame callback, which looks again
         if box != self._box:
             if self._box is None or box.size() != self._box.size():
-                for buf in self._buffers:  # made for another size: one of this size comes next
-                    buf.destroy()
+                for old in self._buffers:  # made for another size: one of this size comes next
+                    old.destroy()
                 self._buffers, self._shown = [], None
-            for buf in self._buffers:  # the same size somewhere else: drawn again there, in full
-                buf.stale = QRegion(self._qt_rect(box))
+            for kept in self._buffers:  # the same size somewhere else: drawn again there, in full
+                kept.stale = QRegion(self._qt_rect(box))
         scale = self._scale()
         buf = self._free_buffer(max(1, round(box.width() * scale)), max(1, round(box.height() * scale)), self._qt_rect(box))
         if buf is None:
             return False  # one comes back with wl_buffer.release: a move waits for it, never shown without its pixels
         if box != self._box:
             self._box = box
-            c.request(self._subsurface, SUBSURFACE_SET_POSITION, "ii", box.x(), box.y())
-            c.request(self._sub_viewport, VIEWPORT_SET_DESTINATION, "ii", box.width(), box.height())
+            c.request(subsurface, SUBSURFACE_SET_POSITION, "ii", box.x(), box.y())
+            c.request(viewport, VIEWPORT_SET_DESTINATION, "ii", box.width(), box.height())
             self._pending = QRegion(self._qt_rect(box))
-        self._draw(buf, self._sub)
-        c.request(self._sub, SURFACE_COMMIT)  # held until the layer surface's commit (a synchronized subsurface)
+        self._draw(buf, sub)
+        c.request(sub, SURFACE_COMMIT)  # held until the layer surface's commit (a synchronized subsurface)
         return True
 
     def _content_box(self) -> QRect | None:
