@@ -7,7 +7,7 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QPoint, QPointF, QRect
+from PyQt6.QtCore import QObject, QPoint, QPointF, QRect, pyqtSignal
 from PyQt6.QtGui import QImage, QPainter, QRegion
 from PyQt6.QtWidgets import QMenu
 
@@ -113,10 +113,13 @@ def test_reduced_motion_stills_the_creature_and_its_zs(qapp):
     s.close_stage()
 
 
-class Screen:
-    """A monitor, as much of one as the stage asks about."""
+class Screen(QObject):
+    """A monitor, as much of one as the stage asks about (and its word that it moved, which the stage listens to)."""
+
+    geometryChanged = pyqtSignal(QRect)
 
     def __init__(self, name, x, y, w, h):
+        super().__init__()
         self._name, self._geo = name, QRect(x, y, w, h)
 
     def name(self):

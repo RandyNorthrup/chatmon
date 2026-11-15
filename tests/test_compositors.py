@@ -33,23 +33,6 @@ KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND = 1, 2  # layer.py's
 DESK_WINDOW = DESK_WINDOW.replace("desk.show()\n", "desk.showMaximized()\n").replace("settled()\n", "until(lambda: desk.width() >= 1200, 5)\nsettled()\n")
 
 
-# What the product does wrong on a compositor, found by these checks (docs/delivery/reports/release/compositors/
-# README.md has the evidence and the fixes proposed). Each check it fails is a strict xfail there: it passes the
-# day the product is fixed, and then fails until the mark is taken away.
-KWIN_KEEPS_THE_KEYBOARD = ("KWin 6.8 leaves the keyboard on the overlay after the overlay lets it go (keyboard interactivity "
-                           "none): no window gets it back (README, problem 1)")
-HYPRLAND_ENDS_THE_PRESS = ("Hyprland 0.57 releases the button on the overlay as soon as the pointer leaves its input region, "
-                           "mid-drag: the chatmon drops (README, problem 2)")
-KWIN_REFUSES_QTS_SELECTION = ("KWin 6.8 takes a selection only from the client with the keyboard, the overlay's connection when "
-                              "the box copies, so Qt's copy is refused and Chatmon's windows read the overlay's: a 2 s freeze, "
-                              "nothing pasted (README, problem 3; and problem 1 before it)")
-
-
-def known_problem(request, session, compositor: str, reason: str) -> None:
-    if session.NAME == compositor:
-        request.node.add_marker(pytest.mark.xfail(strict=True, reason=reason))
-
-
 def _needs(name, atspi=False, orca=False):
     why = compositor_session.unavailable(name, atspi=atspi, orca=orca)
     if why and os.environ.get("CHATMON_COMPOSITORS") == "1":
@@ -150,7 +133,6 @@ def test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else(desktop, ch
 
 
 def test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open(desktop, chatmon, hands, request):
-    known_problem(request, desktop, "kwin", KWIN_KEEPS_THE_KEYBOARD)
     chatmon.call(DESK_WINDOW)
     hands.move(300, 200)
     hands.type("ab")
@@ -194,8 +176,8 @@ def test_the_penguins_menu_opens_on_the_overlay_and_works_from_the_keyboard_and_
 
 
 def test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows(desktop, chatmon, hands, request):
-    # The last step: Chatmon's own window reads Qt's clipboard, which a Wayland client gets only with the keyboard.
-    known_problem(request, desktop, "kwin", KWIN_REFUSES_QTS_SELECTION)
+    # The last step: Chatmon's own window reads Qt's clipboard, which a Wayland client gets only with the keyboard
+    # (KWin: the overlay hands it back on letting go, and puts its copy on Qt's clipboard again: layer.py).
     if shutil.which("wl-copy") is None:
         if os.environ.get("CHATMON_COMPOSITORS") == "1":
             pytest.fail("CHATMON_COMPOSITORS=1, but wl-clipboard isn't installed")
@@ -220,8 +202,7 @@ def test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmon
 
 
 def test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box(desktop, chatmon, hands, request):
-    # The last step: a full-screen window KWin no longer counts as active goes under the top layer.
-    known_problem(request, desktop, "kwin", KWIN_KEEPS_THE_KEYBOARD)
+    # The last step: on KWin, a full-screen window comes back on top once the overlay hands the keyboard back.
     chatmon.call(DESK_WINDOW)
     chatmon.call("desk.showFullScreen(); until(lambda: desk.windowState() & Qt.WindowState.WindowFullScreen, 5); settled()", settle=0.5)
     x, y = centre(penguin(chatmon))
@@ -302,7 +283,6 @@ def test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales(tmp_p
 
 
 def test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else(desktop, chatmon, hands, request):
-    known_problem(request, desktop, "hyprland", HYPRLAND_ENDS_THE_PRESS)
     rect = penguin(chatmon)
     x, y = centre(rect)
     hands.move(x, y)
@@ -367,7 +347,6 @@ def test_with_a_screen_reader_the_ask_box_is_a_window_on_screen_and_focused(read
 
 def test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back(reader_session, qapp, request):
     session = reader_session
-    known_problem(request, session, "kwin", KWIN_KEEPS_THE_KEYBOARD)
     probe = Probe(session)
     hands = compositor_session.devices(session)
     try:

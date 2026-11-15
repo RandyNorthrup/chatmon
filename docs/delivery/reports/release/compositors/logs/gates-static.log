@@ -1,0 +1,27 @@
+# Windows, Python 3.14.10, worktree 04112b9 with the fixes (uncommitted); ruff 0.17.4; mypy 2.4.1 (compiled: yes)
+$ python -m ruff check .
+All checks passed!
+exit=0
+
+$ python -m mypy --platform linux
+Success: no issues found in 70 source files
+exit=0
+
+$ python -m mypy --platform win32
+Success: no issues found in 70 source files
+exit=0
+
+$ python -m mypy --platform darwin
+Success: no issues found in 70 source files
+exit=0
+
+$ python -m mypy --platform linux --follow-imports=silent tests/compositor_session.py tests/test_compositors.py
+Success: no issues found in 2 source files
+
+$ python packaging/extract_strings.py --check
+exit=0
+$ git status --short chatmon/locale/
+(nothing: the template is unchanged)
+
+$ grep -c 'type: ignore\|noqa' in the diff's added lines
+0

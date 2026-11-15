@@ -5,8 +5,57 @@
 tried on sway". Every check of [tests/test_sway.py](../../../../../tests/test_sway.py) now also runs on a headless
 KWin and a headless Hyprland ([tests/test_compositors.py](../../../../../tests/test_compositors.py), on
 [tests/compositor_session.py](../../../../../tests/compositor_session.py)), in WSL Arch, with the real Orca.
-No product file was changed; three product problems were found, each with a proposed fix below, checked but not
-committed.
+Three product problems were found. On the coordinator's go, their fixes landed in this branch's second commit, with
+a fourth for the gap seen when a monitor is unplugged, each guarded by a unit test CI runs and drilled red
+([The fixes, landed](#the-fixes-landed)). The sections after that one record the first round, before the fixes.
+
+## The fixes, landed
+
+| | What changed | Guarded in CI by (pretend compositor or stage) |
+|---|---|---|
+| 1. KWin keeps the keyboard | `LayerSurface._set_keyboard_mode` starts `_kept_timer` (`KEPT_GRACE`, 0.3 s, a QTimer the surface owns) when it lets the keyboard go while it has it; `_keyboard_kept` makes the surface again if it's still there, unless the surface closed, wants the keyboard again, lost it after all, or has a button held (then it waits for the release). `close()` stops the timer. | tests/test_wayland.py: `test_a_compositor_that_keeps_the_keyboard_after_its_let_go_gets_the_surface_made_again`, `test_a_compositor_that_takes_the_keyboard_away_keeps_its_surface`, `test_once_closed_the_overlay_makes_no_surface_for_a_keyboard_it_let_go` |
+| 2. Hyprland ends a held press | `Stage._tick`: while `_press` is set (a button held on the chatmon or its bubble), the input region is the whole stage, as for an open menu. | tests/test_overlay_stage.py: `test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer` |
+| 3. KWin refuses Qt's copy | `LayerSurface.copy` keeps what it put on Qt's clipboard; `_qt_window_focused(window: QWindow \| None)` puts it there again when one of Qt's windows gets the keyboard, once, and only while the overlay's selection is still the clipboard. The slot is a closure holding the surface weakly (`_watch_qt_focus`); `close()` disconnects it, and a call already on its way finds the surface closed. A focus change to no window keeps the text for the next one. | tests/test_wayland.py: `test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard`, `test_a_closed_overlay_puts_nothing_on_qts_clipboard` |
+| 4. A screen that moves under the stage | `Stage._tick`: when the chatmon's place is on no screen, the stage's own screen is looked at, so one that moved (KDE Plasma and sway move the one left to 0,0) is covered where it is now. `_watch_screen` wakes the stage on its screen's `geometryChanged` (within a frame, not at the next idle tick, up to a second); `close_stage` stops listening. | tests/test_stage_screens.py: `test_a_screen_that_moves_under_it_is_covered_where_it_is_now`, `test_a_screen_that_moves_wakes_the_stage_within_a_frame`, `test_a_closed_stage_hears_no_more_of_its_screen` |
+
+The landed code differs from [proposed-fixes.diff](proposed-fixes.diff) (the first round's, kept as it was) in what
+the coordinator asked for: typed parameters, the timer owned and stopped, the slot weak and disconnected; and in one
+bug the new tests found in the proposal: Qt reports "no focus window" between windows, and that dropped the text
+waiting for the next one.
+
+**On the real compositors.** The 5 strict xfails are plain checks again, and pass:
+[logs/kwin-hyprland-fixed.log](logs/kwin-hyprland-fixed.log), `CHATMON_COMPOSITORS=1`, **39 passed** (KWin and
+Hyprland). On sway, `CHATMON_SWAY=1` tests/test_sway.py and tests/test_wayland.py: [logs/sway-test_sway-fixed.log](logs/sway-test_sway-fixed.log),
+**57 passed** (52 before, and the 5 new layer tests), none skipped. Screenshots of the two checks that showed
+the problems, now passing: [shots/fixed/](shots/fixed/) (KWin's full-screen window back over the chatmon after
+the box closes; Hyprland's chatmon held through every step of the drag). What each compositor did:
+[observed-fixed.jsonl](observed-fixed.jsonl).
+
+**Red drills** ([drill-spec.json](drill-spec.json), `tests/drills/run.py`, each in a copy of the tree: green, the fix
+taken out and the test red, restored and green again): **14 of 14 pass.**
+
+- Through WSL ([logs/drills-linux.log](logs/drills-linux.log), [results](logs/drills-linux-results.json)): all 14.
+  Eleven take out one part of a fix and its unit test fails: fix 1's timer start, its "still has the keyboard"
+  guard, its stop on close; fix 2's held press; fix 3's copy kept, its "still ours" guard, its disconnect on close,
+  its closed guard; fix 4's fallback to its own screen, its `geometryChanged` connection, its stop on close.
+  Three take out a fix and run the real compositor's checks: fix 1 on KWin (the keyboard, full-screen and
+  penguin's-menu checks: 3 passed, 3 failed, 3 passed), fix 2 on Hyprland (the drag), fix 3 on KWin (the clipboard).
+- On Windows ([logs/drills-windows.log](logs/drills-windows.log)): the four that need no Wayland (fix 2, fix 4).
+
+The drills ran before one test fake changed (below); they bind `chatmon/layer.py` and `chatmon/penguin.py`, whose
+hashes in the logs are the committed files'.
+
+**Gates.** All on this commit's tree.
+
+- The whole suite on Windows: **1260 passed, 226 skipped**, nothing failed ([logs/suite-windows.log](logs/suite-windows.log)).
+  Its first run had 2 errors: tests/test_stage_features.py's pretend `Screen` had no `geometryChanged`, which the
+  stage now listens to; it has one now, as its docstring says it's "as much of one as the stage asks about".
+- The whole suite in WSL Arch: **1364 passed, 122 skipped** ([logs/suite-linux.log](logs/suite-linux.log)); OUTCOME.md's last was
+  1316 and 122, at 45a17b3: the 48 more are the 39 compositor checks and the 9 new unit tests.
+- `ruff check .`: all checks passed. mypy `--platform linux`, `win32`, `darwin`: no issues in 70 files each, with
+  no `type: ignore` or `noqa` added to `chatmon/` ([logs/gates-static.log](logs/gates-static.log)).
+- `python packaging/extract_strings.py --check`: exit 0, the template unchanged (no new text to translate).
+- tests/test_sway.py and tests/test_wayland.py on sway: 57 passed, above.
 
 ## Versions
 
@@ -102,10 +151,10 @@ desktop is under "What couldn't be checked".
 
 ## Product problems found
 
-Each is a strict xfail in tests/test_compositors.py, on its compositor only, naming this section: the check passes
-the day the product is fixed, and then fails until the mark is taken away. The three fixes together are in
-[proposed-fixes.diff](proposed-fixes.diff) (86 lines, `chatmon/layer.py` and `chatmon/penguin.py`), **not
-committed**. With them applied to the working tree, the five affected checks pass on both compositors
+*As found in the first round; all three are fixed now ([The fixes, landed](#the-fixes-landed)).* In the first
+round each was a strict xfail in tests/test_compositors.py, on its compositor only; the marks went with the
+fixes. The three fixes as first proposed are in [proposed-fixes.diff](proposed-fixes.diff) (86 lines,
+`chatmon/layer.py` and `chatmon/penguin.py`), then not committed. With them applied to the working tree, the five affected checks pass on both compositors
 ([logs/proposed-fixes-applied.log](logs/proposed-fixes-applied.log), `--runxfail`: 10 passed), and sway's whole
 test_sway.py, test_wayland.py and the stage's tests still pass on sway
 ([logs/proposed-fixes-applied-sway-and-stage.log](logs/proposed-fixes-applied-sway-and-stage.log): 106 passed).
@@ -319,13 +368,31 @@ still has it at x 1280 (`Stage._screen_removed`), and keeps that origin until a 
 the moved screen (`Stage._tick` asks `screenAt(behavior.x)`; nothing listens to a screen's geometry changing). On
 KWin, with the chatmon still, that was about a second: the stage's origin still 1280 and the chatmon at x -108 in
 its own coordinates 1 s after ([logs/probe-kwin-output-relayout.log](logs/probe-kwin-output-relayout.log)), then
-right; within 5 s in the check, on both. Not counted as a problem here (it puts itself right), but a place to look
-if a person sees the chatmon vanish for a moment when a monitor is unplugged: waking the stage on
-`QScreen.geometryChanged` would close it.
+right; within 5 s in the check, on both. Not counted as a problem in the first round (it puts itself right);
+fixed with the others all the same (fix 4: the stage wakes on its screen's `geometryChanged` and covers its own
+screen where it is now).
 
 ## The commands
 
-In WSL (`wsl.exe -d archlinux -- ...`), from the worktree's `/mnt/c/...` path, every run through [run.sh](run.sh):
+**The second round (the fixes landed).** On Windows, from the worktree, with `C:/Users/Randy/Coding/chatmon/.venv`,
+each started at BelowNormal priority:
+
+```sh
+R=docs/delivery/reports/release/compositors
+# the drills that need no Wayland, on Windows; then all 14 in WSL (wslvenv.bat: /var/tmp/plans-venv, nice 10)
+python tests/drills/run.py $R/drill-spec.json --only FIX2-held-press FIX4-own-screen-moved FIX4-woken-by-the-move \
+  FIX4-deaf-once-closed --log $R/logs/drills-windows.log
+python tests/drills/run.py $R/drill-spec.json --python <absolute path of $R/wslvenv.bat> --log $R/logs/drills-linux.log
+python -m pytest -p no:cacheprovider -q -rs                      # the whole suite: $R/logs/suite-windows.log
+python -m ruff check . ; python -m mypy --platform linux|win32|darwin ; python packaging/extract_strings.py --check
+#                                                                   $R/logs/gates-static.log
+```
+
+And in WSL, through run.sh as below: tests/test_compositors.py on KWin and Hyprland (`logs/kwin-hyprland-fixed.log`),
+the whole suite (`logs/suite-linux.log`), and `CHATMON_SWAY=1` tests/test_sway.py tests/test_wayland.py on sway
+(`logs/sway-test_sway-fixed.log`).
+
+**The first round.** In WSL (`wsl.exe -d archlinux -- ...`), from the worktree's `/mnt/c/...` path, every run through [run.sh](run.sh):
 nice 10, the venv first on PATH, `QT_QPA_PLATFORM=offscreen`, a `CHATMON_INSTANCE` of the run's own, and a header
 with the versions and the worktree's HEAD. Every compositor, bus, AT-SPI registry and Orca is started by the test
 bed in a runtime folder of the test's own and stopped by it (`Session.close`); nothing runs on a display of the
@@ -375,5 +442,6 @@ tests/sway_session.py` on `main` ([logs/lint.log](logs/lint.log)).
 | [observed.jsonl](observed.jsonl) | what each compositor did where the checks allow more than one way |
 | [probes/](probes/), [probes.sh](probes.sh) | the scripts behind the problems' evidence |
 | [collect.sh](collect.sh) | copies a run's notes and screenshots here |
+| [drill-spec.json](drill-spec.json), [wslvenv.py](wslvenv.py), [wslvenv.bat](wslvenv.bat) | the red drills of the landed fixes, and the WSL interpreter the drill runner is given |
 | [proposed-fixes.diff](proposed-fixes.diff) | the three fixes, not committed |
 | [versions.txt](versions.txt), [versions.sh](versions.sh), [run.sh](run.sh) | versions, and how every run was made |

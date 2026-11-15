@@ -562,3 +562,27 @@ def test_a_drop_lands_in_the_open_ask_box_only(stage, tmp_path):
     notes = tmp_path / "notes.txt"
     s.dropped("text/uri-list", f"{QUrl.fromLocalFile(str(notes)).toString()}\r\n".encode())
     assert pasted == [("files", [str(notes)])]
+
+
+def test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer(stage):
+    """Hyprland ends a press as soon as the pointer leaves the input region, though Wayland keeps a press with the
+    surface it began on (tests/test_compositors.py sees a drag drop the chatmon there, or turn into a click): while a
+    button is held on it, the whole stage is the input region, and the chatmon's own pixels again once it's let go."""
+    s, _box = stage
+    s._tick()
+    whole = [(0, 0, s._geo.width(), s._geo.height())]
+    assert s.surface.input and s.surface.input != whole
+    sprite = s.sprites.frame(s._frame.anim, s._frame.index, s._frame.mirror)
+    x, y, w, h = max(sprite.rects, key=lambda r: r[2] * r[3])
+    on = QPointF(s._penguin.x() + x + w / 2, s._penguin.y() + y + h / 2)
+    assert s._target_at(on.toPoint()) == "penguin"
+    gpos = on + QPointF(s.origin())
+    assert s.press(on, gpos, Qt.MouseButton.LeftButton)
+    s._tick()
+    assert s.surface.input == whole
+    s.move(on + QPointF(-200, 0), gpos + QPointF(-200, 0))  # dragged well off where it was
+    s._tick()
+    assert s.surface.input == whole
+    s.release(on + QPointF(-200, 0), gpos + QPointF(-200, 0), Qt.MouseButton.LeftButton)
+    s._tick()
+    assert s.surface.input != whole and s.surface.input

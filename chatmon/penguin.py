@@ -503,6 +503,7 @@ class Stage(QObject):
         self._grab = QPointF()
         self._dragging = False
         self._screen: QScreen | None = None
+        self._watched: QScreen | None = None  # the screen whose moves wake the stage (_watch_screen)
         self.menu = StageMenu(clock=lambda: self._clock())
         self._menu_rects: list[QRect] = []
         self._owned_menu: QMenu | None = None
@@ -965,6 +966,7 @@ class Stage(QObject):
     def close_stage(self) -> None:
         self._timer.stop()
         self._pointer_timer.stop()
+        self._unwatch_screen()
         self.drawing = None  # for good: set_drawing never starts it again
         self.surface.close()
 
@@ -975,12 +977,33 @@ class Stage(QObject):
         if screen is self._screen and not again:
             return
         self._screen = screen
+        self._watch_screen(screen)
         self._geo = screen.geometry()
         self._key = None  # draw it all again there
         # A bubble no taller than its share of this screen (it scrolls past that, with More).
         self.bubble.max_height = getattr(SpeechBubble, "SCREEN_SHARE", 0.4) * screen.availableGeometry().height()
         self.surface.set_screen(screen, self._geo)
         self._floor()
+
+    def _watch_screen(self, screen: QScreen) -> None:
+        """Hear the stage's screen move or change size. Another screen unplugged, KDE Plasma and sway move the one
+        left (to 0,0): the stage covers it where it is now within a frame, not at its next idle tick."""
+        if screen is self._watched:
+            return
+        self._unwatch_screen()
+        self._watched = screen
+        screen.geometryChanged.connect(self._screen_moved)
+
+    def _unwatch_screen(self) -> None:
+        old, self._watched = self._watched, None
+        if old is not None:
+            try:
+                old.geometryChanged.disconnect(self._screen_moved)
+            except (TypeError, RuntimeError):  # not connected, or gone with its screen
+                pass
+
+    def _screen_moved(self, _geometry: QRect) -> None:
+        self._wake()  # nothing once the stage is closed
 
     def _screen_removed(self, screen: QScreen) -> None:
         """A monitor unplugged, a laptop undocked: if the chatmon was on it, over to one that's still there
@@ -1007,8 +1030,10 @@ class Stage(QObject):
             self._follow_pointer(now)
         if not self._dragging:
             here = self._screen_at(QPoint(int(self.behavior.x), self._geo.center().y()))
+            if here is None:  # its place is on no screen: its own screen moved (another was unplugged), or a gap
+                here = self._screen
             if here is not None:
-                self._use_screen(here, again=here.geometry() != self._geo)  # its resolution or scale may have changed
+                self._use_screen(here, again=here.geometry() != self._geo)  # its place, resolution or scale may have changed
         floor = self._floor()
         f = self.behavior.tick(now)
         self.bubble.tick(now)
@@ -1063,7 +1088,7 @@ class Stage(QObject):
             (bubble_rect.x(), bubble_rect.y(), bubble_rect.width(), bubble_rect.height()) if bubble_rect is not None else None,
             (zs.x(), zs.y(), zs.width(), zs.height()) if zs.isValid() else None,
             hosted_rects,
-            (self._geo.width(), self._geo.height()) if self.menu.is_open() else None,
+            (self._geo.width(), self._geo.height()) if self.menu.is_open() or self._press is not None else None,
         )
         if parts != self._input_parts:
             self._take_input(parts)
@@ -1164,7 +1189,9 @@ class Stage(QObject):
 
     def _take_input(self, parts: tuple) -> None:
         """Take clicks where `parts` (plain numbers) says: the whole stage while the menu is open, as any popup menu
-        does (a click anywhere else closes it), else the sprite, the bubble, the z's and the hosted scene."""
+        does (a click anywhere else closes it), and while a button is held on the chatmon or its bubble (a drag:
+        Hyprland ends a press as soon as the pointer leaves the input region, though Wayland keeps it with the
+        surface it began on), else the sprite, the bubble, the z's and the hosted scene."""
         self._input_parts = parts
         rects, (px, py), bubble_t, zs_t, hosted_t, menu = parts
         if menu is not None:

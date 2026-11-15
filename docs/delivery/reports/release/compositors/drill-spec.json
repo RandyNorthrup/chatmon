@@ -1,0 +1,190 @@
+{
+  "drills": [
+    {
+      "id": "FIX1-kept-keyboard",
+      "requirement": "fix 1 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "            self._kept_timer.start()  # the compositor should take it away now; _keyboard_kept, if it doesn't\n",
+      "replace": "            pass  # drill: the keyboard the compositor kept is left there\n",
+      "test": [
+        "tests/test_wayland.py::test_a_compositor_that_keeps_the_keyboard_after_its_let_go_gets_the_surface_made_again"
+      ],
+      "expect": [
+        "test_a_compositor_that_keeps_the_keyboard_after_its_let_go_gets_the_surface_made_again"
+      ]
+    },
+    {
+      "id": "FIX1-leave-respected",
+      "requirement": "fix 1 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "        if self._closing or self._kb_wanted or not self._kb_focus or self._surface is None:\n            return  # closed, wanted again, or let go after all\n",
+      "replace": "        if self._closing or self._kb_wanted or self._surface is None:\n            return  # drill: made again though the keyboard went\n",
+      "test": [
+        "tests/test_wayland.py::test_a_compositor_that_takes_the_keyboard_away_keeps_its_surface"
+      ],
+      "expect": [
+        "test_a_compositor_that_takes_the_keyboard_away_keeps_its_surface"
+      ]
+    },
+    {
+      "id": "FIX1-stopped-on-close",
+      "requirement": "fix 1 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "        self._kept_timer.stop()\n        app = QGuiApplication.instance()\n",
+      "replace": "        app = QGuiApplication.instance()  # drill: the wait for the keyboard outlives the surface\n",
+      "test": [
+        "tests/test_wayland.py::test_once_closed_the_overlay_makes_no_surface_for_a_keyboard_it_let_go"
+      ],
+      "expect": [
+        "test_once_closed_the_overlay_makes_no_surface_for_a_keyboard_it_let_go"
+      ]
+    },
+    {
+      "id": "FIX2-held-press",
+      "requirement": "fix 2 (Hyprland)",
+      "file": "chatmon/penguin.py",
+      "find": "            (self._geo.width(), self._geo.height()) if self.menu.is_open() or self._press is not None else None,\n",
+      "replace": "            (self._geo.width(), self._geo.height()) if self.menu.is_open() else None,\n",
+      "test": [
+        "tests/test_overlay_stage.py::test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer"
+      ],
+      "expect": [
+        "test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer"
+      ]
+    },
+    {
+      "id": "FIX3-qt-clipboard-again",
+      "requirement": "fix 3 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "            self._qt_clipboard = text\n",
+      "replace": "            pass  # drill: Qt's copy never made again\n",
+      "test": [
+        "tests/test_wayland.py::test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard"
+      ],
+      "expect": [
+        "test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard"
+      ]
+    },
+    {
+      "id": "FIX3-only-if-ours",
+      "requirement": "fix 3 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "        if self._closing or self.selections[\"clipboard\"].source is None:\n",
+      "replace": "        if self._closing:  # drill: put back though another app copied since\n",
+      "test": [
+        "tests/test_wayland.py::test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard"
+      ],
+      "expect": [
+        "test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard"
+      ]
+    },
+    {
+      "id": "FIX3-disconnected-on-close",
+      "requirement": "fix 3 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "                app.focusWindowChanged.disconnect(self._focus_watch)\n",
+      "replace": "                pass  # drill: still listening once closed\n",
+      "test": [
+        "tests/test_wayland.py::test_a_closed_overlay_puts_nothing_on_qts_clipboard"
+      ],
+      "expect": [
+        "test_a_closed_overlay_puts_nothing_on_qts_clipboard"
+      ]
+    },
+    {
+      "id": "FIX3-nothing-once-closed",
+      "requirement": "fix 3 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "        if self._closing or self.selections[\"clipboard\"].source is None:\n",
+      "replace": "        if self.selections[\"clipboard\"].source is None:  # drill: a late call acts on a closed surface\n",
+      "test": [
+        "tests/test_wayland.py::test_a_closed_overlay_puts_nothing_on_qts_clipboard"
+      ],
+      "expect": [
+        "test_a_closed_overlay_puts_nothing_on_qts_clipboard"
+      ]
+    },
+    {
+      "id": "FIX4-own-screen-moved",
+      "requirement": "screen moved",
+      "file": "chatmon/penguin.py",
+      "find": "            if here is None:  # its place is on no screen: its own screen moved (another was unplugged), or a gap\n                here = self._screen\n",
+      "replace": "            pass  # drill: a screen that moved under it is left where it was\n",
+      "test": [
+        "tests/test_stage_screens.py::test_a_screen_that_moves_under_it_is_covered_where_it_is_now"
+      ],
+      "expect": [
+        "test_a_screen_that_moves_under_it_is_covered_where_it_is_now"
+      ]
+    },
+    {
+      "id": "FIX4-woken-by-the-move",
+      "requirement": "screen moved",
+      "file": "chatmon/penguin.py",
+      "find": "        screen.geometryChanged.connect(self._screen_moved)\n",
+      "replace": "        pass  # drill: deaf to its screen moving\n",
+      "test": [
+        "tests/test_stage_screens.py::test_a_screen_that_moves_wakes_the_stage_within_a_frame"
+      ],
+      "expect": [
+        "test_a_screen_that_moves_wakes_the_stage_within_a_frame"
+      ]
+    },
+    {
+      "id": "FIX4-deaf-once-closed",
+      "requirement": "screen moved",
+      "file": "chatmon/penguin.py",
+      "find": "        self._pointer_timer.stop()\n        self._unwatch_screen()\n",
+      "replace": "        self._pointer_timer.stop()  # drill: still listening to its screen once closed\n",
+      "test": [
+        "tests/test_stage_screens.py::test_a_closed_stage_hears_no_more_of_its_screen"
+      ],
+      "expect": [
+        "test_a_closed_stage_hears_no_more_of_its_screen"
+      ]
+    },
+    {
+      "id": "REAL1-kwin-keyboard",
+      "requirement": "fix 1 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "            self._kept_timer.start()  # the compositor should take it away now; _keyboard_kept, if it doesn't\n",
+      "replace": "            pass  # drill: the keyboard the compositor kept is left there\n",
+      "test": [
+        "tests/test_compositors.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open[kwin]",
+        "tests/test_compositors.py::test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box[kwin]",
+        "tests/test_compositors.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back[kwin]"
+      ],
+      "expect": [
+        "test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open[kwin]",
+        "test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box[kwin]",
+        "test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back[kwin]"
+      ]
+    },
+    {
+      "id": "REAL2-hyprland-drag",
+      "requirement": "fix 2 (Hyprland)",
+      "file": "chatmon/penguin.py",
+      "find": "            (self._geo.width(), self._geo.height()) if self.menu.is_open() or self._press is not None else None,\n",
+      "replace": "            (self._geo.width(), self._geo.height()) if self.menu.is_open() else None,\n",
+      "test": [
+        "tests/test_compositors.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else[hyprland]"
+      ],
+      "expect": [
+        "test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else[hyprland]"
+      ]
+    },
+    {
+      "id": "REAL3-kwin-clipboard",
+      "requirement": "fix 3 (KWin)",
+      "file": "chatmon/layer.py",
+      "find": "            self._qt_clipboard = text\n",
+      "replace": "            pass  # drill: Qt's copy never made again\n",
+      "test": [
+        "tests/test_compositors.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin]"
+      ],
+      "expect": [
+        "test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin]"
+      ]
+    }
+  ]
+}

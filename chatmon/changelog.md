@@ -65,6 +65,8 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - Codex settings with an array of arrays across lines can be connected.
 - With two monitors on X11, a full-screen app on the other monitor no longer hides the chatmon; with X11 display scaling, clicks land exactly on it.
 - On sway, the ask box keeps the keyboard until you close it; before, typing could go to the window behind it. A copy from the ask box pastes at once into Chatmon's own windows, and with a screen reader the chatmon's menu still works from the keyboard and bubbles no longer cover the ask box.
+- **KDE Plasma:** closing the ask box gives the keyboard back to the window you were typing in (before, typing went nowhere until you clicked one), so a full-screen video comes back in front of the chatmon too, and what you copy in the ask box pastes into Chatmon's own windows. When a monitor is unplugged and the desktop moves the one left, the chatmon follows at once (on sway too).
+- **Hyprland:** dragging the chatmon quickly no longer drops it on the way, or opens the ask box instead.
 - Hovering a walking chatmon stops it mid-step instead of snapping it round.
 - The fairy style's highlighted button label could not be seen.
 - pip and pipx installs include the sounds and offline phrases.
