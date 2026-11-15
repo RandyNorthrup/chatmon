@@ -1,0 +1,29 @@
+command: python -m pytest -q -p no:cacheprovider tests/test_presence.py tests/test_linuxsession.py tests/test_winlock.py tests/test_heads_up.py tests/test_platform_events.py tests/test_a11y.py tests/test_macnative.py tests/test_portal_bus.py
+...s....s...s.s.........s....ss..............s.....s..........ssssssssss [ 81%]
+..s.ssssssssssss                                                         [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_presence.py:72: macOS only
+SKIPPED [1] tests\test_presence.py:141: no GNOME session here
+SKIPPED [1] tests\test_presence.py:218: macOS only
+SKIPPED [1] tests\test_presence.py:246: PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal
+SKIPPED [1] tests\test_presence.py:347: Linux with an X display
+SKIPPED [1] tests\test_linuxsession.py:102: no PackageKit here
+SKIPPED [2] tests\private_bus.py:19: Linux with dbus-run-session
+SKIPPED [1] tests\test_heads_up.py:135: macOS only
+SKIPPED [1] tests\test_platform_events.py:305: Linux with dbus-run-session
+SKIPPED [8] tests\test_platform_events.py:341: Linux with dbus-run-session
+SKIPPED [1] tests\test_platform_events.py:360: Linux with dbus-run-session
+SKIPPED [1] tests\test_a11y.py:46: Linux with dbus-run-session
+SKIPPED [1] tests\test_a11y.py:70: macOS
+SKIPPED [1] tests\test_macnative.py:20: macOS only
+SKIPPED [1] tests\test_macnative.py:54: macOS only
+SKIPPED [1] tests\test_macnative.py:88: macOS only
+SKIPPED [1] tests\test_macnative.py:116: macOS only
+SKIPPED [1] tests\test_macnative.py:134: macOS only
+SKIPPED [1] tests\test_macnative.py:162: macOS only
+SKIPPED [1] tests\test_macnative.py:170: macOS only
+SKIPPED [1] tests\test_portal_bus.py:41: Linux with dbus-run-session
+SKIPPED [2] tests\test_portal_bus.py:80: Linux with dbus-run-session
+SKIPPED [1] tests\test_portal_bus.py:119: Linux with dbus-run-session
+56 passed, 32 skipped in 7.00s
+exit 0

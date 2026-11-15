@@ -1,0 +1,65 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/m4a/docs/delivery/reports/m4a/drill-spec-linux.json
+python: /var/tmp/m4a-venv/bin/python
+copy: /tmp/chatmon-drill-l_88zu8_
+copied 290 files
+
+=== drill L-AC-02-x11-place (M4A-02) on chatmon/presence.py
+command: /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_presence.py::test_x11_says_where_a_window_is
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.17s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_x11_says_where_a_window_is ________________________
+
+    @pytest.mark.skipif(not sys.platform.startswith("linux") or not os.environ.get("DISPLAY"), reason="Linux with an X display")
+    def test_x11_says_where_a_window_is():
+        """The X server's own answer (XGetGeometry, XTranslateCoordinates), which covered() compares: a window's place on
+        the whole X screen. The window is made with Xlib itself, override-redirect so no window manager moves it (Qt's xcb
+        platform would need libraries a bare X server, as CI's Xvfb, goes without)."""
+        import ctypes
+    
+        class XSetWindowAttributes(ctypes.Structure):  # Xlib.h; only override_redirect is set
+            _fields_ = [("background_pixmap", ctypes.c_ulong), ("background_pixel", ctypes.c_ulong), ("border_pixmap", ctypes.c_ulong),
+                        ("border_pixel", ctypes.c_ulong), ("bit_gravity", ctypes.c_int), ("win_gravity", ctypes.c_int),
+                        ("backing_store", ctypes.c_int), ("backing_planes", ctypes.c_ulong), ("backing_pixel", ctypes.c_ulong),
+                        ("save_under", ctypes.c_int), ("event_mask", ctypes.c_long), ("do_not_propagate_mask", ctypes.c_long),
+                        ("override_redirect", ctypes.c_int), ("colormap", ctypes.c_ulong), ("cursor", ctypes.c_ulong)]
+    
+        opened = _x_display()
+        if opened is None:
+            pytest.skip(f"no X server answers at DISPLAY={os.environ.get('DISPLAY')}")
+        xlib, display = opened
+        xlib.XDefaultRootWindow.restype = ctypes.c_ulong
+        xlib.XDefaultRootWindow.argtypes = [ctypes.c_void_p]
+        xlib.XCreateWindow.restype = ctypes.c_ulong
+        xlib.XCreateWindow.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.c_int, ctypes.c_int, ctypes.c_uint, ctypes.c_uint, ctypes.c_uint,
+                                       ctypes.c_int, ctypes.c_uint, ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(XSetWindowAttributes)]
+        for name in ("XMapWindow", "XDestroyWindow"):
+            getattr(xlib, name).argtypes = [ctypes.c_void_p, ctypes.c_ulong]
+        xlib.XSync.argtypes = [ctypes.c_void_p, ctypes.c_int]
+        xlib.XCloseDisplay.argtypes = [ctypes.c_void_p]
+        cw_override_redirect, input_output, copy_from_parent = 1 << 9, 1, 0
+        attributes = XSetWindowAttributes(override_redirect=1)
+        window = xlib.XCreateWindow(display, xlib.XDefaultRootWindow(display), 120, 80, 320, 200, 0, copy_from_parent, input_output, None,
+                                    cw_override_redirect, ctypes.byref(attributes))
+        try:
+            xlib.XMapWindow(display, window)
+            xlib.XSync(display, 0)  # made and shown before Chatmon's own connection asks
+            x = presence._X11()
+>           assert x.ok and x.rect(window) == (120, 80, 320, 200)
+E           assert (True and (0, 0, 320, 200) == (120, 80, 320, 200)
+E            +  where True = <chatmon.presence._X11 object at 0x78d092240ec0>.ok
+E             
+E             At index 0 diff: 0 != 120
+E             Use -v to get more diff)
+
+tests/test_presence.py:382: AssertionError
+1 failed in 1.01s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.00s
+
+=== summary
+PASS L-AC-02-x11-place

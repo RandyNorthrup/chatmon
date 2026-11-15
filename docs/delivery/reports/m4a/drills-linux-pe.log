@@ -1,0 +1,164 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/m4a/docs/delivery/reports/m4a/drill-spec-linux.json
+python: /var/tmp/m4a-venv/bin/python
+copy: /tmp/chatmon-drill-ty07yqcd
+copied 290 files
+
+=== drill L-AC-05-starts-services (M4A-05) on chatmon/linuxsession.py
+command: /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_asking_about_do_not_disturb_never_starts_a_service
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 28.32s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_asking_about_do_not_disturb_never_starts_a_service ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-1/test_asking_about_do_not_distu0')
+
+    @linux_bus
+    def test_asking_about_do_not_disturb_never_starts_a_service(tmp_path):
+        """SwayNotificationCenter named as the server, but its own bus name not running, and startable (a D-Bus
+        service file, as the swaync package installs): asking doesn't start it; an ordinary call would."""
+        pytest.importorskip("PyQt6.QtDBus")
+        services, started = tmp_path / "services", tmp_path / "started"
+        services.mkdir()
+        (services / "org.erikreider.swaync.cc.service").write_text(
+            f"[D-BUS Service]\nName=org.erikreider.swaync.cc\nExec=/bin/sh -c 'touch {started}; sleep 5'\n", encoding="utf-8")
+        config = tmp_path / "session.conf"
+        config.write_text(
+            "<!DOCTYPE busconfig PUBLIC \"-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN\" "
+            "\"http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd\">\n"
+            f"<busconfig><type>session</type><listen>unix:tmpdir={tmp_path}</listen><servicedir>{services}</servicedir>"
+            "<policy context=\"default\"><allow send_destination=\"*\" eavesdrop=\"true\"/><allow eavesdrop=\"true\"/><allow own=\"*\"/></policy>"
+            "</busconfig>\n", encoding="utf-8")
+        check = f'echo "started before: $(test -e {started} && echo yes || echo no)"'
+        ordinary = ("dbus-send --session --print-reply --dest=org.erikreider.swaync.cc /org/erikreider/swaync/cc "
+                    "org.erikreider.swaync.cc.GetDnd >/dev/null 2>&1; sleep 0.5")
+        out, log = _on_a_private_bus(tmp_path, ["--name", "SwayNotificationCenter", "--dnd", "on", "--not-own"], DND_CLIENT, config,
+                                     after=f'{check}; {ordinary}; echo "started after: $(test -e {started} && echo yes || echo no)"')
+>       assert "quiet None" in out and "started before: no" in out, out  # not known, and not started
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: quiet None
+E         started before: yes
+E         started after: yes
+E         dbus-daemon[387]: [session uid=1000 pid=387 pidfd=5] Activating service name='org.erikreider.swaync.cc' requested by ':1.1' (uid=1000 pid=395 comm="/var/tmp/m4a-venv/bin/python -c ?import sys?sys.pa" label="kernel")
+E         dbus-daemon[387]: [session uid=1000 pid=387 pidfd=5] Failed to activate service 'org.erikreider.swaync.cc': timed out (service_start_timeout=25000ms)
+E         
+E       assert ('quiet None' in "quiet None\nstarted before: yes\nstarted after: yes\ndbus-daemon[387]: [session uid=1000 pid=387 pidfd=5] Activating ...00 pid=387 pidfd=5] Failed to activate service 'org.erikreider.swaync.cc': timed out (service_start_timeout=25000ms)\n" and 'started before: no' in "quiet None\nstarted before: yes\nstarted after: yes\ndbus-daemon[387]: [session uid=1000 pid=387 pidfd=5] Activating ...00 pid=387 pidfd=5] Failed to activate service 'org.erikreider.swaync.cc': timed out (service_start_timeout=25000ms)\n")
+
+tests/test_platform_events.py:381: AssertionError
+1 failed in 26.97s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 27.79s
+
+=== drill L-AC-05-dunst-question (M4A-05) on chatmon/linuxsession.py
+command: /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server
+-- green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 13.79s
+-- red: exit 1
+F.......                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_each_servers_do_not_disturb_is_read_from_the_server[dunst-on-Do Not Disturb] _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-5/test_each_servers_do_not_distu0')
+server = 'dunst', dnd = 'on', expected = 'Do Not Disturb'
+
+    @linux_bus
+    @pytest.mark.parametrize("server, dnd, expected", [
+        ("dunst", "on", "Do Not Disturb"),
+        ("dunst", "off", "None"),
+        ("mako", "on", "Do Not Disturb"),
+        ("mako", "off", "None"),
+        ("SwayNotificationCenter", "on", "Do Not Disturb"),
+        ("Xfce Notify Daemon", "on", "Do Not Disturb"),
+        ("Xfce Notify Daemon", "unset", "None"),
+        ("Plasma", "on", "Do Not Disturb"),
+    ])
+    def test_each_servers_do_not_disturb_is_read_from_the_server(tmp_path, server, dnd, expected):
+        pytest.importorskip("PyQt6.QtDBus")
+        out, log = _on_a_private_bus(tmp_path, ["--name", server, "--dnd", dnd], DND_CLIENT)
+>       assert f"quiet {expected}" in out, out
+E       AssertionError: quiet None
+E         
+E       assert 'quiet Do Not Disturb' in 'quiet None\n'
+
+tests/test_platform_events.py:355: AssertionError
+1 failed, 7 passed in 13.53s
+-- restored green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 11.76s
+
+=== drill L-AC-07a-not-replaced (M4A-07) on chatmon/sysnotify.py
+command: /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.06s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_the_notification_server_gets_transient_replacing_and_urgent_notifications _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-8/test_the_notification_server_g0')
+
+    @linux_bus
+    def test_the_notification_server_gets_transient_replacing_and_urgent_notifications(tmp_path):
+        pytest.importorskip("PyQt6.QtDBus")
+        out, log = _on_a_private_bus(tmp_path, ["--name", "dunst", "--press", "1"], NOTIFY_CLIENT)
+        sent = [json.loads(line) for line in log.splitlines() if '"Notify"' in line]
+        assert len(sent) == 3, out
+        first, second, alert = sent
+        assert first["signature"] == "susssasa{sv}i" and first["replaces"] == 0 and first["hints"]["transient"] == ["b", True]
+        assert first["actions"] == ["0", "Snooze 10 min", "1", "Done"]
+>       assert second["replaces"] == first["id"] and second["hints"]["transient"] == ["b", True]  # one replaces the other
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (0 == 1)
+
+tests/test_platform_events.py:314: AssertionError
+1 failed in 3.78s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.08s
+
+=== drill L-AC-07b-action-unheard (M4A-07) on chatmon/sysnotify.py
+command: /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.95s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_the_notification_server_gets_transient_replacing_and_urgent_notifications _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-11/test_the_notification_server_g0')
+
+    @linux_bus
+    def test_the_notification_server_gets_transient_replacing_and_urgent_notifications(tmp_path):
+        pytest.importorskip("PyQt6.QtDBus")
+        out, log = _on_a_private_bus(tmp_path, ["--name", "dunst", "--press", "1"], NOTIFY_CLIENT)
+        sent = [json.loads(line) for line in log.splitlines() if '"Notify"' in line]
+        assert len(sent) == 3, out
+        first, second, alert = sent
+        assert first["signature"] == "susssasa{sv}i" and first["replaces"] == 0 and first["hints"]["transient"] == ["b", True]
+        assert first["actions"] == ["0", "Snooze 10 min", "1", "Done"]
+        assert second["replaces"] == first["id"] and second["hints"]["transient"] == ["b", True]  # one replaces the other
+        assert alert["hints"]["urgency"] == ["y", 2] and "transient" not in alert["hints"] and alert["replaces"] == 0
+        assert "urgency" not in first["hints"]
+        # The server pressed "Done" on the first: reported, with that button's place.
+>       assert f"pressed [1] read aloud id {second['id']}" in out, out
+E       AssertionError: pressed [] read aloud id 1
+E         
+E       assert 'pressed [1] read aloud id 1' in 'pressed [] read aloud id 1\n'
+
+tests/test_platform_events.py:318: AssertionError
+1 failed in 3.51s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.32s
+
+=== summary
+PASS L-AC-05-starts-services
+PASS L-AC-05-dunst-question
+PASS L-AC-07a-not-replaced
+PASS L-AC-07b-action-unheard
