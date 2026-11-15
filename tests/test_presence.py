@@ -3,9 +3,9 @@ and never raise."""
 
 import os
 import sys
-from pathlib import Path
 
 import pytest
+from PyQt6.QtCore import qVersion
 
 from chatmon import presence
 
@@ -221,15 +221,29 @@ def test_macos_reads_increase_contrast():
     assert presence.Desk("cocoa").high_contrast() == presence._mac_increase_contrast()
 
 
-def test_qts_contrast_change_is_passed_on(qapp):
-    from PyQt6.QtCore import Qt
+def test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms(qapp, monkeypatch):
+    """Qt before 6.10 (Ubuntu 24.04's 6.4, Debian 13's 6.8) has no QStyleHints.accessibility(): nothing raises, Qt's
+    word is no, and nothing is connected."""
     from PyQt6.QtGui import QGuiApplication
 
-    from PyQt6.QtCore import pyqtBoundSignal
+    class OldStyleHints:  # QStyleHints as Qt 6.9 and before have it: no accessibility()
+        pass
 
-    hints = QGuiApplication.styleHints().accessibility()
+    monkeypatch.setattr(QGuiApplication, "styleHints", staticmethod(lambda: OldStyleHints()))
+    presence.Desk("offscreen").close()  # connects Qt's signal where there is one: here, nothing to connect, and no error
+    assert presence._qt_high_contrast() is False
+
+
+def test_qts_contrast_change_is_passed_on(qapp):
+    from PyQt6.QtCore import Qt, pyqtBoundSignal
+    from PyQt6.QtGui import QGuiApplication
+
+    style_hints = QGuiApplication.styleHints()
+    if not hasattr(style_hints, "accessibility"):  # QStyleHints.accessibility() is Qt 6.10's
+        pytest.skip(f"Qt {qVersion()} is before 6.10: no contrast preference to follow")
+    hints = style_hints.accessibility()
     if not isinstance(getattr(hints, "contrastPreferenceChanged", None), pyqtBoundSignal):
-        pytest.skip("Qt before 6.10, or PyQt6 6.11, which wraps contrastPreferenceChanged as a method, not a signal")
+        pytest.skip("PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal")
     desk = presence.Desk("offscreen")
     changes = []
     desk.settings_changed.connect(lambda: changes.append(True))
@@ -315,39 +329,59 @@ def test_the_linux_listeners_go_with_their_desk(linux_desk):
     assert sip.isdeleted(portal) and sip.isdeleted(dnd) and sip.isdeleted(gnome)
 
 
-X11_CLIENT = r"""
-import sys, time
-sys.path.insert(0, sys.argv[1])
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QWidget
-app = QApplication([])
-from chatmon import presence
-window = QWidget(None, Qt.WindowType.FramelessWindowHint)
-window.setGeometry(120, 80, 320, 200)
-window.show()
-end = time.monotonic() + 1.5
-while time.monotonic() < end:
-    app.processEvents()
-    time.sleep(0.02)
-x = presence._X11()
-g = window.geometry()
-print("qt", g.x(), g.y(), g.width(), g.height())
-print("x11", *(x.rect(int(window.winId())) or ("none",)))
-print("root", *(x.rect(x.root) or ("none",))[2:])
-"""
+def _x_display():
+    """Xlib, and a connection of the test's own to the X server; None where no X server answers."""
+    import ctypes
+    import ctypes.util
+
+    try:
+        xlib = ctypes.CDLL(ctypes.util.find_library("X11") or "libX11.so.6")
+    except OSError:
+        return None
+    xlib.XOpenDisplay.restype = ctypes.c_void_p
+    xlib.XOpenDisplay.argtypes = [ctypes.c_char_p]
+    display = xlib.XOpenDisplay(None)
+    return (xlib, display) if display else None
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux") or not os.environ.get("DISPLAY"), reason="Linux with an X display")
 def test_x11_says_where_a_window_is():
     """The X server's own answer (XGetGeometry, XTranslateCoordinates), which covered() compares: a window's place on
-    the whole X screen, as Qt put it there."""
-    import subprocess
+    the whole X screen. The window is made with Xlib itself, override-redirect so no window manager moves it (Qt's xcb
+    platform would need libraries a bare X server, as CI's Xvfb, goes without)."""
+    import ctypes
 
-    env = dict(os.environ, QT_QPA_PLATFORM="xcb", QT_ENABLE_HIGHDPI_SCALING="0", QT_SCALE_FACTOR="1")
-    env.pop("WAYLAND_DISPLAY", None)
-    out = subprocess.run([sys.executable, "-c", X11_CLIENT, str(Path(__file__).resolve().parent.parent)], capture_output=True, text=True,
-                         timeout=60, env=env)
-    lines = dict(line.split(" ", 1) for line in out.stdout.splitlines() if " " in line)
-    assert "qt" in lines and lines.get("x11") == lines["qt"], out.stdout + out.stderr
-    width, height = map(int, lines["root"].split())
-    assert width >= 440 and height >= 280  # the root window spans the screen the window is on
+    class XSetWindowAttributes(ctypes.Structure):  # Xlib.h; only override_redirect is set
+        _fields_ = [("background_pixmap", ctypes.c_ulong), ("background_pixel", ctypes.c_ulong), ("border_pixmap", ctypes.c_ulong),
+                    ("border_pixel", ctypes.c_ulong), ("bit_gravity", ctypes.c_int), ("win_gravity", ctypes.c_int),
+                    ("backing_store", ctypes.c_int), ("backing_planes", ctypes.c_ulong), ("backing_pixel", ctypes.c_ulong),
+                    ("save_under", ctypes.c_int), ("event_mask", ctypes.c_long), ("do_not_propagate_mask", ctypes.c_long),
+                    ("override_redirect", ctypes.c_int), ("colormap", ctypes.c_ulong), ("cursor", ctypes.c_ulong)]
+
+    opened = _x_display()
+    if opened is None:
+        pytest.skip(f"no X server answers at DISPLAY={os.environ.get('DISPLAY')}")
+    xlib, display = opened
+    xlib.XDefaultRootWindow.restype = ctypes.c_ulong
+    xlib.XDefaultRootWindow.argtypes = [ctypes.c_void_p]
+    xlib.XCreateWindow.restype = ctypes.c_ulong
+    xlib.XCreateWindow.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.c_int, ctypes.c_int, ctypes.c_uint, ctypes.c_uint, ctypes.c_uint,
+                                   ctypes.c_int, ctypes.c_uint, ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(XSetWindowAttributes)]
+    for name in ("XMapWindow", "XDestroyWindow"):
+        getattr(xlib, name).argtypes = [ctypes.c_void_p, ctypes.c_ulong]
+    xlib.XSync.argtypes = [ctypes.c_void_p, ctypes.c_int]
+    xlib.XCloseDisplay.argtypes = [ctypes.c_void_p]
+    cw_override_redirect, input_output, copy_from_parent = 1 << 9, 1, 0
+    attributes = XSetWindowAttributes(override_redirect=1)
+    window = xlib.XCreateWindow(display, xlib.XDefaultRootWindow(display), 120, 80, 320, 200, 0, copy_from_parent, input_output, None,
+                                cw_override_redirect, ctypes.byref(attributes))
+    try:
+        xlib.XMapWindow(display, window)
+        xlib.XSync(display, 0)  # made and shown before Chatmon's own connection asks
+        x = presence._X11()
+        assert x.ok and x.rect(window) == (120, 80, 320, 200)
+        root = x.rect(x.root)
+        assert root is not None and root[:2] == (0, 0) and root[2] >= 440 and root[3] >= 280  # the whole X screen
+    finally:
+        xlib.XDestroyWindow(display, window)
+        xlib.XCloseDisplay(display)

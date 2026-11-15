@@ -29,4 +29,6 @@ PASS AC-10-plugged
 PASS AC-11-told-twice
 PASS AC-11-seen-inverted
 PASS AC-04a-listener-outlives-desk
+PASS AC-04b-old-qt-hints
+PASS AC-01b-old-qt-contrast
 exit 0

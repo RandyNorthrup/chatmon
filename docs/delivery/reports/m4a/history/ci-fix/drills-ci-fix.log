@@ -1,0 +1,104 @@
+red drills from docs\delivery\reports\m4a\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-zzo_qyuy
+copied 290 files
+
+=== drill AC-04b-old-qt-hints (M4A-04) on chatmon/presence.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms __
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000141315EDA90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000141316ECB00>
+
+    def test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms(qapp, monkeypatch):
+        """Qt before 6.10 (Ubuntu 24.04's 6.4, Debian 13's 6.8) has no QStyleHints.accessibility(): nothing raises, Qt's
+        word is no, and nothing is connected."""
+        from PyQt6.QtGui import QGuiApplication
+    
+        class OldStyleHints:  # QStyleHints as Qt 6.9 and before have it: no accessibility()
+            pass
+    
+        monkeypatch.setattr(QGuiApplication, "styleHints", staticmethod(lambda: OldStyleHints()))
+>       presence.Desk("offscreen").close()  # connects Qt's signal where there is one: here, nothing to connect, and no error
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_presence.py:233: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+chatmon\presence.py:378: in __init__
+    self._watch_qt_contrast()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <chatmon.presence.Desk object at 0x00000141312FB1B0>
+
+    def _watch_qt_contrast(self) -> None:
+        """Qt 6.10 and later say when the system's contrast preference changes, on every platform. PyQt6 6.11
+        wraps that signal as a method, so there the platforms' own signals alone say so (6.12 has it right)."""
+        try:
+            from PyQt6.QtGui import QGuiApplication
+    
+            if QGuiApplication.instance() is None:
+                return
+>           QGuiApplication.styleHints().accessibility().contrastPreferenceChanged.connect(self.settings_changed)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OldStyleHints' object has no attribute 'accessibility'
+
+chatmon\presence.py:388: AttributeError
+1 failed in 0.44s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.57s
+
+=== drill AC-01b-old-qt-contrast (M4A-01) on chatmon/presence.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms __
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000195859BDA90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019585ADC9D0>
+
+    def test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms(qapp, monkeypatch):
+        """Qt before 6.10 (Ubuntu 24.04's 6.4, Debian 13's 6.8) has no QStyleHints.accessibility(): nothing raises, Qt's
+        word is no, and nothing is connected."""
+        from PyQt6.QtGui import QGuiApplication
+    
+        class OldStyleHints:  # QStyleHints as Qt 6.9 and before have it: no accessibility()
+            pass
+    
+        monkeypatch.setattr(QGuiApplication, "styleHints", staticmethod(lambda: OldStyleHints()))
+        presence.Desk("offscreen").close()  # connects Qt's signal where there is one: here, nothing to connect, and no error
+>       assert presence._qt_high_contrast() is False
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_presence.py:234: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _qt_high_contrast() -> bool:
+        """Qt's own word (6.10 and later), from the platform's theme."""
+        try:
+            from PyQt6.QtCore import Qt
+            from PyQt6.QtGui import QGuiApplication
+    
+>           return QGuiApplication.styleHints().accessibility().contrastPreference() == Qt.ContrastPreference.HighContrast
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OldStyleHints' object has no attribute 'accessibility'
+
+chatmon\presence.py:549: AttributeError
+1 failed in 0.92s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.42s
+
+=== summary
+PASS AC-04b-old-qt-hints
+PASS AC-01b-old-qt-contrast

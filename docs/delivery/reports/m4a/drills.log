@@ -1,19 +1,19 @@
 red drills from docs\delivery\reports\m4a\drill-spec.json
 python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
-copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-jf9cirpu
-copied 213 files
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-79teq7ui
+copied 290 files
 
 === drill AC-01a-portal-key (M4A-01) on chatmon/presence.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.47s
+1 passed in 0.94s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _________ test_the_portals_contrast_decides_and_says_when_it_changes __________
 
-linux_desk = (<chatmon.presence.Desk object at 0x0000026049958410>, [True])
+linux_desk = (<chatmon.presence.Desk object at 0x00000228449A1EF0>, [True])
 
     def test_the_portals_contrast_decides_and_says_when_it_changes(linux_desk):
         desk, changes = linux_desk
@@ -26,27 +26,25 @@ linux_desk = (<chatmon.presence.Desk object at 0x0000026049958410>, [True])
 >       assert desk.high_contrast() is False and changes == [True]
 E       assert (True is False)
 E        +  where True = high_contrast()
-E        +    where high_contrast = <chatmon.presence.Desk object at 0x0000026049958410>.high_contrast
+E        +    where high_contrast = <chatmon.presence.Desk object at 0x00000228449A1EF0>.high_contrast
 
 tests\test_presence.py:186: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
-1 failed in 0.49s
+1 failed in 1.56s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.39s
+1 passed in 2.02s
 
 === drill AC-01a-portal-flag (M4A-01) on chatmon/linuxsession.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_linuxsession.py::test_portal_settings_are_yes_no_or_unknown tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
 -- green: exit 0, 2 passed
 ..                                                                       [100%]
-2 passed in 0.52s
+2 passed in 4.42s
 -- red: exit 1
 FF                                                                       [100%]
 ================================== FAILURES ===================================
 _________________ test_portal_settings_are_yes_no_or_unknown __________________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000002C9AC2945F0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001DC1925DE50>
 
     def test_portal_settings_are_yes_no_or_unknown(qapp):
         from PyQt6.QtDBus import QDBusVariant
@@ -55,13 +53,13 @@ qapp = <PyQt6.QtWidgets.QApplication object at 0x000002C9AC2945F0>
     
 >       assert linuxsession.portal_flag(1) is True and linuxsession.portal_flag(0) is False
 E       AssertionError: assert (False is True)
-E        +  where False = <function portal_flag at 0x000002C9AC2119B0>(1)
-E        +    where <function portal_flag at 0x000002C9AC2119B0> = <module 'chatmon.linuxsession' from 'C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-drill-jf9cirpu\\chatmon\\linuxsession.py'>.portal_flag
+E        +  where False = <function portal_flag at 0x000001DC192109E0>(1)
+E        +    where <function portal_flag at 0x000001DC192109E0> = <module 'chatmon.linuxsession' from 'C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-drill-79teq7ui\\chatmon\\linuxsession.py'>.portal_flag
 
 tests\test_linuxsession.py:85: AssertionError
 _________ test_the_portals_contrast_decides_and_says_when_it_changes __________
 
-linux_desk = (<chatmon.presence.Desk object at 0x000002C9AC0DAB70>, [True])
+linux_desk = (<chatmon.presence.Desk object at 0x000001DC18DCAE90>, [True])
 
     def test_the_portals_contrast_decides_and_says_when_it_changes(linux_desk):
         desk, changes = linux_desk
@@ -74,29 +72,26 @@ linux_desk = (<chatmon.presence.Desk object at 0x000002C9AC0DAB70>, [True])
 >       assert desk.high_contrast() is False and changes == [True]
 E       assert (True is False)
 E        +  where True = high_contrast()
-E        +    where high_contrast = <chatmon.presence.Desk object at 0x000002C9AC0DAB70>.high_contrast
+E        +    where high_contrast = <chatmon.presence.Desk object at 0x000001DC18DCAE90>.high_contrast
 
 tests\test_presence.py:186: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_linuxsession.py::test_portal_settings_are_yes_no_or_unknown
-FAILED tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
-2 failed in 0.52s
+2 failed in 2.01s
 -- restored green: exit 0, 2 passed
 ..                                                                       [100%]
-2 passed in 0.53s
+2 passed in 1.30s
 
 === drill AC-01b-gnome-skipped (M4A-01) on chatmon/presence.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.42s
+1 passed in 1.30s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _____ test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high ______
 
-linux_desk = (<chatmon.presence.Desk object at 0x0000022C475A4370>, [True])
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022C47256520>
+linux_desk = (<chatmon.presence.Desk object at 0x0000014C12481EF0>, [True])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014C125CCD60>
 
     def test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high(linux_desk, monkeypatch):
         desk, changes = linux_desk
@@ -106,27 +101,25 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022C47256520>
 >       assert desk.high_contrast() is True and changes == [True]
 E       assert (False is True)
 E        +  where False = high_contrast()
-E        +    where high_contrast = <chatmon.presence.Desk object at 0x0000022C475A4370>.high_contrast
+E        +    where high_contrast = <chatmon.presence.Desk object at 0x0000014C12481EF0>.high_contrast
 
 tests\test_presence.py:202: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high
-1 failed in 0.49s
+1 failed in 1.60s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.42s
+1 passed in 1.99s
 
 === drill AC-01c-mac-contrast (M4A-01) on chatmon/presence.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_macos_high_contrast_is_appkits_increase_contrast
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.33s
+1 passed in 1.13s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ____________ test_macos_high_contrast_is_appkits_increase_contrast ____________
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019A62B06B10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000182AD75D940>
 
     def test_macos_high_contrast_is_appkits_increase_contrast(monkeypatch):
         seen = []
@@ -135,23 +128,21 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019A62B06B10>
 >       assert presence.Desk("cocoa").high_contrast() is True and seen == [True]
 E       AssertionError: assert (False is True)
 E        +  where False = high_contrast()
-E        +    where high_contrast = <chatmon.presence.Desk object at 0x0000019A62BA9810>.high_contrast
-E        +      where <chatmon.presence.Desk object at 0x0000019A62BA9810> = <class 'chatmon.presence.Desk'>('cocoa')
+E        +    where high_contrast = <chatmon.presence.Desk object at 0x00000182AD36B390>.high_contrast
+E        +      where <chatmon.presence.Desk object at 0x00000182AD36B390> = <class 'chatmon.presence.Desk'>('cocoa')
 E        +        where <class 'chatmon.presence.Desk'> = presence.Desk
 
 tests\test_presence.py:215: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_macos_high_contrast_is_appkits_increase_contrast
-1 failed in 0.38s
+1 failed in 0.71s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.28s
+1 passed in 1.55s
 
 === drill AC-02-any-monitor (M4A-02) on chatmon/presence.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_a_full_screen_window_counts_only_on_the_stages_screen tests/test_presence.py::test_covered_on_x11_asks_where_the_full_screen_window_is
 -- green: exit 0, 2 passed
 ..                                                                       [100%]
-2 passed in 0.36s
+2 passed in 1.70s
 -- red: exit 1
 FF                                                                       [100%]
 ================================== FAILURES ===================================
@@ -162,13 +153,13 @@ _________ test_a_full_screen_window_counts_only_on_the_stages_screen __________
         assert presence.covers(left, left) and presence.covers(right, right)
 >       assert not presence.covers(right, left) and not presence.covers(left, right)
 E       assert (not True)
-E        +  where True = <function covers at 0x0000020F047B0D50>((1920, 0, 2560, 1440), (0, 0, 1920, 1080))
-E        +    where <function covers at 0x0000020F047B0D50> = presence.covers
+E        +  where True = <function covers at 0x000001728DBC00F0>((1920, 0, 2560, 1440), (0, 0, 1920, 1080))
+E        +    where <function covers at 0x000001728DBC00F0> = presence.covers
 
-tests\test_presence.py:257: AssertionError
+tests\test_presence.py:271: AssertionError
 __________ test_covered_on_x11_asks_where_the_full_screen_window_is ___________
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020F044F6780>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001728DC5CFC0>
 
     def test_covered_on_x11_asks_where_the_full_screen_window_is(monkeypatch):
         class X:  # an X server's answers: a full-screen video in front, on the right monitor
@@ -189,18 +180,15 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020F044F6780>
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       assert (True and not True)
 E        +  where True = covered(200)
-E        +    where covered = <chatmon.presence.Desk object at 0x0000020F045BE7B0>.covered
+E        +    where covered = <chatmon.presence.Desk object at 0x000001728DB5C410>.covered
 E        +  and   True = covered(100)
-E        +    where covered = <chatmon.presence.Desk object at 0x0000020F045BE7B0>.covered
+E        +    where covered = <chatmon.presence.Desk object at 0x000001728DB5C410>.covered
 
-tests\test_presence.py:277: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_a_full_screen_window_counts_only_on_the_stages_screen
-FAILED tests/test_presence.py::test_covered_on_x11_asks_where_the_full_screen_window_is
-2 failed in 0.44s
+tests\test_presence.py:291: AssertionError
+2 failed in 0.69s
 -- restored green: exit 0, 2 passed
 ..                                                                       [100%]
-2 passed in 0.39s
+2 passed in 0.47s
 
 === drill AC-03-sleep-wake (M4A-03) on chatmon/macnative.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
@@ -212,8 +200,8 @@ F                                                                        [100%]
 ================================== FAILURES ===================================
 _____________ test_each_workspace_notification_is_its_own_signal ______________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000002154DD97570>
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002154DCD5BA0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001ECA52D4E10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001ECA55EC180>
 
     def test_each_workspace_notification_is_its_own_signal(qapp, monkeypatch):
         """What each of the observer's methods says (here without AppKit: on macOS, tests/test_macnative.py posts the
@@ -236,24 +224,22 @@ E         At index 0 diff: ('slept', False) != ('slept', True)
 E         Use -v to get more diff
 
 tests\test_platform_events.py:263: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
-1 failed in 0.43s
+1 failed in 0.52s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.41s
+1 passed in 0.56s
 
 === drill AC-04a-setting-changed-ignored (M4A-04) on chatmon/linuxsession.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.58s
+1 passed in 1.91s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _________ test_the_portals_contrast_decides_and_says_when_it_changes __________
 
-linux_desk = (<chatmon.presence.Desk object at 0x000002BB5A948410>, [])
+linux_desk = (<chatmon.presence.Desk object at 0x0000028ABFA25EF0>, [])
 
     def test_the_portals_contrast_decides_and_says_when_it_changes(linux_desk):
         desk, changes = linux_desk
@@ -266,27 +252,25 @@ linux_desk = (<chatmon.presence.Desk object at 0x000002BB5A948410>, [])
 >       assert desk.high_contrast() is False and changes == [True]
 E       assert (True is False)
 E        +  where True = high_contrast()
-E        +    where high_contrast = <chatmon.presence.Desk object at 0x000002BB5A948410>.high_contrast
+E        +    where high_contrast = <chatmon.presence.Desk object at 0x0000028ABFA25EF0>.high_contrast
 
 tests\test_presence.py:186: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
-1 failed in 0.61s
+1 failed in 0.73s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.43s
+1 passed in 0.59s
 
 === drill AC-04a-no-dedupe (M4A-04) on chatmon/linuxsession.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_linuxsession.py::test_portal_settings_are_yes_no_or_unknown tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
 -- green: exit 0, 2 passed
 ..                                                                       [100%]
-2 passed in 0.49s
+2 passed in 0.51s
 -- red: exit 1
 FF                                                                       [100%]
 ================================== FAILURES ===================================
 _________________ test_portal_settings_are_yes_no_or_unknown __________________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x0000018EAD21C5F0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001905E74DE50>
 
     def test_portal_settings_are_yes_no_or_unknown(qapp):
         from PyQt6.QtDBus import QDBusVariant
@@ -312,7 +296,7 @@ E         Use -v to get more diff
 tests\test_linuxsession.py:94: AssertionError
 _________ test_the_portals_contrast_decides_and_says_when_it_changes __________
 
-linux_desk = (<chatmon.presence.Desk object at 0x0000018EAD06AB70>, [True, True, True])
+linux_desk = (<chatmon.presence.Desk object at 0x000001905E28AE90>, [True, True, True])
 
     def test_the_portals_contrast_decides_and_says_when_it_changes(linux_desk):
         desk, changes = linux_desk
@@ -333,25 +317,22 @@ E         Left contains one more item: True
 E         Use -v to get more diff
 
 tests\test_presence.py:190: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_linuxsession.py::test_portal_settings_are_yes_no_or_unknown
-FAILED tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
-2 failed in 0.48s
+2 failed in 0.98s
 -- restored green: exit 0, 2 passed
 ..                                                                       [100%]
-2 passed in 0.41s
+2 passed in 0.70s
 
 === drill AC-04c-other-windows-copy (M4A-04) on chatmon/winlock.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_winlock.py::test_a_setting_change_is_passed_on_once_from_its_own_window
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.54s
+1 passed in 0.44s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _________ test_a_setting_change_is_passed_on_once_from_its_own_window _________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x0000026674A7AD50>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000021AA693CA50>
 
     def test_a_setting_change_is_passed_on_once_from_its_own_window(qapp):
         from ctypes import wintypes
@@ -380,24 +361,22 @@ E             Left contains one more item: 0
 E             Use -v to get more diff
 
 tests\test_winlock.py:36: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_winlock.py::test_a_setting_change_is_passed_on_once_from_its_own_window
-1 failed in 1.21s
+1 failed in 0.52s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.38s
+1 passed in 0.37s
 
 === drill AC-04c-screen-reader (M4A-04) on chatmon/presence.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_windows_setting_changes_are_passed_on tests/test_winlock.py::test_a_sent_wm_settingchange_reaches_desk_through_qts_window_procedure
 -- green: exit 0, 2 passed
 ..                                                                       [100%]
-2 passed in 0.94s
+2 passed in 0.86s
 -- red: exit 1
 FF                                                                       [100%]
 ================================== FAILURES ===================================
 _________________ test_windows_setting_changes_are_passed_on __________________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x0000019A2D364230>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000019533AD1A90>
 
     def test_windows_setting_changes_are_passed_on(qapp):
         desk = presence.Desk("windows")
@@ -414,7 +393,7 @@ E
 E         Right contains one more item: True
 E         Use -v to get more diff)
 
-tests\test_presence.py:249: AssertionError
+tests\test_presence.py:263: AssertionError
 ___ test_a_sent_wm_settingchange_reaches_desk_through_qts_window_procedure ____
 
     def test_a_sent_wm_settingchange_reaches_desk_through_qts_window_procedure():
@@ -430,25 +409,22 @@ E         - settings,screen reader
 E         + screen reader
 
 tests\test_winlock.py:83: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_windows_setting_changes_are_passed_on - a...
-FAILED tests/test_winlock.py::test_a_sent_wm_settingchange_reaches_desk_through_qts_window_procedure
-2 failed in 0.72s
+2 failed in 1.06s
 -- restored green: exit 0, 2 passed
 ..                                                                       [100%]
-2 passed in 0.66s
+2 passed in 0.86s
 
 === drill AC-05-mako-modes (M4A-05) on chatmon/linuxsession.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles
 -- green: exit 0, 5 passed
 .....                                                                    [100%]
-5 passed in 0.41s
+5 passed in 0.63s
 -- red: exit 1
 ....F                                                                    [100%]
 ================================== FAILURES ===================================
 _ test_each_notification_servers_do_not_disturb_holds_bubbles[mako-on4-off4] __
 
-linux_desk = (<chatmon.presence.Desk object at 0x000001C31CC591D0>, [])
+linux_desk = (<chatmon.presence.Desk object at 0x0000018E0347F430>, [])
 server = 'mako', on = ['default', 'do-not-disturb'], off = ['default']
 
     @pytest.mark.parametrize("server, on, off", [
@@ -471,32 +447,36 @@ server = 'mako', on = ['default', 'do-not-disturb'], off = ['default']
 >       assert desk.quiet() is None
 E       AssertionError: assert 'Do Not Disturb' is None
 E        +  where 'Do Not Disturb' = quiet()
-E        +    where quiet = <chatmon.presence.Desk object at 0x000001C31CC591D0>.quiet
+E        +    where quiet = <chatmon.presence.Desk object at 0x0000018E0347F430>.quiet
 
-tests\test_presence.py:299: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[mako-on4-off4]
-1 failed, 4 passed in 0.52s
+tests\test_presence.py:313: AssertionError
+1 failed, 4 passed in 1.46s
 -- restored green: exit 0, 5 passed
 .....                                                                    [100%]
-5 passed in 0.46s
+5 passed in 2.46s
 
 === drill AC-05-dnd-ignored (M4A-05) on chatmon/presence.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles
 -- green: exit 0, 5 passed
 .....                                                                    [100%]
-5 passed in 0.53s
+5 passed in 0.69s
 -- red: exit 1
+        ("mako", ["default", "do-not-disturb"], ["default"]),
+    ])
+    def test_each_notification_servers_do_not_disturb_holds_bubbles(linux_desk, server, on, off):
+        from chatmon import linuxsession
+    
+        desk, _ = linux_desk
 >       assert desk.quiet() is None  # nothing known yet (no bus here): not quiet
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       AssertionError: assert 'Do Not Disturb' is None
 E        +  where 'Do Not Disturb' = quiet()
-E        +    where quiet = <chatmon.presence.Desk object at 0x000001C130D4AE90>.quiet
+E        +    where quiet = <chatmon.presence.Desk object at 0x0000022BC3C3CEB0>.quiet
 
-tests\test_presence.py:293: AssertionError
+tests\test_presence.py:307: AssertionError
 _ test_each_notification_servers_do_not_disturb_holds_bubbles[Xfce Notify Daemon-True-False] _
 
-linux_desk = (<chatmon.presence.Desk object at 0x000001C130D49DB0>, [])
+linux_desk = (<chatmon.presence.Desk object at 0x0000022BC3C3CCD0>, [])
 server = 'Xfce Notify Daemon', on = True, off = False
 
     @pytest.mark.parametrize("server, on, off", [
@@ -514,12 +494,12 @@ server = 'Xfce Notify Daemon', on = True, off = False
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       AssertionError: assert 'Do Not Disturb' is None
 E        +  where 'Do Not Disturb' = quiet()
-E        +    where quiet = <chatmon.presence.Desk object at 0x000001C130D49DB0>.quiet
+E        +    where quiet = <chatmon.presence.Desk object at 0x0000022BC3C3CCD0>.quiet
 
-tests\test_presence.py:293: AssertionError
+tests\test_presence.py:307: AssertionError
 _ test_each_notification_servers_do_not_disturb_holds_bubbles[mako-on4-off4] __
 
-linux_desk = (<chatmon.presence.Desk object at 0x000001C130D4B610>, [])
+linux_desk = (<chatmon.presence.Desk object at 0x0000022BC3C3C370>, [])
 server = 'mako', on = ['default', 'do-not-disturb'], off = ['default']
 
     @pytest.mark.parametrize("server, on, off", [
@@ -537,31 +517,25 @@ server = 'mako', on = ['default', 'do-not-disturb'], off = ['default']
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       AssertionError: assert 'Do Not Disturb' is None
 E        +  where 'Do Not Disturb' = quiet()
-E        +    where quiet = <chatmon.presence.Desk object at 0x000001C130D4B610>.quiet
+E        +    where quiet = <chatmon.presence.Desk object at 0x0000022BC3C3C370>.quiet
 
-tests\test_presence.py:293: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[dunst-True-False]
-FAILED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[Plasma-True-False]
-FAILED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[SwayNotificationCenter-True-False]
-FAILED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[Xfce Notify Daemon-True-False]
-FAILED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[mako-on4-off4]
-5 failed in 1.55s
+tests\test_presence.py:307: AssertionError
+5 failed in 0.72s
 -- restored green: exit 0, 5 passed
 .....                                                                    [100%]
-5 passed in 2.55s
+5 passed in 0.53s
 
 === drill AC-06a-battery-ignored (M4A-06) on chatmon/linuxsession.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_linuxsession.py::test_running_on_battery_saves_power_too
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.51s
+1 passed in 0.36s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ___________________ test_running_on_battery_saves_power_too ___________________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000001C521E7F4D0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000201F4DC8D70>
 
     def test_running_on_battery_saves_power_too(qapp):
         """UPower's OnBattery and the power-saver profile: saving while either is on, each change told once."""
@@ -582,25 +556,23 @@ E         Right contains one more item: True
 E         Use -v to get more diff
 
 tests\test_linuxsession.py:44: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_linuxsession.py::test_running_on_battery_saves_power_too - ...
-1 failed in 0.92s
+1 failed in 0.69s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.48s
+1 passed in 0.52s
 
 === drill AC-06b-low-power (M4A-06) on chatmon/macnative.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.46s
+1 passed in 0.51s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _____________ test_each_workspace_notification_is_its_own_signal ______________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000001DC7A917570>
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DC7A855BA0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000231C7064E10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000231C71DC180>
 
     def test_each_workspace_notification_is_its_own_signal(qapp, monkeypatch):
         """What each of the observer's methods says (here without AppKit: on macOS, tests/test_macnative.py posts the
@@ -623,24 +595,22 @@ E         At index 5 diff: ('low power', False) != ('low power', True)
 E         Use -v to get more diff
 
 tests\test_platform_events.py:263: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
-1 failed in 0.61s
+1 failed in 0.56s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.84s
+1 passed in 0.48s
 
 === drill AC-07a-transient (M4A-07) on chatmon/sysnotify.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.49s
+1 passed in 0.51s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ________ test_read_aloud_notifications_are_transient_and_alerts_urgent ________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000001D3DCD074D0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000017BC9744E10>
 
     def test_read_aloud_notifications_are_transient_and_alerts_urgent(qapp):
         pytest.importorskip("PyQt6.QtDBus")
@@ -652,24 +622,22 @@ qapp = <PyQt6.QtWidgets.QApplication object at 0x000001D3DCD074D0>
 E       KeyError: 'transient'
 
 tests\test_platform_events.py:32: KeyError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent
-1 failed in 0.51s
+1 failed in 0.59s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.44s
+1 passed in 0.46s
 
 === drill AC-07a-urgency-byte (M4A-07) on chatmon/sysnotify.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.42s
+1 passed in 0.51s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ________ test_read_aloud_notifications_are_transient_and_alerts_urgent ________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x00000201562F74D0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001EEC4940E10>
 
     def test_read_aloud_notifications_are_transient_and_alerts_urgent(qapp):
         pytest.importorskip("PyQt6.QtDBus")
@@ -686,24 +654,22 @@ E         - uchar
 E         + int)
 
 tests\test_platform_events.py:34: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent
-1 failed in 0.45s
+1 failed in 0.76s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.36s
+1 passed in 0.65s
 
 === drill AC-07b-replaced-buttons (M4A-07) on chatmon/sysnotify.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.35s
+1 passed in 1.02s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 __________ test_a_notifications_buttons_are_answered_for_ours_alone ___________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000001BE9C18F4D0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001D70C23CD70>
 
     def test_a_notifications_buttons_are_answered_for_ours_alone(qapp):
         pytest.importorskip("PyQt6.QtDBus")
@@ -728,24 +694,22 @@ E         Left contains one more item: ('second', 0)
 E         Use -v to get more diff)
 
 tests\test_platform_events.py:77: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone
-1 failed in 1.00s
+1 failed in 2.24s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.41s
+1 passed in 0.53s
 
 === drill AC-07b-other-apps (M4A-07) on chatmon/sysnotify.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.80s
+1 passed in 0.52s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 __________ test_a_notifications_buttons_are_answered_for_ours_alone ___________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x0000019C303674D0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000226E9128D70>
 
     def test_a_notifications_buttons_are_answered_for_ours_alone(qapp):
         pytest.importorskip("PyQt6.QtDBus")
@@ -765,25 +729,23 @@ E         Left contains one more item: ('first', 0)
 E         Use -v to get more diff
 
 tests\test_platform_events.py:73: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone
-1 failed in 4.47s
+1 failed in 2.87s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.63s
+1 passed in 0.83s
 
 === drill AC-08-not-held (M4A-08) on chatmon/a11y.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_voiceover_holds_announcements_until_chatmon_is_in_front
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.47s
+1 passed in 1.39s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ________ test_voiceover_holds_announcements_until_chatmon_is_in_front _________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x0000019A919274D0>
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019A91865BA0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002ACB981CE10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002ACB9B2C3E0>
 
     def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypatch):
         from PyQt6.QtCore import Qt
@@ -802,25 +764,23 @@ E         Left contains 7 more items, first extra item: ('Message 0.', False)
 E         Use -v to get more diff)
 
 tests\test_platform_events.py:220: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_voiceover_holds_announcements_until_chatmon_is_in_front
-1 failed in 0.52s
+1 failed in 74.34s (0:01:14)
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.40s
+1 passed in 84.65s (0:01:24)
 
 === drill AC-08-no-fallback (M4A-08) on chatmon/a11y.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_the_speech_fallback_says_it_at_once_instead
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.41s
+1 passed in 137.18s (0:02:17)
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ______________ test_the_speech_fallback_says_it_at_once_instead _______________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000001597D2474D0>
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001597D185BA0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000199643E8D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001996457C3E0>
 
     def test_the_speech_fallback_says_it_at_once_instead(qapp, monkeypatch):
         from chatmon import a11y
@@ -837,24 +797,38 @@ E         Right contains one more item: 'Reminder. Stretch.'
 E         Use -v to get more diff)
 
 tests\test_platform_events.py:240: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_the_speech_fallback_says_it_at_once_instead
-1 failed in 0.56s
+1 failed in 16.30s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 1.66s
+1 passed in 66.77s (0:01:06)
 
 === drill AC-09a-client-side (M4A-09) on chatmon/winuia.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 7.79s
+============================== warnings summary ===============================
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 48904 is still running
+    _warn("subprocess %s is still running" % self.pid,
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=11 encoding='cp1252'>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 2 warnings in 15.50s
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='cp1252'>
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=12 encoding='cp1252'>
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _____________ test_a_ui_automation_client_hears_the_announcement ______________
 
-tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1551/test_a_ui_automation_client_he0')
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2402/test_a_ui_automation_client_he0')
 
     @windows
     def test_a_ui_automation_client_hears_the_announcement(tmp_path):
@@ -889,24 +863,54 @@ E       AssertionError: []
 E       assert ([])
 
 tests\test_platform_events.py:208: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
-1 failed in 24.28s
+1 failed in 29.98s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 6.34s
+============================== warnings summary ===============================
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 37736 is still running
+    _warn("subprocess %s is still running" % self.pid,
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=11 encoding='cp1252'>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 2 warnings in 7.59s
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='cp1252'>
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=12 encoding='cp1252'>
 
 === drill AC-09a-not-handed-out (M4A-09) on chatmon/winuia.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 21.22s
+============================== warnings summary ===============================
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 38308 is still running
+    _warn("subprocess %s is still running" % self.pid,
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=11 encoding='cp1252'>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 2 warnings in 6.63s
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='cp1252'>
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=12 encoding='cp1252'>
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _____________ test_a_ui_automation_client_hears_the_announcement ______________
 
-tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1554/test_a_ui_automation_client_he0')
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2415/test_a_ui_automation_client_he0')
 
     @windows
     def test_a_ui_automation_client_hears_the_announcement(tmp_path):
@@ -942,24 +946,54 @@ E         - Chatmon announcements
 E         + Chatmon
 
 tests\test_platform_events.py:207: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
-1 failed in 9.14s
+1 failed in 6.78s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 6.82s
+============================== warnings summary ===============================
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 49700 is still running
+    _warn("subprocess %s is still running" % self.pid,
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=11 encoding='cp1252'>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 2 warnings in 6.68s
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='cp1252'>
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=12 encoding='cp1252'>
 
 === drill AC-09a-host-provider (M4A-09) on chatmon/winuia.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 8.35s
+============================== warnings summary ===============================
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 32072 is still running
+    _warn("subprocess %s is still running" % self.pid,
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=11 encoding='cp1252'>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 2 warnings in 6.48s
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='cp1252'>
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=12 encoding='cp1252'>
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _____________ test_a_ui_automation_client_hears_the_announcement ______________
 
-tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1557/test_a_ui_automation_client_he0')
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2426/test_a_ui_automation_client_he0')
 
     @windows
     def test_a_ui_automation_client_hears_the_announcement(tmp_path):
@@ -994,25 +1028,39 @@ E       AssertionError: []
 E       assert ([])
 
 tests\test_platform_events.py:208: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
-1 failed in 41.55s
+1 failed in 22.49s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 11.08s
+============================== warnings summary ===============================
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Python314\Lib\subprocess.py:1139: ResourceWarning: subprocess 42868 is still running
+    _warn("subprocess %s is still running" % self.pid,
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\python.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=11 encoding='cp1252'>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 2 warnings in 7.77s
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='cp1252'>
+<sys>:0: ResourceWarning: unclosed file <_io.TextIOWrapper name=12 encoding='cp1252'>
 
 === drill AC-09b-behind (M4A-09) on chatmon/a11y.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_on_windows_announcements_need_chatmon_in_front
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.39s
+1 passed in 0.59s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _____________ test_on_windows_announcements_need_chatmon_in_front _____________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000001B9B65E74D0>
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B9B6525BA0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001BBEC0E4D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BBEC25C3E0>
 
     @windows
     def test_on_windows_announcements_need_chatmon_in_front(qapp, monkeypatch):
@@ -1029,25 +1077,23 @@ E         - notification
 E         + uia
 
 tests\test_platform_events.py:112: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_on_windows_announcements_need_chatmon_in_front
-1 failed in 0.42s
+1 failed in 0.65s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.45s
+1 passed in 0.46s
 
 === drill AC-09b-no-notification (M4A-09) on chatmon/a11y.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_announcements_fall_back_to_the_notification
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.39s
+1 passed in 0.52s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ______________ test_announcements_fall_back_to_the_notification _______________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000001F856FB74D0>
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F856EF5BA0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001CEF2B48D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001CEF2E4C3E0>
 
     def test_announcements_fall_back_to_the_notification(qapp, monkeypatch):
         """Without UI Automation (Qt's offscreen platform has no real windows) or with Chatmon behind other apps, the
@@ -1064,18 +1110,16 @@ E         Right contains one more item: True
 E         Use -v to get more diff
 
 tests\test_platform_events.py:96: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_platform_events.py::test_announcements_fall_back_to_the_notification
-1 failed in 0.40s
+1 failed in 0.47s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.32s
+1 passed in 0.44s
 
 === drill AC-10-plugged (M4A-10) on chatmon/heads_up.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_heads_up.py::test_upowers_display_device_in_one_answer
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.25s
+1 passed in 0.41s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
@@ -1099,24 +1143,22 @@ E         At index 1 diff: True != False
 E         Use -v to get more diff
 
 tests\test_heads_up.py:189: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_heads_up.py::test_upowers_display_device_in_one_answer - as...
-1 failed in 0.37s
+1 failed in 0.34s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.28s
+1 passed in 0.31s
 
 === drill AC-11-told-twice (M4A-11) on chatmon/linuxsession.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_linuxsession.py::test_the_lock_is_told_once_and_stops_drawing
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.36s
+1 passed in 0.37s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ________________ test_the_lock_is_told_once_and_stops_drawing _________________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x00000189AFD5F4D0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000186098E8D70>
 
     def test_the_lock_is_told_once_and_stops_drawing(qapp):
         """logind's LockedHint and the screen saver both tell of a lock: told once, and nothing need be drawn."""
@@ -1145,24 +1187,22 @@ E         Left contains 2 more items, first extra item: False
 E         Use -v to get more diff)
 
 tests\test_linuxsession.py:74: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_linuxsession.py::test_the_lock_is_told_once_and_stops_drawing
-1 failed in 0.40s
+1 failed in 0.42s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 3.52s
+1 passed in 0.42s
 
 === drill AC-11-seen-inverted (M4A-11) on chatmon/linuxsession.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_linuxsession.py::test_the_lock_is_told_once_and_stops_drawing
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.35s
+1 passed in 0.49s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 ________________ test_the_lock_is_told_once_and_stops_drawing _________________
 
-qapp = <PyQt6.QtWidgets.QApplication object at 0x000001D245EFF4D0>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001AF94558D70>
 
     def test_the_lock_is_told_once_and_stops_drawing(qapp):
         """logind's LockedHint and the screen saver both tell of a lock: told once, and nothing need be drawn."""
@@ -1192,24 +1232,22 @@ E         At index 0 diff: True != False
 E         Use -v to get more diff)
 
 tests\test_linuxsession.py:74: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_linuxsession.py::test_the_lock_is_told_once_and_stops_drawing
-1 failed in 0.37s
+1 failed in 0.50s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.42s
+1 passed in 0.37s
 
 === drill AC-04a-listener-outlives-desk (M4A-04) on chatmon/presence.py
 command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_the_linux_listeners_go_with_their_desk
 -- green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 0.50s
+1 passed in 0.62s
 -- red: exit 1
 F                                                                        [100%]
 ================================== FAILURES ===================================
 _________________ test_the_linux_listeners_go_with_their_desk _________________
 
-linux_desk = (<chatmon.presence.Desk object at 0x0000016F8EA38370>, [])
+linux_desk = (<chatmon.presence.Desk object at 0x00000228CEB8DE50>, [])
 
     def test_the_linux_listeners_go_with_their_desk(linux_desk):
         """What they hear after the Desk has gone (an answer still on its way) must reach nothing: they belong to it."""
@@ -1220,17 +1258,111 @@ linux_desk = (<chatmon.presence.Desk object at 0x0000016F8EA38370>, [])
         desk._gsetting("org.gnome.desktop.interface", "enable-animations")
         gnome = desk._gnome[("org.gnome.desktop.interface", "enable-animations")]
 >       assert portal.parent() is desk and dnd.parent() is desk and gnome.parent() is desk
-E       assert (None is <chatmon.presence.Desk object at 0x0000016F8EA38370>)
-E        +  where None = <built-in method parent of PortalSettings object at 0x0000016F8EA38690>()
-E        +    where <built-in method parent of PortalSettings object at 0x0000016F8EA38690> = <chatmon.linuxsession.PortalSettings object at 0x0000016F8EA38690>.parent
+E       assert (None is <chatmon.presence.Desk object at 0x00000228CEB8DE50>)
+E        +  where None = <built-in method parent of PortalSettings object at 0x00000228CEB8E170>()
+E        +    where <built-in method parent of PortalSettings object at 0x00000228CEB8E170> = <chatmon.linuxsession.PortalSettings object at 0x00000228CEB8E170>.parent
 
-tests\test_presence.py:313: AssertionError
-=========================== short test summary info ===========================
-FAILED tests/test_presence.py::test_the_linux_listeners_go_with_their_desk - ...
-1 failed in 0.60s
+tests\test_presence.py:327: AssertionError
+1 failed in 0.74s
 -- restored green: exit 0, 1 passed
 .                                                                        [100%]
-1 passed in 2.37s
+1 passed in 0.72s
+
+=== drill AC-04b-old-qt-hints (M4A-04) on chatmon/presence.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.91s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms __
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000193B2B29A90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193B2CACB00>
+
+    def test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms(qapp, monkeypatch):
+        """Qt before 6.10 (Ubuntu 24.04's 6.4, Debian 13's 6.8) has no QStyleHints.accessibility(): nothing raises, Qt's
+        word is no, and nothing is connected."""
+        from PyQt6.QtGui import QGuiApplication
+    
+        class OldStyleHints:  # QStyleHints as Qt 6.9 and before have it: no accessibility()
+            pass
+    
+        monkeypatch.setattr(QGuiApplication, "styleHints", staticmethod(lambda: OldStyleHints()))
+>       presence.Desk("offscreen").close()  # connects Qt's signal where there is one: here, nothing to connect, and no error
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_presence.py:233: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+chatmon\presence.py:378: in __init__
+    self._watch_qt_contrast()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <chatmon.presence.Desk object at 0x00000193B28BB1B0>
+
+    def _watch_qt_contrast(self) -> None:
+        """Qt 6.10 and later say when the system's contrast preference changes, on every platform. PyQt6 6.11
+        wraps that signal as a method, so there the platforms' own signals alone say so (6.12 has it right)."""
+        try:
+            from PyQt6.QtGui import QGuiApplication
+    
+            if QGuiApplication.instance() is None:
+                return
+>           QGuiApplication.styleHints().accessibility().contrastPreferenceChanged.connect(self.settings_changed)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OldStyleHints' object has no attribute 'accessibility'
+
+chatmon\presence.py:388: AttributeError
+1 failed in 0.79s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.85s
+
+=== drill AC-01b-old-qt-contrast (M4A-01) on chatmon/presence.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.16s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms __
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000023BA3905A90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA3A0C9D0>
+
+    def test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms(qapp, monkeypatch):
+        """Qt before 6.10 (Ubuntu 24.04's 6.4, Debian 13's 6.8) has no QStyleHints.accessibility(): nothing raises, Qt's
+        word is no, and nothing is connected."""
+        from PyQt6.QtGui import QGuiApplication
+    
+        class OldStyleHints:  # QStyleHints as Qt 6.9 and before have it: no accessibility()
+            pass
+    
+        monkeypatch.setattr(QGuiApplication, "styleHints", staticmethod(lambda: OldStyleHints()))
+        presence.Desk("offscreen").close()  # connects Qt's signal where there is one: here, nothing to connect, and no error
+>       assert presence._qt_high_contrast() is False
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_presence.py:234: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _qt_high_contrast() -> bool:
+        """Qt's own word (6.10 and later), from the platform's theme."""
+        try:
+            from PyQt6.QtCore import Qt
+            from PyQt6.QtGui import QGuiApplication
+    
+>           return QGuiApplication.styleHints().accessibility().contrastPreference() == Qt.ContrastPreference.HighContrast
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'OldStyleHints' object has no attribute 'accessibility'
+
+chatmon\presence.py:549: AttributeError
+1 failed in 1.86s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.83s
 
 === summary
 PASS AC-01a-portal-key
@@ -1262,3 +1394,5 @@ PASS AC-10-plugged
 PASS AC-11-told-twice
 PASS AC-11-seen-inverted
 PASS AC-04a-listener-outlives-desk
+PASS AC-04b-old-qt-hints
+PASS AC-01b-old-qt-contrast
