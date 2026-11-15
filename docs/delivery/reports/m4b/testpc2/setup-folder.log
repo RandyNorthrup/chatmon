@@ -1,0 +1,9 @@
+== folder, 2026-11-15 08:35:17 -08:00, testpc2\technician
+last boot: 2026-11-12 11:59:51
+claims:
+--- chatmon.txt
+console 2026-11-15 08:31 -08:00 until 2026-11-15 10:31 -08:00: Chatmon M4B toast drill (AC-03E), a scheduled task in Technician's console session showing and hiding toasts
+drive 0025_38B8_21B7_37C0. 2026-11-15 08:31 -08:00 until 2026-11-15 10:31 -08:00: Chatmon writes W:\chatmon-m4b only (source, venv, logs), no erase; removed at the end
+W: is disk 0: SAMSUNG MZVL2512HCJQ-00BH1, serial 0025_38B8_21B7_37C0., 512110190592 bytes, boot False
+made W:\chatmon-m4b (Technician: full control)
+Chatmon app IDs registered before the run: 0

@@ -1,0 +1,4 @@
+
+=== summary
+FAIL P-03E-hide-lies: mutated run exited 0, not 1 (tests failed)
+PASS P-03E-hide-lies-heard

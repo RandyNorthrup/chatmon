@@ -820,7 +820,7 @@ them.
           "action": "modify"
         }
       ],
-      "status": "implemented",
+      "status": "verified",
       "evidence": [
         "EV-CI-WINDOWS-TOASTS",
         "W4-READY",
@@ -828,7 +828,8 @@ them.
         "W4-BEH-CI-WINDOWS",
         "W4B-READY",
         "W4B-RED-AC-03E-deferred",
-        "W4B-BEH-CI-WINDOWS"
+        "W4B-BEH-CI-WINDOWS",
+        "TP2-RED-D-03E-hide-kept"
       ],
       "blocker": null,
       "superseded_by": null
@@ -19822,6 +19823,112 @@ them.
         ]
       },
       "reason": null
+    },
+    {
+      "id": "TP2-RED-D-03E-hide-kept",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ],
+      "method": "Red drill D-03E-hide-kept through tests/drills/run.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5), in a temporary copy of 3586a0d's files (from git archive, its tree checked against 3586a0d's, 2d3c01b), with a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0). Green; then hide() made to leave the toast where it is (on screen and in Action Center) and return False; the named test failing with pytest's tests-failed exit at tests/test_wintoast.py:118, 'assert toaster.hide(tag)' ('AssertionError: assert False'), after its two assertions before had seen the toast in Windows' history under its tag; the file's bytes put back (checked by SHA-256) and green again. Before it, testpc2/probe.log showed a toast in Windows' history under its tag and gone after hide(), and testpc2/plain-test.log the whole test file green. A hide() that does nothing yet answers True survives this test and is caught by test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread (testpc2/probe-drills.log). The command is the one run there; this receipt's environment is the plan's profile, the workstation that bound it (ROADMAP: evidence from elsewhere). Every file it binds has the same bytes at 3586a0d as at bf9d8ac.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/testpc2/drills.log",
+        "sha256": "e87b0f10c9595c9f562e8c9f6bc86da9ff6986c52f784604e1d37b9b5c522b7d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "185310887f35af566f2a80da6d7ab72e1cd4fcd0a472a743198393ca321cd23a",
+      "red": {
+        "mutation": "D-03E-hide-kept: in chatmon/wintoast.py, '            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\\n            return True\\n' became '            return False\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+        "observed_diagnostic": "_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "2c4e4d7e0b14cdfa09d2172957560dd91f6eb30c17497d09ab5b520c32957c0d"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
     }
   ],
   "checkpoint": {
@@ -19928,6 +20035,7 @@ them.
     "verified_tasks": [
       "T-WINRT",
       "T-TOAST",
+      "T-TOAST-SHOWN",
       "T-CARET",
       "T-SOUND",
       "T-SOUND-LINUX",
@@ -19937,8 +20045,8 @@ them.
       "T-IMPORTS"
     ],
     "pending_operations": [],
-    "next_action": "Four red drills remain, each needing a place to run, not new code. AC-00C, AC-01D and AC-02F need macOS (Randy on a Mac, or the coordinator through a CI run of a drill branch). AC-03E needs a Windows desktop with notifications on (see W4-RED-AC-03E-deferred). Then T-IMPORTS-POSIX, T-HOTKEY-MAC, T-SOUND-MAC and T-TOAST-SHOWN can be verified and M4B closed. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4b/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes none of the files this plan's receipts bind.",
-    "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545"
+    "next_action": "Three red drills remain, each needing macOS, not new code: AC-00C, AC-01D and AC-02F (Randy on a Mac, or the coordinator through a CI run of a drill branch). Then T-IMPORTS-POSIX, T-HOTKEY-MAC and T-SOUND-MAC can be verified and M4B closed. AC-03E's drill ran on testpc2 (TP2-RED-D-03E-hide-kept), so T-TOAST-SHOWN is verified. For the coordinator, optional: tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon could also wait for the tag to leave in_action_center() after hide(); a hide() that answers True without hiding survives it, though AC-03E's other test catches it (reports/m4b/testpc2/README.md). That change would make every receipt bound to tests/test_wintoast.py stale. wave4/crash, merged at 3586a0d, changes none of the files this plan's receipts bind.",
+    "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
   }
 }
 ```
