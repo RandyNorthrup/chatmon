@@ -39,10 +39,20 @@ are fixed and checked:
   WSL's whole suite, then five runs in five on its own ([reports/wave4e/crash-test-wsl.log](reports/wave4e/crash-test-wsl.log)).
   A drill that takes the guard out of `Companion._heard` makes it fail there (CRASH-08, [reports/wave4e/crash/drills-heard-linux.log](reports/wave4e/crash/drills-heard-linux.log)).
 
+M6A's receipts didn't go stale on 45a17b3's files, so its one fix was first bound without a new section in its plan.
+That left the plan's text saying M6A-10.A1 fails while its ledger said it passes. M6A's plan now has its final-round
+section. A plan's prose is in every receipt's scope, so every M6A check ran again on 45a17b3 or was read from CI run
+43743804662 and Packages run 43743804716 ([reports/wave4f/](reports/wave4f/)): the suite, its drills, the gate
+drills on CI's combined coverage data, the distro drill, the reproducible wheel, the Windows Update opt-in,
+Dependabot's schema and the reviews. M6B and M10 bind M6A's plan, so they went stale with it, and every check of
+theirs ran again too, with the same results. To bind M6B again under the validator's 4 MiB plan limit, its 108 oldest
+receipts (round one's and the original ones, all stale) were moved, byte for byte, to
+[reports/m6b/history/](reports/m6b/history/README.md).
+
 Every plan was validated at resume and at closure on 45a17b3. Eleven close. M6A and M10 stop only on their pending
 operations, which are outcomes of a release, a merge or a date, not criteria
-([reports/wave4e/validation-sweep.txt](reports/wave4e/validation-sweep.txt)). No receipt of any plan is stale
-([reports/wave4e/stale-after-binding.md](reports/wave4e/stale-after-binding.md)).
+([reports/wave4f/validation-sweep.txt](reports/wave4f/validation-sweep.txt)). No receipt of any plan is stale
+([reports/wave4f/stale-after-binding.md](reports/wave4f/stale-after-binding.md)).
 
 | Milestone | State | What's left, and who |
 |---|---|---|
@@ -54,13 +64,21 @@ operations, which are outcomes of a release, a merge or a date, not criteria
 | M4A Platform awareness | closed | Nothing. |
 | M4B Hotkey, sound, toasts | closed | Nothing. AC-00C, AC-01D and AC-02F were drilled on the MacBook Pro, and AC-03E on testpc2's desktop. |
 | M5 Reminders, offline, locale | closed | Nothing. |
-| M6A CI and tooling | checkpoint | Every task is verified; M6A-10.A1 passes again, recorded without a new section in the plan, so that none of its other receipts go stale ([reports/m6a/wave4e/final-round-note.md](reports/m6a/wave4e/final-round-note.md)). Two pending operations, outcomes of a release and a merge, not criteria: **P-RELEASE**, the first tag-pushed release (v0.10.0; none yet, the newest tag is v0.9.2), Randy or the coordinator; **P-DEPENDABOT**, Dependabot's first run once `.github/dependabot.yml` is on `main`, the coordinator, after the merge. |
+| M6A CI and tooling | checkpoint | Every task is verified; M6A-10.A1 passes again, and the plan's final-round section says so. Two pending operations, outcomes of a release and a merge, not criteria: **P-RELEASE**, the first tag-pushed release (v0.10.0; none yet, the newest tag is v0.9.2), Randy or the coordinator; **P-DEPENDABOT**, Dependabot's first run once `.github/dependabot.yml` is on `main`, the coordinator, after the merge. |
 | M6B Static analysis, logging | closed | Nothing. |
 | M7 Integration | closed | Nothing. |
 | M8 Translation | closed | Nothing. |
 | M9 Sounds (coordinator) | done | The owner accepted the cues as they are (2026-11-14). |
 | M10 Follow-ups | checkpoint | Every task is verified. One pending operation, not a criterion: **P-CI-NEXT-STUBS**, from 2026-11-28, when PyQt6 6.12.1 can be hash-locked, the `types` job's check against the next stubs (integration note 2), the coordinator. And for the owner: the upstream report on PyQt6's stubs (note 4), which needs the owner's PyQt mailing-list account. |
 | Consolidation | the coordinator's | Version 0.10.0, README and changelog. PR #18 (`improve/assessment-fixes` to `main`) is open at 45a17b3. |
+
+## For the coordinator, outside the criteria
+
+- **Plan size.** The validator reads a plan of at most 4 MiB, and every re-binding adds a round of receipts to it.
+  M7's plan is 2.5 MB and M8's 2.8 MB, so a few more rounds would stop them as M6B was stopped. The way out is M6B's:
+  move a plan's oldest stale receipts, byte for byte, to `reports/<id>/history/` with a README (where they were last,
+  why, and each file's SHA-256), take their ids out of the tasks' evidence lists, and point to the folder from the
+  plan's next section ([reports/m6b/history/README.md](reports/m6b/history/README.md)).
 
 ## For a person before release, not covered by any criterion
 
