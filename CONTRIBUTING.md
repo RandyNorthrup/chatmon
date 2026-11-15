@@ -111,6 +111,12 @@ A translation is one file: copy `chatmon/locale/chatmon.pot` to `chatmon/locale/
 by hand. Chatmon reads it as it is; there's nothing to compile. An entry left empty or marked fuzzy shows in
 English. The offline commands' phrases and help are translated separately, in `chatmon/phrases/<language>.json`.
 
+Qt's own buttons and menus follow the same language. The Windows and macOS builds carry Qt's translation for each
+language Chatmon has a `.po` for (`packaging/build.py` picks them). The Linux packages use the system's Qt, so with
+the first language shipped, add Qt's translations package to `packaging/linux/nfpm.yaml`'s `recommends`:
+`qt6-translations-l10n` for the .deb and `qt6-qttranslations` for the .rpm. Without it, Qt's buttons stay English
+there.
+
 ## Dependencies
 
 `packaging/requirements*.in` name the versions; each `requirements*.txt` beside them locks those, and every
