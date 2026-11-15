@@ -1,0 +1,32 @@
+[
+  {
+    "id": "L-00B-eager-objc",
+    "requirement": "AC-00B",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "_sounds = Sounds()\n",
+      "replace": "_sounds = Sounds()\nMacPlayer()\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_m4b_imports.py::test_it_imports_here"
+    ],
+    "expected": [
+      "test_it_imports_here[sound]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "4287d58a512459251c8717ac2be048b21782a15ede6dc515280eb5ea637cf0b5",
+    "mutated_exit": 1,
+    "observed": "_________________________ test_it_imports_here[sound] __________________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  }
+]

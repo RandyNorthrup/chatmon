@@ -724,7 +724,11 @@ them.
         "W4B-BEH-WINDOWS",
         "W4B-RED-D-03C-action",
         "W4B-RED-D-03C-button",
-        "W4B-RED-D-03C-qt-thread"
+        "W4B-RED-D-03C-qt-thread",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-D-03C-action",
+        "W4C-RED-D-03C-button",
+        "W4C-RED-D-03C-qt-thread"
       ],
       "blocker": null,
       "superseded_by": null
@@ -796,7 +800,17 @@ them.
         "W4B-RED-D-03C-action",
         "W4B-RED-D-03C-button",
         "W4B-RED-D-03C-qt-thread",
-        "W4B-RED-D-03D-icon"
+        "W4B-RED-D-03D-icon",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-D-03A-control-chars",
+        "W4C-RED-D-03A-escaped",
+        "W4C-RED-D-03A-five-buttons",
+        "W4C-RED-D-03A-reminder-button",
+        "W4C-RED-D-03B-setting",
+        "W4C-RED-D-03C-action",
+        "W4C-RED-D-03C-button",
+        "W4C-RED-D-03C-qt-thread",
+        "W4C-RED-D-03D-icon"
       ],
       "blocker": null,
       "superseded_by": null
@@ -829,7 +843,10 @@ them.
         "W4B-READY",
         "W4B-RED-AC-03E-deferred",
         "W4B-BEH-CI-WINDOWS",
-        "TP2-RED-D-03E-hide-kept"
+        "TP2-RED-D-03E-hide-kept",
+        "W4C-BEH-TESTPC2-TOASTS",
+        "W4C-RED-D-03E-hide-kept",
+        "W4C-RED-D-03E-hide-noop"
       ],
       "blocker": null,
       "superseded_by": null
@@ -875,7 +892,8 @@ them.
         "W4B-RED-D-04A-bubble-size",
         "W4B-RED-D-04A-cleared",
         "W4B-RED-D-04A-position",
-        "W4B-RED-D-04B-magnifier"
+        "W4B-RED-D-04B-magnifier",
+        "W4C-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -947,7 +965,8 @@ them.
         "W4B-RED-D-02C-defaults",
         "W4B-RED-D-02D-own-thread",
         "W4B-RED-D-02D-scaled",
-        "W4B-RED-D-02D-without-qt"
+        "W4B-RED-D-02D-without-qt",
+        "W4C-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -982,7 +1001,8 @@ them.
         "W4-RED-L-02E-linux-player",
         "W4B-READY",
         "W4B-BEH-CI-LINUX",
-        "W4B-RED-L-02E-linux-player"
+        "W4B-RED-L-02E-linux-player",
+        "W4C-BEH-LINUX"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1077,7 +1097,8 @@ them.
         "W4B-RED-D-01B-its-own-id",
         "W4B-RED-D-01B-message-only",
         "W4B-RED-D-01C-conflict",
-        "W4B-RED-D-01C-keeps-old"
+        "W4B-RED-D-01C-keeps-old",
+        "W4C-BEH-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1148,7 +1169,8 @@ them.
         "W4B-READY",
         "W4B-BEH-CI-LINUX",
         "W4B-RED-L-01E-conflict",
-        "W4B-RED-L-01E-numlock"
+        "W4B-RED-L-01E-numlock",
+        "W4C-BEH-LINUX"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1205,7 +1227,8 @@ them.
         "W4B-RED-D-01F-trigger",
         "W4B-RED-L-01F-carries-on",
         "W4B-RED-L-01F-its-own-session",
-        "W4B-RED-L-01F-response"
+        "W4B-RED-L-01F-response",
+        "W4C-BEH-LINUX"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1241,7 +1264,9 @@ them.
         "W4-RED-D-00A-eager-objc",
         "W4B-READY",
         "W4B-BEH-WINDOWS",
-        "W4B-RED-D-00A-eager-objc"
+        "W4B-RED-D-00A-eager-objc",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-D-00A-eager-objc"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1278,7 +1303,9 @@ them.
         "W4B-RED-AC-00C-deferred",
         "W4B-BEH-CI-LINUX",
         "W4B-BEH-CI-MACOS",
-        "W4B-RED-L-00B-eager-objc"
+        "W4B-RED-L-00B-eager-objc",
+        "W4C-BEH-LINUX",
+        "W4C-RED-L-00B-eager-objc"
       ],
       "blocker": null,
       "superseded_by": null
@@ -14976,7 +15003,7 @@ them.
         "AC-04B"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -15076,7 +15103,7 @@ them.
       ],
       "scope_sha256": "439a5bf4a8b9f1ed2f34ec734a3ceebdd4fdfaec20a87f7c5367e914db18119f",
       "red": null,
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-AC-00C-deferred",
@@ -15379,7 +15406,7 @@ them.
         "AC-02E"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -15498,7 +15525,7 @@ them.
       ],
       "scope_sha256": "c14f390d882e73482dd510cf1d2222e2fa0c6f093929315ead991160e524b9a5",
       "red": null,
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-BEH-CI-MACOS",
@@ -15508,7 +15535,7 @@ them.
         "AC-02F"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -15611,7 +15638,7 @@ them.
       ],
       "scope_sha256": "c70719ab7eb55dd976b9aa1e1006d88953720efcc4fd3f970bc79ea7c6dae49c",
       "red": null,
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-BEH-CI-WINDOWS",
@@ -15619,7 +15646,7 @@ them.
         "AC-03E"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -15694,7 +15721,7 @@ them.
       ],
       "scope_sha256": "185310887f35af566f2a80da6d7ab72e1cd4fcd0a472a743198393ca321cd23a",
       "red": null,
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-00A-eager-objc",
@@ -15702,7 +15729,7 @@ them.
         "AC-00A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -15828,7 +15855,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-01A-alone",
@@ -17714,7 +17741,7 @@ them.
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -17812,7 +17839,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-03A-escaped",
@@ -17820,7 +17847,7 @@ them.
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -17918,7 +17945,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-03A-five-buttons",
@@ -17926,7 +17953,7 @@ them.
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18024,7 +18051,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-03A-reminder-button",
@@ -18032,7 +18059,7 @@ them.
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18130,7 +18157,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-03B-setting",
@@ -18138,7 +18165,7 @@ them.
         "AC-03B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18236,7 +18263,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-03C-action",
@@ -18244,7 +18271,7 @@ them.
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18342,7 +18369,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-03C-button",
@@ -18350,7 +18377,7 @@ them.
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18448,7 +18475,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-03C-qt-thread",
@@ -18456,7 +18483,7 @@ them.
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18554,7 +18581,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-03D-icon",
@@ -18562,7 +18589,7 @@ them.
         "AC-03D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18660,7 +18687,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-D-04A-bubble-size",
@@ -19060,7 +19087,7 @@ them.
         "AC-00B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "/var/tmp/plans-venv/bin/python",
         "-m",
@@ -19186,7 +19213,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
     },
     {
       "id": "W4B-RED-L-01E-conflict",
@@ -19830,7 +19857,7 @@ them.
         "AC-03E"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
         "-m",
@@ -19928,6 +19955,1779 @@ them.
           }
         ]
       },
+      "reason": "Stale at 8c24b1c (2026-11-15): tests/test_wintoast.py, which it was bound to, now waits for a hidden toast to leave Action Center; the W4C- receipts re-ran its check on the workstation, in WSL or on testpc2, and CI's macOS job can't be re-run here (the validator's findings: inputs-stale)"
+    },
+    {
+      "id": "W4C-BEH-WINDOWS",
+      "acceptance": [
+        "AC-00A",
+        "AC-01A",
+        "AC-01B",
+        "AC-01C",
+        "AC-02A",
+        "AC-02B",
+        "AC-02C",
+        "AC-02D",
+        "AC-03A",
+        "AC-03B",
+        "AC-03C",
+        "AC-03D",
+        "AC-04A",
+        "AC-04B"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on 8c24b1c's files (the log's header has HEAD, the staged change and the source digest) on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0. Notifications are off for this user (ToastEnabled 0), so the toast tests take their declining branch, which passed. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/suite-windows.log",
+        "sha256": "1af72326c1ac42848182e6a929bb25ea5423e78234599d5ded41ce0514d474f3"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "439a5bf4a8b9f1ed2f34ec734a3ceebdd4fdfaec20a87f7c5367e914db18119f",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4C-BEH-LINUX",
+      "acceptance": [
+        "AC-00B",
+        "AC-01E",
+        "AC-01F",
+        "AC-02E"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "wsl.exe",
+        "-d",
+        "archlinux",
+        "--",
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-v",
+        "-rA",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_m4b_imports.py",
+        "tests/test_hotkey.py",
+        "tests/test_hotkey_portal.py",
+        "tests/test_sound.py"
+      ],
+      "method": "In WSL (Arch Linux; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11.0, Qt 6.11.2, pytest 9.2.0) on 8c24b1c's files, through docs/delivery/reports/m4b/w4c/run-wsl.sh: the tests CI's Linux job had shown for these criteria, which can't be re-run without a push. Passed: tests/test_m4b_imports.py::test_it_imports_here for each of the 8 modules (AC-00B), tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict on its own Xvfb with XTest (AC-01E), all 7 tests in tests/test_hotkey_portal.py against the pretend GlobalShortcuts portal on a private bus (AC-01F), and tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait (AC-02E); 58 passed, 7 skipped (Windows or macOS only), exit 0, every warning an error (pyproject.toml). The receipt's environment is the plan's profile; the run's own versions head the log (ROADMAP: evidence from elsewhere). Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/linux-tests.log",
+        "sha256": "d2c4c94f0a2791018de471382d295c4e9fb72b6d31a6687493d3dc800b43241d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "c14f390d882e73482dd510cf1d2222e2fa0c6f093929315ead991160e524b9a5",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4C-BEH-TESTPC2-TOASTS",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-v",
+        "-rA",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py"
+      ],
+      "method": "tests/test_wintoast.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: testpc2/probe.log), 8c24b1c's files from git archive (its tree checked against 8c24b1c's, 73fd28a5), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0), in place of CI's Windows run, which can't be re-run without a push. The toast tests take their notifications-on branch: test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon saw the toast in Windows' history under its tag and gone after hide(), test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread heard Dismissed(HIDDEN_BY_CHATMON) on the Qt thread as the last word, and the fixture found nothing left in the history. 12 passed, 1 skipped (the test for other systems), exit 0. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/testpc2/plain-test.log",
+        "sha256": "60720ba6c12c5c9d4c2e016c2c24b520ea69f1a407be321f8b629e97b153794e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "185310887f35af566f2a80da6d7ab72e1cd4fcd0a472a743198393ca321cd23a",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03E-hide-kept",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ],
+      "method": "Red drill D-03E-hide-kept through tests/drills/run.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: testpc2/probe.log), 8c24b1c's files from git archive (its tree checked against 8c24b1c's, 73fd28a5), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0), in a temporary copy of those files. Green; then hide() made to leave the toast where it is (on screen and in Action Center) and return False; the named test failing with pytest's tests-failed exit at tests/test_wintoast.py:118, 'assert toaster.hide(tag)' ('AssertionError: assert False'), after the test had seen the toast in Windows' history under its tag; the file's bytes put back (checked by SHA-256) and green again. The command is the one run there; this receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/testpc2/drills.log",
+        "sha256": "9f2c0bf4b4255e03b749f07618ccb2c0cf3c6c5a354b79309c8f2fd81c1fa9e0"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "185310887f35af566f2a80da6d7ab72e1cd4fcd0a472a743198393ca321cd23a",
+      "red": {
+        "mutation": "D-03E-hide-kept: in chatmon/wintoast.py, '            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\\n            return True\\n' became '            return False\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+        "observed_diagnostic": "_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "2c4e4d7e0b14cdfa09d2172957560dd91f6eb30c17497d09ab5b520c32957c0d"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03E-hide-noop",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon"
+      ],
+      "method": "Red drill D-03E-hide-noop through tests/drills/run.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: testpc2/probe.log), 8c24b1c's files from git archive (its tree checked against 8c24b1c's, 73fd28a5), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0), in a temporary copy of those files. Green; then hide() made to leave the toast where it is and still return True (Windows' Hide call taken out: the mutation that survived the test before 8c24b1c); the named test failing with pytest's tests-failed exit at tests/test_wintoast.py:120, 'AssertionError: the hidden toast is still in Action Center', after the test had seen the toast in Windows' history under its tag; the file's bytes put back (checked by SHA-256) and green again. The command is the one run there; this receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/testpc2/drills.log",
+        "sha256": "9f2c0bf4b4255e03b749f07618ccb2c0cf3c6c5a354b79309c8f2fd81c1fa9e0"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "185310887f35af566f2a80da6d7ab72e1cd4fcd0a472a743198393ca321cd23a",
+      "red": {
+        "mutation": "D-03E-hide-noop: in chatmon/wintoast.py, '            winrt.method(notifier, NOTIFIER_HIDE, ctypes.c_void_p)(notifier, shown.toast)\\n' became ''",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+        "observed_diagnostic": "_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "9e6561d48b2544819e3bb8525baf47c699f1c6d53862e74a7317c3b7fd2011ab"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-00A-eager-objc",
+      "acceptance": [
+        "AC-00A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "method": "Red drill D-00A-eager-objc through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "439a5bf4a8b9f1ed2f34ec734a3ceebdd4fdfaec20a87f7c5367e914db18119f",
+      "red": {
+        "mutation": "D-00A-eager-objc: in chatmon/sound.py, '_sounds = Sounds()\\n' became '_sounds = Sounds()\\nMacPlayer()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_it_imports_here[sound]",
+        "observed_diagnostic": "_________________________ test_it_imports_here[sound] _________________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "4287d58a512459251c8717ac2be048b21782a15ede6dc515280eb5ea637cf0b5"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03A-control-chars",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+      ],
+      "method": "Red drill D-03A-control-chars through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03A-control-chars: in chatmon/wintoast.py, 'return NOT_XML.sub(\"\", str(text))' became 'return str(text)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_text_from_an_agent_is_text_never_markup",
+        "observed_diagnostic": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4563873bb19df6529440afd29be9116cbdfe6deab43678387b1b46d13126d7c8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03A-escaped",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+      ],
+      "method": "Red drill D-03A-escaped through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03A-escaped: in chatmon/wintoast.py, 'return ET.tostring(toast, encoding=\"unicode\")' became 'return ET.tostring(toast, encoding=\"unicode\").replace(\"&lt;\", \"<\").replace(\"&gt;\", \">\")'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_text_from_an_agent_is_text_never_markup",
+        "observed_diagnostic": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "7846bd59156595fe5a8ad37b0fcd1a2eb215cb6293157ec5a074cabbc72c6603"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03A-five-buttons",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused"
+      ],
+      "method": "Red drill D-03A-five-buttons through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03A-five-buttons: in chatmon/wintoast.py, 'if len(buttons) > MAX_BUTTONS:' became 'if len(buttons) >= MAX_BUTTONS:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_too_many_buttons_or_an_unknown_scenario_is_refused",
+        "observed_diagnostic": "___________ test_too_many_buttons_or_an_unknown_scenario_is_refused ___________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "970473229a83ffee2577e349d8b438e63620a8d4bca1668dbd48c0f359078239"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03A-reminder-button",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_reminder_stays_until_answered"
+      ],
+      "method": "Red drill D-03A-reminder-button through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03A-reminder-button: in chatmon/wintoast.py, \"        if not buttons:  # Windows' own Dismiss, so the scenario holds\" became '        if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_reminder_stays_until_answered",
+        "observed_diagnostic": "____________________ test_a_reminder_stays_until_answered _____________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "5be8549db801c4f83d129237cd921219216fcb3faa51e5b618c980e4d87ec0c4"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03B-setting",
+      "acceptance": [
+        "AC-03B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried"
+      ],
+      "method": "Red drill D-03B-setting through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03B-setting: in chatmon/wintoast.py, '        if setting in WHY_NOT:\\n' became '        if setting != ENABLED:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_only_a_real_no_keeps_a_toast_from_being_tried",
+        "observed_diagnostic": "_____________ test_only_a_real_no_keeps_a_toast_from_being_tried ______________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "fe1d2cf3103080b90b717a6d4fbbffe1c4734fe3dcf71b82511dba75235e073a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03C-action",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+      ],
+      "method": "Red drill D-03C-action through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03C-action: in chatmon/wintoast.py, '                action()\\n' became '                pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread",
+        "observed_diagnostic": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "008d67a858b86dd0b80faee36b4c608d28dd1719b6b46515c8f7d507b1dfcca5"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03C-button",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+      ],
+      "method": "Red drill D-03C-button through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03C-button: in chatmon/wintoast.py, '                    index = parsed[1]\\n' became '                    index = BODY\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread",
+        "observed_diagnostic": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "43adc1a200b45eecd4f763038f019a85bf2effa0277bf53e1d9b561b28d8b6e2"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03C-qt-thread",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+      ],
+      "method": "Red drill D-03C-qt-thread through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03C-qt-thread: in chatmon/wintoast.py, 'self._heard.emit(\"failed\", tag, code.value)' became 'self.failed.emit(tag, code.value)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread",
+        "observed_diagnostic": "________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "7471923cb1c1f4d04426e417dd497479cc6b7249406675c4fcc0bb8b8aa11e38"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-D-03D-icon",
+      "acceptance": [
+        "AC-03D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon"
+      ],
+      "method": "Red drill D-03D-icon through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, --only the drills whose receipts bound tests/test_wintoast.py), in a temporary copy of 8c24b1c's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/drills.log",
+        "sha256": "5854153662cedc0c901c0f88168e15c7bc70c9e511e7e1b14534cbea9ddae7f7"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "f8c2979bc2bb5aecc91bfa1758e6f40848557e607dea964b5e7de98a3b5822bb",
+      "red": {
+        "mutation": "D-03D-icon: in chatmon/wintoast.py, '        if icon:\\n' became '        if not icon:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pip_install_tells_windows_its_name_and_icon",
+        "observed_diagnostic": "_____________ test_a_pip_install_tells_windows_its_name_and_icon ______________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "29b73e052b3fc6eaf3722b77f5b81e83c2e4ce319f098d61d5c9a9e0e3ffe6ce"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-L-00B-eager-objc",
+      "acceptance": [
+        "AC-00B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "method": "Red drill L-00B-eager-objc in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 8c24b1c's files (the list in w4c/files.lst), from docs/delivery/reports/m4b/w4c/run-wsl.sh: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 8c24b1c, where tests/test_wintoast.py waits for a hidden toast to leave Action Center.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/w4c/wsl-drills.log",
+        "sha256": "3dc0e59cecd6db264f1ab530bf543c03d9da538ce82e7ad41febc4fa612c4e8b"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
+        }
+      ],
+      "scope_sha256": "0da1119b514c72e9dc5b4e3ed8c5e890537203069ccb87927c6e7ecc17fd9941",
+      "red": {
+        "mutation": "L-00B-eager-objc: in chatmon/sound.py, '_sounds = Sounds()\\n' became '_sounds = Sounds()\\nMacPlayer()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_it_imports_here[sound]",
+        "observed_diagnostic": "_________________________ test_it_imports_here[sound] __________________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "4287d58a512459251c8717ac2be048b21782a15ede6dc515280eb5ea637cf0b5"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+          }
+        ]
+      },
       "reason": null
     }
   ],
@@ -20020,7 +21820,7 @@ them.
       },
       {
         "path": "tests/test_wintoast.py",
-        "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        "sha256": "6c54256ee3988c0f0a102c16b92edd86dd88ca025d4d09d0be15e3f2ab340e4e"
       }
     ],
     "environment": {
@@ -20045,8 +21845,8 @@ them.
       "T-IMPORTS"
     ],
     "pending_operations": [],
-    "next_action": "Three red drills remain, each needing macOS, not new code: AC-00C, AC-01D and AC-02F (Randy on a Mac, or the coordinator through a CI run of a drill branch). Then T-IMPORTS-POSIX, T-HOTKEY-MAC and T-SOUND-MAC can be verified and M4B closed. AC-03E's drill ran on testpc2 (TP2-RED-D-03E-hide-kept), so T-TOAST-SHOWN is verified. For the coordinator, optional: tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon could also wait for the tag to leave in_action_center() after hide(); a hide() that answers True without hiding survives it, though AC-03E's other test catches it (reports/m4b/testpc2/README.md). That change would make every receipt bound to tests/test_wintoast.py stale. wave4/crash, merged at 3586a0d, changes none of the files this plan's receipts bind.",
-    "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
+    "next_action": "Three red drills remain, each needing macOS, not new code: AC-00C, AC-01D and AC-02F (Randy on a Mac, or the coordinator through a CI run of a drill branch). CI's macOS behavior receipt W4B-BEH-CI-MACOS went stale when tests/test_wintoast.py changed (8c24b1c), so that Mac or CI run must also run the macOS tests again (the imports, Carbon's hotkey, NSSound). Then T-IMPORTS-POSIX, T-HOTKEY-MAC and T-SOUND-MAC can be verified and M4B closed. Every other task is verified at 8c24b1c: the workstation's suite and drills, WSL's Linux tests and drill, and testpc2's signed-in desktop for the toasts Windows shows (reports/m4b/w4c/README.md).",
+    "source_revision": "8c24b1c1b17b977cee967695670a9b7802896c3e"
   }
 }
 ```

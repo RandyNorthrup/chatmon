@@ -1,0 +1,4 @@
+-- other claims:
+-- chatmon.txt:
+console 2026-11-15 09:08 -08:00 until 2026-11-15 11:08 -08:00: Chatmon M4B toast drill (AC-03E), a scheduled task in Technician's console session showing and hiding toasts
+drive 0025_38B8_21B7_37C0. 2026-11-15 09:08 -08:00 until 2026-11-15 11:08 -08:00: Chatmon writes W:\chatmon-m4b only (source, venv, logs), no erase; removed at the end

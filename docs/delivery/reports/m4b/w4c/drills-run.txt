@@ -1,0 +1,13 @@
+
+=== summary
+PASS D-03A-escaped
+PASS D-03A-control-chars
+PASS D-03A-reminder-button
+PASS D-03A-five-buttons
+PASS D-03B-setting
+PASS D-03C-qt-thread
+PASS D-03C-button
+PASS D-03C-action
+PASS D-03D-icon
+PASS D-00A-eager-objc
+exit 0

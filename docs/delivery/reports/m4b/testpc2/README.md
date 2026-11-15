@@ -1,5 +1,8 @@
 # AC-03E's red drill on testpc2 (2026-11-15)
 
+**Later the same day:** the gap found here is closed in 8c24b1c, and both `hide()` mutations ran again on testpc2.
+This round's receipt, TP2-RED-D-03E-hide-kept, is stale history now. See [../w4c/README.md](../w4c/README.md).
+
 M4B's last Windows drill needs a desktop where Windows shows toasts. This workstation's user has notifications off
 (`ToastEnabled = 0`), so the drill ran on testpc2's signed-in desktop, which the owner approved that day ("use testpc2
 for the notifications drill"). The source was **3586a0d** (`improve/assessment-fixes`). Every file the receipt binds
