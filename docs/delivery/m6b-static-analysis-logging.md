@@ -235,6 +235,25 @@ again. The requirements were reviewed again against the amended rules and the re
 **Receipts.** Every earlier passing receipt is now marked stale, as history, with its hashes untouched. The W4-
 receipts replace them. Nothing remains open in M6B on fb19cb9.
 
+## Reconciliation, wave 4, round two (2026-11-15)
+
+Round two re-bound this plan at **bf9d8ac**: `improve/assessment-fixes` after the wayland, followups, a11y and
+sway-ci merges, and round one's own. Its earlier receipts went stale, because `pyproject.toml` (a rule) and files they
+were bound to changed. The evidence is for bf9d8ac only. wave4/crash, not merged yet, fixes an intermittent Qt crash
+in `chatmon/app.py`, `chatmon/brains.py`, `tests/app_harness.py` and `tests/test_app_smoke.py`. The checkpoint's next
+action names the receipts that bind those files, and only those need a refresh when it merges.
+
+**What was re-run.** The whole suite on Windows ([wave4b/suite-windows.log](reports/wave4b/suite-windows.log): 1256 passed, 178 skipped), then 46 Windows drills and 5 Linux ones (in WSL). Every one went green, red and green again. CI run 43701523023 (PR #18 at bf9d8ac, all 19
+jobs green) was read for its lint, types and test legs ([reports/m6b/ci/observed-bf9d8ac.txt](reports/m6b/ci/observed-bf9d8ac.txt)). The
+requirements were reviewed again ([wave4b/readiness.md](reports/m6b/wave4b/readiness.md)).
+
+The followups worker's stub workarounds make mypy pass with PyQt6 6.12.1's stubs too, checked here in WSL on
+linux, win32 and darwin. The 16 gate drills ran again. The M6A and M8 plans this plan takes as inputs were re-bound
+first.
+
+**Receipts.** Round one's W4- receipts are now stale history, with their hashes untouched. The W4B- receipts replace
+them. M6B is closed on bf9d8ac.
+
 ```quality-ledger
 {
   "schema_version": 1,
@@ -247,11 +266,11 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
     "rules": [
       {
         "path": "docs/delivery/ROADMAP.md",
-        "revision": "fb19cb9+wave4"
+        "revision": "bf9d8ac+wave4b"
       },
       {
         "path": "pyproject.toml",
-        "revision": "fb19cb9"
+        "revision": "bf9d8ac"
       }
     ],
     "inputs": [
@@ -874,7 +893,26 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "W4-RED-ruff-RUF",
         "W4-RED-ruff-S",
         "W4-RED-ruff-S101-in-chatmon",
-        "W4-RED-ruff-UP"
+        "W4-RED-ruff-UP",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-TEMPLATE",
+        "W4B-BEH-CI-LINT",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M6B-01-bubble-not-clear-of-the-box",
+        "W4B-RED-M6B-01-extractor-misses-import-time",
+        "W4B-RED-M6B-01-menu-end-key-goes-home",
+        "W4B-RED-ruff-BLE",
+        "W4B-RED-ruff-C4",
+        "W4B-RED-ruff-C90",
+        "W4B-RED-ruff-DTZ",
+        "W4B-RED-ruff-PERF",
+        "W4B-RED-ruff-PIE",
+        "W4B-RED-ruff-RUF",
+        "W4B-RED-ruff-S",
+        "W4B-RED-ruff-S101-in-chatmon",
+        "W4B-RED-ruff-UP"
       ],
       "blocker": null,
       "superseded_by": null
@@ -926,7 +964,20 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "W4-RED-M6B-03-limit-ten-times",
         "W4-RED-M6B-03-no-stderr",
         "W4-RED-M6B-03-rotated-as-dot-1",
-        "W4-RED-M6B-03-setup-twice-doubles"
+        "W4-RED-M6B-03-setup-twice-doubles",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M6B-03-brain-failure-not-logged",
+        "W4B-RED-M6B-03-brain-key-not-scrubbed",
+        "W4B-RED-M6B-03-console-not-blanked",
+        "W4B-RED-M6B-03-debug-env-ignored",
+        "W4B-RED-M6B-03-keys-not-blanked",
+        "W4B-RED-M6B-03-limit-ten-times",
+        "W4B-RED-M6B-03-no-stderr",
+        "W4B-RED-M6B-03-rotated-as-dot-1",
+        "W4B-RED-M6B-03-setup-twice-doubles"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1126,7 +1177,21 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "W4-RED-M6B-03-package-manager-failure-hidden",
         "W4-RED-M6B-03-phrases-failure-hidden",
         "W4-RED-M6B-03-player-failure-hidden",
-        "W4-RED-M6B-03-reminder-words-logged"
+        "W4-RED-M6B-03-reminder-words-logged",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M6B-03-autostart-warning-printed",
+        "W4B-RED-M6B-03-brain-failure-not-logged",
+        "W4B-RED-M6B-03-brain-key-not-scrubbed",
+        "W4B-RED-M6B-03-chat-failure-hidden",
+        "W4B-RED-M6B-03-console-not-blanked",
+        "W4B-RED-M6B-03-keys-not-blanked",
+        "W4B-RED-M6B-03-package-manager-failure-hidden",
+        "W4B-RED-M6B-03-phrases-failure-hidden",
+        "W4B-RED-M6B-03-player-failure-hidden",
+        "W4B-RED-M6B-03-reminder-words-logged"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1361,7 +1426,17 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "W4-BEH-CI-MACOS",
         "W4-RED-M6B-02-a-module-loads-macos-on-import",
         "W4-RED-mypy-brains",
-        "W4-RED-mypy-winpipe"
+        "W4-RED-mypy-winpipe",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-TYPES-LINUX",
+        "W4B-BEH-CI-TYPES-WIN32",
+        "W4B-BEH-CI-TYPES-DARWIN",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M6B-02-a-module-loads-macos-on-import",
+        "W4B-RED-mypy-brains",
+        "W4B-RED-mypy-winpipe"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1411,7 +1486,14 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "W4-BEH-CI-MACOS",
         "W4-RED-M6B-B-leak-fails-without-a-flag",
         "W4-RED-M6B-RW-http-error-left-open",
-        "W4-RED-M6B-RW-release-server-left-open"
+        "W4-RED-M6B-RW-release-server-left-open",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M6B-B-leak-fails-without-a-flag",
+        "W4B-RED-M6B-RW-http-error-left-open",
+        "W4B-RED-M6B-RW-release-server-left-open"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1522,7 +1604,21 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "W4-RED-mypy-app",
         "W4-RED-mypy-menus",
         "W4-RED-ruff-app",
-        "W4-RED-ruff-app-test"
+        "W4-RED-ruff-app-test",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINT",
+        "W4B-BEH-CI-TYPES-LINUX",
+        "W4B-BEH-CI-TYPES-WIN32",
+        "W4B-BEH-CI-TYPES-DARWIN",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M6B-B-escaped-exception-not-in-the-log",
+        "W4B-RED-M6B-B-unreadable-settings-hidden",
+        "W4B-RED-mypy-app",
+        "W4B-RED-mypy-menus",
+        "W4B-RED-ruff-app",
+        "W4B-RED-ruff-app-test"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1603,7 +1699,17 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "W4-RED-M6B-B-player-not-closed",
         "W4-RED-M6B-B-players-left-at-quit",
         "W4-RED-M6B-B-status-waits-for-the-brain",
-        "W4-RED-M6B-B-unclear-script-reminder-unsaid"
+        "W4-RED-M6B-B-unclear-script-reminder-unsaid",
+        "W4B-READY",
+        "W4B-BEH-WINDOWS",
+        "W4B-BEH-CI-LINUX",
+        "W4B-BEH-CI-MACOS",
+        "W4B-RED-M6B-B-desktops-words-not-shown",
+        "W4B-RED-M6B-B-hotkey-bound-kept-private",
+        "W4B-RED-M6B-B-player-not-closed",
+        "W4B-RED-M6B-B-players-left-at-quit",
+        "W4B-RED-M6B-B-status-waits-for-the-brain",
+        "W4B-RED-M6B-B-unclear-script-reminder-unsaid"
       ],
       "blocker": null,
       "superseded_by": null
@@ -21140,7 +21246,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A4"
       ],
       "kind": "readiness",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Requirements review again at fb19cb9 (readiness.md): M6B-01 to M6B-03, M6B-RW and M6B-LEFT re-read against ASSESSMENT.md, the amended ROADMAP.md, pyproject.toml as M6B left it, and the M6A and M8 plans it takes as inputs (both re-bound in this wave first); no conflict or gap; integration note 1's CI run has happened.",
       "environment": {
@@ -21199,7 +21305,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "92b4a8d77ad9f5de623f15f410fe56e3db7a9f7f208fc9c7a05f899ce6962796",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-WINDOWS",
@@ -21219,7 +21325,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-RW.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21765,7 +21871,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "92b4a8d77ad9f5de623f15f410fe56e3db7a9f7f208fc9c7a05f899ce6962796",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-TEMPLATE",
@@ -21773,7 +21879,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A2"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "packaging/extract_strings.py",
@@ -22116,7 +22222,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "418af9d8675e9db566828d0e4f40f2d9f7713b26fcdd401eb9e4c1abeea37d93",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-CI-LINT",
@@ -22125,7 +22231,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A3"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -22662,7 +22768,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "e538aa8a61eaaaa7ef7dd5de0e0fd0bb3a0d7add4f4acb037d9f6374d7a80480",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-CI-TYPES-LINUX",
@@ -22671,7 +22777,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-02.A3"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -23208,7 +23314,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "e538aa8a61eaaaa7ef7dd5de0e0fd0bb3a0d7add4f4acb037d9f6374d7a80480",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-CI-TYPES-WIN32",
@@ -23217,7 +23323,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-02.A3"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -23754,7 +23860,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "e538aa8a61eaaaa7ef7dd5de0e0fd0bb3a0d7add4f4acb037d9f6374d7a80480",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-CI-TYPES-DARWIN",
@@ -23763,7 +23869,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-02.A3"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -24300,7 +24406,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "e538aa8a61eaaaa7ef7dd5de0e0fd0bb3a0d7add4f4acb037d9f6374d7a80480",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-CI-LINUX",
@@ -24320,7 +24426,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A4"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -24869,7 +24975,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "92b4a8d77ad9f5de623f15f410fe56e3db7a9f7f208fc9c7a05f899ce6962796",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-BEH-CI-MACOS",
@@ -24889,7 +24995,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A4"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -25438,7 +25544,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       ],
       "scope_sha256": "92b4a8d77ad9f5de623f15f410fe56e3db7a9f7f208fc9c7a05f899ce6962796",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-01-bubble-not-clear-of-the-box",
@@ -25446,7 +25552,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -25818,7 +25924,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-01-extractor-misses-import-time",
@@ -25826,7 +25932,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -26198,7 +26304,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-01-menu-end-key-goes-home",
@@ -26206,7 +26312,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -26578,7 +26684,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-02-a-module-loads-macos-on-import",
@@ -26586,7 +26692,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-02.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -27058,7 +27164,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-autostart-warning-printed",
@@ -27066,7 +27172,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A4"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -27322,7 +27428,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-brain-failure-not-logged",
@@ -27330,7 +27436,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -27586,7 +27692,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-brain-key-not-scrubbed",
@@ -27594,7 +27700,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -27850,7 +27956,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-chat-failure-hidden",
@@ -27858,7 +27964,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A5"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -28114,7 +28220,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-console-not-blanked",
@@ -28122,7 +28228,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -28378,7 +28484,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-debug-env-ignored",
@@ -28386,7 +28492,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -28490,7 +28596,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-keys-not-blanked",
@@ -28498,7 +28604,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -28754,7 +28860,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-limit-ten-times",
@@ -28762,7 +28868,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -28866,7 +28972,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-no-stderr",
@@ -28874,7 +28980,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -28978,7 +29084,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-package-manager-failure-hidden",
@@ -28986,7 +29092,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A5"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -29242,7 +29348,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-phrases-failure-hidden",
@@ -29250,7 +29356,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A5"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -29506,7 +29612,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-player-failure-hidden",
@@ -29514,7 +29620,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A5"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -29770,7 +29876,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-reminder-words-logged",
@@ -29778,7 +29884,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A5"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -30034,7 +30140,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-rotated-as-dot-1",
@@ -30042,7 +30148,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -30146,7 +30252,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-03-setup-twice-doubles",
@@ -30154,7 +30260,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -30258,7 +30364,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-desktops-words-not-shown",
@@ -30266,7 +30372,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -30838,7 +30944,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-escaped-exception-not-in-the-log",
@@ -30846,7 +30952,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A6"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -31406,7 +31512,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-hotkey-bound-kept-private",
@@ -31414,7 +31520,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -31986,7 +32092,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-leak-fails-without-a-flag",
@@ -31994,7 +32100,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-RW.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -32110,7 +32216,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-player-not-closed",
@@ -32118,7 +32224,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -32690,7 +32796,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-players-left-at-quit",
@@ -32698,7 +32804,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -33270,7 +33376,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-status-waits-for-the-brain",
@@ -33278,7 +33384,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -33850,7 +33956,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-unclear-script-reminder-unsaid",
@@ -33858,7 +33964,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-LEFT.A4"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -34430,7 +34536,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-B-unreadable-settings-hidden",
@@ -34438,7 +34544,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-03.A6"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -34998,7 +35104,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-RW-http-error-left-open",
@@ -35006,7 +35112,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-RW.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -35124,7 +35230,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-M6B-RW-release-server-left-open",
@@ -35132,7 +35238,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-RW.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -35250,7 +35356,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-mypy-app",
@@ -35258,7 +35364,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-02.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -35817,7 +35923,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-mypy-brains",
@@ -35825,7 +35931,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-02.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -36296,7 +36402,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-mypy-menus",
@@ -36304,7 +36410,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-02.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -36863,7 +36969,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-mypy-winpipe",
@@ -36871,7 +36977,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-02.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -37342,7 +37448,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-BLE",
@@ -37350,7 +37456,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -37721,7 +37827,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-C4",
@@ -37729,7 +37835,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -38100,7 +38206,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-C90",
@@ -38108,7 +38214,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -38479,7 +38585,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-DTZ",
@@ -38487,7 +38593,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -38858,7 +38964,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-PERF",
@@ -38866,7 +38972,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -39237,7 +39343,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-PIE",
@@ -39245,7 +39351,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -39616,7 +39722,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-RUF",
@@ -39624,7 +39730,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -39995,7 +40101,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-S",
@@ -40003,7 +40109,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -40374,7 +40480,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-S101-in-chatmon",
@@ -40382,7 +40488,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -40753,7 +40859,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-UP",
@@ -40761,7 +40867,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -41132,7 +41238,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-app",
@@ -41140,7 +41246,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -41699,7 +41805,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4-RED-ruff-app-test",
@@ -41707,7 +41813,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
         "M6B-01.A3"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -42266,11 +42372,21161 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
           }
         ]
       },
+      "reason": "Stale at wave 4's second round (2026-11-15): the files it was bound to changed by bf9d8ac (the wayland, followups, a11y and sway merges, pyproject.toml's coverage floor among them), and the plan's rules and narrative were amended; the W4B- receipts re-ran its check on bf9d8ac or read it from CI run 43701523023 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W4B-READY",
+      "acceptance": [
+        "M6B-01.A1",
+        "M6B-01.A2",
+        "M6B-01.A3",
+        "M6B-02.A1",
+        "M6B-02.A2",
+        "M6B-02.A3",
+        "M6B-03.A1",
+        "M6B-03.A2",
+        "M6B-03.A3",
+        "M6B-03.A4",
+        "M6B-03.A5",
+        "M6B-03.A6",
+        "M6B-RW.A1",
+        "M6B-LEFT.A1",
+        "M6B-LEFT.A2",
+        "M6B-LEFT.A3",
+        "M6B-LEFT.A4"
+      ],
+      "kind": "readiness",
+      "status": "pass",
+      "command": [],
+      "method": "Requirements review, round two, at bf9d8ac (readiness.md): M6B-01 to M6B-03, M6B-RW and M6B-LEFT re-read against ASSESSMENT.md, the amended ROADMAP.md, pyproject.toml as it is now and the M6A and M8 plans it takes as inputs (both re-bound in round two first); no conflict or gap; mypy now also passes with PyQt6 6.12.1's stubs.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/readiness.md",
+        "sha256": "9afab036785efd8e2cd54c34cadfb0f9a3c7396c5bf69a42145cac7b832d6574"
+      },
+      "inputs": [
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        }
+      ],
+      "scope_sha256": "646597e3ef8bc4e73ca19f3ef2b687a8b8fcfda957d435a484683ecd92412101",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-WINDOWS",
+      "acceptance": [
+        "M6B-01.A2",
+        "M6B-02.A2",
+        "M6B-03.A1",
+        "M6B-03.A2",
+        "M6B-03.A3",
+        "M6B-03.A4",
+        "M6B-03.A5",
+        "M6B-03.A6",
+        "M6B-LEFT.A1",
+        "M6B-LEFT.A2",
+        "M6B-LEFT.A3",
+        "M6B-LEFT.A4",
+        "M6B-RW.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on bf9d8ac's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1256 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Every criterion's tests ran here; the Linux-only overlay and log-mode tests skip on Windows, and CI's and WSL's receipts add them. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/wave4b/suite-windows.log",
+        "sha256": "7f503b5d1a475b727e01e7b972cf58f5c756082c5dabfdcb6be93c57621c00ad"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "646597e3ef8bc4e73ca19f3ef2b687a8b8fcfda957d435a484683ecd92412101",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-TEMPLATE",
+      "acceptance": [
+        "M6B-01.A2"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "packaging/extract_strings.py",
+        "--check"
+      ],
+      "method": "packaging/extract_strings.py --check at bf9d8ac on this workstation, exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes, so the split-out helpers changed no marked string. Evidence for fb19cb9; two other workers are changing code at the same time, so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/wave4b/extract-strings-check.log",
+        "sha256": "aef71157c92df5a342dd82f7f8935be2c89549879c74755150f368cf5cf185fe"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-CI-LINT",
+      "acceptance": [
+        "M6B-01.A1",
+        "M6B-01.A3"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43701523023",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132773560250",
+        "--log"
+      ],
+      "method": "CI run 43701523023 on bf9d8ac, job lint. It ran ruff check . with pyproject.toml's settings: the eleven families, max-complexity 15, RUF001-003 ignored, S101 allowed only in tests, and no per-file exemption left for the eight hub files. The result was 'All checks passed!', and the job succeeded. ruff is pinned in packaging/requirements-dev.txt, which the job installed with --require-hashes. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/ci/ci-132773560250-lint.log",
+        "sha256": "4051ed4b0bb5b0203d523e5c2365dcf1bd1200a043f40e9ea796c43c78dba3a9"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-CI-TYPES-LINUX",
+      "acceptance": [
+        "M6B-02.A1",
+        "M6B-02.A3"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43701523023",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132773560129",
+        "--log"
+      ],
+      "method": "CI run 43701523023 on bf9d8ac, job types (linux): mypy --platform linux on [tool.mypy], which has no overrides and no exemption list. It passed with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt), and the job succeeded. Since round one the followups worker's workarounds (chatmon/qtsignal.py, typed static constructors) also make mypy pass with PyQt6 6.12.1's stubs: Success on linux, win32 and darwin in WSL (reports/m6a/wave4b/mypy-pyqt6-6.12.1-*.log). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/ci/ci-132773560129-types-linux.log",
+        "sha256": "4d344882aaa2a350ca61c8d26f2d51b1ad4224b713e1f2992b85ad5051a945a2"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-CI-TYPES-WIN32",
+      "acceptance": [
+        "M6B-02.A1",
+        "M6B-02.A3"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43701523023",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132773560161",
+        "--log"
+      ],
+      "method": "CI run 43701523023 on bf9d8ac, job types (win32): mypy --platform win32 passed with no module exempt. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/ci/ci-132773560161-types-win32.log",
+        "sha256": "0353ccf6609efc4bbe1fb8b14ccaab9201c26d82e5a5b0102aa84bb74d12f642"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-CI-TYPES-DARWIN",
+      "acceptance": [
+        "M6B-02.A1",
+        "M6B-02.A3"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43701523023",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132773559931",
+        "--log"
+      ],
+      "method": "CI run 43701523023 on bf9d8ac, job types (darwin): mypy --platform darwin passed with no module exempt. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/ci/ci-132773559931-types-darwin.log",
+        "sha256": "aa591eeca5cd0c65621378048954ba30eae7b0809cb383daf79b84e3a0e4b1d8"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-CI-LINUX",
+      "acceptance": [
+        "M6B-01.A2",
+        "M6B-02.A2",
+        "M6B-03.A1",
+        "M6B-03.A2",
+        "M6B-03.A3",
+        "M6B-03.A4",
+        "M6B-03.A5",
+        "M6B-03.A6",
+        "M6B-RW.A1",
+        "M6B-LEFT.A1",
+        "M6B-LEFT.A2",
+        "M6B-LEFT.A3",
+        "M6B-LEFT.A4"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43701523023",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132773560297",
+        "--log"
+      ],
+      "method": "CI run 43701523023 on bf9d8ac, job test (ubuntu-24.04, 3.15), every test under xvfb-run. Every warning is an error there (pyproject.toml), and every test these criteria's drills name passed, apart from the Windows-only installer test (tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change), which skips there: the log's 0600 and no-link test, tests/test_imports.py on Linux, the overlay's keymap and debug-log tests in tests/test_wayland.py, and the suite's own ResourceWarning-free run. That is integration note 1's Linux xvfb run. The Qt 6.4-era distribution containers (ubuntu:24.04, debian:trixie, fedora:44 on their own PyQt6) passed the whole suite too. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/ci/ci-132773560297-test-ubuntu-24.04-3.15.log",
+        "sha256": "365e319b53a88e4ac0668fb8af697a801a6334b65195a144a40eecdc2916dadc"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "646597e3ef8bc4e73ca19f3ef2b687a8b8fcfda957d435a484683ecd92412101",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-BEH-CI-MACOS",
+      "acceptance": [
+        "M6B-01.A2",
+        "M6B-02.A2",
+        "M6B-03.A1",
+        "M6B-03.A2",
+        "M6B-03.A3",
+        "M6B-03.A4",
+        "M6B-03.A5",
+        "M6B-03.A6",
+        "M6B-RW.A1",
+        "M6B-LEFT.A1",
+        "M6B-LEFT.A2",
+        "M6B-LEFT.A3",
+        "M6B-LEFT.A4"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43701523023",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132773560342",
+        "--log"
+      ],
+      "method": "CI run 43701523023 on bf9d8ac, job test (macos-latest, 3.14): the same tests passed on macOS (the Windows-only installer test skipping there too), with every warning an error, as on the 3.11 and 3.15 legs. fb19cb9's change keeps the log tests to themselves on macOS, and they still do. That is integration note 1's macOS run. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto bf9d8ac's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-bf9d8ac.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/ci/ci-132773560342-test-macos-latest-3.14.log",
+        "sha256": "a1e97fcbcd11b0d99311b71ae95f232afaae0c5fc2f82fd7b711eb7f69580a34"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "646597e3ef8bc4e73ca19f3ef2b687a8b8fcfda957d435a484683ecd92412101",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-01-bubble-not-clear-of-the-box",
+      "acceptance": [
+        "M6B-01.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_overlay_stage.py::test_a_message_goes_above_the_open_box"
+      ],
+      "method": "Red drill M6B-01-bubble-not-clear-of-the-box through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "M6B-01-bubble-not-clear-of-the-box: in chatmon/penguin.py, '            top = min(top, self._clear_of.geometry().top() - origin.y())\\n' became '            top = top\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_message_goes_above_the_open_box",
+        "observed_diagnostic": "___________________ test_a_message_goes_above_the_open_box ____________________",
+        "before": [
+          {
+            "path": "chatmon/penguin.py",
+            "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/penguin.py",
+            "sha256": "482a38b0f6523a0298d372cf7187380ac2f64883805d91be444fe86730b7ae41"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/penguin.py",
+            "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-01-extractor-misses-import-time",
+      "acceptance": [
+        "M6B-01.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_i18n.py::test_the_extractor_refuses_a_string_that_couldnt_be_translated"
+      ],
+      "method": "Red drill M6B-01-extractor-misses-import-time through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "M6B-01-extractor-misses-import-time: in packaging/extract_strings.py, '    if marker in TRANSLATED_NOW and at_import:\\n' became '    if False:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_extractor_refuses_a_string_that_couldnt_be_translated",
+        "observed_diagnostic": "_ test_the_extractor_refuses_a_string_that_couldnt_be_translated[GREETING = _(\"Hi\")\\n-imported] _",
+        "before": [
+          {
+            "path": "packaging/extract_strings.py",
+            "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/extract_strings.py",
+            "sha256": "f95d18b88856fac20c2ed4df3bc01456a7c7700a1c619a0627b5384f77abd75f"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/extract_strings.py",
+            "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-01-menu-end-key-goes-home",
+      "acceptance": [
+        "M6B-01.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_stagemenu.py::test_the_keyboard_moves_opens_picks_and_closes"
+      ],
+      "method": "Red drill M6B-01-menu-end-key-goes-home through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "M6B-01-menu-end-key-goes-home: in chatmon/stagemenu.py, 'self._activate(panel, pickable[0 if key == Qt.Key.Key_Home else -1])' became 'self._activate(panel, pickable[0])'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_keyboard_moves_opens_picks_and_closes",
+        "observed_diagnostic": "_______________ test_the_keyboard_moves_opens_picks_and_closes ________________",
+        "before": [
+          {
+            "path": "chatmon/stagemenu.py",
+            "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/stagemenu.py",
+            "sha256": "8b104f0295148014bdda0a8e7274fc2631cb7efbb30c37263b88fe41a91af855"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/stagemenu.py",
+            "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-02-a-module-loads-macos-on-import",
+      "acceptance": [
+        "M6B-02.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_imports.py"
+      ],
+      "method": "Red drill M6B-02-a-module-loads-macos-on-import through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "8721e694ff1b0c0cf3eb63a5af802cd5dbd03124e57b58d2aaca7d280f5da5cb",
+      "red": {
+        "mutation": "M6B-02-a-module-loads-macos-on-import: in chatmon/macnative.py, 'logger = logging.getLogger(__name__)\\n' became 'logger = logging.getLogger(__name__)\\n_objc = ctypes.cdll.LoadLibrary(\"/usr/lib/libobjc.A.dylib\")\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "chatmon.macnative doesn't import on win32",
+        "observed_diagnostic": "E       AssertionError: chatmon.macnative doesn't import on win32:",
+        "before": [
+          {
+            "path": "chatmon/macnative.py",
+            "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/macnative.py",
+            "sha256": "4cfc077bf6e914fa1af712e8772992f1eb2c6865cffbd3773ab84e4be2b8778a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/macnative.py",
+            "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-autostart-warning-printed",
+      "acceptance": [
+        "M6B-03.A4"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_autostart.py::test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent"
+      ],
+      "method": "Red drill M6B-03-autostart-warning-printed through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-autostart-warning-printed: in chatmon/autostart.py, '        logger.warning(\"couldn\\'t add Chatmon to Login Items (%s), so a LaunchAgent starts it\", problem)\\n' became '        print(f\"couldn\\'t add Chatmon to Login Items ({problem}), so a LaunchAgent starts it\", file=sys.stderr)\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent",
+        "observed_diagnostic": "_______ test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent _______",
+        "before": [
+          {
+            "path": "chatmon/autostart.py",
+            "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/autostart.py",
+            "sha256": "95e735210931f85cb6067314e7cb9505e81fe8c24c5fc86a6737185e70d6862b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/autostart.py",
+            "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-brain-failure-not-logged",
+      "acceptance": [
+        "M6B-03.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_a_logged_brain_error_never_carries_the_key"
+      ],
+      "method": "Red drill M6B-03-brain-failure-not-logged through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-brain-failure-not-logged: in chatmon/brains.py, '        self.failed.connect(self._log_failure)\\n' became ''",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_logged_brain_error_never_carries_the_key",
+        "observed_diagnostic": "_______________ test_a_logged_brain_error_never_carries_the_key _______________",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "ca780028e419e126bf2d1ae07664bd8fdcd22daca1df3f0a17da9e41392edeb7"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-brain-key-not-scrubbed",
+      "acceptance": [
+        "M6B-03.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_a_logged_brain_error_never_carries_the_key"
+      ],
+      "method": "Red drill M6B-03-brain-key-not-scrubbed through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-brain-key-not-scrubbed: in chatmon/brains.py, '    return text.replace(key, \"…\") if len(key) >= 8 else text\\n' became '    return text\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_logged_brain_error_never_carries_the_key",
+        "observed_diagnostic": "_______________ test_a_logged_brain_error_never_carries_the_key _______________",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "097684810cabe9da4ed59489a17938bd0a259b999e1bad301cf629134ea67b2f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-chat-failure-hidden",
+      "acceptance": [
+        "M6B-03.A5"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_chats.py::test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not"
+      ],
+      "method": "Red drill M6B-03-chat-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-chat-failure-hidden: in chatmon/chats.py, '            logger.debug(\"couldn\\'t read chat %s: %s\", chat_id, exc)\\n' became '            pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not",
+        "observed_diagnostic": "___ test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not ___",
+        "before": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "311c1789e740a3c3ee5903cc7a8687139b20cb3b385fd9776900260434ea2723"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-console-not-blanked",
+      "acceptance": [
+        "M6B-03.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+      ],
+      "method": "Red drill M6B-03-console-not-blanked through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-console-not-blanked: in chatmon/log.py, '        console.setFormatter(_Blanking(CONSOLE_FORMAT))\\n' became '        console.setFormatter(logging.Formatter(CONSOLE_FORMAT))\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_anything_shaped_like_a_key_is_blanked_as_it_is_written",
+        "observed_diagnostic": "_________ test_anything_shaped_like_a_key_is_blanked_as_it_is_written _________",
+        "before": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "91a88abc91cf8c466d3937866502b78f362085cf57608a7d1dd17ffaaf031a7d"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-debug-env-ignored",
+      "acceptance": [
+        "M6B-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_chatmon_debug_keeps_the_details_too"
+      ],
+      "method": "Red drill M6B-03-debug-env-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        }
+      ],
+      "scope_sha256": "bf7d8adeb6b2055e438ed231736c1d8022e97deb1925d0f47a1aabe1c374b91f",
+      "red": {
+        "mutation": "M6B-03-debug-env-ignored: in chatmon/log.py, '    level = logging.DEBUG if debugging() else logging.INFO\\n' became '    level = logging.INFO\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_chatmon_debug_keeps_the_details_too",
+        "observed_diagnostic": "__________________ test_chatmon_debug_keeps_the_details_too ___________________",
+        "before": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "e36447c4c7e274d1c1c84fa2e78b3782db4393898b93a3388150d3d85420a25b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-keys-not-blanked",
+      "acceptance": [
+        "M6B-03.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+      ],
+      "method": "Red drill M6B-03-keys-not-blanked through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-keys-not-blanked: in chatmon/log.py, '    return _KEYS.sub(BLANKED, text)\\n' became '    return text\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_anything_shaped_like_a_key_is_blanked_as_it_is_written",
+        "observed_diagnostic": "_________ test_anything_shaped_like_a_key_is_blanked_as_it_is_written _________",
+        "before": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "2e2b4667413f122cd91df69b548a73ace83de53df757ac82949396a1104d6c3f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-limit-ten-times",
+      "acceptance": [
+        "M6B-03.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+      ],
+      "method": "Red drill M6B-03-limit-ten-times through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        }
+      ],
+      "scope_sha256": "bf7d8adeb6b2055e438ed231736c1d8022e97deb1925d0f47a1aabe1c374b91f",
+      "red": {
+        "mutation": "M6B-03-limit-ten-times: in chatmon/log.py, 'maxBytes=LIMIT,' became 'maxBytes=LIMIT * 10,'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_full_log_starts_over_and_the_last_one_is_kept_as_old",
+        "observed_diagnostic": "_________ test_a_full_log_starts_over_and_the_last_one_is_kept_as_old _________",
+        "before": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "8f5ccedcc65dad1c65f439121450c0eef45a535161d15e7a119aa3e659979da1"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-no-stderr",
+      "acceptance": [
+        "M6B-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_problems_reach_stderr_as_well_and_details_and_news_dont"
+      ],
+      "method": "Red drill M6B-03-no-stderr through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        }
+      ],
+      "scope_sha256": "bf7d8adeb6b2055e438ed231736c1d8022e97deb1925d0f47a1aabe1c374b91f",
+      "red": {
+        "mutation": "M6B-03-no-stderr: in chatmon/log.py, '    if sys.stderr is not None:\\n' became '    if False:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_problems_reach_stderr_as_well_and_details_and_news_dont",
+        "observed_diagnostic": "________ test_problems_reach_stderr_as_well_and_details_and_news_dont _________",
+        "before": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "762273bae88fad83f7bdb9c823582a1f7b1b10bfb3245b99d70e342d2e29103a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-package-manager-failure-hidden",
+      "acceptance": [
+        "M6B-03.A5"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_updates.py::test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked"
+      ],
+      "method": "Red drill M6B-03-package-manager-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-package-manager-failure-hidden: in chatmon/updates.py, '                    logger.debug(\"couldn\\'t ask %s whether it installed Chatmon: %s\", query[0], exc)\\n' became '                    pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked",
+        "observed_diagnostic": "____ test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked ____",
+        "before": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "8e735a585a279a5f88769c70a8857455ec38c283e293ce8e53f6fbd0b9a43694"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-phrases-failure-hidden",
+      "acceptance": [
+        "M6B-03.A5"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_offline.py::test_a_broken_translation_is_logged_and_a_missing_one_isnt"
+      ],
+      "method": "Red drill M6B-03-phrases-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-phrases-failure-hidden: in chatmon/offline.py, '            logger.debug(\"couldn\\'t read the phrases in %s: %s\", folder / f\"{candidate}.json\", exc)\\n' became '            pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_broken_translation_is_logged_and_a_missing_one_isnt",
+        "observed_diagnostic": "_________ test_a_broken_translation_is_logged_and_a_missing_one_isnt __________",
+        "before": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "909ab40077e368296e6c15a7564be78bb0cfad089b0d26da9e78629b1f61bfca"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/offline.py",
+            "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-player-failure-hidden",
+      "acceptance": [
+        "M6B-03.A5"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays"
+      ],
+      "method": "Red drill M6B-03-player-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-player-failure-hidden: in chatmon/sound.py, '            logger.debug(\"couldn\\'t start %s: %s\", self.name, exc)\\n' became '            pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays",
+        "observed_diagnostic": "____ test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays _____",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "a3b82b4043115a1b8277a87f9254129f0e40bf25052cdedb389bc9640e6004b9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-reminder-words-logged",
+      "acceptance": [
+        "M6B-03.A5"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_reminders.py::test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words"
+      ],
+      "method": "Red drill M6B-03-reminder-words-logged through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "f475c8f6b232356c5e0d8c4d296dad62f813bbe0cd2597e38e1262fa395ceb5c",
+      "red": {
+        "mutation": "M6B-03-reminder-words-logged: in chatmon/reminders.py, '                logger.debug(\"skipped a saved reminder that can\\'t be read (%s)\", type(exc).__name__)\\n' became '                logger.debug(\"skipped a saved reminder that can\\'t be read (%s): %s\", type(exc).__name__, entry)\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words",
+        "observed_diagnostic": "_____ test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words _____",
+        "before": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "ecf34a102a7de7441e12a8470c2fcdc09e188e1cb0cac0f4f17882498faca8be"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/reminders.py",
+            "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-rotated-as-dot-1",
+      "acceptance": [
+        "M6B-03.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+      ],
+      "method": "Red drill M6B-03-rotated-as-dot-1 through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        }
+      ],
+      "scope_sha256": "bf7d8adeb6b2055e438ed231736c1d8022e97deb1925d0f47a1aabe1c374b91f",
+      "red": {
+        "mutation": "M6B-03-rotated-as-dot-1: in chatmon/log.py, '    return default.removesuffix(\".1\") + \".old\"\\n' became '    return default\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_full_log_starts_over_and_the_last_one_is_kept_as_old",
+        "observed_diagnostic": "_________ test_a_full_log_starts_over_and_the_last_one_is_kept_as_old _________",
+        "before": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "3c73a342d73100491091505d702d84367c3714c17904754de96e61fbeba7df31"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-03-setup-twice-doubles",
+      "acceptance": [
+        "M6B-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_log.py::test_setting_up_twice_keeps_one_of_each"
+      ],
+      "method": "Red drill M6B-03-setup-twice-doubles through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        }
+      ],
+      "scope_sha256": "bf7d8adeb6b2055e438ed231736c1d8022e97deb1925d0f47a1aabe1c374b91f",
+      "red": {
+        "mutation": "M6B-03-setup-twice-doubles: in chatmon/log.py, '    reset()\\n    level = ' became '    level = '",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_setting_up_twice_keeps_one_of_each",
+        "observed_diagnostic": "___________________ test_setting_up_twice_keeps_one_of_each ___________________",
+        "before": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "556c2be548cf050405d8e4dd1244ee6afa54aa9608213c6bdcf021f402b30f4b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/log.py",
+            "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-desktops-words-not-shown",
+      "acceptance": [
+        "M6B-LEFT.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words"
+      ],
+      "method": "Red drill M6B-B-desktops-words-not-shown through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "345e7cc084a5f0829a10bc307f50df393bf851743b2c60ffe6b34925e21bc53c",
+      "red": {
+        "mutation": "M6B-B-desktops-words-not-shown: in chatmon/settingswin.py, '        self.hotkey_bound.setVisible(shown)' became '        self.hotkey_bound.setVisible(False)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words",
+        "observed_diagnostic": "_ test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words _",
+        "before": [
+          {
+            "path": "chatmon/settingswin.py",
+            "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/settingswin.py",
+            "sha256": "8b528d2d1a37a32473637f0fd29f8e9ceeca593b00435de3209d7b9261139ac6"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/settingswin.py",
+            "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-escaped-exception-not-in-the-log",
+      "acceptance": [
+        "M6B-03.A6"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_smoke.py::test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback"
+      ],
+      "method": "Red drill M6B-B-escaped-exception-not-in-the-log through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": {
+        "mutation": "M6B-B-escaped-exception-not-in-the-log: in chatmon/app.py, '    logger.error(\"something went wrong\", exc_info=(kind, value, tb))' became '    logger.debug(\"something went wrong\", exc_info=(kind, value, tb))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback",
+        "observed_diagnostic": "_ test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback __",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "c7d65d7b35c14594e578264b1b845c534f97b25a43fef40a33e612b4fbe809a9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-hotkey-bound-kept-private",
+      "acceptance": [
+        "M6B-LEFT.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_the_apps_one_shortcut_says_how_the_desktop_has_it"
+      ],
+      "method": "Red drill M6B-B-hotkey-bound-kept-private through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "345e7cc084a5f0829a10bc307f50df393bf851743b2c60ffe6b34925e21bc53c",
+      "red": {
+        "mutation": "M6B-B-hotkey-bound-kept-private: in chatmon/hotkey.py, '    _hotkey.on_pressed, _hotkey.on_failed, _hotkey.on_bound = callback, failed, bound' became '    _hotkey.on_pressed, _hotkey.on_failed, _hotkey.on_bound = callback, failed, None'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_apps_one_shortcut_says_how_the_desktop_has_it",
+        "observed_diagnostic": "___________ test_the_apps_one_shortcut_says_how_the_desktop_has_it ____________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "195a55e5274bf0b3e5d34d5bae6cbd174b4c5727d557e5e98e0f2a128ae8bc82"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-leak-fails-without-a-flag",
+      "acceptance": [
+        "M6B-RW.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed"
+      ],
+      "method": "Red drill M6B-B-leak-fails-without-a-flag through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "b844407a387927027e6a12bb953e2735ce943942148cf8bf87d779f1c618f382",
+      "red": {
+        "mutation": "M6B-B-leak-fails-without-a-flag: in chatmon/brains.py, '        exc.close()\\n        raise' became '        raise'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "PytestUnraisableExceptionWarning: Exception ignored while calling deallocator <function _TemporaryFileCloser.__del__",
+        "observed_diagnostic": "E                   pytest.PytestUnraisableExceptionWarning: Exception ignored while calling deallocator <function _TemporaryFileCloser.__del__ at 0x000001C2702AD900>: None",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "8f404526cf79869f1e042895758d696e17d1363047c189a62d03eca7b18b51a9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-player-not-closed",
+      "acceptance": [
+        "M6B-LEFT.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind"
+      ],
+      "method": "Red drill M6B-B-player-not-closed through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "345e7cc084a5f0829a10bc307f50df393bf851743b2c60ffe6b34925e21bc53c",
+      "red": {
+        "mutation": "M6B-B-player-not-closed: in chatmon/sound.py, '            if close is not None:\\n                close()' became '            if close is not None:\\n                pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind",
+        "observed_diagnostic": "__ test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind ___",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "19ba487f8bca0bd70ab1236db4424eb290cc29a3bcf3dfd006ceb9b22244f9fc"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-players-left-at-quit",
+      "acceptance": [
+        "M6B-LEFT.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_quitting_lets_go_of_the_sound_players"
+      ],
+      "method": "Red drill M6B-B-players-left-at-quit through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "345e7cc084a5f0829a10bc307f50df393bf851743b2c60ffe6b34925e21bc53c",
+      "red": {
+        "mutation": "M6B-B-players-left-at-quit: in chatmon/app.py, '        sound.close()  # a Linux player still sounding finishes and is reaped, never left behind' became '        pass  # a Linux player still sounding finishes and is reaped, never left behind'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_quitting_lets_go_of_the_sound_players",
+        "observed_diagnostic": "_________________ test_quitting_lets_go_of_the_sound_players __________________",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "fce202707b442c73050e650f2342dd5425001c10890c3b7cd0d5e4982d2e650a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-status-waits-for-the-brain",
+      "acceptance": [
+        "M6B-LEFT.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_status_names_the_brain_from_the_finder_and_never_waits_for_one"
+      ],
+      "method": "Red drill M6B-B-status-waits-for-the-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "345e7cc084a5f0829a10bc307f50df393bf851743b2c60ffe6b34925e21bc53c",
+      "red": {
+        "mutation": "M6B-B-status-waits-for-the-brain: in chatmon/app.py, '        self.finder.find(self.brains, self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), found)' became '        found(self._brain())'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_status_names_the_brain_from_the_finder_and_never_waits_for_one",
+        "observed_diagnostic": "_____ test_status_names_the_brain_from_the_finder_and_never_waits_for_one _____",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "dccfe3fdf53a9a7f55219dea8eb25972893b725aee9b5b8bf90710d5d16557a4"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-unclear-script-reminder-unsaid",
+      "acceptance": [
+        "M6B-LEFT.A4"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_reminders.py::test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+      ],
+      "method": "Red drill M6B-B-unclear-script-reminder-unsaid through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "c702bb35c8865119abb6fb9063af9bcdca6f9bce1963bbb9c63e450786909ddd"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_macnative.py",
+          "sha256": "57711a34cca82aa1c365ace7998143ef41a1d96a9ee65f11c41e6d5d0555e6ec"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "345e7cc084a5f0829a10bc307f50df393bf851743b2c60ffe6b34925e21bc53c",
+      "red": {
+        "mutation": "M6B-B-unclear-script-reminder-unsaid: in chatmon/app.py, '                self.say(_(\"Reminder not set\"), reminders.explain(command), timeout_s=15, background=True)' became '                pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time",
+        "observed_diagnostic": "____ test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time _____",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "c48e2832805a3a5fa05dca59cf56f09f1283834f57a150caf3d1bf289eb895ba"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-B-unreadable-settings-hidden",
+      "acceptance": [
+        "M6B-03.A6"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_settings.py::test_a_state_file_that_cant_be_read_is_logged_and_started_afresh"
+      ],
+      "method": "Red drill M6B-B-unreadable-settings-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills-b.log",
+        "sha256": "58b110680d6205aeb20b407e6c47647bdd9b3badad897907af1cf4e463be0352"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": {
+        "mutation": "M6B-B-unreadable-settings-hidden: in chatmon/settings.py, '        logger.debug(\"couldn\\'t read %s: %s\", path, exc)' became '        pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_state_file_that_cant_be_read_is_logged_and_started_afresh",
+        "observed_diagnostic": "______ test_a_state_file_that_cant_be_read_is_logged_and_started_afresh _______",
+        "before": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "c9c82831c919f42481ca719090f7aa10841e17fd89976aa6937ac02a514c9d8c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-RW-http-error-left-open",
+      "acceptance": [
+        "M6B-RW.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-W",
+        "error::ResourceWarning",
+        "tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed"
+      ],
+      "method": "Red drill M6B-RW-http-error-left-open through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "b844407a387927027e6a12bb953e2735ce943942148cf8bf87d779f1c618f382",
+      "red": {
+        "mutation": "M6B-RW-http-error-left-open: in chatmon/brains.py, '        exc.close()\\n        raise\\n' became '        raise\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "ResourceWarning",
+        "observed_diagnostic": ">           _warnings.warn(self.warn_message, ResourceWarning)",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "8f404526cf79869f1e042895758d696e17d1363047c189a62d03eca7b18b51a9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-M6B-RW-release-server-left-open",
+      "acceptance": [
+        "M6B-RW.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-W",
+        "error::ResourceWarning",
+        "tests/test_updates.py"
+      ],
+      "method": "Red drill M6B-RW-release-server-left-open through tests/drills/run.py on this Windows workstation, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/drills.log",
+        "sha256": "4e40503539aa80c272ef04007eb3099c00d8311b858881e6490b6687792b5f93"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        }
+      ],
+      "scope_sha256": "b844407a387927027e6a12bb953e2735ce943942148cf8bf87d779f1c618f382",
+      "red": {
+        "mutation": "M6B-RW-release-server-left-open: in tests/test_updates.py, '    server.shutdown()\\n    server.server_close()\\n\\n\\ndef run_updater' became '    server.shutdown()\\n\\n\\ndef run_updater'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "ResourceWarning",
+        "observed_diagnostic": "E           ResourceWarning: unclosed <socket.socket fd=816, family=2, type=1, proto=0, laddr=('127.0.0.1', 60249)>",
+        "before": [
+          {
+            "path": "tests/test_updates.py",
+            "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "tests/test_updates.py",
+            "sha256": "0d64d678abbb857a1f1fc26ad4f5489f68ec89574238d054dd17625ab772bb4b"
+          }
+        ],
+        "after": [
+          {
+            "path": "tests/test_updates.py",
+            "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-mypy-app",
+      "acceptance": [
+        "M6B-02.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill mypy-app through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": {
+        "mutation": "mypy-app: in chatmon/app.py, 'MAX_CONNECTIONS = 64' became 'MAX_CONNECTIONS: int = \"64\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Incompatible types in assignment",
+        "observed_diagnostic": "chatmon\\app.py:45: error: Incompatible types in assignment (expression has type \"str\", variable has type \"int\")  [assignment]",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "b93b6723e6802588a7665b7d3f48ece8419a5cff59e3855a805b876d0a7bb416"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-mypy-brains",
+      "acceptance": [
+        "M6B-02.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill mypy-brains through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "8721e694ff1b0c0cf3eb63a5af802cd5dbd03124e57b58d2aaca7d280f5da5cb",
+      "red": {
+        "mutation": "mypy-brains: in chatmon/brains.py, 'MAX_REPLY = 32 * 2**20' became 'MAX_REPLY: int = \"32 MB\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Incompatible types in assignment",
+        "observed_diagnostic": "chatmon\\brains.py:1160: error: Incompatible types in assignment (expression has type \"str\", variable has type \"int\")  [assignment]",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "7b233471ca9baf23fe9d7cf6c5b088147ef8e147a9515b161a2694c349032f57"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-mypy-menus",
+      "acceptance": [
+        "M6B-02.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill mypy-menus through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": {
+        "mutation": "mypy-menus: in chatmon/menus.py, 'RECENT_CHATS = 8' became 'RECENT_CHATS: int = \"8\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Incompatible types in assignment",
+        "observed_diagnostic": "chatmon\\menus.py:43: error: Incompatible types in assignment (expression has type \"str\", variable has type \"int\")  [assignment]",
+        "before": [
+          {
+            "path": "chatmon/menus.py",
+            "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/menus.py",
+            "sha256": "ef8ff0d67a15c0e68de4353a65833bbaa2fbdc1811477ed1e79a43ff2ce59678"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/menus.py",
+            "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-mypy-winpipe",
+      "acceptance": [
+        "M6B-02.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill mypy-winpipe through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "8721e694ff1b0c0cf3eb63a5af802cd5dbd03124e57b58d2aaca7d280f5da5cb",
+      "red": {
+        "mutation": "mypy-winpipe: in chatmon/winpipe.py, 'REPLY_MAX = 64 * 1024' became 'REPLY_MAX: int = \"64 KB\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Incompatible types in assignment",
+        "observed_diagnostic": "chatmon\\winpipe.py:50: error: Incompatible types in assignment (expression has type \"str\", variable has type \"int\")  [assignment]",
+        "before": [
+          {
+            "path": "chatmon/winpipe.py",
+            "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/winpipe.py",
+            "sha256": "e0305dae0d78ed5ddff5da139cd9dfffb106ba029b37db0b8a048ab58d1f332a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/winpipe.py",
+            "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-BLE",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-BLE through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-BLE: in chatmon/behavior.py, appended 'try:\\n    _DRILL = 1\\nexcept Exception:\\n    _DRILL = 2\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "BLE001",
+        "observed_diagnostic": "BLE001 Do not catch blind exception: `Exception`",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "483d1b5e3a07e7211da33b7df376a1df6d00aaccc09c34f2f9b48df8f979ed5b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-C4",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-C4 through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-C4: in chatmon/behavior.py, appended '_DRILL = [v for v in (1, 2)]\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "C416",
+        "observed_diagnostic": "C416 Unnecessary list comprehension (rewrite using `list()`)",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "69f67f2fe352389eb7f53b80f1e144c465473ad26494740efcc922d8426ee027"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-C90",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-C90 through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-C90: in chatmon/behavior.py, appended 'def _drill(x):\\n    if x == 0:\\n        return 0\\n    if x == 1:\\n        return 1\\n    if x == 2:\\n        return 2\\n    if x == 3:\\n        return 3\\n    if x == 4:\\n        return 4\\n    if x == 5:\\n        return 5\\n    if x == 6:\\n        return 6\\n    if x == 7:\\n        return 7\\n    if x == 8:\\n        return 8\\n    if x == 9:\\n        return 9\\n    if x == 10:\\n        return 10\\n    if x == 11:\\n        return 11\\n    if x == 12:\\n        return 12\\n    if x == 13:\\n        return 13\\n    if x == 14:\\n        return 14\\n    return -1\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "C901",
+        "observed_diagnostic": "C901 `_drill` is too complex (16 > 15)",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "c55b57e96aa3eddb171040257c15db99da7658e782cc59575b91ff939ff599c3"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-DTZ",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-DTZ through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-DTZ: in chatmon/behavior.py, appended 'import datetime as _dt\\n\\n_DRILL = _dt.datetime.now()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "DTZ005",
+        "observed_diagnostic": "DTZ005 `datetime.datetime.now()` called without a `tz` argument",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "7f77aa0537919308688f7999d8019231cdf3454c99bf5b9ae41b7855d4676f58"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-PERF",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-PERF through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-PERF: in chatmon/behavior.py, appended 'def _drill(items):\\n    out = []\\n    for i in items:\\n        out.append(i * 2)\\n    return out\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "PERF401",
+        "observed_diagnostic": "PERF401 Use a list comprehension to create a transformed list",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "b1599943d5bd8db8b6929cab7e7bcdb66239390cb14bf5f65ce8bf48a2aa4e65"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-PIE",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-PIE through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-PIE: in chatmon/behavior.py, appended '_DRILL = list(range(0, 3))\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "PIE808",
+        "observed_diagnostic": "PIE808 [*] Unnecessary `start` argument in `range`",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "3d0748712dac6d03dd5e8a46f35e9b2d6f1a9c22ffc6bd869442a571e75cbe50"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-RUF",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-RUF through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-RUF: in chatmon/behavior.py, appended '_DRILL = list(range(3))[0]\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "RUF015",
+        "observed_diagnostic": "RUF015 Prefer `next(iter(range(3)))` over single element slice",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "db6ce147054ccb28dd7eef787490701c78c42fa512832c45911b64a0d966976f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-S",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-S through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-S: in chatmon/behavior.py, appended '_DRILL = eval(\"1\")\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "S307",
+        "observed_diagnostic": "S307 Use of possibly insecure function; consider using `ast.literal_eval`",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "00a5554b12361e00d2224c19c4193347f0a9e33ec9f7730b1ff0938ae8513210"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-S101-in-chatmon",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-S101-in-chatmon through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-S101-in-chatmon: in chatmon/behavior.py, appended 'assert __name__\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "S101",
+        "observed_diagnostic": "S101 Use of `assert` detected",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "b20fd0069b811ba0f7f29d57101bfc328a8bad9cfcfb698d6dbb33b586a17776"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-UP",
+      "acceptance": [
+        "M6B-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-UP through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "b795d333a97ca33d994c0a93a93ad5789decc9e2d8101deb2ece69927ab3f94a",
+      "red": {
+        "mutation": "ruff-UP: in chatmon/behavior.py, appended '_DRILL = \"%s\" % 1\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "UP031",
+        "observed_diagnostic": "UP031 Use format specifiers instead of percent format",
+        "before": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "8eedc77c92e1a63693ea9541c3871b99ccbce54ec40341086fd2e2910aeb8dd1"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/behavior.py",
+            "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-app",
+      "acceptance": [
+        "M6B-01.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-app through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": {
+        "mutation": "ruff-app: in chatmon/app.py, appended 'import datetime as _dt\\n\\n_DRILL = _dt.datetime.now()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "DTZ005",
+        "observed_diagnostic": "DTZ005 `datetime.datetime.now()` called without a `tz` argument",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "c7269df95341a999fb0166a5589ff3e4902914973bd952761423cffcaba87fa8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4B-RED-ruff-app-test",
+      "acceptance": [
+        "M6B-01.A3"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "--no-cache",
+        "."
+      ],
+      "method": "Red drill ruff-app-test through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of bf9d8ac's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for bf9d8ac: another worker (wave4/crash) may change code for an intermittent Qt crash, so its merge will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m6b/wave4b/gate-drills.log",
+        "sha256": "0aee1653b30a078b3abddbdc2788c9939701ea473b1bb67ccd6d7e4bc6ca97ca"
+      },
+      "inputs": [
+        {
+          "path": "art/tools/blink-inbetween.py",
+          "sha256": "b48859f6d09f4f5ce4530a9422baec95a394dff59242515c6169e26d7b90aedf"
+        },
+        {
+          "path": "art/tools/bubble-cut.py",
+          "sha256": "509fb2a12abed209c6ef43424a951935f26e7e7836c2c257dd02b3cc7f4d2b72"
+        },
+        {
+          "path": "art/tools/bubble-preview.py",
+          "sha256": "aea73cb4bf133783554644b36498872d5b5a57841e6321bed504971cf4d1fc9a"
+        },
+        {
+          "path": "art/tools/creature-cut.py",
+          "sha256": "463084e23cb301c9acaa0978f3a841071900a47a90aa732c1c6ea06adf046101"
+        },
+        {
+          "path": "art/tools/creature-preview.py",
+          "sha256": "69d74d0fb968cd9e0b4c152f650ad7ded972afbedd935da0efe596e8261122fa"
+        },
+        {
+          "path": "art/tools/creature-qc.py",
+          "sha256": "b9b8dad0bbd2bd7132f9418c6a22221a0dfa8636665e40621548f495b1c87fd0"
+        },
+        {
+          "path": "art/tools/loop-qc.py",
+          "sha256": "d275551b0fe72d225988247de093b946f6791d078f5845ecb406d9dfec6663db"
+        },
+        {
+          "path": "art/tools/penguin-slice.py",
+          "sha256": "e1f36abb1cf9d645a1527c6f3f664f641c240bd02daa4935c6d3c54bcd00a7bd"
+        },
+        {
+          "path": "art/tools/penguin-touchup.py",
+          "sha256": "79eeb92d98a03c8c2d969f723bc22af4b03cfc6117fe5deaab3b308b3875b3df"
+        },
+        {
+          "path": "art/tools/readme_media.py",
+          "sha256": "db24eb62a69b5544b725eda4face957f1308784b71ca381e3fed2a5fbd449989"
+        },
+        {
+          "path": "art/tools/sound-cues.py",
+          "sha256": "c7ec18e82d8d36449db611e79188da04ac1dd246816403eeec5580ac0c1ab3c4"
+        },
+        {
+          "path": "art/tools/spritefix.py",
+          "sha256": "c5f0c68caceea3f2fc8a4105b5a9e86456ca79fdcf9f07bdd4316ec7dd186c21"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "684aeff939bebed6f74f00853d98c1285eec7fc5535ed755167549fe3be891b3"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "584c83cc0f36bf355b26575fcb25c690a568208a43a173d374368f6aa087f3c8"
+        },
+        {
+          "path": "chatmon/attachments.py",
+          "sha256": "6fd8c7f1c89aedb234e8049a3ef878d897633753a2e97ca7db8ac6e8b3a4f0bb"
+        },
+        {
+          "path": "chatmon/autostart.py",
+          "sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4"
+        },
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/behavior.py",
+          "sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/changelog.py",
+          "sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/cli.py",
+          "sha256": "fe5d975c13ee06e1eb8f14f26cfe554af27d5435b196fc2472d5fa1343fd49b8"
+        },
+        {
+          "path": "chatmon/clickthrough.py",
+          "sha256": "c527289fd1b6623380591546ac6109416e5ff7d5372a3acf84798f1d27cb37d0"
+        },
+        {
+          "path": "chatmon/commands.py",
+          "sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38"
+        },
+        {
+          "path": "chatmon/context.py",
+          "sha256": "eee28f2368cf8c65bed030573fc2258f28e458ae5614e853d17357b642c42119"
+        },
+        {
+          "path": "chatmon/ed25519.py",
+          "sha256": "6510ebf30ca94d0459c18286f8ca9f4bafabcf1af5a1ff7505600da88373f891"
+        },
+        {
+          "path": "chatmon/events.py",
+          "sha256": "60453d86fabeac6c80325f8493c7cee49b4848636ed11b9b311e8e84761bba44"
+        },
+        {
+          "path": "chatmon/heads_up.py",
+          "sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/layer.py",
+          "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
+        },
+        {
+          "path": "chatmon/log.py",
+          "sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/offline.py",
+          "sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/paths.py",
+          "sha256": "64e11fdbc8fbd657a8c5e1a87ff79527d92bdd9adac7fa5d8412c80a7f1a9d42"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/reminders.py",
+          "sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c"
+        },
+        {
+          "path": "chatmon/report.py",
+          "sha256": "dfe06ae2e33ab4b71db1d403167d3037b13d99ff11f615c940b8ed51a97a439e"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/stagemenu.py",
+          "sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3"
+        },
+        {
+          "path": "chatmon/sysnotify.py",
+          "sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wayland.py",
+          "sha256": "bcc4edb0afe31f2f8046762fa06b67a3b1dc3de02990f328e6367d460cd5ffc6"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/windrop.py",
+          "sha256": "b5f931b0245e359ae0df2594c5680c538d6f21db82fefb137f233131912c23c4"
+        },
+        {
+          "path": "chatmon/winfiles.py",
+          "sha256": "9c4e342414938066fe03336e0bd9ae7d7bfc7124c105c9c0fbaf5566fff09a6c"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winlock.py",
+          "sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb"
+        },
+        {
+          "path": "chatmon/winpipe.py",
+          "sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/wintrust.py",
+          "sha256": "80fc5fc28e8f9b43a5669447fbf85df0173c378e344d35d95d418c4f49ef30ac"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "chatmon/xkb.py",
+          "sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/extract_strings.py",
+          "sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080"
+        },
+        {
+          "path": "packaging/macos/entry.py",
+          "sha256": "5743546e35d47f853f0f3741aa871d6defe03f4a1dffa90888b578d30ef12157"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/app_harness.py",
+          "sha256": "125a6577c176c918dbff0463132f7fff2acadd131906caa372bf433ba9edc4a9"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/ed25519_sign.py",
+          "sha256": "ac3bc5a078fb5077e26a5b6531658f6052288895a8a2ac6eb43ff769dc61b077"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_agents.py",
+          "sha256": "c21830c9a1481350dc4118103e141b5c3a20a0b583208d529e3567efaf8c34c9"
+        },
+        {
+          "path": "tests/test_app_reminders.py",
+          "sha256": "251150e2261351b3f22bc22626bf786608bd757c17edb7cf26d08ba1b315a77c"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+        },
+        {
+          "path": "tests/test_autostart.py",
+          "sha256": "5cc1ead1d7d9c8f04d5a626b43eec167d213361c6ee28c9c8ef662e9d8c58b03"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_behavior.py",
+          "sha256": "35aefbb82f472c46029afc30bdc3bcab8bdc53095e8f670db4e87ccc76acfbed"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_clickthrough.py",
+          "sha256": "78235ca031f00f8938587664b4652bcbb5e3bd207955e8b54beeed01fc6bcd3b"
+        },
+        {
+          "path": "tests/test_companions.py",
+          "sha256": "96e7e0999ce9577f5b4976000789d24a40eefa942fd7c5f5679b90d23d377810"
+        },
+        {
+          "path": "tests/test_context.py",
+          "sha256": "61115357513dec151088459e177421023c7b96fa3bb6e085477c83513ff33ad5"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_events.py",
+          "sha256": "efe83add1eb0ec01c4decbc4143a9636a9210c6a452bc50f9bc3b1a534b11d7d"
+        },
+        {
+          "path": "tests/test_heads_up.py",
+          "sha256": "fc206ccff82075db948b7155f8fc49364b198a43bbb71f69f702134ccd9c64e1"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_imports.py",
+          "sha256": "bb03d577b13589450c80feafc976ef5da20d3e86f64c69ffb4b42f2922db5033"
+        },
+        {
+          "path": "tests/test_install_update.py",
+          "sha256": "94b7a779db7e80e01272ee231688e3690991f4693df8e6ae47cadc1e94bfc282"
+        },
+        {
+          "path": "tests/test_log.py",
+          "sha256": "d3021dcb95b5223bfce3f4ea08fecf615bd5c37b89ccdde68b960ec3c6ebeaa5"
+        },
+        {
+          "path": "tests/test_offline.py",
+          "sha256": "7c1140f29f70f4c6da48c338d06fdd171f0bf8965b359effebfa700316c9dc16"
+        },
+        {
+          "path": "tests/test_overlay_stage.py",
+          "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
+        },
+        {
+          "path": "tests/test_parser_properties.py",
+          "sha256": "aa31df4705306e92b98591864a44313217f05a6fb9bd6fcaae4eab267cc29071"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        },
+        {
+          "path": "tests/test_presence.py",
+          "sha256": "f5f9d609f5fc42196f58648916d852f16df94195354574de1ae991070e7bf5a5"
+        },
+        {
+          "path": "tests/test_releasecheck.py",
+          "sha256": "5e6805ca07fb84c3a231fbdb01b0c5fc170625401aa809fa5af5ecc827b5d9b2"
+        },
+        {
+          "path": "tests/test_reminders.py",
+          "sha256": "0f2ce236cf2d183c968b099b7e3b9aac50e3202a4c8104caa604c29ed546f6c0"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_sprites.py",
+          "sha256": "d911941e53f3cc5caf387ba889dca5db44acadbaef58a2466d8f779455c53097"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "76ecd89c4fc64427f7cf51827affaa4f600284c609ee8c3cbcf9460b60b631e5"
+        },
+        {
+          "path": "tests/test_stage_timer.py",
+          "sha256": "7ea5cd42443d1265711ecd2f4b59d8775d49463c7936d62b538a36fe1a0c61d5"
+        },
+        {
+          "path": "tests/test_stagemenu.py",
+          "sha256": "8a61cdfbe0bc14599da49dc0bf488bfa9a7d17e0504e8933c7f74d71bbe45ae5"
+        },
+        {
+          "path": "tests/test_updates.py",
+          "sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136"
+        },
+        {
+          "path": "tests/test_wayland.py",
+          "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
+        },
+        {
+          "path": "tests/test_windows.py",
+          "sha256": "9c5d58910d17a72b9b186440c3266d3a67eeb25ca053e287c1fc5c1e6389699f"
+        },
+        {
+          "path": "tests/test_xkb.py",
+          "sha256": "814fefdca8569d692c52783a54e662f4cbfdbd61abced571d610d470be051bd1"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "0280efaf84c79bf340480b06dab205be5f8cdcc1507e0e6213cf5f6aaf8b64ab",
+      "red": {
+        "mutation": "ruff-app-test: in tests/test_app_smoke.py, appended '_DRILL = list(range(3))[0]\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "RUF015",
+        "observed_diagnostic": "RUF015 Prefer `next(iter(range(3)))` over single element slice",
+        "before": [
+          {
+            "path": "tests/test_app_smoke.py",
+            "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "tests/test_app_smoke.py",
+            "sha256": "9ce9f77f6a60c86f6516a042d5623187e9472f9c0b380c7b1be213281284c137"
+          }
+        ],
+        "after": [
+          {
+            "path": "tests/test_app_smoke.py",
+            "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
+          }
+        ]
+      },
       "reason": null
     }
   ],
   "checkpoint": {
-    "scope_sha256": "92b4a8d77ad9f5de623f15f410fe56e3db7a9f7f208fc9c7a05f899ce6962796",
+    "scope_sha256": "646597e3ef8bc4e73ca19f3ef2b687a8b8fcfda957d435a484683ecd92412101",
     "inputs": [
       {
         "path": "art/tools/blink-inbetween.py",
@@ -42322,7 +63578,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/a11y.py",
-        "sha256": "7ea51b7782cca5e65fe86029fe31001f7d12fa9490af095e373bc200fd3290f3"
+        "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
       },
       {
         "path": "chatmon/agents.py",
@@ -42330,7 +63586,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/app.py",
-        "sha256": "98ff476bfe3f2ac7144bb1f178beace485215d91417fe423ca8e14e4c7a5dda8"
+        "sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54"
       },
       {
         "path": "chatmon/asking.py",
@@ -42354,11 +63610,11 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/brains.py",
-        "sha256": "562ce2962dea886224b127b59285226238f351895f461fb1330daa07442a0c38"
+        "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
       },
       {
         "path": "chatmon/bubble.py",
-        "sha256": "c5d346d55cbfa3f9262d4158b52191b309b8f00f17533cd805606cbdd0d08f16"
+        "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
       },
       {
         "path": "chatmon/bubbleart.py",
@@ -42402,19 +63658,19 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/hotkey.py",
-        "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
       },
       {
         "path": "chatmon/i18n.py",
-        "sha256": "752edf74f6b9b56ff42cf6a5bb37b3527fcbed0f6d90c0d175cb0f1693065667"
+        "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
       },
       {
         "path": "chatmon/keychain.py",
-        "sha256": "4a477a372dae3f820a19a62a8874d931e7e4d127c10fdf76caa1cfc6b7ce16a2"
+        "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
       },
       {
         "path": "chatmon/layer.py",
-        "sha256": "963779ae04d3f21b3a2f8c8b8365a2aad37e3152ecfbd80dcc169347511a8460"
+        "sha256": "d3f506b3e4376097a0b1283f79bc9fbf85b36db3b7286529c096faddc903cf5e"
       },
       {
         "path": "chatmon/libdbus.py",
@@ -42422,11 +63678,11 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/linuxsession.py",
-        "sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928"
+        "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
       },
       {
         "path": "chatmon/locale/chatmon.pot",
-        "sha256": "1e7e5be17c68fa9e879b99b0e24113559d1856781b810f3fc540b22d7cd32885"
+        "sha256": "219c95f32ab1fa5d6ce668cc017573b75f3276a0f61d23885d50e6213a816d71"
       },
       {
         "path": "chatmon/log.py",
@@ -42434,11 +63690,11 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/macnative.py",
-        "sha256": "2d08d7cf57234eb38f3fbb605ea0891e557c7206573bab48511f4db282fdf138"
+        "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
       },
       {
         "path": "chatmon/menus.py",
-        "sha256": "30dc957489a349a915484f480a5b4621eaf3fe945e62ca76ebcafa3763384a34"
+        "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
       },
       {
         "path": "chatmon/messages.py",
@@ -42450,7 +63706,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/packagekit.py",
-        "sha256": "29b3e7718f7741cfc3c2afd2e5feab0d1d56a9020f11549fa274d101ce244c09"
+        "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
       },
       {
         "path": "chatmon/paths.py",
@@ -42458,11 +63714,11 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/penguin.py",
-        "sha256": "b3718ddf63554dee6a7ae5682cb6b59ebe5412874c11b7a054fedc3e27194f75"
+        "sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d"
       },
       {
         "path": "chatmon/portal.py",
-        "sha256": "39c560454bcb494ed18cc79c3b5e75bc4cadf73d48cd512a6404823144094c5c"
+        "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
       },
       {
         "path": "chatmon/portowner.py",
@@ -42470,7 +63726,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/presence.py",
-        "sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86"
+        "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
       },
       {
         "path": "chatmon/reminders.py",
@@ -42490,15 +63746,15 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/settingswin.py",
-        "sha256": "0ca4c6147f85beef239d121f9268d9d08f3889718967fd00cd0f61da6f90f846"
+        "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
       },
       {
         "path": "chatmon/sound.py",
-        "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
       },
       {
         "path": "chatmon/sprites.py",
-        "sha256": "fe342109519f1f0fb632ef1179eecca5c43325ed1399a0381e3480cc67318906"
+        "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
       },
       {
         "path": "chatmon/stagemenu.py",
@@ -42510,7 +63766,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/updates.py",
-        "sha256": "ca878f84f5df93bb338d03fdc065c213a2ff8f4ff2a21f59afdde2a6f0c45e82"
+        "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
       },
       {
         "path": "chatmon/wayland.py",
@@ -42546,7 +63802,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "chatmon/wintoast.py",
-        "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
       },
       {
         "path": "chatmon/wintrust.py",
@@ -42566,15 +63822,15 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "docs/delivery/ROADMAP.md",
-        "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
       },
       {
         "path": "docs/delivery/m6a-ci-tooling.md",
-        "sha256": "7112ad439c1811947db57562f7b526d0d4cef30efb4bc850f2334ac2a79dbae5"
+        "sha256": "a53971b50ad4b355666f93d7b5594b67e81147122f046d57db5e4e7aa93bc74b"
       },
       {
         "path": "docs/delivery/m8-translation.md",
-        "sha256": "26e5b329863f4429f97d6397d67e1cd76f3ab3ba416c75670a688888bd4a0c53"
+        "sha256": "60565a1370f140cf38ea16366c7a45771a918b20a7ea48acde501b3195b55041"
       },
       {
         "path": "docs/delivery/reports/wave4/cilog.py",
@@ -42586,7 +63842,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "packaging/build.py",
-        "sha256": "3bf3a74f9c63e0ce6601d26d4106adfc5095dcbb1113ee49744d6a7c987457ad"
+        "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
       },
       {
         "path": "packaging/extract_strings.py",
@@ -42598,7 +63854,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "pyproject.toml",
-        "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
       },
       {
         "path": "tests/app_harness.py",
@@ -42638,7 +63894,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "tests/test_app_smoke.py",
-        "sha256": "a741dd661443f97a644224e6fcd1b69c847fed1af7890dd878b84705aefb4870"
+        "sha256": "1d2ed2bfba77398597c0f618832405f8c2b51e20336d52a711c5cf0bd50cd112"
       },
       {
         "path": "tests/test_autostart.py",
@@ -42694,7 +63950,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "tests/test_i18n.py",
-        "sha256": "5e911d07ab780c393cdf49cfb264e55fae7d4b81e082cfdeb58756b2c92c2530"
+        "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
       },
       {
         "path": "tests/test_imports.py",
@@ -42718,7 +63974,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "tests/test_overlay_stage.py",
-        "sha256": "de5457804dca65b8a9dec65d9447a68a025332423df9f41c51aaff77ced0871b"
+        "sha256": "96177b6b976e21e3bdd88a3f36ff3af28dff182e794e0171705b1ac44492ee08"
       },
       {
         "path": "tests/test_parser_properties.py",
@@ -42774,7 +64030,7 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       },
       {
         "path": "tests/test_wayland.py",
-        "sha256": "83d05d4511ff6e594ef8a4cc86d2033163e177f6f48549e71b1453f47bfaa139"
+        "sha256": "34868d17e21633dddb0b36b706d2ecc0ebb3c19a591884ff2c26b45b17abe05f"
       },
       {
         "path": "tests/test_windows.py",
@@ -42810,8 +64066,8 @@ receipts replace them. Nothing remains open in M6B on fb19cb9.
       "T7-leftovers"
     ],
     "pending_operations": [],
-    "next_action": "None in M6B on fb19cb9; integration note 1's CI run has happened (run 43677128712, every job green). The followups worker is changing the mypy settings in pyproject.toml: re-run the types jobs, the gate drills and this plan's drill specs in wave4/ on the merged tree.",
-    "source_revision": "fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0"
+    "next_action": "None in M6B on bf9d8ac. wave4/crash may change code: re-run the types jobs, the gate drills and this plan's drill specs in wave4b/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes chatmon/app.py, chatmon/brains.py, tests/app_harness.py, tests/test_app_smoke.py: once it merges, these receipts bind what it changed and need a refresh, W4B-BEH-WINDOWS, W4B-BEH-TEMPLATE, W4B-BEH-CI-LINT, W4B-BEH-CI-TYPES-LINUX, W4B-BEH-CI-TYPES-WIN32, W4B-BEH-CI-TYPES-DARWIN, W4B-BEH-CI-LINUX, W4B-BEH-CI-MACOS, W4B-RED-M6B-01-bubble-not-clear-of-the-box, W4B-RED-M6B-01-extractor-misses-import-time, W4B-RED-M6B-01-menu-end-key-goes-home, W4B-RED-M6B-02-a-module-loads-macos-on-import, W4B-RED-M6B-03-autostart-warning-printed, W4B-RED-M6B-03-brain-failure-not-logged, W4B-RED-M6B-03-brain-key-not-scrubbed, W4B-RED-M6B-03-chat-failure-hidden, W4B-RED-M6B-03-console-not-blanked, W4B-RED-M6B-03-debug-env-ignored, W4B-RED-M6B-03-keys-not-blanked, W4B-RED-M6B-03-limit-ten-times, W4B-RED-M6B-03-no-stderr, W4B-RED-M6B-03-package-manager-failure-hidden, W4B-RED-M6B-03-phrases-failure-hidden, W4B-RED-M6B-03-player-failure-hidden, W4B-RED-M6B-03-reminder-words-logged, W4B-RED-M6B-03-rotated-as-dot-1, W4B-RED-M6B-03-setup-twice-doubles, W4B-RED-M6B-B-desktops-words-not-shown, W4B-RED-M6B-B-escaped-exception-not-in-the-log, W4B-RED-M6B-B-hotkey-bound-kept-private, W4B-RED-M6B-B-leak-fails-without-a-flag, W4B-RED-M6B-B-player-not-closed, W4B-RED-M6B-B-players-left-at-quit, W4B-RED-M6B-B-status-waits-for-the-brain, W4B-RED-M6B-B-unclear-script-reminder-unsaid, W4B-RED-M6B-B-unreadable-settings-hidden, W4B-RED-M6B-RW-http-error-left-open, W4B-RED-M6B-RW-release-server-left-open, W4B-RED-mypy-app, W4B-RED-mypy-brains, W4B-RED-mypy-menus, W4B-RED-mypy-winpipe, W4B-RED-ruff-BLE, W4B-RED-ruff-C4, W4B-RED-ruff-C90, W4B-RED-ruff-DTZ, W4B-RED-ruff-PERF, W4B-RED-ruff-PIE, W4B-RED-ruff-RUF, W4B-RED-ruff-S, W4B-RED-ruff-S101-in-chatmon, W4B-RED-ruff-UP, W4B-RED-ruff-app, W4B-RED-ruff-app-test (54 of 55); the others stay fresh.",
+    "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545"
   }
 }
 ```
