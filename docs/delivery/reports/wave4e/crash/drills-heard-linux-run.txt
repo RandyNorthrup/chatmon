@@ -1,0 +1,3 @@
+
+=== summary
+PASS CRASH-08-heard-passes-on-after-quit

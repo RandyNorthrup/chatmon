@@ -1,0 +1,165 @@
+red drills from docs\delivery\reports\m8\wave4e\drill-spec-c.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-xeovsdvp
+copied 310 files
+
+=== drill M8-01C-window-title-english (M8-01) on chatmon/chatswin.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_the_window_speaks_the_translation_and_english_where_it_has_none _____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000023B1447EE90>
+book = <chatmon.chats.ChatBook object at 0x0000023B142A6E40>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-8257/test_the_window_speaks_the_tra0')
+
+    def test_the_window_speaks_the_translation_and_english_where_it_has_none(qapp, book, tmp_path):
+        """With a German catalog (a throwaway one: only English ships), the window's title, buttons, the chat you're in
+        and its empty state are German; what the catalog leaves out (Rename…, the search field) is English."""
+        from chatmon import i18n
+    
+        (tmp_path / "de.po").write_text(GERMAN, encoding="utf-8")
+        groceries = book.listing()[0].id
+        i18n.setup("de", tmp_path)
+        w = ChatsWindow(book)
+        try:
+            w.refresh(current=groceries, kept=True)
+>           assert w.windowTitle() == "Unterhaltungen" and w.buttons["carry_on"].text() == "Weitermachen"
+E           AssertionError: assert ('Chats' == 'Unterhaltungen'
+E             
+E             - Unterhaltungen
+E             + Chats)
+
+tests\test_chatswin.py:164: AssertionError
+1 failed in 0.30s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.33s
+
+=== drill M8-01C-this-one-glued (M8-01) on chatmon/chatswin.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.30s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_the_window_speaks_the_translation_and_english_where_it_has_none _____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000014EC31AEF30>
+book = <chatmon.chats.ChatBook object at 0x0000014EC2FB6E40>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-8260/test_the_window_speaks_the_tra0')
+
+    def test_the_window_speaks_the_translation_and_english_where_it_has_none(qapp, book, tmp_path):
+        """With a German catalog (a throwaway one: only English ships), the window's title, buttons, the chat you're in
+        and its empty state are German; what the catalog leaves out (Rename…, the search field) is English."""
+        from chatmon import i18n
+    
+        (tmp_path / "de.po").write_text(GERMAN, encoding="utf-8")
+        groceries = book.listing()[0].id
+        i18n.setup("de", tmp_path)
+        w = ChatsWindow(book)
+        try:
+            w.refresh(current=groceries, kept=True)
+            assert w.windowTitle() == "Unterhaltungen" and w.buttons["carry_on"].text() == "Weitermachen"
+>           assert w.list.item(0).text().endswith("(diese)") and w.buttons["pin"].text() == "Lösen"
+E           AssertionError: assert (False)
+E            +  where False = <built-in method endswith of str object at 0x0000014EC31D3120>('(diese)')
+E            +    where <built-in method endswith of str object at 0x0000014EC31D3120> = '★ Groceries   ·   Mi., 31. Dez.  (this one)'.endswith
+E            +      where '★ Groceries   ·   Mi., 31. Dez.  (this one)' = <built-in method text of QListWidgetItem object at 0x0000014EC3213750>()
+E            +        where <built-in method text of QListWidgetItem object at 0x0000014EC3213750> = <PyQt6.QtWidgets.QListWidgetItem object at 0x0000014EC3213750>.text
+E            +          where <PyQt6.QtWidgets.QListWidgetItem object at 0x0000014EC3213750> = <built-in method item of QListWidget object at 0x0000014EC31AFC50>(0)
+E            +            where <built-in method item of QListWidget object at 0x0000014EC31AFC50> = <PyQt6.QtWidgets.QListWidget object at 0x0000014EC31AFC50>.item
+E            +              where <PyQt6.QtWidgets.QListWidget object at 0x0000014EC31AFC50> = <chatmon.chatswin.ChatsWindow object at 0x0000014EC31AF9D0>.list
+
+tests\test_chatswin.py:165: AssertionError
+1 failed in 0.34s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.29s
+
+=== drill M8-01C-pin-label-english (M8-01) on chatmon/chatswin.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.32s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_the_window_speaks_the_translation_and_english_where_it_has_none _____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000015CD39CAE90>
+book = <chatmon.chats.ChatBook object at 0x0000015CD38A2E40>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-8263/test_the_window_speaks_the_tra0')
+
+    def test_the_window_speaks_the_translation_and_english_where_it_has_none(qapp, book, tmp_path):
+        """With a German catalog (a throwaway one: only English ships), the window's title, buttons, the chat you're in
+        and its empty state are German; what the catalog leaves out (Rename…, the search field) is English."""
+        from chatmon import i18n
+    
+        (tmp_path / "de.po").write_text(GERMAN, encoding="utf-8")
+        groceries = book.listing()[0].id
+        i18n.setup("de", tmp_path)
+        w = ChatsWindow(book)
+        try:
+            w.refresh(current=groceries, kept=True)
+            assert w.windowTitle() == "Unterhaltungen" and w.buttons["carry_on"].text() == "Weitermachen"
+>           assert w.list.item(0).text().endswith("(diese)") and w.buttons["pin"].text() == "Lösen"
+E           AssertionError: assert (True and 'Unpin' == 'Lösen'
+E            +  where True = <built-in method endswith of str object at 0x0000015CD3AA7120>('(diese)')
+E            +    where <built-in method endswith of str object at 0x0000015CD3AA7120> = '★ Groceries   ·   Mi., 31. Dez.  (diese)'.endswith
+E            +      where '★ Groceries   ·   Mi., 31. Dez.  (diese)' = <built-in method text of QListWidgetItem object at 0x0000015CD3ADF6B0>()
+E            +        where <built-in method text of QListWidgetItem object at 0x0000015CD3ADF6B0> = <PyQt6.QtWidgets.QListWidgetItem object at 0x0000015CD3ADF6B0>.text
+E            +          where <PyQt6.QtWidgets.QListWidgetItem object at 0x0000015CD3ADF6B0> = <built-in method item of QListWidget object at 0x0000015CD39CBBB0>(0)
+E            +            where <built-in method item of QListWidget object at 0x0000015CD39CBBB0> = <PyQt6.QtWidgets.QListWidget object at 0x0000015CD39CBBB0>.item
+E            +              where <PyQt6.QtWidgets.QListWidget object at 0x0000015CD39CBBB0> = <chatmon.chatswin.ChatsWindow object at 0x0000015CD39CB930>.list
+E             
+E             - Lösen
+E             + Unpin)
+
+tests\test_chatswin.py:165: AssertionError
+1 failed in 0.31s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+
+=== drill M8-01C-template-stale (M8-01) on chatmon/chatswin.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_the_template_has_every_marked_string_and_reads_as_a_catalog
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.75s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_the_template_has_every_marked_string_and_reads_as_a_catalog _______
+
+    def test_the_template_has_every_marked_string_and_reads_as_a_catalog():
+        pot = REPO / "chatmon" / "locale" / "chatmon.pot"
+>       assert extractor().template(REPO) == pot.read_text(encoding="utf-8"), "run: python packaging/extract_strings.py"
+E       AssertionError: run: python packaging/extract_strings.py
+E       assert '# The words ...\nmsgstr ""\n' == '# The words ...\nmsgstr ""\n'
+E         
+E         Skipping 41194 identical leading characters in diff, use -v to show
+E           py
+E         - msgid "Looking inside your chats…"
+E         ?        ^^^^
+E         + msgid "Searching inside your chats…"
+E         ?        ^^^^^^...
+E         
+E         ...Full output truncated, use '-vv' to show
+
+tests\test_i18n.py:317: AssertionError
+1 failed in 0.80s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.73s
+
+=== summary
+PASS M8-01C-window-title-english
+PASS M8-01C-this-one-glued
+PASS M8-01C-pin-label-english
+PASS M8-01C-template-stale

@@ -1,0 +1,27 @@
+suite-windows.log 1259 passed, 179 skipped in 207.12s (0:03:27) # exit 0 18:00:32-18:03:59
+docs/delivery/reports/m0/wave4e/drill-spec.json exit 0 18:03:59-18:06:57 22 pass 0 fail
+docs/delivery/reports/m0/wave4e/drill-spec-new.json exit 0 18:06:57-18:07:29 8 pass 0 fail
+docs/delivery/reports/m0/wave4e/drill-spec-new2.json exit 0 18:07:29-18:07:33 2 pass 0 fail
+docs/delivery/reports/m3/wave4e/drill-spec-r3.json exit 0 18:07:33-18:08:40 27 pass 0 fail
+docs/delivery/reports/m3/wave4e/drill-spec-wayland.json exit 0 18:08:40-18:08:52 3 pass 0 fail
+docs/delivery/reports/m6b/wave4e/drill-spec.json exit 0 18:08:53-18:10:11 21 pass 0 fail
+docs/delivery/reports/m6b/wave4e/drill-spec-b.json exit 0 18:10:11-18:10:50 9 pass 0 fail
+docs/delivery/reports/m7/wave4e/drill-spec.json exit 0 18:10:50-18:16:49 70 pass 0 fail
+docs/delivery/reports/m7/wave4e/drill-spec-new.json exit 0 18:16:49-18:17:10 3 pass 0 fail
+docs/delivery/reports/m7/wave4e/drill-spec-v3.json exit 0 18:17:11-18:17:18 2 pass 0 fail
+docs/delivery/reports/m8/wave4e/drill-spec.json exit 0 18:17:18-18:18:03 23 pass 0 fail
+docs/delivery/reports/m8/wave4e/drill-spec-b.json exit 0 18:18:03-18:19:32 14 pass 0 fail
+docs/delivery/reports/m8/wave4e/drill-spec-c.json exit 0 18:19:32-18:19:42 4 pass 0 fail
+docs/delivery/reports/m8/wave4e/drill-spec-english.json exit 0 18:19:42-18:19:46 2 pass 0 fail
+docs/delivery/reports/m10/wave4e/drill-spec.json exit 0 18:19:47-18:20:03 9 pass 0 fail
+docs/delivery/reports/wave4e/crash/drill-spec.json exit 0 18:20:03-18:21:15 6 pass 0 fail
+docs/delivery/reports/wave4e/crash/drill-spec-new.json exit 0 18:21:15-18:21:26 1 pass 0 fail
+m6b gate drills exit 0 18:21:26-18:22:19
+m10 gate drills exit 0 18:22:19-18:23:15
+m10 mypy 6.11 exit 0
+m10 mypy 6.12.1 exit 0
+template exit exit 0
+DONE
+docs/delivery/reports/m10/wave4e/drill-spec-ci-venv.json exit 0 18:45:13-18:45:33 1 pass
+uia-ci-venv exit 0
+m10 locks done

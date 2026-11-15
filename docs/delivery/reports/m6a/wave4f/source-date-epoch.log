@@ -1,0 +1,9 @@
+# Two copies of chatmon, pyproject.toml, README.md, LICENSE at 94d6670590cc237ff05d036e25d06ba2988a8397,
+# their files' times set to 2026-11-01 (a) and 2026-11-14 (b), each built with python -m build --no-isolation --wheel
+# and packaging/requirements-build.txt's tools: build 1.6.1 setuptools 84.2.1 wheel 0.48.0
+no SOURCE_DATE_EPOCH, copy a: 56d98fd1ef994e46b14294c5acda8f4004725cdf20e3d8db015ee1b0fd0cd9fb
+no SOURCE_DATE_EPOCH, copy b: 663288c9be8f4966d82c7488f3afb3db5b33af60cf7a1cd32834f0a41b5da02b
+SOURCE_DATE_EPOCH=1794768801 (HEAD's commit time), copy a: a6bee8f5d5f1632ff1f234c6abb134b489b1598f3b274c29760f6d04b6b4d6dd
+SOURCE_DATE_EPOCH=1794768801 (HEAD's commit time), copy b: a6bee8f5d5f1632ff1f234c6abb134b489b1598f3b274c29760f6d04b6b4d6dd
+# without it the wheels differ; with it they are byte-identical
+exit 0

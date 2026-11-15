@@ -1,0 +1,843 @@
+windows	Set up job	﻿2026-11-15T17:55:39.5363839Z Current runner version: '2.338.2'
+windows	Set up job	2026-11-15T17:55:39.5428316Z ##[group]Runner Image Provisioner
+windows	Set up job	2026-11-15T17:55:39.5429182Z Hosted Compute Agent
+windows	Set up job	2026-11-15T17:55:39.5429767Z Version: 20261103.629
+windows	Set up job	2026-11-15T17:55:39.5430373Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+windows	Set up job	2026-11-15T17:55:39.5431080Z Build Date: 2026-11-03T17:26:59Z
+windows	Set up job	2026-11-15T17:55:39.5431695Z Worker ID: {585619b1-c8b2-48f8-9c6a-12ee542e56c7}
+windows	Set up job	2026-11-15T17:55:39.5432393Z Region: westus
+windows	Set up job	2026-11-15T17:55:39.5432877Z Cloud: Azure
+windows	Set up job	2026-11-15T17:55:39.5433354Z ##[endgroup]
+windows	Set up job	2026-11-15T17:55:39.5434638Z ##[group]Operating System
+windows	Set up job	2026-11-15T17:55:39.5435272Z Microsoft Windows Server 2025
+windows	Set up job	2026-11-15T17:55:39.5435864Z 10.0.26100
+windows	Set up job	2026-11-15T17:55:39.5436388Z Datacenter
+windows	Set up job	2026-11-15T17:55:39.5436863Z ##[endgroup]
+windows	Set up job	2026-11-15T17:55:39.5437656Z ##[group]Runner Image
+windows	Set up job	2026-11-15T17:55:39.5438223Z Image: windows-2025-vs2026
+windows	Set up job	2026-11-15T17:55:39.5438793Z Version: 20261103.298.1
+windows	Set up job	2026-11-15T17:55:39.5440112Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+windows	Set up job	2026-11-15T17:55:39.5442165Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+windows	Set up job	2026-11-15T17:55:39.5443114Z ##[endgroup]
+windows	Set up job	2026-11-15T17:55:39.5444193Z ##[group]GITHUB_TOKEN Permissions
+windows	Set up job	2026-11-15T17:55:39.5445978Z Contents: read
+windows	Set up job	2026-11-15T17:55:39.5446594Z Metadata: read
+windows	Set up job	2026-11-15T17:55:39.5447097Z ##[endgroup]
+windows	Set up job	2026-11-15T17:55:39.5449049Z Secret source: Actions
+windows	Set up job	2026-11-15T17:55:39.5450004Z Cache mode: write
+windows	Set up job	2026-11-15T17:55:39.5450701Z Prepare workflow directory
+windows	Set up job	2026-11-15T17:55:39.5890172Z Prepare all required actions
+windows	Set up job	2026-11-15T17:55:39.5941201Z Getting action download info
+windows	Set up job	2026-11-15T17:55:39.9259869Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+windows	Set up job	2026-11-15T17:55:40.0591597Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+windows	Set up job	2026-11-15T17:55:40.5281632Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+windows	Set up job	2026-11-15T17:55:40.7623506Z Complete job name: windows
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T17:55:40.9233693Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9235217Z with:
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9235973Z   persist-credentials: false
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9236795Z   repository: RandyNorthrup/chatmon
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9242708Z   token: ***
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9243387Z   ssh-strict: true
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9244046Z   ssh-user: git
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9244737Z   clean: true
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9245344Z   sparse-checkout-cone-mode: true
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9245985Z   fetch-depth: 1
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9246525Z   fetch-tags: false
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9247080Z   show-progress: true
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9247630Z   lfs: false
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9248167Z   submodules: false
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9248739Z   set-safe-directory: true
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9249360Z   allow-unsafe-pr-checkout: false
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9250260Z env:
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9250815Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:40.9251436Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.0802835Z Syncing repository: RandyNorthrup/chatmon
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.0805489Z ##[group]Getting Git version info
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.0806308Z Working directory is 'D:\a\chatmon\chatmon'
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1697305Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.4858581Z git version 2.56.0.windows.4
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.4912937Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.4928603Z Temporarily overriding HOME='D:\a\_temp\e7d81c1f-d9e1-4562-96d9-7aee80fdabbb' before making global git config changes
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.4931438Z Adding repository directory to the temporary git global config as a safe directory
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.4938384Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.5571596Z Deleting the contents of 'D:\a\chatmon\chatmon'
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.5578295Z ##[group]Determining repository object format
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.5581882Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.5584416Z ##[group]Initializing the repository
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.5589738Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\chatmon\chatmon
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.6444866Z Initialized empty Git repository in D:/a/chatmon/chatmon/.git/
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.6517131Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/RandyNorthrup/chatmon
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.7307395Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.7309557Z ##[group]Disabling automatic garbage collection
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.7316138Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.7726649Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.7728489Z ##[group]Setting up auth
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.7729790Z Removing SSH command configuration
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.7737268Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.8124261Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:43.2928528Z Removing HTTP extra header
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:43.2938333Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:43.3311049Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:43.8836239Z Removing includeIf entries pointing to credentials config files
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:43.8847233Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:43.9226101Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.4565471Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.4946867Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git.path D:\a\_temp\git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.5326885Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D:\a\_temp\git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.5744983Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.6151519Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.6546485Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.6547199Z ##[group]Fetching the repository
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.6559826Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +eb8a996c4d85255e18e7180c2ed22dfebbcc333b:refs/remotes/pull/18/merge
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.5303783Z From https://github.com/RandyNorthrup/chatmon
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.5305285Z  * [new ref]         eb8a996c4d85255e18e7180c2ed22dfebbcc333b -> pull/18/merge
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.5348997Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.5349638Z ##[group]Determining the checkout info
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.5352528Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.5361559Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.5939833Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.6329494Z ##[group]Checking out the ref
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:48.6340583Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/18/merge
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.7104067Z Updating files:   8% (201/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.7293821Z Updating files:   9% (212/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.7407651Z Updating files:  10% (235/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.7502024Z Updating files:  11% (258/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.7619076Z Updating files:  12% (282/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8286130Z Updating files:  13% (305/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8380604Z Updating files:  14% (329/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8445336Z Updating files:  15% (352/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8508954Z Updating files:  16% (376/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8570567Z Updating files:  17% (399/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8650795Z Updating files:  18% (423/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8707924Z Updating files:  19% (446/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8767488Z Updating files:  20% (469/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8844816Z Updating files:  21% (493/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8948926Z Updating files:  22% (516/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9004223Z Updating files:  23% (540/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9059021Z Updating files:  24% (563/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9106944Z Updating files:  25% (587/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9170265Z Updating files:  26% (610/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9224988Z Updating files:  27% (634/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9334033Z Updating files:  28% (657/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9395869Z Updating files:  29% (681/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9451226Z Updating files:  30% (704/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9511988Z Updating files:  31% (727/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9591512Z Updating files:  32% (751/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9662471Z Updating files:  33% (774/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9729160Z Updating files:  34% (798/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9818781Z Updating files:  35% (821/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9885284Z Updating files:  36% (845/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9943686Z Updating files:  37% (868/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.9998738Z Updating files:  38% (892/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0050773Z Updating files:  39% (915/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0128395Z Updating files:  40% (938/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0193712Z Updating files:  41% (962/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0271949Z Updating files:  42% (985/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0327778Z Updating files:  43% (1009/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0386204Z Updating files:  44% (1032/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0437268Z Updating files:  45% (1056/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0497067Z Updating files:  46% (1079/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0548438Z Updating files:  47% (1103/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0602930Z Updating files:  48% (1126/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0695157Z Updating files:  49% (1150/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0759698Z Updating files:  50% (1173/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0816301Z Updating files:  51% (1196/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0866281Z Updating files:  52% (1220/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.0957984Z Updating files:  53% (1243/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1003731Z Updating files:  54% (1267/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1066042Z Updating files:  55% (1290/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1111758Z Updating files:  56% (1314/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1169658Z Updating files:  57% (1337/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1226113Z Updating files:  58% (1361/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1291686Z Updating files:  59% (1384/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1350072Z Updating files:  60% (1407/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1403395Z Updating files:  61% (1431/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1458957Z Updating files:  62% (1454/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1563516Z Updating files:  63% (1478/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1646578Z Updating files:  64% (1501/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1705216Z Updating files:  65% (1525/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1762903Z Updating files:  66% (1548/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1819609Z Updating files:  67% (1572/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1875031Z Updating files:  68% (1595/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.1926115Z Updating files:  69% (1619/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2013478Z Updating files:  70% (1642/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2078120Z Updating files:  71% (1665/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2141524Z Updating files:  72% (1689/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2212372Z Updating files:  73% (1712/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2267802Z Updating files:  74% (1736/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2325611Z Updating files:  75% (1759/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2410714Z Updating files:  76% (1783/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2488949Z Updating files:  77% (1806/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2543519Z Updating files:  78% (1830/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2600582Z Updating files:  79% (1853/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2679351Z Updating files:  80% (1876/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2736119Z Updating files:  81% (1900/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2787983Z Updating files:  82% (1923/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2842285Z Updating files:  83% (1947/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2902000Z Updating files:  84% (1970/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.2956628Z Updating files:  85% (1994/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.3038748Z Updating files:  86% (2017/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.3137571Z Updating files:  87% (2041/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.3200727Z Updating files:  88% (2064/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.3268321Z Updating files:  89% (2088/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.3364697Z Updating files:  90% (2111/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.3446100Z Updating files:  91% (2134/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.3539416Z Updating files:  92% (2158/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.3728688Z Updating files:  93% (2181/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4068038Z Updating files:  94% (2205/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4132133Z Updating files:  95% (2228/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4199163Z Updating files:  96% (2252/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4270482Z Updating files:  97% (2275/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4334417Z Updating files:  98% (2299/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4400114Z Updating files:  99% (2322/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4400758Z Updating files: 100% (2345/2345)
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4401039Z Updating files: 100% (2345/2345), done.
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4519084Z Note: switching to 'refs/remotes/pull/18/merge'.
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4519510Z 
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4519834Z You are in 'detached HEAD' state. You can look around, make experimental
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4521068Z changes and commit them, and you can discard any commits you make in this
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4521817Z state without impacting any branches by switching back to a branch.
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4522263Z 
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4522539Z If you want to create a new branch to retain commits you create, you may
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4523772Z do so (now or later) by using -c with the switch command. Example:
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4524222Z 
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4524419Z   git switch -c <new-branch-name>
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4525121Z 
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4525282Z Or undo this operation with:
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4525545Z 
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4525680Z   git switch -
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4525885Z 
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4526238Z Turn off this advice by setting config variable advice.detachedHead to false
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4526791Z 
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4527415Z HEAD is now at eb8a996 Merge 45a17b37fb25590a62fe3391379f7c8d2870da29 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.4821425Z ##[endgroup]
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.5413454Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.5779338Z eb8a996c4d85255e18e7180c2ed22dfebbcc333b
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.5827849Z ##[group]Removing auth
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.5828219Z Removing SSH command configuration
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.5837419Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:50.6229437Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.2382945Z Removing HTTP extra header
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.2391235Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.2793459Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.8342148Z Removing includeIf entries pointing to credentials config files
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.8351743Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.8690695Z includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.8692347Z includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.8693151Z includeif.gitdir:/github/workspace/.git.path
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.8693565Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.8739793Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.9076792Z D:\a\_temp\git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.9126173Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git.path D\:\\a\\_temp\\git\-credentials\-90bf79f9\-2d3d\-47a8\-822f\-4727f1e86446\.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.9502390Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.9830751Z D:\a\_temp\git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:51.9874835Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-90bf79f9\-2d3d\-47a8\-822f\-4727f1e86446\.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.0267233Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.0614639Z /github/runner_temp/git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.0668915Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-90bf79f9\-2d3d\-47a8\-822f\-4727f1e86446\.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.1053554Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.1390237Z /github/runner_temp/git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.1432883Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-90bf79f9\-2d3d\-47a8\-822f\-4727f1e86446\.config
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.1816603Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.7396212Z Removing credentials config 'D:\a\_temp\git-credentials-90bf79f9-2d3d-47a8-822f-4727f1e86446.config'
+windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:52.7408168Z ##[endgroup]
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T17:55:52.7848775Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7849248Z with:
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7849454Z   python-version: 3.14
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7849682Z   check-latest: false
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7852103Z   token: ***
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7852435Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7852836Z   update-environment: true
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7853067Z   allow-prereleases: false
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7853279Z   freethreaded: false
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7853488Z env:
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7853668Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.7853904Z ##[endgroup]
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.9298893Z ##[group]Installed versions
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.9499676Z Successfully set up CPython (3.14.10)
+windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:52.9500295Z ##[endgroup]
+windows	Date the build by its commit	﻿2026-11-15T17:55:52.9802907Z ##[group]Run echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+windows	Date the build by its commit	2026-11-15T17:55:52.9803615Z [36;1mecho "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"[0m
+windows	Date the build by its commit	2026-11-15T17:55:52.9900341Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	Date the build by its commit	2026-11-15T17:55:52.9900783Z env:
+windows	Date the build by its commit	2026-11-15T17:55:52.9900992Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	Date the build by its commit	2026-11-15T17:55:52.9901334Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Date the build by its commit	2026-11-15T17:55:52.9901824Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	Date the build by its commit	2026-11-15T17:55:52.9902288Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Date the build by its commit	2026-11-15T17:55:52.9902693Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Date the build by its commit	2026-11-15T17:55:52.9903090Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Date the build by its commit	2026-11-15T17:55:52.9903441Z ##[endgroup]
+windows	What the installers are built with, hash-locked	﻿2026-11-15T17:55:53.2328252Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-build.txt
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2329010Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-build.txt[0m
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2329675Z [36;1mpython -m pip install --require-hashes --no-build-isolation -r packaging/requirements.txt[0m
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2935196Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2935643Z env:
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2935886Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2936303Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2936889Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2937463Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2937966Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2938485Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2938938Z   SOURCE_DATE_EPOCH: 1794765319
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:53.2939209Z ##[endgroup]
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:57.7340849Z Ignoring cffi: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:57.7343633Z Ignoring cryptography: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:57.7346656Z Ignoring jeepney: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:57.7349830Z Ignoring pycparser: markers 'implementation_name != "PyPy" and platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:57.7352430Z Ignoring secretstorage: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:57.9340616Z Collecting build==1.6.1 (from -r packaging/requirements-build.txt (line 3))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.0211461Z   Downloading build-1.6.1-py3-none-any.whl (31 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.0971785Z Collecting certifi==2026.10.23 (from -r packaging/requirements-build.txt (line 7))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.1187725Z   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.3619645Z Collecting charset-normalizer==3.5.2 (from -r packaging/requirements-build.txt (line 113))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.3852967Z   Downloading charset_normalizer-3.5.2-cp314-cp314-win_amd64.whl (210 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.4518300Z Collecting colorama==0.4.6 (from -r packaging/requirements-build.txt (line 287))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.4728605Z   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.5286197Z Collecting docutils==0.23 (from -r packaging/requirements-build.txt (line 354))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.5503161Z   Downloading docutils-0.23-py3-none-any.whl (634 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.5999803Z      ---------------------------------------- 634.7/634.7 kB 12.3 MB/s  0:00:00
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.6385384Z Collecting id==1.6.1 (from -r packaging/requirements-build.txt (line 358))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.6598616Z   Downloading id-1.6.1-py3-none-any.whl (14 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.7097558Z Collecting idna==3.20 (from -r packaging/requirements-build.txt (line 362))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.7317895Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.7905226Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-build.txt (line 366))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.8123310Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.8612651Z Collecting jaraco-classes==3.4.0 (from -r packaging/requirements-build.txt (line 370))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.8825531Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.9327721Z Collecting jaraco-context==6.1.2 (from -r packaging/requirements-build.txt (line 374))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:58.9558805Z   Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.0030593Z Collecting jaraco-functools==4.6.0 (from -r packaging/requirements-build.txt (line 378))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.0248109Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.0925973Z Collecting keyring==25.7.0 (from -r packaging/requirements-build.txt (line 388))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.1144027Z   Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.1672432Z Collecting markdown-it-py==4.2.0 (from -r packaging/requirements-build.txt (line 392))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.1901080Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.2356503Z Collecting mdurl==0.1.2 (from -r packaging/requirements-build.txt (line 396))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.2614731Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.3138991Z Collecting more-itertools==11.2.1 (from -r packaging/requirements-build.txt (line 400))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.3359246Z   Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.4294721Z Collecting nh3==0.3.7 (from -r packaging/requirements-build.txt (line 406))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.4553781Z   Downloading nh3-0.3.7-cp38-abi3-win_amd64.whl (644 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.4943787Z      ---------------------------------------- 644.5/644.5 kB 10.8 MB/s  0:00:00
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.5294041Z Collecting packaging==26.3 (from -r packaging/requirements-build.txt (line 435))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.5522621Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.5985213Z Collecting pluggy==1.7.0 (from -r packaging/requirements-build.txt (line 443))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.6201242Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.6770246Z Collecting pygments==2.21.0 (from -r packaging/requirements-build.txt (line 451))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.7005910Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.7453388Z      ---------------------------------------- 1.3/1.3 MB 23.9 MB/s  0:00:00
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.7788734Z Collecting pyproject-hooks==1.3.3 (from -r packaging/requirements-build.txt (line 458))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.8022915Z   Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.8632140Z Collecting pytest==9.2.0 (from -r packaging/requirements-build.txt (line 462))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.8850244Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.9374418Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-build.txt (line 468))
+windows	What the installers are built with, hash-locked	2026-11-15T17:55:59.9590621Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.0032607Z Collecting pywin32-ctypes==0.2.3 (from -r packaging/requirements-build.txt (line 472))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.0246618Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.0783340Z Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.1000190Z   Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.1586923Z Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.1963081Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.2431186Z Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.2647596Z   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.3178965Z Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.3400829Z   Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.4111692Z Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.4346350Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.5712558Z Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.5964732Z   Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.6257182Z      ---------------------------------------- 876.3/876.3 kB 23.5 MB/s  0:00:00
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.6687910Z Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.7054683Z   Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.7811446Z Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.8071393Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.8597701Z Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:00.8827956Z   Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:01.1649842Z Installing collected packages: urllib3, setuptools, rfc3986, pywin32-ctypes, pyproject-hooks, pygments, pluggy, packaging, nh3, more-itertools, mdurl, jaraco-context, iniconfig, idna, docutils, colorama, charset-normalizer, certifi, wheel, requests, readme-renderer, pytest, markdown-it-py, jaraco-functools, jaraco-classes, id, build, rich, requests-toolbelt, pytest-timeout, keyring, twine
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:09.5101319Z 
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:09.5139186Z Successfully installed build-1.6.1 certifi-2026.10.23 charset-normalizer-3.5.2 colorama-0.4.6 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pyproject-hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 pywin32-ctypes-0.2.3 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:10.5929306Z Ignoring altgraph: markers 'sys_platform == "darwin"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:10.5931892Z Ignoring macholib: markers 'sys_platform == "darwin"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:10.5934312Z Ignoring packaging: markers 'sys_platform == "darwin"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:10.5936541Z Ignoring pyinstaller: markers 'sys_platform == "darwin"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:10.5938961Z Ignoring pyinstaller-hooks-contrib: markers 'sys_platform == "darwin"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:10.5941408Z Ignoring setuptools: markers 'sys_platform == "darwin"' don't match your environment
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:10.7245321Z Collecting nuitka==4.3.1 (from -r packaging/requirements.txt (line 13))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:10.7854556Z   Downloading nuitka-4.3.1.tar.gz (4.8 MB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:11.0727231Z      ---------------------------------------- 4.8/4.8 MB 18.3 MB/s  0:00:00
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:14.7307346Z   Preparing metadata (pyproject.toml): started
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:15.4418611Z   Preparing metadata (pyproject.toml): finished with status 'done'
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:15.5533594Z Collecting psutil==7.2.2 (from -r packaging/requirements.txt (line 22))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:15.5652507Z   Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:15.6996473Z Collecting pyqt6==6.11.0 (from -r packaging/requirements.txt (line 65))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:15.7714987Z   Downloading pyqt6-6.11.0-cp310-abi3-win_amd64.whl (6.8 MB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:15.9283170Z      ---------------------------------------- 6.8/6.8 MB 43.5 MB/s  0:00:00
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:15.9830650Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements.txt (line 73))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:16.0600629Z   Downloading pyqt6_qt6-6.11.2-py3-none-win_amd64.whl (78.0 MB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:18.6750257Z      ---------------------------------------- 78.0/78.0 MB 29.8 MB/s  0:00:02
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:18.8149999Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements.txt (line 83))
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:18.8285281Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-win_amd64.whl (55 kB)
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:18.8515039Z Building wheels for collected packages: nuitka
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:18.8540016Z   Building wheel for nuitka (pyproject.toml): started
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:24.8694423Z   Building wheel for nuitka (pyproject.toml): finished with status 'done'
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:24.8760620Z   Created wheel for nuitka: filename=nuitka-4.3.1-cp314-cp314-win_amd64.whl size=4654077 sha256=2af3312ceb713472549fd475091cf5d97f6360c79cf942f158d0ceb030b86c58
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:24.8762267Z   Stored in directory: c:\users\runneradmin\appdata\local\pip\cache\wheels\76\1c\0a\b662ee4c4416c2ea5b7791f82af29d4ad2774f0d5e6f5860a3
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:24.8913468Z Successfully built nuitka
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:24.9762142Z Installing collected packages: pyqt6-qt6, nuitka, pyqt6-sip, psutil, pyqt6
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:34.5573758Z 
+windows	What the installers are built with, hash-locked	2026-11-15T17:56:34.5613046Z Successfully installed nuitka-4.3.1 psutil-7.2.2 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0
+windows	Inno Setup 6.7.3, checked to be signed by its maker	﻿2026-11-15T17:56:35.9263099Z ##[group]Run gh release download is-6_7_3 --repo jrsoftware/issrc --pattern innosetup-6.7.3.exe --dir $env:RUNNER_TEMP
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9264074Z [36;1mgh release download is-6_7_3 --repo jrsoftware/issrc --pattern innosetup-6.7.3.exe --dir $env:RUNNER_TEMP[0m
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9264705Z [36;1m$setup = Join-Path $env:RUNNER_TEMP innosetup-6.7.3.exe[0m
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9265090Z [36;1m$sig = Get-AuthenticodeSignature $setup[0m
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9265922Z [36;1mif ($sig.Status -ne "Valid" -or $sig.SignerCertificate.Subject -notlike "CN=Pyrsys B.V.*") { throw "Unexpected signature: $($sig.Status) $($sig.SignerCertificate.Subject)" }[0m
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9266954Z [36;1mStart-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/SP-" -Wait[0m
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9346213Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9346575Z env:
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9346776Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9347161Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9347649Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9348120Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9348559Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9348971Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9349313Z   SOURCE_DATE_EPOCH: 1794765319
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9352448Z   GH_TOKEN: ***
+windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-15T17:56:35.9352671Z ##[endgroup]
+windows	Run python packaging/build.py windows	﻿2026-11-15T17:56:43.8925179Z ##[group]Run python packaging/build.py windows
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8925637Z [36;1mpython packaging/build.py windows[0m
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8995154Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8995506Z env:
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8995698Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8996042Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8996506Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8997704Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8998113Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8998513Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8998836Z   SOURCE_DATE_EPOCH: 1794765319
+windows	Run python packaging/build.py windows	2026-11-15T17:56:43.8999056Z ##[endgroup]
+windows	Run python packaging/build.py windows	2026-11-15T17:56:44.3128263Z + C:\hostedtoolcache\windows\Python\3.14.10\x64\python.exe -m nuitka --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=D:\a\chatmon\chatmon\build\nuitka-console --experimental=force-dependencies-pefile --output-folder-name=Chatmon --windows-icon-from-ico=D:\a\chatmon\chatmon\packaging\icons\chatmon.ico --company-name=Randy Northrup --product-name=Chatmon --file-description=Chatmon --file-version=0.10.0.0 --product-version=0.10.0.0 --copyright=Copyright (c) 2026 Randy Northrup. MIT License. --windows-console-mode=force --output-filename=chatmon.exe D:\a\chatmon\chatmon\packaging\entry.py
+windows	Run python packaging/build.py windows	2026-11-15T17:56:44.8278581Z Nuitka-Options: Used command line options:
+windows	Run python packaging/build.py windows	2026-11-15T17:56:44.8284136Z Nuitka-Options:   --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=D:\a\chatmon\chatmon\build\nuitka-console --experimental=force-dependencies-pefile --output-folder-name=Chatmon --windows-icon-from-ico=D:\a\chatmon\chatmon\packaging\icons\chatmon.ico --company-name="Randy Northrup" --product-name=Chatmon --file-description=Chatmon --file-version=0.10.0.0 --product-version=0.10.0.0 --copyright="Copyright (c) 2026 Randy Northrup. MIT License." --windows-console-mode=force --output-filename=chatmon.exe D:\a\chatmon\chatmon\packaging\entry.py
+windows	Run python packaging/build.py windows	2026-11-15T17:56:44.8777090Z Nuitka-Plugins:pyqt6: Support for PyQt6 is not perfect, e.g. Qt threading does not work, so prefer PySide6 if you can.
+windows	Run python packaging/build.py windows	2026-11-15T17:56:45.0918907Z Nuitka: Starting Python compilation with:
+windows	Run python packaging/build.py windows	2026-11-15T17:56:45.0919676Z Nuitka:   Version '4.3.1' on Python 3.14 (flavor 'CPython Official') commercial grade 'not installed'.
+windows	Run python packaging/build.py windows	2026-11-15T17:56:45.1630953Z Nuitka:WARNING: Nuitka '4.3.1' is older than the latest stable release '4.3.5'.
+windows	Run python packaging/build.py windows	2026-11-15T17:56:45.1632620Z Nuitka:WARNING:     Complex topic! More information can be found at [94mhttps://nuitka.net/info/outdated-nuitka-version.html[0m
+windows	Run python packaging/build.py windows	2026-11-15T17:58:12.4175456Z Nuitka-Plugins:pyqt6: Including Qt plugins 'iconengines,imageformats,platforms,styles,tls' below 'PyQt6\Qt6\plugins'.
+windows	Run python packaging/build.py windows	2026-11-15T17:58:28.2698566Z Nuitka-Inclusion: Including Windows Runtime DLLs, which increases distribution size. Use '--include-windows-runtime-dlls=no' to disable, or make explicit with '--include-windows-runtime-dlls=yes'.
+windows	Run python packaging/build.py windows	2026-11-15T18:06:05.1757933Z Nuitka: Completed Python level compilation and optimization.
+windows	Run python packaging/build.py windows	2026-11-15T18:06:05.1758694Z Nuitka: Generating source code for C backend compiler.
+windows	Run python packaging/build.py windows	2026-11-15T18:06:14.3662794Z Nuitka: Running data composer tool for optimal constant value handling.
+windows	Run python packaging/build.py windows	2026-11-15T18:06:14.6961422Z Nuitka: Running C compilation via Scons.
+windows	Run python packaging/build.py windows	2026-11-15T18:06:17.1065817Z Nuitka-Scons: Backend C compiler: cl (cl 14.5).
+windows	Run python packaging/build.py windows	2026-11-15T18:07:43.0031619Z Nuitka-Scons: Backend C linking with 89 files (no progress information available for this stage).
+windows	Run python packaging/build.py windows	2026-11-15T18:11:16.3303162Z Nuitka-Scons: Compiled 89 C files using clcache with 0 cache hits and 89 cache misses.
+windows	Run python packaging/build.py windows	2026-11-15T18:11:16.4155174Z Nuitka-Postprocessing: Adding 10 icon(s) from icon file 'D:\a\chatmon\chatmon\packaging\icons\chatmon.ico'.
+windows	Run python packaging/build.py windows	2026-11-15T18:11:24.4130387Z Nuitka-Options: Included 93 data files due to package 'chatmon' package data.
+windows	Run python packaging/build.py windows	2026-11-15T18:11:24.4133389Z Nuitka: Keeping build directory 'D:\a\chatmon\chatmon\build\nuitka-console\Chatmon.build'.
+windows	Run python packaging/build.py windows	2026-11-15T18:11:24.4137699Z Nuitka: Successfully created 'D:\a\chatmon\chatmon\build\nuitka-console\Chatmon.dist\chatmon.exe'.
+windows	Run python packaging/build.py windows	2026-11-15T18:11:29.8936929Z + C:\hostedtoolcache\windows\Python\3.14.10\x64\python.exe -m nuitka --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=D:\a\chatmon\chatmon\build\nuitka-windowless --experimental=force-dependencies-pefile --output-folder-name=Chatmon --windows-icon-from-ico=D:\a\chatmon\chatmon\packaging\icons\chatmon.ico --company-name=Randy Northrup --product-name=Chatmon --file-description=Chatmon --file-version=0.10.0.0 --product-version=0.10.0.0 --copyright=Copyright (c) 2026 Randy Northrup. MIT License. --windows-console-mode=disable --output-filename=chatmonw.exe --force-stdout-spec={NONE} --force-stderr-spec={NONE} D:\a\chatmon\chatmon\packaging\entry.py
+windows	Run python packaging/build.py windows	2026-11-15T18:11:30.2098957Z Nuitka-Options: Used command line options:
+windows	Run python packaging/build.py windows	2026-11-15T18:11:30.2103159Z Nuitka-Options:   --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=D:\a\chatmon\chatmon\build\nuitka-windowless --experimental=force-dependencies-pefile --output-folder-name=Chatmon --windows-icon-from-ico=D:\a\chatmon\chatmon\packaging\icons\chatmon.ico --company-name="Randy Northrup" --product-name=Chatmon --file-description=Chatmon --file-version=0.10.0.0 --product-version=0.10.0.0 --copyright="Copyright (c) 2026 Randy Northrup. MIT License." --windows-console-mode=disable --output-filename=chatmonw.exe --force-stdout-spec={NONE} --force-stderr-spec={NONE} D:\a\chatmon\chatmon\packaging\entry.py
+windows	Run python packaging/build.py windows	2026-11-15T18:11:30.2308666Z Nuitka-Plugins:pyqt6: Support for PyQt6 is not perfect, e.g. Qt threading does not work, so prefer PySide6 if you can.
+windows	Run python packaging/build.py windows	2026-11-15T18:11:30.4362810Z Nuitka: Starting Python compilation with:
+windows	Run python packaging/build.py windows	2026-11-15T18:11:30.4363664Z Nuitka:   Version '4.3.1' on Python 3.14 (flavor 'CPython Official') commercial grade 'not installed'.
+windows	Run python packaging/build.py windows	2026-11-15T18:11:30.4404142Z Nuitka:WARNING: Nuitka '4.3.1' is older than the latest stable release '4.3.5'.
+windows	Run python packaging/build.py windows	2026-11-15T18:11:30.4406606Z Nuitka:WARNING:     Complex topic! More information can be found at [94mhttps://nuitka.net/info/outdated-nuitka-version.html[0m
+windows	Run python packaging/build.py windows	2026-11-15T18:12:06.5989431Z Nuitka-Plugins:pyqt6: Including Qt plugins 'iconengines,imageformats,platforms,styles,tls' below 'PyQt6\Qt6\plugins'.
+windows	Run python packaging/build.py windows	2026-11-15T18:12:06.6407750Z Nuitka-Inclusion: Including Windows Runtime DLLs, which increases distribution size. Use '--include-windows-runtime-dlls=no' to disable, or make explicit with '--include-windows-runtime-dlls=yes'.
+windows	Run python packaging/build.py windows	2026-11-15T18:12:11.0022910Z Nuitka: Completed Python level compilation and optimization.
+windows	Run python packaging/build.py windows	2026-11-15T18:12:11.0023661Z Nuitka: Generating source code for C backend compiler.
+windows	Run python packaging/build.py windows	2026-11-15T18:12:20.0707190Z Nuitka: Running data composer tool for optimal constant value handling.
+windows	Run python packaging/build.py windows	2026-11-15T18:12:20.3862375Z Nuitka: Running C compilation via Scons.
+windows	Run python packaging/build.py windows	2026-11-15T18:12:20.7946913Z Nuitka-Scons: Backend C compiler: cl (cl 14.5).
+windows	Run python packaging/build.py windows	2026-11-15T18:12:59.1035548Z Nuitka-Scons: Backend C linking with 89 files (no progress information available for this stage).
+windows	Run python packaging/build.py windows	2026-11-15T18:16:34.4827653Z Nuitka-Scons: Compiled 89 C files using clcache with 85 cache hits and 4 cache misses.
+windows	Run python packaging/build.py windows	2026-11-15T18:16:34.5643798Z Nuitka-Postprocessing: Adding 10 icon(s) from icon file 'D:\a\chatmon\chatmon\packaging\icons\chatmon.ico'.
+windows	Run python packaging/build.py windows	2026-11-15T18:16:39.9705304Z Nuitka-Options: Included 93 data files due to package 'chatmon' package data.
+windows	Run python packaging/build.py windows	2026-11-15T18:16:39.9708240Z Nuitka: Keeping build directory 'D:\a\chatmon\chatmon\build\nuitka-windowless\Chatmon.build'.
+windows	Run python packaging/build.py windows	2026-11-15T18:16:39.9712950Z Nuitka: Successfully created 'D:\a\chatmon\chatmon\build\nuitka-windowless\Chatmon.dist\chatmonw.exe'.
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.2332228Z + C:\ProgramData\Chocolatey\bin\iscc.EXE /DAppVersion=0.10.0 /DSourceDir=D:\a\chatmon\chatmon\build\nuitka\Chatmon /DOutputDir=D:\a\chatmon\chatmon\dist D:\a\chatmon\chatmon\packaging\windows\chatmon.iss
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.4357327Z Inno Setup 6 Command-Line Compiler
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.4357901Z Copyright (C) 1997-2026 Jordan Russell. All rights reserved.
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.4358474Z Portions Copyright (C) 2000-2026 Martijn Laan. All rights reserved.
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.4359125Z Portions Copyright (C) 2001-2004 Alex Yackimoff. All rights reserved.
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.4359653Z https://www.innosetup.com
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.4359849Z 
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.5615465Z Compiler engine version: Inno Setup 6.7.1
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.5615942Z Non-commercial use only
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.5616147Z 
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6495927Z Preprocessing
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6498316Z    Reading file: c:\program files (x86)\inno setup 6\ISPPBuiltins.iss
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6538298Z    Line 130: Including file: D:\a\chatmon\chatmon\packaging\windows\path.iss
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6539660Z    Reading file: D:\a\chatmon\chatmon\packaging\windows\path.iss
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6541909Z Parsing [Setup] section, line 23
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6542853Z Parsing [Setup] section, line 24
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6543483Z Parsing [Setup] section, line 25
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6544037Z Parsing [Setup] section, line 26
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6544588Z Parsing [Setup] section, line 27
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6545194Z Parsing [Setup] section, line 28
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6545750Z Parsing [Setup] section, line 29
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6546305Z Parsing [Setup] section, line 30
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6546848Z Parsing [Setup] section, line 31
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6547385Z Parsing [Setup] section, line 32
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6547925Z Parsing [Setup] section, line 33
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6548470Z Parsing [Setup] section, line 34
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6549006Z Parsing [Setup] section, line 35
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6549548Z Parsing [Setup] section, line 36
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6550109Z Parsing [Setup] section, line 37
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6550683Z Parsing [Setup] section, line 38
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6551263Z Parsing [Setup] section, line 39
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6551825Z Parsing [Setup] section, line 40
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6552381Z Parsing [Setup] section, line 41
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6552946Z Parsing [Setup] section, line 42
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6553467Z Parsing [Setup] section, line 43
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6553986Z Parsing [Setup] section, line 44
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6554515Z Parsing [Setup] section, line 45
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6555032Z Parsing [Setup] section, line 46
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6555550Z Parsing [Setup] section, line 47
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6556064Z Parsing [Setup] section, line 48
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6556582Z Parsing [Setup] section, line 49
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6557097Z Parsing [Setup] section, line 50
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6557657Z Parsing [Setup] section, line 51
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6558229Z Parsing [Setup] section, line 52
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6558758Z Reading file (WizardImageFile)
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6559312Z Reading file (WizardSmallImageFile)
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.6559883Z Preparing Setup program executable
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.9861416Z    Verification successful
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.9895835Z    Updating icons (Setup.e32)
+windows	Run python packaging/build.py windows	2026-11-15T18:16:42.9986560Z    Updating version info (Setup.e32)
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0000223Z Determining language code pages
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0001138Z Parsing [Languages] section, line 59
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0002361Z    Reading file: c:\program files (x86)\inno setup 6\Default.isl
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0013884Z    Messages in script file
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0015013Z Reading default messages from Default.isl
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0019223Z Parsing [Languages] section, line 59
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0020267Z    Reading file: c:\program files (x86)\inno setup 6\Default.isl
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0022401Z Parsing [LangOptions], [Messages], and [CustomMessages] sections
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0023935Z    Messages in script file
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0024474Z Reading [Code] section
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0024971Z Parsing [Tasks] section, line 62
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0025800Z Parsing [Tasks] section, line 63
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0026385Z Parsing [Tasks] section, line 66
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0026921Z Parsing [Tasks] section, line 71
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0027460Z Parsing [Tasks] section, line 74
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0028020Z Parsing [Icons] section, line 101
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0028959Z Parsing [Icons] section, line 102
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0029595Z Parsing [Registry] section, line 106
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0030240Z Parsing [InstallDelete] section, line 80
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0030915Z Parsing [InstallDelete] section, line 81
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0031610Z Parsing [InstallDelete] section, line 82
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0032239Z Parsing [InstallDelete] section, line 88
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0032888Z Parsing [InstallDelete] section, line 88
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0033558Z Parsing [InstallDelete] section, line 88
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0034184Z Parsing [Run] section, line 109
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0034766Z Parsing [Run] section, line 111
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0035328Z Parsing [Files] section, line 97
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0055625Z Compiling [Code] section
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0111890Z Creating setup files
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0927031Z    Verification successful
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0935188Z    Updating icons (Setup.exe)
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.0966407Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon.exe
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.3060100Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmonw.exe
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.5163541Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\libcrypto-3.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.5790651Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\libffi-8.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.5795548Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\libssl-3.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.5932230Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\msvcp140.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.6000022Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\msvcp140_1.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.6004831Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\msvcp140_2.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.6034067Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\pyexpat.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.6056013Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\python3.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.6064758Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\python314.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.6779518Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6core.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.7854922Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6dbus.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.7932901Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6gui.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.8924473Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6multimedia.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.9058051Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6network.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.9240933Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6pdf.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.9732756Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6svg.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:43.9798342Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6widgets.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0477805Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\select.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0481881Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\unicodedata.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0560864Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\vcruntime140.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0580544Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\vcruntime140_1.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0586729Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\winsound.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0591141Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_bz2.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0601070Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_ctypes.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0617069Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_decimal.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0648340Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_elementtree.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0664145Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_hashlib.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0672008Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_lzma.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0689710Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_queue.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0694521Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_socket.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0704676Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_ssl.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0725540Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_uuid.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0729206Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_wmi.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0734286Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_zstd.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0787789Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\changelog.md
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0791320Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\alert.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0834162Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\beam.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0875454Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\charge.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0925326Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\hop.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0955888Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\idle.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0992972Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\manifest.json
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.0993957Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\peek.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1028809Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\sleep.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1065781Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\talk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1101586Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\think.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1138837Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\turn.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1169586Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\walk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1207093Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\wave.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1244168Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\alert.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1293802Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\beam.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1338717Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\charge.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1384555Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\hop.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1422215Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\idle.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1464543Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\manifest.json
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1465924Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\peek.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1514143Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\sleep.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1555692Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\talk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1597587Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\think.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1642328Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\turn.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1690653Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\walk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:16:44.1757934Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\wave.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1642618Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\alert.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1695698Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\beam.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1748580Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\charge.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1808243Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\hop.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1876449Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\idle.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1892557Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\manifest.json
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1894103Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\peek.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1930754Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\sleep.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.1964361Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\talk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2003067Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\think.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2046764Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\turn.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2087116Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\walk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2142023Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\wave.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2181827Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\alert.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2221088Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\beam.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2254543Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\charge.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2300447Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\hop.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2332397Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\idle.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2356742Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\manifest.json
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2357959Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\peek.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2423906Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\sleep.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2458573Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\talk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2494098Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\think.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2530067Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\turn.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2559406Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\walk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2596101Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\wave.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2630809Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\alert.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2668798Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\beam.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2713212Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\charge.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2763609Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\hop.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2798375Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\idle.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2836039Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\manifest.json
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2838049Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\peek.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2872754Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\sleep.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2912340Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\talk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2950769Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\think.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.2989969Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\turn.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3032235Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\walk.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3085328Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\wave.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3123568Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\electric-arcs.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3127622Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\electric-current.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3131578Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\electric-still.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3139731Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fairy-sparkles.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3142300Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fairy-still-b.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3145120Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fairy-still.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3152196Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fire-embers.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3153272Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fire-flames.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3215750Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fire-still.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3223029Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\ghost-mist-a.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3225835Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\ghost-mist-b.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3228575Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\ghost-still.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3237620Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\leaf-crawler.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3245687Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\leaf-still.png
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3259287Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\manifest.json
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3260870Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\integrations\claude\.claude-plugin\marketplace.json
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3262442Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\integrations\claude\chatmon\.claude-plugin\plugin.json
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3263817Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\integrations\claude\chatmon\hooks\hooks.json
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3264852Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\locale\chatmon.pot
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3272911Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\phrases\en.json
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3273939Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\done.wav
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3281478Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\error.wav
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3288489Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\focus-done.wav
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3300064Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\needs-you.wav
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3309364Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\pop.wav
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3311415Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\reminder.wav
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3326365Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\success.wav
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3334001Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\psutil\_psutil_windows.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3342204Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtCore.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3619399Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtDBus.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3639624Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtGui.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3880250Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtMultimedia.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.3926906Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtNetwork.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4014624Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtWidgets.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4538840Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\sip.pyd
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4551396Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\iconengines\qsvgicon.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4559750Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qgif.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4565664Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qicns.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4572583Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qico.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4578208Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qjpeg.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4640606Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qpdf.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4645956Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qsvg.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4651284Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qtga.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4656121Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qtiff.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4703222Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qwbmp.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4707884Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qwebp.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4766907Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\platforms\qminimal.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4774326Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\platforms\qoffscreen.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4786960Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\platforms\qwindows.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4890420Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\styles\qmodernwindowsstyle.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4915913Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\tls\qcertonlybackend.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4927809Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\tls\qopensslbackend.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:10.4961317Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\tls\qschannelbackend.dll
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.0176132Z    Compressing Setup program executable
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.5603000Z    Updating version info (Setup.exe)
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.5603548Z    Updating manifest (Setup.exe)
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.5604552Z 
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.5607816Z 
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.5608278Z Successful compile (35.985 sec). Resulting Setup program filename is:
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.5608962Z D:\a\chatmon\chatmon\dist\Chatmon-0.10.0-windows-x64-setup.exe
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.5684239Z 
+windows	Run python packaging/build.py windows	2026-11-15T18:17:18.5684796Z D:\a\chatmon\chatmon\dist\Chatmon-0.10.0-windows-x64-setup.exe  48 MB
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	﻿2026-11-15T18:17:18.7126047Z ##[group]Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7126870Z [36;1m"version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT[0m
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7211386Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7212726Z env:
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7212991Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7213464Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7214003Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7214563Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7215055Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7215542Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7215947Z   SOURCE_DATE_EPOCH: 1794765319
+windows	Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT	2026-11-15T18:17:18.7216246Z ##[endgroup]
+windows	The last release's installer, for this one to upgrade	﻿2026-11-15T18:17:19.2670646Z ##[group]Run tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select((.draft | not) and any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2672156Z [36;1mtag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select((.draft | not) and any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')[0m
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2673883Z [36;1mgh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-windows-x64-setup.exe" --dir "$RUNNER_TEMP/last"[0m
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2691331Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2691857Z env:
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2692143Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2692591Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2693445Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2694258Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2694913Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2695448Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2695889Z   SOURCE_DATE_EPOCH: 1794765319
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2699036Z   GH_TOKEN: ***
+windows	The last release's installer, for this one to upgrade	2026-11-15T18:17:19.2699318Z ##[endgroup]
+windows	Install the last release, update it to this one, run it, uninstall it	﻿2026-11-15T18:17:21.3666147Z ##[group]Run $last = Get-Item "$env:RUNNER_TEMP\last\*-windows-x64-setup.exe"
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3666843Z [36;1m$last = Get-Item "$env:RUNNER_TEMP\last\*-windows-x64-setup.exe"[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3667641Z [36;1m$p = Start-Process $last.FullName -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/TASKS=startmenu" -Wait -PassThru[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3668485Z [36;1mif ($p.ExitCode) { throw "$($last.Name) failed: $($p.ExitCode)" }[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3668896Z [36;1mWrite-Host "Installed $($last.Name)"[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3669427Z [36;1m# Then this one, as Chatmon's updater runs it: silently, as the last install was, and Chatmon starts again.[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3669940Z [36;1m$env:QT_QPA_PLATFORM = "offscreen"[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3670359Z [36;1m$setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3670972Z [36;1m# Not Start-Process -Wait: that waits for what the installer starts too, and it starts Chatmon again.[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3671782Z [36;1m$p = Start-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/relaunch=1" -PassThru[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3672327Z [36;1m$p.WaitForExit()[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3672649Z [36;1mif ($p.ExitCode) { throw "Updating failed: $($p.ExitCode)" }[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3673074Z [36;1m$app = Join-Path $env:LOCALAPPDATA "Programs\Chatmon"[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3673814Z [36;1mfor ($i = 0; $i -lt 30 -and -not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe"); $i++) { Start-Sleep 1 }[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3674889Z [36;1mif (-not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe")) { throw "Chatmon didn't start again after updating" }[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3675765Z [36;1mif ((& "$app\chatmon.exe" --version) -ne $env:VERSION) { throw "Not updated to $env:VERSION" }[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3676497Z [36;1m& "$app\chatmon.exe" quit[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3676988Z [36;1mfor ($i = 0; $i -lt 30 -and (Get-Process chatmonw -ErrorAction SilentlyContinue); $i++) { Start-Sleep 1 }[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3677558Z [36;1mWrite-Host "Updated to $env:VERSION and started again"[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3677943Z [36;1mRemove-Item Env:QT_QPA_PLATFORM[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3678335Z [36;1m./packaging/windows/test-install.ps1 $setup $env:VERSION -Unsigned[0m
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3751498Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3751875Z env:
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3752075Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3752418Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3752881Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3753365Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3753794Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3754219Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3754565Z   SOURCE_DATE_EPOCH: 1794765319
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3754790Z   VERSION: 0.10.0
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:21.3754985Z ##[endgroup]
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:25.7207852Z Installed Chatmon-0.9.2-windows-x64-setup.exe
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:17:30.1049852Z Chatmon isn't running. Start it with: chatmon
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:00.1862560Z Updated to 0.10.0 and started again
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:00.6052357Z ok: the installer isn't signed (NotSigned)
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.0714818Z ok: the installer finished (exit 0)
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.0748190Z ok: chatmon.exe and chatmonw.exe in C:\Users\runneradmin\AppData\Local\Programs\Chatmon
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.0759810Z ok: nothing left of an older version's PyInstaller build
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.1156051Z ok: the uninstaller isn't signed (NotSigned)
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.2196732Z ok: chatmon.exe isn't signed (NotSigned)
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.3377253Z ok: chatmonw.exe isn't signed (NotSigned)
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.5440071Z ok: a Start menu entry that starts chatmonw.exe
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.5737132Z ok: the Start menu entry is Chatmon's own (its AppUserModelID)
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.5770079Z ok: a desktop icon that starts chatmonw.exe
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.5859857Z ok: its folder on your PATH
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.5900233Z ok: starting at login
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:06.5996390Z ok: in Apps & features as Chatmon 0.10.0
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:08.2330664Z C:\Users\runneradmin\AppData\Local\Programs\Chatmon\chatmon.exe --version: 0.10.0
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:08.2331360Z it answered
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:08.2331649Z it quit when asked: all good
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:08.2415990Z ok: the installed Chatmon runs
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:09.5709355Z ok: its folder is gone
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:09.5718930Z ok: the Start menu entry and desktop icon are gone
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:09.5731029Z ok: PATH is as it was, type and all
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:09.5761992Z ok: it no longer starts at login
+windows	Install the last release, update it to this one, run it, uninstall it	2026-11-15T18:18:09.5777304Z ok: it's gone from Apps & features
+windows	Keep the unsigned installer with the run	﻿2026-11-15T18:18:09.6221538Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6222443Z with:
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6222645Z   name: windows-unsigned
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6222878Z   path: dist/*.exe
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6223085Z   if-no-files-found: error
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6223318Z   compression-level: 6
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6223530Z   overwrite: false
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6223738Z   include-hidden-files: false
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6223968Z   archive: true
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6224156Z env:
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6224350Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6224685Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6225151Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6225610Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6226257Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6226671Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6227035Z   SOURCE_DATE_EPOCH: 1794765319
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.6227262Z ##[endgroup]
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.8060445Z With the provided path, there will be 1 file uploaded
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.8066332Z Artifact name is valid!
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:09.8067706Z Root directory input is valid!
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:10.1960229Z Uploading artifact: windows-unsigned.zip
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:10.2000118Z Beginning upload of artifact content to blob storage
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:11.7240003Z Uploaded bytes 8388608
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:11.7358670Z Uploaded bytes 16777216
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:11.9797537Z Uploaded bytes 25165824
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:12.0668121Z Uploaded bytes 33554432
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:12.3712537Z Uploaded bytes 41943040
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:12.5843498Z Uploaded bytes 50331648
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:12.6810244Z Uploaded bytes 50874198
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:12.7612642Z Finished uploading artifact content to blob storage!
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:12.7616360Z SHA256 digest of uploaded artifact is 0372e0890e4f78e323200512670604b160936cf3ff7969637746b60880e7c51b
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:12.7618872Z Finalizing artifact upload
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:13.3058097Z Artifact windows-unsigned successfully finalized. Artifact ID 14173813947
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:13.3059615Z Artifact windows-unsigned has been successfully uploaded! Final size is 50874198 bytes. Artifact ID is 14173813947
+windows	Keep the unsigned installer with the run	2026-11-15T18:18:13.3070592Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43743804716/artifacts/14173813947
+windows	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T18:18:13.3434572Z Post job cleanup.
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T18:18:13.5131035Z Post job cleanup.
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:13.7319781Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:13.7674955Z git version 2.56.0.windows.4
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:13.7739046Z Temporarily overriding HOME='D:\a\_temp\6127a1e1-1d45-4fbe-be6d-bd44f5c055c8' before making global git config changes
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:13.7740979Z Adding repository directory to the temporary git global config as a safe directory
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:13.7749722Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:13.8129010Z Removing SSH command configuration
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:13.8140120Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:13.8522292Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:14.4215604Z Removing HTTP extra header
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:14.4225808Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:14.4592991Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:15.0167900Z Removing includeIf entries pointing to credentials config files
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:15.0179522Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:18:15.0549504Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows	Complete job	﻿2026-11-15T18:18:15.6224170Z Evaluate and set job outputs
+windows	Complete job	2026-11-15T18:18:15.6229806Z Set output 'version'
+windows	Complete job	2026-11-15T18:18:15.6231674Z Cleaning up orphan processes
+windows	Complete job	2026-11-15T18:18:15.6411148Z Terminate orphan process: pid (8292) (vctip)

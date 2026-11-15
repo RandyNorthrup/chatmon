@@ -1,0 +1,8 @@
+
+=== summary
+PASS CRASH-01-held-by-the-harness
+PASS CRASH-02-no-look-once-quit
+PASS CRASH-04-background-stopped
+PASS CRASH-05-finder-stopped
+PASS CRASH-06-timers-silenced
+PASS CRASH-07-event-filter-removed

@@ -1,0 +1,11 @@
+
+=== summary
+PASS M6B-B-escaped-exception-not-in-the-log
+PASS M6B-B-status-waits-for-the-brain
+PASS M6B-B-desktops-words-not-shown
+PASS M6B-B-hotkey-bound-kept-private
+PASS M6B-B-players-left-at-quit
+PASS M6B-B-player-not-closed
+PASS M6B-B-unreadable-settings-hidden
+PASS M6B-B-unclear-script-reminder-unsaid
+PASS M6B-B-leak-fails-without-a-flag

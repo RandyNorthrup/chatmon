@@ -1,0 +1,4 @@
+
+=== summary
+PASS W4-M0-13-log-left-at-the-umask
+PASS W4-M0-13-log-followed-through-a-link

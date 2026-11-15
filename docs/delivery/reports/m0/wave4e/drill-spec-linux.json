@@ -1,0 +1,30 @@
+{
+  "drills": [
+    {
+      "id": "W4-M0-13-log-left-at-the-umask",
+      "requirement": "M0-13.A1",
+      "file": "chatmon/log.py",
+      "find": "            os.fchmod(fd, 0o600)\n",
+      "replace": "            pass\n",
+      "test": [
+        "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+      ],
+      "expect": [
+        "test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+      ]
+    },
+    {
+      "id": "W4-M0-13-log-followed-through-a-link",
+      "requirement": "M0-13.A1",
+      "file": "chatmon/log.py",
+      "find": "getattr(os, \"O_NOFOLLOW\", 0)",
+      "replace": "0",
+      "test": [
+        "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+      ],
+      "expect": [
+        "test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+ "drills": [
+  {
+   "id": "CRASH-08-heard-passes-on-after-quit",
+   "requirement": "crash-nothing-after-quit",
+   "file": "chatmon/app.py",
+   "find": "            if c is not None and not c._quitting:\n                func(c, *args)\n\n        return call",
+   "replace": "            if c is not None:\n                func(c, *args)\n\n        return call",
+   "test": [
+    "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+   ],
+   "expect": [
+    "test_a_quit_companion_runs_nothing_it_had_waiting"
+   ]
+  }
+ ]
+}

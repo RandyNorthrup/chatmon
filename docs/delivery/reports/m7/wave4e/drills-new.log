@@ -1,0 +1,113 @@
+red drills from docs\delivery\reports\m7\wave4e\drill-spec-new.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-si7qkozi
+copied 310 files
+
+=== drill W4-M7-02-no-next-brain (AC-02-1) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_answers.py::test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.58s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings _
+
+companion = <chatmon.app.Companion object at 0x0000013E64E7B4D0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000013E63751A70>
+
+    def test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings(companion, monkeypatch):
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        monkeypatch.setattr(c, "brains", {"pretend": brain.brain, "other": api("other", "Other API")})
+        spin(1.8)
+        c.stage.dismiss_message()
+        c.open_ask()
+        c.submit("explain")
+        c._failed("Pretend API: invalid x-api-key (HTTP 401). Check its key.")
+        assert c.ask_box.entry.text() == "explain"  # back in the box, as before
+        assert until(lambda: c.stage.bubble.title == "Pretend API couldn't answer")
+>       assert labels(c) == ["Try again", "Ask Other API", "Settings"] and "HTTP 401" in c.stage.bubble.doc.toPlainText()
+E       AssertionError: assert (['Try again', 'Settings'] == ['Try again',...', 'Settings']
+E         
+E         At index 1 diff: 'Settings' != 'Ask Other API'
+E         Right contains one more item: 'Settings'
+E         Use -v to get more diff)
+
+tests\test_app_answers.py:127: AssertionError
+1 failed in 2.66s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.54s
+
+=== drill W4-M7-02-welcome-without-brain (AC-02-3) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_answers.py::test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.75s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up ____
+
+companion = <chatmon.app.Companion object at 0x0000018F5DDB72F0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000018F5C6B1A70>
+
+    def test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up(companion, monkeypatch):
+        c = companion
+        PretendBrain(c, monkeypatch)
+        c._asking_name = True
+        c.open_ask(focus=False)
+        c.submit("Pip")
+        assert until(lambda: c.stage.bubble.title == "Pip! I love it.")
+>       assert "Your questions go to Pretend API" in c.stage.bubble.doc.toPlainText()
+E       AssertionError: assert 'Your questions go to Pretend API' in 'Click me to ask anything, drag me anywhere, right-click for the menu.\nI also do plenty without any AI, like remind me in 20m to stretch, timer 10 min, note: buy milk, 5 km in miles or roll 2d6. Ask me help to see it all.'
+E        +  where 'Click me to ask anything, drag me anywhere, right-click for the menu.\nI also do plenty without any AI, like remind me in 20m to stretch, timer 10 min, note: buy milk, 5 km in miles or roll 2d6. Ask me help to see it all.' = <built-in method toPlainText of SafeDocument object at 0x0000018F5DDB7F70>()
+E        +    where <built-in method toPlainText of SafeDocument object at 0x0000018F5DDB7F70> = <chatmon.richtext.SafeDocument object at 0x0000018F5DDB7F70>.toPlainText
+E        +      where <chatmon.richtext.SafeDocument object at 0x0000018F5DDB7F70> = <chatmon.bubble.SpeechBubble object at 0x0000018F5DEAFCB0>.doc
+E        +        where <chatmon.bubble.SpeechBubble object at 0x0000018F5DEAFCB0> = <chatmon.penguin.Stage object at 0x0000018F5DDB7ED0>.bubble
+E        +          where <chatmon.penguin.Stage object at 0x0000018F5DDB7ED0> = <chatmon.app.Companion object at 0x0000018F5DDB72F0>.stage
+
+tests\test_app_answers.py:187: AssertionError
+1 failed in 0.82s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.75s
+
+=== drill W4-M7-11-palette-ignored-v2 (AC-11-2) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_the_desktops_colours_and_reduced_motion_apply_at_once
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.82s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_the_desktops_colours_and_reduced_motion_apply_at_once __________
+
+companion = <chatmon.app.Companion object at 0x0000021B7D547C50>
+
+    def test_the_desktops_colours_and_reduced_motion_apply_at_once(companion):
+        c = companion
+        c.state.set("bubble_style", None)
+        c.desk.contrast = True  # high contrast turned on: the desktop's palette changes
+        app = QApplication.instance()
+        before = QPalette(app.palette())
+        changed = QPalette(before)
+        changed.setColor(QPalette.ColorRole.Window, QColor("black"))
+        try:
+            app.setPalette(changed)
+>           assert until(lambda: c.stage.bubble.style.name == "plain" and c.ask_box.style.name == "plain")  # without waiting for a look
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert False
+E            +  where False = until(<function test_the_desktops_colours_and_reduced_motion_apply_at_once.<locals>.<lambda> at 0x0000021B7D475590>)
+
+tests\test_app_m7.py:270: AssertionError
+1 failed in 5.82s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.88s
+
+=== summary
+PASS W4-M7-02-no-next-brain
+PASS W4-M7-02-welcome-without-brain
+PASS W4-M7-11-palette-ignored-v2

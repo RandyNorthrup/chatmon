@@ -1,0 +1,26 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 45a17b3's files; CHATMON_INSTANCE=plansfinal-wsl-10-147467
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting   (run 1, UPower on the system bus, CHATMON_INSTANCE=plansfinal-wsl-11-147467)
+tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting PASSED [100%]
+============================== 1 passed in 3.57s ===============================
+# exit 0
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting   (run 2, UPower on the system bus, CHATMON_INSTANCE=plansfinal-wsl-12-147467)
+tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting PASSED [100%]
+============================== 1 passed in 3.36s ===============================
+# exit 0
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting   (run 3, UPower on the system bus, CHATMON_INSTANCE=plansfinal-wsl-13-147467)
+tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting PASSED [100%]
+============================== 1 passed in 3.53s ===============================
+# exit 0
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting   (run 4, UPower on the system bus, CHATMON_INSTANCE=plansfinal-wsl-14-147467)
+tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting PASSED [100%]
+============================== 1 passed in 3.75s ===============================
+# exit 0
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting   (run 5, UPower on the system bus, CHATMON_INSTANCE=plansfinal-wsl-15-147467)
+tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting PASSED [100%]
+============================== 1 passed in 3.65s ===============================
+# exit 0
