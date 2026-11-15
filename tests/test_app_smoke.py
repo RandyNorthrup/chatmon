@@ -608,7 +608,8 @@ def test_asks_for_no_session_bus_on_macos(monkeypatch):
     monkeypatch.setattr(macnative, "WorkspaceWatcher", lambda: workspace.append(True) or types.SimpleNamespace(
         slept=signal, screens_slept=signal, accessibility_changed=signal, low_power_changed=signal))
     monkeypatch.setattr(macnative, "low_power_mode", lambda: False)
-    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=lambda on: None, _seen=None, _check_accessibility=None)
+    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=lambda on: None, _seen=None, _check_accessibility=None,
+                               _heard=lambda method: method)  # the quit guard, passed through: this stands in for a Companion
     monkeypatch.setattr(sys, "platform", "darwin")
     appmod.Companion._watch_screen_lock(me)
     assert watched == [] and workspace == [True]
@@ -711,7 +712,7 @@ def test_a_quit_companion_runs_nothing_it_had_waiting(tmp_path, monkeypatch):
 
         def watch(frame, event, _arg):
             name = frame.f_code.co_qualname
-            if event == "call" and name.startswith("Companion.") and not name.startswith("Companion._later."):
+            if event == "call" and name.startswith("Companion.") and not name.startswith(("Companion._later.", "Companion._heard.")):  # the guards themselves: what they guard shows by name
                 ran.append(name)
 
         sys.setprofile(watch)

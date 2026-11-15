@@ -1,0 +1,8 @@
+{"drills": [
+ {"id": "HEARD-01-power-unguarded", "requirement": "wave4 quit guard",
+  "file": "chatmon/app.py",
+  "find": "linuxsession.PowerProfile(self._heard(self._power_saving), parent=self)",
+  "replace": "linuxsession.PowerProfile(self._power_saving, parent=self)",
+  "test": ["tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"],
+  "expect": ["test_a_quit_companion_runs_nothing_it_had_waiting"]}
+]}
