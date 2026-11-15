@@ -1,0 +1,30 @@
+{
+  "drills": [
+    {
+      "id": "W4-M7-02-no-next-brain",
+      "requirement": "AC-02-1",
+      "file": "chatmon/app.py",
+      "find": "buttons.append((_(\"Ask {brain}\").format(brain=other.label), partial(self._try_again, q, other)))",
+      "replace": "pass",
+      "test": [
+        "tests/test_app_answers.py::test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings"
+      ],
+      "expect": [
+        "test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings"
+      ]
+    },
+    {
+      "id": "W4-M7-02-welcome-without-brain",
+      "requirement": "AC-02-3",
+      "file": "chatmon/app.py",
+      "find": "line = _(\"Your questions go to **{brain}**; **Brain** in my menu picks another.\").format(brain=brain.label)",
+      "replace": "line = \"\"",
+      "test": [
+        "tests/test_app_answers.py::test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up"
+      ],
+      "expect": [
+        "test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+ "readiness_method": "Requirements review, round two, at bf9d8ac (readiness.md): M5-01 to M5-08 re-read against ASSESSMENT.md, the amended ROADMAP.md (the M0/M5 reminder contract unchanged) and pyproject.toml as they are now; no conflict or gap; five drills whose text moved, and the one criterion left without a drill given a new one.",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "drill_acceptance": {
+  "W4-M5-06-help-not-translated": [
+   "M5-06.A2"
+  ]
+ },
+ "ci": [
+  {
+   "id": "W4B-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132773560297-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (ubuntu-24.04, 3.15). Every test these criteria's drills run passed: the reminder book, parse_when (with Hypothesis), the offline answers and phrases, localefmt, and the agents report. They passed on Linux's own time zone data and C library, and also on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the three distro containers."
+  },
+  {
+   "id": "W4B-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132773560342-test-macos-latest-3.14.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (macos-latest, 3.14). The same tests passed on macOS, as on the 3.11 and 3.15 legs."
+  }
+ ],
+ "receipts": [],
+ "pending": [],
+ "next_action": "None in M5 on bf9d8ac. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree."
+}

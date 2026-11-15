@@ -1,0 +1,5 @@
+FAIL: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+outcome-unresolved | CI-ALL-PLATFORMS | Observe the outcome (the coordinator's CI run or merge), then re-run the affected checks.
+outcome-unresolved | WAYLAND-HOSTING | Observe the outcome (the coordinator's CI run or merge), then re-run the affected checks.
+Structural and recorded-evidence checks; semantic review remains required.

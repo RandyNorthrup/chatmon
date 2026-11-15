@@ -1,0 +1,26 @@
+# forced_repro.py on Windows 11, Python 3.14.10, PyQt6 6.11.0, Qt 6.11.0, offscreen; source: bf9d8ac + this commit's harness and app.py
+## run 1
+ 0.77 s: two companion tests done; top-level windows 28
+ 7.87 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.13 s: the first freed by the harness, between tests: True
+# exit 0
+## run 2
+ 0.79 s: two companion tests done; top-level windows 28
+ 7.92 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.19 s: the first freed by the harness, between tests: True
+# exit 0
+## run 3
+ 0.76 s: two companion tests done; top-level windows 28
+ 7.86 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.12 s: the first freed by the harness, between tests: True
+# exit 0
+## run 4
+ 0.74 s: two companion tests done; top-level windows 28
+ 7.83 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.10 s: the first freed by the harness, between tests: True
+# exit 0
+## run 5
+ 0.73 s: two companion tests done; top-level windows 28
+ 7.80 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.06 s: the first freed by the harness, between tests: True
+# exit 0

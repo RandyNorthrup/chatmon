@@ -1,0 +1,272 @@
+[
+  {
+    "id": "M6B-B-escaped-exception-not-in-the-log",
+    "requirement": "M6B-03.A6",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "    logger.error(\"something went wrong\", exc_info=(kind, value, tb))",
+      "replace": "    logger.debug(\"something went wrong\", exc_info=(kind, value, tb))"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback"
+    ],
+    "expected": [
+      "test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "baseline_exit": 0,
+    "mutated_sha256": "4259e6c1ad4158507f98d8692d85c4bf73793b4a37ee81f5617501f3bea64964",
+    "mutated_exit": 1,
+    "observed": "_ test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback __",
+    "after_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-B-status-waits-for-the-brain",
+    "requirement": "M6B-LEFT.A1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.finder.find(self.brains, self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), found)",
+      "replace": "        found(self._brain())"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_status_names_the_brain_from_the_finder_and_never_waits_for_one"
+    ],
+    "expected": [
+      "test_status_names_the_brain_from_the_finder_and_never_waits_for_one"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "baseline_exit": 0,
+    "mutated_sha256": "d445c81ec7be0e20703a753d16add0423c2ad31d776dc567c0cabf6fc8daa7a8",
+    "mutated_exit": 1,
+    "observed": "_____ test_status_names_the_brain_from_the_finder_and_never_waits_for_one _____",
+    "after_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-B-desktops-words-not-shown",
+    "requirement": "M6B-LEFT.A2",
+    "file": "chatmon/settingswin.py",
+    "mutation": {
+      "find": "        self.hotkey_bound.setVisible(shown)",
+      "replace": "        self.hotkey_bound.setVisible(False)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words"
+    ],
+    "expected": [
+      "test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca1c253330fd2d606bb9f5429f107300a41e4b16b1d72c80d00ef760660f65a3",
+    "baseline_exit": 0,
+    "mutated_sha256": "2519d2f9b500bda591c9cb8bc8d3f655c55290be3215aa674e98525a4b711c17",
+    "mutated_exit": 1,
+    "observed": "_ test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words _",
+    "after_sha256": "ca1c253330fd2d606bb9f5429f107300a41e4b16b1d72c80d00ef760660f65a3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-B-hotkey-bound-kept-private",
+    "requirement": "M6B-LEFT.A2",
+    "file": "chatmon/hotkey.py",
+    "mutation": {
+      "find": "    _hotkey.on_pressed, _hotkey.on_failed, _hotkey.on_bound = callback, failed, bound",
+      "replace": "    _hotkey.on_pressed, _hotkey.on_failed, _hotkey.on_bound = callback, failed, None"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_hotkey.py::test_the_apps_one_shortcut_says_how_the_desktop_has_it"
+    ],
+    "expected": [
+      "test_the_apps_one_shortcut_says_how_the_desktop_has_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b3e835248a3c4f41998d15cc9636bc48d88e04cd091be61f8c17b2ea9e4925a9",
+    "baseline_exit": 0,
+    "mutated_sha256": "7eec2b6130eddd1e6de2b24ed7eb947ab1e986d2c00d57b259220265761f80a9",
+    "mutated_exit": 1,
+    "observed": "___________ test_the_apps_one_shortcut_says_how_the_desktop_has_it ____________",
+    "after_sha256": "b3e835248a3c4f41998d15cc9636bc48d88e04cd091be61f8c17b2ea9e4925a9",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-B-players-left-at-quit",
+    "requirement": "M6B-LEFT.A3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        sound.close()  # a Linux player still sounding finishes and is reaped, never left behind",
+      "replace": "        pass  # a Linux player still sounding finishes and is reaped, never left behind"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_quitting_lets_go_of_the_sound_players"
+    ],
+    "expected": [
+      "test_quitting_lets_go_of_the_sound_players"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "baseline_exit": 0,
+    "mutated_sha256": "b5e6f4d971c7136dc15d23327712b5780e33e9a7f74e92ab97585e60b6abf9ae",
+    "mutated_exit": 1,
+    "observed": "_________________ test_quitting_lets_go_of_the_sound_players __________________",
+    "after_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-B-player-not-closed",
+    "requirement": "M6B-LEFT.A3",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "            if close is not None:\r\n                close()",
+      "replace": "            if close is not None:\r\n                pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind"
+    ],
+    "expected": [
+      "test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3305a54fd329318da21f447a75552adeda28cd374c6824e00a050c8cdcc01762",
+    "baseline_exit": 0,
+    "mutated_sha256": "14c1399e45c217a13509185a831dca6348e56be127f14051c2825cc3affc0dc0",
+    "mutated_exit": 1,
+    "observed": "__ test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind ___",
+    "after_sha256": "3305a54fd329318da21f447a75552adeda28cd374c6824e00a050c8cdcc01762",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-B-unreadable-settings-hidden",
+    "requirement": "M6B-03.A6",
+    "file": "chatmon/settings.py",
+    "mutation": {
+      "find": "        logger.debug(\"couldn't read %s: %s\", path, exc)",
+      "replace": "        pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settings.py::test_a_state_file_that_cant_be_read_is_logged_and_started_afresh"
+    ],
+    "expected": [
+      "test_a_state_file_that_cant_be_read_is_logged_and_started_afresh"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "132ec69ef2b5ec2a5d88a84e5510acd6ae9fd2670215ba08b2afe7b9e93911d2",
+    "baseline_exit": 0,
+    "mutated_sha256": "8c32642b4979dfc19abd2f4af49b15254aa7c40e76bd6e00a524f31c822247ca",
+    "mutated_exit": 1,
+    "observed": "______ test_a_state_file_that_cant_be_read_is_logged_and_started_afresh _______",
+    "after_sha256": "132ec69ef2b5ec2a5d88a84e5510acd6ae9fd2670215ba08b2afe7b9e93911d2",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-B-unclear-script-reminder-unsaid",
+    "requirement": "M6B-LEFT.A4",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "                self.say(_(\"Reminder not set\"), reminders.explain(command), timeout_s=15, background=True)",
+      "replace": "                pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_reminders.py::test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+    ],
+    "expected": [
+      "test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "baseline_exit": 0,
+    "mutated_sha256": "ab3cda2f91c04c4a216b684bd08d83a499391f8c7ff2337b63e6b772fbb91d15",
+    "mutated_exit": 1,
+    "observed": "____ test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time _____",
+    "after_sha256": "8982f886175e09f8893a5e37f34c8d78ae1c1c9b83c6fe3f4475853900868355",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-B-leak-fails-without-a-flag",
+    "requirement": "M6B-RW.A1",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "        exc.close()\r\n        raise",
+      "replace": "        raise"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed"
+    ],
+    "expected": [
+      "PytestUnraisableExceptionWarning: Exception ignored while calling deallocator <function _TemporaryFileCloser.__del__"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7bb0fb06c1c85207c7cdaf12eeabd437664527db8fde717a155328cfa70e356c",
+    "baseline_exit": 0,
+    "mutated_sha256": "9e048e3e456a183d02289e261a7d38a4b6a963339c90f7c080e288acd1e1d937",
+    "mutated_exit": 1,
+    "observed": "E                   pytest.PytestUnraisableExceptionWarning: Exception ignored while calling deallocator <function _TemporaryFileCloser.__del__ at 0x000001AD9913D900>: None",
+    "after_sha256": "7bb0fb06c1c85207c7cdaf12eeabd437664527db8fde717a155328cfa70e356c",
+    "restored_exit": 0
+  }
+]

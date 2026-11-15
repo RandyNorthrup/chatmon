@@ -1,0 +1,408 @@
+{
+ "plan": "docs/delivery/m5-reminders-offline-locale.md",
+ "section": "docs/delivery/reports/m5/wave4c/section.md",
+ "rules": {
+  "docs/delivery/ROADMAP.md": "3586a0d+wave4c",
+  "pyproject.toml": "3586a0d"
+ },
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "task_changes_add": {},
+ "stale_reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408",
+ "receipts": [
+  {
+   "id": "W4C-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "M5-01.A1",
+    "M5-01.A2",
+    "M5-02.A1",
+    "M5-02.A2",
+    "M5-02.A3",
+    "M5-02.A4",
+    "M5-03.A1",
+    "M5-04.A1",
+    "M5-04.A2",
+    "M5-05.A1",
+    "M5-06.A1",
+    "M5-06.A2",
+    "M5-07.A1",
+    "M5-07.A2",
+    "M5-08.A1"
+   ],
+   "artifact": "docs/delivery/reports/m5/wave4c/readiness.md",
+   "method": "Requirements review, round three, at 3586a0d (readiness.md): M5-01 to M5-08 re-read against ASSESSMENT.md, the amended ROADMAP.md (the M0/M5 reminder contract unchanged) and pyproject.toml as they are now; no conflict or gap; five drills whose text moved, and the one criterion left without a drill given a new one."
+  },
+  {
+   "id": "W4C-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "M5-01.A1",
+    "M5-01.A2",
+    "M5-02.A1",
+    "M5-02.A2",
+    "M5-02.A3",
+    "M5-02.A4",
+    "M5-03.A1",
+    "M5-04.A1",
+    "M5-04.A2",
+    "M5-05.A1",
+    "M5-06.A1",
+    "M5-06.A2",
+    "M5-07.A1",
+    "M5-07.A2",
+    "M5-08.A1"
+   ],
+   "artifact": "docs/delivery/reports/wave4c/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 3586a0d's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "M5-01.A1",
+    "M5-01.A2",
+    "M5-02.A1",
+    "M5-02.A2",
+    "M5-02.A3",
+    "M5-02.A4",
+    "M5-03.A1",
+    "M5-04.A1",
+    "M5-04.A2",
+    "M5-05.A1",
+    "M5-06.A1",
+    "M5-06.A2",
+    "M5-07.A1",
+    "M5-07.A2",
+    "M5-08.A1"
+   ],
+   "artifact": "docs/delivery/reports/m5/ci/ci-132858987756-test-ubuntu-24.04-3.15.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987756",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job test (ubuntu-24.04, 3.15). Every test these criteria's drills run passed: the reminder book, parse_when (with Hypothesis), the offline answers and phrases, localefmt, and the agents report. They passed on Linux's own time zone data and C library, and also on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the three distro containers. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-MACOS",
+   "kind": "behavior",
+   "acceptance": [
+    "M5-01.A1",
+    "M5-01.A2",
+    "M5-02.A1",
+    "M5-02.A2",
+    "M5-02.A3",
+    "M5-02.A4",
+    "M5-03.A1",
+    "M5-04.A1",
+    "M5-04.A2",
+    "M5-05.A1",
+    "M5-06.A1",
+    "M5-06.A2",
+    "M5-07.A1",
+    "M5-07.A2",
+    "M5-08.A1"
+   ],
+   "artifact": "docs/delivery/reports/m5/ci/ci-132858987797-test-macos-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987797",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job test (macos-latest, 3.14). The same tests passed on macOS, as on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-01-fired-not-saved",
+   "kind": "red",
+   "acceptance": [
+    "M5-01.A2"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-01-fired-not-saved",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-01-fired-not-saved through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-01-old-saves-change",
+   "kind": "red",
+   "acceptance": [
+    "M5-01.A2"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-01-old-saves-change",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-01-old-saves-change through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-01-removed-when-due",
+   "kind": "red",
+   "acceptance": [
+    "M5-01.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-01-removed-when-due",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-01-removed-when-due through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-02-bare-hour-am",
+   "kind": "red",
+   "acceptance": [
+    "M5-02.A2"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-02-bare-hour-am",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-02-bare-hour-am through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-02-in-by-wall-clock",
+   "kind": "red",
+   "acceptance": [
+    "M5-02.A4"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-02-in-by-wall-clock",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-02-in-by-wall-clock through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-02-leftovers-guessed",
+   "kind": "red",
+   "acceptance": [
+    "M5-02.A3"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-02-leftovers-guessed",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-02-leftovers-guessed through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-02-weekday-ignored",
+   "kind": "red",
+   "acceptance": [
+    "M5-02.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-02-weekday-ignored",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-02-weekday-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-03-done-repeat-removed",
+   "kind": "red",
+   "acceptance": [
+    "M5-03.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-03-done-repeat-removed",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-03-done-repeat-removed through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-03-every-not-read",
+   "kind": "red",
+   "acceptance": [
+    "M5-03.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-03-every-not-read",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-03-every-not-read through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-03-repeat-by-real-days",
+   "kind": "red",
+   "acceptance": [
+    "M5-03.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-03-repeat-by-real-days",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-03-repeat-by-real-days through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-04-blank-edit-accepted",
+   "kind": "red",
+   "acceptance": [
+    "M5-04.A2"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-04-blank-edit-accepted",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-04-blank-edit-accepted through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-04-no-hour-snooze",
+   "kind": "red",
+   "acceptance": [
+    "M5-04.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-04-no-hour-snooze",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-04-no-hour-snooze through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-04-snooze-stays-fired",
+   "kind": "red",
+   "acceptance": [
+    "M5-04.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-04-snooze-stays-fired",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-04-snooze-stays-fired through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-04-tomorrow-by-real-day",
+   "kind": "red",
+   "acceptance": [
+    "M5-04.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-04-tomorrow-by-real-day",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-04-tomorrow-by-real-day through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-05-c-locale-shown",
+   "kind": "red",
+   "acceptance": [
+    "M5-05.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-05-c-locale-shown",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-05-c-locale-shown through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-05-loads-qt",
+   "kind": "red",
+   "acceptance": [
+    "M5-05.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-05-loads-qt",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-05-loads-qt through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-05-qlocale-unused",
+   "kind": "red",
+   "acceptance": [
+    "M5-05.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-05-qlocale-unused",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-05-qlocale-unused through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-06-english-dropped",
+   "kind": "red",
+   "acceptance": [
+    "M5-06.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-06-english-dropped",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-06-english-dropped through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-06-phrases-not-normalized",
+   "kind": "red",
+   "acceptance": [
+    "M5-06.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-06-phrases-not-normalized",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-06-phrases-not-normalized through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-07-401-digits",
+   "kind": "red",
+   "acceptance": [
+    "M5-07.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-07-401-digits",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-07-401-digits through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-07-in-by-wall-clock",
+   "kind": "red",
+   "acceptance": [
+    "M5-07.A2"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-07-in-by-wall-clock",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-07-in-by-wall-clock through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-07-past-longest",
+   "kind": "red",
+   "acceptance": [
+    "M5-07.A2"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-07-past-longest",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-07-past-longest through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-08-working-first",
+   "kind": "red",
+   "acceptance": [
+    "M5-08.A1"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-results.json",
+   "drill": "M5-08-working-first",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills.log",
+   "method": "Red drill M5-08-working-first through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-M5-06-help-not-translated",
+   "kind": "red",
+   "acceptance": [
+    "M5-06.A2"
+   ],
+   "results": "docs/delivery/reports/m5/wave4c/drills-new-results.json",
+   "drill": "W4-M5-06-help-not-translated",
+   "artifact": "docs/delivery/reports/m5/wave4c/drills-new.log",
+   "method": "Red drill W4-M5-06-help-not-translated through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  }
+ ],
+ "tasks": {},
+ "pending": [],
+ "next_action": "None in M5 on 3586a0d.",
+ "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
+}

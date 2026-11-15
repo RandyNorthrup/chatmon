@@ -1,0 +1,62 @@
+[
+  {
+    "id": "AC-04b-old-qt-hints",
+    "requirement": "M4A-04",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "except (AttributeError, ImportError, RuntimeError, TypeError):",
+      "replace": "except (ImportError, RuntimeError, TypeError):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms"
+    ],
+    "expected": [
+      "test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2b1073598fa3ededc80cb408bff1a43e7b384d4d356973bcc022b5c5860320c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "d6cf42d1390ca74d8f1604a43274dc022cb4c9842503dadfe07f575818edd194",
+    "mutated_exit": 1,
+    "observed": "_ test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms __",
+    "after_sha256": "2b1073598fa3ededc80cb408bff1a43e7b384d4d356973bcc022b5c5860320c1",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01b-old-qt-contrast",
+    "requirement": "M4A-01",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "except (AttributeError, ImportError, RuntimeError):",
+      "replace": "except (ImportError, RuntimeError):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms"
+    ],
+    "expected": [
+      "test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2b1073598fa3ededc80cb408bff1a43e7b384d4d356973bcc022b5c5860320c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "0ad23f2687267d9f0ae5bf9edc73d6f8838de3dcce198d05bfd3955e3281e6bc",
+    "mutated_exit": 1,
+    "observed": "_ test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms __",
+    "after_sha256": "2b1073598fa3ededc80cb408bff1a43e7b384d4d356973bcc022b5c5860320c1",
+    "restored_exit": 0
+  }
+]

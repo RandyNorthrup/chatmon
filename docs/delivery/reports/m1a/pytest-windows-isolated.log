@@ -1,0 +1,149 @@
+$ python -m pytest -q -p no:cacheprovider -rs -p m1a_isolation   (PYTHONPATH=docs/delivery/reports/m1a: the conftest isolation of the integration notes; Windows 11, 6c65c95)
+..s.s...............................s................................... [ 10%]
+............ssss........................................................ [ 21%]
+s.s...ssss..s.................................................F......... [ 32%]
+........................................................................ [ 42%]
+......................sss....ss.ssss...........s...ssssssssssssssssss... [ 53%]
+sssssss................................................................. [ 64%]
+...................ssssssss.........s...s....s.......................... [ 75%]
+........................ss.............................................. [ 85%]
+.........ss.......sssssssssss.ssssssss..................s..............s [ 96%]
+.................sssss                                                   [100%]
+================================== FAILURES ===================================
+________________ test_a_redirect_never_takes_the_key_anywhere _________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000136ADB407D0>
+
+    def test_a_redirect_never_takes_the_key_anywhere(qapp):
+        """Plain HTTP is allowed to this computer only; a redirect from there must not carry the key on."""
+        import http.server
+        import threading
+    
+        from PyQt6.QtCore import QEventLoop, QTimer
+    
+        seen = []
+    
+        class Elsewhere(http.server.BaseHTTPRequestHandler):
+            def do_POST(self):
+                seen.append(self.headers.get("authorization"))
+                self.send_response(200)
+                self.end_headers()
+    
+            def log_message(self, *args):
+                pass
+    
+        elsewhere = http.server.HTTPServer(("127.0.0.1", 0), Elsewhere)
+    
+        class Redirect(http.server.BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.send_response(307)
+                self.send_header("Location", f"http://127.0.0.1:{elsewhere.server_port}/steal")
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+    
+            def log_message(self, *args):
+                pass
+    
+        local = http.server.HTTPServer(("127.0.0.1", 0), Redirect)
+        for server in (local, elsewhere):
+            threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            brain = Brain("local", "openai", url=f"http://127.0.0.1:{local.server_port}/v1", model="m", api_key="secret-key")
+            asker = brains.Asker()
+            result = []
+            loop = QEventLoop()
+            asker.answered.connect(lambda text: (result.append(("answer", text)), loop.quit()))
+            asker.failed.connect(lambda text: (result.append(("failed", text)), loop.quit()))
+            QTimer.singleShot(5000, loop.quit)
+            asker.ask(brain, "S", [], "q", 5.0)
+            loop.exec()
+>           assert result and result[0][0] == "failed" and "redirect" in result[0][1], result
+E           AssertionError: [('failed', ' took too long to answer.')]
+E           assert ([('failed', ' took too long to answer.')] and 'failed' == 'failed'
+E             
+E               failed and 'redirect' in ' took too long to answer.')
+
+tests\test_brains.py:315: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_a11y.py:46: Linux with dbus-run-session
+SKIPPED [1] tests\test_a11y.py:70: macOS
+SKIPPED [1] tests\test_agents.py:505: POSIX permissions
+SKIPPED [1] tests\test_app_smoke.py:337: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:361: a Windows pipe takes a sender's bytes only once Chatmon reads that connection, so a message can't wait unread for it this way
+SKIPPED [1] tests\test_app_smoke.py:393: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:413: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_attachments.py:47: POSIX file types
+SKIPPED [1] tests\test_attachments.py:73: POSIX file types
+SKIPPED [1] tests\test_attachments.py:131: making links needs Developer Mode or an administrator here
+SKIPPED [1] tests\test_attachments.py:137: Linux statfs and mountinfo
+SKIPPED [1] tests\test_attachments.py:154: Linux paths, resolved as Linux does
+SKIPPED [1] tests\test_attachments.py:169: macOS statfs
+SKIPPED [1] tests\test_autostart.py:23: the XDG autostart entry
+SKIPPED [1] tests\test_events.py:106: a named pipe there
+SKIPPED [1] tests\test_events.py:117: macOS's temporary folder of your own
+SKIPPED [1] tests\test_events.py:130: a named pipe there
+SKIPPED [1] tests\test_events.py:180: a named pipe there
+SKIPPED [1] tests\test_events.py:243: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:285: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_events.py:308: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:336: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:353: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_heads_up.py:135: macOS only
+SKIPPED [1] tests\test_install_update.py:122: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:133: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:141: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:149: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:159: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:167: root's side is sh, on Linux and macOS
+SKIPPED [4] tests\test_install_update.py:175: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:197: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:207: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:256: root's side is sh, on Linux and macOS
+SKIPPED [3] tests\test_install_update.py:267: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:282: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:291: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_linuxsession.py:28: no PackageKit here
+SKIPPED [1] tests\test_macnative.py:20: macOS only
+SKIPPED [1] tests\test_macnative.py:54: macOS only
+SKIPPED [1] tests\test_macnative.py:88: macOS only
+SKIPPED [1] tests\test_macnative.py:116: macOS only
+SKIPPED [1] tests\test_macnative.py:134: macOS only
+SKIPPED [1] tests\test_macnative.py:162: macOS only
+SKIPPED [1] tests\test_packaging.py:48: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [1] tests\test_packaging.py:64: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [5] tests\test_packaging.py:71: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [1] tests\test_packaging.py:97: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [1] tests\test_portal_bus.py:41: Linux with dbus-run-session
+SKIPPED [1] tests\test_presence.py:70: macOS only
+SKIPPED [1] tests\test_presence.py:139: no GNOME session here
+SKIPPED [1] tests\test_rename.py:62: Windows keeps it in the registry
+SKIPPED [1] tests\test_rename.py:74: Windows keeps it in the registry
+SKIPPED [2] tests\test_updates.py:524: pkexec: Linux
+SKIPPED [1] tests\test_wayland.py:46: Wayland sockets are Unix paths
+SKIPPED [1] tests\test_wayland.py:203: no Wayland protocol files installed
+SKIPPED [1] tests\test_wayland.py:311: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:413: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:424: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:438: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:524: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:546: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:570: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:579: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:590: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:643: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:694: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:724: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:758: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:771: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:784: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:797: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:866: Wayland is Linux only
+SKIPPED [1] tests\test_windows.py:416: needs QT_QPA_PLATFORM=windows
+SKIPPED [1] tests\test_windows.py:788: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+SKIPPED [1] tests\test_xkb.py:25: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:33: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:44: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:54: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:61: libxkbcommon isn't installed
+1 failed, 579 passed, 90 skipped in 162.19s (0:02:42)
+exit 1

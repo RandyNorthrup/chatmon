@@ -1,0 +1,61 @@
+# The whole suite on 4fdf790 with every warning an error (before M6A's config), Windows 11, Python 3.14.10, PyQt6 6.11.0
+# command: python -m pytest -q -p no:cacheprovider -W error --strict-markers --durations=25 -rfE
+# every failure's root warning, deduplicated:
+      1     | ResourceWarning: subprocess  is still running
+      1     | ResourceWarning: unclosed file <_io.TextIOWrapper name=11 encoding='cp'>
+      1 E                   pytest.PytestUnraisableExceptionWarning: Exception ignored while calling deallocator <function _TemporaryFileCloser.__del__ at >: None
+      1 E                   pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing file <_io.FileIO name=11 mode='rb' closefd=True>: None
+     17 E                   pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket , family=2, type=1, proto=0, >: None
+      1 E               ResourceWarning: unclosed file <_io.TextIOWrapper name=11 mode='r' encoding='cp'>
+      1 E           ResourceWarning: Implicitly cleaning up <HTTPError 302: 'Found'>
+     15 E           ResourceWarning: unclosed <socket.socket , family=2, type=1, proto=0, >
+      2 E       ResourceWarning: unclosed <socket.socket , family=2, type=1, proto=0, >
+
+============================ slowest 25 durations =============================
+9.95s call     tests/test_windows.py::test_the_windows_update_check_runs_and_says_something_readable
+7.90s call     tests/test_anim_strips.py::test_front_view_frames_keep_the_body_in_place[hop]
+7.86s call     tests/test_app_smoke.py::test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none
+6.90s call     tests/test_app_smoke.py::test_a_focus_session_holds_what_comes_on_its_own_until_its_over
+6.67s call     tests/test_app_smoke.py::test_greets_and_reacts_to_agents
+6.15s call     tests/test_agents.py::test_codex_connect_then_disconnect_changes_nothing_but_notify
+5.47s call     tests/test_anim_strips.py::test_front_view_frames_keep_the_body_in_place[alert]
+5.13s call     tests/test_app_smoke.py::test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert
+5.01s call     tests/test_app_smoke.py::test_local_commands_and_reminders
+4.71s call     tests/test_app_smoke.py::test_the_days_updates_heads_up_waits_for_a_bubble_showing_instead_of_going_unsaid
+4.61s call     tests/test_brains.py::test_cancelling_on_windows_stops_the_tool_behind_a_cmd_file_without_waiting
+4.24s call     tests/test_streaming.py::test_no_server_at_all_says_its_offline_or_not_running
+3.65s call     tests/test_app_smoke.py::test_quiet_holds_bubbles_from_the_background_until_its_over
+3.64s call     tests/test_brains.py::test_an_asker_let_go_of_straight_after_cancelling_takes_nothing_down
+3.63s call     tests/test_app_smoke.py::test_a_problem_inside_chatmon_offers_to_report_it_once
+2.95s call     tests/test_app_smoke.py::test_battery_disks_and_status_are_read_off_the_screens_thread
+2.80s setup    tests/test_anim_strips.py::test_front_view_frames_keep_the_body_in_place[sleep]
+2.72s call     tests/test_attachments.py::test_windows_a_link_to_a_share_is_the_share
+2.53s call     tests/test_anim_strips.py::test_front_view_frames_keep_the_body_in_place[wave]
+2.52s call     tests/test_anim_strips.py::test_strip_matches_its_manifest_entry[wave]
+2.50s setup    tests/test_anim_strips.py::test_front_view_frames_keep_the_body_in_place[wave]
+2.50s call     tests/test_anim_strips.py::test_front_view_frames_keep_the_body_in_place[think]
+2.48s call     tests/test_anim_strips.py::test_front_view_frames_keep_the_body_in_place[idle]
+2.45s call     tests/test_anim_strips.py::test_front_view_frames_keep_the_body_in_place[talk]
+2.34s call     tests/test_brains.py::test_cancelling_a_command_brain_returns_at_once_and_stops_it
+=========================== short test summary info ===========================
+FAILED tests/test_brains.py::test_a_redirect_never_takes_the_key_anywhere - p...
+FAILED tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed
+FAILED tests/test_brains.py::test_cancelling_a_command_brain_returns_at_once_and_stops_it
+FAILED tests/test_brains.py::test_ending_a_tree_on_windows_ends_the_brain_and_what_it_started_and_nothing_else
+FAILED tests/test_chats.py::test_an_odd_or_damaged_chat_file_is_skipped - pyt...
+ERROR tests/test_events.py::test_notify_never_waits_on_an_open_stdin - pytest...
+ERROR tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[installed]
+ERROR tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[refused]
+ERROR tests/test_updates.py::test_a_newer_release_is_downloaded_checked_and_offered
+ERROR tests/test_updates.py::test_a_tampered_download_is_thrown_away_never_offered
+ERROR tests/test_updates.py::test_a_download_past_the_limit_is_stopped - pyte...
+ERROR tests/test_updates.py::test_nothing_newer_says_so - pytest.PytestUnrais...
+ERROR tests/test_updates.py::test_a_chatmon_that_cant_install_it_is_only_told
+ERROR tests/test_updates.py::test_an_update_is_checked_again_just_before_its_installed
+ERROR tests/test_updates.py::test_an_installer_that_wont_start_says_so_and_frees_the_updater
+ERROR tests/test_updates.py::test_checksums_not_signed_with_the_release_key_are_never_trusted
+ERROR tests/test_updates.py::test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit
+ERROR tests/test_updates.py::test_a_download_that_cant_be_checked_yet_is_looked_at_again_within_the_hour
+ERROR tests/test_updates.py::test_an_update_that_cant_be_checked_at_install_time_is_kept_for_later
+ERROR tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change
+5 failed, 816 passed, 101 skipped, 15 errors in 194.60s (0:03:14)

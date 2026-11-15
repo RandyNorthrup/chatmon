@@ -1,0 +1,154 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; xorg-server-xvfb 21.1.26-1 dbus 1.16.2-2 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2 pytest 9.2.0; the worktree's files at 2026-11-15T17:31:02Z
+$ /var/tmp/plans-venv/bin/python -m pytest -v -rA -p no:cacheprovider tests/test_m4b_imports.py tests/test_hotkey.py tests/test_hotkey_portal.py tests/test_sound.py
+============================= test session starts ==============================
+platform linux -- Python 3.14.9, pytest-9.2.0, pluggy-1.7.0 -- /var/tmp/plans-venv/bin/python
+hypothesis profile 'default'
+rootdir: /mnt/c/Users/Randy/Coding/chatmon-wt/mac-drills
+configfile: pyproject.toml
+plugins: hypothesis-6.170.14, timeout-2.4.0
+timeout: 120.0s
+timeout method: signal
+timeout func_only: False
+collecting ... collected 65 items
+
+tests/test_m4b_imports.py::test_it_imports_here[hotkey] PASSED           [  1%]
+tests/test_m4b_imports.py::test_it_imports_here[sound] PASSED            [  3%]
+tests/test_m4b_imports.py::test_it_imports_here[wintoast] PASSED         [  4%]
+tests/test_m4b_imports.py::test_it_imports_here[wincaret] PASSED         [  6%]
+tests/test_m4b_imports.py::test_it_imports_here[winrt] PASSED            [  7%]
+tests/test_m4b_imports.py::test_it_imports_here[winfocus] PASSED         [  9%]
+tests/test_m4b_imports.py::test_it_imports_here[libdbus] PASSED          [ 10%]
+tests/test_m4b_imports.py::test_it_imports_here[shortcutportal] PASSED   [ 12%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Space-Ctrl+Alt+Space] PASSED [ 13%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[alt+ctrl+space-Ctrl+Alt+Space] PASSED [ 15%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[ Control + Option + k -Ctrl+Alt+K] PASSED [ 16%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[meta+shift+f5-Shift+Meta+F5] PASSED [ 18%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Win+Escape-Meta+Esc] PASSED [ 20%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Super+PageDown-Meta+PgDown] PASSED [ 21%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+/-Ctrl+Alt+/] PASSED [ 23%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Shift+Return-Ctrl+Shift+Return] PASSED [ 24%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Enter-Ctrl+Alt+Return] PASSED [ 26%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[F13-F13] PASSED [ 27%]
+tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Shift+F24-Shift+F24] PASSED [ 29%]
+tests/test_hotkey.py::test_command_is_ctrl_on_a_mac_as_in_qt PASSED      [ 30%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[-needs a key] PASSED [ 32%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[   -needs a key] PASSED [ 33%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Ctrl+-isn't a shortcut] PASSED [ 35%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Ctrl+Alt-needs a key as well] PASSED [ 36%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Ctrl+A+B-one key, not A and B] PASSED [ 38%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Ctrl+Hyper-doesn't know the key "Hyper"] PASSED [ 40%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[A-would take that key] PASSED [ 41%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Shift+A-would take that key] PASSED [ 43%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[F12-would take that key] PASSED [ 44%]
+tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Shift+Space-would take that key] PASSED [ 46%]
+tests/test_hotkey.py::test_every_key_has_a_code_of_its_own PASSED        [ 47%]
+tests/test_hotkey.py::test_each_platform_has_its_way PASSED              [ 49%]
+tests/test_hotkey.py::test_a_bad_shortcut_is_refused_before_anything_is_claimed PASSED [ 50%]
+tests/test_hotkey.py::test_the_apps_one_shortcut_says_how_the_desktop_has_it PASSED [ 52%]
+tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it SKIPPED [ 53%]
+tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had SKIPPED [ 55%]
+tests/test_hotkey.py::test_the_apps_one_shortcut SKIPPED (Windows only)  [ 56%]
+tests/test_hotkey.py::test_macos_registers_it_and_hears_it SKIPPED (...) [ 58%]
+tests/test_hotkey.py::test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had SKIPPED [ 60%]
+tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict PASSED [ 61%]
+tests/test_hotkey.py::test_x11_without_a_display_says_so PASSED          [ 63%]
+tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format PASSED [ 64%]
+tests/test_hotkey_portal.py::test_signatures_split_into_their_complete_types PASSED [ 66%]
+tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon PASSED [ 67%]
+tests/test_hotkey_portal.py::test_a_shortcut_the_desktop_turns_down_is_reported PASSED [ 69%]
+tests/test_hotkey_portal.py::test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked PASSED [ 70%]
+tests/test_hotkey_portal.py::test_a_desktop_without_the_portal_says_how_to_do_it_instead[None] PASSED [ 72%]
+tests/test_hotkey_portal.py::test_a_desktop_without_the_portal_says_how_to_do_it_instead[no-shortcuts] PASSED [ 73%]
+tests/test_sound.py::test_only_the_alerts_sound_until_you_turn_the_others_on PASSED [ 75%]
+tests/test_sound.py::test_a_cue_that_is_on_plays_at_the_volume_set PASSED [ 76%]
+tests/test_sound.py::test_nothing_sounds_when_it_shouldnt PASSED         [ 78%]
+tests/test_sound.py::test_the_same_cue_twice_at_once_sounds_once PASSED  [ 80%]
+tests/test_sound.py::test_a_missing_file_or_unknown_cue PASSED           [ 81%]
+tests/test_sound.py::test_the_next_player_is_tried_when_one_cant PASSED  [ 83%]
+tests/test_sound.py::test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays PASSED [ 84%]
+tests/test_sound.py::test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind PASSED [ 86%]
+tests/test_sound.py::test_samples_are_scaled_for_the_volume PASSED       [ 87%]
+tests/test_sound.py::test_each_linux_player_is_told_the_volume PASSED    [ 89%]
+tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting PASSED   [ 90%]
+tests/test_sound.py::test_playsound_plays_on_its_own_thread SKIPPED      [ 92%]
+tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait PASSED [ 93%]
+tests/test_sound.py::test_nssound_plays_at_the_volume SKIPPED (macOS...) [ 95%]
+tests/test_sound.py::test_this_platforms_players PASSED                  [ 96%]
+tests/test_sound.py::test_without_qtmultimedia_the_systems_own_player_is_used PASSED [ 98%]
+tests/test_sound.py::test_quitting_while_a_sound_plays_ends_cleanly PASSED [100%]
+
+==================================== PASSES ====================================
+_____ test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays _____
+------------------------------ Captured log call -------------------------------
+DEBUG    chatmon.sound:sound.py:245 couldn't start pw-play: [Errno 2] No such file or directory: 'pw-play'
+__________________ test_qsoundeffect_plays_it_without_waiting __________________
+----------------------------- Captured stderr call -----------------------------
+qt.multimedia.ffmpeg: Using Qt multimedia with FFmpeg version 7.1.5 LGPL version 2.1 or later
+=========================== short test summary info ============================
+PASSED tests/test_m4b_imports.py::test_it_imports_here[hotkey]
+PASSED tests/test_m4b_imports.py::test_it_imports_here[sound]
+PASSED tests/test_m4b_imports.py::test_it_imports_here[wintoast]
+PASSED tests/test_m4b_imports.py::test_it_imports_here[wincaret]
+PASSED tests/test_m4b_imports.py::test_it_imports_here[winrt]
+PASSED tests/test_m4b_imports.py::test_it_imports_here[winfocus]
+PASSED tests/test_m4b_imports.py::test_it_imports_here[libdbus]
+PASSED tests/test_m4b_imports.py::test_it_imports_here[shortcutportal]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Space-Ctrl+Alt+Space]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[alt+ctrl+space-Ctrl+Alt+Space]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[ Control + Option + k -Ctrl+Alt+K]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[meta+shift+f5-Shift+Meta+F5]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Win+Escape-Meta+Esc]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Super+PageDown-Meta+PgDown]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+/-Ctrl+Alt+/]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Shift+Return-Ctrl+Shift+Return]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Enter-Ctrl+Alt+Return]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[F13-F13]
+PASSED tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it[Shift+F24-Shift+F24]
+PASSED tests/test_hotkey.py::test_command_is_ctrl_on_a_mac_as_in_qt
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[-needs a key]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[   -needs a key]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Ctrl+-isn't a shortcut]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Ctrl+Alt-needs a key as well]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Ctrl+A+B-one key, not A and B]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Ctrl+Hyper-doesn't know the key "Hyper"]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[A-would take that key]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Shift+A-would take that key]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[F12-would take that key]
+PASSED tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why[Shift+Space-would take that key]
+PASSED tests/test_hotkey.py::test_every_key_has_a_code_of_its_own
+PASSED tests/test_hotkey.py::test_each_platform_has_its_way
+PASSED tests/test_hotkey.py::test_a_bad_shortcut_is_refused_before_anything_is_claimed
+PASSED tests/test_hotkey.py::test_the_apps_one_shortcut_says_how_the_desktop_has_it
+PASSED tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict
+PASSED tests/test_hotkey.py::test_x11_without_a_display_says_so
+PASSED tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format
+PASSED tests/test_hotkey_portal.py::test_signatures_split_into_their_complete_types
+PASSED tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon
+PASSED tests/test_hotkey_portal.py::test_a_shortcut_the_desktop_turns_down_is_reported
+PASSED tests/test_hotkey_portal.py::test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked
+PASSED tests/test_hotkey_portal.py::test_a_desktop_without_the_portal_says_how_to_do_it_instead[None]
+PASSED tests/test_hotkey_portal.py::test_a_desktop_without_the_portal_says_how_to_do_it_instead[no-shortcuts]
+PASSED tests/test_sound.py::test_only_the_alerts_sound_until_you_turn_the_others_on
+PASSED tests/test_sound.py::test_a_cue_that_is_on_plays_at_the_volume_set
+PASSED tests/test_sound.py::test_nothing_sounds_when_it_shouldnt
+PASSED tests/test_sound.py::test_the_same_cue_twice_at_once_sounds_once
+PASSED tests/test_sound.py::test_a_missing_file_or_unknown_cue
+PASSED tests/test_sound.py::test_the_next_player_is_tried_when_one_cant
+PASSED tests/test_sound.py::test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays
+PASSED tests/test_sound.py::test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind
+PASSED tests/test_sound.py::test_samples_are_scaled_for_the_volume
+PASSED tests/test_sound.py::test_each_linux_player_is_told_the_volume
+PASSED tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting
+PASSED tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait
+PASSED tests/test_sound.py::test_this_platforms_players
+PASSED tests/test_sound.py::test_without_qtmultimedia_the_systems_own_player_is_used
+PASSED tests/test_sound.py::test_quitting_while_a_sound_plays_ends_cleanly
+SKIPPED [1] tests/test_hotkey.py:157: Windows only
+SKIPPED [1] tests/test_hotkey.py:183: Windows only
+SKIPPED [1] tests/test_hotkey.py:200: Windows only
+SKIPPED [1] tests/test_hotkey.py:254: macOS only
+SKIPPED [1] tests/test_hotkey.py:271: macOS only
+SKIPPED [1] tests/test_sound.py:210: Windows only
+SKIPPED [1] tests/test_sound.py:261: macOS only
+======================== 58 passed, 7 skipped in 15.67s ========================
+# exit 0

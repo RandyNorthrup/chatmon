@@ -1,0 +1,5 @@
+$ verify-delivery.py --root . --plan docs/delivery/m8-translation.md --stage closure --context docs/delivery/reports/m8/context.json
+PASS: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+Structural and recorded-evidence checks; semantic review remains required.
+exit 0

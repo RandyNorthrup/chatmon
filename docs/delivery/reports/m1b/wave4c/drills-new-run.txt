@@ -1,0 +1,4 @@
+
+=== summary
+PASS W4-M1B-05-stale-folders
+PASS W4-M1B-12-partial

@@ -1,0 +1,878 @@
+{
+ "plan": "docs/delivery/m4a-platform-awareness.md",
+ "section": "docs/delivery/reports/m4a/wave4c/section.md",
+ "rules": {
+  "docs/delivery/ROADMAP.md": "3586a0d+wave4c",
+  "pyproject.toml": "3586a0d"
+ },
+ "inputs_add": [],
+ "task_changes_add": {},
+ "stale_reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408",
+ "receipts": [
+  {
+   "id": "W4C-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "AC-01a",
+    "AC-01b",
+    "AC-01c",
+    "AC-02",
+    "AC-03",
+    "AC-04a",
+    "AC-04b",
+    "AC-04c",
+    "AC-05",
+    "AC-06a",
+    "AC-06b",
+    "AC-07a",
+    "AC-07b",
+    "AC-08",
+    "AC-09a",
+    "AC-09b",
+    "AC-10",
+    "AC-11",
+    "AC-12a",
+    "AC-12b",
+    "AC-12c",
+    "AC-12d",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/wave4c/readiness.md",
+   "method": "Requirements review, round three, at 3586a0d (readiness.md): M4A-01 to M4A-12 (M4A-12, Linux screen readers with at-spi2-core 2.62, added by the M4A worker) re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now; no conflict or gap; CI-macos and CI-linux answered by CI run 43729628408."
+  },
+  {
+   "id": "W4C-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-01a",
+    "AC-01b",
+    "AC-01c",
+    "AC-02",
+    "AC-03",
+    "AC-04a",
+    "AC-04c",
+    "AC-05",
+    "AC-06a",
+    "AC-06b",
+    "AC-07a",
+    "AC-07b",
+    "AC-08",
+    "AC-09a",
+    "AC-09b",
+    "AC-10",
+    "AC-11",
+    "AC-12a",
+    "AC-12b",
+    "AC-12c",
+    "AC-12d",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/wave4c/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 3586a0d's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. The macOS and Linux end-to-end tests skip here; these criteria are listed for their cross-platform tests (stand-ins for AppKit, the buses and the screen readers), as the M4A worker's own Windows receipts listed them. tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement (AC-09a) ran and passed here with comtypes. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-WSL-TESTS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-01a",
+    "AC-01b",
+    "AC-02",
+    "AC-03",
+    "AC-04a",
+    "AC-04b",
+    "AC-04c",
+    "AC-05",
+    "AC-06a",
+    "AC-06b",
+    "AC-07a",
+    "AC-07b",
+    "AC-08",
+    "AC-09b",
+    "AC-10",
+    "AC-11",
+    "AC-12a",
+    "AC-12b",
+    "AC-12c",
+    "AC-12d",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/wave4c/suite-linux-qt612.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/m4a-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-rA",
+    "tests/test_screen_readers.py",
+    "tests/test_a11y.py",
+    "tests/test_presence.py",
+    "tests/test_linuxsession.py",
+    "tests/test_heads_up.py",
+    "tests/test_platform_events.py",
+    "tests/test_portal_bus.py",
+    "tests/test_winlock.py",
+    "tests/test_macnative.py"
+   ],
+   "exit_code": 0,
+   "method": "M4A's tests in WSL (Arch: at-spi2-core 2.62.1, Orca 51.1; /var/tmp/m4a-venv, PyQt6 6.12.1, whose contrastPreferenceChanged is a signal) under xvfb-run -a, on 3586a0d's files, as the M4A worker ran them: the -rA summary names each pass, test_qts_contrast_change_is_passed_on (AC-04b) and the screen-reader bus tests among them. The run's own versions head the log (ROADMAP: evidence from elsewhere)."
+  },
+  {
+   "id": "W4C-BEH-WSL-SWAY",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-12b",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/wave4c/sway-readers.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-rA",
+    "tests/test_sway.py",
+    "-k",
+    "screen_reader or orca or window_of_its_own or reaches_atspi"
+   ],
+   "exit_code": 0,
+   "method": "The real-sway screen-reader tests in WSL on 3586a0d's files, with the real Orca 51.1 and at-spi2-core 2.62.1 (/var/tmp/plans-venv, PyQt6 6.11): 7 passed, 13 deselected (-rA names each pass). Chatmon finds the running Orca and moves the ask box to a window of its own, which sway floats, centres and focuses; a screen reader finds its field, buttons and conversation; only as a window is the box ever an active window to a screen reader; what changes in it reaches AT-SPI listeners; and with Orca, the box as a window is announced and echoes typing while drawn on the overlay it is neither announced nor echoed."
+  },
+  {
+   "id": "W4C-BEH-CI-MACOS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-01c",
+    "AC-03",
+    "AC-06b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/ci/ci-132858987797-test-macos-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987797",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d (macnative.py and presence.py as they are after the merges CI-macos waited for), job test (macos-latest, 3.14). Passed: tests/test_macnative.py::test_sleep_wake_displays_accessibility_and_low_power_are_heard (AC-03, AC-06b: real NSWorkspace and NSProcessInfo notifications posted to a WorkspaceWatcher, and Low Power Mode read) and tests/test_presence.py::test_macos_reads_increase_contrast (AC-01c: AppKit's Increase contrast read by Desk). In the job's second step, on macOS's real window server (QT_QPA_PLATFORM=cocoa), all 8 tests of tests/test_macnative.py passed. The same passed on the 3.11 and 3.15 legs. This answers CI-macos: T-04 and T-09's end-to-end checks ran on the merged tree. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-01a",
+    "AC-01b",
+    "AC-01c",
+    "AC-02",
+    "AC-03",
+    "AC-04a",
+    "AC-04b",
+    "AC-04c",
+    "AC-05",
+    "AC-06a",
+    "AC-06b",
+    "AC-07a",
+    "AC-07b",
+    "AC-08",
+    "AC-09b",
+    "AC-10",
+    "AC-11",
+    "AC-12a",
+    "AC-12b",
+    "AC-12c",
+    "AC-12d",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/ci/ci-132858987756-test-ubuntu-24.04-3.15.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987756",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job test (ubuntu-24.04, 3.15), every test under xvfb-run. The D-Bus, X11 and screen-reader tests these criteria's drills run passed there, among them tests/test_screen_readers.py and tests/test_a11y.py: each ran and passed, or skipped with its reason where Ubuntu 24.04's runner lacks the piece (AT-SPI's bus launcher, GNOME's accessibility schema), and the ubuntu-24.04-arm leg and fedora:44, which have them, ran those too (ci/observed-3586a0d.txt). This answers CI-linux. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-09a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/ci/ci-132858987936-test-windows-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987936",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job test (windows-latest, 3.14): tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement now runs and passes in CI, comtypes being in packaging/requirements-test.txt (the followups worker), as on the 3.11 and 3.15 legs. Round one's CI-windows-comtypes follow-up is done. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-BEH-CI-GNOME",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-01b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/ci/ci-132858987919-gnome.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43729628408",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132858987919",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43729628408 on 3586a0d, job gnome: a real Mutter (headless Wayland) in a fresh ubuntu:24.04 container; tests/test_presence.py -k gnome with CHATMON_GNOME_SESSION=1 ran 2 tests and both passed, test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high (AC-01b) among them. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-01a-portal-flag",
+   "kind": "red",
+   "acceptance": [
+    "AC-01a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-01a-portal-flag",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-01a-portal-flag through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-01a-portal-key",
+   "kind": "red",
+   "acceptance": [
+    "AC-01a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-01a-portal-key",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-01a-portal-key through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-01b-gnome-skipped",
+   "kind": "red",
+   "acceptance": [
+    "AC-01b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-01b-gnome-skipped",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-01b-gnome-skipped through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-01b-old-qt-contrast",
+   "kind": "red",
+   "acceptance": [
+    "AC-01b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-01b-old-qt-contrast",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-01b-old-qt-contrast through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-01c-mac-contrast",
+   "kind": "red",
+   "acceptance": [
+    "AC-01c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-01c-mac-contrast",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-01c-mac-contrast through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-02-any-monitor",
+   "kind": "red",
+   "acceptance": [
+    "AC-02"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-02-any-monitor",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-02-any-monitor through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-03-sleep-wake",
+   "kind": "red",
+   "acceptance": [
+    "AC-03"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-03-sleep-wake",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-03-sleep-wake through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-04a-listener-outlives-desk",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-04a-listener-outlives-desk",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-04a-listener-outlives-desk through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-04a-no-dedupe",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-04a-no-dedupe",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-04a-no-dedupe through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-04a-setting-changed-ignored",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-04a-setting-changed-ignored",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-04a-setting-changed-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-04b-old-qt-hints",
+   "kind": "red",
+   "acceptance": [
+    "AC-04b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-04b-old-qt-hints",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-04b-old-qt-hints through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-04c-other-windows-copy",
+   "kind": "red",
+   "acceptance": [
+    "AC-04c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-04c-other-windows-copy",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-04c-other-windows-copy through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-04c-screen-reader",
+   "kind": "red",
+   "acceptance": [
+    "AC-04c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-04c-screen-reader",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-04c-screen-reader through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-05-dnd-ignored",
+   "kind": "red",
+   "acceptance": [
+    "AC-05"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-05-dnd-ignored",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "method": "Red drill AC-05-dnd-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. The artifact is the harness's results record, whose observed line names the failing test; the red run's output tail in w4-drills.log begins after that line. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-05-mako-modes",
+   "kind": "red",
+   "acceptance": [
+    "AC-05"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-05-mako-modes",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-05-mako-modes through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-06a-battery-ignored",
+   "kind": "red",
+   "acceptance": [
+    "AC-06a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-06a-battery-ignored",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-06a-battery-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-06b-low-power",
+   "kind": "red",
+   "acceptance": [
+    "AC-06b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-06b-low-power",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-06b-low-power through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-07a-transient",
+   "kind": "red",
+   "acceptance": [
+    "AC-07a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-07a-transient",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-07a-transient through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-07a-urgency-byte",
+   "kind": "red",
+   "acceptance": [
+    "AC-07a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-07a-urgency-byte",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-07a-urgency-byte through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-07b-other-apps",
+   "kind": "red",
+   "acceptance": [
+    "AC-07b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-07b-other-apps",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-07b-other-apps through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-07b-replaced-buttons",
+   "kind": "red",
+   "acceptance": [
+    "AC-07b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-07b-replaced-buttons",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-07b-replaced-buttons through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-08-no-fallback",
+   "kind": "red",
+   "acceptance": [
+    "AC-08"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-08-no-fallback",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-08-no-fallback through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-09a-client-side",
+   "kind": "red",
+   "acceptance": [
+    "AC-09a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-09a-client-side",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-09a-client-side through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-09a-host-provider",
+   "kind": "red",
+   "acceptance": [
+    "AC-09a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-09a-host-provider",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-09a-host-provider through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-09a-not-handed-out",
+   "kind": "red",
+   "acceptance": [
+    "AC-09a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-09a-not-handed-out",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-09a-not-handed-out through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-09b-behind",
+   "kind": "red",
+   "acceptance": [
+    "AC-09b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-09b-behind",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-09b-behind through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-09b-no-notification",
+   "kind": "red",
+   "acceptance": [
+    "AC-09b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-09b-no-notification",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-09b-no-notification through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-10-plugged",
+   "kind": "red",
+   "acceptance": [
+    "AC-10"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-10-plugged",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-10-plugged through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-11-seen-inverted",
+   "kind": "red",
+   "acceptance": [
+    "AC-11"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-11-seen-inverted",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-11-seen-inverted through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-11-told-twice",
+   "kind": "red",
+   "acceptance": [
+    "AC-11"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-results.json",
+   "drill": "AC-11-told-twice",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills.log",
+   "method": "Red drill AC-11-told-twice through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12a-comm-newline",
+   "kind": "red",
+   "acceptance": [
+    "AC-12a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12a-comm-newline",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12a-comm-newline through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12a-uid",
+   "kind": "red",
+   "acceptance": [
+    "AC-12a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12a-uid",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12a-uid through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12b-orca-order",
+   "kind": "red",
+   "acceptance": [
+    "AC-12b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12b-orca-order",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12b-orca-order through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12c-bus-gone",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12c-bus-gone",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12c-bus-gone through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12c-is-enabled-alone",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12c-is-enabled-alone",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12c-is-enabled-alone through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12c-no-rescan-on-status",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12c-no-rescan-on-status",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12c-no-rescan-on-status through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12c-old-at-spi",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12c-old-at-spi",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12c-old-at-spi through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12d-gnome",
+   "kind": "red",
+   "acceptance": [
+    "AC-12d"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12d-gnome",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12d-gnome through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12e-orca-speaks",
+   "kind": "red",
+   "acceptance": [
+    "AC-12b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12e-orca-speaks",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12e-orca-speaks through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-AC-12f-desk-signal",
+   "kind": "red",
+   "acceptance": [
+    "AC-12e"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-results.json",
+   "drill": "AC-12f-desk-signal",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills.log",
+   "method": "Red drill AC-12f-desk-signal through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-01a-read-fallback",
+   "kind": "red",
+   "acceptance": [
+    "AC-01a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-01a-read-fallback",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-01a-read-fallback in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-02-x11-place",
+   "kind": "red",
+   "acceptance": [
+    "AC-02"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-02-x11-place",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-02-x11-place in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-04a-asked-each-time",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-04a-asked-each-time",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "method": "Red drill L-AC-04a-asked-each-time in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. The artifact is the harness's results record, whose observed line names the failing test; the red run's output tail in w4-drills-linux.log begins after that line. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-04a-listener-outlives-desk",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-04a-listener-outlives-desk",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-04a-listener-outlives-desk in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-05-dunst-question",
+   "kind": "red",
+   "acceptance": [
+    "AC-05"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-05-dunst-question",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-05-dunst-question in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-05-starts-services",
+   "kind": "red",
+   "acceptance": [
+    "AC-05"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-05-starts-services",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-05-starts-services in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-06a-upower-not-followed",
+   "kind": "red",
+   "acceptance": [
+    "AC-06a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-06a-upower-not-followed",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-06a-upower-not-followed in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-07a-not-replaced",
+   "kind": "red",
+   "acceptance": [
+    "AC-07a"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-07a-not-replaced",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-07a-not-replaced in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-07b-action-unheard",
+   "kind": "red",
+   "acceptance": [
+    "AC-07b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-07b-action-unheard",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-07b-action-unheard in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-10-not-one-call",
+   "kind": "red",
+   "acceptance": [
+    "AC-10"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-results.json",
+   "drill": "L-AC-10-not-one-call",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux.log",
+   "method": "Red drill L-AC-10-not-one-call in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-12b-orca-unwatched",
+   "kind": "red",
+   "acceptance": [
+    "AC-12b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-linux-results.json",
+   "drill": "L-AC-12b-orca-unwatched",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills-linux.log",
+   "method": "Red drill L-AC-12b-orca-unwatched in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/m4a-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-12c-not-read",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-linux-results.json",
+   "drill": "L-AC-12c-not-read",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills-linux.log",
+   "method": "Red drill L-AC-12c-not-read in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/m4a-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-12c-status-unheard",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-linux-results.json",
+   "drill": "L-AC-12c-status-unheard",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills-linux.log",
+   "method": "Red drill L-AC-12c-status-unheard in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/m4a-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-12d-gnome-key",
+   "kind": "red",
+   "acceptance": [
+    "AC-12d"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/readers-drills-linux-results.json",
+   "drill": "L-AC-12d-gnome-key",
+   "artifact": "docs/delivery/reports/m4a/wave4c/readers-drills-linux.log",
+   "method": "Red drill L-AC-12d-gnome-key in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/m4a-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  },
+  {
+   "id": "W4C-RED-L-AC-04b-qt-signal",
+   "kind": "red",
+   "acceptance": [
+    "AC-04b"
+   ],
+   "results": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-qt612-results.json",
+   "drill": "W4-L-AC-04b-qt-signal",
+   "artifact": "docs/delivery/reports/m4a/wave4c/w4-drills-linux-qt612.log",
+   "method": "Red drill W4-L-AC-04b-qt-signal in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/m4a-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged."
+  }
+ ],
+ "tasks": {},
+ "pending": [],
+ "next_action": "None in M4A on 3586a0d: CI-macos and CI-linux are answered by CI run 43729628408, and T-04 and T-09 are verified.",
+ "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
+}

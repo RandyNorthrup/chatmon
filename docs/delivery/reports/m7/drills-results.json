@@ -1,0 +1,2434 @@
+[
+  {
+    "id": "CI-01-host-desk-read",
+    "requirement": "M7-CI",
+    "file": "tests/app_harness.py",
+    "mutation": {
+      "find": "    c.desk = PretendDesk()",
+      "replace": "    pass  # the computer's own desk, as before"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_the_computer_the_tests_run_on_holds_nothing_back"
+    ],
+    "expected": [
+      "test_the_computer_the_tests_run_on_holds_nothing_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd",
+    "baseline_exit": 0,
+    "mutated_sha256": "6b190bc3cc76ad13c50615c78a619bfa711aa408773cf7fbf3d3ed11762db4f9",
+    "mutated_exit": 1,
+    "observed": "____________ test_the_computer_the_tests_run_on_holds_nothing_back ____________",
+    "after_sha256": "2548c17bc5391f3485f07735bf49a8c6b9eb01ab99099fff81813fe1a8fa78bd",
+    "restored_exit": 0
+  },
+  {
+    "id": "CI-02-queue-best-only",
+    "requirement": "M7-CI",
+    "file": "chatmon/messages.py",
+    "mutation": {
+      "find": "best = next((m for m in self._ready() if self._takes_over(m, now)), None)",
+      "replace": "best = next((m for m in self._ready()[:1] if self._takes_over(m, now)), None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over",
+      "tests/test_messages.py::test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum"
+    ],
+    "expected": [
+      "test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over",
+      "test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d",
+    "baseline_exit": 0,
+    "mutated_sha256": "97bcb0886353ce0725c1b6c90288ad155f846e36369eaca789a187e801981cc8",
+    "mutated_exit": 1,
+    "observed": "___ test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over ____",
+    "after_sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d",
+    "restored_exit": 0
+  },
+  {
+    "id": "CI-03-wake-best-only",
+    "requirement": "M7-CI",
+    "file": "chatmon/messages.py",
+    "mutation": {
+      "find": "times = [at for m in self._ready() if",
+      "replace": "times = [at for m in self._ready()[:1] if"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over"
+    ],
+    "expected": [
+      "test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d",
+    "baseline_exit": 0,
+    "mutated_sha256": "738ab7dd6e479b811aa4998965b16c5122d517c8416331e4be32c1a1765fc9b9",
+    "mutated_exit": 1,
+    "observed": "___ test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over ____",
+    "after_sha256": "1ae28121c8d19526f62a66e36dfaccaa84ae653ae94af5aca32082d33e97287d",
+    "restored_exit": 0
+  },
+  {
+    "id": "CI-04-askbox-wakes-by-strength",
+    "requirement": "M7-CI",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        if drawn_here and self._moving(time.monotonic()):",
+      "replace": "        if drawn_here and self.effects(time.monotonic()) > 0.0:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since"
+    ],
+    "expected": [
+      "new words: it moves again"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af",
+    "baseline_exit": 0,
+    "mutated_sha256": "fc60ebfa58ebd48c40101b3e68c4ed0bedc382a405cabcbdf72e2bd5cc4114ff",
+    "mutated_exit": 1,
+    "observed": ">       assert box._frames.isActive() and box.anim_key(now) != -1, \"new words: it moves again\"",
+    "after_sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af",
+    "restored_exit": 0
+  },
+  {
+    "id": "CI-05-askbox-frame-stops-at-zero",
+    "requirement": "M7-CI",
+    "file": "chatmon/bubble.py",
+    "mutation": {
+      "find": "        if not self._moving(time.monotonic()):",
+      "replace": "        if self.effects(time.monotonic()) <= 0.0:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since"
+    ],
+    "expected": [
+      "a frame drawn at strength 0 is the start of the rise"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af",
+    "baseline_exit": 0,
+    "mutated_sha256": "60f29925d53fd13062906b789855d4561cb75adaaf764802a6408933bbb16a1c",
+    "mutated_exit": 1,
+    "observed": ">       assert box._frames.isActive(), \"a frame drawn at strength 0 is the start of the rise, not the end of it\"",
+    "after_sha256": "66eac8bcda569245877da20212cbc834a0aa79b444a19ad9e88b5f867443c0af",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-01-only-newest-piece",
+    "requirement": "AC-01-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "first, q.partial = not q.partial, q.partial + text",
+      "replace": "first, q.partial = not q.partial, text"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_an_answer_shows_as_it_streams_in_and_survives_the_box_being_drawn_again"
+    ],
+    "expected": [
+      "test_an_answer_shows_as_it_streams_in_and_survives_the_box_being_drawn_again"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "4492a81cc158d83773502230aad75696f2491ca8089bd27c12ad8c64f9473813",
+    "mutated_exit": 1,
+    "observed": "_ test_an_answer_shows_as_it_streams_in_and_survives_the_box_being_drawn_again _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-01-closing-drops",
+    "requirement": "AC-01-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        # A question on its way carries on: its answer is kept in the chat, and a bubble says it came (_answered).",
+      "replace": "        self.asker.cancel()\r\n        self.questions.drop()"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came"
+    ],
+    "expected": [
+      "test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "c83fbb3aaa4cce17d0c9e96d3584e0e97dcb50f25ddfa7918851fb828d803af7",
+    "mutated_exit": 1,
+    "observed": "____ test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came ____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-01-answered-unsaid",
+    "requirement": "AC-01-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self.say(f\"{label or 'The AI'} answered\", buttons=[(\"Read\", self._read_answer)]",
+      "replace": "self._read_aloud(f\"{label or 'The AI'} answered\", buttons=[(\"Read\", self._read_answer)]"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came"
+    ],
+    "expected": [
+      "test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "14ff2e590c8ead4e3c5e84e7e4e8636e48c974b897f1bfe1b53d19eb9a304e22",
+    "mutated_exit": 1,
+    "observed": "____ test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came ____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-01-stop-loses-what-came",
+    "requirement": "AC-01-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        if q.partial.strip():\r\n",
+      "replace": "        if False:\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_the_box_says_who_is_answering_and_stop_ends_it"
+    ],
+    "expected": [
+      "test_the_box_says_who_is_answering_and_stop_ends_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "0ebb02ea8d96180872bde37256ab31da207306560621bccb7a96515796d94928",
+    "mutated_exit": 1,
+    "observed": "_____________ test_the_box_says_who_is_answering_and_stop_ends_it _____________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-01-no-busy",
+    "requirement": "AC-01-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.ask_box.set_busy(brain.label, q.started)\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_the_box_says_who_is_answering_and_stop_ends_it"
+    ],
+    "expected": [
+      "test_the_box_says_who_is_answering_and_stop_ends_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "6db21788c16295f4547f58741ac7c5c93cbd561283e8c5cc34b2d6ab731abd6a",
+    "mutated_exit": 1,
+    "observed": "_____________ test_the_box_says_who_is_answering_and_stop_ends_it _____________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-02-no-next-brain",
+    "requirement": "AC-02-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        if other is not None:\r\n            buttons.append",
+      "replace": "        if False:\r\n            buttons.append"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings"
+    ],
+    "expected": [
+      "test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "827ad8b65d89f89c7be32ad1df178e93e4dfd23858fcd9482d7f28935cb3a4eb",
+    "mutated_exit": 1,
+    "observed": "_ test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-02-fallback-every-time",
+    "requirement": "AC-02-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        if self._fallback_told == picked:\r\n",
+      "replace": "        if False:\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_a_brain_picked_that_cant_answer_is_announced_once_for_that_pick"
+    ],
+    "expected": [
+      "test_a_brain_picked_that_cant_answer_is_announced_once_for_that_pick"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "008764c276b0264ea87863721bd5f6ca9fa19200a75876995e63bf259ea9b029",
+    "mutated_exit": 1,
+    "observed": "____ test_a_brain_picked_that_cant_answer_is_announced_once_for_that_pick _____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-02-welcome-without-brain",
+    "requirement": "AC-02-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "line = f\"Your questions go to **{brain.label}**; **Brain** in my menu picks another.\"",
+      "replace": "line = \"\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up"
+    ],
+    "expected": [
+      "test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "951f2151535c327990af069ab4ca24a8e378b69610b79ba314bd3d63957b8bf5",
+    "mutated_exit": 1,
+    "observed": "___ test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up ____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-02-server-not-kept",
+    "requirement": "AC-02-4",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.state.set(\"trusted_servers\", brains.confirmed_servers())\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_a_model_server_that_isnt_yours_is_offered_once_and_kept_once_confirmed"
+    ],
+    "expected": [
+      "test_a_model_server_that_isnt_yours_is_offered_once_and_kept_once_confirmed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "46c93fbae63b7f811f4be24fee6df7450cfe3ad3e0b8c724e09eb35e2b62e060",
+    "mutated_exit": 1,
+    "observed": "_ test_a_model_server_that_isnt_yours_is_offered_once_and_kept_once_confirmed _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-key-not-saved",
+    "requirement": "AC-03-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            problem = keychain.set(name, key)\r\n",
+      "replace": "            problem = None\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_a_key_saved_in_settings_goes_to_the_keychain_only"
+    ],
+    "expected": [
+      "test_a_key_saved_in_settings_goes_to_the_keychain_only"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "72dfbc0f9ffe8c22e942a15916b2fbfcd93a6aefa89f6004f8c8c32537a341e6",
+    "mutated_exit": 1,
+    "observed": "___________ test_a_key_saved_in_settings_goes_to_the_keychain_only ____________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-key-not-handed-back",
+    "requirement": "AC-03-1",
+    "file": "chatmon/settingswin.py",
+    "mutation": {
+      "find": "\"api_key\": (self._brain_name(), key) if key and self._brain_name() in self._keys else None,",
+      "replace": "\"api_key\": None,"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settingswin.py::test_the_key_field_shows_only_for_an_api_brain_and_a_key_typed_is_handed_back_once"
+    ],
+    "expected": [
+      "test_the_key_field_shows_only_for_an_api_brain_and_a_key_typed_is_handed_back_once"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "baseline_exit": 0,
+    "mutated_sha256": "69d7dab72865a0e7830bda699c48d317159f3486c742891e473d58b3c731282c",
+    "mutated_exit": 1,
+    "observed": "_ test_the_key_field_shows_only_for_an_api_brain_and_a_key_typed_is_handed_back_once _",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-test-without-typed-key",
+    "requirement": "AC-03-1",
+    "file": "chatmon/settingswin.py",
+    "mutation": {
+      "find": "self.test_requested.emit(name, self.key.text().strip() if name in self._keys else \"\")",
+      "replace": "self.test_requested.emit(name, \"\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settingswin.py::test_test_and_remove_key_ask_the_companion"
+    ],
+    "expected": [
+      "test_test_and_remove_key_ask_the_companion"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "baseline_exit": 0,
+    "mutated_sha256": "3d8072cc0797d5608eb825c9b5c56ee1a2ecdda959fa9db223dbdc22a13b2094",
+    "mutated_exit": 1,
+    "observed": "_________________ test_test_and_remove_key_ask_the_companion __________________",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-text-scale-unapplied",
+    "requirement": "AC-03-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.stage.bubble.set_text_scale(scale)\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_text_size_and_how_long_bubbles_stay_apply_at_once"
+    ],
+    "expected": [
+      "test_text_size_and_how_long_bubbles_stay_apply_at_once"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "04bff04b3c930746b59296cf519f16cb48f0ce4b04129bf4d04871af6a99df96",
+    "mutated_exit": 1,
+    "observed": "___________ test_text_size_and_how_long_bubbles_stay_apply_at_once ____________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-cues-not-handed-back",
+    "requirement": "AC-03-2",
+    "file": "chatmon/settingswin.py",
+    "mutation": {
+      "find": "\"cues\": {name: box.isChecked() for name, box in self.cues.items()},",
+      "replace": "\"cues\": {},"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settingswin.py::test_the_accessibility_tab_hands_back_what_was_set"
+    ],
+    "expected": [
+      "test_the_accessibility_tab_hands_back_what_was_set"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "baseline_exit": 0,
+    "mutated_sha256": "d5a1c046d8d3b9bf2850dada7d377a059da40a1a554dc26e5676da9164bbdc9a",
+    "mutated_exit": 1,
+    "observed": "_____________ test_the_accessibility_tab_hands_back_what_was_set ______________",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-snooze-from-breaks",
+    "requirement": "AC-03-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        return float(self.config[\"reminders\"][\"snooze_minutes\"])",
+      "replace": "        return float(self.config[\"breaks\"][\"snooze_minutes\"])"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_reminders.py::test_reminders_snooze_by_their_own_setting_not_the_breaks"
+    ],
+    "expected": [
+      "test_reminders_snooze_by_their_own_setting_not_the_breaks"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "97aff18cb248d9848601e546ab416935755c0520e6659e788798cf676e6c59e0",
+    "mutated_exit": 1,
+    "observed": "__________ test_reminders_snooze_by_their_own_setting_not_the_breaks __________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-interval-needs-restart",
+    "requirement": "AC-03-4",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self._updates_timer.setInterval(",
+      "replace": "        (lambda ms: None)("
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_update_check_interval_applies_without_a_restart"
+    ],
+    "expected": [
+      "test_the_update_check_interval_applies_without_a_restart"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "72a1a20391f3daaf777787c84315e4a3300be15517683422ce9d1f23143f4356",
+    "mutated_exit": 1,
+    "observed": "__________ test_the_update_check_interval_applies_without_a_restart ___________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-battery-order-window",
+    "requirement": "AC-03-5",
+    "file": "chatmon/settingswin.py",
+    "mutation": {
+      "find": "self.battery_critical.setMaximum(max(1, low - 1) if low else 50)",
+      "replace": "self.battery_critical.setMaximum(50)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settingswin.py::test_reminders_have_their_own_snooze_and_almost_empty_stays_below_low"
+    ],
+    "expected": [
+      "test_reminders_have_their_own_snooze_and_almost_empty_stays_below_low"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "baseline_exit": 0,
+    "mutated_sha256": "013da72845928c09da535b4e70102b018d4fa2f51342a09d574c6a90945f6d3b",
+    "mutated_exit": 1,
+    "observed": "____ test_reminders_have_their_own_snooze_and_almost_empty_stays_below_low ____",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-03-battery-order-file",
+    "requirement": "AC-03-5",
+    "file": "chatmon/settings.py",
+    "mutation": {
+      "find": "0 < heads_up.get(\"battery_low\", 0) <= heads_up.get(\"battery_critical\", 0)",
+      "replace": "False"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settings.py::test_almost_empty_stays_below_low_in_the_settings_file"
+    ],
+    "expected": [
+      "test_almost_empty_stays_below_low_in_the_settings_file"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f",
+    "baseline_exit": 0,
+    "mutated_sha256": "0660ae380f0c2c2f853b403f3f3ed1ae59307e04fc569faa1ca67ae3b6f8b0a5",
+    "mutated_exit": 1,
+    "observed": "___________ test_almost_empty_stays_below_low_in_the_settings_file ____________",
+    "after_sha256": "9d7b99d1f7c725b799b6a690de4303c2abe745a2e8c8f8e72f6d53e4c8c3f65f",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-04-done-keeps-it",
+    "requirement": "AC-04-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        if self.reminders.acknowledge(rid, time.time()):",
+      "replace": "        if self.reminders.get(rid):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_reminders.py::test_a_reminder_that_comes_due_waits_until_done_or_snoozed"
+    ],
+    "expected": [
+      "test_a_reminder_that_comes_due_waits_until_done_or_snoozed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "5632a3ed148ac86fc5b6c6fd2d20de595bd0aabdfdc4b8e8f333f7cc9a3b2d4f",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_reminder_that_comes_due_waits_until_done_or_snoozed __________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-04-later-missing",
+    "requirement": "AC-04-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            (\"Later\u2026\", partial(self._offer_snoozes, r.id)),\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_reminders.py::test_a_repeating_reminder_moves_on_when_done_and_later_offers_every_snooze"
+    ],
+    "expected": [
+      "test_a_repeating_reminder_moves_on_when_done_and_later_offers_every_snooze"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "b35fbe39d6dd84d4e617d2ef33a007d294ce498c98fad87ea39e2de01355f73d",
+    "mutated_exit": 1,
+    "observed": "_ test_a_repeating_reminder_moves_on_when_done_and_later_offers_every_snooze __",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-04-not-restored",
+    "requirement": "AC-04-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self._show_due_reminders()  # fired and not yet done or snoozed",
+      "replace": "        pass  # fired and not yet done or snoozed"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_reminders.py::test_reminders_fired_and_not_done_come_back_at_the_next_start"
+    ],
+    "expected": [
+      "test_reminders_fired_and_not_done_come_back_at_the_next_start"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "3f1d3fbbd24495846eb1613c4879f6449ffea0bab7975d9a61661cd087c9eb1b",
+    "mutated_exit": 1,
+    "observed": "________ test_reminders_fired_and_not_done_come_back_at_the_next_start ________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-04-focus-held-forever",
+    "requirement": "AC-04-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        for r in [r for r in due if r.kind == \"focus\"]:\r\n",
+      "replace": "        for r in []:\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_reminders.py::test_reminders_fired_and_not_done_come_back_at_the_next_start"
+    ],
+    "expected": [
+      "test_reminders_fired_and_not_done_come_back_at_the_next_start"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "f5b14b39b24ddf1463182cb5203b6d583700dc6ffee22d83377d9b1e4929432f",
+    "mutated_exit": 1,
+    "observed": "________ test_reminders_fired_and_not_done_come_back_at_the_next_start ________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-04-edit-ignores-time",
+    "requirement": "AC-04-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            changes[\"when\"] = when.due.timestamp()\r\n",
+      "replace": "            pass\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_reminders.py::test_each_reminder_in_the_menu_can_be_changed_repeated_or_cancelled"
+    ],
+    "expected": [
+      "test_each_reminder_in_the_menu_can_be_changed_repeated_or_cancelled"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "4ed540f95658fdeed50762f6f5f1c8badef2a86cafcbf87aa1e92b0356d47856",
+    "mutated_exit": 1,
+    "observed": "_____ test_each_reminder_in_the_menu_can_be_changed_repeated_or_cancelled _____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-04-repeat-dropped",
+    "requirement": "AC-04-4",
+    "file": "chatmon/commands.py",
+    "mutation": {
+      "find": "command.kind, repeat=command.repeat)",
+      "replace": "command.kind, repeat=None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_reminders.py::test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+    ],
+    "expected": [
+      "test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90",
+    "baseline_exit": 0,
+    "mutated_sha256": "e5a31788e61cca2b3ad5f9316207cd55b5cfa9e303f0db29364e2d8ea1632098",
+    "mutated_exit": 1,
+    "observed": "____ test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time _____",
+    "after_sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-04-cli-no-explanation",
+    "requirement": "AC-04-4",
+    "file": "chatmon/cli.py",
+    "mutation": {
+      "find": "why = reminders.explain(command, markdown=False) if command is not None and command.kind == \"unclear\" else \"\"",
+      "replace": "why = \"\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_cli.py::test_a_reminder_it_cant_read_says_so_and_exits_2"
+    ],
+    "expected": [
+      "test_a_reminder_it_cant_read_says_so_and_exits_2"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "baseline_exit": 0,
+    "mutated_sha256": "b5169748ae3a1aa86996d1c2dcfbb8177bed9f8b59f50df02b04c9c700ad5b77",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_reminder_it_cant_read_says_so_and_exits_2 _______________",
+    "after_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-05-no-summary",
+    "requirement": "AC-05-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        return self.messages.take(lambda m: m in held and not m.buttons)",
+      "replace": "        return []"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_focus_session_holds_what_comes_on_its_own_until_its_over_then_sums_it_up"
+    ],
+    "expected": [
+      "test_a_focus_session_holds_what_comes_on_its_own_until_its_over_then_sums_it_up"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "dbfe63fff9b2daacc2fa462697c5a8647bbe9e1c06e7ce57fc3e9b4fd6b94a47",
+    "mutated_exit": 1,
+    "observed": "_ test_a_focus_session_holds_what_comes_on_its_own_until_its_over_then_sums_it_up _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-06-not-recent",
+    "requirement": "AC-06-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self._recent.append((time.time(), message))\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_recent_messages_are_in_the_menu_and_show_again"
+    ],
+    "expected": [
+      "test_recent_messages_are_in_the_menu_and_show_again"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "ea4c1a2fd9e474df3a8e9b95689a0eaf1e31dc6106fca91f11c93fe913582f43",
+    "mutated_exit": 1,
+    "observed": "_____________ test_recent_messages_are_in_the_menu_and_show_again _____________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-06-click-ignores-missed",
+    "requirement": "AC-06-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        elif self._missed and not self.stage.message_visible():",
+      "replace": "        elif False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_a_bubble_that_went_by_while_you_were_away_comes_back_with_a_click"
+    ],
+    "expected": [
+      "test_a_bubble_that_went_by_while_you_were_away_comes_back_with_a_click"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "d4f5b3eafcdcf0d5440289e2cfd123b93dd3473ad727488d67c526e030059fd6",
+    "mutated_exit": 1,
+    "observed": "___ test_a_bubble_that_went_by_while_you_were_away_comes_back_with_a_click ____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-06-dropped-not-missed",
+    "requirement": "AC-06-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self._missed += [m for m in self.messages.add(message) if m is not message]",
+      "replace": "self.messages.add(message)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_plain_bubbles_the_queue_dropped_count_as_missed"
+    ],
+    "expected": [
+      "test_plain_bubbles_the_queue_dropped_count_as_missed"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "5d06aef3b4232a80ad13d65b993dafbf13471d2a63a8dc2c265b7921d3e93dff",
+    "mutated_exit": 1,
+    "observed": "____________ test_plain_bubbles_the_queue_dropped_count_as_missed _____________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-07-no-tooltip",
+    "requirement": "AC-07-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.tray.setToolTip(f\"Chatmon\\n{states}\" if states else \"Chatmon\")",
+      "replace": "        self.tray.setToolTip(\"Chatmon\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+    ],
+    "expected": [
+      "test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "40d5d878e983f1de12753c85b695cfeb8fdd341c96252d39ed1c83b0e9df93a5",
+    "mutated_exit": 1,
+    "observed": "_ test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-07-no-badge",
+    "requirement": "AC-07-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            return QIcon(_with_badge(frame.pixmap) if self._tray_badge else frame.pixmap)",
+      "replace": "            return QIcon(frame.pixmap)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+    ],
+    "expected": [
+      "test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "46e4a721182d184bb964b29b914d1d59100edd711e63665f5e0603ca5243ed74",
+    "mutated_exit": 1,
+    "observed": "_ test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-07-agents-command-is-help",
+    "requirement": "AC-07-2",
+    "file": "chatmon/commands.py",
+    "mutation": {
+      "find": "\"agents\": _agents,",
+      "replace": "\"agents\": _help,"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_agents_command_says_how_each_stands"
+    ],
+    "expected": [
+      "test_the_agents_command_says_how_each_stands"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90",
+    "baseline_exit": 0,
+    "mutated_sha256": "5e73cb1c34bde96d7e0a025d677c12371b4879a307ad670fb5e7eecff7a7b4f2",
+    "mutated_exit": 1,
+    "observed": "________________ test_the_agents_command_says_how_each_stands _________________",
+    "after_sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-07-no-reply",
+    "requirement": "AC-07-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "                            sock.write(events.reply_line(reply))",
+      "replace": "                            pass"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_chatmon_status_hears_the_live_states_from_the_running_chatmon"
+    ],
+    "expected": [
+      "test_chatmon_status_hears_the_live_states_from_the_running_chatmon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "082e005039090dfa6fffcd270fd2642f36d75e9adc1eddcc2735222f3313cb27",
+    "mutated_exit": 1,
+    "observed": "_____ test_chatmon_status_hears_the_live_states_from_the_running_chatmon ______",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-07-cli-ignores-live",
+    "requirement": "AC-07-3",
+    "file": "chatmon/cli.py",
+    "mutation": {
+      "find": "    if live is not None:\r\n",
+      "replace": "    if False:\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_cli.py::test_status_says_whether_its_running_the_brain_reminders_and_agents"
+    ],
+    "expected": [
+      "test_status_says_whether_its_running_the_brain_reminders_and_agents"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "baseline_exit": 0,
+    "mutated_sha256": "97591d410682545599966e258131360223d9b86be25bd49970869b803c6f565e",
+    "mutated_exit": 1,
+    "observed": "_____ test_status_says_whether_its_running_the_brain_reminders_and_agents _____",
+    "after_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-08-text-not-attached",
+    "requirement": "AC-08-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self._attach(lambda: attachments.from_text(payload))  # attached, however short",
+      "replace": "            pass  # attached, however short"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_quick_actions_attach_the_clipboard_only_when_chosen_and_type_the_prompt"
+    ],
+    "expected": [
+      "test_quick_actions_attach_the_clipboard_only_when_chosen_and_type_the_prompt"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "92715392d1c3570af1fe01a9b837ee4a8eef1870fede858e64721758e1f0ae94",
+    "mutated_exit": 1,
+    "observed": "_ test_quick_actions_attach_the_clipboard_only_when_chosen_and_type_the_prompt _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-09-no-search-inside",
+    "requirement": "AC-09-1",
+    "file": "chatmon/chatswin.py",
+    "mutation": {
+      "find": "                inside.add(listed.id)\n",
+      "replace": "                pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chatswin.py::test_the_window_lists_every_chat_and_searches_titles_then_words_inside"
+    ],
+    "expected": [
+      "test_the_window_lists_every_chat_and_searches_titles_then_words_inside"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "da3d7845b19bb1888001e93d1f13b5319288d0e36d5e66a2dc277e700a9bc4b9",
+    "baseline_exit": 0,
+    "mutated_sha256": "3bb69b67be5f931647b2f6a850a91be8ce477c24ec9626ec901a4dee5cb58b0f",
+    "mutated_exit": 1,
+    "observed": "___ test_the_window_lists_every_chat_and_searches_titles_then_words_inside ____",
+    "after_sha256": "da3d7845b19bb1888001e93d1f13b5319288d0e36d5e66a2dc277e700a9bc4b9",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-09-no-all-chats",
+    "requirement": "AC-09-1",
+    "file": "chatmon/menus.py",
+    "mutation": {
+      "find": "    sub.addAction(\"All chats\u2026\", c.open_chats)\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window"
+    ],
+    "expected": [
+      "test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "306f037e46cd090cf587b626e71626a9fe0ef200069086b5313ccd5984eb9e51",
+    "baseline_exit": 0,
+    "mutated_sha256": "317e3dc1e2e3d404384558857dd05f981149d83c37d0a71f9c3c3f5db14090d3",
+    "mutated_exit": 1,
+    "observed": "_____ test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window _____",
+    "after_sha256": "306f037e46cd090cf587b626e71626a9fe0ef200069086b5313ccd5984eb9e51",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-09-answer-not-by",
+    "requirement": "AC-09-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self.chat.add(chats.Message(\"assistant\", answer, brain=label, by=name))",
+      "replace": "self.chat.add(chats.Message(\"assistant\", answer, brain=label))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_a_chat_keeps_its_brain_and_another_brain_can_answer_the_last_question"
+    ],
+    "expected": [
+      "test_a_chat_keeps_its_brain_and_another_brain_can_answer_the_last_question"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "683edea0c09f262fa8a239c5f263cd2129a540087d3bdeb609e938cd5eeb9230",
+    "mutated_exit": 1,
+    "observed": "_ test_a_chat_keeps_its_brain_and_another_brain_can_answer_the_last_question __",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-09-chat-brain-ignored",
+    "requirement": "AC-09-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "picked, prefer = self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), self.chat.brain or None",
+      "replace": "picked, prefer = self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), None"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_carrying_a_chat_on_asks_its_own_brain_before_the_one_picked"
+    ],
+    "expected": [
+      "test_carrying_a_chat_on_asks_its_own_brain_before_the_one_picked"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "e6af7676a558a866befd1c74ffc4f32285dd382b8669ca1a3d325bf559dc1d20",
+    "mutated_exit": 1,
+    "observed": "______ test_carrying_a_chat_on_asks_its_own_brain_before_the_one_picked _______",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-09-restore-not-reread",
+    "requirement": "AC-09-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.reminders = reminders.ReminderBook.from_list(self.state.get(\"reminders\", []))\r\n        self._sync_focus_hold()\r\n        self.reload(quietly=True)",
+      "replace": "        self.reload(quietly=True)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_back_up_and_bring_back_from_settings"
+    ],
+    "expected": [
+      "test_back_up_and_bring_back_from_settings"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "e6e8ade23fda3a403dcfdf6d7926eab4d3fe5ca6cb8c87aa57a022998e1bed3c",
+    "mutated_exit": 1,
+    "observed": "__________________ test_back_up_and_bring_back_from_settings __________________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-09-listing-rereads",
+    "requirement": "AC-09-4",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "            if seen is None or seen[:2] != (info.st_mtime_ns, info.st_size):",
+      "replace": "            if True:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chatswin.py::test_the_listing_reads_each_file_once_while_it_doesnt_change"
+    ],
+    "expected": [
+      "test_the_listing_reads_each_file_once_while_it_doesnt_change"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3",
+    "baseline_exit": 0,
+    "mutated_sha256": "d069dc6f73a09a85815384b6763d1010d3ccfecf4d7ecd41402ca63a381a6673",
+    "mutated_exit": 1,
+    "observed": "________ test_the_listing_reads_each_file_once_while_it_doesnt_change _________",
+    "after_sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-10-copy-unwired",
+    "requirement": "AC-10-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.ask_box.copy_requested.connect(self._copy)\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_copy_puts_an_answer_on_the_clipboard"
+    ],
+    "expected": [
+      "test_copy_puts_an_answer_on_the_clipboard"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "a2076212c473e84573181af7df69db55c1c8d7fdbf8e80f7518edd9064855a9a",
+    "mutated_exit": 1,
+    "observed": "__________________ test_copy_puts_an_answer_on_the_clipboard __________________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-10-ctrl-number-ignored",
+    "requirement": "AC-10-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "                return self._press_bubble_button(key - Qt.Key.Key_1.value)",
+      "replace": "                return False"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_ctrl_and_a_number_press_a_bubbles_buttons_while_the_box_is_open"
+    ],
+    "expected": [
+      "test_ctrl_and_a_number_press_a_bubbles_buttons_while_the_box_is_open"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "d93bd6ee0afeb2010bdb7b96871c212087d559ceb80a839f2787530d7d6bf118",
+    "mutated_exit": 1,
+    "observed": "____ test_ctrl_and_a_number_press_a_bubbles_buttons_while_the_box_is_open _____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-10-expired-unanswerable",
+    "requirement": "AC-10-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self._answerable = (now, list(message.buttons))\r\n",
+      "replace": "            pass\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_a_buttons_label_typed_after_its_bubble_went_is_answerable_for_a_while"
+    ],
+    "expected": [
+      "test_a_buttons_label_typed_after_its_bubble_went_is_answerable_for_a_while"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "45bc0a9fd5e50d8ff2215f2a20842de105702205fc46ff03c7253b430cc4789b",
+    "mutated_exit": 1,
+    "observed": "_ test_a_buttons_label_typed_after_its_bubble_went_is_answerable_for_a_while __",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-lock-keeps-drawing",
+    "requirement": "AC-11-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self.stage.set_drawing(not locked)  # nothing is drawn while nobody can see it",
+      "replace": "            pass"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box"
+    ],
+    "expected": [
+      "test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "ac7136af403ef0fc6907bccd45b45832e6a3e01cede7cb42b5e27531596899c7",
+    "mutated_exit": 1,
+    "observed": "_ test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-box-ignores-saver",
+    "requirement": "AC-11-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.ask_box.set_power_saving(on)\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box"
+    ],
+    "expected": [
+      "test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "6a8407f4ed0fbd3f6c82d69220f25d33b004664b8adfd49c1abf6097586c852c",
+    "mutated_exit": 1,
+    "observed": "_ test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-palette-ignored",
+    "requirement": "AC-11-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            QTimer.singleShot(0, self._palette_changed)\r\n",
+      "replace": "            pass\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_desktops_colours_and_reduced_motion_apply_at_once"
+    ],
+    "expected": [
+      "test_the_desktops_colours_and_reduced_motion_apply_at_once"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "b477243a0c7d8df77d1983ecff735b0d363413f8cf90e0fcf9bad608934b00e3",
+    "mutated_exit": 1,
+    "observed": "_________ test_the_desktops_colours_and_reduced_motion_apply_at_once __________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-sound-in-quiet",
+    "requirement": "AC-11-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        if self._quiet or self.reminders.focus() is not None:\r\n            return False\r\n        return self._play(name)",
+      "replace": "        return self._play(name)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_sounds_play_for_alerts_only_unless_turned_on_and_never_in_quiet_or_focus"
+    ],
+    "expected": [
+      "test_sounds_play_for_alerts_only_unless_turned_on_and_never_in_quiet_or_focus"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "ae94f9ee46fcf56110550cb01df9e046bb0c3e08fd54b029f52b1467d97516ce",
+    "mutated_exit": 1,
+    "observed": "_ test_sounds_play_for_alerts_only_unless_turned_on_and_never_in_quiet_or_focus _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-12-carry-on-forgotten",
+    "requirement": "AC-12-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self._set_aside = set_aside\r\n",
+      "replace": "            pass\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back"
+    ],
+    "expected": [
+      "test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "b8e5d4b7028e9627390820e8c174de5e6ca69bfeee36f0486434d86481c65091",
+    "mutated_exit": 1,
+    "observed": "____ test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back ____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-12-drops-question",
+    "requirement": "AC-12-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "and bool(self.chat.messages) and self.questions.current is None and",
+      "replace": "and bool(self.chat.messages) and"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back"
+    ],
+    "expected": [
+      "test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "14a5e63f430ec4924e77ae33ef12cf65850487f812beea4f4e3ba3da288734c4",
+    "mutated_exit": 1,
+    "observed": "____ test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back ____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-13-hello-every-unlock",
+    "requirement": "AC-13-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        if self.state.get(\"hello_day\") == today.isoformat():\r\n            return False\r\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_first_unlock_of_the_day_names_reminders_agents_and_updates_once"
+    ],
+    "expected": [
+      "test_the_first_unlock_of_the_day_names_reminders_agents_and_updates_once"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "bc4bb22cc3215d38c4413ce45a8fe916219d2e54d2301192ddbf0cdeef612ece",
+    "mutated_exit": 1,
+    "observed": "__ test_the_first_unlock_of_the_day_names_reminders_agents_and_updates_once ___",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M0-06-table-unfiltered",
+    "requirement": "AC-M0-6",
+    "file": "chatmon/commands.py",
+    "mutation": {
+      "find": "        return command if command in COMMANDS else None",
+      "replace": "        return command"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_commands.py::test_a_phrase_is_found_as_typed_give_or_take_case_and_punctuation"
+    ],
+    "expected": [
+      "test_a_phrase_is_found_as_typed_give_or_take_case_and_punctuation"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90",
+    "baseline_exit": 0,
+    "mutated_sha256": "37e8bcc3a22ca14f6baa695c96a975a474420d820da5a5c96e9fdf837a321311",
+    "mutated_exit": 1,
+    "observed": "______ test_a_phrase_is_found_as_typed_give_or_take_case_and_punctuation ______",
+    "after_sha256": "f214e1ecc38b856a5aeb37ff519769b3770f1018ce954715ebb4fa5b0a9e8d90",
+    "restored_exit": 0
+  },
+  {
+    "id": "M0-07-waits-for-brain",
+    "requirement": "AC-M0-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "quick = brains.choose(self.brains, configured, picked, wait=False, prefer=prefer)",
+      "replace": "quick = brains.choose(self.brains, configured, picked, wait=True, prefer=prefer)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_asking_never_waits_on_the_screens_thread_to_find_the_brain"
+    ],
+    "expected": [
+      "test_asking_never_waits_on_the_screens_thread_to_find_the_brain"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "0007b5fad0fda55187d92b48ea2aacbd027cb3b1ed4c94b3d87c8dad4535f2d3",
+    "mutated_exit": 1,
+    "observed": "_______ test_asking_never_waits_on_the_screens_thread_to_find_the_brain _______",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M0-08-connections-unchecked",
+    "requirement": "AC-M0-8",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            if sys.platform == \"win32\" and not _client_is_me(sock):",
+      "replace": "            if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_on_windows_each_connection_is_checked_to_be_yours"
+    ],
+    "expected": [
+      "test_on_windows_each_connection_is_checked_to_be_yours"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "51d77c6dd8febb0bb6f4184cf46f9a787111a56e2f024de8d60819a16ee38be2",
+    "mutated_exit": 1,
+    "observed": "___________ test_on_windows_each_connection_is_checked_to_be_yours ____________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M0-10-any-process-forward",
+    "requirement": "AC-M0-10",
+    "file": "chatmon/cli.py",
+    "mutation": {
+      "find": "    target = pid if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0 else ASFW_ANY",
+      "replace": "    target = ASFW_ANY"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_cli.py::test_on_windows_ask_lets_only_chatmon_come_forward_before_sending"
+    ],
+    "expected": [
+      "test_on_windows_ask_lets_only_chatmon_come_forward_before_sending"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "baseline_exit": 0,
+    "mutated_sha256": "ab6c6f06f3a9e8ebfa3b4f04891447920d0689215445cb162a462787c75773e3",
+    "mutated_exit": 1,
+    "observed": "______ test_on_windows_ask_lets_only_chatmon_come_forward_before_sending ______",
+    "after_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-07-files-brain-sees-all",
+    "requirement": "AC-M1B-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "pairs = chat.history(brain.label, name=brain.name, own_only=guard, before=q.before)",
+      "replace": "pairs = chat.history(brain.label, name=brain.name, own_only=False, before=q.before)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_a_brain_that_reads_files_gets_only_its_own_answers_and_summaries"
+    ],
+    "expected": [
+      "test_a_brain_that_reads_files_gets_only_its_own_answers_and_summaries"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "9788ec757c01e402f5a89e7dfe2a847fb9822df1b9af7688d375976683f58a55",
+    "mutated_exit": 1,
+    "observed": "____ test_a_brain_that_reads_files_gets_only_its_own_answers_and_summaries ____",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-09-overrides-unchecked",
+    "requirement": "AC-M1B-9",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            config, more = coerce(merge(config, overrides))",
+      "replace": "            config, more = merge(config, overrides), []"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_wrong_settings_are_named_one_by_one_and_the_rest_apply"
+    ],
+    "expected": [
+      "test_wrong_settings_are_named_one_by_one_and_the_rest_apply"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "cfd3890d65b9bfc1052160b57d769513adc579201f1da077e55dc52d291aef31",
+    "mutated_exit": 1,
+    "observed": "_________ test_wrong_settings_are_named_one_by_one_and_the_rest_apply _________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-10-damage-unsaid",
+    "requirement": "AC-M1B-10",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        for problem in (self.state.problem, self.memory.problem):",
+      "replace": "        for problem in ():"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_a_damaged_file_recovered_at_start_is_said"
+    ],
+    "expected": [
+      "test_a_damaged_file_recovered_at_start_is_said"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "14ee37b380ac04cdd50935f53706080fab0daa2ad27c24a709ef5ced9a9321d0",
+    "mutated_exit": 1,
+    "observed": "_______________ test_a_damaged_file_recovered_at_start_is_said ________________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M2-more-unwired",
+    "requirement": "AC-M2-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.stage.bubble.on_more = self._show_more",
+      "replace": "        pass"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_more_opens_the_whole_text_and_the_box_remembers_its_size_and_says_shift_enter"
+    ],
+    "expected": [
+      "test_more_opens_the_whole_text_and_the_box_remembers_its_size_and_says_shift_enter"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "54c19c2a0b96df7fa24f7d11dc97632cb8b490103e9aa1ff9564bf2c4ff4588d",
+    "mutated_exit": 1,
+    "observed": "_ test_more_opens_the_whole_text_and_the_box_remembers_its_size_and_says_shift_enter _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M5-chat-times-12h",
+    "requirement": "AC-M5-1",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "        return _(\"today {time}\").format(time=localefmt.time_of_day(d))",
+      "replace": "        return f\"today {(d.hour % 12) or 12}:{d.minute:02d} {'AM' if d.hour < 12 else 'PM'}\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chatswin.py::test_chat_times_follow_the_locale"
+    ],
+    "expected": [
+      "test_chat_times_follow_the_locale"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3",
+    "baseline_exit": 0,
+    "mutated_sha256": "159886b7c605dff9861b178c625dd03e081475c420a251fd0c70964adcc78f27",
+    "mutated_exit": 1,
+    "observed": "______________________ test_chat_times_follow_the_locale ______________________",
+    "after_sha256": "291cd461529db851480828ecb52398b5cd9b3d3c02fe874e7a57ffabaf440ab3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-07-no-stage-badge",
+    "requirement": "AC-07-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.stage.set_badge(sum(1 for state, _ in self.agents.values() if state == \"working\"), waiting)\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+    ],
+    "expected": [
+      "test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "117c1c76ef436b9a7e440e10a97d2e369185bfa8ca3f88a3b6909885d37681c3",
+    "mutated_exit": 1,
+    "observed": "_ test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-player-never-quiet",
+    "requirement": "AC-11-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "quiet=lambda: self._quiet or self.reminders.focus() is not None)",
+      "replace": "quiet=lambda: False)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet"
+    ],
+    "expected": [
+      "test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "a2c81e89efa9bc189407e77a89297dca23743b87b1c489e065593517135d8b86",
+    "mutated_exit": 1,
+    "observed": "_ test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet __",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-hotkey-unregistered",
+    "requirement": "AC-11-4",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        error = hotkey.register(sequence, self._hotkey_pressed, failed=self._hotkey_failed)",
+      "replace": "        error = None"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_hotkey_is_registered_from_settings_toggles_the_box_and_a_problem_is_said_once"
+    ],
+    "expected": [
+      "test_the_hotkey_is_registered_from_settings_toggles_the_box_and_a_problem_is_said_once"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "48c43d73516c121c2264012281c0d3acb190abedd9eb67a499006e8e43da75aa",
+    "mutated_exit": 1,
+    "observed": "_ test_the_hotkey_is_registered_from_settings_toggles_the_box_and_a_problem_is_said_once _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-balloon-not-toast",
+    "requirement": "AC-11-4",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            if tag is None:  # no toast here",
+      "replace": "            if True:  # no toast here"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"
+    ],
+    "expected": [
+      "test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "ee60aebe017787e90c504d6c732efc535699d29543e0106cc52ef50710db93ff",
+    "mutated_exit": 1,
+    "observed": "_ test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-refused-toast-unsaid",
+    "requirement": "AC-11-4",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self._balloon(*notice)\r\n",
+      "replace": "            pass\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"
+    ],
+    "expected": [
+      "test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "a60fdd4f9e335c17216f3b3c813f115e4e6a4e7405a8191cedf6fe00a16a42e1",
+    "mutated_exit": 1,
+    "observed": "_ test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-box-always-hosted",
+    "requirement": "AC-11-5",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self.stage.set_hosting(not self._ask_box_as_window())",
+      "replace": "            pass"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_ask_box_is_a_window_with_a_screen_reader_where_the_overlay_draws_it"
+    ],
+    "expected": [
+      "test_the_ask_box_is_a_window_with_a_screen_reader_where_the_overlay_draws_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "67f8cc0bfda6ae83e972673590698fb47d3822c783245becf4b16b03d50539ab",
+    "mutated_exit": 1,
+    "observed": "_ test_the_ask_box_is_a_window_with_a_screen_reader_where_the_overlay_draws_it _",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-follow-ignored",
+    "requirement": "AC-11-5",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self.stage.follow_pointer_screen(bool(self.config[\"follow_screen\"]))",
+      "replace": "        self.stage.follow_pointer_screen(False)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_follow_me_across_monitors_is_a_setting"
+    ],
+    "expected": [
+      "test_follow_me_across_monitors_is_a_setting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "0307e34f91a4f6ed5592fd29b46dd8302ba98528b16e8cd9e1bd7346da03fa03",
+    "mutated_exit": 1,
+    "observed": "_________________ test_follow_me_across_monitors_is_a_setting _________________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M4A-desk-changes-unheard",
+    "requirement": "AC-11-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        desk.settings_changed.connect(self._check_accessibility)\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+    ],
+    "expected": [
+      "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "fdca77b85ea327ba9ef5ee0bcabec08c5ad6edac21821c07a44a483395d913df",
+    "mutated_exit": 1,
+    "observed": "__ test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change ___",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M4A-reader-not-looked-again",
+    "requirement": "AC-11-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        self._reader_seen = float(\"-inf\")\r\n        self._check_hosting()",
+      "replace": "        self._check_hosting()"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+    ],
+    "expected": [
+      "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "0fdf9600e749c4ffba927bfcad46ae3d8ed41b69f9345f5ee18599b6fdd08e45",
+    "mutated_exit": 1,
+    "observed": "__ test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change ___",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M4A-mac-sleep-unheard",
+    "requirement": "AC-11-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            watcher.slept.connect(self._sleeping)\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+    ],
+    "expected": [
+      "test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "7e43f6ef20f1a739e17694259ed965a0909be6b997cc8f49bac95aac4e6da417",
+    "mutated_exit": 1,
+    "observed": "_____ test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard ______",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M4A-low-power-not-read",
+    "requirement": "AC-11-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self._power_saving(bool(macnative.low_power_mode()))\r\n",
+      "replace": "\r\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+    ],
+    "expected": [
+      "test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "726b83136c08361644d5ebc16a87395d572a41a34a5881a032391ed4139a6817",
+    "mutated_exit": 1,
+    "observed": "_____ test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard ______",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M4A-urgent-through-dnd",
+    "requirement": "AC-11-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "urgency = sysnotify.URGENCY_NORMAL if self._quiet == \"Do Not Disturb\" else sysnotify.URGENCY_CRITICAL",
+      "replace": "urgency = sysnotify.URGENCY_CRITICAL"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits"
+    ],
+    "expected": [
+      "test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "7eec721f64c3ef6528a13e89261ecb402007f4d2c74b7cfdd3c2e8204ca4ed83",
+    "mutated_exit": 1,
+    "observed": "_ test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits __",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-app-language-ignored",
+    "requirement": "AC-M8-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        i18n.setup(self.config.get(i18n.SETTING) or None)",
+      "replace": "        i18n.setup(None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_chatmon_starts_in_the_language_set_before_any_window"
+    ],
+    "expected": [
+      "test_chatmon_starts_in_the_language_set_before_any_window"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "f06aef6a45bf1b61f051d38ac5afadada73b0bdeec5a1512f26cb81dd2ac181b",
+    "mutated_exit": 1,
+    "observed": "__________ test_chatmon_starts_in_the_language_set_before_any_window __________",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-cli-language-ignored",
+    "requirement": "AC-M8-1",
+    "file": "chatmon/cli.py",
+    "mutation": {
+      "find": "    i18n.setup(_language_setting())",
+      "replace": "    i18n.setup(None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_cli.py::test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+    ],
+    "expected": [
+      "test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "baseline_exit": 0,
+    "mutated_sha256": "ce0396752396b8b2ccc1e2d66cd31fae29c90cdc66cccde6c6c4489fca75c0f0",
+    "mutated_exit": 1,
+    "observed": "__ test_the_command_line_speaks_the_language_chosen_without_writing_anything __",
+    "after_sha256": "744861f8602695e86cf80752a3ba28736dc989b252a492579936693ffe270815",
+    "restored_exit": 0
+  },
+  {
+    "id": "M8-window-language-dropped",
+    "requirement": "AC-M8-1",
+    "file": "chatmon/settingswin.py",
+    "mutation": {
+      "find": "            \"language\": self.language.currentData(),\r\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settingswin.py::test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
+    ],
+    "expected": [
+      "test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "baseline_exit": 0,
+    "mutated_sha256": "d1cb999d37045e5ce5af3f3154fd4254675631e1ea6f34b1fea105f2e3eb7cf9",
+    "mutated_exit": 1,
+    "observed": "_ test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start _",
+    "after_sha256": "1f120463c15a359663f923a5500bc05642da3b86f49cf404b1605b692314575c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M7-11-magnifier-not-placed",
+    "requirement": "AC-11-6",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        wincaret.place(self.stage.native_window(),",
+      "replace": "        (lambda *a: None)(self.stage.native_window(),"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_on_windows_magnifier_goes_to_each_bubble_and_lets_go_when_it_closes"
+    ],
+    "expected": [
+      "test_on_windows_magnifier_goes_to_each_bubble_and_lets_go_when_it_closes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "baseline_exit": 0,
+    "mutated_sha256": "ea588eec6e42bcad3369c3492dbe9449ec21672970d6e7931a2297ed4ae2faed",
+    "mutated_exit": 1,
+    "observed": "__ test_on_windows_magnifier_goes_to_each_bubble_and_lets_go_when_it_closes ___",
+    "after_sha256": "7919c507bb867b8a7e8665166d0287d8a0017914447055d57c20b2332af1c532",
+    "restored_exit": 0
+  }
+]

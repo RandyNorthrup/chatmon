@@ -1,0 +1,11 @@
+FAIL: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+outcome-unresolved | CI-posix | Coordinator: push the merged branch so CI runs all three OSes; send any failure back to M0
+evidence-coverage | M0-03.A3 | No passing behavior receipt covers this acceptance criterion
+evidence-coverage | M0-03.A3 | No passing red receipt covers this acceptance criterion
+evidence-coverage | M0-13.A1 | No passing behavior receipt covers this acceptance criterion
+evidence-coverage | M0-13.A1 | No passing red receipt covers this acceptance criterion
+task-unverified | T-M0-03-light | Task is blocked, not verified
+task-unverified | T-M0-13 | Task is implemented, not verified
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

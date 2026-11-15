@@ -1,0 +1,123 @@
+{
+  "drills": [
+    {
+      "id": "M10-01-comtypes-on-every-platform",
+      "requirement": "M10-01.A1",
+      "file": "packaging/requirements-test.txt",
+      "find": "comtypes==1.4.17 ; sys_platform == 'win32' \\",
+      "replace": "comtypes==1.4.17 \\",
+      "test": [
+        "tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client"
+      ],
+      "expect": [
+        "requirements-test.txt installs comtypes on ['win32', 'linux', 'darwin'], not on Windows alone"
+      ]
+    },
+    {
+      "id": "M10-01-comtypes-left-out-of-the-dev-lock",
+      "requirement": "M10-01.A1",
+      "file": "packaging/requirements-dev.txt",
+      "find": "comtypes==1.4.17 ; sys_platform == 'win32' \\",
+      "replace": "comtypez==1.4.17 ; sys_platform == 'win32' \\",
+      "test": [
+        "tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client",
+        "tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names"
+      ],
+      "expect": [
+        "requirements-dev.txt doesn't lock comtypes",
+        "requirements-dev.txt doesn't lock these at the versions requirements-dev.in pins: {'comtypes': '1.4.17'}"
+      ]
+    },
+    {
+      "id": "M10-02-english-carries-qts-english",
+      "requirement": "M10-02.A1",
+      "file": "packaging/build.py",
+      "find": "    for code in i18n.available(LOCALE)[1:]:",
+      "replace": "    for code in i18n.available(LOCALE):",
+      "test": [
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "expect": [
+        "English alone: Qt's own language"
+      ]
+    },
+    {
+      "id": "M10-02-pyinstaller-keeps-every-language",
+      "requirement": "M10-02.A1",
+      "file": "packaging/build.py",
+      "find": "    kept = [d for d in datas if not (Path(d[0]).parent == i18n.QT_FROZEN and Path(d[0]).suffix == \".qm\")]",
+      "replace": "    kept = list(datas)",
+      "test": [
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "expect": [
+        "none of Qt's translations, and everything else kept"
+      ]
+    },
+    {
+      "id": "M10-02-nuitka-left-without-them",
+      "requirement": "M10-02.A1",
+      "file": "packaging/build.py",
+      "find": "\"--noinclude-qt-translations\", *nuitka_qt_translations(),",
+      "replace": "\"--noinclude-qt-translations\",",
+      "test": [
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "expect": [
+        "AssertionError: assert [] == ['--include-d"
+      ]
+    },
+    {
+      "id": "M10-02-frozen-app-folder-never-looked-in",
+      "requirement": "M10-02.A2",
+      "file": "chatmon/i18n.py",
+      "find": "    if paths.frozen():",
+      "replace": "    if False:",
+      "test": [
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "expect": [
+        "Qt's own folder first"
+      ]
+    },
+    {
+      "id": "M10-02-app-folder-before-qts",
+      "requirement": "M10-02.A2",
+      "file": "chatmon/i18n.py",
+      "find": "        folders.append(str(_APP_FOLDER / QT_FROZEN))",
+      "replace": "        folders.insert(0, str(_APP_FOLDER / QT_FROZEN))",
+      "test": [
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "expect": [
+        "Qt's own folder first"
+      ]
+    },
+    {
+      "id": "M10-02-translator-only-asks-qt",
+      "requirement": "M10-02.A2",
+      "file": "chatmon/i18n.py",
+      "find": "    translator = qt_translator(qtcore, code, qt_folders(qtcore))",
+      "replace": "    translator = qt_translator(qtcore, code, [_qt_library_folder(qtcore)])",
+      "test": [
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "expect": [
+        "assert 'Cancel' == 'Abbrechen'"
+      ]
+    },
+    {
+      "id": "M10-03-alias-not-pyqts-signal",
+      "requirement": "M10-03.A2",
+      "file": "chatmon/qtsignal.py",
+      "find": "= QtCore.pyqtSignal",
+      "replace": "= lambda *types, **named: QtCore.pyqtSignal()",
+      "test": [
+        "tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal"
+      ],
+      "expect": [
+        "test_each_workspace_notification_is_its_own_signal"
+      ]
+    }
+  ]
+}

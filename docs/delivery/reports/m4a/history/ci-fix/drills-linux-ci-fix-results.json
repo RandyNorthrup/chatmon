@@ -1,0 +1,32 @@
+[
+  {
+    "id": "L-AC-02-x11-place",
+    "requirement": "M4A-02",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "return x.value, y.value, width.value, height.value",
+      "replace": "return 0, 0, width.value, height.value"
+    },
+    "command": [
+      "/var/tmp/m4a-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_x11_says_where_a_window_is"
+    ],
+    "expected": [
+      "test_x11_says_where_a_window_is"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2b1073598fa3ededc80cb408bff1a43e7b384d4d356973bcc022b5c5860320c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "666a8842318340d801f53b0695a3df0229cf159a22636e2b2ba39579179b2a86",
+    "mutated_exit": 1,
+    "observed": "_______________________ test_x11_says_where_a_window_is ________________________",
+    "after_sha256": "2b1073598fa3ededc80cb408bff1a43e7b384d4d356973bcc022b5c5860320c1",
+    "restored_exit": 0
+  }
+]

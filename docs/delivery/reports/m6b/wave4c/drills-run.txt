@@ -1,0 +1,23 @@
+
+=== summary
+PASS M6B-01-bubble-not-clear-of-the-box
+PASS M6B-01-menu-end-key-goes-home
+PASS M6B-01-extractor-misses-import-time
+PASS M6B-02-a-module-loads-macos-on-import
+PASS M6B-03-debug-env-ignored
+PASS M6B-03-no-stderr
+PASS M6B-03-setup-twice-doubles
+PASS M6B-03-rotated-as-dot-1
+PASS M6B-03-limit-ten-times
+PASS M6B-03-keys-not-blanked
+PASS M6B-03-console-not-blanked
+PASS M6B-03-brain-key-not-scrubbed
+PASS M6B-03-brain-failure-not-logged
+PASS M6B-03-autostart-warning-printed
+PASS M6B-03-chat-failure-hidden
+PASS M6B-03-package-manager-failure-hidden
+PASS M6B-03-phrases-failure-hidden
+PASS M6B-03-reminder-words-logged
+PASS M6B-03-player-failure-hidden
+PASS M6B-RW-http-error-left-open
+PASS M6B-RW-release-server-left-open

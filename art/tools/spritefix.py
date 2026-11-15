@@ -115,13 +115,13 @@ def _best_overlap(ref: np.ndarray, mask: np.ndarray) -> int:
 
 def _foot_x(frame: np.ndarray) -> float:
     a = frame[..., 3]
-    ys, xs = np.nonzero(a[a.shape[0] * 3 // 4 :] > 40)
+    _ys, xs = np.nonzero(a[a.shape[0] * 3 // 4 :] > 40)
     return float(xs.mean()) if len(xs) else a.shape[1] / 2
 
 
 def _belly_x(frame: np.ndarray) -> float:
     r, g, b, a = (frame[..., i].astype(int) for i in range(4))
-    ys, xs = np.nonzero((a > 200) & (r > 245) & (g > 245) & (b > 245))
+    _ys, xs = np.nonzero((a > 200) & (r > 245) & (g > 245) & (b > 245))
     return float(xs.mean()) if len(xs) else _foot_x(frame)
 
 

@@ -1,0 +1,203 @@
+red drills from docs\delivery\reports\m7\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-rsi6h92s
+copied 254 files
+
+=== drill CI-01-host-desk-read (M7-CI) on tests/test_app_smoke.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_the_computer_the_tests_run_on_holds_nothing_back
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.12s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_the_computer_the_tests_run_on_holds_nothing_back ____________
+
+quiet_desktop = None
+companion = <chatmon.app.Companion object at 0x000001FDEA469BD0>
+
+    def test_the_computer_the_tests_run_on_holds_nothing_back(quiet_desktop, companion):
+        """Windows CI failed three smoke tests that passed here: its desktop said "quiet", and from the first look (five
+        seconds in) every bubble from the background waited. The companion's desk is the test's own."""
+        c = companion
+        c._check_quiet()
+>       assert not c.messages.holding("quiet")
+E       AssertionError: assert not True
+E        +  where True = holding('quiet')
+E        +    where holding = <chatmon.messages.MessageQueue object at 0x000001FDEC61AE40>.holding
+E        +      where <chatmon.messages.MessageQueue object at 0x000001FDEC61AE40> = <chatmon.app.Companion object at 0x000001FDEA469BD0>.messages
+
+tests\test_app_smoke.py:1201: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_the_computer_the_tests_run_on_holds_nothing_back
+1 failed in 1.82s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.47s
+
+=== drill CI-02-queue-best-only (M7-CI) on chatmon/messages.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over tests/test_messages.py::test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.38s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+___ test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over ____
+
+    def test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over():
+        """The queue used to look only at its best-placed message: with another agent's needs-you waiting (which can't
+        push aside the one showing), newer words from the agent showing waited until it was closed, and then behind
+        the other one."""
+        q = MessageQueue()
+        q.add(alert("Claude needs you", "agent:claude", text="Approve?"))
+        assert shown(q, 0) == "Claude needs you"
+        q.add(alert("Codex needs you", "agent:codex"))
+        q.add(alert("Claude needs you", "agent:claude", text="Approve the deploy?"))
+        assert q.wake_at(1) == MIN_SHOWN  # it has a time to show, not "when that's closed"
+        m = q.next(MIN_SHOWN)
+>       assert m is not None and m.text == "Approve the deploy?"
+E       assert (None is not None)
+
+tests\test_messages.py:167: AssertionError
+_ test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum _
+
+    def test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum():
+        q = MessageQueue()
+        q.add(news("Codex finished"))
+        assert shown(q, 0) == "Codex finished"
+        q.add(prompt("Backup done: open it?", background=True))  # matters more, but waits for the minimum
+        q.add(plain("5 km = 3.1 miles"))  # what you asked for
+>       assert shown(q, 0.5) == "5 km = 3.1 miles"
+E       AssertionError: assert None == '5 km = 3.1 miles'
+E        +  where None = shown(<chatmon.messages.MessageQueue object at 0x0000023C3D5982D0>, 0.5)
+
+tests\test_messages.py:180: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over
+FAILED tests/test_messages.py::test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum
+2 failed in 0.71s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.37s
+
+=== drill CI-03-wake-best-only (M7-CI) on chatmon/messages.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.31s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over ____
+
+    def test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over():
+        """The queue used to look only at its best-placed message: with another agent's needs-you waiting (which can't
+        push aside the one showing), newer words from the agent showing waited until it was closed, and then behind
+        the other one."""
+        q = MessageQueue()
+        q.add(alert("Claude needs you", "agent:claude", text="Approve?"))
+        assert shown(q, 0) == "Claude needs you"
+        q.add(alert("Codex needs you", "agent:codex"))
+        q.add(alert("Claude needs you", "agent:claude", text="Approve the deploy?"))
+>       assert q.wake_at(1) == MIN_SHOWN  # it has a time to show, not "when that's closed"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert None == 2.0
+E        +  where None = wake_at(1)
+E        +    where wake_at = <chatmon.messages.MessageQueue object at 0x0000029C57014980>.wake_at
+
+tests\test_messages.py:165: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over
+1 failed in 0.35s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.31s
+
+=== drill CI-04-askbox-wakes-by-strength (M7-CI) on chatmon/bubble.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.77s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since ______
+
+animated_box = <chatmon.bubble.AskBox object at 0x00000252F7CF3C50>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000252F7CA6650>
+
+    def test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since(animated_box, monkeypatch):
+        """Windows' clock moves in steps of about 15 ms. Woken, the effects rise from nothing, and with no time gone by
+        since, their strength was still 0: the box decided there was nothing to draw and never started again (Windows
+        CI failed test_the_ask_box_settles_and_wakes this way). Here the clock stands still, as it does there."""
+        box = animated_box
+        box._effects.since -= 1000  # long ago: settled
+        box._next_frame()
+        assert not box._frames.isActive()
+        now = time.monotonic()
+        monkeypatch.setattr(bubble.time, "monotonic", lambda: now)
+        box.set_answer("**You:** hello\n\nSomething new.")
+>       assert box._frames.isActive() and box.anim_key(now) != -1, "new words: it moves again"
+E       AssertionError: new words: it moves again
+E       assert (False)
+E        +  where False = <built-in method isActive of QTimer object at 0x00000252F7CF3E30>()
+E        +    where <built-in method isActive of QTimer object at 0x00000252F7CF3E30> = <PyQt6.QtCore.QTimer object at 0x00000252F7CF3E30>.isActive
+E        +      where <PyQt6.QtCore.QTimer object at 0x00000252F7CF3E30> = <chatmon.bubble.AskBox object at 0x00000252F7CF3C50>._frames
+
+tests\test_bubble_styles.py:613: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since
+1 failed in 0.96s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.87s
+
+=== drill CI-05-askbox-frame-stops-at-zero (M7-CI) on chatmon/bubble.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.00s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since ______
+
+animated_box = <chatmon.bubble.AskBox object at 0x000002C56A11BC50>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002C56A0EA650>
+
+    def test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since(animated_box, monkeypatch):
+        """Windows' clock moves in steps of about 15 ms. Woken, the effects rise from nothing, and with no time gone by
+        since, their strength was still 0: the box decided there was nothing to draw and never started again (Windows
+        CI failed test_the_ask_box_settles_and_wakes this way). Here the clock stands still, as it does there."""
+        box = animated_box
+        box._effects.since -= 1000  # long ago: settled
+        box._next_frame()
+        assert not box._frames.isActive()
+        now = time.monotonic()
+        monkeypatch.setattr(bubble.time, "monotonic", lambda: now)
+        box.set_answer("**You:** hello\n\nSomething new.")
+        assert box._frames.isActive() and box.anim_key(now) != -1, "new words: it moves again"
+        assert box.effects(now) == 0.0  # and rises from the still picture it was showing, without a jump
+        box._next_frame()
+>       assert box._frames.isActive(), "a frame drawn at strength 0 is the start of the rise, not the end of it"
+E       AssertionError: a frame drawn at strength 0 is the start of the rise, not the end of it
+E       assert False
+E        +  where False = <built-in method isActive of QTimer object at 0x000002C56A11BE30>()
+E        +    where <built-in method isActive of QTimer object at 0x000002C56A11BE30> = <PyQt6.QtCore.QTimer object at 0x000002C56A11BE30>.isActive
+E        +      where <PyQt6.QtCore.QTimer object at 0x000002C56A11BE30> = <chatmon.bubble.AskBox object at 0x000002C56A11BC50>._frames
+
+tests\test_bubble_styles.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since
+1 failed in 0.92s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.78s
+
+=== summary
+PASS CI-01-host-desk-read
+PASS CI-02-queue-best-only
+PASS CI-03-wake-best-only
+PASS CI-04-askbox-wakes-by-strength
+PASS CI-05-askbox-frame-stops-at-zero

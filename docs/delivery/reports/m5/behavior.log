@@ -1,0 +1,8 @@
+$ python -m pytest -q -p no:cacheprovider -rs tests/test_reminders.py tests/test_offline.py tests/test_localefmt.py tests/test_parser_properties.py
+........................................................................ [ 34%]
+.....s.................................................................. [ 68%]
+..................................................................       [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_reminders.py:280: the computer's own zone can be changed in a test only on Unix (time.tzset)
+209 passed, 1 skipped in 1.80s
+exit 0

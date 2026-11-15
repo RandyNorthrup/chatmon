@@ -3,56 +3,21 @@
 import os
 import subprocess
 import sys
-import tempfile
 import time
 
 import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt6.QtCore import QEventLoop, QTimer  # noqa: E402
-from PyQt6.QtNetwork import QLocalServer  # noqa: E402
-from PyQt6.QtWidgets import QApplication, QMenu  # noqa: E402
+from PyQt6.QtNetwork import QLocalServer
+from PyQt6.QtWidgets import QApplication, QMenu
 
-
-def spin(seconds: float) -> None:
-    loop = QEventLoop()
-    QTimer.singleShot(int(seconds * 1000), loop.quit)
-    loop.exec()
+from app_harness import PretendBrain, PretendDesk, make_companion, spin, until
 
 
 @pytest.fixture
 def companion(tmp_path, monkeypatch):
-    for var in ("XDG_CONFIG_HOME", "XDG_STATE_HOME", "APPDATA"):
-        monkeypatch.setenv(var, str(tmp_path / var))
-    monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setenv("USERPROFILE", str(tmp_path))
-    # socket paths are limited to ~100 characters, so keep this one short
-    run = tempfile.mkdtemp(prefix="pc-", dir=None if sys.platform == "win32" else "/tmp")
-    monkeypatch.setenv("XDG_RUNTIME_DIR", run)
-    from chatmon import agents, app as appmod, paths
-    from chatmon.settings import State
-
-    monkeypatch.setattr(agents, "_run_json", lambda argv, what: [])  # never run a real agent's command line
-
-    from chatmon import __version__
-
-    # Seen this version already (no what's new), asked about every agent already (no offer to connect them),
-    # and never looking for updates (no network in tests).
-    seen = {"name": "Sparky", "x": 600, "seen_version": __version__, "check_updates": False, "agent_status": {a.name: "found" for a in agents.AGENTS}}
-    State(paths.state_file(), seen).save()
-    qapp = QApplication.instance() or QApplication([])
-    qapp.setQuitOnLastWindowClosed(False)
-    server = QLocalServer()
-    server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)
-    QLocalServer.removeServer(paths.server_name())
-    assert server.listen(paths.server_name()), server.errorString()
-    c = appmod.Companion(qapp, server)
-    c._file_chooser = None  # Qt's dialogs, which the tests stand in for: never the desktop's portal
-    c._reader_seen = float("inf")  # no screen reader, never looked for: tests never talk to the desktop's
-    yield c
-    c.quit()
-    server.close()
+    yield from make_companion(tmp_path, monkeypatch)
 
 
 def test_greets_and_reacts_to_agents(companion):
@@ -62,14 +27,41 @@ def test_greets_and_reacts_to_agents(companion):
     c.handle({"type": "event", "event": "working", "source": "claude", "message": ""})
     assert c.behavior.working_since is not None
     c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve the deploy?"})
-    assert c.behavior.alert and c.stage.bubble.title == "Claude needs you"
+    assert until(lambda: c.behavior.alert)  # once the greeting has been up long enough to read
+    assert c.stage.bubble.title == "Claude needs you"
     # something else to say waits until the alert is answered
     c.handle({"type": "event", "event": "done", "source": "codex", "message": "All tests pass."})
-    assert c.stage.bubble.title == "Claude needs you" and len(c._waiting) == 1
+    spin(2.5)
+    assert c.stage.bubble.title == "Claude needs you" and [m.title for m in c.messages.waiting] == ["Codex finished"]
     c.handle({"type": "event", "event": "done", "source": "claude", "message": "Deployed."})
     assert not c.behavior.alert and c.behavior.working_since is None
     spin(0.6)
     assert c.stage.message_visible()
+
+
+def test_chatmon_ask_opens_the_box_with_the_text_typed_in_and_the_keyboard(companion):
+    c = companion
+    c.set_hidden(True)
+    c.handle({"type": "ask", "text": "how do I rebase onto main?"})
+    assert c.ask_box.isVisible() and not c.behavior.hidden
+    assert c.ask_box.entry.text() == "how do I rebase onto main?" and c.ask_box.wants_keyboard
+    assert c.ask_box.title.text() == "Ask Sparky"  # a chat, not a rename
+    c.ask_box.dismiss()
+    c.handle({"type": "ask"})
+    assert c.ask_box.isVisible() and c.ask_box.entry.text() == ""
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="on Windows every Chatmon in a session shares the hooks' pipe name, a test's too")
+def test_chatmon_ask_from_a_terminal_reaches_it(companion):
+    """`chatmon ask`, run as you would, in a process of its own."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env = dict(os.environ, PYTHONPATH=root)
+    proc = subprocess.Popen([sys.executable, "-m", "chatmon", "ask", "what's", "a", "rebase?"], env=env)
+    deadline = time.monotonic() + 20
+    while proc.poll() is None and time.monotonic() < deadline:
+        spin(0.05)
+    assert proc.returncode == 0
+    assert until(lambda: companion.ask_box.isVisible()) and companion.ask_box.entry.text() == "what's a rebase?"
 
 
 def test_a_hook_reaches_it(companion):
@@ -96,10 +88,9 @@ def test_local_commands_and_reminders(companion):
     c.submit("remind me in 1 second to stretch")
     assert "stretch" in c.ask_box.answer.toPlainText()
     c.submit("status")
-    assert "Brain:" in c.ask_box.answer.toPlainText()
+    assert until(lambda: "Brain:" in c.ask_box.answer.toPlainText())  # looked up off the screen's thread
     c.ask_box.dismiss()
-    spin(5.5)
-    assert c.behavior.alert and c.stage.bubble.title == "Reminder"
+    assert until(lambda: c.behavior.alert and c.stage.bubble.title == "Reminder", 12)  # the next look at reminders: every 5 s
     c.stage.dismiss_message()
     assert not c.behavior.alert
 
@@ -110,11 +101,18 @@ def test_hide_menu_and_reload(companion):
     spin(1.0)
     assert c.behavior.hidden
     c.set_hidden(False)
-    c._fill_menu()
+    c.menus.fill()
     labels = [a.text() for a in c.menu.actions() if a.text()]
-    assert labels[0] == "Ask Sparky…" and "Quit" in labels
-    c.reload()
-    assert c.stage.message_visible()
+    assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
+                      "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
+    submenu = {a.text(): a.menu() for a in c.menu.actions() if a.menu()}
+    appearance = [a.text() for a in submenu["Appearance"].actions()]
+    assert appearance == ["Companion", "Bubble style", "Walk around", "Start when I log in"]
+    help_items = {a.text(): a for a in submenu["Help && updates"].actions()}
+    focus_items = [a.text() for a in submenu["Focus and notes"].actions() if a.text()]
+    assert focus_items == ["Focus timer", "15 minutes", "25 minutes", "50 minutes", "Notes", "Add a note…"]
+    help_items["Reload settings file"].trigger()
+    assert c.stage.message_visible() and c.stage.bubble.title == "Settings reloaded"
 
 
 def test_the_tray_menu_is_filled_before_anyone_opens_it(companion):
@@ -129,6 +127,38 @@ def test_the_tray_menu_is_filled_before_anyone_opens_it(companion):
     c.handle({"type": "remind", "text": "in 30m to stretch"})
     spin(0.1)
     assert any(a.text().startswith("Reminders (1)") for a in c.menu.actions())
+
+
+def all_actions(menu):
+    """Every item in a menu and its submenus."""
+    for action in menu.actions():
+        yield action
+        if action.menu() is not None:
+            yield from all_actions(action.menu())
+
+
+def test_a_clock_tick_changes_only_the_times_in_the_menu(companion):
+    """A countdown in the menu used to rebuild all of it every minute: every chat and every agent's look."""
+    from PyQt6 import sip
+
+    c = companion
+    c.start_focus(25)
+    c.submit("remind me in 30m to stretch")
+    c.submit("stopwatch")
+    spin(0.1)
+    items = list(all_actions(c.menu))
+    texts = [a.text() for a in items]
+    assert any(t.startswith("Stop focus (25 min left)") for t in texts) and any(t.startswith("in 30 min: stretch") for t in texts)
+    assert any(t == "Stop the stopwatch (0 min)" for t in texts)
+    c.reminders.focus().due -= 10 * 60  # ten minutes go by
+    next(r for r in c.reminders.upcoming() if r.text == "stretch").due -= 10 * 60
+    c._stopwatch -= 2 * 60
+    c._check_time()  # the clock's tick
+    spin(0.1)
+    assert not any(sip.isdeleted(a) for a in items) and list(all_actions(c.menu)) == items  # the same items, not built again
+    texts = [a.text() for a in items]
+    assert "Stop focus (15 min left)" in texts and "in 20 min: stretch" in texts and "Stop the stopwatch (2 min)" in texts
+    assert "Focus and notes (15 min left)" in texts
 
 
 def test_a_window_manager_cant_close_the_stage_or_strand_the_ask_box(companion):
@@ -152,8 +182,9 @@ def test_picking_a_companion_swaps_its_sprites_at_once(companion):
     c = companion
     assert c._companion().id == "penguin" and c.sprites is c.stage.sprites
     penguin_frame = c.sprites.frame("idle", 0, False).image
-    c._fill_menu()
-    menu = next(a.menu() for a in c.menu.actions() if a.text() == "Companion")
+    c.menus.fill()
+    appearance = next(a.menu() for a in c.menu.actions() if a.text() == "Appearance")
+    menu = next(a.menu() for a in appearance.actions() if a.text() == "Companion")
     labels = [a.text() for a in menu.actions()]
     assert labels == [x.label for x in companions.COMPANIONS.values()]
     assert [a.text() for a in menu.actions() if a.isChecked()] == ["Electric penguin"]
@@ -188,8 +219,9 @@ def test_bubbles_match_the_companion_unless_a_style_was_chosen(companion):
     assert c._bubble_style_name() == "match" and c._bubble_style().name == "electric"
     c._pick_companion("fire-red-panda")
     assert c._bubble_style().name == "fire" and c.stage.bubble.style.name == "fire" and c.ask_box.style.name == "fire"
-    c._fill_menu()
-    menu = next(a.menu() for a in c.menu.actions() if a.text() == "Bubble style")
+    c.menus.fill()
+    appearance = next(a.menu() for a in c.menu.actions() if a.text() == "Appearance")
+    menu = next(a.menu() for a in appearance.actions() if a.text() == "Bubble style")
     assert [a.text() for a in menu.actions() if a.isChecked() and a.text() != "Animate bubbles"] == ["Match companion (fire)"]
 
     next(a for a in menu.actions() if a.text() == "Leaf").trigger()  # a style chosen by name wins
@@ -306,11 +338,13 @@ def test_the_greeting_never_covers_a_message_that_came_first(companion):
 
 
 def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
+    from chatmon import menus
+
     c = companion
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     c._pick_brain("anthropic-api")
     menu = QMenu()
-    c._brain_menu(menu)
+    menus.brain_menu(c, menu)
     subs = {a.text().split(":")[0]: a.menu() for a in menu.actions() if a.menu()}
     assert {"Model", "Effort", "Thinking"} <= set(subs)
 
@@ -321,17 +355,17 @@ def test_brain_menu_sets_model_effort_and_thinking(companion, monkeypatch):
 
     click("Model", "claude-sonnet-5-5")
     click("Effort", "medium")
-    off = [a for a in subs["Thinking"].actions() if a.text().startswith("Off")][0]
+    off = next(a for a in subs["Thinking"].actions() if a.text().startswith("Off"))
     assert off.isEnabled() is False and "always thinks" in off.text()  # still Opus 5.5 when the menu was made
     brain = c._brain()
     assert (brain.name, brain.model, brain.effort) == ("anthropic-api", "claude-sonnet-5-5", "medium")
     menu = QMenu()
-    c._brain_menu(menu)
+    menus.brain_menu(c, menu)
     subs = {a.text().split(":")[0]: a.menu() for a in menu.actions() if a.menu()}
     click("Thinking", "Off")  # Sonnet 5.5 can, at medium
     assert c._brain().thinking == "off" and c.state.get("brain_options")["anthropic-api"]["thinking"] == "off"
     c.submit("status")
-    assert "claude-sonnet-5-5, effort medium, thinking off" in c.ask_box.answer.toPlainText()
+    assert until(lambda: "claude-sonnet-5-5, effort medium, thinking off" in c.ask_box.answer.toPlainText())
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="a Unix socket, as hooks use on Linux and macOS")
@@ -435,6 +469,97 @@ def test_chatmon_quit_hears_back_before_the_connections_close(companion):
         assert until(lambda: not c.server.isListening())
     assert not c._connections
 
+
+def private_server(c) -> str:
+    """A server of the companion's own under a name no one else uses, which it takes connections on as it does
+    the hooks' (on Windows the hooks' pipe name is shared by every Chatmon in the session, a test's too)."""
+    import uuid
+
+    server = QLocalServer()
+    server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)
+    name = f"chatmon-test-{uuid.uuid4().hex[:12]}"
+    assert server.listen(name), server.errorString()
+    server.newConnection.connect(c._accept)
+    c.server = server  # closed when the companion quits; the fixture closes its own
+    return name
+
+
+def test_a_hook_connection_never_holds_more_than_a_message(companion, monkeypatch):
+    """The 64 KB limit was checked after reading all a connection had sent: now no more than that is ever held."""
+    import json
+
+    from PyQt6.QtNetwork import QLocalSocket
+
+    from chatmon import events
+
+    c = companion
+    name = private_server(c)
+    heard = []
+    monkeypatch.setattr(c, "handle", heard.append)
+    big = {"type": "say", "text": "hello", "padding": "x" * (events.MAX_MESSAGE - 100)}  # just under: still heard
+    sender = QLocalSocket()
+    sender.connectToServer(name)
+    assert sender.waitForConnected(2000) and until(lambda: len(c._connections) == 1)
+    (sock,) = c._connections
+    assert sock.readBufferSize() == events.MAX_MESSAGE + 1
+    sender.write(json.dumps(big).encode() + b"\n")
+    assert until(lambda: heard == [big])
+    sender.write(b"x" * (events.MAX_MESSAGE + 50_000) + b'\n{"type": "say", "text": "after"}\n')
+    assert until(lambda: sender.state() == QLocalSocket.LocalSocketState.UnconnectedState)  # cut off
+    assert heard == [big] and not c._connections
+
+
+def test_hook_connections_past_the_cap_are_turned_away(companion, monkeypatch):
+    from PyQt6.QtNetwork import QLocalSocket
+
+    from chatmon import app as appmod
+
+    c = companion
+    monkeypatch.setattr(appmod, "MAX_CONNECTIONS", 3)
+    name = private_server(c)
+    unconnected = QLocalSocket.LocalSocketState.UnconnectedState
+    senders = []
+    for _ in range(4):  # each connects and says nothing yet
+        sender = QLocalSocket()
+        sender.connectToServer(name)
+        assert sender.waitForConnected(2000)
+        senders.append(sender)
+    assert until(lambda: sum(s.state() == unconnected for s in senders) == 1)
+    spin(0.2)
+    assert len(c._connections) == 3 and sum(s.state() == unconnected for s in senders) == 1
+    next(s for s in senders if s.state() != unconnected).disconnectFromServer()  # one is done
+    assert until(lambda: len(c._connections) == 2)
+    late = QLocalSocket()
+    late.connectToServer(name)
+    assert late.waitForConnected(2000) and until(lambda: len(c._connections) == 3)  # room again
+    spin(0.2)
+    assert late.state() != unconnected
+
+
+def test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback(tmp_path, monkeypatch):
+    """What reaches sys.excepthook (PyQt would abort the app over it) is in chatmon.log, traceback and all, as it is
+    whether or not there's a console. The log itself (private, rotated, never a key) is log.py's: test_log.py."""
+    import logging
+
+    from chatmon import app as appmod, log
+
+    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "state"))
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "state"))
+    monkeypatch.setattr(appmod, "_running", None)  # no Companion here to offer a report
+    path = log.setup()
+    try:
+        try:
+            raise ValueError("boom in a slot")
+        except ValueError:
+            appmod._log_exception(*sys.exc_info())
+        for handler in logging.getLogger("chatmon").handlers:
+            handler.flush()
+        text = path.read_text(encoding="utf-8")
+    finally:
+        log.reset()
+    assert "ERROR chatmon.app: something went wrong" in text and "Traceback" in text and "ValueError: boom in a slot" in text
+
+
 def test_looks_at_the_agents_one_look_at_a_time(companion, monkeypatch):
     """Each look at how the agents stand starts their command lines, and every refill of the menu asks for
     one: asked again while looking, it looks once more when done, never several at once."""
@@ -450,14 +575,18 @@ def test_looks_at_the_agents_one_look_at_a_time(companion, monkeypatch):
     assert len(looks) == 2 and looks[1][0].args == (True,)
     looks[1][1]({"claude": "found"})
     assert len(looks) == 2 and not c._refreshing
-    # Filling the menu in again looks only once what it knows has gone stale.
-    from chatmon import app as appmod
+    # Opening the menu looks only once what it knows has gone stale; filling it in for a change never looks.
+    from chatmon import menus
 
     monkeypatch.setattr(c, "_look_again", lambda: None)  # the brains' look, not the agents'
-    c._fill_menu()
+    c.menus.opening()
     assert len(looks) == 2
-    c._agents_seen -= appmod.AGENTS_FRESH + 1
-    c._fill_menu()
+    c._agents_seen -= menus.AGENTS_FRESH + 1
+    c.menus.fill()
+    c._menu_changed()
+    spin(0.1)
+    assert len(looks) == 2
+    c.menus.opening()
     assert len(looks) == 3 and looks[2][0].args == (False,)
 
 
@@ -469,13 +598,21 @@ def test_asks_for_no_session_bus_on_macos(monkeypatch):
     pytest.importorskip("PyQt6.QtDBus")  # not in PyQt's Windows build
     from chatmon import app as appmod, linuxsession
 
-    watched = []
-    monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept: watched.append(True))
-    monkeypatch.setattr(linuxsession, "PowerProfile", lambda saving: None)
-    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=None)
+    from chatmon import macnative
+
+    watched, workspace = [], []
+    monkeypatch.setattr(linuxsession, "SessionWatcher", lambda locked, slept, seen=None, parent=None: watched.append(True))
+    monkeypatch.setattr(linuxsession, "PowerProfile", lambda saving, parent=None: None)
+    signal = types.SimpleNamespace(connect=lambda handler: None)
+    # macOS hears sleep, the displays, accessibility and Low Power Mode from NSWorkspace instead (M4A's macnative).
+    monkeypatch.setattr(macnative, "WorkspaceWatcher", lambda: workspace.append(True) or types.SimpleNamespace(
+        slept=signal, screens_slept=signal, accessibility_changed=signal, low_power_changed=signal))
+    monkeypatch.setattr(macnative, "low_power_mode", lambda: False)
+    me = types.SimpleNamespace(_screen_locked=None, _sleeping=None, _power_saving=lambda on: None, _seen=None, _check_accessibility=None,
+                               _heard=lambda method: method)  # the quit guard, passed through: this stands in for a Companion
     monkeypatch.setattr(sys, "platform", "darwin")
     appmod.Companion._watch_screen_lock(me)
-    assert watched == []
+    assert watched == [] and workspace == [True]
     monkeypatch.setattr(sys, "platform", "linux")
     appmod.Companion._watch_screen_lock(me)
     assert watched == [True]  # where there is one, it still listens
@@ -515,8 +652,155 @@ def test_a_quit_companion_runs_and_paints_nothing_more(companion):
         spin(0.5)
     finally:
         QApplication.instance().removeEventFilter(paints)
-    running = [t for owner in (c, c.ask_box, c.stage) for t in owner.findChildren(QTimer) if t.isActive()]
+    running = [(t.interval(), type(t.parent()).__name__, t.objectName()) for owner in (c, c.ask_box, c.stage) for t in owner.findChildren(QTimer) if t.isActive()]
     assert running == [] and painted == [] and not c.ask_box.isVisible()
+
+
+def test_a_quit_companion_never_looks_at_the_agents_again(companion, monkeypatch):
+    """Its first look at the agents is a timer three seconds in, which quitting can't stop: after a shorter test it
+    went off in a later one, the harness's stand-ins undone by then, and ran the agents' own command lines (and moved
+    hooks connected under the old name) as whoever ran the tests."""
+    c = companion
+    assert until(lambda: not c._refreshing)  # a look already on its way: back first
+    looked = []
+    monkeypatch.setattr(c.background, "run", lambda work, then: looked.append(work))
+    c._refresh_agents()
+    assert len(looked) == 1  # running, it looks
+    c._refreshing = False  # (as that look coming back would have it)
+    c.quit()
+    c._refresh_agents(True)  # as that timer does, gone off after quitting
+    assert len(looked) == 1
+
+
+def test_a_quit_companion_runs_nothing_it_had_waiting(tmp_path, monkeypatch):
+    """Quitting ends all a Companion had waiting, which went on happening in a process that goes on (the tests'):
+    its one-off waits (Companion._later: the greeting, the first look at the agents three seconds in, the update
+    checks minutes in), its timers, should anything start one again, and the answers of the threads it handed work
+    to and of the brain finder. Here every wait it made comes due, the longest ten minutes in, with a thread's
+    answer, a brain found and a timer started again besides, and none of the Companion's own code runs."""
+    import inspect
+    import time as clock
+
+    from PyQt6.QtCore import QTimer
+
+    from chatmon import app as appmod, brains
+
+    assert inspect.getsource(appmod).count("QTimer.singleShot(") == 1, "the Companion waits only through _later"
+    waits = []
+    real = QTimer.singleShot
+
+    def recording(ms, *rest):
+        waits.append((ms, rest[-1]))
+        real(ms, *rest)
+
+    monkeypatch.setattr(QTimer, "singleShot", staticmethod(recording))
+    monkeypatch.setattr(appmod.Companion, "_agent_statuses", staticmethod(lambda migrate: clock.sleep(0.3) or {}))
+    fixture = make_companion(tmp_path, monkeypatch)
+    c = next(fixture)
+    try:
+        assert until(lambda: not c._refreshing)
+        appmod._log_exception(ValueError, ValueError("boom"), None)  # the offer to report it, a moment later
+        c.handle({"type": "quit"})  # `chatmon quit`: quits once the sender has heard back
+        c._refresh_agents()  # how the agents stand comes back from a thread, 0.3 s on
+        monkeypatch.setattr(brains, "unsure", lambda: True)  # and the brain to ask from the finder's thread
+        monkeypatch.setattr(brains, "look_again", lambda: clock.sleep(0.1))
+        c._find_brain(c._welcome)
+        c.quit()
+        due = [(ms, then) for ms, then in waits if getattr(then, "__qualname__", "") == "Companion._later.<locals>.go"]
+        assert max(ms for ms, _then in due) >= 120_000 and len(due) >= 8  # the update check's among them
+        ran = []
+
+        def watch(frame, event, _arg):
+            name = frame.f_code.co_qualname
+            if event == "call" and name.startswith("Companion.") and not name.startswith(("Companion._later.", "Companion._heard.")):  # the guards themselves: what they guard shows by name
+                ran.append(name)
+
+        sys.setprofile(watch)
+        try:
+            for _ms, then in due:
+                then()  # its time come
+            c._message_timer.start(0)  # one of its timers, started again
+            spin(1.0)  # meanwhile the thread's answer and the finder's come back
+        finally:
+            sys.setprofile(None)
+        assert ran == []
+    finally:
+        fixture.close()
+
+
+QUIT_COMPANIONS = r"""
+import faulthandler, gc, os, sys, tempfile, time, weakref
+from pathlib import Path
+faulthandler.enable()
+gc.disable()  # no collection but those made here and the harness's: Python's own would come at moments of their own
+sys.path[:0] = [sys.argv[1], os.path.join(sys.argv[1], "tests")]
+import pytest
+from PyQt6.QtCore import QEvent, QObject
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtWidgets import QApplication, QWidget
+app = QApplication([])
+from chatmon import agents
+agents._run_json = lambda argv, what: []  # for good: nothing that goes off after a test's stand-ins are undone runs one
+import app_harness
+from app_harness import make_companion, spin
+
+def companion_test():
+    # a test of the companion fixture's, a short one: built, the event loop run a moment, then the teardown
+    with pytest.MonkeyPatch.context() as mp:
+        folder = Path(tempfile.mkdtemp(dir=sys.argv[2]))
+        mp.setenv("LOCALAPPDATA", str(folder))
+        fixture = make_companion(folder, mp)
+        c = next(fixture)
+        spin(0.2)
+        fixture.close()
+    return weakref.ref(c)
+
+first = companion_test()
+companion_test()  # the next test's: as it starts, the sound module lets go of the first; its own timer, 3 s in, still holds it
+
+class CollectsInside(QObject):
+    # A collection inside Qt's loop over the top-level windows, as one of Python's own can start in any Python call Qt
+    # makes there; as Qt reaches a window of this script's own, which holds nothing of the Companions'.
+    freed = 0
+    def eventFilter(self, watched, event):
+        if event.type() == QEvent.Type.ApplicationWindowIconChange:
+            before = len(QApplication.topLevelWidgets())
+            gc.collect()
+            self.freed += before - len(QApplication.topLevelWidgets())
+        return False
+
+inside, window = CollectsInside(), QWidget()
+window.installEventFilter(inside)
+deadline = time.monotonic() + 7  # its timers go off meanwhile (all by about 5 s in), and nothing but the harness holds it then
+while time.monotonic() < deadline and not inside.freed:
+    spin(0.25)
+    app.setWindowIcon(QIcon(QPixmap(16, 16)))  # as every Companion does as it starts
+window.removeEventFilter(inside)
+print("windows freed inside Qt's loop:", inside.freed, flush=True)
+deadline = time.monotonic() + 15
+while first() is not None and time.monotonic() < deadline:
+    spin(0.25)
+    app_harness.let_go_of_the_quit()
+print("the first freed by the harness:", first() is None, flush=True)
+"""
+
+
+def test_a_quit_companion_is_freed_between_tests_never_inside_qts_own_loops(tmp_path):
+    """A quit Companion is garbage once its timers have gone off, and Python's own collections freed its windows
+    whenever one ran: once inside the ask boxes' event filter, which Qt called as it told every top-level window of
+    the next Companion's icon (setWindowIcon). Qt went on to the windows freed under it, and CI's fedora:44 job
+    crashed (Fatal Python error: Segmentation fault, in QApplicationPrivate::notifyWindowIconChanged). The harness
+    holds each quit Companion and its windows until nothing else does, then frees them itself, between tests. Here
+    a collection runs inside that loop of Qt's while the first of two quit Companions becomes garbage; run apart, as
+    a crash here must not take the tests with it."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env = dict(os.environ, QT_QPA_PLATFORM="offscreen", CHATMON_INSTANCE=f"test-{os.getpid()}-quit")
+    for var in ("HOME", "USERPROFILE", "APPDATA", "LOCALAPPDATA", "XDG_CONFIG_HOME", "XDG_STATE_HOME"):
+        env[var] = str(tmp_path)  # whatever outlives a test's stand-ins finds no one's own files
+    out = subprocess.run([sys.executable, "-X", "faulthandler", "-c", QUIT_COMPANIONS, root, str(tmp_path)],
+                         capture_output=True, text=True, timeout=90, env=env)
+    assert out.returncode == 0 and "windows freed inside Qt's loop: 0" in out.stdout and "the first freed by the harness: True" in out.stdout, (
+        hex(out.returncode & 0xFFFFFFFF), out.stdout[-500:], out.stderr[-3000:])
 
 def test_after_an_update_it_shows_whats_new_once(companion):
     from chatmon import __version__
@@ -548,8 +832,8 @@ def test_the_help_menu_and_its_words_in_the_ask_box(companion, monkeypatch):
     c = companion
     opened = []
     monkeypatch.setattr(appmod.QDesktopServices, "openUrl", lambda url: opened.append(url.toString()))
-    c._fill_menu()
-    help_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Help & updates")
+    c.menus.fill()
+    help_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Help && updates")
     labels = [a.text() for a in help_menu.actions() if a.text()]
     assert labels[:3] == [f"What's new in {appmod.__version__}", "Check for updates now", "Check for updates every day"]
     assert "Report a problem…" in labels and "Open the log" in labels
@@ -571,38 +855,12 @@ def test_a_problem_inside_chatmon_offers_to_report_it_once(companion):
         raise ValueError("boom")
     except ValueError:
         appmod._log_exception(*sys.exc_info())
-    spin(0.1)
-    assert c.stage.bubble.title == "Something went wrong in me"
-    assert [b.label for b in c.stage.bubble.buttons][0] == "Report it"
+    assert until(lambda: c.stage.bubble.title == "Something went wrong in me")  # once the greeting has been read
+    assert next(b.label for b in c.stage.bubble.buttons) == "Report it"
     c.stage.dismiss_message()
     appmod._log_exception(ValueError, ValueError("again"), None)
     spin(0.1)
     assert not c.stage.message_visible()  # once a run
-
-
-def until(condition, seconds=5.0):
-    deadline = time.monotonic() + seconds
-    while not condition() and time.monotonic() < deadline:
-        spin(0.02)
-    return condition()
-
-
-class PretendBrain:
-    """Stands in for asking a brain: records each question, and answers when told to."""
-
-    def __init__(self, c, monkeypatch, kind="anthropic", tools_off=True):
-        from chatmon import brains
-
-        self.c, self.asked = c, []
-        self.brain = brains.Brain(
-            "pretend", kind, label="Pretend API", model="m", api_key="k", command=["pretend"] if kind == "command" else [], tools_off=tools_off
-        )
-        monkeypatch.setattr(c, "_brain", lambda wait=True: self.brain)
-        monkeypatch.setitem(c.brains, "pretend", self.brain)
-        monkeypatch.setattr(c.asker, "ask", lambda brain, system, history, question, timeout, attached=(): self.asked.append((history, question, list(attached))))
-
-    def answer(self, text):
-        self.c._answered(text)
 
 
 def test_a_chat_is_kept_and_can_be_carried_on(companion, monkeypatch):
@@ -617,7 +875,7 @@ def test_a_chat_is_kept_and_can_be_carried_on(companion, monkeypatch):
     c.submit("And for a dog?")
     brain.answer("Biscuit.")
     assert brain.asked[-1][0] == []  # a new chat starts with nothing to go on
-    c._fill_menu()
+    c.menus.fill()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
     titles = [a.text() for a in chats_menu.actions()]
     assert any(t.startswith("And for a dog?") for t in titles) and any(t.startswith("What's a good name for a cat?") for t in titles)
@@ -642,7 +900,7 @@ def test_what_you_attach_goes_with_the_question(companion, monkeypatch, qapp):
     assert until(lambda: [a.kind for a in c.attached] == ["text", "image"]) and c.ask_box.chips.isVisibleTo(c.ask_box)
     c.ask_box.entry.clear()
     c.submit("status")  # a word Chatmon knows, but with something attached it's a question
-    history, question, sent = brain.asked[-1]
+    _history, question, sent = brain.asked[-1]
     assert question == "status" and [a.name for a in sent] == ["pasted text", "pasted image"]
     assert c.attached == [] and not c.ask_box.chips.isVisibleTo(c.ask_box)
     brain.answer("All good.")
@@ -713,10 +971,10 @@ def test_chats_can_be_renamed_pinned_saved_and_deleted(companion, monkeypatch, t
 
     c._pin_chat(first.id, True)
     assert [ch.title for ch in c.chat_book.recent()] == ["Cat names", "second question"]  # pinned first, though older
-    c._fill_menu()
+    c.menus.fill()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
-    item = next(a.menu() for a in chats_menu.actions() if a.text().startswith("★ Cat names"))
-    assert [a.text() for a in item.actions() if a.text()] == ["Carry on", "Rename…", "Instructions for this chat…", "Unpin", "Save as Markdown…", "Delete…"]
+    item = next(a for a in chats_menu.actions() if a.text().startswith("★ Cat names"))
+    assert item.menu() is None  # one item a chat, which carries it on: the rest is in the Chats window (M7-09)
 
     out = tmp_path / "saved.md"
     monkeypatch.setattr(appmod.QFileDialog, "getSaveFileName", lambda *a: (str(out), "Markdown (*.md)"))
@@ -730,18 +988,41 @@ def test_chats_can_be_renamed_pinned_saved_and_deleted(companion, monkeypatch, t
     assert [ch.title for ch in c.chat_book.recent()] == ["second question"]
 
 
-def test_older_chats_are_one_menu_further(companion):
-    from chatmon import chats
+def test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window(companion):
+    from chatmon import chats, menus
 
     c = companion
-    for i in range(c.RECENT_CHATS + 3):
+    for i in range(menus.RECENT_CHATS + 3):
         chat = chats.Chat()
         chat.add(chats.Message("user", f"chat {i}", at=1000.0 + i))
         c.chat_book.save(chat)
-    c._fill_menu()
+    c.menus.fill()
     chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
-    older = next(a.menu() for a in chats_menu.actions() if a.text() == "Older chats (3)")
-    assert [a.text().split("   ·")[0] for a in older.actions()] == ["chat 2", "chat 1", "chat 0"]
+    listed = [a.text().split("   ·")[0] for a in chats_menu.actions() if "   ·" in a.text()]
+    assert listed == [f"chat {i}" for i in range(menus.RECENT_CHATS + 2, 2, -1)]  # the newest, newest first
+    next(a for a in chats_menu.actions() if a.text() == "All chats…").trigger()
+    window = c._chats_window
+    assert window.isVisible() and len(window.shown_ids()) == menus.RECENT_CHATS + 3  # every one
+    window.close()
+
+
+def test_the_chats_menu_lists_chats_without_reading_any_whole(companion, monkeypatch):
+    """The Chats menu shows each chat's title, time and pin (ChatBook.listing), never a whole chat: with many kept,
+    reading every message of each to fill a menu was the cost M0-03 took away."""
+    from chatmon import chats, menus
+
+    c = companion
+    for i in range(menus.RECENT_CHATS + 3):
+        chat = chats.Chat()
+        chat.add(chats.Message("user", f"chat {i}", at=1000.0 + i))
+        c.chat_book.save(chat)
+    read_whole: list[str] = []
+    load = chats.ChatBook.load
+    monkeypatch.setattr(chats.ChatBook, "load", lambda book, chat_id: (read_whole.append(chat_id), load(book, chat_id))[1])
+    c.menus.fill()
+    chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
+    assert sum("   ·" in a.text() for a in chats_menu.actions()) == menus.RECENT_CHATS
+    assert read_whole == []
 
 
 def test_a_command_line_tool_that_can_read_files_gets_no_attachments(companion, monkeypatch):
@@ -763,7 +1044,7 @@ def test_an_answer_for_a_chat_youve_left_goes_nowhere(companion, monkeypatch):
     c.submit("a secret question")
     asked_in = c.chat.id
     c._new_chat()  # while it's thinking
-    assert cancelled and c._asking is None
+    assert cancelled and c.questions.current is None
     brain.answer("the secret answer")  # arrives anyway
     assert c.chat.messages == [] and c.chat_book.load(asked_in) is None and c.chat_book.recent() == []
     c.submit("one")
@@ -812,7 +1093,7 @@ def test_files_that_arent_on_disk_attach_as_files_do(companion):
     c = companion
     c.open_ask()
     c._attach_pasted("named", [Dropped("notes.txt", b"buy milk"), Dropped("report.pdf", b"%PDF-1.7 ..."),
-                               Dropped("Re: lunch.msg", b"", "couldn't be read")])
+                               Dropped("Re: lunch.msg", b"", "Re: lunch.msg couldn't be read")])
     assert until(lambda: len(c.attached) == 2)
     assert sorted((a.name, a.kind) for a in c.attached) == [("notes.txt", attachments.TEXT), ("report.pdf", attachments.PDF)]  # read side by side
     assert c.stage.bubble.title == "Couldn't attach that" and "Re: lunch.msg couldn't be read" in c.stage.bubble._text
@@ -835,6 +1116,48 @@ def test_offline_answers_are_marked_and_kept_out_of_the_chat(companion, monkeypa
     assert len(c.chat.messages) == 2 and "password" not in c.chat_book.load(c.chat.id).markdown().lower()
 
 
+def test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat(companion, monkeypatch):
+    """A brain answers one question at a time, and asking it another dropped the first: now the second waits."""
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    c.submit("What's a good name for a cat?")
+    c.submit("And for a dog?")
+    assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?"]  # asked once: the first isn't dropped
+    shown = c.ask_box.answer.toPlainText()
+    assert "What's a good name for a cat?" in shown and "Pretend API is thinking" in shown
+    assert "And for a dog?" in shown and "this one goes next" in shown
+    c.submit("5 km in miles")  # Chatmon's own answers don't wait
+    shown = c.ask_box.answer.toPlainText()
+    assert "3.107 miles" in shown and "What's a good name for a cat?" in shown and "And for a dog?" in shown  # nothing vanished
+    c.submit("And for a fish?")  # one waiting is enough: this stays in the box
+    assert c.ask_box.entry.text() == "And for a fish?" and "One question is waiting already" in c.ask_box.answer.toPlainText()
+    c.ask_box.entry.clear()
+    brain.answer("Mochi.")
+    assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?", "And for a dog?"]
+    assert brain.asked[-1][0] == [("What's a good name for a cat?", "Mochi.")]  # with the first answer to go on
+    brain.answer("Biscuit.")
+    assert [(m.role, m.text) for m in c.chat.messages] == [
+        ("user", "What's a good name for a cat?"), ("assistant", "Mochi."), ("user", "And for a dog?"), ("assistant", "Biscuit."),
+    ]
+    shown = c.ask_box.answer.toPlainText()
+    assert shown.index("Mochi.") < shown.index("And for a dog?") < shown.index("Biscuit.") and "thinking" not in shown
+
+
+def test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes(companion, monkeypatch):
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    c.open_ask()
+    c.submit("first")
+    c.submit("second")
+    c._failed("Pretend API took too long to answer.")
+    assert c.ask_box.entry.text() == "first" and brain.asked[-1][1] == "second"
+    shown = c.ask_box.answer.toPlainText()
+    assert "didn't work" in shown and "took too long" in shown and "Pretend API is thinking" in shown
+    brain.answer("2")
+    assert [m.text for m in c.chat.messages] == ["second", "2"]
+
+
 def test_a_question_that_only_sounds_like_a_command_goes_to_the_ai(companion, monkeypatch):
     c = companion
     brain = PretendBrain(c, monkeypatch)
@@ -842,7 +1165,50 @@ def test_a_question_that_only_sounds_like_a_command_goes_to_the_ai(companion, mo
     for question in ("remind me how python decorators work", "what is the capital of France?", "how do I set a timer in python"):
         c.submit(question)
         assert brain.asked[-1][1] == question
+        brain.answer("An answer.")
     assert c.reminders.upcoming() == []
+
+
+def test_every_command_in_the_table_does_what_it_did(companion, monkeypatch):
+    """Each command found by its phrase (commands.py) acts as the inline chain did."""
+    from chatmon import app as appmod
+
+    c = companion
+    brain = PretendBrain(c, monkeypatch)
+    opened, checked, shown = [], [], []
+    monkeypatch.setattr(appmod.QDesktopServices, "openUrl", lambda url: opened.append(url.toString()))
+    monkeypatch.setattr(c, "check_for_updates", lambda: checked.append(True))
+    monkeypatch.setattr(c, "open_settings", lambda: shown.append("settings"))
+    monkeypatch.setattr(c, "_popup", lambda menu, pos: shown.append(next(a.text() for a in menu.actions() if a.text())))
+    c.open_ask()
+    c.submit("rename chat")  # nothing to name yet: a question after all
+    assert brain.asked[-1][1] == "rename chat"
+    brain.answer("Name what?")
+    c.submit("Rename this chat")
+    assert c.ask_box.title.text() == "Rename this chat"
+    c.ask_box.dismiss()  # Esc: left as it is
+    c.open_ask()
+    c.submit("help")
+    assert "Without any AI" in c.ask_box.answer.toPlainText()
+    c.submit("chats")
+    assert shown[-1] == "New chat"  # the history menu, by the box
+    c.submit("Preferences")
+    assert shown[-1] == "settings" and not c.ask_box.isVisible()
+    c.open_ask()
+    c.submit("check for updates")
+    assert checked == [True] and not c.ask_box.isVisible()
+    c.open_ask()
+    c.submit("feature request")
+    assert opened and "template=feature_request" in opened[-1] and "idea form" in c.ask_box.answer.toPlainText()
+    c.start_focus(25)
+    c.open_ask()
+    c.submit("end focus")
+    assert c.reminders.focus() is None and "Focus stopped." in c.ask_box.answer.toPlainText()
+    c.submit("/new")
+    assert c.chat.messages == [] and "New chat" in c.ask_box.answer.toPlainText()
+    c.submit("go away")
+    assert c.behavior.hidden and not c.ask_box.isVisible()
+    assert len(brain.asked) == 1  # none of it went to the AI but the first
 
 
 def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
@@ -856,13 +1222,14 @@ def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
     assert "1. buy milk 2. call Sam" in shown  # a numbered list
     c.submit("delete note 1")
     assert [n["text"] for n in c.state.get("notes")] == ["call Sam"]
-    c._fill_menu()
-    labels = [a.text() for a in c.menu.actions()]
-    assert "Notes (1)" in labels
+    c.menus.fill()
+    focus_and_notes = next(a.menu() for a in c.menu.actions() if a.text() == "Focus and notes")
+    assert "Notes (1)" in [a.text() for a in focus_and_notes.actions()]
     c.submit("stopwatch")
     assert c._stopwatch is not None
-    c._fill_menu()
-    assert any(a.text().startswith("Stop the stopwatch") for a in c.menu.actions())
+    c.menus.fill()
+    focus_and_notes = next(a.menu() for a in c.menu.actions() if a.text() == "Focus and notes")
+    assert any(a.text().startswith("Stop the stopwatch") for a in focus_and_notes.actions())
     c.submit("stop stopwatch")
     assert c._stopwatch is None and "Stopwatch stopped at" in c.ask_box.answer.toPlainText()
     c.submit("remind me in 30m to stretch")
@@ -874,33 +1241,26 @@ def test_notes_the_stopwatch_and_reminders_by_number(companion, monkeypatch):
     assert [r.text for r in c.reminders.upcoming()] == ["stretch"]
 
 
-class PretendDesk:
-    """The platform's readings, set by the test."""
+@pytest.fixture
+def quiet_desktop(monkeypatch):
+    """The computer the tests run on is in a presentation, with a full-screen window in front: as a CI runner's
+    desktop says it is."""
+    from chatmon import presence
 
-    def __init__(self):
-        self.idle, self.why_quiet, self.is_covered, self.motion, self.contrast, self.notice = 0.0, None, False, False, False, None
-        self.overlay_idle_since = None
+    monkeypatch.setattr(presence.Desk, "quiet", lambda self, stage_window=0: "a presentation")
+    monkeypatch.setattr(presence.Desk, "covered", lambda self, stage_window: True)
+    monkeypatch.setattr(presence.Desk, "reduce_motion", lambda self: True)
 
-    def idle_seconds(self):
-        return self.idle
 
-    def quiet(self, _window=0):
-        return self.why_quiet
-
-    def covered(self, _window):
-        return self.is_covered
-
-    def reduce_motion(self):
-        return self.motion
-
-    def high_contrast(self):
-        return self.contrast
-
-    def notice_seconds(self):
-        return self.notice
-
-    def close(self):
-        pass
+def test_the_computer_the_tests_run_on_holds_nothing_back(quiet_desktop, companion):
+    """Windows CI failed three smoke tests that passed here: its desktop said "quiet", and from the first look (five
+    seconds in) every bubble from the background waited. The companion's desk is the test's own."""
+    c = companion
+    c._check_quiet()
+    assert not c.messages.holding("quiet")
+    c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+    assert until(lambda: c.stage.bubble.title == "Claude finished")
+    assert c.behavior.walk_enabled  # the desktop's reduced motion didn't stop it either
 
 
 def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
@@ -913,15 +1273,54 @@ def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
     c._check_quiet()
     c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
     spin(0.2)
-    assert not c.stage.message_visible() and len(c._held) == 1
+    assert not c.stage.message_visible() and len(c.messages.held("quiet")) == 1
     c.open_ask()  # you're using Chatmon: what you ask for isn't held back
     c.submit("status")
-    assert "Brain:" in c.ask_box.answer.toPlainText()
+    assert until(lambda: "Brain:" in c.ask_box.answer.toPlainText())
     c.ask_box.dismiss()
     desk.why_quiet = None
     c._check_quiet()
     spin(1.0)
-    assert c.stage.message_visible() and c.stage.bubble.title == "Claude finished" and c._held == []
+    assert c.stage.message_visible() and c.stage.bubble.title == "Claude finished" and c.messages.held() == []
+
+
+def test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert(companion):
+    """"Delete chat?" (or Focus done, or a break) used to be replaced by whatever came next: now an agent's news
+    waits for it, and a needs-you that matters more pushes it aside only for as long as it's up."""
+    c = companion
+    spin(1.8)  # the greeting, out of the way
+    c.stage.dismiss_message()
+    deleted = []
+    c.say("Delete “Cat names”?", "It can't be brought back.", [("Delete it", lambda: deleted.append(True)), ("Keep it", None)], timeout_s=30)
+    c.handle({"type": "event", "event": "done", "source": "codex", "message": ""})
+    spin(2.5)  # past the minimum: it still waits, for as long as the question is up
+    assert c.stage.bubble.title == "Delete “Cat names”?" and [m.title for m in c.messages.waiting] == ["Codex finished"]
+    c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
+    assert until(lambda: c.stage.bubble.title == "Claude needs you") and c.behavior.alert
+    c.stage.dismiss_message()  # answered
+    assert until(lambda: c.stage.bubble.title == "Delete “Cat names”?") and not c.behavior.alert  # back, still answerable
+    assert c.stage.press_button("Delete it") and deleted == [True]
+    assert until(lambda: c.stage.bubble.title == "Codex finished")  # and only then the news
+
+
+def test_a_focus_session_holds_what_comes_on_its_own_until_its_over_then_sums_it_up(companion):
+    c = companion
+    spin(1.8)  # the greeting, out of the way
+    c.stage.dismiss_message()
+    c.start_focus(25)
+    assert c.stage.bubble.title == "Focus time"  # what you did still shows
+    c.stage.dismiss_message()
+    c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+    c.handle({"type": "say", "text": "Backup finished."})
+    spin(0.6)
+    assert not c.stage.message_visible() and len(c.messages.held("focus")) == 2
+    c.handle({"type": "event", "event": "needs-you", "source": "codex", "message": "Approve?"})
+    assert c.stage.bubble.title == "Codex needs you"  # what needs you doesn't wait for focus
+    c.stage.dismiss_message()
+    c.stop_focus()
+    assert until(lambda: c.stage.bubble.title == "Focus stopped") and not c.messages.holding("focus")
+    said = c.stage.bubble.doc.toPlainText()  # what waited, in the one bubble (M7-05)
+    assert "While you focused" in said and "Claude finished" in said and "Backup finished." in said and c.messages.waiting == []
 
 
 def test_on_macos_an_ask_box_left_open_under_a_full_screen_app_holds_nothing_back(companion, monkeypatch):
@@ -936,10 +1335,10 @@ def test_on_macos_an_ask_box_left_open_under_a_full_screen_app_holds_nothing_bac
     c._check_quiet()
     monkeypatch.setattr(sys, "platform", "darwin")
     c.say("Claude finished", timeout_s=8)
-    assert len(c._held) == 1 and c.stage.bubble.title != "Claude finished"
+    assert len(c.messages.held("quiet")) == 1 and c.stage.bubble.title != "Claude finished"
     monkeypatch.setattr(sys, "platform", "win32")
     c.say("Codex finished", timeout_s=8)
-    assert len(c._held) == 1 and c.stage.bubble.title == "Codex finished"
+    assert len(c.messages.held("quiet")) == 1 and c.stage.bubble.title == "Codex finished"
 
 
 def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(companion, monkeypatch):
@@ -950,13 +1349,12 @@ def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(com
     shown = []
     monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
     monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: shown.append((title, text)))
-    from chatmon import sysnotify
-
-    monkeypatch.setattr(sysnotify, "send", lambda title, text: shown.append((title, text)) or True)  # Linux: tray or not
+    if c._notifier is not None:  # Linux: the desktop's notification server, tray or not
+        monkeypatch.setattr(c._notifier, "alert", lambda title, text, buttons=None, pressed=None, urgency=2: shown.append((title, text)) or True)
     desk.why_quiet, desk.is_covered = "a full-screen game", True
     c._check_quiet()
     c.alert("reminder:x", "Reminder", "**Stretch**")
-    assert c._alert_key is None and len(c._held) == 1
+    assert c._alert_key is None and len(c.messages.held("quiet")) == 1
     if sys.platform != "darwin":
         assert shown == [("Reminder", "Chatmon has something for you.")]  # never its words: the system keeps them
     desk.why_quiet, desk.is_covered = None, False
@@ -1006,7 +1404,128 @@ def test_quitting_while_a_system_update_check_runs_is_quiet(companion, monkeypat
     assert len(c._update_procs) == 1
     c._stop_update_checks()
     spin(0.3)
-    assert c._update_procs == []
+    assert c._update_procs == {}
+
+
+def test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none(companion, monkeypatch):
+    from chatmon import app as appmod, heads_up
+
+    c = companion
+    slow = [sys.executable, "-c", "import time; time.sleep(30)"]
+    fast = [sys.executable, "-c", "print('3 waiting')"]
+    monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("stuck", slow, lambda out, code: 9),
+                                                            heads_up.UpdateCheck("apt", fast, lambda out, code: 3 if "3" in out else None)])
+    monkeypatch.setattr(appmod, "UPDATE_CHECK_TIMEOUT_S", 6)  # room for a Python to start on a busy computer
+    c.config["heads_up"]["updates"] = True
+    spin(1.8)
+    c.stage.dismiss_message()
+    c._check_updates()
+    assert until(lambda: c._update_counts == {"apt": 3}, 6)
+    assert len(c._update_procs) == 1  # the stuck one, still running
+    assert until(lambda: not c._update_procs, 10) and c._update_counts == {"apt": 3, "stuck": 0}  # killed: none from it
+    assert until(lambda: c.stage.bubble.title == "Updates waiting") and "3 system updates" in c.stage.bubble.doc.toPlainText()
+
+
+def test_the_days_updates_heads_up_waits_for_a_bubble_showing_instead_of_going_unsaid(companion):
+    """Told once a day: skipped because a bubble was up, it used to be lost until the next day."""
+    c = companion
+    spin(1.8)  # the greeting, out of the way
+    c.stage.dismiss_message()
+    c.say("Delete “Cat names”?", "It can't be brought back.", [("Delete it", None), ("Keep it", None)], timeout_s=30)
+    c._update_round, c._update_expected, c._update_counts = 7, 1, {}
+    c._tally_updates(7, "apt", 4)
+    spin(2.5)
+    assert c.stage.bubble.title == "Delete “Cat names”?"  # not over the question
+    c.stage.dismiss_message()
+    assert until(lambda: c.stage.bubble.title == "Updates waiting") and "4 system updates" in c.stage.bubble.doc.toPlainText()
+
+
+def test_a_late_answer_from_an_earlier_look_at_updates_is_ignored(companion, monkeypatch):
+    from chatmon import heads_up
+
+    c = companion
+    slow = [sys.executable, "-c", "import time; time.sleep(1.5); print('late')"]
+    fast = [sys.executable, "-c", "print('now')"]
+    c.config["heads_up"]["updates"] = True
+    monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("apt", slow, lambda out, code: 40)])
+    c._check_updates()  # the first look, slow to answer
+    monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("apt", fast, lambda out, code: 0)])
+    c._check_updates()  # the next look, which answers first
+    assert until(lambda: c._update_counts == {"apt": 0}, 10)
+    assert until(lambda: not c._update_procs, 10)  # the first has answered too, by now
+    spin(0.2)
+    assert c._update_counts == {"apt": 0} and c.watcher._updates_told is None  # its 40 went nowhere: no heads-up
+
+
+def test_the_ask_box_never_waits_to_find_the_brain(companion, monkeypatch):
+    """Opening the ask box only says which brain answers: finding out mustn't hold up the screen (a model
+    server on this computer is looked for with a wait of up to a second)."""
+    from chatmon import app as appmod
+
+    c = companion
+    waits = []
+    real = appmod.brains.choose
+    monkeypatch.setattr(appmod.brains, "choose", lambda *a, **k: (waits.append(a[3] if len(a) > 3 else k.get("wait", True)), real(*a, **k))[1])
+    c.open_ask()
+    assert waits and not any(waits)
+    c.ask_box.dismiss()
+    c.open_ask(focus=False)
+    assert not any(waits)
+
+
+def test_battery_disks_and_status_are_read_off_the_screens_thread(companion, monkeypatch):
+    import threading
+
+    from chatmon import heads_up
+
+    c = companion
+    spin(1.8)
+    c.stage.dismiss_message()
+    threads = []
+
+    def battery():
+        threads.append(threading.current_thread() is threading.main_thread())
+        return (4.0, False)
+
+    def disks(folders):
+        threads.append(threading.current_thread() is threading.main_thread())
+        return [("/", 99.0)]
+
+    monkeypatch.setattr(heads_up, "read_battery", battery)
+    monkeypatch.setattr(heads_up, "read_disks", disks)
+    c._check_system()
+    assert until(lambda: c.stage.bubble.title == "Battery almost empty") and c.behavior.alert
+    assert threads == [False, False]  # neither read on the screen's thread
+    c.stage.dismiss_message()
+    assert until(lambda: c.stage.bubble.title == "Disk almost full")
+    c.open_ask()
+    c.submit("status")
+    assert "Looking…" in c.ask_box.answer.toPlainText()
+    assert until(lambda: "Battery: 4%" in c.ask_box.answer.toPlainText()) and "Disk for /: 99% full" in c.ask_box.answer.toPlainText()
+    assert threads == [False] * 4
+    c.submit("status")
+    c.submit("5 km in miles")  # answered while status is still being looked up: the late status doesn't cover it
+    spin(0.5)
+    assert "3.107 miles" in c.ask_box.answer.toPlainText() and "Battery" not in c.ask_box.answer.toPlainText()
+
+
+def test_the_name_you_gave_wins_over_the_settings_file(companion, monkeypatch):
+    from chatmon import autostart, paths
+
+    c = companion
+    monkeypatch.setattr(autostart, "set_enabled", lambda on: None)
+    paths.config_file().parent.mkdir(parents=True, exist_ok=True)
+    paths.config_file().write_text('name = "FromTheFile"\n', encoding="utf-8")
+    c.reload(quietly=True)
+    assert c.config["name"] == "FromTheFile" and c.name == "Sparky"  # what you named it
+    c.open_settings()
+    c._settings_window.name.setText("Pebble")
+    c._settings_window._save()
+    assert c.name == "Pebble" and c.state.get("name") == "Pebble"
+    c.menus.fill()
+    assert c.menu.actions()[0].text() == "Ask Pebble…"
+    c.state.set("name", None)
+    assert c.name == "FromTheFile"  # never named: the file's
 
 
 def test_with_no_tray_it_says_once_where_its_menu_is(companion, monkeypatch):
@@ -1027,11 +1546,9 @@ def test_in_power_saver_mode_the_stage_draws_less_often(companion):
 
     c = companion
     c._power_saving(True)
-    spin(0.2)
-    assert c.stage._timer.interval() in (1000 // penguin.SAVER_FPS, 1000 // penguin.SAVER_SLOW_FPS)
+    assert c.stage._frame_interval() == pytest.approx(1 / min(c.stage._refresh_hz(), penguin.SAVER_FPS))
     c._power_saving(False)
-    spin(0.2)
-    assert c.stage._timer.interval() in (1000 // penguin.FPS, 1000 // penguin.SLOW_FPS)
+    assert c.stage._frame_interval() == pytest.approx(1 / c.stage._refresh_hz())
 
 
 def test_nothing_is_drawn_while_nothing_can_be_seen(companion, monkeypatch):
@@ -1149,11 +1666,11 @@ def test_settings_shows_whats_in_use_and_saving_applies_it_and_keeps_it(companio
     c.behavior.set_walk(c._walks(), c._now())
     c.open_settings()
     w = c._settings_window
-    assert w.isVisible() and w.size.value() == int(c.config["size"]) and w.walk.isChecked() == c.behavior.walk_enabled
+    assert w.isVisible() and w.size_box.value() == int(c.config["size"]) and w.walk.isChecked() == c.behavior.walk_enabled
     c.open_settings()
     assert c._settings_window is w  # one window, brought forward
     w.walk.setChecked(False)
-    w.size.setValue(150)
+    w.size_box.setValue(150)
     w.battery_low.setValue(30)
     w.instructions.setPlainText("Be brief.")
     w.new_memory.setText("I use Arch")
@@ -1295,11 +1812,11 @@ def test_saving_settings_never_sets_it_walking_against_reduced_motion(companion,
     c = companion
     monkeypatch.setattr(autostart, "set_enabled", lambda on: None)
     c._walk_picked = False
-    c._reduce_motion = True  # the system asks for less movement
+    c.desk.motion = c._reduce_motion = True  # the system asks for less movement
     c.behavior.set_walk(c._walks(), c._now())
     assert not c.behavior.walk_enabled
     c.open_settings()
-    c._settings_window.size.setValue(140)  # something else entirely
+    c._settings_window.size_box.setValue(140)  # something else entirely
     c._settings_window._save()
     assert not c.behavior.walk_enabled  # still standing
     c.reload(quietly=True)
@@ -1357,15 +1874,15 @@ def test_a_screen_reader_hears_bubbles_alerts_and_answers(companion, monkeypatch
 
 
 def test_without_a_way_to_speak_linux_reads_it_through_a_notification(companion, monkeypatch):
-    from chatmon import sysnotify
+    from app_harness import PretendNotifier
 
     c = companion
     PretendReader(c, speaks=False)
-    sent = []
-    monkeypatch.setattr(sysnotify, "send", lambda title, text: sent.append((title, text)) or True)
+    c._notifier = PretendNotifier()  # sysnotify.Notifier, as Linux makes it
     monkeypatch.setattr(sys, "platform", "linux")
-    c.say("Reminder", "Stretch")
-    assert sent == [("Reminder", "Reminder. Stretch.")]
+    c.say("Reminder", "Stretch", [("Done", None)], timeout_s=None)
+    [(title, words, buttons)] = c._notifier.read  # read aloud, its buttons pressable there
+    assert title == "Reminder" and words.startswith("Reminder. Stretch.") and buttons == ["Done"]
 
 
 def test_reading_aloud_can_be_turned_off(companion):
@@ -1374,6 +1891,31 @@ def test_reading_aloud_can_be_turned_off(companion):
     c.config["accessibility"]["read_aloud"] = False
     c.say("Hello", "there")
     assert reader.said == []
+
+
+def test_a_password_made_is_never_read_out(companion, monkeypatch):
+    """Without a voice of its own to use, Chatmon reads out through a system notification (Narrator, NVDA and
+    JAWS read those on Windows), which the system keeps in its history: a password there would stay there."""
+    from PyQt6.QtWidgets import QSystemTrayIcon
+
+    c = companion
+    reader = PretendReader(c)
+    c.open_ask()
+    c.submit("password 24")
+    shown = c.ask_box.answer.toPlainText()
+    made = shown.split("You: password 24", 1)[1].split()[0]
+    assert len(made) == 24 and reader.said[-1] == ("Password made; it's in the box.", False)
+    assert not any(made in text for text, _ in reader.said)
+    PretendReader(c, speaks=False)
+    notified = []
+    monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
+    monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: notified.append(title + " " + text))
+    monkeypatch.setattr(sys, "platform", "win32")
+    c.submit("password")
+    made = c.ask_box.answer.toPlainText().split("You: password", 1)[1].split()[0]
+    assert notified == ["Password made; it's in the box. Password made; it's in the box."] and made not in notified[0]
+    c.submit("password 4")  # not one made: what it says is read out as it is
+    assert "8 to 128 characters" in notified[-1]
 
 
 def test_typing_a_bubbles_button_presses_it(companion):

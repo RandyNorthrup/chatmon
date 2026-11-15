@@ -1,0 +1,44 @@
+$ python -m pytest -q -p no:cacheprovider -rs tests/test_releasecheck.py tests/test_install_update.py tests/test_packaging.py tests/test_updates.py tests/test_agents.py tests/test_attachments.py tests/test_paths.py tests/test_rename.py tests/test_events.py tests/test_winpipe.py tests/test_wintrust.py tests/test_chats.py   (Windows 11, Python 3.14.10, PyQt 6.11.0, LOCALAPPDATA=a fresh scratch folder, 6c65c95)
+..................ssssssssssssssssssssssssss............................ [ 31%]
+................ss...................................s..............s.s. [ 63%]
+..ssss............ss.............sss....ss.ssss......................... [ 95%]
+..........                                                               [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_install_update.py:122: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:133: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:141: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:149: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:159: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:167: root's side is sh, on Linux and macOS
+SKIPPED [4] tests\test_install_update.py:175: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:197: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:207: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:256: root's side is sh, on Linux and macOS
+SKIPPED [3] tests\test_install_update.py:267: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:282: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:291: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_packaging.py:48: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [1] tests\test_packaging.py:64: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [5] tests\test_packaging.py:71: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [1] tests\test_packaging.py:97: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [2] tests\test_updates.py:524: pkexec: Linux
+SKIPPED [1] tests\test_agents.py:505: POSIX permissions
+SKIPPED [1] tests\test_attachments.py:47: POSIX file types
+SKIPPED [1] tests\test_attachments.py:73: POSIX file types
+SKIPPED [1] tests\test_attachments.py:131: making links needs Developer Mode or an administrator here
+SKIPPED [1] tests\test_attachments.py:137: Linux statfs and mountinfo
+SKIPPED [1] tests\test_attachments.py:154: Linux paths, resolved as Linux does
+SKIPPED [1] tests\test_attachments.py:169: macOS statfs
+SKIPPED [1] tests\test_rename.py:62: Windows keeps it in the registry
+SKIPPED [1] tests\test_rename.py:74: Windows keeps it in the registry
+SKIPPED [1] tests\test_events.py:106: a named pipe there
+SKIPPED [1] tests\test_events.py:117: macOS's temporary folder of your own
+SKIPPED [1] tests\test_events.py:130: a named pipe there
+SKIPPED [1] tests\test_events.py:180: a named pipe there
+SKIPPED [1] tests\test_events.py:243: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:285: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_events.py:308: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:336: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:353: Windows: the pipe's first instance does this
+180 passed, 46 skipped in 20.89s
+exit 0

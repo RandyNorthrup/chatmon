@@ -1,0 +1,1371 @@
+red drills from docs\delivery\reports\m0\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-wf5jqy31
+copied 214 files
+
+=== drill M0-01-priority (M0-01) on chatmon/messages.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_messages.py::test_alerts_then_reminders_then_prompts_then_plain_bubbles
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_alerts_then_reminders_then_prompts_then_plain_bubbles __________
+
+    def test_alerts_then_reminders_then_prompts_then_plain_bubbles():
+        q = MessageQueue()
+        for m in (plain("agent done"), prompt("delete chat?"), reminder("stretch", "reminder:1"), alert("claude needs you", "agent:claude"), plain("tests pass")):
+            q.add(m)
+>       assert drain(q) == ["claude needs you", "stretch", "delete chat?", "agent done", "tests pass"]
+E       AssertionError: assert ['agent done'... 'tests pass'] == ['claude need... 'tests pass']
+E         
+E         At index 0 diff: 'agent done' != 'claude needs you'
+E         Use -v to get more diff
+
+tests\test_messages.py:54: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_messages.py::test_alerts_then_reminders_then_prompts_then_plain_bubbles
+1 failed in 0.34s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.29s
+
+=== drill M0-01-never-dropped (M0-01) on chatmon/messages.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_messages.py::test_nothing_but_plain_bubbles_is_ever_dropped
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.30s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_nothing_but_plain_bubbles_is_ever_dropped ________________
+
+    def test_nothing_but_plain_bubbles_is_ever_dropped():
+        q = MessageQueue()
+        for i in range(20):
+            q.add(alert(f"alert {i}", f"agent:{i}"))
+            q.add(reminder(f"reminder {i}", f"reminder:{i}"))
+            q.add(prompt(f"prompt {i}"))
+            q.add(plain(f"plain {i}"))
+        order = drain(q)
+>       assert [t for t in order if t.startswith("alert")] == [f"alert {i}" for i in range(20)]
+E       AssertionError: assert ['alert 19'] == ['alert 0', '...alert 5', ...]
+E         
+E         At index 0 diff: 'alert 19' != 'alert 0'
+E         Right contains 19 more items, first extra item: 'alert 1'
+E         Use -v to get more diff
+
+tests\test_messages.py:65: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_messages.py::test_nothing_but_plain_bubbles_is_ever_dropped
+1 failed in 0.39s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.31s
+
+=== drill M0-01-heads-up-not-lost (M0-01) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_the_days_updates_heads_up_waits_for_a_bubble_showing_instead_of_going_unsaid
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 5.90s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_the_days_updates_heads_up_waits_for_a_bubble_showing_instead_of_going_unsaid _
+
+companion = <chatmon.app.Companion object at 0x0000023DA3B2D6D0>
+
+    def test_the_days_updates_heads_up_waits_for_a_bubble_showing_instead_of_going_unsaid(companion):
+        """Told once a day: skipped because a bubble was up, it used to be lost until the next day."""
+        c = companion
+        spin(1.8)  # the greeting, out of the way
+        c.stage.dismiss_message()
+        c.say("Delete “Cat names”?", "It can't be brought back.", [("Delete it", None), ("Keep it", None)], timeout_s=30)
+        c._update_round, c._update_expected, c._update_counts = 7, 1, {}
+        c._tally_updates(7, "apt", 4)
+        spin(2.5)
+        assert c.stage.bubble.title == "Delete “Cat names”?"  # not over the question
+        c.stage.dismiss_message()
+>       assert until(lambda: c.stage.bubble.title == "Updates waiting") and "4 system updates" in c.stage.bubble.doc.toPlainText()
+E       assert (False)
+E        +  where False = until(<function test_the_days_updates_heads_up_waits_for_a_bubble_showing_instead_of_going_unsaid.<locals>.<lambda> at 0x0000023DA3A978A0>)
+
+tests\test_app_smoke.py:1355: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_the_days_updates_heads_up_waits_for_a_bubble_showing_instead_of_going_unsaid
+1 failed in 10.81s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 5.83s
+
+=== drill M0-01-prompt-stays (M0-01) on chatmon/messages.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_messages.py::test_a_bubble_with_buttons_is_never_replaced_by_anything_that_matters_as_much_or_less tests/test_app_smoke.py::test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.31s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_a_bubble_with_buttons_is_never_replaced_by_anything_that_matters_as_much_or_less _
+
+    def test_a_bubble_with_buttons_is_never_replaced_by_anything_that_matters_as_much_or_less():
+        q = MessageQueue()
+        q.add(prompt("Focus done!"))
+        assert shown(q, 0) == "Focus done!"
+        q.add(plain("Claude finished"))
+        q.add(news("Codex finished"))
+        q.add(prompt("Update ready", background=True))
+        for now in (1, MIN_SHOWN, 60, 600):
+>           assert q.next(now) is None and q.showing.title == "Focus done!"
+E           AssertionError: assert (Message(title='Update ready', text='', buttons=[('OK', None)], timeout_s=12, key=None, priority=2, alert=False, yours=False, background=True, seq=3) is None)
+E            +  where Message(title='Update ready', text='', buttons=[('OK', None)], timeout_s=12, key=None, priority=2, alert=False, yours=False, background=True, seq=3) = next(2.0)
+E            +    where next = <chatmon.messages.MessageQueue object at 0x0000016448E9C6E0>.next
+
+tests\test_messages.py:91: AssertionError
+_ test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert _
+
+companion = <chatmon.app.Companion object at 0x000001644B056210>
+
+    def test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert(companion):
+        """"Delete chat?" (or Focus done, or a break) used to be replaced by whatever came next: now an agent's news
+        waits for it, and a needs-you that matters more pushes it aside only for as long as it's up."""
+        c = companion
+        spin(1.8)  # the greeting, out of the way
+        c.stage.dismiss_message()
+        deleted = []
+        c.say("Delete “Cat names”?", "It can't be brought back.", [("Delete it", lambda: deleted.append(True)), ("Keep it", None)], timeout_s=30)
+        c.handle({"type": "event", "event": "done", "source": "codex", "message": ""})
+        spin(2.5)  # past the minimum: it still waits, for as long as the question is up
+>       assert c.stage.bubble.title == "Delete “Cat names”?" and [m.title for m in c.messages.waiting] == ["Codex finished"]
+E       AssertionError: assert ('Delete \u201... names\u201d?' == 'Delete \u201... names\u201d?'
+E         
+E           Delete “Cat names”? and [] == ['Codex finished']
+E         
+E         Right contains one more item: 'Codex finished'
+E         Use -v to get more diff)
+
+tests\test_app_smoke.py:1210: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_messages.py::test_a_bubble_with_buttons_is_never_replaced_by_anything_that_matters_as_much_or_less
+FAILED tests/test_app_smoke.py::test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert
+2 failed in 5.74s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.30s
+
+=== drill M0-01-pushed-comes-back (M0-01) on chatmon/messages.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_messages.py::test_something_more_important_takes_over_after_the_minimum_and_the_bubble_comes_back tests/test_app_smoke.py::test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 7.05s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_something_more_important_takes_over_after_the_minimum_and_the_bubble_comes_back _
+
+    def test_something_more_important_takes_over_after_the_minimum_and_the_bubble_comes_back():
+        q = MessageQueue()
+        q.add(prompt("Delete chat?"))
+        assert shown(q, 0) == "Delete chat?"
+        q.add(alert("Claude needs you", "agent:claude"))
+        assert q.next(MIN_SHOWN - 0.1) is None  # not before it's been up the minimum
+        assert q.wake_at(0.5) == MIN_SHOWN
+        assert shown(q, MIN_SHOWN) == "Claude needs you"
+        q.closed()
+>       assert shown(q, MIN_SHOWN + 1) == "Delete chat?"  # pushed aside, not lost
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert None == 'Delete chat?'
+E        +  where None = shown(<chatmon.messages.MessageQueue object at 0x000001C0E940C6E0>, (2.0 + 1))
+
+tests\test_messages.py:106: AssertionError
+_ test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert _
+
+companion = <chatmon.app.Companion object at 0x000001C0E97423F0>
+
+    def test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert(companion):
+        """"Delete chat?" (or Focus done, or a break) used to be replaced by whatever came next: now an agent's news
+        waits for it, and a needs-you that matters more pushes it aside only for as long as it's up."""
+        c = companion
+        spin(1.8)  # the greeting, out of the way
+        c.stage.dismiss_message()
+        deleted = []
+        c.say("Delete “Cat names”?", "It can't be brought back.", [("Delete it", lambda: deleted.append(True)), ("Keep it", None)], timeout_s=30)
+        c.handle({"type": "event", "event": "done", "source": "codex", "message": ""})
+        spin(2.5)  # past the minimum: it still waits, for as long as the question is up
+        assert c.stage.bubble.title == "Delete “Cat names”?" and [m.title for m in c.messages.waiting] == ["Codex finished"]
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Approve?"})
+        assert until(lambda: c.stage.bubble.title == "Claude needs you") and c.behavior.alert
+        c.stage.dismiss_message()  # answered
+>       assert until(lambda: c.stage.bubble.title == "Delete “Cat names”?") and not c.behavior.alert  # back, still answerable
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (False)
+E        +  where False = until(<function test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert.<locals>.<lambda> at 0x000001C0EB404EB0>)
+
+tests\test_app_smoke.py:1214: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_messages.py::test_something_more_important_takes_over_after_the_minimum_and_the_bubble_comes_back
+FAILED tests/test_app_smoke.py::test_a_bubble_with_buttons_waits_for_no_agent_and_comes_back_after_an_alert
+2 failed in 11.90s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.53s
+
+=== drill M0-01-minimum-time (M0-01) on chatmon/messages.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_messages.py::test_a_plain_bubble_gives_way_to_the_next_plain_one_after_the_minimum_and_is_gone tests/test_messages.py::test_something_more_important_takes_over_after_the_minimum_and_the_bubble_comes_back
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.37s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_a_plain_bubble_gives_way_to_the_next_plain_one_after_the_minimum_and_is_gone _
+
+    def test_a_plain_bubble_gives_way_to_the_next_plain_one_after_the_minimum_and_is_gone():
+        q = MessageQueue()
+        q.add(news("one"))
+        assert shown(q, 0) == "one"
+        q.add(news("two"))
+>       assert q.next(1.0) is None and q.wake_at(1.0) == MIN_SHOWN
+E       AssertionError: assert (Message(title='two', text='', buttons=[], timeout_s=8, key=None, priority=3, alert=False, yours=False, background=True, seq=1) is None)
+E        +  where Message(title='two', text='', buttons=[], timeout_s=8, key=None, priority=3, alert=False, yours=False, background=True, seq=1) = next(1.0)
+E        +    where next = <chatmon.messages.MessageQueue object at 0x0000018E4AAEC6E0>.next
+
+tests\test_messages.py:114: AssertionError
+_ test_something_more_important_takes_over_after_the_minimum_and_the_bubble_comes_back _
+
+    def test_something_more_important_takes_over_after_the_minimum_and_the_bubble_comes_back():
+        q = MessageQueue()
+        q.add(prompt("Delete chat?"))
+        assert shown(q, 0) == "Delete chat?"
+        q.add(alert("Claude needs you", "agent:claude"))
+>       assert q.next(MIN_SHOWN - 0.1) is None  # not before it's been up the minimum
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert Message(title='Claude needs you', text='', buttons=[('OK', None)], timeout_s=None, key='agent:claude', priority=0, alert=True, yours=False, background=True, seq=3) is None
+E        +  where Message(title='Claude needs you', text='', buttons=[('OK', None)], timeout_s=None, key='agent:claude', priority=0, alert=True, yours=False, background=True, seq=3) = next((2.0 - 0.1))
+E        +    where next = <chatmon.messages.MessageQueue object at 0x0000018E4AA37610>.next
+
+tests\test_messages.py:102: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_messages.py::test_a_plain_bubble_gives_way_to_the_next_plain_one_after_the_minimum_and_is_gone
+FAILED tests/test_messages.py::test_something_more_important_takes_over_after_the_minimum_and_the_bubble_comes_back
+2 failed in 0.43s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.31s
+
+=== drill M0-01-focus-holds (M0-01) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_focus_session_holds_what_comes_on_its_own_until_its_over
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.04s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_a_focus_session_holds_what_comes_on_its_own_until_its_over _______
+
+companion = <chatmon.app.Companion object at 0x0000029D4D019450>
+
+    def test_a_focus_session_holds_what_comes_on_its_own_until_its_over(companion):
+        c = companion
+        spin(1.8)  # the greeting, out of the way
+        c.stage.dismiss_message()
+        c.start_focus(25)
+        assert c.stage.bubble.title == "Focus time"  # what you did still shows
+        c.stage.dismiss_message()
+        c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+        c.handle({"type": "say", "text": "Backup finished."})
+        spin(0.6)
+>       assert not c.stage.message_visible() and len(c.messages.held("focus")) == 2
+E       assert (not True)
+E        +  where True = message_visible()
+E        +    where message_visible = <chatmon.penguin.Stage object at 0x0000029D4D019590>.message_visible
+E        +      where <chatmon.penguin.Stage object at 0x0000029D4D019590> = <chatmon.app.Companion object at 0x0000029D4D019450>.stage
+
+tests\test_app_smoke.py:1229: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_focus_session_holds_what_comes_on_its_own_until_its_over
+1 failed in 3.74s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.16s
+
+=== drill M0-01-quiet-holds (M0-01) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_quiet_holds_bubbles_from_the_background_until_its_over tests/test_app_smoke.py::test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.64s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_________ test_quiet_holds_bubbles_from_the_background_until_its_over _________
+
+companion = <chatmon.app.Companion object at 0x0000016C8EBE5450>
+
+    def test_quiet_holds_bubbles_from_the_background_until_its_over(companion):
+        c = companion
+        c.desk = desk = PretendDesk()
+        spin(1.8)
+        c.stage.dismiss_message()
+        spin(0.3)
+        desk.why_quiet = "a presentation"
+        c._check_quiet()
+        c.handle({"type": "event", "event": "done", "source": "claude", "message": ""})
+        spin(0.2)
+>       assert not c.stage.message_visible() and len(c.messages.held("quiet")) == 1
+E       assert (not True)
+E        +  where True = message_visible()
+E        +    where message_visible = <chatmon.penguin.Stage object at 0x0000016C8EBE5590>.message_visible
+E        +      where <chatmon.penguin.Stage object at 0x0000016C8EBE5590> = <chatmon.app.Companion object at 0x0000016C8EBE5450>.stage
+
+tests\test_app_smoke.py:1189: AssertionError
+__ test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits ___
+
+companion = <chatmon.app.Companion object at 0x0000016C8EB0EA30>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016C8F03CE90>
+
+    def test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits(companion, monkeypatch):
+        from PyQt6.QtWidgets import QSystemTrayIcon
+    
+        c = companion
+        c.desk = desk = PretendDesk()
+        shown = []
+        monkeypatch.setattr(QSystemTrayIcon, "supportsMessages", staticmethod(lambda: True))
+        monkeypatch.setattr(c.tray, "showMessage", lambda title, text, *a: shown.append((title, text)))
+        from chatmon import sysnotify
+    
+        monkeypatch.setattr(sysnotify, "send", lambda title, text: shown.append((title, text)) or True)  # Linux: tray or not
+        desk.why_quiet, desk.is_covered = "a full-screen game", True
+        c._check_quiet()
+        c.alert("reminder:x", "Reminder", "**Stretch**")
+>       assert c._alert_key is None and len(c.messages.held("quiet")) == 1
+E       AssertionError: assert ('reminder:x' is None)
+E        +  where 'reminder:x' = <chatmon.app.Companion object at 0x0000016C8EB0EA30>._alert_key
+
+tests\test_app_smoke.py:1272: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_quiet_holds_bubbles_from_the_background_until_its_over
+FAILED tests/test_app_smoke.py::test_an_alert_under_a_full_screen_app_is_a_system_notification_and_waits
+2 failed in 3.97s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.14s
+
+=== drill M0-02-second-waits (M0-02) on chatmon/asking.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat tests/test_asking.py::test_the_first_question_goes_and_the_next_waits_its_turn
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.15s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat _
+
+companion = <chatmon.app.Companion object at 0x00000203D383D770>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000203D3C0D350>
+
+    def test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat(companion, monkeypatch):
+        """A brain answers one question at a time, and asking it another dropped the first: now the second waits."""
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        c.open_ask()
+        c.submit("What's a good name for a cat?")
+        c.submit("And for a dog?")
+>       assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?"]  # asked once: the first isn't dropped
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert ["What's a go...d for a dog?'] == ["What's a go...e for a cat?"]
+E         
+E         Left contains one more item: 'And for a dog?'
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:1018: AssertionError
+__________ test_the_first_question_goes_and_the_next_waits_its_turn ___________
+
+    def test_the_first_question_goes_and_the_next_waits_its_turn():
+        qs = Questions()
+        first, second = Question("chat", "cat?"), Question("chat", "dog?")
+        assert qs.ask(first) is True and qs.current is first
+>       assert qs.ask(second) is False and qs.current is first and qs.waiting == [second]
+E       AssertionError: assert (True is False)
+E        +  where True = ask(Question(chat_id='chat', text='dog?', attached=[], brain=None, retried=False, tokens=0, fold=None))
+E        +    where ask = <chatmon.asking.Questions object at 0x00000203D3754190>.ask
+
+tests\test_asking.py:22: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat
+FAILED tests/test_asking.py::test_the_first_question_goes_and_the_next_waits_its_turn
+2 failed in 1.24s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.17s
+
+=== drill M0-02-still-answering-shown (M0-02) on chatmon/asking.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.77s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat _
+
+companion = <chatmon.app.Companion object at 0x00000195A47C14F0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000195A4C78FC0>
+
+    def test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat(companion, monkeypatch):
+        """A brain answers one question at a time, and asking it another dropped the first: now the second waits."""
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        c.open_ask()
+        c.submit("What's a good name for a cat?")
+        c.submit("And for a dog?")
+        assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?"]  # asked once: the first isn't dropped
+        shown = c.ask_box.answer.toPlainText()
+        assert "What's a good name for a cat?" in shown and "Pretend API is thinking" in shown
+>       assert "And for a dog?" in shown and "Still answering, Esc to stop" in shown
+E       assert ('And for a dog?' in "You: What's a good name for a cat?\nPretend API is thinking…")
+
+tests\test_app_smoke.py:1021: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat
+1 failed in 1.23s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.04s
+
+=== drill M0-02-nothing-vanishes (M0-02) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.10s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat _
+
+companion = <chatmon.app.Companion object at 0x000001BDB06294F0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BDB0AECFC0>
+
+    def test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat(companion, monkeypatch):
+        """A brain answers one question at a time, and asking it another dropped the first: now the second waits."""
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        c.open_ask()
+        c.submit("What's a good name for a cat?")
+        c.submit("And for a dog?")
+        assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?"]  # asked once: the first isn't dropped
+        shown = c.ask_box.answer.toPlainText()
+>       assert "What's a good name for a cat?" in shown and "Pretend API is thinking" in shown
+E       assert ("What's a good name for a cat?" in '')
+
+tests\test_app_smoke.py:1020: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat
+1 failed in 1.35s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.04s
+
+=== drill M0-02-both-answered (M0-02) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat tests/test_app_smoke.py::test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.05s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat _
+
+companion = <chatmon.app.Companion object at 0x0000017E635D54F0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017E6399CFC0>
+
+    def test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat(companion, monkeypatch):
+        """A brain answers one question at a time, and asking it another dropped the first: now the second waits."""
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        c.open_ask()
+        c.submit("What's a good name for a cat?")
+        c.submit("And for a dog?")
+        assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?"]  # asked once: the first isn't dropped
+        shown = c.ask_box.answer.toPlainText()
+        assert "What's a good name for a cat?" in shown and "Pretend API is thinking" in shown
+        assert "And for a dog?" in shown and "Still answering, Esc to stop" in shown
+        c.submit("5 km in miles")  # Chatmon's own answers don't wait
+        shown = c.ask_box.answer.toPlainText()
+        assert "3.107 miles" in shown and "What's a good name for a cat?" in shown and "And for a dog?" in shown  # nothing vanished
+        c.submit("And for a fish?")  # one waiting is enough: this stays in the box
+        assert c.ask_box.entry.text() == "And for a fish?" and "One question is waiting already" in c.ask_box.answer.toPlainText()
+        c.ask_box.entry.clear()
+        brain.answer("Mochi.")
+>       assert [q for _, q, _ in brain.asked] == ["What's a good name for a cat?", "And for a dog?"]
+E       assert ["What's a go...e for a cat?"] == ["What's a go...d for a dog?']
+E         
+E         Right contains one more item: 'And for a dog?'
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:1029: AssertionError
+____ test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes _____
+
+companion = <chatmon.app.Companion object at 0x0000017E63501B30>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017E6399CE90>
+
+    def test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes(companion, monkeypatch):
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        c.open_ask()
+        c.submit("first")
+        c.submit("second")
+        c._failed("Pretend API took too long to answer.")
+>       assert c.ask_box.entry.text() == "first" and brain.asked[-1][1] == "second"
+E       AssertionError: assert ('first' == 'first'
+E         
+E           first and 'first' == 'second'
+E         
+E         - second
+E         + first)
+
+tests\test_app_smoke.py:1060: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_question_asked_while_one_is_answered_waits_and_both_stay_in_the_chat
+FAILED tests/test_app_smoke.py::test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes
+2 failed in 1.32s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.21s
+
+=== drill M0-03-tick-only-labels (M0-03) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_clock_tick_changes_only_the_times_in_the_menu
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.56s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_a_clock_tick_changes_only_the_times_in_the_menu _____________
+
+companion = <chatmon.app.Companion object at 0x00000242D8935450>
+
+    def test_a_clock_tick_changes_only_the_times_in_the_menu(companion):
+        """A countdown in the menu used to rebuild all of it every minute: every chat and every agent's look."""
+        from PyQt6 import sip
+    
+        c = companion
+        c.start_focus(25)
+        c.submit("remind me in 30m to stretch")
+        c.submit("stopwatch")
+        spin(0.1)
+        items = list(all_actions(c.menu))
+        texts = [a.text() for a in items]
+        assert any(t.startswith("Stop focus (25 min left)") for t in texts) and any(t.startswith("✕  in 30 min: stretch") for t in texts)
+        assert any(t == "Stop the stopwatch (0 min)" for t in texts)
+        c.reminders.focus().due -= 10 * 60  # ten minutes go by
+        next(r for r in c.reminders.upcoming() if r.text == "stretch").due -= 10 * 60
+        c._stopwatch -= 2 * 60
+        c._check_time()  # the clock's tick
+        spin(0.1)
+>       assert not any(sip.isdeleted(a) for a in items) and list(all_actions(c.menu)) == items  # the same items, not built again
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (not True)
+E        +  where True = any(<generator object test_a_clock_tick_changes_only_the_times_in_the_menu.<locals>.<genexpr> at 0x00000242D8B317E0>)
+
+tests\test_app_smoke.py:193: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_clock_tick_changes_only_the_times_in_the_menu
+1 failed in 1.59s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.63s
+
+=== drill M0-03-agents-on-open-only (M0-03) on chatmon/menus.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_looks_at_the_agents_one_look_at_a_time
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.28s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_looks_at_the_agents_one_look_at_a_time _________________
+
+companion = <chatmon.app.Companion object at 0x000001E19260D450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E192A6CFC0>
+
+    def test_looks_at_the_agents_one_look_at_a_time(companion, monkeypatch):
+        """Each look at how the agents stand starts their command lines, and every refill of the menu asks for
+        one: asked again while looking, it looks once more when done, never several at once."""
+        c = companion
+        looks = []
+        monkeypatch.setattr(c.background, "run", lambda work, then: looks.append((work, then)))
+        c._refreshing, c._refresh_next = False, None  # whatever starting up began
+        c._refresh_agents()
+        c._refresh_agents()
+        c._refresh_agents(True)  # the one that moves hooks over from the old name: not to be lost
+        assert len(looks) == 1
+        looks[0][1]({"claude": "found"})
+        assert len(looks) == 2 and looks[1][0].args == (True,)
+        looks[1][1]({"claude": "found"})
+        assert len(looks) == 2 and not c._refreshing
+        # Opening the menu looks only once what it knows has gone stale; filling it in for a change never looks.
+        from chatmon import menus
+    
+        monkeypatch.setattr(c, "_look_again", lambda: None)  # the brains' look, not the agents'
+        c.menus.opening()
+>       assert len(looks) == 2
+E       assert 3 == 2
+E        +  where 3 = len([(functools.partial(<function Companion._agent_statuses at 0x000001E192680300>, False), <bound method Companion._agent...92680300>, False), <bound method Companion._agents_refreshed of <chatmon.app.Companion object at 0x000001E19260D450>>)])
+
+tests\test_app_smoke.py:626: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_looks_at_the_agents_one_look_at_a_time
+1 failed in 1.28s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.31s
+
+=== drill M0-04-appearance (M0-04) on chatmon/menus.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_hide_menu_and_reload
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.18s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________________ test_hide_menu_and_reload __________________________
+
+companion = <chatmon.app.Companion object at 0x000001F2F8DE5310>
+
+    def test_hide_menu_and_reload(companion):
+        c = companion
+        c.set_hidden(True)
+        spin(1.0)
+        assert c.behavior.hidden
+        c.set_hidden(False)
+        c.menus.fill()
+        labels = [a.text() for a in c.menu.actions() if a.text()]
+>       assert labels == ["Ask Sparky…", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
+                          "Hide (peek now and then)", "Settings…", "Help & updates", "Quit"]
+E       AssertionError: assert ['Ask Sparky…... agents', ...] == ['Ask Sparky…... agents', ...]
+E         
+E         At index 7 diff: 'Companion' != 'Hide (peek now and then)'
+E         Left contains one more item: 'Quit'
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:141: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_hide_menu_and_reload - AssertionError: a...
+1 failed in 2.18s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.79s
+
+=== drill M0-04-reload-under-help (M0-04) on chatmon/menus.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_hide_menu_and_reload
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 5.48s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________________ test_hide_menu_and_reload __________________________
+
+companion = <chatmon.app.Companion object at 0x00000248703DD310>
+
+    def test_hide_menu_and_reload(companion):
+        c = companion
+        c.set_hidden(True)
+        spin(1.0)
+        assert c.behavior.hidden
+        c.set_hidden(False)
+        c.menus.fill()
+        labels = [a.text() for a in c.menu.actions() if a.text()]
+        assert labels == ["Ask Sparky…", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
+                          "Hide (peek now and then)", "Settings…", "Help & updates", "Quit"]
+        submenu = {a.text(): a.menu() for a in c.menu.actions() if a.menu()}
+        appearance = [a.text() for a in submenu["Appearance"].actions()]
+        assert appearance == ["Companion", "Bubble style", "Walk around", "Start when I log in"]
+        help_items = {a.text(): a for a in submenu["Help & updates"].actions()}
+        focus_items = [a.text() for a in submenu["Focus and notes"].actions() if a.text()]
+        assert focus_items == ["Focus timer", "15 minutes", "25 minutes", "50 minutes", "Notes", "Add a note…"]
+>       help_items["Reload settings file"].trigger()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'Reload settings file'
+
+tests\test_app_smoke.py:149: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_hide_menu_and_reload - KeyError: 'Reload...
+1 failed in 2.97s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.32s
+
+=== drill M0-05-same-phrases (M0-05) on chatmon/commands.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_commands.py::test_the_same_phrases_run_the_same_commands tests/test_app_smoke.py::test_every_command_in_the_table_does_what_it_did
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.75s
+-- red: exit 1
+E         
+E         Omitting 59 identical items, use -vv to show
+E         Differing items:
+E         {'go away': None} != {'go away': 'hide'}
+E         Use -v to get more diff
+
+tests\test_commands.py:34: AssertionError
+______________ test_every_command_in_the_table_does_what_it_did _______________
+
+companion = <chatmon.app.Companion object at 0x00000261C72E9D10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000261C75E6060>
+
+    def test_every_command_in_the_table_does_what_it_did(companion, monkeypatch):
+        """Each command found by its phrase (commands.py) acts as the inline chain did."""
+        from chatmon import app as appmod
+    
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        opened, checked, shown = [], [], []
+        monkeypatch.setattr(appmod.QDesktopServices, "openUrl", lambda url: opened.append(url.toString()))
+        monkeypatch.setattr(c, "check_for_updates", lambda: checked.append(True))
+        monkeypatch.setattr(c, "open_settings", lambda: shown.append("settings"))
+        monkeypatch.setattr(c, "_popup", lambda menu, pos: shown.append([a.text() for a in menu.actions() if a.text()][0]))
+        c.open_ask()
+        c.submit("rename chat")  # nothing to name yet: a question after all
+        assert brain.asked[-1][1] == "rename chat"
+        brain.answer("Name what?")
+        c.submit("Rename this chat")
+        assert c.ask_box.title.text() == "Rename this chat"
+        c.ask_box.dismiss()  # Esc: left as it is
+        c.open_ask()
+        c.submit("help")
+        assert "Without any AI" in c.ask_box.answer.toPlainText()
+        c.submit("chats")
+        assert shown[-1] == "New chat"  # the history menu, by the box
+        c.submit("Preferences")
+        assert shown[-1] == "settings" and not c.ask_box.isVisible()
+        c.open_ask()
+        c.submit("check for updates")
+        assert checked == [True] and not c.ask_box.isVisible()
+        c.open_ask()
+        c.submit("feature request")
+        assert opened and "template=feature_request" in opened[-1] and "idea form" in c.ask_box.answer.toPlainText()
+        c.start_focus(25)
+        c.open_ask()
+        c.submit("end focus")
+        assert c.reminders.focus() is None and "Focus stopped." in c.ask_box.answer.toPlainText()
+        c.submit("/new")
+        assert c.chat.messages == [] and "New chat" in c.ask_box.answer.toPlainText()
+        c.submit("go away")
+>       assert c.behavior.hidden and not c.ask_box.isVisible()
+E       assert (False)
+E        +  where False = <chatmon.behavior.Behavior object at 0x00000261C7119A90>.hidden
+E        +    where <chatmon.behavior.Behavior object at 0x00000261C7119A90> = <chatmon.app.Companion object at 0x00000261C72E9D10>.behavior
+
+tests\test_app_smoke.py:1116: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_commands.py::test_the_same_phrases_run_the_same_commands - ...
+FAILED tests/test_app_smoke.py::test_every_command_in_the_table_does_what_it_did
+2 failed in 1.96s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.41s
+
+=== drill M0-05-english-stays (M0-05) on chatmon/commands.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_commands.py::test_another_languages_phrases_join_english_which_stays
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.40s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_another_languages_phrases_join_english_which_stays ___________
+
+    def test_another_languages_phrases_join_english_which_stays():
+        table = Table({"help": ["aide", "Qu'est-ce que tu sais faire ?"], "hide": ["help"], "no-such-command": ["bonjour"]})
+        assert table.find("aide") == "help" and table.find("qu'est-ce que tu sais faire") == "help"
+>       assert table.find("help") == "help"  # English wins where they share a phrase
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'hide' == 'help'
+E         
+E         - help
+E         + hide
+
+tests\test_commands.py:49: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_commands.py::test_another_languages_phrases_join_english_which_stays
+1 failed in 0.54s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.40s
+
+=== drill M0-06-ask-box-doesnt-wait (M0-06) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_the_ask_box_never_waits_to_find_the_brain
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.24s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_the_ask_box_never_waits_to_find_the_brain ________________
+
+companion = <chatmon.app.Companion object at 0x0000028D205E5450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028D2096CFC0>
+
+    def test_the_ask_box_never_waits_to_find_the_brain(companion, monkeypatch):
+        """Opening the ask box only says which brain answers: finding out mustn't hold up the screen (a model
+        server on this computer is looked for with a wait of up to a second)."""
+        from chatmon import app as appmod
+    
+        c = companion
+        waits = []
+        real = appmod.brains.choose
+        monkeypatch.setattr(appmod.brains, "choose", lambda *a, **k: (waits.append(a[3] if len(a) > 3 else k.get("wait", True)), real(*a, **k))[1])
+        c.open_ask()
+>       assert waits and not any(waits)
+E       assert ([True] and not True)
+E        +  where True = any([True])
+
+tests\test_app_smoke.py:1385: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_the_ask_box_never_waits_to_find_the_brain
+1 failed in 1.44s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.17s
+
+=== drill M0-06-readings-off-thread (M0-06) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_battery_disks_and_status_are_read_off_the_screens_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.93s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_battery_disks_and_status_are_read_off_the_screens_thread ________
+
+companion = <chatmon.app.Companion object at 0x00000209F88F9450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000209FAC9CFC0>
+
+    def test_battery_disks_and_status_are_read_off_the_screens_thread(companion, monkeypatch):
+        import threading
+    
+        from chatmon import heads_up
+    
+        c = companion
+        spin(1.8)
+        c.stage.dismiss_message()
+        threads = []
+    
+        def battery():
+            threads.append(threading.current_thread() is threading.main_thread())
+            return (4.0, False)
+    
+        def disks(folders):
+            threads.append(threading.current_thread() is threading.main_thread())
+            return [("/", 99.0)]
+    
+        monkeypatch.setattr(heads_up, "read_battery", battery)
+        monkeypatch.setattr(heads_up, "read_disks", disks)
+        c._check_system()
+        assert until(lambda: c.stage.bubble.title == "Battery almost empty") and c.behavior.alert
+>       assert threads == [False, False]  # neither read on the screen's thread
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert [True, True] == [False, False]
+E         
+E         At index 0 diff: True != False
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:1413: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_battery_disks_and_status_are_read_off_the_screens_thread
+1 failed in 2.98s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.91s
+
+=== drill M0-07-state-name-wins (M0-07) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_the_name_you_gave_wins_over_the_settings_file
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_the_name_you_gave_wins_over_the_settings_file ______________
+
+companion = <chatmon.app.Companion object at 0x0000026078A75450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000026078E3CFC0>
+
+    def test_the_name_you_gave_wins_over_the_settings_file(companion, monkeypatch):
+        from chatmon import autostart, paths
+    
+        c = companion
+        monkeypatch.setattr(autostart, "set_enabled", lambda on: None)
+        paths.config_file().parent.mkdir(parents=True, exist_ok=True)
+        paths.config_file().write_text('name = "FromTheFile"\n', encoding="utf-8")
+        c.reload(quietly=True)
+>       assert c.config["name"] == "FromTheFile" and c.name == "Sparky"  # what you named it
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ('FromTheFile' == 'FromTheFile'
+E         
+E           FromTheFile and 'FromTheFile' == 'Sparky'
+E         
+E         - Sparky
+E         + FromTheFile)
+
+tests\test_app_smoke.py:1435: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_the_name_you_gave_wins_over_the_settings_file
+1 failed in 1.37s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.24s
+
+=== drill M0-08-hung-check-stopped (M0-08) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 9.07s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none _____
+
+companion = <chatmon.app.Companion object at 0x0000024AA4339450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024AA47DCFC0>
+
+    def test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none(companion, monkeypatch):
+        from chatmon import app as appmod, heads_up
+    
+        c = companion
+        slow = [sys.executable, "-c", "import time; time.sleep(30)"]
+        fast = [sys.executable, "-c", "print('3 waiting')"]
+        monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("stuck", slow, lambda out, code: 9),
+                                                                heads_up.UpdateCheck("apt", fast, lambda out, code: 3 if "3" in out else None)])
+        monkeypatch.setattr(appmod, "UPDATE_CHECK_TIMEOUT_S", 6)  # room for a Python to start on a busy computer
+        c.config["heads_up"]["updates"] = True
+        spin(1.8)
+        c.stage.dismiss_message()
+        c._check_updates()
+        assert until(lambda: c._update_counts == {"apt": 3}, 6)
+        assert len(c._update_procs) == 1  # the stuck one, still running
+>       assert until(lambda: not c._update_procs, 10) and c._update_counts == {"apt": 3, "stuck": 0}  # killed: none from it
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (False)
+E        +  where False = until(<function test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none.<locals>.<lambda> at 0x0000024AA42DF7F0>, 10)
+
+tests\test_app_smoke.py:1340: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_system_update_check_that_hangs_is_stopped_and_counts_as_none
+1 failed in 15.73s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 9.22s
+
+=== drill M0-08-late-answer-ignored (M0-08) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_late_answer_from_an_earlier_look_at_updates_is_ignored
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.16s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_a_late_answer_from_an_earlier_look_at_updates_is_ignored ________
+
+companion = <chatmon.app.Companion object at 0x00000200E70DD450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000200E744CFC0>
+
+    def test_a_late_answer_from_an_earlier_look_at_updates_is_ignored(companion, monkeypatch):
+        from chatmon import heads_up
+    
+        c = companion
+        slow = [sys.executable, "-c", "import time; time.sleep(1.5); print('late')"]
+        fast = [sys.executable, "-c", "print('now')"]
+        c.config["heads_up"]["updates"] = True
+        monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("apt", slow, lambda out, code: 40)])
+        c._check_updates()  # the first look, slow to answer
+        monkeypatch.setattr(heads_up, "update_checks", lambda: [heads_up.UpdateCheck("apt", fast, lambda out, code: 0)])
+        c._check_updates()  # the next look, which answers first
+        assert until(lambda: c._update_counts == {"apt": 0}, 10)
+        assert until(lambda: not c._update_procs, 10)  # the first has answered too, by now
+        spin(0.2)
+>       assert c._update_counts == {"apt": 0} and c.watcher._updates_told is None  # its 40 went nowhere: no heads-up
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ({'apt': 40} == {'apt': 0}
+E         
+E         Differing items:
+E         {'apt': 40} != {'apt': 0}
+E         Use -v to get more diff)
+
+tests\test_app_smoke.py:1372: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_late_answer_from_an_earlier_look_at_updates_is_ignored
+1 failed in 3.49s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.20s
+
+=== drill M0-09-password-not-read (M0-09) on chatmon/commands.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_password_made_is_never_read_out
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.49s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________________ test_a_password_made_is_never_read_out ____________________
+
+companion = <chatmon.app.Companion object at 0x000001E0F7851450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E0F7C9CFC0>
+
+    def test_a_password_made_is_never_read_out(companion, monkeypatch):
+        """Without a voice of its own to use, Chatmon reads out through a system notification (Narrator, NVDA and
+        JAWS read those on Windows), which the system keeps in its history: a password there would stay there."""
+        from PyQt6.QtWidgets import QSystemTrayIcon
+    
+        c = companion
+        reader = PretendReader(c)
+        c.open_ask()
+        c.submit("password 24")
+        shown = c.ask_box.answer.toPlainText()
+        made = shown.split("You: password 24", 1)[1].split()[0]
+>       assert len(made) == 24 and reader.said[-1] == ("Password made; it's in the box.", False)
+E       assert (24 == 24 and ('zhR1$kuF1?6... now.', False) == ("Password ma... box.", False)
+E        +  where 24 = len('zhR1$kuF1?6at!#p58W-mH9i')
+E         
+E         At index 0 diff: "zhR1$kuF1?6at!#p58W-mH9i Made here, from your system's own randomness. I don't keep it anywhere: copy it now." != "Password made; it's in the box."
+E         Use -v to get more diff)
+
+tests\test_app_smoke.py:1824: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_password_made_is_never_read_out - asse...
+1 failed in 1.36s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.31s
+
+=== drill M0-10-read-buffer (M0-10) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_hook_connection_never_holds_more_than_a_message
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.30s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_a_hook_connection_never_holds_more_than_a_message ____________
+
+companion = <chatmon.app.Companion object at 0x00000258CAFC9450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000258CB48CFC0>
+
+    def test_a_hook_connection_never_holds_more_than_a_message(companion, monkeypatch):
+        """The 64 KB limit was checked after reading all a connection had sent: now no more than that is ever held."""
+        import json
+    
+        from PyQt6.QtNetwork import QLocalSocket
+    
+        from chatmon import events
+    
+        c = companion
+        name = private_server(c)
+        heard = []
+        monkeypatch.setattr(c, "handle", heard.append)
+        big = {"type": "say", "text": "hello", "padding": "x" * (events.MAX_MESSAGE - 100)}  # just under: still heard
+        sender = QLocalSocket()
+        sender.connectToServer(name)
+        assert sender.waitForConnected(2000) and until(lambda: len(c._connections) == 1)
+        (sock,) = c._connections
+>       assert sock.readBufferSize() == events.MAX_MESSAGE + 1
+E       AssertionError: assert 0 == (65536 + 1)
+E        +  where 0 = <built-in method readBufferSize of QLocalSocket object at 0x00000258CAF3CEB0>()
+E        +    where <built-in method readBufferSize of QLocalSocket object at 0x00000258CAF3CEB0> = <PyQt6.QtNetwork.QLocalSocket object at 0x00000258CAF3CEB0>.readBufferSize
+E        +  and   65536 = <module 'chatmon.events' from 'C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-drill-wf5jqy31\\chatmon\\events.py'>.MAX_MESSAGE
+
+tests\test_app_smoke.py:539: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_a_hook_connection_never_holds_more_than_a_message
+1 failed in 1.31s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.26s
+
+=== drill M0-10-connection-cap (M0-10) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_hook_connections_past_the_cap_are_turned_away
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.72s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_hook_connections_past_the_cap_are_turned_away ______________
+
+companion = <chatmon.app.Companion object at 0x00000216CF449450>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000216CF83CFC0>
+
+    def test_hook_connections_past_the_cap_are_turned_away(companion, monkeypatch):
+        from PyQt6.QtNetwork import QLocalSocket
+    
+        from chatmon import app as appmod
+    
+        c = companion
+        monkeypatch.setattr(appmod, "MAX_CONNECTIONS", 3)
+        name = private_server(c)
+        unconnected = QLocalSocket.LocalSocketState.UnconnectedState
+        senders = []
+        for _ in range(4):  # each connects and says nothing yet
+            sender = QLocalSocket()
+            sender.connectToServer(name)
+            assert sender.waitForConnected(2000)
+            senders.append(sender)
+>       assert until(lambda: sum(s.state() == unconnected for s in senders) == 1)
+E       assert False
+E        +  where False = until(<function test_hook_connections_past_the_cap_are_turned_away.<locals>.<lambda> at 0x00000216CF48E820>)
+
+tests\test_app_smoke.py:562: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_hook_connections_past_the_cap_are_turned_away
+1 failed in 6.47s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.72s
+
+=== drill M0-11-unparseable-remind (M0-11) on chatmon/cli.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_cli.py::test_a_reminder_it_cant_read_says_so_and_exits_2
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.37s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_a_reminder_it_cant_read_says_so_and_exits_2 _______________
+
+sent = [{'type': 'remind', 'text': 'sometime to stretch'}]
+capsys = <_pytest.capture.CaptureFixture object at 0x000002474A0BC590>
+
+    def test_a_reminder_it_cant_read_says_so_and_exits_2(sent, capsys):
+        for words in (["sometime", "to", "stretch"], ["to", "call", "Sam"], []):
+>           assert cli.main(["remind", *words]) == 2
+E           AssertionError: assert 0 == 2
+E            +  where 0 = <function main at 0x000002474A1A0E00>(['remind', 'sometime', 'to', 'stretch'])
+E            +    where <function main at 0x000002474A1A0E00> = cli.main
+
+tests\test_cli.py:74: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_cli.py::test_a_reminder_it_cant_read_says_so_and_exits_2 - ...
+1 failed in 0.45s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+
+=== drill M0-12-ask-sent (M0-12) on chatmon/cli.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_cli.py::test_ask_opens_the_box_with_the_text_typed_in
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.32s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_ask_opens_the_box_with_the_text_typed_in ________________
+
+sent = [{'type': 'say', 'text': 'how do I rebase?'}, {'type': 'say', 'text': ''}]
+capsys = <_pytest.capture.CaptureFixture object at 0x000001AEC5FAC590>
+
+    def test_ask_opens_the_box_with_the_text_typed_in(sent, capsys):
+        assert cli.main(["ask", "how", "do", "I", "rebase?"]) == 0
+        assert cli.main(["ask"]) == 0
+>       assert sent == [{"type": "ask", "text": "how do I rebase?"}, {"type": "ask", "text": ""}]
+E       AssertionError: assert [{'type': 'sa..., 'text': ''}] == [{'type': 'as..., 'text': ''}]
+E         
+E         At index 0 diff: {'type': 'say', 'text': 'how do I rebase?'} != {'type': 'ask', 'text': 'how do I rebase?'}
+E         Use -v to get more diff
+
+tests\test_cli.py:84: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_cli.py::test_ask_opens_the_box_with_the_text_typed_in - Ass...
+1 failed in 0.57s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.41s
+
+=== drill M0-12-ask-prefilled (M0-12) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_chatmon_ask_opens_the_box_with_the_text_typed_in_and_the_keyboard
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.49s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_chatmon_ask_opens_the_box_with_the_text_typed_in_and_the_keyboard ____
+
+companion = <chatmon.app.Companion object at 0x000001E9EB3E5450>
+
+    def test_chatmon_ask_opens_the_box_with_the_text_typed_in_and_the_keyboard(companion):
+        c = companion
+        c.set_hidden(True)
+        c.handle({"type": "ask", "text": "how do I rebase onto main?"})
+        assert c.ask_box.isVisible() and not c.behavior.hidden
+>       assert c.ask_box.entry.text() == "how do I rebase onto main?" and c.ask_box.wants_keyboard
+E       AssertionError: assert ('' == 'how do I rebase onto main?'
+E         
+E         - how do I rebase onto main?)
+
+tests\test_app_smoke.py:82: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_app_smoke.py::test_chatmon_ask_opens_the_box_with_the_text_typed_in_and_the_keyboard
+1 failed in 1.37s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.34s
+
+=== drill M0-12-come-forward (M0-12) on chatmon/cli.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_cli.py::test_on_windows_ask_lets_chatmon_come_forward_before_sending
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_on_windows_ask_lets_chatmon_come_forward_before_sending _________
+
+sent = []
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D0D1A1D350>
+
+    @pytest.mark.skipif(sys.platform != "win32", reason="only Windows keeps a program you're not using from coming to the front")
+    def test_on_windows_ask_lets_chatmon_come_forward_before_sending(sent, monkeypatch):
+        import ctypes
+    
+        order = []
+        monkeypatch.setattr(ctypes.windll.user32, "AllowSetForegroundWindow", lambda pid: order.append(("allow", pid.value)) or 1)
+        monkeypatch.setattr(events, "send", lambda message, timeout=0.5: order.append(("send", message["type"])) or True)
+        assert cli.main(["ask", "hello"]) == 0
+>       assert order == [("allow", cli.ASFW_ANY), ("send", "ask")]
+E       AssertionError: assert [('send', 'ask')] == [('allow', 42...send', 'ask')]
+E         
+E         At index 0 diff: ('send', 'ask') != ('allow', 4294967295)
+E         Right contains one more item: ('send', 'ask')
+E         Use -v to get more diff
+
+tests\test_cli.py:97: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_cli.py::test_on_windows_ask_lets_chatmon_come_forward_before_sending
+1 failed in 0.50s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+
+=== drill M0-12-status-brain (M0-12) on chatmon/commands.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_cli.py::test_status_says_whether_its_running_the_brain_reminders_and_agents
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.50s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_status_says_whether_its_running_the_brain_reminders_and_agents _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C45C9AD350>
+capsys = <_pytest.capture.CaptureFixture object at 0x000001C45CA0C590>
+home = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1008/test_status_says_whether_its_r0')
+
+    def test_status_says_whether_its_running_the_brain_reminders_and_agents(monkeypatch, capsys, home):
+        from chatmon.settings import State
+    
+        monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+        now = time.time()
+        State(paths.state_file(), {
+            "brain": "anthropic-api", "brain_options": {"anthropic-api": {"model": "claude-sonnet-5-5"}},
+            "reminders": [{"due": now + 30 * 60 + 20, "text": "stretch", "kind": "reminder", "id": "a1"},
+                          {"due": now + 600, "text": "pasta", "kind": "timer", "id": "b2"}],
+        }).save()
+        (home / ".gemini").mkdir()  # Gemini CLI's settings folder: found, not connected
+        pinged = []
+        monkeypatch.setattr(events, "deliver", lambda message, timeout=0.5: pinged.append(message) or events.ABSENT)
+        assert cli.main(["status"]) == 0
+        out = capsys.readouterr().out
+        assert pinged == [{"type": "ping"}] and out.startswith("Chatmon isn't running.")
+        assert "- Timer in 10 min: pasta" in out and "- Reminder in 30 min: stretch" in out
+        assert out.index("pasta") < out.index("stretch")  # soonest first
+>       assert "- Brain: Anthropic API (claude-sonnet-5-5, effort low)" in out
+E       assert '- Brain: Anthropic API (claude-sonnet-5-5, effort low)' in "Chatmon isn't running. Start it with: chatmon\n- Disk for C:\\: 87% full\n- Timer in 10 min: pasta\n- Reminder in 30 ...     not found\n  Cline                not found\n  Qwen Code            not found\n  Devin CLI            not found\n"
+
+tests\test_cli.py:123: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_cli.py::test_status_says_whether_its_running_the_brain_reminders_and_agents
+1 failed in 0.62s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.54s
+
+=== drill M0-12-hooks-connect-all (M0-12) on chatmon/cli.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_cli.py::test_hooks_lists_shows_connects_and_disconnects
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.33s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_hooks_lists_shows_connects_and_disconnects _______________
+
+capsys = <_pytest.capture.CaptureFixture object at 0x000002DFA618C590>
+home = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1011/test_hooks_lists_shows_connect0')
+
+    def test_hooks_lists_shows_connects_and_disconnects(capsys, home):
+        assert cli.main(["hooks"]) == 0
+        listed = capsys.readouterr().out
+        assert all(agent.label in listed for agent in agents.AGENTS) and "Connect one with: chatmon hooks connect NAME" in listed
+        assert cli.main(["hooks", "show", "gemini"]) == 0 and ".gemini" in capsys.readouterr().out
+        assert cli.main(["hooks", "show", "any"]) == 0 and "Any other agent or script" in capsys.readouterr().out
+>       assert cli.main(["hooks", "connect", "all"]) == 0 and capsys.readouterr().out.strip() == "No coding agents found here."
+E       AssertionError: assert (1 == 0)
+E        +  where 1 = <function main at 0x000002DFA6400E00>(['hooks', 'connect', 'all'])
+E        +    where <function main at 0x000002DFA6400E00> = cli.main
+
+tests\test_cli.py:146: AssertionError
+---------------------------- Captured stdout call -----------------------------
+Connected Codex: C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-1011\test_hooks_lists_shows_connect0\.codex\config.toml
+Connected Gemini CLI: C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-1011\test_hooks_lists_shows_connect0\.gemini\settings.json
+Connected Grok: C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-1011\test_hooks_lists_shows_connect0\.grok\hooks\chatmon.json
+Connected GitHub Copilot CLI: C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-1011\test_hooks_lists_shows_connect0\.copilot\hooks\chatmon.json
+Connected Cursor: C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-1011\test_hooks_lists_shows_connect0\.cursor\hooks.json
+Connected Cline: hook scripts in C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-1011\test_hooks_lists_shows_connect0\Documents\Cline\Hooks (Cline's "Enable Hooks" setting has to be on)
+Connected Qwen Code: C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-1011\test_hooks_lists_shows_connect0\.qwen\settings.json
+Connected Devin CLI: C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-1011\test_hooks_lists_shows_connect0\AppData\devin\config.json
+---------------------------- Captured stderr call -----------------------------
+Claude Code: chatmon has to be on your PATH for agent plugins to find it. Install it with `pipx install git+https://github.com/RandyNorthrup/chatmon`, or link the launcher: ln -s <repo>/bin/chatmon ~/.local/bin/
+Muse Code: Muse Code isn't installed.
+=========================== short test summary info ===========================
+FAILED tests/test_cli.py::test_hooks_lists_shows_connects_and_disconnects - A...
+1 failed in 0.43s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.35s
+
+=== summary
+PASS M0-01-priority
+PASS M0-01-never-dropped
+PASS M0-01-heads-up-not-lost
+PASS M0-01-prompt-stays
+PASS M0-01-pushed-comes-back
+PASS M0-01-minimum-time
+PASS M0-01-focus-holds
+PASS M0-01-quiet-holds
+PASS M0-02-second-waits
+PASS M0-02-still-answering-shown
+PASS M0-02-nothing-vanishes
+PASS M0-02-both-answered
+PASS M0-03-tick-only-labels
+PASS M0-03-agents-on-open-only
+PASS M0-04-appearance
+PASS M0-04-reload-under-help
+PASS M0-05-same-phrases
+PASS M0-05-english-stays
+PASS M0-06-ask-box-doesnt-wait
+PASS M0-06-readings-off-thread
+PASS M0-07-state-name-wins
+PASS M0-08-hung-check-stopped
+PASS M0-08-late-answer-ignored
+PASS M0-09-password-not-read
+PASS M0-10-read-buffer
+PASS M0-10-connection-cap
+PASS M0-11-unparseable-remind
+PASS M0-12-ask-sent
+PASS M0-12-ask-prefilled
+PASS M0-12-come-forward
+PASS M0-12-status-brain
+PASS M0-12-hooks-connect-all

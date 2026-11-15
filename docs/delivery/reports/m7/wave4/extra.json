@@ -1,0 +1,64 @@
+{
+ "readiness_method": "Requirements review again at fb19cb9 (readiness.md): M7-CI, M7-01 to M7-13 and the INT- requirements re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now, and the wave-1 plans whose integration notes they answer; no conflict or gap; CI-ALL-PLATFORMS answered by CI run 43677128712; WAYLAND-HOSTING still needs a person.",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "drill_acceptance": {
+  "W4-M7-02-no-next-brain": [
+   "AC-02-1"
+  ],
+  "W4-M7-02-welcome-without-brain": [
+   "AC-02-3"
+  ]
+ },
+ "observe_add": [
+  "tests/test_app_m7.py",
+  "tests/test_app_answers.py",
+  "tests/test_app_reminders.py",
+  "tests/test_chatswin.py",
+  "tests/test_app_smoke.py",
+  "tests/test_ask_box.py",
+  "tests/test_events.py"
+ ],
+ "ci": [
+  {
+   "id": "W4-BEH-CI-WINDOWS",
+   "leg": "win3.14",
+   "log": "ci-132699632366-test-windows-latest-3.14.log",
+   "method": "CI run 43677128712 on fb19cb9, job test (windows-latest, 3.14). Every test these criteria's drills run passed, the smoke tests and ask-box tests among them; their failing on Windows CI was the coordinator's finding (AC-CI-1 to AC-CI-3). The same was true on the 3.11 and 3.15 legs. This answers CI-ALL-PLATFORMS for Windows."
+  },
+  {
+   "id": "W4-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132699632422-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15), under xvfb-run. Every test these criteria's drills run passed, including POSIX events.request (tests/test_events.py) and the windows' tests with Linux's own fonts. The same was true on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the three distro containers. This answers CI-ALL-PLATFORMS for Linux."
+  },
+  {
+   "id": "W4-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132699632411-test-macos-latest-3.14.log",
+   "method": "CI run 43677128712 on fb19cb9, job test (macos-latest, 3.14). Every test these criteria's drills run passed with macOS's fonts and events.request over its temporary folder, as on the 3.11 and 3.15 legs. This answers CI-ALL-PLATFORMS for macOS."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4-MAN-WAYLAND-HOSTING",
+   "kind": "manual",
+   "status": "deferred",
+   "acceptance": [
+    "AC-11-5"
+   ],
+   "method": "AC-11-5 on a real Wayland compositor: with Orca running on Hyprland or KDE, the ask box opens as a window of its own (set_hosting(False)) and the penguin's menu stays on the stage. The offscreen tests in the Windows suite and on CI prove the switch itself.",
+   "reason": "Not done: it needs a person at a Wayland desktop with a screen reader. There is no Wayland compositor or screen reader here, and CI has neither. Owner: Randy, before release (or the wayland worker, if its machine has a compositor and Orca)."
+  }
+ ],
+ "pending": [
+  {
+   "id": "WAYLAND-HOSTING",
+   "description": "set_hosting(False) with a screen reader on a real Wayland compositor (Hyprland or KDE): the ask box as a window, the penguin's menu kept on the stage. This is a manual check for a person (W4-MAN-WAYLAND-HOSTING); no compositor or screen reader is here or in CI.",
+   "next_action": "Randy, before release: run Chatmon from this branch on Hyprland or KDE with Orca on, open the ask box and the penguin's menu, and record what happened in this plan (a manual receipt for AC-11-5)."
+  }
+ ],
+ "next_action": "WAYLAND-HOSTING, a person's check on a real Wayland desktop with Orca (Randy, before release). Nothing else is open in M7 on fb19cb9. The other workers' merges (the overlay, ci.yml) change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree."
+}

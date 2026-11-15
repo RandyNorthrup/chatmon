@@ -1,0 +1,7 @@
+docs/delivery/reports/m1b/drill-spec-linux.json: 6 drills kept in docs/delivery/reports/m1b/wave4/drill-spec-linux.json, 0 left out
+docs/delivery/reports/m1b/drill-spec.json: 28 drills kept in docs/delivery/reports/m1b/wave4/drill-spec.json, 5 left out
+  M1B-05-stale-folders: its find text occurs 0 times in chatmon/brains.py (expected 1)
+  M1B-09-offline: its find text occurs 0 times in chatmon/brains.py (expected 1)
+  M1B-10-let-go: its find text occurs 0 times in chatmon/brains.py (expected 1)
+  M1B-12-partial: its find text occurs 0 times in chatmon/brains.py (expected 1)
+  M1B-17-not-roaming: its find text occurs 0 times in chatmon/chats.py (expected 1)

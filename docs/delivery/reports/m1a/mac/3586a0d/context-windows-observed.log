@@ -1,0 +1,14 @@
+# Observed 2026-11-15T17:04:34Z on the Windows 11 workstation, for binding the macOS drill (3586a0d)
+$ python verify-delivery.py --observe-context
+{
+  "platform": "windows",
+  "tools": {
+    "python": "3.14.10"
+  }
+}
+$ .venv python -c (test tool versions)
+python 3.14.10
+pytest 9.2.0
+PyQt6 6.11.0
+$ ruff --version
+ruff 0.17.4

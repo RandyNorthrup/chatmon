@@ -1,0 +1,6 @@
+tests/test_windows.py::test_windows_tells_the_display_and_energy_saver_as_they_stand
+tests/test_windows.py::test_files_out_of_a_zip_are_read_as_windows_hands_them
+tests/test_windows.py::test_the_ask_boxs_drop_target_takes_a_drop_only_while_you_can_type
+tests/test_windows.py::test_a_paste_of_files_copied_out_of_a_zip
+
+4/35 tests collected (31 deselected) in 0.28s

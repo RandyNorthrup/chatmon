@@ -1,0 +1,5 @@
+$ verify-delivery.py --root . --plan docs/delivery/m8-translation.md --stage readiness --context docs/delivery/reports/m8/context.json
+PASS: readiness record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts
+Structural and recorded-evidence checks; semantic review remains required.
+exit 0

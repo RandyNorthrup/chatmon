@@ -1,0 +1,644 @@
+{
+  "plan": "docs/delivery/m4b-hotkey-sound-toasts.md",
+  "section": "docs/delivery/reports/m4b/w4d/section.md",
+  "rules": {
+    "docs/delivery/ROADMAP.md": "3586a0d+wave4c",
+    "pyproject.toml": "3586a0d"
+  },
+  "inputs_add": [],
+  "task_changes_add": {},
+  "stale_reason": "Stale at wave 4's round three (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three (3586a0d+wave4c), and the plan's rules and narrative with it; the W4D- receipts ran its check again on a4fe9f8",
+  "receipts": [
+    {
+      "id": "W4D-READY",
+      "kind": "readiness",
+      "acceptance": [
+        "AC-00A",
+        "AC-00B",
+        "AC-00C",
+        "AC-01A",
+        "AC-01B",
+        "AC-01C",
+        "AC-01D",
+        "AC-01E",
+        "AC-01F",
+        "AC-02A",
+        "AC-02B",
+        "AC-02C",
+        "AC-02D",
+        "AC-02E",
+        "AC-02F",
+        "AC-03A",
+        "AC-03B",
+        "AC-03C",
+        "AC-03D",
+        "AC-03E",
+        "AC-04A",
+        "AC-04B"
+      ],
+      "artifact": "docs/delivery/reports/m4b/w4d/readiness.md",
+      "method": "Requirements review, round three, on a4fe9f8 (w4d/readiness.md): M4B-00 to M4B-04 and their 22 criteria re-read against ASSESSMENT.md, ROADMAP.md as amended for round three and pyproject.toml; no conflict or gap; the four drills that needed a place to run now have one, each owner-approved."
+    },
+    {
+      "id": "W4D-RED-D-01A-alone",
+      "kind": "red",
+      "acceptance": [
+        "AC-01A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01A-alone",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01A-alone through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('__________ test_what_isnt_a_shortcut_says_why[A-would take that key] __________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-01A-order",
+      "kind": "red",
+      "acceptance": [
+        "AC-01A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01A-order",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01A-order through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('___ test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Space-Ctrl+Alt+Space] ____'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-01B-filter",
+      "kind": "red",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01B-filter",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01B-filter through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-01B-given-back",
+      "kind": "red",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01B-given-back",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01B-given-back through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-01B-its-own-id",
+      "kind": "red",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01B-its-own-id",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01B-its-own-id through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('E           assert [True, True] == [True]'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-01B-message-only",
+      "kind": "red",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01B-message-only",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01B-message-only through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-01C-conflict",
+      "kind": "red",
+      "acceptance": [
+        "AC-01C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01C-conflict",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01C-conflict through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected (\"E             + Windows wouldn't set up Ctrl+Alt+Shift+F23 (error 1409).\"); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-01C-keeps-old",
+      "kind": "red",
+      "acceptance": [
+        "AC-01C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01C-keeps-old",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01C-keeps-old through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('________ test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had ________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-01F-trigger",
+      "kind": "red",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-01F-trigger",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-01F-trigger through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected (\"E       AssertionError: assert 'CTRL+ALT+Space' == 'CTRL+ALT+space'\"); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02A-plays",
+      "kind": "red",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02A-plays",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02A-plays through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('>       assert True in playing or effect.isPlaying(), f\"never played (status {effect.status()})\"'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02A-stopped-at-exit",
+      "kind": "red",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02A-stopped-at-exit",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02A-stopped-at-exit through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_______________ test_quitting_while_a_sound_plays_ends_cleanly ________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02A-volume",
+      "kind": "red",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02A-volume",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02A-volume through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_________________ test_qsoundeffect_plays_it_without_waiting __________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02B-cue-off",
+      "kind": "red",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02B-cue-off",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02B-cue-off through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('____________________ test_nothing_sounds_when_it_shouldnt _____________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02B-one-switch",
+      "kind": "red",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02B-one-switch",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02B-one-switch through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('____________________ test_nothing_sounds_when_it_shouldnt _____________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02B-quiet",
+      "kind": "red",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02B-quiet",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02B-quiet through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('____________________ test_nothing_sounds_when_it_shouldnt _____________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02C-defaults",
+      "kind": "red",
+      "acceptance": [
+        "AC-02C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02C-defaults",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02C-defaults through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('___________ test_only_the_alerts_sound_until_you_turn_the_others_on ___________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02D-own-thread",
+      "kind": "red",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02D-own-thread",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02D-own-thread through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('___________________ test_playsound_plays_on_its_own_thread ____________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02D-scaled",
+      "kind": "red",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02D-scaled",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02D-scaled through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('___________________ test_samples_are_scaled_for_the_volume ____________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-02D-without-qt",
+      "kind": "red",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-02D-without-qt",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-02D-without-qt through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('__________ test_without_qtmultimedia_the_systems_own_player_is_used ___________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-04A-bubble-size",
+      "kind": "red",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-04A-bubble-size",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-04A-bubble-size through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-04A-cleared",
+      "kind": "red",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-04A-cleared",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-04A-cleared through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-04A-position",
+      "kind": "red",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-04A-position",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-04A-position through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-04B-magnifier",
+      "kind": "red",
+      "acceptance": [
+        "AC-04B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-04B-magnifier",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-04B-magnifier through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_______________ test_the_caret_is_only_for_when_magnifier_runs ________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-L-01E-conflict",
+      "kind": "red",
+      "acceptance": [
+        "AC-01E"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/wsl-drills-results.json",
+      "drill": "L-01E-conflict",
+      "artifact": "docs/delivery/reports/m4b/w4d/wsl-drills.log",
+      "method": "Red drill L-01E-conflict in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of a4fe9f8's files (w4d/files.lst), from w4d/run-wsl.sh: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-L-01E-numlock",
+      "kind": "red",
+      "acceptance": [
+        "AC-01E"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/wsl-drills-results.json",
+      "drill": "L-01E-numlock",
+      "artifact": "docs/delivery/reports/m4b/w4d/wsl-drills.log",
+      "method": "Red drill L-01E-numlock in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of a4fe9f8's files (w4d/files.lst), from w4d/run-wsl.sh: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-L-01F-carries-on",
+      "kind": "red",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/wsl-drills-results.json",
+      "drill": "L-01F-carries-on",
+      "artifact": "docs/delivery/reports/m4b/w4d/wsl-drills.log",
+      "method": "Red drill L-01F-carries-on in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of a4fe9f8's files (w4d/files.lst), from w4d/run-wsl.sh: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_ test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked _'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-L-01F-its-own-session",
+      "kind": "red",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/wsl-drills-results.json",
+      "drill": "L-01F-its-own-session",
+      "artifact": "docs/delivery/reports/m4b/w4d/wsl-drills.log",
+      "method": "Red drill L-01F-its-own-session in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of a4fe9f8's files (w4d/files.lst), from w4d/run-wsl.sh: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-L-01F-response",
+      "kind": "red",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/wsl-drills-results.json",
+      "drill": "L-01F-response",
+      "artifact": "docs/delivery/reports/m4b/w4d/wsl-drills.log",
+      "method": "Red drill L-01F-response in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of a4fe9f8's files (w4d/files.lst), from w4d/run-wsl.sh: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-L-02E-linux-player",
+      "kind": "red",
+      "acceptance": [
+        "AC-02E"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/wsl-drills-new-results.json",
+      "drill": "W4-L-02E-linux-player",
+      "artifact": "docs/delivery/reports/m4b/w4d/wsl-drills-new.log",
+      "method": "Red drill W4-L-02E-linux-player in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of a4fe9f8's files (w4d/files.lst), from w4d/run-wsl.sh: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('______ test_linux_players_follow_the_sound_server_and_never_make_you_wait ______'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-BEH-WINDOWS",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-00A",
+        "AC-01A",
+        "AC-01B",
+        "AC-01C",
+        "AC-02A",
+        "AC-02B",
+        "AC-02C",
+        "AC-02D",
+        "AC-03A",
+        "AC-03B",
+        "AC-03C",
+        "AC-03D",
+        "AC-04A",
+        "AC-04B"
+      ],
+      "artifact": "docs/delivery/reports/m4b/w4d/suite-windows.log",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "exit_code": 0,
+      "method": "The whole suite on a4fe9f8's files (the log's header has HEAD and the source digest) on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 178 skipped, exit 0. Notifications are off for this user (ToastEnabled 0), so the toast tests take their declining branch, which passed. Evidence for a4fe9f8: wave4/mac-drills with improve/assessment-fixes merged (the toast merge, cbeed17, and the quit guard, 86e84e0)."
+    },
+    {
+      "id": "W4D-BEH-LINUX",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-00B",
+        "AC-01E",
+        "AC-01F",
+        "AC-02E"
+      ],
+      "artifact": "docs/delivery/reports/m4b/w4d/linux-tests.log",
+      "command": [
+        "wsl.exe",
+        "-d",
+        "archlinux",
+        "--",
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-v",
+        "-rA",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_m4b_imports.py",
+        "tests/test_hotkey.py",
+        "tests/test_hotkey_portal.py",
+        "tests/test_sound.py"
+      ],
+      "exit_code": 0,
+      "method": "In WSL (Arch Linux; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11.0, Qt 6.11.2, pytest 9.2.0) on a4fe9f8's files, through docs/delivery/reports/m4b/w4d/run-wsl.sh: the tests CI's Linux job had shown for these criteria (the imports for AC-00B, the X11 grab on its own Xvfb for AC-01E, the GlobalShortcuts portal on a private bus for AC-01F, the Linux players for AC-02E): 58 passed, 7 skipped, exit 0, every warning an error. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for a4fe9f8: wave4/mac-drills with improve/assessment-fixes merged (the toast merge, cbeed17, and the quit guard, 86e84e0)."
+    },
+    {
+      "id": "W4D-BEH-TESTPC2-TOASTS",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "artifact": "docs/delivery/reports/m4b/w4d/testpc2/plain-test.log",
+      "command": [
+        "W:\\chatmon-m4b\\venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-v",
+        "-rA",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py"
+      ],
+      "exit_code": 0,
+      "method": "tests/test_wintoast.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: w4d/testpc2/probe.log), a4fe9f8's files from git archive (its tree checked against the commit's, 6fa4a57f), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0). The toast tests take their notifications-on branch: the toast is in Windows' history under its tag, gone from it after hide(), and Dismissed(HIDDEN_BY_CHATMON) comes back on the Qt thread as the last word: 12 passed, 1 skipped, exit 0. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for a4fe9f8: wave4/mac-drills with improve/assessment-fixes merged (the toast merge, cbeed17, and the quit guard, 86e84e0)."
+    },
+    {
+      "id": "W4D-RED-D-03E-hide-kept",
+      "kind": "red",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/testpc2/drills-results.json",
+      "drill": "D-03E-hide-kept",
+      "artifact": "docs/delivery/reports/m4b/w4d/testpc2/drills.log",
+      "method": "Red drill D-03E-hide-kept through tests/drills/run.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: w4d/testpc2/probe.log), a4fe9f8's files from git archive (its tree checked against the commit's, 6fa4a57f), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0), in a temporary copy of those files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________'); the file's bytes put back (checked by SHA-256) and green again. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere)."
+    },
+    {
+      "id": "W4D-RED-D-03E-hide-noop",
+      "kind": "red",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/testpc2/drills-results.json",
+      "drill": "D-03E-hide-noop",
+      "artifact": "docs/delivery/reports/m4b/w4d/testpc2/drills.log",
+      "method": "Red drill D-03E-hide-noop through tests/drills/run.py on testpc2's signed-in desktop, owner-approved 2026-11-15: a scheduled task with an interactive logon in Technician's console session (session 1, Medium integrity), notifications on (ToastEnabled absent, SHQueryUserNotificationState 5, Focus off: w4d/testpc2/probe.log), a4fe9f8's files from git archive (its tree checked against the commit's, 6fa4a57f), a venv of packaging/requirements-test.txt installed with --require-hashes (Python 3.14.10, PyQt6 6.11.0, pytest 9.2.0), in a temporary copy of those files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_______ test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon ________'); the file's bytes put back (checked by SHA-256) and green again. The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere)."
+    },
+    {
+      "id": "W4D-RED-D-00A-eager-objc",
+      "kind": "red",
+      "acceptance": [
+        "AC-00A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-00A-eager-objc",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-00A-eager-objc through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_________________________ test_it_imports_here[sound] _________________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03A-control-chars",
+      "kind": "red",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03A-control-chars",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03A-control-chars through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('________________ test_text_from_an_agent_is_text_never_markup _________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03A-escaped",
+      "kind": "red",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03A-escaped",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03A-escaped through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('________________ test_text_from_an_agent_is_text_never_markup _________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03A-five-buttons",
+      "kind": "red",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03A-five-buttons",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03A-five-buttons through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('___________ test_too_many_buttons_or_an_unknown_scenario_is_refused ___________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03A-reminder-button",
+      "kind": "red",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03A-reminder-button",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03A-reminder-button through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('____________________ test_a_reminder_stays_until_answered _____________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03B-setting",
+      "kind": "red",
+      "acceptance": [
+        "AC-03B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03B-setting",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03B-setting through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_____________ test_only_a_real_no_keeps_a_toast_from_being_tried ______________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03C-action",
+      "kind": "red",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03C-action",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03C-action through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03C-button",
+      "kind": "red",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03C-button",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03C-button through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03C-qt-thread",
+      "kind": "red",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03C-qt-thread",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03C-qt-thread through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-D-03D-icon",
+      "kind": "red",
+      "acceptance": [
+        "AC-03D"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/drills-results.json",
+      "drill": "D-03D-icon",
+      "artifact": "docs/delivery/reports/m4b/w4d/drills.log",
+      "method": "Red drill D-03D-icon through tests/drills/run.py on this Windows workstation (wave4b/drill-spec.json, all 36), in a temporary copy of a4fe9f8's files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_____________ test_a_pip_install_tells_windows_its_name_and_icon ______________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "W4D-RED-L-00B-eager-objc",
+      "kind": "red",
+      "acceptance": [
+        "AC-00B"
+      ],
+      "results": "docs/delivery/reports/m4b/w4d/wsl-drills-results.json",
+      "drill": "L-00B-eager-objc",
+      "artifact": "docs/delivery/reports/m4b/w4d/wsl-drills.log",
+      "method": "Red drill L-00B-eager-objc in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of a4fe9f8's files (w4d/files.lst), from w4d/run-wsl.sh: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_________________________ test_it_imports_here[sound] __________________________'); the file's bytes put back (checked by SHA-256) and green again."
+    },
+    {
+      "id": "MAC-BEH-MACOS",
+      "kind": "behavior",
+      "acceptance": [
+        "AC-00C",
+        "AC-01D",
+        "AC-02F"
+      ],
+      "artifact": "docs/delivery/reports/m4b/mac/suite-offscreen.log",
+      "command": [
+        "/Users/user/chatmon-drills-tmp/venv/bin/python",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "--deselect",
+        "tests/test_keychain.py::test_macos_keychain_keeps_replaces_and_forgets_a_key"
+      ],
+      "exit_code": 0,
+      "method": "The whole suite on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh and run in his signed-in Aqua session by docs/delivery/reports/m1a/mac/aqua.sh (a one-shot launchd job in gui/503) with job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m4b/mac/context-observed-aqua.txt), on a4fe9f8's files (git archive), offscreen as CI's macOS job runs it (m4b/mac/README.md): 1235 passed, 201 skipped, 1 deselected, exit 0. It ran every macOS test of these criteria's: all 8 of tests/test_m4b_imports.py (AC-00C); tests/test_hotkey.py's Carbon tests, registered and heard on the application's event target, a second exclusive registration reported as a conflict, and unregistered (AC-01D); tests/test_sound.py::test_nssound_plays_at_the_volume (AC-02F). The one test left out writes to the owner's login keychain. tests/test_macnative.py passed on Qt's cocoa platform too (m4b/mac/suite-macnative-cocoa.log). The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere). Evidence for a4fe9f8: wave4/mac-drills with improve/assessment-fixes merged (the toast merge, cbeed17, and the quit guard, 86e84e0)."
+    },
+    {
+      "id": "MAC-RED-AC-00C",
+      "kind": "red",
+      "acceptance": [
+        "AC-00C"
+      ],
+      "results": "docs/delivery/reports/m4b/mac/drills-results.json",
+      "drill": "MAC-00C-linux-import-sound",
+      "artifact": "docs/delivery/reports/m4b/mac/drills.log",
+      "method": "Red drill MAC-00C-linux-import-sound on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh and run in his signed-in Aqua session by docs/delivery/reports/m1a/mac/aqua.sh (a one-shot launchd job in gui/503) with job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m4b/mac/context-observed-aqua.txt), on a4fe9f8's files (git archive), in a temporary copy of those files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('_________________________ test_it_imports_here[sound] __________________________'); the file's bytes put back (checked by SHA-256) and green again. The same drill went green, red and green on 3586a0d earlier that day (m4b/mac/3586a0d/). The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere)."
+    },
+    {
+      "id": "MAC-RED-AC-01D",
+      "kind": "red",
+      "acceptance": [
+        "AC-01D"
+      ],
+      "results": "docs/delivery/reports/m4b/mac/drills-results.json",
+      "drill": "MAC-01D-conflict-unreported",
+      "artifact": "docs/delivery/reports/m4b/mac/drills.log",
+      "method": "Red drill MAC-01D-conflict-unreported on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh and run in his signed-in Aqua session by docs/delivery/reports/m1a/mac/aqua.sh (a one-shot launchd job in gui/503) with job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m4b/mac/context-observed-aqua.txt), on a4fe9f8's files (git archive), in a temporary copy of those files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected (\"E           AssertionError: assert None == 'Ctrl+Alt+Shift+F18 is already used by another app. Pick another shortcut.'\"); the file's bytes put back (checked by SHA-256) and green again. The same drill went green, red and green on 3586a0d earlier that day (m4b/mac/3586a0d/). The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere)."
+    },
+    {
+      "id": "MAC-RED-AC-02F",
+      "kind": "red",
+      "acceptance": [
+        "AC-02F"
+      ],
+      "results": "docs/delivery/reports/m4b/mac/drills-results.json",
+      "drill": "MAC-02F-volume-unset",
+      "artifact": "docs/delivery/reports/m4b/mac/drills.log",
+      "method": "Red drill MAC-02F-volume-unset on the owner's MacBook Pro (macOS 15.7.9 24G830, Intel x86_64), owner-approved 2026-11-15, launched from here over ssh and run in his signed-in Aqua session by docs/delivery/reports/m1a/mac/aqua.sh (a one-shot launchd job in gui/503) with job.sh, with Homebrew's Python 3.13.7, PyQt6 6.11.0 and pytest 9.2.0 in a venv of its own (packaging/requirements-test.txt, hash-locked; m4b/mac/context-observed-aqua.txt), on a4fe9f8's files (git archive), in a temporary copy of those files: green; the defect put in, the named tests failing with pytest's tests-failed exit and printing what's expected ('E       assert 1.0 == 0.5 ± 5.0e-07'); the file's bytes put back (checked by SHA-256) and green again. The same drill went green, red and green on 3586a0d earlier that day (m4b/mac/3586a0d/). The command is the one run there; the receipt's environment is the plan's profile (ROADMAP: evidence from elsewhere)."
+    }
+  ],
+  "tasks": {},
+  "pending": [],
+  "next_action": "None for M4B: every task is verified at a4fe9f8. A merge that changes a file these receipts bind, or ROADMAP.md, needs those checks run again: on this workstation, in WSL, on testpc2 (AC-03E) and on a Mac (AC-00C, AC-01D, AC-02F), each as reports/m4b/w4d/ and reports/m4b/mac/ say.",
+  "source_revision": "a4fe9f8d2f45b35ba23da6b2b06a689604fca1db"
+}

@@ -1,0 +1,14 @@
+$ python verify-delivery.py --root . --plan docs/delivery/m4b-hotkey-sound-toasts.md --stage closure --context docs/delivery/reports/m4b/w4c/context.json
+FAIL: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+evidence-coverage | AC-00C | No passing behavior receipt covers this acceptance criterion
+evidence-coverage | AC-00C | No passing red receipt covers this acceptance criterion
+evidence-coverage | AC-01D | No passing behavior receipt covers this acceptance criterion
+evidence-coverage | AC-01D | No passing red receipt covers this acceptance criterion
+evidence-coverage | AC-02F | No passing behavior receipt covers this acceptance criterion
+evidence-coverage | AC-02F | No passing red receipt covers this acceptance criterion
+task-unverified | T-HOTKEY-MAC | Task is implemented, not verified
+task-unverified | T-IMPORTS-POSIX | Task is implemented, not verified
+task-unverified | T-SOUND-MAC | Task is implemented, not verified
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

@@ -1,0 +1,30 @@
+# 2026-11-15T17:30:04Z, over ssh
+$ /usr/local/bin/python3 --version
+Python 3.15.2
+$ /usr/local/bin/python3.15 --version
+Python 3.15.2
+$ /usr/local/bin/python3.13 --version
+Python 3.13.7
+$ /usr/local/bin/python3.12 --version
+Python 3.12.12
+$ /usr/local/bin/pip3 --version
+pip 26.2.2 from /usr/local/lib/python3.15/site-packages/pip (python 3.15)
+$ /usr/local/bin/python3.15 -c (the standard library modules that need Homebrew libraries)
+OpenSSL 4.1.0 23 Oct 2026 | sqlite 3.54.1 | libmpdec 4.0.1
+$ /usr/local/bin/brew info python@3.15 (first 12 lines)
+==> python@3.15: stable 3.15.2
+Interpreted, interactive, object-oriented programming language
+https://www.python.org/
+Aliases: python, python3, python@3
+Installed (on request)
+From: https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/p/python@3.15.rb
+License: Python-2.0
+==> Installed Versions
+python@3.15 3.15.2            (10,549 files, 259MB) [Linked]
+python@3.13 3.13.7 → 3.13.18  (3,943 files, 73.4MB) [Linked]
+python@3.12 3.12.12 → 3.12.16 (3,899 files, 72.6MB) [Linked]
+==> Dependencies
+$ zsh -lc "command -v python3 python3.15; python3 --version" (the owner's login PATH)
+/usr/local/bin/python3
+/usr/local/bin/python3.15
+Python 3.15.2

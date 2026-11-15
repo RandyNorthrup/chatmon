@@ -1,0 +1,5 @@
+FAIL: resume record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, checkpoint-freshness
+outcome-unresolved | CI-posix | Coordinator: push the merged branch so CI runs all three OSes; send any failure back to M0
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

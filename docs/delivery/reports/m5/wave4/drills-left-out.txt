@@ -1,0 +1,6 @@
+docs/delivery/reports/m5/drill-spec.json: 23 drills kept in docs/delivery/reports/m5/wave4/drill-spec.json, 5 left out
+  M5-05-offline-12-hour: its find text occurs 0 times in chatmon/offline.py (expected 1)
+  M5-06-help-not-translated: its find text occurs 0 times in chatmon/offline.py (expected 1)
+  M5-06-broken-file-raises: its find text occurs 0 times in chatmon/offline.py (expected 1)
+  M5-07-type-error-escapes: its find text occurs 0 times in chatmon/offline.py (expected 1)
+  M5-08-span-off-by-one: its find text occurs 0 times in chatmon/offline.py (expected 1)

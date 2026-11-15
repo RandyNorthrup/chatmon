@@ -1,0 +1,42 @@
+# Weekly pull requests for newer actions and Python packages, each held back until it has been out two weeks
+# (cooldown), the same rule as for moving a pin by hand. Every one runs CI before it can be merged.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 14
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # The hash-locked lists CI and the release builds install (packaging/requirements*.in, locked into .txt).
+  - package-ecosystem: pip
+    directory: /packaging
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 14
+    groups:
+      qt:  # PyQt6 and its Qt and sip move together
+        patterns: ["PyQt6*", "pyqt6*"]
+    ignore:
+      # 6.12.0's own QtDBus.pyi has a syntax error that stops mypy before it reads anything: every types job would
+      # fail. 6.12.1 fixes it (docs/delivery/m10-followups.md).
+      - dependency-name: "PyQt6"
+        versions: ["6.12.0"]
+
+  # pyproject.toml: the dev extra's pins. PyQt6>=6.5 is a floor for the Linux distributions' own PyQt6, never
+  # raised just because a newer one is out.
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 14
+    versioning-strategy: increase-if-necessary
+    groups:
+      qt:
+        patterns: ["PyQt6*", "pyqt6*"]

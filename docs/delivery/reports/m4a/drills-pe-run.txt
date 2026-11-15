@@ -1,0 +1,16 @@
+
+=== summary
+PASS AC-03-sleep-wake
+PASS AC-06b-low-power
+PASS AC-07a-transient
+PASS AC-07a-urgency-byte
+PASS AC-07b-replaced-buttons
+PASS AC-07b-other-apps
+PASS AC-08-not-held
+PASS AC-08-no-fallback
+PASS AC-09a-client-side
+PASS AC-09a-not-handed-out
+PASS AC-09a-host-provider
+PASS AC-09b-behind
+PASS AC-09b-no-notification
+exit 0

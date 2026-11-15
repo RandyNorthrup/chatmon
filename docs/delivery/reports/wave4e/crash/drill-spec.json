@@ -1,0 +1,82 @@
+{
+  "drills": [
+    {
+      "id": "CRASH-01-held-by-the-harness",
+      "requirement": "crash-quit-companions",
+      "file": "tests/app_harness.py",
+      "find": "_QUIT.extend([c, *(w for w in QApplication.topLevelWidgets() if sip.unwrapinstance(w) not in others)])",
+      "replace": "pass",
+      "test": [
+        "tests/test_app_smoke.py::test_a_quit_companion_is_freed_between_tests_never_inside_qts_own_loops"
+      ],
+      "expect": [
+        "test_a_quit_companion_is_freed_between_tests_never_inside_qts_own_loops"
+      ]
+    },
+    {
+      "id": "CRASH-02-no-look-once-quit",
+      "requirement": "crash-stale-timers",
+      "file": "chatmon/app.py",
+      "find": "        if self._quitting:\n            return\n        if self._refreshing:",
+      "replace": "        if self._refreshing:",
+      "test": [
+        "tests/test_app_smoke.py::test_a_quit_companion_never_looks_at_the_agents_again"
+      ],
+      "expect": [
+        "test_a_quit_companion_never_looks_at_the_agents_again"
+      ]
+    },
+    {
+      "id": "CRASH-04-background-stopped",
+      "requirement": "crash-nothing-after-quit",
+      "file": "chatmon/app.py",
+      "find": "self.background.stop()",
+      "replace": "self.background.stopped = False",
+      "test": [
+        "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+      ],
+      "expect": [
+        "test_a_quit_companion_runs_nothing_it_had_waiting"
+      ]
+    },
+    {
+      "id": "CRASH-05-finder-stopped",
+      "requirement": "crash-nothing-after-quit",
+      "file": "chatmon/app.py",
+      "find": "self.finder.stop()",
+      "replace": "self.finder.stopped = False",
+      "test": [
+        "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+      ],
+      "expect": [
+        "test_a_quit_companion_runs_nothing_it_had_waiting"
+      ]
+    },
+    {
+      "id": "CRASH-06-timers-silenced",
+      "requirement": "crash-nothing-after-quit",
+      "file": "chatmon/app.py",
+      "find": "timer.blockSignals(True)",
+      "replace": "timer.blockSignals(False)",
+      "test": [
+        "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+      ],
+      "expect": [
+        "test_a_quit_companion_runs_nothing_it_had_waiting"
+      ]
+    },
+    {
+      "id": "CRASH-07-event-filter-removed",
+      "requirement": "crash-nothing-after-quit",
+      "file": "chatmon/app.py",
+      "find": "widget.removeEventFilter(self)",
+      "replace": "widget.objectName()",
+      "test": [
+        "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+      ],
+      "expect": [
+        "test_a_quit_companion_runs_nothing_it_had_waiting"
+      ]
+    }
+  ]
+}

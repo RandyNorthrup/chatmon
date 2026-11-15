@@ -1,0 +1,12 @@
+
+=== summary
+PASS L-AC-01a-read-fallback
+PASS L-AC-04a-asked-each-time
+PASS L-AC-05-starts-services
+PASS L-AC-05-dunst-question
+PASS L-AC-06a-upower-not-followed
+PASS L-AC-07a-not-replaced
+PASS L-AC-07b-action-unheard
+PASS L-AC-10-not-one-call
+PASS L-AC-04a-listener-outlives-desk
+PASS L-AC-02-x11-place

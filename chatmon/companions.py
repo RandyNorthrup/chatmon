@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import paths
+from .i18n import N_, _
 
 DEFAULT = "penguin"
 
@@ -18,9 +19,18 @@ DEFAULT = "penguin"
 @dataclass(frozen=True)
 class Companion:
     id: str
-    label: str
-    nickname: str  # what it answers to until you name it
+    label_en: str  # its name in menus, in English: `label` is in the person's language
+    nickname_en: str
     bubble_style: str  # the bubble style that matches it (styles.STYLES)
+
+    @property
+    def label(self) -> str:
+        return _(self.label_en)
+
+    @property
+    def nickname(self) -> str:
+        """What it answers to until you name it."""
+        return _(self.nickname_en)
 
     def anim_dir(self) -> Path:
         base = paths.anim_dir()
@@ -30,11 +40,11 @@ class Companion:
 COMPANIONS: dict[str, Companion] = {
     c.id: c
     for c in (
-        Companion("penguin", "Electric penguin", "Penguin", "electric"),
-        Companion("fire-red-panda", "Fire red panda", "Panda", "fire"),
-        Companion("ghost-rabbit", "Ghost rabbit", "Rabbit", "ghost"),
-        Companion("fairy-axolotl", "Fairy axolotl", "Axolotl", "fairy"),
-        Companion("leaf-pangolin", "Leaf pangolin", "Pangolin", "leaf"),
+        Companion("penguin", N_("Electric penguin"), N_("Penguin"), "electric"),
+        Companion("fire-red-panda", N_("Fire red panda"), N_("Panda"), "fire"),
+        Companion("ghost-rabbit", N_("Ghost rabbit"), N_("Rabbit"), "ghost"),
+        Companion("fairy-axolotl", N_("Fairy axolotl"), N_("Axolotl"), "fairy"),
+        Companion("leaf-pangolin", N_("Leaf pangolin"), N_("Pangolin"), "leaf"),
     )
 }
 

@@ -1,0 +1,41 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0 -- W:\chatmon-m4b\venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: W:\chatmon-m4b\src
+configfile: pyproject.toml
+plugins: hypothesis-6.170.14, timeout-2.4.0
+timeout: 120.0s
+timeout method: thread
+timeout func_only: False
+collecting ... collected 13 items
+
+tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup PASSED [  7%]
+tests/test_wintoast.py::test_buttons_say_which_toast_and_which_button PASSED [ 15%]
+tests/test_wintoast.py::test_a_reminder_stays_until_answered PASSED      [ 23%]
+tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused PASSED [ 30%]
+tests/test_wintoast.py::test_only_chatmons_own_arguments_are_read PASSED [ 38%]
+tests/test_wintoast.py::test_elsewhere_there_are_no_toasts_and_the_caller_falls_back SKIPPED [ 46%]
+tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon PASSED [ 53%]
+tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried PASSED [ 61%]
+tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread PASSED [ 69%]
+tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread PASSED [ 76%]
+tests/test_wintoast.py::test_what_windows_says_after_a_toast_is_settled_is_not_news PASSED [ 84%]
+tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon PASSED [ 92%]
+tests/test_wintoast.py::test_the_app_id_is_the_one_the_process_gave_itself PASSED [100%]
+
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup
+PASSED tests/test_wintoast.py::test_buttons_say_which_toast_and_which_button
+PASSED tests/test_wintoast.py::test_a_reminder_stays_until_answered
+PASSED tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused
+PASSED tests/test_wintoast.py::test_only_chatmons_own_arguments_are_read
+PASSED tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon
+PASSED tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried
+PASSED tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread
+PASSED tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread
+PASSED tests/test_wintoast.py::test_what_windows_says_after_a_toast_is_settled_is_not_news
+PASSED tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon
+PASSED tests/test_wintoast.py::test_the_app_id_is_the_one_the_process_gave_itself
+SKIPPED [1] tests\test_wintoast.py:65: elsewhere than Windows
+======================== 12 passed, 1 skipped in 2.34s ========================

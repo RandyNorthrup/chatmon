@@ -1,0 +1,92 @@
+[
+  {
+    "id": "W4-M7-02-no-next-brain",
+    "requirement": "AC-02-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "buttons.append((_(\"Ask {brain}\").format(brain=other.label), partial(self._try_again, q, other)))",
+      "replace": "pass"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings"
+    ],
+    "expected": [
+      "test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "41e5bf884c59ea07fb34c5a089e9d8e881d8baf64fbf15e9b6cce4091e206e7a",
+    "baseline_exit": 0,
+    "mutated_sha256": "305041afd4484d854a883a6645b30a936ad9d44cd9f93eceb7e12ec69122b5bf",
+    "mutated_exit": 1,
+    "observed": "_ test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings _",
+    "after_sha256": "41e5bf884c59ea07fb34c5a089e9d8e881d8baf64fbf15e9b6cce4091e206e7a",
+    "restored_exit": 0
+  },
+  {
+    "id": "W4-M7-02-welcome-without-brain",
+    "requirement": "AC-02-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "line = _(\"Your questions go to **{brain}**; **Brain** in my menu picks another.\").format(brain=brain.label)",
+      "replace": "line = \"\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up"
+    ],
+    "expected": [
+      "test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "41e5bf884c59ea07fb34c5a089e9d8e881d8baf64fbf15e9b6cce4091e206e7a",
+    "baseline_exit": 0,
+    "mutated_sha256": "44acf85f489191622ab7a8391f15e09690cb37b83f2872f4808f6d8c77c56f79",
+    "mutated_exit": 1,
+    "observed": "___ test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up ____",
+    "after_sha256": "41e5bf884c59ea07fb34c5a089e9d8e881d8baf64fbf15e9b6cce4091e206e7a",
+    "restored_exit": 0
+  },
+  {
+    "id": "W4-M7-11-palette-ignored-v2",
+    "requirement": "AC-11-2",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self._later(0, self._palette_changed)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_the_desktops_colours_and_reduced_motion_apply_at_once"
+    ],
+    "expected": [
+      "test_the_desktops_colours_and_reduced_motion_apply_at_once"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "41e5bf884c59ea07fb34c5a089e9d8e881d8baf64fbf15e9b6cce4091e206e7a",
+    "baseline_exit": 0,
+    "mutated_sha256": "b8d416ba0a6ebfab94b1f6e236452dbb8b7d6b10e99c9e9c594225e3a18aaf48",
+    "mutated_exit": 1,
+    "observed": "_________ test_the_desktops_colours_and_reduced_motion_apply_at_once __________",
+    "after_sha256": "41e5bf884c59ea07fb34c5a089e9d8e881d8baf64fbf15e9b6cce4091e206e7a",
+    "restored_exit": 0
+  }
+]

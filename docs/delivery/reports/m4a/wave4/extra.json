@@ -1,0 +1,86 @@
+{
+ "readiness_method": "Requirements review again at fb19cb9 (readiness.md): M4A-01 to M4A-11 re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now; no conflict or gap; the three CI operations' outcomes recorded, including that CI still skips the UI Automation client test (comtypes isn't in its locks).",
+ "windows_note": "On Windows the macOS and Linux end-to-end tests skip; the criteria they carry are listed here for their cross-platform tests (pretend notifications, buses and AppKit stand-ins), as the earlier Windows receipts listed them, and CI's and WSL's receipts add the platforms' own runs. tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement (AC-09a) ran and passed here, with comtypes 1.5.0 in the venv.",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "drill_acceptance": {
+  "W4-L-AC-04b-qt-signal": [
+   "AC-04b"
+  ]
+ },
+ "tests_add": {
+  "AC-03": [
+   "tests/test_macnative.py::test_sleep_wake_displays_accessibility_and_low_power_are_heard"
+  ],
+  "AC-06b": [
+   "tests/test_macnative.py::test_sleep_wake_displays_accessibility_and_low_power_are_heard"
+  ],
+  "AC-01c": [
+   "tests/test_presence.py::test_macos_reads_increase_contrast"
+  ]
+ },
+ "observe_add": [
+  "tests/test_platform_events.py",
+  "tests/test_portal_bus.py",
+  "tests/test_heads_up.py",
+  "tests/test_linuxsession.py",
+  "tests/test_presence.py",
+  "tests/test_macnative.py",
+  "tests/test_a11y.py"
+ ],
+ "ci": [
+  {
+   "id": "W4-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132699632422-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15), every test under xvfb-run. On the D-Bus tests' own private buses these passed: tests/test_platform_events.py's notification-server, Do Not Disturb (swaync, dunst, mako, xfce4-notifyd, Plasma) and no-service-started tests, tests/test_portal_bus.py's portal appearance tests, tests/test_heads_up.py::test_upower_is_asked_once_from_a_worker_thread, tests/test_linuxsession.py's UPower and PackageKit tests, and tests/test_presence.py::test_x11_says_where_a_window_is on the virtual X server. The same passed on ubuntu 3.11 and ubuntu-24.04-arm 3.14 (and, apart from the X11 and PackageKit tests, in the three distro containers). tests/test_presence.py::test_qts_contrast_change_is_passed_on skips on every CI leg, because PyQt6 6.11 wraps contrastPreferenceChanged as a method; its Linux run is W4-BEH-WSL-QT612. This resolves the CI-linux pending operation."
+  },
+  {
+   "id": "W4-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132699632411-test-macos-latest-3.14.log",
+   "method": "CI run 43677128712 on fb19cb9, job test (macos-latest, 3.14). Passed: tests/test_macnative.py::test_sleep_wake_displays_accessibility_and_low_power_are_heard (AC-03, AC-06b: real NSWorkspace and NSProcessInfo notifications posted to a WorkspaceWatcher, and Low Power Mode read), tests/test_presence.py::test_macos_reads_increase_contrast (AC-01c: AppKit's Increase contrast read by Desk), tests/test_presence.py::test_macos_readings, and the plan's cross-platform tests. In the job's second step, on macOS's real window server (QT_QPA_PLATFORM=cocoa), all 8 tests of tests/test_macnative.py passed. The same passed on the 3.11 and 3.15 legs. This resolves the CI-macos pending operation."
+  },
+  {
+   "id": "W4-BEH-CI-GNOME",
+   "leg": "gnome",
+   "log": "ci-132699632387-gnome.log",
+   "acceptance": [
+    "AC-01b"
+   ],
+   "method": "CI run 43677128712 on fb19cb9, job gnome: a real Mutter 46.2 (headless Wayland, a virtual monitor) in a fresh ubuntu:24.04 container on Ubuntu's own python3-pyqt6. tests/test_presence.py -k gnome with CHATMON_GNOME_SESSION=1 ran 2 tests and both passed, test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high (AC-01b) among them."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4-BEH-WSL-QT612",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-04b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/wave4/presence-linux-qt612.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "xvfb-run",
+    "-a",
+    "/var/tmp/m4a-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-rA",
+    "tests/test_presence.py"
+   ],
+   "exit_code": 0,
+   "method": "tests/test_presence.py run in WSL (Arch Linux, launched from this workstation) on fb19cb9's files with /var/tmp/m4a-venv (Python 3.14.9, PyQt6 6.12.1, Qt 6.12.0), whose contrastPreferenceChanged is a signal. test_qts_contrast_change_is_passed_on ran and passed (PASSED in the log's -rA summary): Qt's contrast change reached Desk.settings_changed. This is the one test CI's PyQt6 6.11 skips. The receipt's environment is the plan's profile; the run's own versions are at the top of the log (ROADMAP: evidence from elsewhere). Evidence for fb19cb9; two other workers are changing code at the same time, so their merges will need this re-checked."
+  }
+ ],
+ "pending": [],
+ "next_action": "None in M4A on fb19cb9. Two follow-ups outside its files: CI still skips tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement because comtypes isn't in packaging/requirements-test.txt (whoever owns the locks: add it for Windows), and test_qts_contrast_change_is_passed_on runs only where PyQt6 is 6.12 or later. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree."
+}

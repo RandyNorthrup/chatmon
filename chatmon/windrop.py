@@ -7,7 +7,7 @@ Qt reads a drop's data everywhere else, but not files that aren't on disk: asked
 kind of answer it got, reads the stream as memory and corrupts the heap (Qt 6.11's qwindowsmimeregistry.cpp,
 getData). So the ask box's window has a drop target of Chatmon's own (IDropTarget, registered in place of
 Qt's), which takes each answer as what Windows says it is, and a paste of such files reads them from the
-clipboard's data object (OleGetClipboard). Imported on Windows alone.
+clipboard's data object (OleGetClipboard). Used on Windows alone; imports anywhere.
 https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget
 https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-registerdragdrop
 https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-getdata
@@ -17,16 +17,20 @@ https://learn.microsoft.com/en-us/windows/win32/shell/clipboard
 from __future__ import annotations
 
 import ctypes
+import logging
 import struct
+import sys
 import uuid
+from collections.abc import Callable
 from ctypes import POINTER, byref, c_void_p, wintypes
-from typing import Callable
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QImage
 
 from . import winfiles
 from .attachments import MAX_FILE
+
+logger = logging.getLogger(__name__)
 
 S_OK = 0
 E_NOINTERFACE = -0x7FFFBFFE  # 0x80004002
@@ -52,24 +56,35 @@ class STGMEDIUM(ctypes.Structure):
     _fields_ = [("tymed", wintypes.DWORD), ("handle", c_void_p), ("pUnkForRelease", c_void_p)]  # handle: HGLOBAL or IStream*
 
 
-_ole32, _user32, _shell32, _kernel32 = (ctypes.WinDLL(name) for name in ("ole32", "user32", "shell32", "kernel32"))
-_ole32.ReleaseStgMedium.argtypes = [POINTER(STGMEDIUM)]
-_ole32.OleGetClipboard.argtypes = [POINTER(c_void_p)]
-_ole32.RegisterDragDrop.argtypes = [wintypes.HWND, c_void_p]
-_ole32.RevokeDragDrop.argtypes = [wintypes.HWND]
-_kernel32.GlobalLock.restype, _kernel32.GlobalLock.argtypes = c_void_p, [c_void_p]
-_kernel32.GlobalUnlock.argtypes = [c_void_p]
-_kernel32.GlobalSize.restype, _kernel32.GlobalSize.argtypes = ctypes.c_size_t, [c_void_p]
-_user32.RegisterClipboardFormatW.restype, _user32.RegisterClipboardFormatW.argtypes = wintypes.UINT, [wintypes.LPCWSTR]
-_shell32.DragQueryFileW.restype, _shell32.DragQueryFileW.argtypes = wintypes.UINT, [c_void_p, wintypes.UINT, wintypes.LPWSTR, wintypes.UINT]
-CF_DESCRIPTORS = _user32.RegisterClipboardFormatW("FileGroupDescriptorW")
-CF_CONTENTS = _user32.RegisterClipboardFormatW("FileContents")
-CF_PNG = _user32.RegisterClipboardFormatW("PNG")
+# Windows' calling convention; CFUNCTYPE elsewhere only so the module imports on every OS (nothing here runs there).
+_FUNCTYPE = getattr(ctypes, "WINFUNCTYPE", ctypes.CFUNCTYPE)
+
+# Windows' DLLs, and the clipboard formats Windows numbers as it runs: set up as the module is imported there.
+_ole32: ctypes.CDLL
+_user32: ctypes.CDLL
+_shell32: ctypes.CDLL
+_kernel32: ctypes.CDLL
+if sys.platform == "win32":
+    _ole32, _user32, _shell32, _kernel32 = (ctypes.WinDLL(name) for name in ("ole32", "user32", "shell32", "kernel32"))
+    _ole32.ReleaseStgMedium.argtypes = [POINTER(STGMEDIUM)]
+    _ole32.OleGetClipboard.argtypes = [POINTER(c_void_p)]
+    _ole32.RegisterDragDrop.argtypes = [wintypes.HWND, c_void_p]
+    _ole32.RevokeDragDrop.argtypes = [wintypes.HWND]
+    _kernel32.GlobalLock.restype, _kernel32.GlobalLock.argtypes = c_void_p, [c_void_p]
+    _kernel32.GlobalUnlock.argtypes = [c_void_p]
+    _kernel32.GlobalSize.restype, _kernel32.GlobalSize.argtypes = ctypes.c_size_t, [c_void_p]
+    _user32.RegisterClipboardFormatW.restype, _user32.RegisterClipboardFormatW.argtypes = wintypes.UINT, [wintypes.LPCWSTR]
+    _shell32.DragQueryFileW.restype, _shell32.DragQueryFileW.argtypes = wintypes.UINT, [c_void_p, wintypes.UINT, wintypes.LPWSTR, wintypes.UINT]
+    CF_DESCRIPTORS = _user32.RegisterClipboardFormatW("FileGroupDescriptorW")
+    CF_CONTENTS = _user32.RegisterClipboardFormatW("FileContents")
+    CF_PNG = _user32.RegisterClipboardFormatW("PNG")
+else:  # imported elsewhere only to be checked: nothing here runs there
+    CF_DESCRIPTORS = CF_CONTENTS = CF_PNG = 0
 
 
 def _method(obj: int, slot: int, *argtypes, restype=ctypes.c_long):
     table = ctypes.cast(obj, POINTER(POINTER(c_void_p))).contents
-    return ctypes.WINFUNCTYPE(restype, c_void_p, *argtypes)(table[slot])
+    return _FUNCTYPE(restype, c_void_p, *argtypes)(table[slot])
 
 
 def _release(obj: int) -> None:
@@ -104,7 +119,8 @@ class DataObject:
         try:
             if _method(self.ptr, GET_DATA, POINTER(FORMATETC), POINTER(STGMEDIUM))(self.ptr, byref(etc), byref(medium)) != S_OK:
                 return None
-        except OSError:
+        except OSError as exc:
+            logger.debug("couldn't get format %d of a drop or the clipboard: %s", cf, exc)
             return None
         try:
             if medium.tymed == TYMED_HGLOBAL and medium.handle:
@@ -204,7 +220,8 @@ def clipboard_named() -> list[winfiles.Dropped] | None:
     try:
         if _ole32.OleGetClipboard(byref(held)) != S_OK or not held.value:
             return None
-    except OSError:
+    except OSError as exc:
+        logger.debug("couldn't open the clipboard's data object: %s", exc)
         return None
     try:
         data = DataObject(held.value)
@@ -219,12 +236,12 @@ class _Object(ctypes.Structure):
     _fields_ = [("vtable", c_void_p)]
 
 
-_QueryInterface = ctypes.WINFUNCTYPE(ctypes.c_long, c_void_p, c_void_p, POINTER(c_void_p))
-_Count = ctypes.WINFUNCTYPE(ctypes.c_ulong, c_void_p)
+_QueryInterface = _FUNCTYPE(ctypes.c_long, c_void_p, c_void_p, POINTER(c_void_p))
+_Count = _FUNCTYPE(ctypes.c_ulong, c_void_p)
 # POINTL comes by value: 8 bytes, passed as one 64-bit number would be.
-_DragEnter = ctypes.WINFUNCTYPE(ctypes.c_long, c_void_p, c_void_p, wintypes.DWORD, ctypes.c_uint64, POINTER(wintypes.DWORD))
-_DragOver = ctypes.WINFUNCTYPE(ctypes.c_long, c_void_p, wintypes.DWORD, ctypes.c_uint64, POINTER(wintypes.DWORD))
-_DragLeave = ctypes.WINFUNCTYPE(ctypes.c_long, c_void_p)
+_DragEnter = _FUNCTYPE(ctypes.c_long, c_void_p, c_void_p, wintypes.DWORD, ctypes.c_uint64, POINTER(wintypes.DWORD))
+_DragOver = _FUNCTYPE(ctypes.c_long, c_void_p, wintypes.DWORD, ctypes.c_uint64, POINTER(wintypes.DWORD))
+_DragLeave = _FUNCTYPE(ctypes.c_long, c_void_p)
 
 
 class DropTarget:
@@ -286,6 +303,7 @@ class DropTarget:
             self._effect(effect)
             return S_OK
         except Exception:  # never into Windows' drag loop
+            logger.debug("a drag coming in failed", exc_info=True)
             effect[0] = DROPEFFECT_NONE
             return E_UNEXPECTED
 
@@ -293,7 +311,8 @@ class DropTarget:
         try:
             self._effect(effect)
             return S_OK
-        except Exception:
+        except Exception:  # never into Windows' drag loop
+            logger.debug("a drag moving over failed", exc_info=True)
             effect[0] = DROPEFFECT_NONE
             return E_UNEXPECTED
 
@@ -311,7 +330,8 @@ class DropTarget:
             else:  # read: the rest once the drop is over (the program it came from waits for it)
                 QTimer.singleShot(0, lambda: self._dropped(*found))
             return S_OK
-        except Exception:
+        except Exception:  # never into Windows' drag loop
+            logger.debug("a drop failed", exc_info=True)
             effect[0] = DROPEFFECT_NONE
             return E_UNEXPECTED
         finally:

@@ -3,13 +3,20 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sys
 import threading
+import time
+from datetime import datetime
 
-from . import __version__, events, paths
+from . import __version__, events, i18n, paths
+from .i18n import N_, _
 
-USAGE = """\
+logger = logging.getLogger(__name__)
+
+# Translators: the commands and flags stay as they are (they're what to type); the words after them are yours.
+USAGE = N_("""\
 usage: chatmon [command]
 
   (no command)               start Chatmon
@@ -24,26 +31,31 @@ usage: chatmon [command]
       EVENT is one of: working, needs-you, done, success, error, idle;
       left out, it's worked out from the payload
   say TEXT                   make it say something
-  remind WHEN [to] TEXT      set a reminder: remind in 20m to stretch
+  ask [TEXT]                 open the ask box, TEXT typed in, ready for more
+  remind WHEN [to] TEXT      set a reminder: remind in 20m to stretch, remind every weekday at 9 to stand up
+                             (exits 2 if it can't tell when, and says why)
+  status                     the brain that answers, your reminders, and what your agents are doing
   quit                       close the chatmon that's running
   autostart on|off           start it when you log in
   --version
-"""
+""")  # shown as _(USAGE)
 
 STDIN_LIMIT = 256 * 1024  # bytes of hook payload to read at most
 STDIN_WAIT = 0.5  # seconds to wait for it
+ASFW_ANY = 0xFFFFFFFF  # AllowSetForegroundWindow's "any process": only when the running Chatmon's id can't be learnt
 
 
 def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     paths.migrate()  # settings and state from before the rename, the first time it runs
+    i18n.setup(_language_setting())  # before anything is printed (Qt isn't loaded for this)
     if not args:
         from .app import run
 
         return run()
     command, rest = args[0], args[1:]
     if command in ("-h", "--help", "help"):
-        print(USAGE, end="")
+        print(_(USAGE), end="")
         return 0
     if command == "--version":
         print(__version__)
@@ -52,8 +64,12 @@ def main(argv: list[str] | None = None) -> int:
         return notify(rest)
     if command == "say":
         return _send({"type": "say", "text": " ".join(rest)})
+    if command == "ask":
+        return ask(rest)
     if command == "remind":
-        return _send({"type": "remind", "text": " ".join(rest)})
+        return remind(rest)
+    if command == "status":
+        return status()
     if command == "quit":
         return _send({"type": "quit"})
     if command == "hooks":
@@ -62,17 +78,118 @@ def main(argv: list[str] | None = None) -> int:
         from . import autostart
 
         autostart.set_enabled(rest[0] == "on")
-        print(f"Autostart {rest[0]}: {autostart.where()}")
+        said = _("Autostart on: {where}") if rest[0] == "on" else _("Autostart off: {where}")
+        print(said.format(where=autostart.where()))
         return 0
-    print(USAGE, end="", file=sys.stderr)
+    print(_(USAGE), end="", file=sys.stderr)
     return 2
+
+
+def _language_setting() -> str | None:
+    """The language chosen in Settings (kept in the state file) or the settings file, read without writing either;
+    None follows the system's."""
+    import json
+    import tomllib
+
+    try:
+        overrides = json.loads(paths.state_file().read_text(encoding="utf-8")).get("settings")
+    except FileNotFoundError:
+        overrides = None  # no state kept yet: nothing chosen in Settings
+    except (OSError, ValueError, AttributeError) as exc:
+        logger.debug("couldn't read the language from the state file: %s", exc)
+        overrides = None
+    picked = overrides.get(i18n.SETTING) if isinstance(overrides, dict) else None
+    if isinstance(picked, str) and picked:
+        return picked
+    try:
+        written = tomllib.loads(paths.config_file().read_text(encoding="utf-8")).get(i18n.SETTING)
+    except FileNotFoundError:
+        return None  # no settings file yet: Chatmon writes it the first time it runs
+    except (OSError, ValueError) as exc:
+        logger.debug("couldn't read the language from the settings file: %s", exc)
+        return None
+    return written if isinstance(written, str) and written else None
 
 
 def _send(message: dict) -> int:
     if events.send(message):
         return 0
-    print("Chatmon isn't running. Start it with: chatmon", file=sys.stderr)
+    print(_("Chatmon isn't running. Start it with: chatmon"), file=sys.stderr)
     return 1
+
+
+def remind(args: list[str]) -> int:
+    """A reminder, sent only once it's clear when: one Chatmon couldn't read used to vanish without a word."""
+    from . import reminders
+
+    text = " ".join(args)
+    command = reminders.parse_command("remind me " + text, datetime.now())  # noqa: DTZ005 - reminders are set in your local wall time
+    if command is None or command.kind != "reminder":
+        why = reminders.explain(command, markdown=False) if command is not None and command.kind == "unclear" else ""
+        said = _("Couldn't tell when to remind you ({text}).").format(text=repr(text)) if text else _("Couldn't tell when to remind you.")
+        print(f"{said} {why}".rstrip(), file=sys.stderr)
+        # Translators: "chatmon remind in 20m to stretch" is what to type, as it is.
+        print(_("Try: chatmon remind in 20m to stretch"), file=sys.stderr)
+        return 2
+    return _send({"type": "remind", "text": text})
+
+
+def ask(args: list[str]) -> int:
+    """Open the running chatmon's ask box with `args` typed in, ready to type more (a hotkey, a launcher)."""
+    _let_chatmon_come_forward()
+    return _send({"type": "ask", "text": " ".join(args)})
+
+
+def _let_chatmon_come_forward() -> bool:
+    """Windows lets only the program you're using bring a window to the front, and you're using this one: it
+    passes that on to the running Chatmon alone (its process id, from its answer to `status`), so its ask box
+    comes up in front, with the keyboard; to any process only when a Chatmon too old to answer is running.
+    Elsewhere there's nothing to pass on. True if Windows took it."""
+    if sys.platform != "win32":
+        return False
+    import ctypes
+
+    reply = events.request({"type": "status"}, timeout=1.0)
+    pid = reply.get("pid") if reply else None
+    target = pid if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0 else ASFW_ANY
+    try:
+        return bool(ctypes.windll.user32.AllowSetForegroundWindow(ctypes.c_ulong(target)))
+    except (AttributeError, OSError) as exc:
+        logger.debug("couldn't let Chatmon come forward: %s", exc)
+        return False
+
+
+def status() -> int:
+    """Whether Chatmon runs, the brain a question would go to, the battery, disks and reminders (as the *status*
+    command says them), what each coding agent is doing (only the running Chatmon knows: its answer to `status`),
+    and each agent's hooks: connected, or found and not connected. The rest is worked out here, from the settings
+    and state the running Chatmon keeps, so it says as much when Chatmon isn't running."""
+    from . import agents, brains, commands, heads_up, offline, reminders
+    from .settings import State, load_config, merge
+
+    paths.windows_environment()  # the agents' command lines, found on PATH as you have it now
+    live = events.request({"type": "status"})
+    running = live is not None or events.deliver({"type": "ping"}) == events.SENT  # a Chatmon too old to answer still runs
+    print(_("Chatmon is running.") if running else _("Chatmon isn't running. Start it with: chatmon"))
+    state = State.load()
+    config, problem = load_config()
+    if problem:
+        print(_("Couldn't read the settings file ({problem}); using the defaults.").format(problem=problem), file=sys.stderr)
+    if isinstance(state.get("settings"), dict):
+        config = merge(config, state.get("settings"))  # what you set in Settings wins, as it does in Chatmon
+    brain = commands.brain_in_use(brains.load_brains(config["ai"]), config, state)
+    book = reminders.ReminderBook.from_list(state.get("reminders", []))
+    lines = commands.status_lines(heads_up.read_battery(), heads_up.read_disks(heads_up.disk_folders()), book.upcoming(), time.time(),
+                                  brain.label if brain else None, brains.describe(brain) if brain else "")
+    print("\n".join(lines))
+    if live is not None:
+        print(_("- Agents now:"))
+        for line in (str(live.get("agents") or "") or offline.agents_report({}, 0, markdown=False)).splitlines():
+            print(f"  {line}")
+    print(_("- Agents:"))
+    for agent in agents.AGENTS:
+        print(f"  {agent.label:<20} {agents.status_words(agent.status())}")
+    return 0
 
 
 def _json(text: str) -> dict:
@@ -92,8 +209,8 @@ def _read_stdin() -> str:
     def read() -> None:
         try:
             chunks.append(sys.stdin.buffer.read(STDIN_LIMIT))
-        except (OSError, ValueError):
-            pass
+        except (OSError, ValueError) as exc:
+            logger.debug("couldn't read the hook's payload from stdin: %s", exc)
 
     reader = threading.Thread(target=read, daemon=True)
     reader.start()
@@ -150,30 +267,33 @@ def hooks(args: list[str]) -> int:
     target = args[1] if len(args) > 1 else None
     if action == "list":
         for agent in agents.AGENTS:
-            print(f"  {agent.name:<10} {agent.label:<20} {agent.status()}")
-        print("\nConnect one with: chatmon hooks connect NAME   (or: all)")
+            print(f"  {agent.name:<10} {agent.label:<20} {agents.status_words(agent.status())}")
+        # Translators: "chatmon hooks connect NAME" and "all" are what to type, as they are.
+        print("\n" + _("Connect one with: chatmon hooks connect NAME   (or: all)"))
         return 0
     if action == "show":
-        agent = agents.find(target or "")
-        print(agent.manual() if agent else agents.generic())
+        found = agents.find(target or "")
+        print(found.manual() if found else agents.generic())
         return 0
     if action not in ("connect", "disconnect") or not target:
-        print(USAGE, end="", file=sys.stderr)
+        print(_(USAGE), end="", file=sys.stderr)
         return 2
     if target == "all":  # connecting, every agent found here; disconnecting, only those connected: nobody else's file is touched
         chosen = [a for a in agents.AGENTS if (a.detected() if action == "connect" else a.connected())]
         if not chosen:
-            print("No coding agents found here." if action == "connect" else "No coding agents are connected.")
+            print(_("No coding agents found here.") if action == "connect" else _("No coding agents are connected."))
     else:
-        chosen = [agents.find(target)]
-    if chosen == [None]:
-        print(f"Unknown agent {target!r}. Known: {', '.join(a.name for a in agents.AGENTS)}", file=sys.stderr)
-        return 2
+        found = agents.find(target)
+        if found is None:
+            known = ", ".join(a.name for a in agents.AGENTS)
+            print(_("Unknown agent {name}. Known: {known}").format(name=repr(target), known=known), file=sys.stderr)
+            return 2
+        chosen = [found]
     failed = 0
     for agent in chosen:
         try:
             print(agent.connect() if action == "connect" else agent.disconnect())
         except (agents.AgentError, OSError) as exc:
             failed += 1
-            print(f"{agent.label}: {exc}", file=sys.stderr)
+            print(_("{agent}: {error}").format(agent=agent.label, error=exc), file=sys.stderr)
     return 1 if failed else 0

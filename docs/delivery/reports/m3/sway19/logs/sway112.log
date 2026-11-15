@@ -1,0 +1,4 @@
+$ CHATMON_SWAY=1 python -m pytest -p no:cacheprovider -q -rs tests/test_sway.py tests/test_wayland.py   (WSL Arch: sway 1.12, /var/tmp/wayland-venv)
+....................................................                     [100%]
+52 passed in 136.20s (0:02:16)
+exit=0

@@ -1,0 +1,48 @@
+{
+  "drills": [
+    {
+      "id": "MAC-00C-linux-import",
+      "requirement": "AC-00C",
+      "file": "chatmon/libdbus.py",
+      "find": "import ctypes.util\nfrom typing import Any\n",
+      "replace": "import ctypes.util\nfrom select import epoll  # Linux's alone\nfrom typing import Any\n",
+      "test": [
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "expect": [
+        "test_it_imports_here[libdbus]",
+        "cannot import name 'epoll' from 'select'"
+      ]
+    },
+    {
+      "id": "MAC-01D-conflict-unreported",
+      "requirement": "AC-01D",
+      "file": "chatmon/hotkey.py",
+      "find": "        if status == self.HOT_KEY_EXISTS:\n            return _(CONFLICT).format(combo=combo.text())\n",
+      "replace": "        if status == self.HOT_KEY_EXISTS:\n            return None\n",
+      "test": [
+        "tests/test_hotkey.py::test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had"
+      ],
+      "expect": [
+        "tests/test_hotkey.py:281: AssertionError",
+        "assert None == 'Ctrl+Alt+Shift+F18 is already used by another app. Pick another shortcut.'",
+        "1 failed"
+      ]
+    },
+    {
+      "id": "MAC-02F-volume-unset",
+      "requirement": "AC-02F",
+      "file": "chatmon/sound.py",
+      "find": "        self._set_float(sound, self._sel(\"setVolume:\"), volume)\n",
+      "replace": "",
+      "test": [
+        "tests/test_sound.py::test_nssound_plays_at_the_volume"
+      ],
+      "expect": [
+        "tests/test_sound.py:267: AssertionError",
+        "== 0.5 ±",
+        "1 failed"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# What builds the wheel and sdist and checks them (CI's `python` job in packages.yml), and what Nuitka's own
+# source package is built with on Windows (pip install --no-build-isolation). requirements-build.txt is this
+# list locked with hashes: lock it again after changing a pin here (CONTRIBUTING.md).
+build==1.6.1
+setuptools==84.2.1  # pyproject.toml's build backend, at the version releases are built with
+wheel==0.48.0  # Nuitka's source package needs it to build
+twine==7.0.0  # `twine check`: the wheel's and sdist's metadata are what PyPI would take
+pytest==9.2.0  # tests/test_package_data.py, on the built wheel and sdist
+pytest-timeout==2.4.0

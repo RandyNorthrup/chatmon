@@ -1,0 +1,6 @@
+Observed 2026-11-14 in the worktree with the venv interpreter C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe:
+  python <skill>/scripts/verify-delivery.py --observe-context   -> {"platform": "windows", "tools": {"python": "3.14.10"}}
+  python -m pytest --version                                     -> pytest 9.2.0
+  ruff --version                                                 -> ruff 0.17.4
+  python -c "import PyQt6.QtCore as c; print(c.PYQT_VERSION_STR)" -> 6.11.0 (Qt 6.11.0)
+Linux checks: WSL Arch (kernel 6.18.58.1-microsoft-standard-WSL2), /var/tmp/m4a-venv: Python 3.14.9, PyQt6 6.12.1 (Qt 6.12.0).

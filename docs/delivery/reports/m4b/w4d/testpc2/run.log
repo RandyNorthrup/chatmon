@@ -1,0 +1,7 @@
+run.ps1 started 2026-11-15 09:25:36 -08:00 as testpc2\technician, session 1, in W:\chatmon-m4b\src at 5243541f0abc4351216d0d033010055f36183731
+integrity: Mandatory Label\Medium Mandatory Level                        Label            S-1-16-8192
+probe exit 0 (09:25:36-09:25:38): W:\chatmon-m4b\venv\Scripts\python.exe W:\chatmon-m4b\rec\toast_probe.py
+plain-test exit 0 (09:25:38-09:25:41): W:\chatmon-m4b\venv\Scripts\python.exe -m pytest -v -rA -p no:cacheprovider tests/test_wintoast.py
+drills-stdout exit 0 (09:25:41-09:25:56): W:\chatmon-m4b\venv\Scripts\python.exe tests\drills\run.py W:\chatmon-m4b\rec\drill-spec.json --log W:\chatmon-m4b\logs\drills.log --python W:\chatmon-m4b\venv\Scripts\python.exe
+git status --porcelain after the drills: 
+run.ps1 done 2026-11-15 09:25:56 -08:00

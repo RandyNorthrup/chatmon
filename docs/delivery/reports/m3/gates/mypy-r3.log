@@ -1,0 +1,18 @@
+$ python -m mypy --platform linux   (PyQt6 6.11.0, the shared venv)
+Success: no issues found in 70 source files
+exit=0
+$ python -m mypy --platform win32   (PyQt6 6.11.0, the shared venv)
+Success: no issues found in 70 source files
+exit=0
+$ python -m mypy --platform darwin   (PyQt6 6.11.0, the shared venv)
+Success: no issues found in 70 source files
+exit=0
+$ python -m mypy --platform linux   (PyQt6 6.12.1, %TEMP%\m10-qt6121)
+Success: no issues found in 70 source files
+exit=0
+$ python -m mypy --platform win32   (PyQt6 6.12.1, %TEMP%\m10-qt6121)
+Success: no issues found in 70 source files
+exit=0
+$ python -m mypy --platform darwin   (PyQt6 6.12.1, %TEMP%\m10-qt6121)
+Success: no issues found in 70 source files
+exit=0

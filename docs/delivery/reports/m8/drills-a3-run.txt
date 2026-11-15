@@ -1,0 +1,26 @@
+
+=== summary
+PASS M8-01-gettext-bypassed
+PASS M8-01-plural-english-only
+PASS M8-01-list-and-in-english
+PASS M8-01-ui-string-not-wrapped
+PASS M8-01-plural-glued
+PASS M8-01-fuzzy-used
+PASS M8-01-placeholder-unchecked
+PASS M8-01-english-not-first
+PASS M8-01-region-dropped
+PASS M8-01-windows-languages-unread
+PASS M8-01-localefmt-not-following
+PASS M8-01-setup-not-telling-localefmt
+PASS M8-01-qt-translation-not-installed
+PASS M8-01-chosen-locale-not-default
+PASS M8-01-default-locale-not-restored
+PASS M8-01-system-language-overrides-region
+PASS M8-01-template-stale
+PASS M8-01-check-passes-stale
+PASS M8-01-import-time-allowed
+PASS M8-01-throwaway-allowed
+PASS M8-01-fstring-allowed
+PASS M8-01-comprehension-scope-lost
+PASS M8-01-locale-not-shipped
+drill-spec.json exit 0

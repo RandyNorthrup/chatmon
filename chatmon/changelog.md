@@ -2,6 +2,77 @@
 
 Each version's changes, newest first: what Chatmon shows after it updates, and each release's notes.
 
+## 0.10.0
+
+### New
+- **Answers appear as they're written**, with who is answering, the seconds so far, and **Stop**. Closing the ask box no longer throws an answer away: it finishes, stays in the chat, and a bubble says it's ready with **Read**. A second question asked meanwhile waits its turn instead of replacing the first.
+- **When a question fails, Chatmon says what to do**: what the provider said and its status, with **Try again**, **Ask another brain** and **Settings**. No connection says you look offline; a model server that isn't running says so.
+- **API keys in your system's keychain** (Windows Credential Manager, the macOS Keychain, GNOME Keyring, KWallet or KeePassXC), saved from Settings › AI, and **Test** asks a brain "Say OK" and shows how long it took. Keys never appear in Chatmon's files, a backup or an error.
+- **A shortcut opens the ask box from any app**: Ctrl+Alt+Space (Ctrl+Shift+Space on macOS), or one you choose. On Wayland your desktop asks first where it supports app shortcuts; elsewhere, bind `chatmon ask` in your desktop's keyboard settings.
+- **Sounds** for something that needs you, a reminder and the end of a focus session. An agent finishing, a success, an error and a soft pop can be turned on too. Each has its own switch, there's a volume and one switch for all, and nothing sounds during Do Not Disturb, Focus, a full-screen app or a focus session.
+- **An Accessibility tab in Settings**: text size, how long bubbles stay (up to "until I close them"), sounds, the shortcut, less movement, the ask box as its own window for screen readers, reading aloud, Magnifier following bubbles (Windows) and speech in macOS's own voice while Chatmon is in the background.
+- **Reminders understand days and dates** ("friday at 3pm", "next mon", "dec 3", "2026-12-03 15:30", "tonight at 8"), and "at 3" means whichever 3 o'clock comes next. They can repeat ("every weekday at 9"). When Chatmon can't tell when you mean, it asks instead of guessing.
+- **Reminders wait for you**: one that comes due stays until you press **Done** or snooze it (your own length, or **Later**: 5 minutes to tomorrow morning), even across a restart. Each reminder in the menu can be edited, made to repeat or cancelled.
+- **Agents at a glance**: the tray's tooltip and the chatmon's name for screen readers say what each agent is doing, a badge by the chatmon and a dot on the tray icon show when one needs you, *agents* says it in the box, and `chatmon status` prints it in a terminal.
+- **A Chats window with search**; the menu keeps the newest. Each chat remembers its brain, and **Ask another brain** asks the last question again.
+- **Back up and move**: Settings › Chats can save your settings, memory, notes, reminders and (if you like) chats to one file and bring them back on another computer. Keys are never in a backup, and a backup is checked before anything changes.
+- **Clipboard actions** in the menu: Explain, Summarize, Translate or Fix what you copied. The clipboard is read only when you pick one.
+- **Recent messages** in the menu shows bubbles again, and a click on your chatmon brings back one that went by while you were away. A focus session ends with one "While you focused" bubble for what waited.
+- **Copy** under every answer and code block. Ctrl+1 to Ctrl+9 press a bubble's buttons while you type.
+- **The ask box takes several lines** (Shift+Enter for a new one; pastes keep their line breaks), opens at your newest question, separates turns with a line, and can be made bigger. Code wraps on a tinted panel, coloured to match the bubble style.
+- **Long messages fit on screen**, ending in "…" with **More**. Bubbles stay long enough to read, wait while you point at them, and their links can be clicked.
+- **Windows:** notifications are Windows' own, with buttons, in Action Center; a reminder stays on screen until you answer it. Magnifier pans to new bubbles.
+- **Your chatmon can follow you to another monitor** (Windows, macOS, X11).
+- **Settings shows how your desktop set the shortcut**: on Wayland, where the desktop has the last word, Settings › Accessibility names the keys it chose.
+- **The first unlock of the day** says what's waiting: today's reminders, agents waiting for you, updates.
+- `chatmon ask [TEXT]` opens the ask box, filled in; `chatmon status` prints the brain, your reminders and your agents.
+- **Chatmon keeps a log** of what went wrong, `chatmon.log` in its state folder, readable only by you; **Open the log** opens it, and `CHATMON_DEBUG=1` keeps the details. No key, chat or typed text ever goes into it: a provider that repeats your key has it blanked out.
+- **Chatmon can be translated**: every word it shows, in its bubbles, menus, Settings and the `chatmon` command, comes from a translation when there's one for your language, or the one you pick in Settings, and Qt's own buttons follow it. Only English ships so far, and a new language is a single file. Times and dates follow your system's regional settings.
+
+### Changes
+- **The menu is tidier**: Companion, Bubble style, Walk around and Start when I log in are under **Appearance**, focus and notes share one menu, and **Reload settings file** is under **Help & updates**.
+- **Far less power when idle**: the chatmon's clock sleeps until the next thing on it changes (about 100 wake-ups a minute standing still, down from 1,800), and nothing is drawn while the screen is locked, asleep or off. It moves at your screen's own refresh rate, and animated bubble edges rest after a loop.
+- **Every bubble style meets WCAG AA contrast**, the plain style follows your desktop's colours (high contrast included), every control shows a focus outline, and text follows your desktop's font size.
+- **High contrast and reduced motion are followed on every platform**, Linux and macOS included, and changes apply at once. With reduced motion the chatmon holds still poses and skips its waves, hops and peeks.
+- **The Wayland overlay draws only what's shown**: its buffers are the size of the chatmon and its bubble, under 8 MB instead of 63 MB on a 4K screen at 2x, and a drag shows the new place and pixels in the same frame.
+- **Overlay menus work from the keyboard** (Esc, arrows, Home/End, Page Up/Down, Left/Right, Enter, letters), scroll when long, and wait a moment before switching submenus. Shortcuts in the ask box work under Russian, Greek and other non-Latin layouts.
+- **Screen readers**: on Windows, Narrator, NVDA and JAWS hear Chatmon directly while it's in front; VoiceOver no longer misses what's said in the background; Linux read-aloud notifications stay out of the history and carry the bubble's buttons. A generated password is never read out.
+- **Linux finds a screen reader again** with at-spi2-core 2.62 (which dropped the old signal): Orca, Odilia, Fenrir, or GNOME's screen-reader setting, and starting or stopping one moves the ask box to a window, or back, at once.
+- **Do Not Disturb** is respected with dunst, mako, SwayNotificationCenter and xfce4-notifyd too. On Linux the chatmon draws less on battery; on macOS, in Low Power Mode.
+- **Messages are never lost**: a bubble with buttons stays until you answer it, alerts and reminders are never dropped, and anything that arrives meanwhile waits its turn. During a focus session, agents' and scripts' messages wait until it's over.
+- **Windows:** settings, state and chats moved from the roaming profile to this computer (`%LOCALAPPDATA%\chatmon`), automatically, the first time this version starts.
+- **Attached text** stays with its chat so you can carry on after a restart, sent again only to the brain you first gave it to. Nothing is written with **Keep chat history** off, and **Clear chat history** removes it.
+- **Settings that are wrong in `config.toml` are named**, one by one, and the rest still apply. A damaged state or memory file is kept aside and the last good copy used, and Chatmon says so.
+- `timeout_seconds` is now how long a brain may go without a word, so long answers aren't cut off.
+- After 15 minutes the ask box opens on a new chat and says so: *carry on* goes back to the last one.
+- The `penguin-companion` command is gone; use `chatmon`. Hooks set up under the old name still move over the first time Chatmon runs.
+
+### Security
+- **An answer can no longer make Chatmon read a file or reach a network share** by naming it as a picture or in HTML. Pictures in answers show as "[image]" and HTML as text.
+- **Linux and macOS:** installing an update has the system itself check the release's signed checksums and its version, so it installs only a newer Chatmon signed with its release key, whatever it's handed. **macOS:** the installer adds the `chatmon` command only to a `/usr/local/bin` that belongs to the system.
+- **Windows:** hooks reach Chatmon in a way that never lets whoever holds its address act as you; each connection is checked to come from your own processes; revoked signing certificates are refused; the update's installer runs from a copy nothing can change before it starts; uninstalling for everyone no longer runs agents' programs as an administrator.
+- **Command-line brains get only the environment variables they need**, not your other keys. Claude Code runs with no MCP servers. Automatic uses only a model server running under your account, or one you've confirmed, and a brain that can read your files never sees other brains' answers.
+- **Files Chatmon keeps are private from the moment they're made** and reach the disk before they replace old ones. Backups of agents' settings are private too, and only the newest five are kept. Files on network drives and mounts can't be attached.
+- Releases appear only once every file is attached, and each file carries a build attestation (`gh attestation verify <file> --repo RandyNorthrup/chatmon`).
+
+### Fixes
+- Renaming your chatmon in Settings works even when the settings file names it.
+- Opening the ask box never waits to work out which brain will answer; cancelling an answer never freezes the screen, and on Windows no longer risks ending unrelated programs.
+- The menu no longer rebuilds itself every minute while a countdown shows.
+- A system update check that hangs is stopped after a minute; changing how often to look applies at once; "almost empty" battery stays below "low".
+- `chatmon remind` with a time it can't read says so and exits with status 2.
+- "in 2 hours" is two real hours, even across a daylight-saving change.
+- Codex settings with an array of arrays across lines can be connected.
+- With two monitors on X11, a full-screen app on the other monitor no longer hides the chatmon; with X11 display scaling, clicks land exactly on it.
+- On sway, the ask box keeps the keyboard until you close it; before, typing could go to the window behind it. A copy from the ask box pastes at once into Chatmon's own windows, and with a screen reader the chatmon's menu still works from the keyboard and bubbles no longer cover the ask box.
+- Hovering a walking chatmon stops it mid-step instead of snapping it round.
+- The fairy style's highlighted button label could not be seen.
+- pip and pipx installs include the sounds and offline phrases.
+- **macOS:** reminders and bubbles keep their time while Chatmon's windows are out of sight; App Nap no longer holds them back.
+- *status* no longer waits on finding a brain, and a sound still playing at quit finishes cleanly.
+- Quitting stops everything Chatmon had waiting: no update check, agent look or late answer runs after it.
+- A repeating reminder reads "Every day at 9:00 AM", and one-of-a-kind counts read right ("1 minute", "1 hook script").
+
 ## 0.9.2
 
 ### Fixes

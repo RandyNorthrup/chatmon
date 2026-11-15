@@ -35,7 +35,23 @@ classifiers = [
 
 [project.optional-dependencies]
 battery = ["psutil"]
-test = ["pytest"]
+test = ["pytest", "pytest-timeout", "hypothesis", "tzdata", "comtypes; sys_platform == 'win32'"]
+# Everything CI runs, at the versions it runs them: `pip install -e ".[dev]"`. packaging/requirements-dev.txt locks
+# the same versions with hashes (tests/test_requirements.py keeps the two in step).
+dev = [
+    "PyQt6==6.11.0",
+    "PyQt6-Qt6==6.11.2",
+    "psutil==7.2.2",
+    "pytest==9.2.0",
+    "pytest-timeout==2.4.0",
+    "coverage==7.17.0",
+    "hypothesis==6.170.14",
+    "tzdata==2026.6",
+    "comtypes==1.4.17; sys_platform == 'win32'",  # the screen-reader test's UI Automation client
+    "ruff==0.17.3",
+    "mypy==2.4.1",
+    "zizmor==1.31.1",
+]
 
 [project.urls]
 Homepage = "https://github.com/RandyNorthrup/chatmon"
@@ -43,7 +59,6 @@ Issues = "https://github.com/RandyNorthrup/chatmon/issues"
 
 [project.scripts]
 chatmon = "chatmon.cli:main"
-penguin-companion = "chatmon.cli:main"  # the old name, kept for one release
 
 [project.gui-scripts]
 chatmonw = "chatmon.cli:main"  # on Windows, Chatmon without a console window: what autostart runs
@@ -67,14 +82,70 @@ chatmon = [
     "integrations/claude/.claude-plugin/marketplace.json",
     "integrations/claude/chatmon/.claude-plugin/plugin.json",
     "integrations/claude/chatmon/hooks/hooks.json",
+    "locale/*",  # the template, and each translation (.po) beside it: adding a language adds a file and nothing here
+    "phrases/*.json",
+    "sounds/*.wav",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+minversion = "7.4"  # Ubuntu 24.04's, which CI's distribution job runs
+required_plugins = ["pytest-timeout"]  # the `timeout` below is its setting
+addopts = ["-rs", "--strict-markers"]  # say why each test skipped; a mistyped mark is an error, not a new mark
+timeout = 120  # pytest-timeout: a test that hangs fails, with every thread's stack, instead of holding up the run
+# Every warning fails the test it's raised in, ResourceWarning too: an unclosed socket, file or process is one to
+# close where it's made (M6B closed the last of them).
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+source = ["chatmon"]
+relative_files = true  # each OS's data names files the same way, so CI can combine them
+
+[tool.coverage.paths]
+chatmon = ["chatmon", "*/chatmon", '*\chatmon']
+
+[tool.coverage.report]
+fail_under = 84  # CI's combined Linux, Windows and macOS figure was 86.2% (run 43694278702, 2026-11-15); raise it as tests improve
+precision = 1
 
 [tool.ruff]
 line-length = 170
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["F", "E9", "B"]
+# Not `ruff format`: the code keeps its own layout. C90 is McCabe complexity, held at 15 below.
+select = ["F", "E9", "B", "UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+# ×, ÷, π and typographic quotes and apostrophes are written on purpose, in strings, docstrings and comments alike.
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "S101",  # assert is how pytest checks
+    "S603", "S607",  # the tests run fixed commands (python, git, dbus, the platform's own tools), never input
+    "S108",  # literal /tmp paths: short socket folders made with mkdtemp, and paths that are only compared
+    "S311",  # random shuffles and jitters the tests' own data; nothing secret comes from it
+    "S314",  # the XML parsed is the Wayland protocol files and toasts Chatmon itself wrote
+    "S105", "S106",  # made-up tokens and passwords are the tests' own data
+    "DTZ001", "DTZ005", "DTZ006",  # reminders and times are the computer's local wall time, as in chatmon/
+]
+# Recorded scripts of finished milestones: their ledgers bind each file by SHA-256, so they stay as they ran.
+"docs/delivery/reports/m2/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/m3/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/m4b/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/m6a/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/m7/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90"]
+"docs/delivery/reports/wave4/**" = ["UP", "C4", "PIE", "PERF", "RUF", "S", "DTZ", "BLE", "C90", "B905", "B023"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["chatmon"]
+warn_unused_configs = true
+warn_redundant_casts = true
+strict_equality = true
+# Not warn_unreachable: CI checks each platform (--platform), and code for the others reads as unreachable. Not
+# explicit-override: @override needs Python 3.12, or typing_extensions, a new dependency, on 3.11.
+enable_error_code = ["redundant-expr", "truthy-bool", "unused-awaitable", "exhaustive-match", "ignore-without-code", "possibly-undefined"]

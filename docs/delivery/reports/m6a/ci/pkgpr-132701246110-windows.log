@@ -1,0 +1,779 @@
+windows	UNKNOWN STEP	﻿2026-11-15T04:38:47.5633203Z Current runner version: '2.338.2'
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5655754Z ##[group]Runner Image Provisioner
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5656404Z Hosted Compute Agent
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5656910Z Version: 20261103.629
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5657389Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5658258Z Build Date: 2026-11-03T17:26:59Z
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5658769Z Worker ID: {52a866d1-1a65-4e8d-84b8-395ebaed18d4}
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5659284Z Region: westus2
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5659707Z Cloud: Azure
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5660108Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5661336Z ##[group]Operating System
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5661835Z Microsoft Windows Server 2025
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5662299Z 10.0.26100
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5662746Z Datacenter
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5663133Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5663533Z ##[group]Runner Image
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5663995Z Image: windows-2025-vs2026
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5664452Z Version: 20261103.298.1
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5665693Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5666946Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5667693Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5668541Z ##[group]GITHUB_TOKEN Permissions
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5670011Z Contents: read
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5670443Z Metadata: read
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5670862Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5672627Z Secret source: Actions
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5673328Z Cache mode: write
+windows	UNKNOWN STEP	2026-11-15T04:38:47.5673912Z Prepare workflow directory
+windows	UNKNOWN STEP	2026-11-15T04:38:47.6001260Z Prepare all required actions
+windows	UNKNOWN STEP	2026-11-15T04:38:47.6046791Z Getting action download info
+windows	UNKNOWN STEP	2026-11-15T04:38:47.9198970Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+windows	UNKNOWN STEP	2026-11-15T04:38:48.0283029Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+windows	UNKNOWN STEP	2026-11-15T04:38:48.3045136Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+windows	UNKNOWN STEP	2026-11-15T04:38:48.7491190Z Complete job name: windows
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9135340Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9137144Z with:
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9138066Z   persist-credentials: false
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9138745Z   repository: RandyNorthrup/chatmon
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9142659Z   token: ***
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9143048Z   ssh-strict: true
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9143424Z   ssh-user: git
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9143805Z   clean: true
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9144191Z   sparse-checkout-cone-mode: true
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9144634Z   fetch-depth: 1
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9145030Z   fetch-tags: false
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9145414Z   show-progress: true
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9145855Z   lfs: false
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9146231Z   submodules: false
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9146667Z   set-safe-directory: true
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9147111Z   allow-unsafe-pr-checkout: false
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9147873Z env:
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9148288Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:38:48.9148729Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:49.0413520Z Syncing repository: RandyNorthrup/chatmon
+windows	UNKNOWN STEP	2026-11-15T04:38:49.0415060Z ##[group]Getting Git version info
+windows	UNKNOWN STEP	2026-11-15T04:38:49.0415651Z Working directory is 'D:\a\chatmon\chatmon'
+windows	UNKNOWN STEP	2026-11-15T04:38:49.1005955Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6027707Z git version 2.56.0.windows.4
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6066531Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6080546Z Temporarily overriding HOME='D:\a\_temp\36b12ea3-af9b-429a-9a1a-43556a0ce3d3' before making global git config changes
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6081828Z Adding repository directory to the temporary git global config as a safe directory
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6088448Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6690645Z Deleting the contents of 'D:\a\chatmon\chatmon'
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6694969Z ##[group]Determining repository object format
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6697114Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6698047Z ##[group]Initializing the repository
+windows	UNKNOWN STEP	2026-11-15T04:38:49.6704705Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\chatmon\chatmon
+windows	UNKNOWN STEP	2026-11-15T04:38:49.8915663Z Initialized empty Git repository in D:/a/chatmon/chatmon/.git/
+windows	UNKNOWN STEP	2026-11-15T04:38:49.8971368Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/RandyNorthrup/chatmon
+windows	UNKNOWN STEP	2026-11-15T04:38:49.9736254Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:49.9737176Z ##[group]Disabling automatic garbage collection
+windows	UNKNOWN STEP	2026-11-15T04:38:49.9744324Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+windows	UNKNOWN STEP	2026-11-15T04:38:50.0106984Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:50.0107868Z ##[group]Setting up auth
+windows	UNKNOWN STEP	2026-11-15T04:38:50.0108608Z Removing SSH command configuration
+windows	UNKNOWN STEP	2026-11-15T04:38:50.0119564Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	UNKNOWN STEP	2026-11-15T04:38:50.0452855Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	UNKNOWN STEP	2026-11-15T04:38:52.2313931Z Removing HTTP extra header
+windows	UNKNOWN STEP	2026-11-15T04:38:52.2322492Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	UNKNOWN STEP	2026-11-15T04:38:52.2631616Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	UNKNOWN STEP	2026-11-15T04:38:52.7212056Z Removing includeIf entries pointing to credentials config files
+windows	UNKNOWN STEP	2026-11-15T04:38:52.7220073Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows	UNKNOWN STEP	2026-11-15T04:38:52.7536439Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows	UNKNOWN STEP	2026-11-15T04:38:53.2299806Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+windows	UNKNOWN STEP	2026-11-15T04:38:53.2618498Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git.path D:\a\_temp\git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config
+windows	UNKNOWN STEP	2026-11-15T04:38:53.2936257Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D:\a\_temp\git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config
+windows	UNKNOWN STEP	2026-11-15T04:38:53.3294374Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config
+windows	UNKNOWN STEP	2026-11-15T04:38:53.3600993Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config
+windows	UNKNOWN STEP	2026-11-15T04:38:53.3901424Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:53.3901963Z ##[group]Fetching the repository
+windows	UNKNOWN STEP	2026-11-15T04:38:53.3911627Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +df725342a3405655e30940839a5d168404170cea:refs/remotes/pull/18/merge
+windows	UNKNOWN STEP	2026-11-15T04:38:56.8839963Z From https://github.com/RandyNorthrup/chatmon
+windows	UNKNOWN STEP	2026-11-15T04:38:56.8845510Z  * [new ref]         df725342a3405655e30940839a5d168404170cea -> pull/18/merge
+windows	UNKNOWN STEP	2026-11-15T04:38:56.8879830Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:56.8880335Z ##[group]Determining the checkout info
+windows	UNKNOWN STEP	2026-11-15T04:38:56.8880858Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:56.8889191Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+windows	UNKNOWN STEP	2026-11-15T04:38:56.9401108Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+windows	UNKNOWN STEP	2026-11-15T04:38:56.9720251Z ##[group]Checking out the ref
+windows	UNKNOWN STEP	2026-11-15T04:38:56.9732963Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/18/merge
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0213171Z Updating files:  72% (580/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0237990Z Updating files:  73% (587/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0260042Z Updating files:  74% (595/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0276906Z Updating files:  75% (603/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0296319Z Updating files:  76% (612/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0317860Z Updating files:  77% (620/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0336385Z Updating files:  78% (628/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0355586Z Updating files:  79% (636/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0373518Z Updating files:  80% (644/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0395282Z Updating files:  81% (652/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0500193Z Updating files:  82% (660/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0674523Z Updating files:  83% (668/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0694966Z Updating files:  84% (676/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0783440Z Updating files:  85% (684/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0798830Z Updating files:  86% (692/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0817290Z Updating files:  87% (700/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0834835Z Updating files:  88% (708/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0851420Z Updating files:  89% (716/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0867218Z Updating files:  90% (724/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0888334Z Updating files:  91% (732/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0908034Z Updating files:  92% (740/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0925978Z Updating files:  93% (748/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0941405Z Updating files:  94% (756/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0962463Z Updating files:  95% (764/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0980111Z Updating files:  96% (772/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.0999538Z Updating files:  97% (780/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1018894Z Updating files:  98% (788/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1036769Z Updating files:  99% (796/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1039393Z Updating files: 100% (804/804)
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1039847Z Updating files: 100% (804/804), done.
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1118150Z Note: switching to 'refs/remotes/pull/18/merge'.
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1118467Z 
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1119602Z You are in 'detached HEAD' state. You can look around, make experimental
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1120245Z changes and commit them, and you can discard any commits you make in this
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1120904Z state without impacting any branches by switching back to a branch.
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1121290Z 
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1121835Z If you want to create a new branch to retain commits you create, you may
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1122375Z do so (now or later) by using -c with the switch command. Example:
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1122690Z 
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1122816Z   git switch -c <new-branch-name>
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1123034Z 
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1123150Z Or undo this operation with:
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1123331Z 
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1123448Z   git switch -
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1123585Z 
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1123841Z Turn off this advice by setting config variable advice.detachedHead to false
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1124214Z 
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1124667Z HEAD is now at df72534 Merge fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1290951Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1625603Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1912320Z df725342a3405655e30940839a5d168404170cea
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1950908Z ##[group]Removing auth
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1951151Z Removing SSH command configuration
+windows	UNKNOWN STEP	2026-11-15T04:38:58.1959432Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	UNKNOWN STEP	2026-11-15T04:38:58.2268645Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	UNKNOWN STEP	2026-11-15T04:38:58.7128712Z Removing HTTP extra header
+windows	UNKNOWN STEP	2026-11-15T04:38:58.7129184Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	UNKNOWN STEP	2026-11-15T04:38:58.7454121Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2029135Z Removing includeIf entries pointing to credentials config files
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2036102Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2315038Z includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2316097Z includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2316401Z includeif.gitdir:/github/workspace/.git.path
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2316740Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2353254Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2620595Z D:\a\_temp\git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2656095Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git.path D\:\\a\\_temp\\git\-credentials\-4be33673\-71a1\-4f88\-86c1\-f041275cf845\.config
+windows	UNKNOWN STEP	2026-11-15T04:38:59.2954146Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+windows	UNKNOWN STEP	2026-11-15T04:38:59.3216892Z D:\a\_temp\git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config
+windows	UNKNOWN STEP	2026-11-15T04:38:59.3255438Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-4be33673\-71a1\-4f88\-86c1\-f041275cf845\.config
+windows	UNKNOWN STEP	2026-11-15T04:38:59.3588568Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+windows	UNKNOWN STEP	2026-11-15T04:38:59.3868954Z /github/runner_temp/git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config
+windows	UNKNOWN STEP	2026-11-15T04:38:59.3913926Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-4be33673\-71a1\-4f88\-86c1\-f041275cf845\.config
+windows	UNKNOWN STEP	2026-11-15T04:38:59.4234346Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+windows	UNKNOWN STEP	2026-11-15T04:38:59.4513522Z /github/runner_temp/git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config
+windows	UNKNOWN STEP	2026-11-15T04:38:59.4552582Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-4be33673\-71a1\-4f88\-86c1\-f041275cf845\.config
+windows	UNKNOWN STEP	2026-11-15T04:38:59.4870196Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows	UNKNOWN STEP	2026-11-15T04:38:59.9647051Z Removing credentials config 'D:\a\_temp\git-credentials-4be33673-71a1-4f88-86c1-f041275cf845.config'
+windows	UNKNOWN STEP	2026-11-15T04:38:59.9657860Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0031332Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0031694Z with:
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0031865Z   python-version: 3.14
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0032037Z   check-latest: false
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0034132Z   token: ***
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0034394Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0034685Z   update-environment: true
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0034862Z   allow-prereleases: false
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0035065Z   freethreaded: false
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0035222Z env:
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0035373Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:39:00.0035557Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1255528Z ##[group]Installed versions
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1446911Z Successfully set up CPython (3.14.10)
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1447411Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1707584Z ##[group]Run echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1708123Z [36;1mecho "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1782702Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1783033Z env:
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1783205Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1783465Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1783855Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1784552Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1784868Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1785185Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:00.1785436Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:39:00.3980296Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-build.txt
+windows	UNKNOWN STEP	2026-11-15T04:39:00.3980863Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-build.txt[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:00.3981336Z [36;1mpython -m pip install --require-hashes --no-build-isolation -r packaging/requirements.txt[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4554861Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4555144Z env:
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4555312Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4555575Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4555917Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4556256Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4556554Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4556913Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4557162Z   SOURCE_DATE_EPOCH: 1794717520
+windows	UNKNOWN STEP	2026-11-15T04:39:00.4557336Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:39:05.6650954Z Ignoring cffi: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:05.6652570Z Ignoring cryptography: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:05.6654745Z Ignoring jeepney: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:05.6656913Z Ignoring pycparser: markers 'implementation_name != "PyPy" and platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:05.6658652Z Ignoring secretstorage: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:06.0227063Z Collecting build==1.6.1 (from -r packaging/requirements-build.txt (line 3))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.0732719Z   Downloading build-1.6.1-py3-none-any.whl (31 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.1714084Z Collecting certifi==2026.10.23 (from -r packaging/requirements-build.txt (line 7))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.1825770Z   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.3829674Z Collecting charset-normalizer==3.5.2 (from -r packaging/requirements-build.txt (line 113))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.3936304Z   Downloading charset_normalizer-3.5.2-cp314-cp314-win_amd64.whl (210 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.4497184Z Collecting colorama==0.4.6 (from -r packaging/requirements-build.txt (line 287))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.4589797Z   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.5322880Z Collecting docutils==0.23 (from -r packaging/requirements-build.txt (line 354))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.5409674Z   Downloading docutils-0.23-py3-none-any.whl (634 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.6023785Z      ---------------------------------------- 634.7/634.7 kB 7.7 MB/s  0:00:00
+windows	UNKNOWN STEP	2026-11-15T04:39:06.6357408Z Collecting id==1.6.1 (from -r packaging/requirements-build.txt (line 358))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.6437960Z   Downloading id-1.6.1-py3-none-any.whl (14 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.6964702Z Collecting idna==3.20 (from -r packaging/requirements-build.txt (line 362))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.7044206Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.7605392Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-build.txt (line 366))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.7690047Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.8865255Z Collecting jaraco-classes==3.4.0 (from -r packaging/requirements-build.txt (line 370))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.8959583Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:06.9510771Z Collecting jaraco-context==6.1.2 (from -r packaging/requirements-build.txt (line 374))
+windows	UNKNOWN STEP	2026-11-15T04:39:06.9594183Z   Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.0203231Z Collecting jaraco-functools==4.6.0 (from -r packaging/requirements-build.txt (line 378))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.0288732Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.1266932Z Collecting keyring==25.7.0 (from -r packaging/requirements-build.txt (line 388))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.1357474Z   Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.1938626Z Collecting markdown-it-py==4.2.0 (from -r packaging/requirements-build.txt (line 392))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.2027279Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.2562998Z Collecting mdurl==0.1.2 (from -r packaging/requirements-build.txt (line 396))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.2682051Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.3221564Z Collecting more-itertools==11.2.1 (from -r packaging/requirements-build.txt (line 400))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.3307263Z   Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.4290218Z Collecting nh3==0.3.7 (from -r packaging/requirements-build.txt (line 406))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.4503491Z   Downloading nh3-0.3.7-cp38-abi3-win_amd64.whl (644 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.4836060Z      ---------------------------------------- 644.5/644.5 kB 13.7 MB/s  0:00:00
+windows	UNKNOWN STEP	2026-11-15T04:39:07.5153438Z Collecting packaging==26.3 (from -r packaging/requirements-build.txt (line 435))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.5243153Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.5732900Z Collecting pluggy==1.7.0 (from -r packaging/requirements-build.txt (line 443))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.5818818Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.6385084Z Collecting pygments==2.21.0 (from -r packaging/requirements-build.txt (line 451))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.6473618Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.6864881Z      ---------------------------------------- 1.3/1.3 MB 27.0 MB/s  0:00:00
+windows	UNKNOWN STEP	2026-11-15T04:39:07.7218796Z Collecting pyproject-hooks==1.3.3 (from -r packaging/requirements-build.txt (line 458))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.7324360Z   Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.7917267Z Collecting pytest==9.2.0 (from -r packaging/requirements-build.txt (line 462))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.8005358Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.8799152Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-build.txt (line 468))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.8883184Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:07.9397118Z Collecting pywin32-ctypes==0.2.3 (from -r packaging/requirements-build.txt (line 472))
+windows	UNKNOWN STEP	2026-11-15T04:39:07.9519531Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.0460370Z Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.0545129Z   Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.1316684Z Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.1406533Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.1919795Z Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.2044722Z   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.2648400Z Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.2753903Z   Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.3704623Z Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.3958715Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.5064040Z Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.5164272Z   Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.5499698Z      ---------------------------------------- 876.3/876.3 kB 20.1 MB/s  0:00:00
+windows	UNKNOWN STEP	2026-11-15T04:39:08.5872638Z Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.5959330Z   Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.6520001Z Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.6628195Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.7238777Z Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+windows	UNKNOWN STEP	2026-11-15T04:39:08.7322730Z   Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:08.9947658Z Installing collected packages: urllib3, setuptools, rfc3986, pywin32-ctypes, pyproject-hooks, pygments, pluggy, packaging, nh3, more-itertools, mdurl, jaraco-context, iniconfig, idna, docutils, colorama, charset-normalizer, certifi, wheel, requests, readme-renderer, pytest, markdown-it-py, jaraco-functools, jaraco-classes, id, build, rich, requests-toolbelt, pytest-timeout, keyring, twine
+windows	UNKNOWN STEP	2026-11-15T04:39:17.5907585Z 
+windows	UNKNOWN STEP	2026-11-15T04:39:17.5935230Z Successfully installed build-1.6.1 certifi-2026.10.23 charset-normalizer-3.5.2 colorama-0.4.6 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pyproject-hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 pywin32-ctypes-0.2.3 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+windows	UNKNOWN STEP	2026-11-15T04:39:19.2716543Z Ignoring altgraph: markers 'sys_platform == "darwin"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:19.2717885Z Ignoring macholib: markers 'sys_platform == "darwin"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:19.2719565Z Ignoring packaging: markers 'sys_platform == "darwin"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:19.2721021Z Ignoring pyinstaller: markers 'sys_platform == "darwin"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:19.2722576Z Ignoring pyinstaller-hooks-contrib: markers 'sys_platform == "darwin"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:19.2724176Z Ignoring setuptools: markers 'sys_platform == "darwin"' don't match your environment
+windows	UNKNOWN STEP	2026-11-15T04:39:19.4477583Z Collecting nuitka==4.3.1 (from -r packaging/requirements.txt (line 13))
+windows	UNKNOWN STEP	2026-11-15T04:39:19.5027417Z   Downloading nuitka-4.3.1.tar.gz (4.8 MB)
+windows	UNKNOWN STEP	2026-11-15T04:39:19.7094690Z      ---------------------------------------- 4.8/4.8 MB 25.5 MB/s  0:00:00
+windows	UNKNOWN STEP	2026-11-15T04:39:23.8688973Z   Preparing metadata (pyproject.toml): started
+windows	UNKNOWN STEP	2026-11-15T04:39:24.4113419Z   Preparing metadata (pyproject.toml): finished with status 'done'
+windows	UNKNOWN STEP	2026-11-15T04:39:24.5069641Z Collecting psutil==7.2.2 (from -r packaging/requirements.txt (line 22))
+windows	UNKNOWN STEP	2026-11-15T04:39:24.5180216Z   Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:24.7865532Z Collecting pyqt6==6.11.0 (from -r packaging/requirements.txt (line 65))
+windows	UNKNOWN STEP	2026-11-15T04:39:24.7979901Z   Downloading pyqt6-6.11.0-cp310-abi3-win_amd64.whl (6.8 MB)
+windows	UNKNOWN STEP	2026-11-15T04:39:24.9776931Z      ---------------------------------------- 6.8/6.8 MB 38.0 MB/s  0:00:00
+windows	UNKNOWN STEP	2026-11-15T04:39:25.0366938Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements.txt (line 73))
+windows	UNKNOWN STEP	2026-11-15T04:39:25.0485020Z   Downloading pyqt6_qt6-6.11.2-py3-none-win_amd64.whl (78.0 MB)
+windows	UNKNOWN STEP	2026-11-15T04:39:28.2431954Z      ---------------------------------------- 78.0/78.0 MB 24.4 MB/s  0:00:03
+windows	UNKNOWN STEP	2026-11-15T04:39:28.3844037Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements.txt (line 83))
+windows	UNKNOWN STEP	2026-11-15T04:39:28.3942050Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-win_amd64.whl (55 kB)
+windows	UNKNOWN STEP	2026-11-15T04:39:28.4530809Z Building wheels for collected packages: nuitka
+windows	UNKNOWN STEP	2026-11-15T04:39:28.4549250Z   Building wheel for nuitka (pyproject.toml): started
+windows	UNKNOWN STEP	2026-11-15T04:39:33.9782925Z   Building wheel for nuitka (pyproject.toml): finished with status 'done'
+windows	UNKNOWN STEP	2026-11-15T04:39:33.9841978Z   Created wheel for nuitka: filename=nuitka-4.3.1-cp314-cp314-win_amd64.whl size=4654077 sha256=6104a3748e5696543bdba36f057ffbbfd68ddb46b5a9546fd8f4c0b04b0e217b
+windows	UNKNOWN STEP	2026-11-15T04:39:33.9843568Z   Stored in directory: c:\users\runneradmin\appdata\local\pip\cache\wheels\76\1c\0a\b662ee4c4416c2ea5b7791f82af29d4ad2774f0d5e6f5860a3
+windows	UNKNOWN STEP	2026-11-15T04:39:33.9973600Z Successfully built nuitka
+windows	UNKNOWN STEP	2026-11-15T04:39:34.0614738Z Installing collected packages: pyqt6-qt6, nuitka, pyqt6-sip, psutil, pyqt6
+windows	UNKNOWN STEP	2026-11-15T04:39:44.7735951Z 
+windows	UNKNOWN STEP	2026-11-15T04:39:44.7763900Z Successfully installed nuitka-4.3.1 psutil-7.2.2 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0802897Z ##[group]Run gh release download is-6_7_3 --repo jrsoftware/issrc --pattern innosetup-6.7.3.exe --dir $env:RUNNER_TEMP
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0803625Z [36;1mgh release download is-6_7_3 --repo jrsoftware/issrc --pattern innosetup-6.7.3.exe --dir $env:RUNNER_TEMP[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0804093Z [36;1m$setup = Join-Path $env:RUNNER_TEMP innosetup-6.7.3.exe[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0804381Z [36;1m$sig = Get-AuthenticodeSignature $setup[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0804954Z [36;1mif ($sig.Status -ne "Valid" -or $sig.SignerCertificate.Subject -notlike "CN=Pyrsys B.V.*") { throw "Unexpected signature: $($sig.Status) $($sig.SignerCertificate.Subject)" }[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0805715Z [36;1mStart-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/SP-" -Wait[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0862821Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0863097Z env:
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0863334Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0863605Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0863978Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0864319Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0864621Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0864920Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0865172Z   SOURCE_DATE_EPOCH: 1794717520
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0867286Z   GH_TOKEN: ***
+windows	UNKNOWN STEP	2026-11-15T04:39:46.0867455Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3771858Z ##[group]Run python packaging/build.py windows
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3772232Z [36;1mpython packaging/build.py windows[0m
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3829618Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3829886Z env:
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3830041Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3830296Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3830814Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3831144Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3831454Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3831745Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3831985Z   SOURCE_DATE_EPOCH: 1794717520
+windows	UNKNOWN STEP	2026-11-15T04:39:55.3832164Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:39:55.6678744Z + C:\hostedtoolcache\windows\Python\3.14.10\x64\python.exe -m nuitka --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=D:\a\chatmon\chatmon\build\nuitka-console --experimental=force-dependencies-pefile --output-folder-name=Chatmon --windows-icon-from-ico=D:\a\chatmon\chatmon\packaging\icons\chatmon.ico --company-name=Randy Northrup --product-name=Chatmon --file-description=Chatmon --file-version=0.10.0.0 --product-version=0.10.0.0 --copyright=Copyright (c) 2026 Randy Northrup. MIT License. --windows-console-mode=force --output-filename=chatmon.exe D:\a\chatmon\chatmon\packaging\entry.py
+windows	UNKNOWN STEP	2026-11-15T04:39:56.1103048Z Nuitka-Options: Used command line options:
+windows	UNKNOWN STEP	2026-11-15T04:39:56.1106331Z Nuitka-Options:   --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=D:\a\chatmon\chatmon\build\nuitka-console --experimental=force-dependencies-pefile --output-folder-name=Chatmon --windows-icon-from-ico=D:\a\chatmon\chatmon\packaging\icons\chatmon.ico --company-name="Randy Northrup" --product-name=Chatmon --file-description=Chatmon --file-version=0.10.0.0 --product-version=0.10.0.0 --copyright="Copyright (c) 2026 Randy Northrup. MIT License." --windows-console-mode=force --output-filename=chatmon.exe D:\a\chatmon\chatmon\packaging\entry.py
+windows	UNKNOWN STEP	2026-11-15T04:39:56.1658523Z Nuitka-Plugins:pyqt6: Support for PyQt6 is not perfect, e.g. Qt threading does not work, so prefer PySide6 if you can.
+windows	UNKNOWN STEP	2026-11-15T04:39:56.3372867Z Nuitka: Starting Python compilation with:
+windows	UNKNOWN STEP	2026-11-15T04:39:56.3373318Z Nuitka:   Version '4.3.1' on Python 3.14 (flavor 'CPython Official') commercial grade 'not installed'.
+windows	UNKNOWN STEP	2026-11-15T04:39:56.3925071Z Nuitka:WARNING: Nuitka '4.3.1' is older than the latest stable release '4.3.5'.
+windows	UNKNOWN STEP	2026-11-15T04:39:56.3926152Z Nuitka:WARNING:     Complex topic! More information can be found at [94mhttps://nuitka.net/info/outdated-nuitka-version.html[0m
+windows	UNKNOWN STEP	2026-11-15T04:41:15.9849151Z Nuitka-Plugins:pyqt6: Including Qt plugins 'iconengines,imageformats,platforms,styles,tls' below 'PyQt6\Qt6\plugins'.
+windows	UNKNOWN STEP	2026-11-15T04:41:32.4781831Z Nuitka-Inclusion: Including Windows Runtime DLLs, which increases distribution size. Use '--include-windows-runtime-dlls=no' to disable, or make explicit with '--include-windows-runtime-dlls=yes'.
+windows	UNKNOWN STEP	2026-11-15T04:49:04.9368746Z Nuitka: Completed Python level compilation and optimization.
+windows	UNKNOWN STEP	2026-11-15T04:49:04.9369251Z Nuitka: Generating source code for C backend compiler.
+windows	UNKNOWN STEP	2026-11-15T04:49:11.2189600Z Nuitka: Running data composer tool for optimal constant value handling.
+windows	UNKNOWN STEP	2026-11-15T04:49:11.4596719Z Nuitka: Running C compilation via Scons.
+windows	UNKNOWN STEP	2026-11-15T04:49:13.6051221Z Nuitka-Scons: Backend C compiler: cl (cl 14.5).
+windows	UNKNOWN STEP	2026-11-15T04:50:08.9992091Z Nuitka-Scons: Backend C linking with 88 files (no progress information available for this stage).
+windows	UNKNOWN STEP	2026-11-15T04:52:50.5192305Z Nuitka-Scons: Compiled 88 C files using clcache with 0 cache hits and 88 cache misses.
+windows	UNKNOWN STEP	2026-11-15T04:52:50.5816773Z Nuitka-Postprocessing: Adding 10 icon(s) from icon file 'D:\a\chatmon\chatmon\packaging\icons\chatmon.ico'.
+windows	UNKNOWN STEP	2026-11-15T04:52:57.7800518Z Nuitka-Options: Included 93 data files due to package 'chatmon' package data.
+windows	UNKNOWN STEP	2026-11-15T04:52:57.7803369Z Nuitka: Keeping build directory 'D:\a\chatmon\chatmon\build\nuitka-console\Chatmon.build'.
+windows	UNKNOWN STEP	2026-11-15T04:52:57.7807288Z Nuitka: Successfully created 'D:\a\chatmon\chatmon\build\nuitka-console\Chatmon.dist\chatmon.exe'.
+windows	UNKNOWN STEP	2026-11-15T04:53:03.6110982Z + C:\hostedtoolcache\windows\Python\3.14.10\x64\python.exe -m nuitka --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=D:\a\chatmon\chatmon\build\nuitka-windowless --experimental=force-dependencies-pefile --output-folder-name=Chatmon --windows-icon-from-ico=D:\a\chatmon\chatmon\packaging\icons\chatmon.ico --company-name=Randy Northrup --product-name=Chatmon --file-description=Chatmon --file-version=0.10.0.0 --product-version=0.10.0.0 --copyright=Copyright (c) 2026 Randy Northrup. MIT License. --windows-console-mode=disable --output-filename=chatmonw.exe --force-stdout-spec={NONE} --force-stderr-spec={NONE} D:\a\chatmon\chatmon\packaging\entry.py
+windows	UNKNOWN STEP	2026-11-15T04:53:03.8425527Z Nuitka-Options: Used command line options:
+windows	UNKNOWN STEP	2026-11-15T04:53:03.8429652Z Nuitka-Options:   --mode=standalone --deployment --enable-plugin=pyqt6 --noinclude-qt-translations --include-package=chatmon --include-package-data=chatmon --nofollow-import-to=tkinter,unittest,pydoc_data,test --python-flag=no_site --python-flag=isolated --output-dir=D:\a\chatmon\chatmon\build\nuitka-windowless --experimental=force-dependencies-pefile --output-folder-name=Chatmon --windows-icon-from-ico=D:\a\chatmon\chatmon\packaging\icons\chatmon.ico --company-name="Randy Northrup" --product-name=Chatmon --file-description=Chatmon --file-version=0.10.0.0 --product-version=0.10.0.0 --copyright="Copyright (c) 2026 Randy Northrup. MIT License." --windows-console-mode=disable --output-filename=chatmonw.exe --force-stdout-spec={NONE} --force-stderr-spec={NONE} D:\a\chatmon\chatmon\packaging\entry.py
+windows	UNKNOWN STEP	2026-11-15T04:53:03.8602758Z Nuitka-Plugins:pyqt6: Support for PyQt6 is not perfect, e.g. Qt threading does not work, so prefer PySide6 if you can.
+windows	UNKNOWN STEP	2026-11-15T04:53:04.0100882Z Nuitka: Starting Python compilation with:
+windows	UNKNOWN STEP	2026-11-15T04:53:04.0101402Z Nuitka:   Version '4.3.1' on Python 3.14 (flavor 'CPython Official') commercial grade 'not installed'.
+windows	UNKNOWN STEP	2026-11-15T04:53:04.0133172Z Nuitka:WARNING: Nuitka '4.3.1' is older than the latest stable release '4.3.5'.
+windows	UNKNOWN STEP	2026-11-15T04:53:04.0134879Z Nuitka:WARNING:     Complex topic! More information can be found at [94mhttps://nuitka.net/info/outdated-nuitka-version.html[0m
+windows	UNKNOWN STEP	2026-11-15T04:53:29.5508875Z Nuitka-Plugins:pyqt6: Including Qt plugins 'iconengines,imageformats,platforms,styles,tls' below 'PyQt6\Qt6\plugins'.
+windows	UNKNOWN STEP	2026-11-15T04:53:29.5925301Z Nuitka-Inclusion: Including Windows Runtime DLLs, which increases distribution size. Use '--include-windows-runtime-dlls=no' to disable, or make explicit with '--include-windows-runtime-dlls=yes'.
+windows	UNKNOWN STEP	2026-11-15T04:53:32.3788970Z Nuitka: Completed Python level compilation and optimization.
+windows	UNKNOWN STEP	2026-11-15T04:53:32.3789561Z Nuitka: Generating source code for C backend compiler.
+windows	UNKNOWN STEP	2026-11-15T04:53:38.9915837Z Nuitka: Running data composer tool for optimal constant value handling.
+windows	UNKNOWN STEP	2026-11-15T04:53:39.2339570Z Nuitka: Running C compilation via Scons.
+windows	UNKNOWN STEP	2026-11-15T04:53:39.5427283Z Nuitka-Scons: Backend C compiler: cl (cl 14.5).
+windows	UNKNOWN STEP	2026-11-15T04:54:03.9775320Z Nuitka-Scons: Backend C linking with 88 files (no progress information available for this stage).
+windows	UNKNOWN STEP	2026-11-15T04:56:44.6828056Z Nuitka-Scons: Compiled 88 C files using clcache with 84 cache hits and 4 cache misses.
+windows	UNKNOWN STEP	2026-11-15T04:56:44.7486211Z Nuitka-Postprocessing: Adding 10 icon(s) from icon file 'D:\a\chatmon\chatmon\packaging\icons\chatmon.ico'.
+windows	UNKNOWN STEP	2026-11-15T04:56:48.8452968Z Nuitka-Options: Included 93 data files due to package 'chatmon' package data.
+windows	UNKNOWN STEP	2026-11-15T04:56:48.8454853Z Nuitka: Keeping build directory 'D:\a\chatmon\chatmon\build\nuitka-windowless\Chatmon.build'.
+windows	UNKNOWN STEP	2026-11-15T04:56:48.8458129Z Nuitka: Successfully created 'D:\a\chatmon\chatmon\build\nuitka-windowless\Chatmon.dist\chatmonw.exe'.
+windows	UNKNOWN STEP	2026-11-15T04:56:51.3581068Z + C:\ProgramData\Chocolatey\bin\iscc.EXE /DAppVersion=0.10.0 /DSourceDir=D:\a\chatmon\chatmon\build\nuitka\Chatmon /DOutputDir=D:\a\chatmon\chatmon\dist D:\a\chatmon\chatmon\packaging\windows\chatmon.iss
+windows	UNKNOWN STEP	2026-11-15T04:56:51.5379498Z Inno Setup 6 Command-Line Compiler
+windows	UNKNOWN STEP	2026-11-15T04:56:51.5380107Z Copyright (C) 1997-2026 Jordan Russell. All rights reserved.
+windows	UNKNOWN STEP	2026-11-15T04:56:51.5380787Z Portions Copyright (C) 2000-2026 Martijn Laan. All rights reserved.
+windows	UNKNOWN STEP	2026-11-15T04:56:51.5381457Z Portions Copyright (C) 2001-2004 Alex Yackimoff. All rights reserved.
+windows	UNKNOWN STEP	2026-11-15T04:56:51.5382028Z https://www.innosetup.com
+windows	UNKNOWN STEP	2026-11-15T04:56:51.5382280Z 
+windows	UNKNOWN STEP	2026-11-15T04:56:51.6567778Z Compiler engine version: Inno Setup 6.7.1
+windows	UNKNOWN STEP	2026-11-15T04:56:51.6568146Z Non-commercial use only
+windows	UNKNOWN STEP	2026-11-15T04:56:51.6568277Z 
+windows	UNKNOWN STEP	2026-11-15T04:56:51.7981793Z Preprocessing
+windows	UNKNOWN STEP	2026-11-15T04:56:51.7983486Z    Reading file: c:\program files (x86)\inno setup 6\ISPPBuiltins.iss
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8012913Z    Line 130: Including file: D:\a\chatmon\chatmon\packaging\windows\path.iss
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8013403Z    Reading file: D:\a\chatmon\chatmon\packaging\windows\path.iss
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8015672Z Parsing [Setup] section, line 23
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8016211Z Parsing [Setup] section, line 24
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8016563Z Parsing [Setup] section, line 25
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8016974Z Parsing [Setup] section, line 26
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8017616Z Parsing [Setup] section, line 27
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8018061Z Parsing [Setup] section, line 28
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8018447Z Parsing [Setup] section, line 29
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8018856Z Parsing [Setup] section, line 30
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8019247Z Parsing [Setup] section, line 31
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8019649Z Parsing [Setup] section, line 32
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8020036Z Parsing [Setup] section, line 33
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8020392Z Parsing [Setup] section, line 34
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8020808Z Parsing [Setup] section, line 35
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8021239Z Parsing [Setup] section, line 36
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8021603Z Parsing [Setup] section, line 37
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8022054Z Parsing [Setup] section, line 38
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8022431Z Parsing [Setup] section, line 39
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8022800Z Parsing [Setup] section, line 40
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8023084Z Parsing [Setup] section, line 41
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8023424Z Parsing [Setup] section, line 42
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8023820Z Parsing [Setup] section, line 43
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8024210Z Parsing [Setup] section, line 44
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8024626Z Parsing [Setup] section, line 45
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8025014Z Parsing [Setup] section, line 46
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8025386Z Parsing [Setup] section, line 47
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8025771Z Parsing [Setup] section, line 48
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8026157Z Parsing [Setup] section, line 49
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8026537Z Parsing [Setup] section, line 50
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8027120Z Parsing [Setup] section, line 51
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8027499Z Parsing [Setup] section, line 52
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8027885Z Reading file (WizardImageFile)
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8028292Z Reading file (WizardSmallImageFile)
+windows	UNKNOWN STEP	2026-11-15T04:56:51.8028725Z Preparing Setup program executable
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1376516Z    Verification successful
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1406083Z    Updating icons (Setup.e32)
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1481639Z    Updating version info (Setup.e32)
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1494023Z Determining language code pages
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1494825Z Parsing [Languages] section, line 59
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1495166Z    Reading file: c:\program files (x86)\inno setup 6\Default.isl
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1502203Z    Messages in script file
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1502588Z Reading default messages from Default.isl
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1506501Z Parsing [Languages] section, line 59
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1506848Z    Reading file: c:\program files (x86)\inno setup 6\Default.isl
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1508927Z Parsing [LangOptions], [Messages], and [CustomMessages] sections
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1509267Z    Messages in script file
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1510103Z Reading [Code] section
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1510704Z Parsing [Tasks] section, line 62
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1511103Z Parsing [Tasks] section, line 63
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1511431Z Parsing [Tasks] section, line 66
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1511808Z Parsing [Tasks] section, line 71
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1512174Z Parsing [Tasks] section, line 74
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1512578Z Parsing [Icons] section, line 101
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1512990Z Parsing [Icons] section, line 102
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1513384Z Parsing [Registry] section, line 106
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1513800Z Parsing [InstallDelete] section, line 80
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1514229Z Parsing [InstallDelete] section, line 81
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1514954Z Parsing [InstallDelete] section, line 82
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1515366Z Parsing [InstallDelete] section, line 88
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1515792Z Parsing [InstallDelete] section, line 88
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1516218Z Parsing [InstallDelete] section, line 88
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1516616Z Parsing [Run] section, line 109
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1517376Z Parsing [Run] section, line 111
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1517794Z Parsing [Files] section, line 97
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1533632Z Compiling [Code] section
+windows	UNKNOWN STEP	2026-11-15T04:56:52.1576913Z Creating setup files
+windows	UNKNOWN STEP	2026-11-15T04:56:52.2339036Z    Verification successful
+windows	UNKNOWN STEP	2026-11-15T04:56:52.2347519Z    Updating icons (Setup.exe)
+windows	UNKNOWN STEP	2026-11-15T04:56:52.2373392Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon.exe
+windows	UNKNOWN STEP	2026-11-15T04:56:52.4204073Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmonw.exe
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6011858Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\libcrypto-3.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6567382Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\libffi-8.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6573946Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\libssl-3.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6695310Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\msvcp140.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6754013Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\msvcp140_1.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6757732Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\msvcp140_2.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6783291Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\pyexpat.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6802378Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\python3.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.6809636Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\python314.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.7429676Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6core.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.8364931Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6dbus.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.8433257Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6gui.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.9297146Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6multimedia.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.9413928Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6network.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.9572814Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6pdf.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:52.9992509Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6svg.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0048287Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\qt6widgets.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0636329Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\select.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0640592Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\unicodedata.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0708742Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\vcruntime140.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0725774Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\vcruntime140_1.dll
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0730800Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\winsound.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0734259Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_bz2.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0742870Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_ctypes.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0756107Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_decimal.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0782882Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_elementtree.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0795959Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_hashlib.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0802732Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_lzma.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0817881Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_queue.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0821720Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_socket.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0830014Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_ssl.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0848356Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_uuid.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0851339Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_wmi.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0855666Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\_zstd.pyd
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0901963Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\changelog.md
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0904480Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\alert.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0941095Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\beam.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.0976393Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\charge.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1022047Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\hop.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1048628Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\idle.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1080129Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\manifest.json
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1080642Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\peek.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1110585Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\sleep.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1142287Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\talk.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1173747Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\think.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1205620Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\turn.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1232058Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\walk.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1264134Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\wave.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1296393Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\alert.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1339641Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\beam.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1377993Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\charge.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1417451Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\hop.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1450526Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\idle.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1486995Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\manifest.json
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1488057Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\peek.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1530119Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\sleep.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1567065Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\talk.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1604202Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\think.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1643445Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\turn.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1686301Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\walk.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1805460Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fairy-axolotl\wave.png
+windows	UNKNOWN STEP	2026-11-15T04:56:53.1848703Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\alert.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4046789Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\beam.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4091317Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\charge.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4140420Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\hop.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4174166Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\idle.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4211876Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\manifest.json
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4212547Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\peek.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4245713Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\sleep.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4274872Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\talk.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4308598Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\think.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4346647Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\turn.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4382106Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\walk.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4429671Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\fire-red-panda\wave.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4464460Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\alert.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4496860Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\beam.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4524762Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\charge.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4564517Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\hop.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4591634Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\idle.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4612521Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\manifest.json
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4613394Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\peek.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4668211Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\sleep.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4697434Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\talk.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4727861Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\think.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4758393Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\turn.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4783392Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\walk.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4813498Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\ghost-rabbit\wave.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4843352Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\alert.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4876271Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\beam.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4915070Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\charge.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4958315Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\hop.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.4988394Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\idle.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5021117Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\manifest.json
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5022040Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\peek.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5052428Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\sleep.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5085213Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\talk.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5118645Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\think.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5151374Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\turn.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5186610Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\walk.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5232508Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\anim\leaf-pangolin\wave.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5265425Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\electric-arcs.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5269003Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\electric-current.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5272519Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\electric-still.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5279503Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fairy-sparkles.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5281159Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fairy-still-b.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5283631Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fairy-still.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5289910Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fire-embers.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5290743Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fire-flames.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5344663Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\fire-still.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5351484Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\ghost-mist-a.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5354663Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\ghost-mist-b.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5357559Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\ghost-still.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5368493Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\leaf-crawler.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5377400Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\leaf-still.png
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5393194Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\bubbles\manifest.json
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5394324Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\integrations\claude\.claude-plugin\marketplace.json
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5395438Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\integrations\claude\chatmon\.claude-plugin\plugin.json
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5396529Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\integrations\claude\chatmon\hooks\hooks.json
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5397147Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\locale\chatmon.pot
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5406888Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\phrases\en.json
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5408231Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\done.wav
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5415729Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\error.wav
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5424106Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\focus-done.wav
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5436915Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\needs-you.wav
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5447620Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\pop.wav
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5449649Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\reminder.wav
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5466682Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\chatmon\sounds\success.wav
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5475262Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\psutil\_psutil_windows.pyd
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5485003Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtCore.pyd
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5733267Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtDBus.pyd
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5750380Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtGui.pyd
+windows	UNKNOWN STEP	2026-11-15T04:57:19.5960828Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtMultimedia.pyd
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6001933Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtNetwork.pyd
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6076645Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\QtWidgets.pyd
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6533387Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\sip.pyd
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6544302Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\iconengines\qsvgicon.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6551526Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qgif.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6556676Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qicns.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6562513Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qico.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6567226Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qjpeg.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6621855Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qpdf.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6626213Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qsvg.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6630615Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qtga.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6634906Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qtiff.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6675798Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qwbmp.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6679712Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\imageformats\qwebp.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6731000Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\platforms\qminimal.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6737365Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\platforms\qoffscreen.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6747885Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\platforms\qwindows.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6838447Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\styles\qmodernwindowsstyle.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6860768Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\tls\qcertonlybackend.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6870901Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\tls\qopensslbackend.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:19.6900060Z    Compressing: D:\a\chatmon\chatmon\build\nuitka\Chatmon\PyQt6\Qt6\plugins\tls\qschannelbackend.dll
+windows	UNKNOWN STEP	2026-11-15T04:57:26.8504872Z    Compressing Setup program executable
+windows	UNKNOWN STEP	2026-11-15T04:57:27.3281097Z    Updating version info (Setup.exe)
+windows	UNKNOWN STEP	2026-11-15T04:57:27.3281477Z    Updating manifest (Setup.exe)
+windows	UNKNOWN STEP	2026-11-15T04:57:27.3282079Z 
+windows	UNKNOWN STEP	2026-11-15T04:57:27.3284913Z 
+windows	UNKNOWN STEP	2026-11-15T04:57:27.3285214Z Successful compile (35.672 sec). Resulting Setup program filename is:
+windows	UNKNOWN STEP	2026-11-15T04:57:27.3286200Z D:\a\chatmon\chatmon\dist\Chatmon-0.10.0-windows-x64-setup.exe
+windows	UNKNOWN STEP	2026-11-15T04:57:27.3348852Z 
+windows	UNKNOWN STEP	2026-11-15T04:57:27.3349307Z D:\a\chatmon\chatmon\dist\Chatmon-0.10.0-windows-x64-setup.exe  48 MB
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4429956Z ##[group]Run "version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4431019Z [36;1m"version=$(python packaging/build.py version)" >> $env:GITHUB_OUTPUT[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4497051Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4497403Z env:
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4497617Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4497942Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4498356Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4498787Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4499156Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4499517Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4499830Z   SOURCE_DATE_EPOCH: 1794717520
+windows	UNKNOWN STEP	2026-11-15T04:57:27.4500075Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8856696Z ##[group]Run tag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select((.draft | not) and any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8857630Z [36;1mtag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '[.[] | select((.draft | not) and any(.assets[]; .name | endswith("-windows-x64-setup.exe")))][0].tag_name')[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8858333Z [36;1mgh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-windows-x64-setup.exe" --dir "$RUNNER_TEMP/last"[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8871074Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8871365Z env:
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8871627Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8871940Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8872357Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8872865Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8873251Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8873623Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8873947Z   SOURCE_DATE_EPOCH: 1794717520
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8876654Z   GH_TOKEN: ***
+windows	UNKNOWN STEP	2026-11-15T04:57:27.8876893Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7774334Z ##[group]Run $last = Get-Item "$env:RUNNER_TEMP\last\*-windows-x64-setup.exe"
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7774954Z [36;1m$last = Get-Item "$env:RUNNER_TEMP\last\*-windows-x64-setup.exe"[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7775614Z [36;1m$p = Start-Process $last.FullName -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/TASKS=startmenu" -Wait -PassThru[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7776275Z [36;1mif ($p.ExitCode) { throw "$($last.Name) failed: $($p.ExitCode)" }[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7776663Z [36;1mWrite-Host "Installed $($last.Name)"[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7777128Z [36;1m# Then this one, as Chatmon's updater runs it: silently, as the last install was, and Chatmon starts again.[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7777630Z [36;1m$env:QT_QPA_PLATFORM = "offscreen"[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7777987Z [36;1m$setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7778575Z [36;1m# Not Start-Process -Wait: that waits for what the installer starts too, and it starts Chatmon again.[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7779212Z [36;1m$p = Start-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/relaunch=1" -PassThru[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7779684Z [36;1m$p.WaitForExit()[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7780009Z [36;1mif ($p.ExitCode) { throw "Updating failed: $($p.ExitCode)" }[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7780394Z [36;1m$app = Join-Path $env:LOCALAPPDATA "Programs\Chatmon"[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7781035Z [36;1mfor ($i = 0; $i -lt 30 -and -not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe"); $i++) { Start-Sleep 1 }[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7781872Z [36;1mif (-not (Get-Process chatmonw -ErrorAction SilentlyContinue | Where-Object Path -eq "$app\chatmonw.exe")) { throw "Chatmon didn't start again after updating" }[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7783351Z [36;1mif ((& "$app\chatmon.exe" --version) -ne $env:VERSION) { throw "Not updated to $env:VERSION" }[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7783754Z [36;1m& "$app\chatmon.exe" quit[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7784179Z [36;1mfor ($i = 0; $i -lt 30 -and (Get-Process chatmonw -ErrorAction SilentlyContinue); $i++) { Start-Sleep 1 }[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7784659Z [36;1mWrite-Host "Updated to $env:VERSION and started again"[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7785021Z [36;1mRemove-Item Env:QT_QPA_PLATFORM[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7785378Z [36;1m./packaging/windows/test-install.ps1 $setup $env:VERSION -Unsigned[0m
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7843002Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7843339Z env:
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7843563Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7843891Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7844304Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7844735Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7845141Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7845508Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7845847Z   SOURCE_DATE_EPOCH: 1794717520
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7846086Z   VERSION: 0.10.0
+windows	UNKNOWN STEP	2026-11-15T04:57:29.7846297Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:57:33.6889366Z Installed Chatmon-0.9.2-windows-x64-setup.exe
+windows	UNKNOWN STEP	2026-11-15T04:57:37.3846172Z Chatmon isn't running. Start it with: chatmon
+windows	UNKNOWN STEP	2026-11-15T04:58:07.4645206Z Updated to 0.10.0 and started again
+windows	UNKNOWN STEP	2026-11-15T04:58:07.8377943Z ok: the installer isn't signed (NotSigned)
+windows	UNKNOWN STEP	2026-11-15T04:58:12.7388879Z ok: the installer finished (exit 0)
+windows	UNKNOWN STEP	2026-11-15T04:58:12.7416446Z ok: chatmon.exe and chatmonw.exe in C:\Users\runneradmin\AppData\Local\Programs\Chatmon
+windows	UNKNOWN STEP	2026-11-15T04:58:12.7427272Z ok: nothing left of an older version's PyInstaller build
+windows	UNKNOWN STEP	2026-11-15T04:58:12.7816335Z ok: the uninstaller isn't signed (NotSigned)
+windows	UNKNOWN STEP	2026-11-15T04:58:12.9543562Z ok: chatmon.exe isn't signed (NotSigned)
+windows	UNKNOWN STEP	2026-11-15T04:58:13.0632131Z ok: chatmonw.exe isn't signed (NotSigned)
+windows	UNKNOWN STEP	2026-11-15T04:58:13.1456563Z ok: a Start menu entry that starts chatmonw.exe
+windows	UNKNOWN STEP	2026-11-15T04:58:13.1723205Z ok: the Start menu entry is Chatmon's own (its AppUserModelID)
+windows	UNKNOWN STEP	2026-11-15T04:58:13.1749120Z ok: a desktop icon that starts chatmonw.exe
+windows	UNKNOWN STEP	2026-11-15T04:58:13.1826045Z ok: its folder on your PATH
+windows	UNKNOWN STEP	2026-11-15T04:58:13.1860335Z ok: starting at login
+windows	UNKNOWN STEP	2026-11-15T04:58:13.1940883Z ok: in Apps & features as Chatmon 0.10.0
+windows	UNKNOWN STEP	2026-11-15T04:58:14.7308950Z C:\Users\runneradmin\AppData\Local\Programs\Chatmon\chatmon.exe --version: 0.10.0
+windows	UNKNOWN STEP	2026-11-15T04:58:14.7309314Z it answered
+windows	UNKNOWN STEP	2026-11-15T04:58:14.7309481Z it quit when asked: all good
+windows	UNKNOWN STEP	2026-11-15T04:58:14.7391397Z ok: the installed Chatmon runs
+windows	UNKNOWN STEP	2026-11-15T04:58:15.9869624Z ok: its folder is gone
+windows	UNKNOWN STEP	2026-11-15T04:58:15.9875507Z ok: the Start menu entry and desktop icon are gone
+windows	UNKNOWN STEP	2026-11-15T04:58:15.9885402Z ok: PATH is as it was, type and all
+windows	UNKNOWN STEP	2026-11-15T04:58:15.9912697Z ok: it no longer starts at login
+windows	UNKNOWN STEP	2026-11-15T04:58:15.9925304Z ok: it's gone from Apps & features
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0300987Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0301352Z with:
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0301510Z   name: windows-unsigned
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0301686Z   path: dist/*.exe
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0301843Z   if-no-files-found: error
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0302019Z   compression-level: 6
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0302181Z   overwrite: false
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0302343Z   include-hidden-files: false
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0302514Z   archive: true
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0302652Z env:
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0302796Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0303046Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0303401Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0303920Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0304223Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0304548Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0304788Z   SOURCE_DATE_EPOCH: 1794717520
+windows	UNKNOWN STEP	2026-11-15T04:58:16.0304957Z ##[endgroup]
+windows	UNKNOWN STEP	2026-11-15T04:58:16.1761694Z With the provided path, there will be 1 file uploaded
+windows	UNKNOWN STEP	2026-11-15T04:58:16.1765486Z Artifact name is valid!
+windows	UNKNOWN STEP	2026-11-15T04:58:16.1766467Z Root directory input is valid!
+windows	UNKNOWN STEP	2026-11-15T04:58:16.5718342Z Uploading artifact: windows-unsigned.zip
+windows	UNKNOWN STEP	2026-11-15T04:58:16.5748240Z Beginning upload of artifact content to blob storage
+windows	UNKNOWN STEP	2026-11-15T04:58:18.1457691Z Uploaded bytes 8388608
+windows	UNKNOWN STEP	2026-11-15T04:58:18.3765849Z Uploaded bytes 16777216
+windows	UNKNOWN STEP	2026-11-15T04:58:18.4878365Z Uploaded bytes 25165824
+windows	UNKNOWN STEP	2026-11-15T04:58:18.4901330Z Uploaded bytes 33554432
+windows	UNKNOWN STEP	2026-11-15T04:58:18.6983935Z Uploaded bytes 41943040
+windows	UNKNOWN STEP	2026-11-15T04:58:18.7120835Z Uploaded bytes 50331648
+windows	UNKNOWN STEP	2026-11-15T04:58:18.8215751Z Uploaded bytes 50844616
+windows	UNKNOWN STEP	2026-11-15T04:58:18.8973760Z Finished uploading artifact content to blob storage!
+windows	UNKNOWN STEP	2026-11-15T04:58:18.8976741Z SHA256 digest of uploaded artifact is eeadb958e3b5f7af22d48e5d3c20bee4c97e8352ec7a18dc6dce576ff8b66a77
+windows	UNKNOWN STEP	2026-11-15T04:58:18.8978695Z Finalizing artifact upload
+windows	UNKNOWN STEP	2026-11-15T04:58:19.4633949Z Artifact windows-unsigned successfully finalized. Artifact ID 14147478258
+windows	UNKNOWN STEP	2026-11-15T04:58:19.4634518Z Artifact windows-unsigned has been successfully uploaded! Final size is 50844616 bytes. Artifact ID is 14147478258
+windows	UNKNOWN STEP	2026-11-15T04:58:19.4645801Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/artifacts/14147478258
+windows	UNKNOWN STEP	2026-11-15T04:58:19.4998651Z Post job cleanup.
+windows	UNKNOWN STEP	2026-11-15T04:58:19.6516301Z Post job cleanup.
+windows	UNKNOWN STEP	2026-11-15T04:58:19.8163680Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows	UNKNOWN STEP	2026-11-15T04:58:19.8590834Z git version 2.56.0.windows.4
+windows	UNKNOWN STEP	2026-11-15T04:58:19.8685462Z Temporarily overriding HOME='D:\a\_temp\b0c26e89-ab13-412e-ab06-f8aa905d6eb3' before making global git config changes
+windows	UNKNOWN STEP	2026-11-15T04:58:19.8686408Z Adding repository directory to the temporary git global config as a safe directory
+windows	UNKNOWN STEP	2026-11-15T04:58:19.8697767Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+windows	UNKNOWN STEP	2026-11-15T04:58:19.9062240Z Removing SSH command configuration
+windows	UNKNOWN STEP	2026-11-15T04:58:19.9071839Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	UNKNOWN STEP	2026-11-15T04:58:19.9422396Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	UNKNOWN STEP	2026-11-15T04:58:20.4416962Z Removing HTTP extra header
+windows	UNKNOWN STEP	2026-11-15T04:58:20.4425630Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	UNKNOWN STEP	2026-11-15T04:58:20.4740219Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	UNKNOWN STEP	2026-11-15T04:58:20.9909075Z Removing includeIf entries pointing to credentials config files
+windows	UNKNOWN STEP	2026-11-15T04:58:20.9919068Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows	UNKNOWN STEP	2026-11-15T04:58:21.0247282Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows	UNKNOWN STEP	2026-11-15T04:58:21.5611552Z Evaluate and set job outputs
+windows	UNKNOWN STEP	2026-11-15T04:58:21.5617057Z Set output 'version'
+windows	UNKNOWN STEP	2026-11-15T04:58:21.5618560Z Cleaning up orphan processes
+windows	UNKNOWN STEP	2026-11-15T04:58:21.5771642Z Terminate orphan process: pid (2804) (vctip)

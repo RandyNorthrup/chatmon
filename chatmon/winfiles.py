@@ -10,10 +10,11 @@ from __future__ import annotations
 
 import re
 import struct
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 from .attachments import MAX_COUNT, MAX_FILE
+from .i18n import _
 
 FD_ATTRIBUTES, FD_FILESIZE = 0x4, 0x40  # which of a description's fields are filled in
 FILE_ATTRIBUTE_DIRECTORY = 0x10
@@ -32,7 +33,7 @@ class Offered:
 class Dropped:
     name: str
     data: bytes
-    problem: str = ""  # why it wasn't read: then `data` is empty
+    problem: str = ""  # why it wasn't read, as a sentence that names it: then `data` is empty
 
 
 def parse(raw: bytes) -> list[Offered]:
@@ -58,17 +59,18 @@ def read(offered: list[Offered], fetch: Callable[[int], bytes | None]) -> list[D
     dropped = []
     for i, item in enumerate(offered):
         if i >= MAX_COUNT:
-            dropped.append(Dropped(item.name, b"", "is one too many"))  # never read: one question can't take it
+            # Never read: one question can't take it.
+            dropped.append(Dropped(item.name, b"", _("{file} is one too many").format(file=item.name)))
             continue
         if item.size is not None and item.size > MAX_FILE:
-            dropped.append(Dropped(item.name, b"", f"is too big ({item.size // 2**20} MB)"))
+            dropped.append(Dropped(item.name, b"", _("{file} is too big ({size} MB)").format(file=item.name, size=item.size // 2**20)))
             continue
         data = fetch(item.index)
         if data is None or (not data and item.size != 0):
             # An email out of Outlook, say, which comes as a store of its own, not as a file's bytes.
-            dropped.append(Dropped(item.name, b"", "couldn't be read"))
+            dropped.append(Dropped(item.name, b"", _("{file} couldn't be read").format(file=item.name)))
         elif len(data) > MAX_FILE:
-            dropped.append(Dropped(item.name, b"", f"is too big (over {MAX_FILE // 2**20} MB)"))
+            dropped.append(Dropped(item.name, b"", _("{file} is too big (over {size} MB)").format(file=item.name, size=MAX_FILE // 2**20)))
         else:
             dropped.append(Dropped(item.name, data))
     return dropped

@@ -1,0 +1,32 @@
+..s.s...............................s................................... [ 11%]
+...ssss.......................................................s......... [ 23%]
+........................................................................ [ 34%]
+........................................................................ [ 46%]
+sss....ss.ssss...........s.....s......sssssssss......................... [ 57%]
+.....................................................................sss [ 69%]
+sssssssssss...s....s...ss.........................................ss.... [ 81%]
+.........................................F..s.ss...sssssssssss.ssssssss. [ 92%]
+.................s..............s.......sssss                            [100%]
+================================== FAILURES ===================================
+______ test_checksums_not_signed_with_the_release_key_are_never_trusted _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000248A6B87570>
+github = <function github.<locals>.publish at 0x00000248ADF30D50>
+
+    def test_checksums_not_signed_with_the_release_key_are_never_trusted(qapp, github):
+        github(b"the real installer", sign=False)  # the right checksums, but anyone could have written them
+        updater, seen = run_updater(qapp)
+>       assert [name for name, _ in seen] == ["failed"] and "release key" in seen[0][1][0]
+E       AssertionError: assert ([] == ['failed']
+E         
+E         Right contains one more item: 'failed'
+E         Use -v to get more diff)
+
+tests\test_updates.py:335: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_updates.py::test_checksums_not_signed_with_the_release_key_are_never_trusted
+1 failed, 543 passed, 77 skipped in 117.38s (0:01:57)
+exit 1
+== re-run alone: a 5-second wait in this M1A test ran out while other workers' suites loaded this machine
+1 passed in 1.06s
+exit 0

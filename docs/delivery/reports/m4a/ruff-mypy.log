@@ -1,0 +1,11 @@
+All checks passed!
+ruff exit 0
+mypy --platform linux
+Success: no issues found in 66 source files
+exit 0
+mypy --platform win32
+Success: no issues found in 66 source files
+exit 0
+mypy --platform darwin
+Success: no issues found in 66 source files
+exit 0

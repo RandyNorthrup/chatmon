@@ -6,6 +6,12 @@ is just drawing them somewhere else: nothing moves, so nothing lags or leaves a
 trail. Only the patch that changed is redrawn, and clicks go through the
 surface everywhere except the penguin and its bubble.
 
+The stage's clock sleeps until the next change it can see (a frame of the
+creature's, a bubble's fade or expiry, a menu's submenu), at most a second, and
+anything it's told (the pointer, a key, a message, the app changing the
+behaviour) wakes it within a frame. While something moves all the time it
+ticks at the screen's refresh rate; positions are in device pixels.
+
 The surface is a layer-shell overlay on Wayland desktops that have one (see
 layer.py), and a window everywhere else (StageWindow, with clickthrough). On
 the overlay the stage also draws the penguin's menus (stagemenu.py) and hosts
@@ -16,14 +22,18 @@ the overlay's pointer and keyboard.
 from __future__ import annotations
 
 import math
+import os
 import sys
 import time
+from typing import Any, cast
 
-from PyQt6.QtCore import QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QCoreApplication, QEvent, QObject, QPoint, QPointF, QRect, QRectF, Qt, QTimer
 from PyQt6.QtGui import (
     QColor,
     QContextMenuEvent,
+    QCursor,
     QFont,
+    QFontMetricsF,
     QGuiApplication,
     QInputMethodEvent,
     QKeyEvent,
@@ -38,19 +48,43 @@ from PyQt6.QtGui import (
     QTextCharFormat,
     QWheelEvent,
 )
-from PyQt6.QtWidgets import QApplication, QFrame, QGraphicsScene, QGraphicsView, QLineEdit, QMenu, QWidget
+from PyQt6.QtWidgets import QApplication, QFrame, QGraphicsProxyWidget, QGraphicsScene, QGraphicsView, QLineEdit, QMenu, QWidget
 
+from . import bubble as bubbles
 from . import clickthrough, layer
 from .behavior import Behavior, Frame
+from .i18n import _, ngettext
 from .bubble import SpeechBubble
 from .bubbleart import device_ratio
+from .qtsignal import pyqtSignal
 from .sprites import Sprites
 from .stagemenu import StageMenu
 
 EDGE = 50  # keep the penguin's centre this far from the screen's sides
-FPS = 60  # while it walks, falls or a bubble fades
-SLOW_FPS = 30  # otherwise
-SAVER_FPS, SAVER_SLOW_FPS = 30, 20  # the system saving power: half as often, still twice a sprite's own frame rate
+DEFAULT_HZ = 60  # frames a second while something moves, on a screen that doesn't say its refresh rate
+MIN_HZ, MAX_HZ = 24, 500  # a refresh rate outside these is a screen that doesn't know its own
+SAVER_FPS = 30  # the system saving power: at most this, still three times a sprite's own frame rate
+IDLE_FLOOR = 1.0  # s: the longest the clock sleeps, for what changes without saying (a screen, a setting)
+COVERED_TICK = 1.0  # s between ticks while a full-screen window covers the stage: nothing to draw
+ANIM_FPS = getattr(bubbles, "ANIM_FPS", 30)  # how often an animated bubble's art moves on
+Z_STEP = 1 / 1.2  # s per step of the sleeping z's
+NEAR = 160  # px around what takes clicks within which the pointer is polled every frame (Windows, macOS)
+FAR_POLL = 0.1  # s between polls of the pointer farther away: it can't reach the chatmon in less
+FOLLOW_AFTER = 1.0  # s the pointer stays on another screen before the chatmon comes over to it (when asked to)
+# The agents badge: needs-you an amber diamond with black figures, working a blue circle with white ones (both
+# over 4.5:1), each with a dark edge for any background behind it. The shape says which, not just the colour.
+BADGE = 20  # px across a working badge, at least; a needs-you diamond is a little bigger, to hold its figure
+BADGE_COLOURS = {"needs-you": (QColor("#f59e0b"), QColor("#000000")), "working": (QColor("#1d4ed8"), QColor("#ffffff"))}
+BADGE_EDGE = QColor(16, 16, 20, 230)
+PULSE_STEP = 0.25  # s per step of the ring round a needs-you badge (still, with reduced motion)
+PULSE_REACH = 8  # px the ring reaches past the badge
+
+
+WINDOW_CURSORS = {
+    "pointer": Qt.CursorShape.PointingHandCursor,
+    "text": Qt.CursorShape.IBeamCursor,
+    "grabbing": Qt.CursorShape.ClosedHandCursor,
+}
 
 
 class StageWindow(QWidget):
@@ -63,7 +97,7 @@ class StageWindow(QWidget):
         # On X11 the stage skips the window manager, so it stays above
         # everything, panels included, and never shows in the taskbar.
         flags |= Qt.WindowType.X11BypassWindowManagerHint if xcb else Qt.WindowType.Tool
-        super().__init__(None, flags)
+        super().__init__(None, flags)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type a widget's parent as Self, and never None
         self.stage = stage
         self.setAccessibleName("Chatmon")  # what a screen reader calls it; its bubble is its description
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -106,13 +140,24 @@ class StageWindow(QWidget):
     def follow_pointer(self, hit) -> None:
         self.input.follow_pointer(hit)
 
+    @property
+    def polls_pointer(self) -> bool:
+        """Windows and macOS: clicks reach the window only while it's told the pointer is over the chatmon."""
+        return isinstance(self.input, clickthrough.PointerToggle)
+
     def device_scale(self) -> float:
         return self.devicePixelRatioF()
 
-    def close(self) -> None:
+    def set_cursor(self, shape: str) -> None:
+        """The pointer's shape over the stage, as the overlay's: a hand over a link, a closed hand dragging."""
+        cursor = WINDOW_CURSORS.get(shape, Qt.CursorShape.ArrowCursor)
+        if self.cursor().shape() != cursor:
+            self.setCursor(cursor)
+
+    def close(self) -> bool:
         self._closing = True
         self.input.close()
-        super().close()
+        return super().close()
 
     def closeEvent(self, event) -> None:
         # Only quitting closes the stage. A window manager's close (Super+C on
@@ -154,11 +199,11 @@ class Hosted(QObject):
     mouse events into scene events, as it would for one on screen."""
 
     def __init__(self, stage: Stage, widget: QWidget):
-        super().__init__(stage)
+        super().__init__(stage)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.stage, self.widget = stage, widget
         self.scene = QGraphicsScene(self)
         shown = widget.isVisible()
-        self.proxy = self.scene.addWidget(widget)
+        self.proxy = cast(QGraphicsProxyWidget, self.scene.addWidget(widget))  # Qt always makes one; PyQt6 types it optional
         widget.setVisible(shown)  # addWidget shows it; it opens when the app opens it
         self.view = QGraphicsView(self.scene)
         self.view.setFrameShape(QFrame.Shape.NoFrame)
@@ -168,6 +213,7 @@ class Hosted(QObject):
         QApplication.sendEvent(self.scene, QEvent(QEvent.Type.WindowActivate))
         self.scene.clearFocus()  # until the keyboard arrives
         self.scene.changed.connect(self._changed)
+        self.proxy.visibleChanged.connect(stage._wake)  # opened or closed: the stage looks at once
         self.was_visible = shown  # the stage notices it opening and closing (see Stage._tick)
         # Its animated bubble is drawn by the stage, each frame; what's in it (the text, the field) is
         # drawn from the scene only when the scene changes, and kept. (Drawing all of it from the scene
@@ -176,10 +222,34 @@ class Hosted(QObject):
             widget.stage_draws_art = True
         self._contents: tuple[tuple, QPixmap] | None = None
         # Its context menus are drawn by the stage too (a QMenu would be an XWayland window).
+        self._rewired: list[QWidget] = []
         for child in widget.findChildren(QWidget):
             if child.contextMenuPolicy() == Qt.ContextMenuPolicy.DefaultContextMenu and hasattr(child, "createStandardContextMenu"):
                 child.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
                 child.customContextMenuRequested.connect(lambda pos, c=child: self._context_menu(c, pos))
+                self._rewired.append(child)
+
+    def unhost(self) -> QWidget:
+        """Let the widget go: a window of its own again, where it was, open if it was open, with Qt's own context
+        menus. That's what a screen reader can find: a widget in a scene nobody shows is out of its reach."""
+        widget, shown = self.widget, self.widget.isVisible()
+        self.scene.changed.disconnect(self._changed)
+        self.proxy.visibleChanged.disconnect(self.stage._wake)
+        for child in self._rewired:
+            try:
+                child.customContextMenuRequested.disconnect()
+            except TypeError:
+                pass
+            child.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
+        if hasattr(widget, "stage_draws_art"):
+            widget.stage_draws_art = False
+        geometry = widget.geometry()
+        widget.hide()
+        self.proxy.setWidget(None)
+        widget.setGeometry(geometry)
+        if shown:
+            widget.show()
+        return widget
 
     def visible(self) -> bool:
         return self.widget.isVisible()
@@ -201,6 +271,16 @@ class Hosted(QObject):
         key = getattr(self.widget, "anim_key", None)
         return key(now) if key is not None and self.visible() else -1
 
+    def ring(self) -> QRegion:
+        """Where its painted border is, in screen coordinates: all that moves as its art animates (the text area
+        inside its margins doesn't), so only that is drawn again each frame of it."""
+        whole = self.rect()
+        layout = self.widget.layout()
+        if layout is None:
+            return QRegion(whole)
+        m = layout.contentsMargins()
+        return QRegion(whole).subtracted(QRegion(whole.adjusted(m.left(), m.top(), -m.right(), -m.bottom())))
+
     def _changed(self, rects) -> None:
         self._contents = None
         origin = self.stage.origin()
@@ -209,6 +289,7 @@ class Hosted(QObject):
             region = region.united(QRegion(r.toAlignedRect().translated(-origin)))
         if not region.isEmpty():
             self.stage.damage(region)
+        self.stage._wake()  # its text, selection or cursor may have changed: the input method and selection follow
 
     def paint(self, p: QPainter, region: QRegion) -> None:
         if not self.visible():
@@ -246,6 +327,8 @@ class Hosted(QObject):
         self._sync_view()
         local = gpos - QPointF(self.rect().topLeft())
         viewport = self.view.viewport()
+        if viewport is None:  # never: a scroll area always has one
+            return
         event = QMouseEvent(kind, local, viewport.mapToGlobal(local), button, buttons, QGuiApplication.keyboardModifiers())
         QApplication.sendEvent(viewport, event)
         if kind == QEvent.Type.MouseButtonPress and button == Qt.MouseButton.RightButton:
@@ -256,6 +339,8 @@ class Hosted(QObject):
         self._sync_view()
         local = gpos - QPointF(self.rect().topLeft())
         viewport = self.view.viewport()
+        if viewport is None:  # never, as in mouse()
+            return
         event = QWheelEvent(
             local, viewport.mapToGlobal(local), QPoint(), QPoint(dx, dy), Qt.MouseButton.NoButton,
             Qt.KeyboardModifier.NoModifier, Qt.ScrollPhase.NoScrollPhase, False,
@@ -263,7 +348,7 @@ class Hosted(QObject):
         QApplication.sendEvent(viewport, event)
 
     def cursor_at(self, gpos: QPointF) -> str:
-        child = self.widget.childAt((gpos - QPointF(self.rect().topLeft())).toPoint())
+        child: QWidget | None = self.widget.childAt((gpos - QPointF(self.rect().topLeft())).toPoint())  # PyQt6 6.12.1's stubs say never None
         while child is not None and not child.testAttribute(Qt.WidgetAttribute.WA_SetCursor):
             child = child.parentWidget()
         if child is None:
@@ -298,7 +383,7 @@ class Hosted(QObject):
             length = len(preedit.encode("utf-16-le", errors="surrogatepass")) // 2
             attributes.append(QInputMethodEvent.Attribute(QInputMethodEvent.AttributeType.TextFormat, 0, length, underline))
         shown = cursor is not None
-        attributes.append(QInputMethodEvent.Attribute(QInputMethodEvent.AttributeType.Cursor, cursor[1] if shown else 0, 1 if shown else 0))
+        attributes.append(QInputMethodEvent.Attribute(QInputMethodEvent.AttributeType.Cursor, cursor[1] if cursor is not None else 0, 1 if shown else 0))
         event = QInputMethodEvent(preedit, attributes)
         if commit or before or after:
             event.setCommitString(commit, -before, before + after)
@@ -310,7 +395,7 @@ class Hosted(QObject):
         else:
             self.scene.clearFocus()
 
-    def _context_menu(self, child: QWidget, pos: QPoint) -> None:
+    def _context_menu(self, child: Any, pos: QPoint) -> None:  # a QTextEdit, a QLineEdit...: any widget with createStandardContextMenu
         try:
             menu = child.createStandardContextMenu(pos)
         except TypeError:
@@ -373,8 +458,8 @@ class Hosted(QObject):
         """Typed-in text: replaces the selection, at the cursor."""
         if not self.visible() or not text:
             return
-        if isinstance(self.widget.focusWidget(), QLineEdit):
-            text = " ".join(text.splitlines())  # one line
+        if isinstance(self.widget.focusWidget(), QLineEdit):  # a one-line field; the ask box's own keeps or joins lines itself
+            text = " ".join(text.splitlines())
         event = QInputMethodEvent("", [])
         event.setCommitString(text)
         QApplication.sendEvent(self.scene, event)
@@ -408,17 +493,17 @@ class Stage(QObject):
         self._clock = time.monotonic
         self._frame: Frame | None = None
         self._geo = QRect()  # the screen the stage covers, in Qt's coordinates
-        self._penguin = QRect()  # where the penguin was last drawn, local
+        self._penguin = QRectF()  # where the penguin was last drawn, local (on the device pixel grid)
         self._bubble_box = QRectF()
         self._head = QPoint()
-        self._key = None
+        self._key: tuple | None = None
         self._input_parts: tuple | None = None  # what the input region was last built from
         self._press: QPoint | None = None
         self._press_on: str | int | None = None
         self._grab = QPointF()
         self._dragging = False
         self._screen: QScreen | None = None
-        self.menu = StageMenu()
+        self.menu = StageMenu(clock=lambda: self._clock())
         self._menu_rects: list[QRect] = []
         self._owned_menu: QMenu | None = None
         self.hosted: Hosted | None = None
@@ -426,15 +511,39 @@ class Stage(QObject):
         self._hosted_press = False  # a button went down on the hosted widget: it gets the rest
         self._text_state: layer.TextState | None = None  # what the input method was last told
         self._primary = ""  # the selected text last made the primary selection
+        self._inputs: tuple = ()  # what takes clicks, as last sent to the surface (local x, y, w, h)
+        self._covered = False  # a full-screen window is in front on this screen
+        self._unhosted = False  # told to leave the ask box a window and menus to Qt (set_hosting)
+        self._unhosted_widget: QWidget | None = None
+        self._badge = (0, 0)  # agents (working, needing you)
+        self._badges: tuple = ()  # what the badge is as last drawn: (state, rect, figure) each, local
+        self._pulse = -1  # the needs-you ring's step as last drawn
+        self._follow = False  # follow the pointer's screen
+        self._away: tuple[QScreen, float] | None = None  # the screen the pointer went to, and since when
+        self._last_tick = -math.inf
+        self._cursor_pos = QCursor.pos  # where the pointer is, in Qt's screen coordinates
+        self._screen_at = QGuiApplication.screenAt
         self.surface = surface_factory(self)
-        self._use_screen(QGuiApplication.screenAt(QPoint(int(behavior.x), 0)) or QGuiApplication.primaryScreen())
-        QGuiApplication.instance().screenRemoved.connect(self._screen_removed)
+        first = self._screen_at(QPoint(int(behavior.x), 0)) or QGuiApplication.primaryScreen()
+        if first is not None:  # none at all: no screen to cover until one comes (_tick)
+            self._use_screen(first)
+        app: QCoreApplication | None = QGuiApplication.instance()  # typed: PyQt6 6.12.1's stubs give instance() an unbound Self
+        if isinstance(app, QGuiApplication):  # always: a stage needs Qt's GUI
+            app.screenRemoved.connect(self._screen_removed)
+        # One shot at a time, set each tick to the next change (see _next_tick); anything that happens wakes it.
         self._timer = QTimer(self)
+        self._timer.setSingleShot(True)
         self._timer.setTimerType(Qt.TimerType.PreciseTimer)
         self._timer.timeout.connect(self._tick)
+        # The pointer, for a surface that has to be told when it's over the chatmon (Windows, macOS).
+        self._pointer_timer = QTimer(self)
+        self._pointer_timer.setSingleShot(True)
+        self._pointer_timer.timeout.connect(self._poll_pointer)
         self.power_saving = False  # the system's power-saver mode: fewer frames
         self.drawing: bool | None = True  # off while nothing on screen can be seen: no frames at all; None once closed
-        self._timer.start(1000 // FPS)
+        behavior.on_change = self._wake
+        self._timer.start(0)
+        self._poll_pointer()
 
     # -- what the app uses
 
@@ -442,6 +551,7 @@ class Stage(QObject):
         self.sprites = sprites
         self._key = None
         self.surface.damage(QRegion(0, 0, self._geo.width(), self._geo.height()))
+        self._wake()
 
     def show_message(self, title: str, text: str = "", buttons=None, timeout_s: float | None = 12) -> None:
         self.bubble.show(title, text, buttons, timeout_s, self._clock())
@@ -451,6 +561,7 @@ class Stage(QObject):
 
             describe(spoken(title, text, [label for label, _ in buttons or []]))
         self._key = None
+        self._wake()
 
     def set_drawing(self, on: bool) -> None:
         """Stop drawing, and the clock that moves it on, while nothing on screen can be seen (Windows asks it
@@ -460,9 +571,11 @@ class Stage(QObject):
         self.drawing = on
         if on:
             self._key = None  # everything drawn again, as it is now
-            self._timer.start()
+            self._wake()
+            self._poll_pointer()
         else:
             self._timer.stop()
+            self._pointer_timer.stop()
 
     # -- full-screen windows, and you being away
 
@@ -494,9 +607,17 @@ class Stage(QObject):
 
     def set_covered(self, on: bool) -> None:
         """A full-screen window is in front on this screen: out of its way (the window surfaces; the overlay's
-        compositor does it itself)."""
+        compositor does it itself), and the clock slowed to COVERED_TICK while nothing can be seen."""
         if hasattr(self.surface, "set_covered"):
             self.surface.set_covered(on)
+        if on != self._covered:
+            self._covered = on
+            if on:
+                self._pointer_timer.stop()
+            else:
+                self._key = None
+                self._wake()
+                self._poll_pointer()
 
     def native_window(self) -> int:
         win = getattr(self.surface, "winId", None)
@@ -511,9 +632,15 @@ class Stage(QObject):
 
     def dismiss_message(self) -> None:
         self.bubble.dismiss(self._clock())
+        self._wake()
 
     def message_visible(self) -> bool:
         return self.bubble.visible()
+
+    def bubble_rect(self) -> QRect:
+        """Where the bubble is drawn, in the stage window's own coordinates (empty when none is): for a screen
+        magnifier to go to (the app's wincaret wiring)."""
+        return self._bubble_box.toAlignedRect() if self.bubble.drawn() else QRect()
 
     def press_button(self, typed: str) -> bool:
         """The bubble's button whose label was typed (or the start of it, if that's one button's alone),
@@ -537,17 +664,111 @@ class Stage(QObject):
         return self._screen
 
     def draws_menus(self) -> bool:
-        """Whether menus have to be drawn on the stage (its surface says so)."""
-        return bool(getattr(self.surface, "draws_menus", False))
+        """Whether menus have to be drawn on the stage (its surface says so, unless it's told not to host)."""
+        return bool(getattr(self.surface, "draws_menus", False)) and not self._unhosted
 
     def hosts_windows(self) -> bool:
-        """Whether the ask box has to be drawn on the stage too (its surface says so)."""
-        return bool(getattr(self.surface, "hosts_windows", False))
+        """Whether the ask box has to be drawn on the stage too (its surface says so, unless it's told not to)."""
+        return bool(getattr(self.surface, "hosts_windows", False)) and not self._unhosted
 
     def host(self, widget: QWidget) -> None:
-        """Draw this top-level widget on the stage instead of as a window."""
-        self.hosted = Hosted(self, widget)
+        """Draw this top-level widget on the stage instead of as a window (kept for later while hosting is off)."""
         self.keep_clear_of(widget)
+        if self._unhosted:
+            self._unhosted_widget = widget
+        else:
+            self.hosted = Hosted(self, widget)
+
+    def set_hosting(self, on: bool) -> None:
+        """Draw the ask box on the overlay (on: the default there), or leave it a normal Qt window, with Qt's own
+        menus, which a screen reader can find and read (off). Off, the stage says it neither hosts windows nor
+        draws menus, so the app gives its menus to Qt as it does everywhere else; the overlay still draws the
+        chatmon and its bubbles."""
+        if on != self._unhosted:
+            return
+        self._unhosted = not on
+        if not on:
+            self.close_menu()
+            if self.hosted is not None:
+                hosted, self.hosted = self.hosted, None
+                if hosted.was_visible:
+                    self.hosted_shown(hosted, False, False)  # the overlay gives the keyboard back
+                self._unhosted_widget = hosted.unhost()
+                hosted.deleteLater()
+            if self._text_state is not None:
+                self._text_state = None
+                set_text_input = getattr(self.surface, "set_text_input", None)
+                if set_text_input is not None:
+                    set_text_input(None)
+        elif self._unhosted_widget is not None and self.hosts_windows():
+            widget, self._unhosted_widget = self._unhosted_widget, None
+            self.host(widget)
+        self._input_parts = None
+        self._key = None
+        self._wake()
+
+    # -- reduced motion, agents at a glance, and which screen
+
+    def set_reduced_motion(self, on: bool) -> None:
+        """Less movement, as the system or you ask: moods hold one pose and waves, hops and peeks are left out (the
+        behaviour), and the sleeping z's and the needs-you badge's ring stand still."""
+        self.behavior.set_reduced_motion(on, self._clock())
+        self._key = None
+        self._wake()
+
+    def set_badge(self, working: int = 0, needs_you: int = 0) -> None:
+        """How many agents are working and how many need you, in a small badge by the chatmon: needs-you an
+        amber diamond, working a blue circle, each with its count. 0 and 0: no badge."""
+        badge = (max(0, int(working)), max(0, int(needs_you)))
+        if badge != self._badge:
+            self._badge = badge
+            self._wake()
+
+    def badge_description(self) -> str:
+        """The badge in words, for a screen reader: "1 agent needs you, 2 agents working"; "" without one."""
+        working, waiting = self._badge
+        needs_you = ngettext("{n} agent needs you", "{n} agents need you", waiting).format(n=waiting)
+        busy = ngettext("{n} agent working", "{n} agents working", working).format(n=working)
+        if waiting and working:
+            # Translators: a badge read out by a screen reader: "1 agent needs you, 2 agents working".
+            return _("{needs_you}, {working}").format(needs_you=needs_you, working=busy)
+        return needs_you if waiting else busy if working else ""
+
+    def follow_pointer_screen(self, on: bool) -> bool:
+        """Come over to the screen the pointer is on once it has stayed there FOLLOW_AFTER (an option, off by
+        default). Only where apps are told where the pointer is (Windows, macOS, X11): on a Wayland desktop
+        they aren't, and this stays off. Returns whether it's on now."""
+        self._follow = bool(on) and self._pointer_known()
+        self._away = None
+        self._wake()
+        return self._follow
+
+    def _pointer_known(self) -> bool:
+        platform = QGuiApplication.platformName()
+        return platform in ("windows", "cocoa") or (platform == "xcb" and not os.environ.get("WAYLAND_DISPLAY"))
+
+    def _follow_pointer(self, now: float) -> None:
+        """Following the pointer's screen: over to it once the pointer has stayed there FOLLOW_AFTER, landing on
+        that screen's floor as far along it as it was on this one. Not while you're using it (a drag, a press,
+        a menu, the ask box)."""
+        busy = self._dragging or self._press is not None or self.behavior.held or self.menu.is_open()
+        busy = busy or (self._clear_of is not None and self._clear_of.isVisible())
+        there = self._screen_at(self._cursor_pos())
+        if busy or there is None or self._screen is None or there is self._screen:
+            self._away = None
+            return
+        if self._away is None or self._away[0] is not there:
+            self._away = (there, now)
+            return
+        if now - self._away[1] < FOLLOW_AFTER:
+            return
+        self._away = None
+        old, new = self._screen.availableGeometry(), there.availableGeometry()
+        along = (self.behavior.x - old.x()) / max(1, old.width())
+        x = new.x() + EDGE + along * max(0, new.width() - 2 * EDGE)
+        self._use_screen(there)
+        self.behavior.hold(x, 0.0, now)
+        self.behavior.release(now)  # lands there, with a hop (without one, for reduced motion)
 
     def keep_clear_of(self, widget: QWidget) -> None:
         """Put speech bubbles above this widget (the ask box) while it's open:
@@ -564,6 +785,71 @@ class Stage(QObject):
     def device_scale(self) -> float:
         return self.surface.device_scale()
 
+    # -- the clock
+
+    def _wake(self) -> None:
+        """Something changed that could change what's drawn: tick within a frame, never sooner than a frame
+        after the last tick (a mouse sends hundreds of moves a second; the screen shows one frame a refresh)."""
+        if not self.drawing:
+            return
+        self._schedule(self._last_tick + self._frame_interval() - self._clock())
+
+    def _schedule(self, delay: float) -> None:
+        """Tick in `delay` seconds, unless a tick is already due sooner."""
+        ms = math.ceil(min(delay, IDLE_FLOOR) * 1000) if delay > 0 else 0  # before the first tick: -inf, at once
+        if not self._timer.isActive() or self._timer.remainingTime() > ms:
+            self._timer.start(ms)
+
+    def _refresh_hz(self) -> float:
+        try:
+            rate = float(self._screen.refreshRate()) if self._screen is not None else 0.0
+        except (AttributeError, RuntimeError):  # a screen being unplugged
+            rate = 0.0
+        return min(max(rate, MIN_HZ), MAX_HZ) if rate > 0 else DEFAULT_HZ
+
+    def _frame_interval(self) -> float:
+        """Seconds per frame while something moves: the screen's refresh rate, SAVER_FPS at most when saving power."""
+        hz = self._refresh_hz()
+        return 1.0 / (min(hz, SAVER_FPS) if self.power_saving else hz)
+
+    def _next_tick(self, now: float, zs: QRect) -> float:
+        """Seconds until the next tick: the soonest change anything drawn will show, at least a frame from now
+        and at most IDLE_FLOOR; COVERED_TICK while covered."""
+        if self._covered:
+            return COVERED_TICK
+        due = [self.behavior.next_change(now), self._bubble_due(now)]
+        if zs.isValid() and not self.behavior.reduced_motion:
+            due.append((int(now / Z_STEP) + 1) * Z_STEP + 0.001)
+        if self._pulse >= 0:
+            due.append((int(now / PULSE_STEP) + 1) * PULSE_STEP + 0.001)
+        if self.hosted is not None and self.hosted.anim_key(now) >= 0:
+            due.append(now + 1 / ANIM_FPS)
+        menu_due = getattr(self.menu, "next_change", None)
+        if menu_due is not None:
+            due.append(menu_due())
+        return min(max(min(due) - now, self._frame_interval()), IDLE_FLOOR)
+
+    def _bubble_due(self, now: float) -> float:
+        b = self.bubble
+        if not b.drawn():
+            return math.inf
+        if not b.visible() or b.opacity(now) < 1:
+            return now  # fading in or out: every frame
+        due = now + 1 / ANIM_FPS if b.anim_key(now) >= 0 else math.inf
+        # When it goes by itself; not a time already past, which is a bubble paused while pointed at.
+        expires = b.expires() if hasattr(b, "expires") else None
+        return min(due, expires) if expires is not None and expires > now else due
+
+    def _poll_pointer(self) -> None:
+        """Tell a surface that has to know (Windows, macOS) whether the pointer is over the chatmon: every frame
+        while it's near, every FAR_POLL farther off, not at all while nothing can be seen."""
+        if not getattr(self.surface, "polls_pointer", False) or not self.drawing or self._covered:
+            return
+        self.surface.follow_pointer(self._target_at)
+        local = self._cursor_pos() - self._geo.topLeft()
+        near = any(x - NEAR <= local.x() < x + w + NEAR and y - NEAR <= local.y() < y + h + NEAR for x, y, w, h in self._inputs)
+        self._pointer_timer.start(max(1, math.ceil((self._frame_interval() if near else FAR_POLL) * 1000)))
+
     def open_menu(self, menu, at: QPoint, owned: bool = False) -> None:
         """Show a QMenu's actions on the stage, its corner at `at` (screen
         coordinates); an `owned` menu is deleted once it closes."""
@@ -571,6 +857,8 @@ class Stage(QObject):
         self.menu.open(menu, QPointF(at - self._geo.topLeft()), QRect(0, 0, self._geo.width(), self._geo.height()))
         self._owned_menu = menu if owned else None
         self._key = None
+        self._menu_keyboard(True)
+        self._wake()
 
     def close_menu(self) -> None:
         if self.menu.is_open():
@@ -580,7 +868,19 @@ class Stage(QObject):
     def _menu_gone(self) -> None:
         self._key = None
         self._close_owned()
+        self._menu_keyboard(False)
         self.menu_closed.emit()
+        self._wake()
+
+    def _menu_keyboard(self, on: bool) -> None:
+        """The overlay takes the keyboard while its menu is open, as any popup menu does, and gives it back as
+        the menu closes; while the ask box is open on it the keyboard is already the overlay's, and stays. With the
+        ask box a window of its own (set_hosting(False)) the penguin's menu is still drawn here, so it takes the
+        keyboard from the box too, and the compositor gives it back to the box as the menu closes."""
+        focus = getattr(self.surface, "focus_keyboard", None)
+        drawn_here = bool(getattr(self.surface, "draws_menus", False))  # whatever the hosting: this menu is the overlay's
+        if focus is not None and drawn_here and not (self.hosted is not None and self.hosted.visible()):
+            focus(on, on)
 
     def _close_owned(self) -> None:
         if self._owned_menu is not None:
@@ -593,16 +893,27 @@ class Stage(QObject):
         """The hosted widget opened (taking the keyboard if `grab`) or closed."""
         if not on:
             self._hosted_press = False
+            if self._owned_menu is not None:
+                self.close_menu()  # its context menu goes with it, not left catching clicks screen-wide
         focus = getattr(self.surface, "focus_keyboard", None)
         if focus is not None:
             focus(on, grab)
         self._key = None
 
     def key(self, key, pressed: bool, repeat: bool) -> None:
-        if self.hosted is None or not self.hosted.visible():
-            return
+        self._wake()
         kind = QEvent.Type.KeyPress if pressed else QEvent.Type.KeyRelease
         event = QKeyEvent(kind, int(key.key), key.modifiers, key.text, repeat)
+        if self.menu.is_open():  # an open menu has the keys, the ask box's Esc too
+            self.menu.key(event)
+            if not self.menu.is_open():
+                self._menu_gone()
+            chosen = self.menu.take_chosen()
+            if chosen is not None:
+                chosen.trigger()
+            return
+        if self.hosted is None or not self.hosted.visible():
+            return
         if pressed and hasattr(self.surface, "paste"):  # the overlay's clipboard, not Qt's
             for shortcut, do in (
                 (QKeySequence.StandardKey.Paste, self.hosted.paste),
@@ -630,16 +941,21 @@ class Stage(QObject):
             self.surface.paste(then, which)
 
     def keyboard_focus(self, on: bool) -> None:
+        self._wake()
         if self.hosted is not None:
             self.hosted.keyboard_focus(on)
 
     def input_method(self, preedit: str, cursor: tuple[int, int] | None, commit: str, before: int, after: int) -> None:
         """Text from an input method (the surface's text-input protocol)."""
+        self._wake()
         if self.hosted is not None and self.hosted.visible():
             self.hosted.input_method(preedit, cursor, commit, before, after)
 
     def wheel(self, pos: QPointF, gpos: QPointF, dx: int, dy: int) -> None:
-        if self.hosted is not None and self.hosted.contains(gpos) and not self.menu.is_open():
+        self._wake()
+        if self.menu.is_open():
+            self.menu.wheel(pos, dy)
+        elif self.hosted is not None and self.hosted.contains(gpos):
             self.hosted.wheel(gpos, dx, dy)
 
     def scale_changed(self, scale: float) -> None:
@@ -648,6 +964,7 @@ class Stage(QObject):
 
     def close_stage(self) -> None:
         self._timer.stop()
+        self._pointer_timer.stop()
         self.drawing = None  # for good: set_drawing never starts it again
         self.surface.close()
 
@@ -660,6 +977,8 @@ class Stage(QObject):
         self._screen = screen
         self._geo = screen.geometry()
         self._key = None  # draw it all again there
+        # A bubble no taller than its share of this screen (it scrolls past that, with More).
+        self.bubble.max_height = getattr(SpeechBubble, "SCREEN_SHARE", 0.4) * screen.availableGeometry().height()
         self.surface.set_screen(screen, self._geo)
         self._floor()
 
@@ -668,11 +987,13 @@ class Stage(QObject):
         (its walking range brings it on screen), before Qt deletes the screen from under the stage."""
         if screen is self._screen:
             self._screen = None
-            self._use_screen(QGuiApplication.primaryScreen())
+            primary = QGuiApplication.primaryScreen()
+            if primary is not None:  # none left: it waits for one (_tick)
+                self._use_screen(primary)
 
     def _floor(self) -> int:
         """The floor's height on the stage, and keep the walking range current."""
-        avail = self._screen.availableGeometry()
+        avail = self._available()
         self.behavior.set_floor(avail.x() + EDGE, avail.x() + avail.width() - EDGE)
         return avail.y() + avail.height() - self._geo.y()
 
@@ -680,8 +1001,12 @@ class Stage(QObject):
 
     def _tick(self) -> None:
         now = self._clock()
+        self._last_tick = now
+        self._timer.stop()  # a wake from what this tick sets off schedules the next one sooner; else _next_tick
+        if self._follow:
+            self._follow_pointer(now)
         if not self._dragging:
-            here = QGuiApplication.screenAt(QPoint(int(self.behavior.x), self._geo.center().y()))
+            here = self._screen_at(QPoint(int(self.behavior.x), self._geo.center().y()))
             if here is not None:
                 self._use_screen(here, again=here.geometry() != self._geo)  # its resolution or scale may have changed
         floor = self._floor()
@@ -689,82 +1014,47 @@ class Stage(QObject):
         self.bubble.tick(now)
         self._frame = f
         origin = self._geo.topLeft()
+        k = self._device_scale()
 
-        penguin, sprite = QRect(), None
+        penguin, sprite = QRectF(), None
         if f.anim is not None:
             sprite = self.sprites.frame(f.anim, f.index, f.mirror)
-            left = round(f.x) - origin.x() - sprite.anchor
-            top = floor - sprite.height() - round(f.lift)
-            penguin = QRect(left, top, sprite.width(), sprite.height())
-            head = QPoint(round(f.x) - origin.x(), top + 4)
+            # On the device pixel grid, not whole stage pixels: half pixels on a 2x screen, so a walk moves
+            # as smoothly as the screen can show.
+            left = round((f.x - origin.x() - sprite.anchor) * k) / k
+            top = round((floor - sprite.height() - f.lift) * k) / k
+            penguin = QRectF(left, top, sprite.width(), sprite.height())
+            head = QPoint(round(f.x) - origin.x(), round(top) + 4)
         else:
             head = QPoint(round(f.x) - origin.x(), floor)
         zs = self._z_rect(penguin) if self._sleeping(f) else QRect()
 
-        bubble_box = QRectF()
-        if self.bubble.drawn():
-            size = self.bubble.size
-            x = min(max(head.x() - size.width() / 2, 4), self._geo.width() - size.width() - 4)
-            top = head.y()
-            if self._clear_of is not None and self._clear_of.isVisible():
-                top = min(top, self._clear_of.geometry().top() - origin.y())
-            y = max(top - size.height(), 4)
-            # On whole device pixels: off them, every pixmap of an animated bubble is resampled each frame,
-            # which is slow and blurs it by half a pixel.
-            k = self._device_scale()
-            x, y = round(x * k) / k, math.floor(y * k) / k  # down, never up: it stays clear of what is below it
-            bubble_box = QRectF(x, y, size.width(), size.height())
+        bubble_box = self._place_bubble(head, origin, k) if self.bubble.drawn() else QRectF()
 
-        z_phase = int(now * 1.2) % 3 if zs.isValid() else -1
+        # Reduced motion: all three z's, still.
+        self._z_phase = (2 if self.behavior.reduced_motion else int(now / Z_STEP) % 3) if zs.isValid() else -1
+        menu_tick = getattr(self.menu, "tick", None)
+        if menu_tick is not None:
+            menu_tick(now)  # a submenu due to open, a scroll arrow held
         fade = round(self.bubble.opacity(now) * 20) if self.bubble.drawn() else -1
         menu_rects = self.menu.rects()
+        badges = self._badge_layout(penguin, sprite)
+        waiting = any(state == "needs-you" for state, _, _ in badges)
+        pulse = int(now / PULSE_STEP) % 4 if waiting and not self.behavior.reduced_motion else -1
         # What looks different, each part on its own: only what changed is drawn again.
         key = (
-            (f.anim, f.index, f.mirror, penguin.topLeft(), z_phase),
+            (f.anim, f.index, f.mirror, penguin.topLeft(), self._z_phase),
             (bubble_box.topLeft(), self.bubble.hover, fade, self.bubble.anim_key(now)),
-            self.menu.key(),
+            self.menu.look(),
             self.hosted.anim_key(now) if self.hosted is not None else -1,
+            (tuple((state, r.x(), r.y(), r.width(), r.height(), figure) for state, r, figure in badges), pulse),
         )
         if key != self._key:
-            old = self._key or (None, None, None, None)
-            dirty = QRegion()
-            if key[0] != old[0]:
-                dirty = QRegion(self._penguin.adjusted(-2, -2, 2, 2)).united(QRegion(penguin.adjusted(-2, -2, 2, 2)))
-                dirty = dirty.united(QRegion(self._z_rect(self._penguin))).united(QRegion(zs))
-            if key[1] != old[1]:
-                dirty = dirty.united(QRegion(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
-                dirty = dirty.united(QRegion(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
-            if key[2] != old[2]:
-                for r in self._menu_rects + menu_rects:
-                    dirty = dirty.united(QRegion(r.adjusted(-2, -2, 2, 2)))
-            if key[3] != old[3] and self.hosted is not None and self.hosted.visible():  # its bubble moved on a frame
-                dirty = dirty.united(QRegion(self.hosted.rect().translated(-origin)))
-            self._menu_rects = menu_rects
-            self._key = key
-            self._penguin, self._bubble_box = penguin, bubble_box
-            self.surface.damage(dirty)
-        hosted_rects: tuple = ()
-        if self.hosted is not None:
-            # Read each frame rather than from Show and Hide events, so however
-            # it opens or closes, the keyboard and input region follow.
-            shown = self.hosted.visible()
-            if shown != self.hosted.was_visible:
-                self.hosted.was_visible = shown
-                self.hosted_shown(self.hosted, shown, shown and getattr(self.hosted.widget, "wants_keyboard", True))
-            if shown:
-                hosted_rects = tuple((r.x() - origin.x(), r.y() - origin.y(), r.width(), r.height()) for r in self.hosted.input_rects())
-            # Selected text is the primary selection, as in any Linux app.
-            selected = self.hosted.selected_text() if shown else ""
-            if selected and selected != self._primary:
-                self.clipboard_copy(selected, "primary")
-            self._primary = selected
-            # The focused field's text and cursor, for an input method, when they change.
-            state = self.hosted.text_state()
-            if state != self._text_state:
-                self._text_state = state
-                set_text_input = getattr(self.surface, "set_text_input", None)
-                if set_text_input is not None:
-                    set_text_input(state)
+            self._damage(key, penguin, zs, bubble_box, menu_rects, badges, pulse, origin)
+        set_extent = getattr(self.surface, "set_extent", None)  # the overlay: buffers only as big as this
+        if set_extent is not None:
+            set_extent(self._extent(penguin, zs, bubble_box, menu_rects, badges, origin))
+        hosted_rects = self._follow_hosted(self.hosted, origin) if self.hosted is not None else ()
         # Where it takes clicks: built again only when something in it changed, and as plain numbers.
         bubble_rect = bubble_box.toAlignedRect() if self.bubble.visible() else None
         parts = (
@@ -776,25 +1066,116 @@ class Stage(QObject):
             (self._geo.width(), self._geo.height()) if self.menu.is_open() else None,
         )
         if parts != self._input_parts:
-            self._input_parts = parts
-            rects, (dx, dy), bubble_t, zs_t, hosted_t, menu = parts
-            if menu is not None:  # like any popup menu: a click anywhere else closes it
-                inputs = ((0, 0, *menu),)
-            else:
-                inputs = tuple((x + dx, y + dy, w, h) for x, y, w, h in rects) + tuple(r for r in (bubble_t, zs_t) if r) + hosted_t
-            self.surface.set_input(inputs)
-        self.surface.follow_pointer(self._target_at)
+            self._take_input(parts)
         if head != self._head:
             self._head = head
             self.head_moved.emit()
-        # Full speed while anything moves; the sprites' own frame rates are 10 fps or less.
-        moving = f.anim == "walk" or self.behavior.held or self.behavior.falling or 0 <= fade < 20
-        if self.power_saving:
-            interval = 1000 // SAVER_FPS if moving else 1000 // SAVER_SLOW_FPS
+        self.next_tick_in = self._next_tick(now, zs)
+        self._schedule(self.next_tick_in)
+
+    def _place_bubble(self, head: QPoint, origin: QPoint, k: float) -> QRectF:
+        """Where the bubble goes this frame: above the head, inside the stage, clear of what it must stay off."""
+        size = self.bubble.size
+        x = min(max(head.x() - size.width() / 2, 4), self._geo.width() - size.width() - 4)
+        top = head.y()
+        if self._clear_of is not None and self._clear_of.isVisible() and self._placed_as_asked(self._clear_of):
+            top = min(top, self._clear_of.geometry().top() - origin.y())
+        y = max(top - size.height(), 4)
+        # On whole device pixels: off them, every pixmap of an animated bubble is resampled each frame,
+        # which is slow and blurs it by half a pixel.
+        x, y = round(x * k) / k, math.floor(y * k) / k  # down, never up: it stays clear of what is below it
+        return QRectF(x, y, size.width(), size.height())
+
+    @staticmethod
+    def _placed_as_asked(widget: QWidget) -> bool:
+        """Whether `widget` is where its geometry says: drawn on the stage (hosted), or a window where windows go
+        where they're asked (X11, Windows, macOS). On Wayland the compositor places a window and never says where
+        (sway centres the ask box, floating): its geometry there is only what was asked for, and a bubble kept
+        above that lands on the box itself."""
+        return widget.graphicsProxyWidget() is not None or not QGuiApplication.platformName().startswith("wayland")
+
+    def _damage(self, key: tuple, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: tuple, pulse: int, origin: QPoint) -> None:
+        """Draw again only the parts whose look (their part of `key`) changed since the last frame drawn."""
+        old = self._key or (None, None, None, None, None)
+        dirty = QRegion()
+        if key[0] != old[0]:
+            dirty = QRegion(self._penguin.toAlignedRect().adjusted(-2, -2, 2, 2)).united(QRegion(penguin.toAlignedRect().adjusted(-2, -2, 2, 2)))
+            dirty = dirty.united(QRegion(self._z_rect(self._penguin))).united(QRegion(zs))
+        if key[1] != old[1]:
+            dirty = dirty.united(QRegion(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
+            dirty = dirty.united(QRegion(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)))
+        if key[2] != old[2]:
+            for r in self._menu_rects + menu_rects:
+                dirty = dirty.united(QRegion(r.adjusted(-2, -2, 2, 2)))
+        if key[3] != old[3] and self.hosted is not None and self.hosted.visible():  # its bubble moved on a frame
+            dirty = dirty.united(self.hosted.ring().translated(-origin))
+        if key[4] != old[4]:
+            for _state, r, _figure in self._badges + badges:
+                dirty = dirty.united(QRegion(r.toAlignedRect().adjusted(-PULSE_REACH - 2, -PULSE_REACH - 2, PULSE_REACH + 2, PULSE_REACH + 2)))
+            self._badges, self._pulse = badges, pulse
+        self._menu_rects = menu_rects
+        self._key = key
+        self._penguin, self._bubble_box = penguin, bubble_box
+        self.surface.damage(dirty)
+
+    def _extent(self, penguin: QRectF, zs: QRect, bubble_box: QRectF, menu_rects: list, badges: tuple, origin: QPoint) -> QRect:
+        """Where everything drawn this frame is, all of it (local coordinates), each part with the margin its
+        drawing reaches past it (as _damage has them): the overlay's buffers need cover no more."""
+        parts = [r.adjusted(-3, -3, 3, 3) for r in menu_rects] if self.menu.is_open() else []
+        if not penguin.isNull():
+            parts.append(penguin.toAlignedRect().adjusted(-2, -2, 2, 2))
+        if zs.isValid():
+            parts.append(zs)
+        if self.bubble.drawn() and not bubble_box.isNull():
+            parts.append(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3))
+        if self.hosted is not None and self.hosted.visible():
+            parts.append(self.hosted.rect().translated(-origin).adjusted(-2, -2, 2, 2))
+        reach = PULSE_REACH + 2
+        parts += [r.toAlignedRect().adjusted(-reach, -reach, reach, reach) for _state, r, _figure in badges]
+        extent = QRect()
+        for part in parts:
+            extent = extent.united(part)
+        return extent
+
+    def _follow_hosted(self, hosted: Hosted, origin: QPoint) -> tuple:
+        """Keep the keyboard, the primary selection and the input method up with the hosted scene, and say where on
+        the stage it takes clicks. Looked at each tick (and the hosted scene wakes the clock when it changes), so
+        however it opens or closes, the keyboard and input region follow."""
+        hosted_rects: tuple = ()
+        shown = hosted.visible()
+        if shown != hosted.was_visible:
+            hosted.was_visible = shown
+            self.hosted_shown(hosted, shown, shown and getattr(hosted.widget, "wants_keyboard", True))
+        if shown:
+            hosted_rects = tuple((r.x() - origin.x(), r.y() - origin.y(), r.width(), r.height()) for r in hosted.input_rects())
+        # Selected text is the primary selection, as in any Linux app.
+        selected = hosted.selected_text() if shown else ""
+        if selected and selected != self._primary:
+            self.clipboard_copy(selected, "primary")
+        self._primary = selected
+        # The focused field's text and cursor, for an input method, when they change.
+        state = hosted.text_state()
+        if state != self._text_state:
+            self._text_state = state
+            set_text_input = getattr(self.surface, "set_text_input", None)
+            if set_text_input is not None:
+                set_text_input(state)
+        return hosted_rects
+
+    def _take_input(self, parts: tuple) -> None:
+        """Take clicks where `parts` (plain numbers) says: the whole stage while the menu is open, as any popup menu
+        does (a click anywhere else closes it), else the sprite, the bubble, the z's and the hosted scene."""
+        self._input_parts = parts
+        rects, (px, py), bubble_t, zs_t, hosted_t, menu = parts
+        if menu is not None:
+            inputs = ((0, 0, *menu),)
         else:
-            interval = 1000 // FPS if moving else 1000 // SLOW_FPS
-        if self._timer.interval() != interval:
-            self._timer.setInterval(interval)
+            # The sprite sits on half pixels on a 2x screen: whole pixels round it, outward.
+            dx, dy = math.floor(px), math.floor(py)
+            ex, ey = (1 if px != dx else 0), (1 if py != dy else 0)
+            inputs = tuple((x + dx, y + dy, w + ex, h + ey) for x, y, w, h in rects) + tuple(r for r in (bubble_t, zs_t) if r) + hosted_t
+        self._inputs = inputs
+        self.surface.set_input(inputs)
 
     def _device_scale(self) -> float:
         scale = getattr(self.surface, "device_scale", None)
@@ -804,10 +1185,10 @@ class Stage(QObject):
     def _sleeping(self, f: Frame) -> bool:
         return f.anim == "sleep" and f.index >= 3
 
-    def _z_rect(self, penguin: QRect) -> QRect:
+    def _z_rect(self, penguin: QRectF) -> QRect:
         if penguin.isNull():
             return QRect()
-        return QRect(penguin.center().x() + 6, penguin.top() - 30, 48, 44)
+        return QRect(round(penguin.center().x()) + 6, round(penguin.top()) - 30, 48, 44)
 
     # -- drawing
 
@@ -820,7 +1201,9 @@ class Stage(QObject):
         if f is not None and f.anim is not None and not self._penguin.isNull():
             p.drawPixmap(self._penguin.topLeft(), self.sprites.frame(f.anim, f.index, f.mirror).pixmap)
             if self._sleeping(f):
-                self._paint_zs(p, self._z_rect(self._penguin), int(now * 1.2) % 3)
+                self._paint_zs(p, self._z_rect(self._penguin), self._z_phase)
+        if self._badges:
+            self._paint_badges(p)
         if self.bubble.drawn() and not self._bubble_box.isNull() and region.intersects(self._bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3)):
             p.save()
             p.translate(self._bubble_box.topLeft())
@@ -830,6 +1213,68 @@ class Stage(QObject):
             self.hosted.paint(p, region)
         if self.menu.is_open() and any(region.intersects(r.adjusted(-3, -3, 3, 3)) for r in self._menu_rects):
             self.menu.paint(p)
+
+    def _badge_layout(self, penguin: QRectF, sprite) -> tuple:
+        """Where the badges go: at the top right of the creature itself (its outline, not the frame round it),
+        needs-you first, then working leftward of it; inside the stage."""
+        working, waiting = self._badge
+        if penguin.isNull() or sprite is None or not (working or waiting):
+            return ()
+        right = max(x + w for x, y, w, h in sprite.rects) + penguin.x()
+        top = min(y for x, y, w, h in sprite.rects) + penguin.y()
+        font = self._badge_font()
+        metrics = QFontMetricsF(font)
+        badges, edge = [], right + BADGE / 2
+        for state, count in (("needs-you", waiting), ("working", working)):
+            if not count:
+                continue
+            figure = str(count) if count < 10 else "9+"
+            size = max(BADGE + (6 if state == "needs-you" else 0), metrics.horizontalAdvance(figure) + (16 if state == "needs-you" else 8))
+            left = min(max(edge - size, 2.0), self._geo.width() - size - 2)
+            badges.append((state, QRectF(round(left), round(max(top - size / 3, 2.0)), size, size), figure))
+            edge = left - 2
+        return tuple(badges)
+
+    @staticmethod
+    def _badge_font() -> QFont:
+        font = QFont()
+        font.setBold(True)
+        font.setPixelSize(12)
+        return font
+
+    @staticmethod
+    def _badge_path(state: str, r: QRectF) -> QPainterPath:
+        path = QPainterPath()
+        if state == "needs-you":  # a diamond: a warning's shape
+            c = r.center()
+            path.moveTo(c.x(), r.top())
+            path.lineTo(r.right(), c.y())
+            path.lineTo(c.x(), r.bottom())
+            path.lineTo(r.left(), c.y())
+            path.closeSubpath()
+        else:
+            path.addEllipse(r)
+        return path
+
+    def _paint_badges(self, p: QPainter) -> None:
+        p.save()
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        p.setFont(self._badge_font())
+        for state, r, figure in self._badges:
+            fill, ink = BADGE_COLOURS[state]
+            if state == "needs-you" and self._pulse >= 0:  # a ring that widens and fades, a step at a time
+                reach = 2 + self._pulse * (PULSE_REACH - 2) / 3
+                ring = QColor(fill)
+                ring.setAlpha(200 - self._pulse * 50)
+                p.setPen(QPen(ring, 2))
+                p.drawPath(self._badge_path(state, r.adjusted(-reach, -reach, reach, reach)))
+            path = self._badge_path(state, r)
+            p.fillPath(path, fill)
+            p.setPen(QPen(BADGE_EDGE, 1.5))
+            p.drawPath(path)
+            p.setPen(ink)
+            p.drawText(r, Qt.AlignmentFlag.AlignCenter, figure)
+        p.restore()
 
     def _paint_zs(self, p: QPainter, rect: QRect, phase: int) -> None:
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -852,10 +1297,10 @@ class Stage(QObject):
         if self.bubble.visible() and self._bubble_box.contains(QPointF(pos)):
             return self.bubble.hit(QPointF(pos) - self._bubble_box.topLeft())
         f = self._frame
-        if f is not None and f.anim is not None and self._penguin.contains(pos):
+        if f is not None and f.anim is not None and self._penguin.contains(QPointF(pos)):
             sprite = self.sprites.frame(f.anim, f.index, f.mirror)
-            local = pos - self._penguin.topLeft()
-            if any(sprite.hit(local.x() + dx, local.y() + dy) for dx, dy in ((0, 0), (3, 0), (-3, 0), (0, 3), (0, -3))):
+            x, y = math.floor(pos.x() - self._penguin.x()), math.floor(pos.y() - self._penguin.y())
+            if any(sprite.hit(x + dx, y + dy) for dx, dy in ((0, 0), (3, 0), (-3, 0), (0, 3), (0, -3))):
                 return "penguin"
         return None
 
@@ -863,6 +1308,7 @@ class Stage(QObject):
 
     def press(self, pos: QPointF, gpos: QPointF, button: Qt.MouseButton) -> bool:
         """A button went down; False if it's not on anything of ours."""
+        self._wake()
         if self.menu.is_open():
             action = self.menu.press(pos)
             if not self.menu.is_open():
@@ -889,6 +1335,7 @@ class Stage(QObject):
         return True
 
     def move(self, pos: QPointF, gpos: QPointF) -> None:
+        self._wake()  # a drag redraws on the move (within a frame), not on a clock's tick
         if self.menu.is_open():
             self.menu.move(pos)
             self._set_cursor("default")
@@ -898,24 +1345,27 @@ class Stage(QObject):
             self.hosted.mouse(QEvent.Type.MouseMove, gpos, Qt.MouseButton.NoButton, held)
             self._set_cursor(self.hosted.cursor_at(gpos))
             return
-        self._set_cursor("grabbing" if self._dragging else "default")
         if self._press is None:
             hover = self._target_at(pos.toPoint())
             self.bubble.hover = hover if isinstance(hover, int) else None
+            self._bubble_hovered(hover not in (None, "penguin"))
             self.behavior.hovered = hover == "penguin"
+            self._set_cursor("pointer" if hover == "link" else "default")  # a link in the bubble: a click opens it
             return
+        self._set_cursor("grabbing" if self._dragging else "default")
         if self._press_on != "penguin":
             return
         if not self._dragging and (gpos.toPoint() - self._press).manhattanLength() < 6:
             return
         self._dragging = True
-        screen = QGuiApplication.screenAt(gpos.toPoint())
+        screen = self._screen_at(gpos.toPoint())
         if screen is not None:
             self._use_screen(screen)
         foot = gpos - self._grab
         self.behavior.hold(foot.x(), self._screen_floor() - foot.y(), self._clock())
 
     def release(self, pos: QPointF, gpos: QPointF, button: Qt.MouseButton) -> None:
+        self._wake()
         if self._hosted_press and self.hosted is not None:
             self._hosted_press = False
             self.hosted.mouse(QEvent.Type.MouseButtonRelease, gpos, button, Qt.MouseButton.NoButton)
@@ -928,6 +1378,8 @@ class Stage(QObject):
             self.behavior.release(self._clock())
         elif target == "penguin":
             self.clicked.emit()
+        elif target == "link" and self._target_at(pos.toPoint()) == "link":
+            self.bubble.open_link_at(QPointF(pos) - self._bubble_box.topLeft())  # http, https or mailto only
         elif target == "close" or (target == "body" and not self.bubble.buttons):
             self.dismiss_message()
         elif isinstance(target, int) and self._target_at(pos.toPoint()) == target:
@@ -937,8 +1389,16 @@ class Stage(QObject):
                 action()
 
     def pointer_left(self) -> None:
+        self._wake()
         self.bubble.hover = None
+        self._bubble_hovered(False)
         self.behavior.hovered = False
+
+    def _bubble_hovered(self, on: bool) -> None:
+        """Tell the bubble the pointer is on it (or not): its clock stops while it's being read."""
+        set_hovered = getattr(self.bubble, "set_hovered", None)
+        if set_hovered is not None:
+            set_hovered(on, self._clock())
 
     def _set_cursor(self, shape: str) -> None:
         set_cursor = getattr(self.surface, "set_cursor", None)
@@ -946,5 +1406,9 @@ class Stage(QObject):
             set_cursor(shape)
 
     def _screen_floor(self) -> float:
-        avail = self._screen.availableGeometry()
+        avail = self._available()
         return avail.y() + avail.height()
+
+    def _available(self) -> QRect:
+        """The stage's screen less its panels; with no screen (between one going and the next), the last one's."""
+        return self._screen.availableGeometry() if self._screen is not None else QRect(self._geo)

@@ -1,0 +1,153 @@
+{
+  "M2-13 bubble lifetime": [
+    {
+      "style": "electric",
+      "seconds": 60.0,
+      "frames_drawn": 275,
+      "ms_total": 552.0,
+      "ms_per_frame": 2.01
+    },
+    {
+      "style": "fire",
+      "seconds": 60.0,
+      "frames_drawn": 216,
+      "ms_total": 196.1,
+      "ms_per_frame": 0.91
+    },
+    {
+      "style": "ghost",
+      "seconds": 60.0,
+      "frames_drawn": 216,
+      "ms_total": 286.0,
+      "ms_per_frame": 1.32
+    },
+    {
+      "style": "fairy",
+      "seconds": 60.0,
+      "frames_drawn": 216,
+      "ms_total": 131.6,
+      "ms_per_frame": 0.61
+    },
+    {
+      "style": "leaf",
+      "seconds": 60.0,
+      "frames_drawn": 1025,
+      "ms_total": 290.5,
+      "ms_per_frame": 0.28
+    }
+  ],
+  "M2-14 ask box, one second": [
+    {
+      "style": "electric",
+      "seconds": 1.0,
+      "box_paints": 23,
+      "child_paints": 4
+    },
+    {
+      "style": "fire",
+      "seconds": 1.0,
+      "box_paints": 23,
+      "child_paints": 4
+    },
+    {
+      "style": "ghost",
+      "seconds": 1.0,
+      "box_paints": 23,
+      "child_paints": 4
+    },
+    {
+      "style": "fairy",
+      "seconds": 1.0,
+      "box_paints": 23,
+      "child_paints": 4
+    },
+    {
+      "style": "leaf",
+      "seconds": 1.0,
+      "box_paints": 22,
+      "child_paints": 4
+    }
+  ],
+  "M2-15 notch moving": [
+    {
+      "style": "electric",
+      "animate": false,
+      "still_notch_ms_per_draw": 0.235,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 0.561,
+      "moving_notch_kpx_composed_per_draw": 67.9
+    },
+    {
+      "style": "electric",
+      "animate": true,
+      "still_notch_ms_per_draw": 3.081,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 4.154,
+      "moving_notch_kpx_composed_per_draw": 67.9
+    },
+    {
+      "style": "fire",
+      "animate": false,
+      "still_notch_ms_per_draw": 0.196,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 0.676,
+      "moving_notch_kpx_composed_per_draw": 59.7
+    },
+    {
+      "style": "fire",
+      "animate": true,
+      "still_notch_ms_per_draw": 1.732,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 2.831,
+      "moving_notch_kpx_composed_per_draw": 59.7
+    },
+    {
+      "style": "ghost",
+      "animate": false,
+      "still_notch_ms_per_draw": 0.167,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 1.084,
+      "moving_notch_kpx_composed_per_draw": 72.6
+    },
+    {
+      "style": "ghost",
+      "animate": true,
+      "still_notch_ms_per_draw": 3.835,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 5.255,
+      "moving_notch_kpx_composed_per_draw": 72.6
+    },
+    {
+      "style": "fairy",
+      "animate": false,
+      "still_notch_ms_per_draw": 0.208,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 0.698,
+      "moving_notch_kpx_composed_per_draw": 57.2
+    },
+    {
+      "style": "fairy",
+      "animate": true,
+      "still_notch_ms_per_draw": 0.882,
+      "still_notch_kpx_composed_per_draw": 1.8,
+      "moving_notch_ms_per_draw": 2.57,
+      "moving_notch_kpx_composed_per_draw": 118.2
+    },
+    {
+      "style": "leaf",
+      "animate": false,
+      "still_notch_ms_per_draw": 0.252,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 0.777,
+      "moving_notch_kpx_composed_per_draw": 63.4
+    },
+    {
+      "style": "leaf",
+      "animate": true,
+      "still_notch_ms_per_draw": 0.253,
+      "still_notch_kpx_composed_per_draw": 0.0,
+      "moving_notch_ms_per_draw": 0.784,
+      "moving_notch_kpx_composed_per_draw": 63.4
+    }
+  ]
+}

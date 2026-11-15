@@ -1,0 +1,218 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/m6b/docs/delivery/reports/m6b/drill-spec-linux.json
+python: /var/tmp/m6b-venv/bin/python
+copy: /tmp/chatmon-drill-w3afd1x1
+copied 305 files
+
+=== drill M6B-01-overlay-key-press-taken-as-release (M6B-01.A2) on chatmon/layer.py
+command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_typing_reaches_the_stage_through_the_keymap
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.90s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________ test_typing_reaches_the_stage_through_the_keymap _______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7fc6d41eed50>
+
+    @linux_only
+    def test_typing_reaches_the_stage_through_the_keymap(qapp):
+        xkb, lib = _xkb()
+        conn, server, stage, surf, ids = _configured(qapp)
+        keymap = xkb.keymap_from_names(lib, "de").encode() + b"\0"  # z and y swap places on a German keyboard
+        fd = os.memfd_create("keymap")
+        os.write(fd, keymap)
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_KEYMAP, "uhu", layer.KEYMAP_XKB_V1, fd, len(keymap))
+        os.close(fd)
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 1, ids["surface"], b"")
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 2, 0, 21, 1)  # the key that's Y in the US
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 3, 0, 21, 0)
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_MODIFIERS, "uuuuu", 4, 1, 0, 0, 0)  # Shift
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_KEY, "uuuu", 5, 0, 30, 1)
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_LEAVE, "uo", 6, ids["surface"])
+        conn.read()
+        keys = [c for c in stage.calls if c[0] in ("key", "keyboard")]
+>       assert keys == [("keyboard", True), ("key", "z", True), ("key", "z", False), ("key", "A", True), ("keyboard", False)]
+E       AssertionError: assert [('keyboard',...oard', False)] == [('keyboard',...oard', False)]
+E         
+E         At index 1 diff: ('key', 'z', False) != ('key', 'z', True)
+E         Use -v to get more diff
+
+tests/test_wayland.py:601: AssertionError
+1 failed in 0.69s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.72s
+
+=== drill M6B-02-winpipe-loads-windows-on-import (M6B-02.A2) on chatmon/winpipe.py
+command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_imports.py
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.11s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________________ test_every_module_imports_here ________________________
+
+    def test_every_module_imports_here():
+        names = sorted(m.name for m in pkgutil.iter_modules(chatmon.__path__) if m.name not in NOT_IMPORTED)
+        assert len(names) > 60 and "cli" in names and "winuia" in names and "macnative" in names  # every module was found
+        env = dict(os.environ, PYTHONPATH=str(ROOT), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", IMPORT_EACH, *names], cwd=ROOT, env=env, capture_output=True, text=True, timeout=120)
+        assert out.returncode == 0, out.stderr
+        failed = json.loads(out.stdout.strip().splitlines()[-1])
+>       assert not failed, "\n".join(f"chatmon.{name} doesn't import on {sys.platform}:\n{why}" for name, why in failed.items())
+E       AssertionError: chatmon.winpipe doesn't import on linux:
+E         Traceback (most recent call last):
+E           File "<string>", line 6, in <module>
+E             importlib.import_module("chatmon." + name)
+E             ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+E           File "/usr/lib/python3.14/importlib/__init__.py", line 88, in import_module
+E             return _bootstrap._gcd_import(name[level:], package, level)
+E                    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<frozen importlib._bootstrap>", line 1406, in _gcd_import
+E         AttributeError: module 'ctypes' has no attribute 'WinDLL'
+E         
+E       assert not {'winpipe': 'Traceback (most recent call last):\n  File "<string>", line 6, in <module>\n    importlib.import_module("...en importlib._bootstrap>", line 1406, in _gcd_import\nAttributeError: module \'ctypes\' has no attribute \'WinDLL\'\n'}
+
+tests/test_imports.py:36: AssertionError
+1 failed in 1.03s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.05s
+
+=== drill M6B-03-log-left-at-the-umask (M6B-03.A2) on chatmon/log.py
+command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.54s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_the_log_is_readable_only_by_you_and_never_followed_through_a_link ____
+
+state = PosixPath('/tmp/pytest-of-randy/pytest-7/test_the_log_is_readable_only_0/state/chatmon')
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-7/test_the_log_is_readable_only_0')
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="file modes and symbolic links are the POSIX log's protections")
+    def test_the_log_is_readable_only_by_you_and_never_followed_through_a_link(state, tmp_path):
+        state.mkdir(parents=True)
+        made_at_the_umask = state / "chatmon.log"
+        made_at_the_umask.write_text("an older Chatmon's log\n")
+        os.chmod(made_at_the_umask, 0o644)
+        log.setup()
+        logging.getLogger("chatmon.x").warning("private")
+>       assert os.stat(made_at_the_umask).st_mode & 0o777 == 0o600
+E       AssertionError: assert (33188 & 511) == 384
+E        +  where 33188 = os.stat_result(st_mode=33188, st_ino=420, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=74, st_atime=1794714423, st_mtime=1794714423, st_ctime=1794714423).st_mode
+E        +    where os.stat_result(st_mode=33188, st_ino=420, st_dev=73, st_nlink=1, st_uid=1000, st_gid=1000, st_size=74, st_atime=1794714423, st_mtime=1794714423, st_ctime=1794714423) = <built-in function stat>(PosixPath('/tmp/pytest-of-randy/pytest-7/test_the_log_is_readable_only_0/state/chatmon/chatmon.log'))
+E        +      where <built-in function stat> = os.stat
+
+tests/test_log.py:101: AssertionError
+----------------------------- Captured stderr call -----------------------------
+chatmon: private
+------------------------------ Captured log call -------------------------------
+WARNING  chatmon.x:test_log.py:100 private
+1 failed in 0.53s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.58s
+
+=== drill M6B-03-log-followed-through-a-link (M6B-03.A2) on chatmon/log.py
+command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.52s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_the_log_is_readable_only_by_you_and_never_followed_through_a_link ____
+
+state = PosixPath('/tmp/pytest-of-randy/pytest-10/test_the_log_is_readable_only_0/state/chatmon')
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-10/test_the_log_is_readable_only_0')
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="file modes and symbolic links are the POSIX log's protections")
+    def test_the_log_is_readable_only_by_you_and_never_followed_through_a_link(state, tmp_path):
+        state.mkdir(parents=True)
+        made_at_the_umask = state / "chatmon.log"
+        made_at_the_umask.write_text("an older Chatmon's log\n")
+        os.chmod(made_at_the_umask, 0o644)
+        log.setup()
+        logging.getLogger("chatmon.x").warning("private")
+        assert os.stat(made_at_the_umask).st_mode & 0o777 == 0o600
+        log.reset()
+        made_at_the_umask.unlink()
+        elsewhere = tmp_path / "elsewhere.txt"
+        elsewhere.write_text("someone else's file\n")
+        made_at_the_umask.symlink_to(elsewhere)
+>       assert log.setup() is None
+E       AssertionError: assert PosixPath('/tmp/pytest-of-randy/pytest-10/test_the_log_is_readable_only_0/state/chatmon/chatmon.log') is None
+E        +  where PosixPath('/tmp/pytest-of-randy/pytest-10/test_the_log_is_readable_only_0/state/chatmon/chatmon.log') = <function setup at 0x7806cb570a90>()
+E        +    where <function setup at 0x7806cb570a90> = log.setup
+
+tests/test_log.py:107: AssertionError
+----------------------------- Captured stderr call -----------------------------
+chatmon: private
+------------------------------ Captured log call -------------------------------
+WARNING  chatmon.x:test_log.py:100 private
+1 failed in 0.62s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.55s
+
+=== drill M6B-03-typed-text-in-the-debug-log (M6B-03.A3) on chatmon/layer.py
+command: /var/tmp/m6b-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.74s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log _________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x79a1f409ed50>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x79a1f4245be0>
+
+    @linux_only
+    def test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log(qapp, caplog):
+        from chatmon.layer import TextState
+    
+        caplog.set_level(logging.DEBUG, logger="chatmon.layer")
+        conn, server, stage, surf, ids = _configured(qapp)
+        ti = ids["text_input"]
+        field, composing, committed = "my password is hunter2", "ひみつ", "swordfish"
+        server.send(ti, layer.EV_TI_ENTER, "o", ids["surface"])
+        conn.read()
+        surf.set_text_input(TextState(field, 7, 7, QRect(10, 20, 2, 16)))  # the text around the cursor goes to the input method
+        server.send(ti, layer.EV_TI_PREEDIT, "sii", composing, 3, 3)
+        server.send(ti, layer.EV_TI_COMMIT_STRING, "s", committed)
+        server.send(ti, layer.EV_TI_DONE, "u", 1)
+        conn.read()
+        assert stage.calls[-1][0] == "im"  # it was typed, all the same
+        logged = [f"{r.getMessage()} {r.args!r}" for r in caplog.records if r.name == "chatmon.layer"]
+        for typed in (field, "hunter2", composing, committed):
+>           assert not any(typed in line for line in logged), typed
+E           AssertionError: swordfish
+E           assert not True
+E            +  where True = any(<generator object test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log.<locals>.<genexpr> at 0x79a1f419af80>)
+
+tests/test_wayland.py:738: AssertionError
+------------------------------ Captured log call -------------------------------
+DEBUG    chatmon.layer:layer.py:705 surface for screen eDP-1 PyQt6.QtCore.QRect(0, 0, 1280, 800) on output None
+DEBUG    chatmon.layer:layer.py:1265 configure 1280x800
+DEBUG    chatmon.layer:layer.py:1184 text input event 0 b'\x14\x00\x00\x00'
+DEBUG    chatmon.layer:layer.py:1159 text input enable: cursor 7, anchor 7, 22 bytes of text
+DEBUG    chatmon.layer:layer.py:1184 text input event 2 b'\n\x00\x00\x00\xe3\x81\xb2\xe3\x81\xbf\xe3\x81\xa4\x00\x00\x00\x03\x00\x00\x00\x03\x00\x00\x00'
+DEBUG    chatmon.layer:layer.py:1184 text input event 3 b'\n\x00\x00\x00swordfish\x00\x00\x00'
+DEBUG    chatmon.layer:layer.py:1184 text input event 5 b'\x01\x00\x00\x00'
+1 failed in 0.72s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.72s
+
+=== summary
+PASS M6B-01-overlay-key-press-taken-as-release
+PASS M6B-02-winpipe-loads-windows-on-import
+PASS M6B-03-log-left-at-the-umask
+PASS M6B-03-log-followed-through-a-link
+PASS M6B-03-typed-text-in-the-debug-log

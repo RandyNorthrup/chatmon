@@ -1,0 +1,678 @@
+test (windows-latest, 3.14)	Set up job	﻿2026-11-15T15:23:41.4335925Z Current runner version: '2.338.2'
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4404511Z ##[group]Runner Image Provisioner
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4405251Z Hosted Compute Agent
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4405708Z Version: 20261103.629
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4406238Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4406832Z Build Date: 2026-11-03T17:26:59Z
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4407338Z Worker ID: {3c7e31b7-5394-4991-b595-f0bc5b0c0499}
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4407860Z Region: westus3
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4408274Z Cloud: Azure
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4408668Z ##[endgroup]
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4409723Z ##[group]Operating System
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4410196Z Microsoft Windows Server 2025
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4410629Z 10.0.26100
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4411045Z Datacenter
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4411431Z ##[endgroup]
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4411878Z ##[group]Runner Image
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4412320Z Image: windows-2025-vs2026
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4412754Z Version: 20261103.298.1
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4413645Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4415337Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4416073Z ##[endgroup]
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4416889Z ##[group]GITHUB_TOKEN Permissions
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4418406Z Contents: read
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4418826Z Metadata: read
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4419263Z ##[endgroup]
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4421027Z Secret source: Actions
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4421746Z Cache mode: write
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4422340Z Prepare workflow directory
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4887514Z Prepare all required actions
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.4928126Z Getting action download info
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.7850022Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:41.8949109Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:42.5272702Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+test (windows-latest, 3.14)	Set up job	2026-11-15T15:23:42.7096083Z Complete job name: test (windows-latest, 3.14)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T15:23:42.8836488Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8837772Z with:
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8838128Z   persist-credentials: false
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8838563Z   sparse-checkout: /*
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8839024Z   sparse-checkout-cone-mode: false
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8839468Z   repository: RandyNorthrup/chatmon
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8843230Z   token: ***
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8843568Z   ssh-strict: true
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8843903Z   ssh-user: git
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8844227Z   clean: true
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8844551Z   fetch-depth: 1
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8844881Z   fetch-tags: false
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8845428Z   show-progress: true
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8845954Z   lfs: false
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8846354Z   submodules: false
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8846814Z   set-safe-directory: true
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8847648Z   allow-unsafe-pr-checkout: false
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8848785Z env:
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8849397Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8850087Z   QT_QPA_PLATFORM: offscreen
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8850574Z   CHATMON_TEST_CLIPBOARD: 1
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8851021Z   COVER: true
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:42.8851446Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.1115153Z Syncing repository: RandyNorthrup/chatmon
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.1117335Z ##[group]Getting Git version info
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.1118064Z Working directory is 'D:\a\chatmon\chatmon'
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.1742474Z [command]"C:\Program Files\Git\bin\git.exe" version
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5216285Z git version 2.56.0.windows.4
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5272136Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5285163Z Temporarily overriding HOME='D:\a\_temp\6a398cc8-8f4e-4d22-9e56-2d57d91f8488' before making global git config changes
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5291251Z Adding repository directory to the temporary git global config as a safe directory
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5295634Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5958871Z Deleting the contents of 'D:\a\chatmon\chatmon'
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5963421Z ##[group]Determining repository object format
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5965306Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5966729Z ##[group]Initializing the repository
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.5972519Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\chatmon\chatmon
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.6754215Z Initialized empty Git repository in D:/a/chatmon/chatmon/.git/
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.6797073Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/RandyNorthrup/chatmon
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.7527948Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.7529481Z ##[group]Disabling automatic garbage collection
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.7534955Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.7910282Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.7912093Z ##[group]Setting up auth
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.7913489Z Removing SSH command configuration
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.7921576Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:43.8250370Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.7709837Z Removing HTTP extra header
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.7718809Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:45.8048582Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:46.3235649Z Removing includeIf entries pointing to credentials config files
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:46.3248193Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:46.3578566Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:46.8488851Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:46.8821476Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git.path D:\a\_temp\git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:46.9162136Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D:\a\_temp\git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:46.9558477Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:46.9896074Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:47.0268815Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:47.0269560Z ##[group]Fetching the repository
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:47.0278856Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +5545f5a9b3fad2e700176b2efb81b7536ab2901e:refs/remotes/pull/18/merge
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.4319373Z From https://github.com/RandyNorthrup/chatmon
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.4401220Z  * [new ref]         5545f5a9b3fad2e700176b2efb81b7536ab2901e -> pull/18/merge
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.4404218Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.4404883Z ##[group]Determining the checkout info
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.4405359Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.4405728Z ##[group]Setting up sparse checkout
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.4406249Z [command]"C:\Program Files\Git\bin\git.exe" config core.sparseCheckout true
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.4722842Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --git-path info/sparse-checkout
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.5112432Z .git/info/sparse-checkout
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.5152556Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.5152955Z ##[group]Checking out the ref
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:48.5160466Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/18/merge
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6742988Z Updating files:   0% (1/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6748436Z Updating files:   1% (4/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6756295Z Updating files:   2% (7/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6766465Z Updating files:   3% (10/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6772611Z Updating files:   4% (13/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6780976Z Updating files:   5% (16/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6855516Z Updating files:   6% (19/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6925986Z Updating files:   7% (22/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.6970759Z Updating files:   8% (25/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7037906Z Updating files:   9% (28/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7113272Z Updating files:  10% (31/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7166079Z Updating files:  11% (35/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7197807Z Updating files:  12% (38/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7249489Z Updating files:  13% (41/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7304540Z Updating files:  14% (44/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7350748Z Updating files:  15% (47/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7399130Z Updating files:  16% (50/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7443043Z Updating files:  17% (53/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7484452Z Updating files:  18% (56/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7530856Z Updating files:  19% (59/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7596838Z Updating files:  20% (62/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7629337Z Updating files:  21% (66/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7677888Z Updating files:  22% (69/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7730869Z Updating files:  23% (72/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7770919Z Updating files:  24% (75/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7815643Z Updating files:  25% (78/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7858064Z Updating files:  26% (81/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7875626Z Updating files:  27% (84/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7882640Z Updating files:  28% (87/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7900222Z Updating files:  29% (90/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7914085Z Updating files:  30% (93/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7925203Z Updating files:  31% (97/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7970350Z Updating files:  32% (100/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7983091Z Updating files:  33% (103/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.7995314Z Updating files:  34% (106/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8002056Z Updating files:  35% (109/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8010406Z Updating files:  36% (112/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8018028Z Updating files:  37% (115/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8026348Z Updating files:  38% (118/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8035901Z Updating files:  39% (121/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8050457Z Updating files:  40% (124/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8063125Z Updating files:  41% (128/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8072365Z Updating files:  42% (131/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8080296Z Updating files:  43% (134/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8089765Z Updating files:  44% (137/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8103005Z Updating files:  45% (140/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8111176Z Updating files:  46% (143/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8120104Z Updating files:  47% (146/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8128890Z Updating files:  48% (149/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8141895Z Updating files:  49% (152/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8168703Z Updating files:  50% (155/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8191324Z Updating files:  51% (159/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8198957Z Updating files:  52% (162/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8206527Z Updating files:  53% (165/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8213092Z Updating files:  54% (168/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8220519Z Updating files:  55% (171/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8227858Z Updating files:  56% (174/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8237085Z Updating files:  57% (177/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8243274Z Updating files:  58% (180/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8252603Z Updating files:  59% (183/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8337872Z Updating files:  60% (186/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8345189Z Updating files:  61% (190/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8351720Z Updating files:  62% (193/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8356927Z Updating files:  63% (196/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8364229Z Updating files:  64% (199/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8370824Z Updating files:  65% (202/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8378282Z Updating files:  66% (205/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8388325Z Updating files:  67% (208/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8395433Z Updating files:  68% (211/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8402120Z Updating files:  69% (214/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8411319Z Updating files:  70% (217/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8418915Z Updating files:  71% (221/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8425044Z Updating files:  72% (224/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8430532Z Updating files:  73% (227/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8437706Z Updating files:  74% (230/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8445438Z Updating files:  75% (233/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8457793Z Updating files:  76% (236/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8464478Z Updating files:  77% (239/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8470933Z Updating files:  78% (242/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8480907Z Updating files:  79% (245/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8491364Z Updating files:  80% (248/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8497882Z Updating files:  81% (252/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8504955Z Updating files:  82% (255/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8512748Z Updating files:  83% (258/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8520600Z Updating files:  84% (261/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8526655Z Updating files:  85% (264/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8533741Z Updating files:  86% (267/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8541405Z Updating files:  87% (270/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8548605Z Updating files:  88% (273/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8557073Z Updating files:  89% (276/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8570041Z Updating files:  90% (279/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8577705Z Updating files:  91% (283/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8584378Z Updating files:  92% (286/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8590924Z Updating files:  93% (289/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8596449Z Updating files:  94% (292/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8603576Z Updating files:  95% (295/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8614964Z Updating files:  96% (298/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8624583Z Updating files:  97% (301/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8630809Z Updating files:  98% (304/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8636534Z Updating files:  99% (307/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8636847Z Updating files: 100% (310/310)
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8637114Z Updating files: 100% (310/310), done.
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8735508Z Note: switching to 'refs/remotes/pull/18/merge'.
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8735770Z 
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8738134Z You are in 'detached HEAD' state. You can look around, make experimental
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8738739Z changes and commit them, and you can discard any commits you make in this
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8739089Z state without impacting any branches by switching back to a branch.
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8739334Z 
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8739556Z If you want to create a new branch to retain commits you create, you may
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8739916Z do so (now or later) by using -c with the switch command. Example:
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8740108Z 
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8740227Z   git switch -c <new-branch-name>
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8740360Z 
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8740440Z Or undo this operation with:
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8740557Z 
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8740620Z   git switch -
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8740711Z 
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8740861Z Turn off this advice by setting config variable advice.detachedHead to false
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8741084Z 
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8820438Z HEAD is now at 5545f5a Merge 3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.8999924Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.9564243Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.9871932Z 5545f5a9b3fad2e700176b2efb81b7536ab2901e
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.9913353Z ##[group]Removing auth
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.9913821Z Removing SSH command configuration
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:49.9934531Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:50.0288390Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:50.5517957Z Removing HTTP extra header
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:50.5527260Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:50.5860637Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.0886249Z Removing includeIf entries pointing to credentials config files
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.0893566Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.1183179Z includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.1184181Z includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.1184681Z includeif.gitdir:/github/workspace/.git.path
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.1184961Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.1223881Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.1501722Z D:\a\_temp\git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.1541540Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git.path D\:\\a\\_temp\\git\-credentials\-a9c51171\-8583\-43e0\-89d7\-41e252564279\.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.1871246Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.2153387Z D:\a\_temp\git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.2193286Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-a9c51171\-8583\-43e0\-89d7\-41e252564279\.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.2531041Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.2815975Z /github/runner_temp/git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.2855194Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-a9c51171\-8583\-43e0\-89d7\-41e252564279\.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.3196623Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.3529040Z /github/runner_temp/git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.3569513Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-a9c51171\-8583\-43e0\-89d7\-41e252564279\.config
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.3986498Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.9043245Z Removing credentials config 'D:\a\_temp\git-credentials-a9c51171-8583-43e0-89d7-41e252564279.config'
+test (windows-latest, 3.14)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:23:51.9053785Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T15:23:51.9411083Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9411460Z with:
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9411616Z   python-version: 3.14
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9411787Z   check-latest: false
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9413866Z   token: ***
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9414121Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9414416Z   update-environment: true
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9414606Z   allow-prereleases: false
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9414775Z   freethreaded: false
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9414926Z env:
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9415074Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9415265Z   QT_QPA_PLATFORM: offscreen
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9415439Z   CHATMON_TEST_CLIPBOARD: 1
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9415595Z   COVER: true
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:51.9415733Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:52.0625064Z ##[group]Installed versions
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:52.0791848Z Successfully set up CPython (3.14.10)
+test (windows-latest, 3.14)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T15:23:52.0792403Z ##[endgroup]
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	﻿2026-11-15T15:23:52.1054920Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-test.txt
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1055541Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-test.txt[0m
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1114962Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1115289Z env:
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1115448Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1115650Z   QT_QPA_PLATFORM: offscreen
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1115830Z   CHATMON_TEST_CLIPBOARD: 1
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1115993Z   COVER: true
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1116202Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1116560Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1116904Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1117202Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1117520Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:52.1117794Z ##[endgroup]
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:57.1609984Z Collecting colorama==0.4.6 (from -r packaging/requirements-test.txt (line 3))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:57.1933726Z   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:57.2582051Z Collecting comtypes==1.4.17 (from -r packaging/requirements-test.txt (line 7))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:57.2636320Z   Downloading comtypes-1.4.17-py3-none-any.whl (298 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:57.6846124Z Collecting coverage==7.17.0 (from -r packaging/requirements-test.txt (line 11))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:57.6916530Z   Downloading coverage-7.17.0-cp314-cp314-win_amd64.whl (228 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.0075956Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-test.txt (line 132))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.0140272Z   Downloading hypothesis-6.170.14-cp314-cp314-win_amd64.whl (690 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.0549539Z      ---------------------------------------- 690.7/690.7 kB 14.4 MB/s  0:00:00
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.0838612Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-test.txt (line 217))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.0881970Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.1298260Z Collecting packaging==26.3 (from -r packaging/requirements-test.txt (line 221))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.1351733Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.1810240Z Collecting pluggy==1.7.0 (from -r packaging/requirements-test.txt (line 225))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.1854981Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.2680487Z Collecting psutil==7.2.2 (from -r packaging/requirements-test.txt (line 229))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.2727198Z   Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.3221721Z Collecting pygments==2.21.0 (from -r packaging/requirements-test.txt (line 252))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.3345247Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.3685502Z      ---------------------------------------- 1.3/1.3 MB 31.7 MB/s  0:00:00
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.4017369Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-test.txt (line 256))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.4071308Z   Downloading pyqt6-6.11.0-cp310-abi3-win_amd64.whl (6.8 MB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.6065688Z      ---------------------------------------- 6.8/6.8 MB 33.5 MB/s  0:00:00
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.6464030Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-test.txt (line 264))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:23:58.6520895Z   Downloading pyqt6_qt6-6.11.2-py3-none-win_amd64.whl (78.0 MB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.6866367Z      ---------------------------------------- 78.0/78.0 MB 38.3 MB/s  0:00:02
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.8022357Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-test.txt (line 274))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.8078137Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-win_amd64.whl (55 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.8594658Z Collecting pytest==9.2.0 (from -r packaging/requirements-test.txt (line 306))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.8644928Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.9219547Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-test.txt (line 312))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.9263190Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.9878116Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-test.txt (line 316))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:00.9923380Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:01.0384895Z Collecting tzdata==2026.6 (from -r packaging/requirements-test.txt (line 320))
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:01.0429891Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:01.7944207Z Installing collected packages: sortedcontainers, pyqt6-qt6, tzdata, pyqt6-sip, pygments, psutil, pluggy, packaging, iniconfig, hypothesis, coverage, comtypes, colorama, pytest, pyqt6, pytest-timeout
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:13.9854202Z 
+test (windows-latest, 3.14)	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T15:24:13.9875514Z Successfully installed colorama-0.4.6 comtypes-1.4.17 coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 sortedcontainers-2.4.0 tzdata-2026.6
+test (windows-latest, 3.14)	Every test	﻿2026-11-15T15:24:14.6016499Z ##[group]Run run=(python -m pytest)
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6016831Z [36;1mrun=(python -m pytest)[0m
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6017188Z [36;1mif [ "$COVER" = true ]; then run=(python -m coverage run --parallel-mode -m pytest); fi[0m
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6017595Z [36;1mif [ "$RUNNER_OS" = Linux ]; then run=(xvfb-run -a "${run[@]}"); fi[0m
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6017861Z [36;1m"${run[@]}"[0m
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6030140Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6030446Z env:
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6030600Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6030800Z   QT_QPA_PLATFORM: offscreen
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6030975Z   CHATMON_TEST_CLIPBOARD: 1
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6031148Z   COVER: true
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6031366Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6031775Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6049649Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6050041Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6050346Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:14.6050589Z ##[endgroup]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1030283Z ============================= test session starts =============================
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1030912Z platform win32 -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1031328Z rootdir: D:\a\chatmon\chatmon
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1031626Z configfile: pyproject.toml
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1032651Z testpaths: tests
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1032921Z plugins: hypothesis-6.170.14, timeout-2.4.0
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1033234Z timeout: 120.0s
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1033798Z timeout method: thread
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1034045Z timeout func_only: False
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1034227Z collected 1437 items
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1034326Z 
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:21.1300425Z tests\test_a11y.py ..s.s                                                 [  0%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:23.6255330Z tests\test_agents.py ................................s............       [  3%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:23.8758500Z tests\test_anim_strips.py ...................                            [  4%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:24:37.2100816Z tests\test_app_answers.py .............                                  [  5%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:25:11.6072554Z tests\test_app_m7.py .......................................             [  8%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:25:22.9030405Z tests\test_app_reminders.py .......                                      [  8%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:26:00.5605823Z tests\test_app_smoke.py ..s................ssss......................... [ 12%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:26:44.0623658Z .................................................                        [ 15%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:26:48.6911621Z tests\test_ask_box.py ..............................                     [ 17%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:26:48.7096455Z tests\test_asking.py ........                                            [ 18%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:26:51.5237291Z tests\test_attachments.py ..s.s....sss.                                  [ 19%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:26:51.5426994Z tests\test_autostart.py .s.....                                          [ 19%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:26:52.3155168Z tests\test_backup.py ..................                                  [ 20%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:26:52.7542196Z tests\test_behavior.py ..........................                        [ 22%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:01.6676230Z tests\test_brains.py ................................s...........        [ 25%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:02.0088089Z tests\test_bubble_safety.py .....                                        [ 26%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:02.5270946Z tests\test_bubble_styles.py ............................................ [ 29%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:03.8807614Z ........                                                                 [ 29%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:04.5560486Z tests\test_chats.py ...............................                      [ 31%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:05.7540896Z tests\test_chatswin.py ........                                          [ 32%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:05.8458187Z tests\test_cli.py ...........                                            [ 33%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:05.8715144Z tests\test_clickthrough.py .......s                                      [ 33%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:05.9193186Z tests\test_commands.py ......                                            [ 34%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:07.2581477Z tests\test_companions.py ...........................                     [ 36%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:07.3309021Z tests\test_context.py ...........                                        [ 36%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:07.6802723Z tests\test_contrast.py .................................                 [ 39%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:08.2394855Z tests\test_events.py .............sss....ss.ssss                         [ 41%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:08.2868701Z tests\test_heads_up.py ...........s.....s                                [ 42%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:08.4827309Z tests\test_hotkey.py .............................ssss                   [ 44%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:08.4955169Z tests\test_hotkey_portal.py ..sssss                                      [ 45%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:09.8844866Z tests\test_i18n.py ...................................                   [ 47%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:10.1165813Z tests\test_i18n_app.py .                                                 [ 47%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:10.3812147Z tests\test_imports.py .                                                  [ 47%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:10.3959300Z tests\test_install_update.py ssssssssssssssssss                          [ 48%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:10.9976538Z tests\test_keychain.py ..ssss..                                          [ 49%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:11.0053150Z tests\test_linux_desktop.py ..                                           [ 49%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:11.0363438Z tests\test_linuxsession.py ....ss                                        [ 50%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:11.1053490Z tests\test_localefmt.py .......                                          [ 50%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:11.7516433Z tests\test_log.py .......s..                                             [ 51%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:12.3946870Z tests\test_m4b_imports.py ........                                       [ 51%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:12.4012081Z tests\test_macnative.py ssssssss                                         [ 52%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:12.4438993Z tests\test_messages.py ....................                              [ 53%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:12.5779493Z tests\test_offline.py .................................................. [ 57%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:12.7073065Z ...................................................                      [ 60%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:18.1324546Z tests\test_overlay_stage.py ......................s...                   [ 62%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:18.1963552Z tests\test_package_data.py ..sss                                         [ 62%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:18.2195748Z tests\test_packaging.py ssssssss..                                       [ 63%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:19.1169624Z tests\test_parser_properties.py .....                                    [ 63%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:19.1773050Z tests\test_paths.py ........                                             [ 64%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:24.7699243Z tests\test_platform_events.py ..........ssssssssss                       [ 65%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:24.7734952Z tests\test_portal_bus.py ssss                                            [ 66%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:24.7846585Z tests\test_portowner.py ..ss                                             [ 66%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:24.9034020Z tests\test_presence.py ...s....s...s.s..........s                        [ 68%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.0316535Z tests\test_releasecheck.py ..................                            [ 69%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.1427959Z tests\test_reminders.py ................................................ [ 72%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.2594441Z .............................s....................                       [ 76%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.2764241Z tests\test_rename.py ...ss                                               [ 76%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.3035318Z tests\test_requirements.py ......                                        [ 77%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.4707322Z tests\test_rich_text.py ...................                              [ 78%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.5165992Z tests\test_screen_readers.py ........sssss                               [ 79%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.6581798Z tests\test_settings.py .............ss..                                 [ 80%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:26.7471946Z tests\test_settingswin.py .........                                      [ 81%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:27.8524059Z tests\test_sound.py ..........ssss..s                                    [ 82%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:27.9735748Z tests\test_speech_bubble.py ...................                          [ 83%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:28.0664681Z tests\test_sprites.py ...                                                [ 83%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:28.1801295Z tests\test_stage_features.py .....                                       [ 84%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:28.1981391Z tests\test_stage_screens.py ...                                          [ 84%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:28.9345560Z tests\test_stage_timer.py .........                                      [ 85%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:28.9763921Z tests\test_stagemenu.py ...........                                      [ 85%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:42.5171123Z tests\test_streaming.py .....................                            [ 87%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:42.5591907Z tests\test_sway.py ssssssssssssssssssss                                  [ 88%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:51.0553437Z tests\test_updates.py ..............................................ss.. [ 92%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:52.6313653Z ..                                                                       [ 92%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:52.6718288Z tests\test_wayland.py ...ssssssssssssssssssss.ssssssss                   [ 94%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:52.8181001Z tests\test_wincaret.py ..s                                               [ 94%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:57.4926677Z tests\test_windows.py ..................s..........s.....                [ 97%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:57.5518016Z tests\test_winfiles.py ...                                               [ 97%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:57.7460029Z tests\test_winlock.py ...                                                [ 97%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:58.5606448Z tests\test_winpipe.py .....                                              [ 97%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:59.8744566Z tests\test_wintoast.py .....s.......                                     [ 98%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:27:59.9331897Z tests\test_wintrust.py ........                                          [ 99%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2972356Z tests\test_xkb.py sssssssss                                              [100%]
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2972860Z 
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2973432Z =========================== short test summary info ===========================
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2974094Z SKIPPED [1] tests\test_a11y.py:49: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2974526Z SKIPPED [1] tests\test_a11y.py:73: macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2974973Z SKIPPED [1] tests\test_agents.py:522: POSIX permissions
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2975637Z SKIPPED [1] tests\test_app_smoke.py:54: on Windows every Chatmon in a session shares the hooks' pipe name, a test's too
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2976429Z SKIPPED [1] tests\test_app_smoke.py:371: a Unix socket, as hooks use on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2977389Z SKIPPED [1] tests\test_app_smoke.py:395: a Windows pipe takes a sender's bytes only once Chatmon reads that connection, so a message can't wait unread for it this way
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2978354Z SKIPPED [1] tests\test_app_smoke.py:427: a Unix socket, as hooks use on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2979023Z SKIPPED [1] tests\test_app_smoke.py:447: a Unix socket, as hooks use on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2979610Z SKIPPED [1] tests\test_attachments.py:47: POSIX file types
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2980077Z SKIPPED [1] tests\test_attachments.py:73: POSIX file types
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2981008Z SKIPPED [1] tests\test_attachments.py:137: Linux statfs and mountinfo
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2981650Z SKIPPED [1] tests\test_attachments.py:154: Linux paths, resolved as Linux does
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2982222Z SKIPPED [1] tests\test_attachments.py:169: macOS statfs
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2983075Z SKIPPED [1] tests\test_autostart.py:24: the XDG autostart entry
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2983682Z SKIPPED [1] tests\test_brains.py:479: Claude Code isn't installed here
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2984377Z SKIPPED [1] tests\test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2985039Z SKIPPED [1] tests\test_events.py:110: a named pipe there
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2985603Z SKIPPED [1] tests\test_events.py:121: macOS's temporary folder of your own
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2986226Z SKIPPED [1] tests\test_events.py:135: a named pipe there
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2986732Z SKIPPED [1] tests\test_events.py:185: a named pipe there
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2987320Z SKIPPED [1] tests\test_events.py:248: a pretend shell script: not on Windows
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2988013Z SKIPPED [1] tests\test_events.py:290: Windows: the pipe's first instance does this
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2988696Z SKIPPED [1] tests\test_events.py:314: a pretend shell script: not on Windows
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2989343Z SKIPPED [1] tests\test_events.py:342: a pretend shell script: not on Windows
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2990032Z SKIPPED [1] tests\test_events.py:359: Windows: the pipe's first instance does this
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2990652Z SKIPPED [1] tests\test_heads_up.py:135: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2991229Z SKIPPED [2] tests\private_bus.py:19: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2991756Z SKIPPED [1] tests\test_hotkey.py:254: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2992216Z SKIPPED [1] tests\test_hotkey.py:271: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2992940Z SKIPPED [1] tests\test_hotkey.py:352: Linux with Xvfb
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2993442Z SKIPPED [1] tests\test_hotkey.py:390: Linux with libX11
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2994067Z SKIPPED [1] tests\test_hotkey_portal.py:95: Linux with dbus-run-session and dbus-monitor
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2994836Z SKIPPED [1] tests\test_hotkey_portal.py:111: Linux with dbus-run-session and dbus-monitor
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2995463Z SKIPPED [1] tests\test_hotkey_portal.py:119: Linux with dbus-run-session and dbus-monitor
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2995928Z SKIPPED [2] tests\test_hotkey_portal.py:127: Linux with dbus-run-session and dbus-monitor
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2996380Z SKIPPED [1] tests\test_install_update.py:122: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2996812Z SKIPPED [1] tests\test_install_update.py:133: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2997230Z SKIPPED [1] tests\test_install_update.py:141: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2997661Z SKIPPED [1] tests\test_install_update.py:149: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2998076Z SKIPPED [1] tests\test_install_update.py:159: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2998530Z SKIPPED [1] tests\test_install_update.py:167: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2998952Z SKIPPED [4] tests\test_install_update.py:175: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2999369Z SKIPPED [1] tests\test_install_update.py:197: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.2999782Z SKIPPED [1] tests\test_install_update.py:207: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3000197Z SKIPPED [1] tests\test_install_update.py:256: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3000614Z SKIPPED [3] tests\test_install_update.py:267: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3001030Z SKIPPED [1] tests\test_install_update.py:282: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3001474Z SKIPPED [1] tests\test_install_update.py:291: root's side is sh, on Linux and macOS
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3001852Z SKIPPED [1] tests\test_keychain.py:83: the macOS Keychain
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3002199Z SKIPPED [1] tests\test_keychain.py:139: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3003028Z SKIPPED [1] tests\test_keychain.py:154: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3003397Z SKIPPED [1] tests\test_keychain.py:165: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3003753Z SKIPPED [1] tests\test_linuxsession.py:102: no PackageKit here
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3004168Z SKIPPED [1] tests\test_log.py:94: file modes and symbolic links are the POSIX log's protections
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3004579Z SKIPPED [1] tests\test_macnative.py:20: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3004903Z SKIPPED [1] tests\test_macnative.py:29: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3005190Z SKIPPED [1] tests\test_macnative.py:63: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3005473Z SKIPPED [1] tests\test_macnative.py:97: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3005771Z SKIPPED [1] tests\test_macnative.py:125: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3006062Z SKIPPED [1] tests\test_macnative.py:143: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3006345Z SKIPPED [1] tests\test_macnative.py:171: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3006631Z SKIPPED [1] tests\test_macnative.py:179: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3007038Z SKIPPED [1] tests\test_overlay_stage.py:489: libxkbcommon isn't installed (the overlay is Linux only)
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3007594Z SKIPPED [1] tests\test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3008178Z SKIPPED [1] tests\test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3008728Z SKIPPED [1] tests\test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3009303Z SKIPPED [1] tests\test_packaging.py:50: an sh script run as root on macOS (and portable to Linux, for its tests)
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3009948Z SKIPPED [1] tests\test_packaging.py:66: an sh script run as root on macOS (and portable to Linux, for its tests)
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3010500Z SKIPPED [5] tests\test_packaging.py:73: an sh script run as root on macOS (and portable to Linux, for its tests)
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3011042Z SKIPPED [1] tests\test_packaging.py:99: an sh script run as root on macOS (and portable to Linux, for its tests)
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3011537Z SKIPPED [1] tests\test_platform_events.py:305: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3011925Z SKIPPED [8] tests\test_platform_events.py:341: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3012307Z SKIPPED [1] tests\test_platform_events.py:360: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3012683Z SKIPPED [1] tests\test_portal_bus.py:41: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3013315Z SKIPPED [2] tests\test_portal_bus.py:80: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3013705Z SKIPPED [1] tests\test_portal_bus.py:119: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3014078Z SKIPPED [1] tests\test_portowner.py:45: Linux's /proc/net/tcp
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3014428Z SKIPPED [1] tests\test_portowner.py:58: Linux's /proc/net/tcp
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3014780Z SKIPPED [1] tests\test_presence.py:74: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3015093Z SKIPPED [1] tests\test_presence.py:143: no GNOME session here
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3015406Z SKIPPED [1] tests\test_presence.py:220: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3015851Z SKIPPED [1] tests\test_presence.py:248: PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3016325Z SKIPPED [1] tests\test_presence.py:364: Linux with an X display
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3016796Z SKIPPED [1] tests\test_reminders.py:282: the computer's own zone can be changed in a test only on Unix (time.tzset)
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3017276Z SKIPPED [1] tests\test_rename.py:62: Windows keeps it in the registry
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3017639Z SKIPPED [1] tests\test_rename.py:74: Windows keeps it in the registry
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3018049Z SKIPPED [1] tests\test_screen_readers.py:195: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3018440Z SKIPPED [2] tests\test_screen_readers.py:219: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3019510Z SKIPPED [1] tests\test_screen_readers.py:247: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3019941Z SKIPPED [1] tests\test_screen_readers.py:263: Linux with dbus-run-session
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3020435Z SKIPPED [1] tests\test_settings.py:171: file modes are POSIX's; on Windows these folders are the user's by their ACLs
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3021020Z SKIPPED [1] tests\test_settings.py:207: file modes are POSIX's; on Windows these folders are the user's by their ACLs
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3021526Z SKIPPED [1] tests\test_sound.py:185: no QtMultimedia, or no audio device to play to
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3021917Z SKIPPED [1] tests\test_sound.py:213: no audio device
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3022229Z SKIPPED [1] tests\test_sound.py:230: Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3022520Z SKIPPED [1] tests\test_sound.py:261: macOS only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3022901Z SKIPPED [1] tests\test_sound.py:334: no QtMultimedia, or no audio device to play to
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3023302Z SKIPPED [1] tests\test_sway.py:111: wlr-protocols isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3023706Z SKIPPED [1] tests\test_sway.py:125: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3024124Z SKIPPED [1] tests\test_sway.py:141: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3024531Z SKIPPED [1] tests\test_sway.py:152: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3024934Z SKIPPED [1] tests\test_sway.py:171: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3025338Z SKIPPED [1] tests\test_sway.py:195: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3025769Z SKIPPED [1] tests\test_sway.py:221: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3026170Z SKIPPED [1] tests\test_sway.py:234: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3026671Z SKIPPED [4] tests\test_sway.py:56: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3027088Z SKIPPED [1] tests\test_sway.py:279: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3027496Z SKIPPED [1] tests\test_sway.py:322: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3027894Z SKIPPED [1] tests\test_sway.py:349: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3028292Z SKIPPED [1] tests\test_sway.py:376: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3028695Z SKIPPED [1] tests\test_sway.py:402: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3029128Z SKIPPED [2] tests\test_sway.py:430: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3029522Z SKIPPED [1] tests\test_sway.py:456: a real Wayland compositor runs on Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3029871Z SKIPPED [2] tests\test_updates.py:573: pkexec: Linux
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3030206Z SKIPPED [1] tests\test_wayland.py:47: Wayland sockets are Unix paths
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3030593Z SKIPPED [1] tests\test_wayland.py:207: no Wayland protocol files installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3030963Z SKIPPED [1] tests\test_wayland.py:317: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3031293Z SKIPPED [1] tests\test_wayland.py:419: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3031620Z SKIPPED [1] tests\test_wayland.py:479: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3031968Z SKIPPED [1] tests\test_wayland.py:567: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3032291Z SKIPPED [1] tests\test_wayland.py:599: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3032615Z SKIPPED [1] tests\test_wayland.py:604: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3033194Z SKIPPED [1] tests\test_wayland.py:615: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3033525Z SKIPPED [1] tests\test_wayland.py:629: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3033850Z SKIPPED [1] tests\test_wayland.py:728: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3034275Z SKIPPED [1] tests\test_wayland.py:758: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3034603Z SKIPPED [1] tests\test_wayland.py:777: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3034921Z SKIPPED [1] tests\test_wayland.py:801: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3035325Z SKIPPED [1] tests\test_wayland.py:835: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3035644Z SKIPPED [1] tests\test_wayland.py:855: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3035986Z SKIPPED [1] tests\test_wayland.py:864: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3036311Z SKIPPED [1] tests\test_wayland.py:875: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3036661Z SKIPPED [1] tests\test_wayland.py:918: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3036983Z SKIPPED [1] tests\test_wayland.py:943: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3037332Z SKIPPED [1] tests\test_wayland.py:963: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3037664Z SKIPPED [1] tests\test_wayland.py:1015: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3038005Z SKIPPED [1] tests\test_wayland.py:1045: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3038331Z SKIPPED [1] tests\test_wayland.py:1079: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3038656Z SKIPPED [1] tests\test_wayland.py:1092: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3038980Z SKIPPED [1] tests\test_wayland.py:1105: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3039329Z SKIPPED [1] tests\test_wayland.py:1118: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3039655Z SKIPPED [1] tests\test_wayland.py:1190: Wayland is Linux only
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3039987Z SKIPPED [1] tests\test_wincaret.py:123: elsewhere than Windows
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3040344Z SKIPPED [1] tests\test_windows.py:416: needs QT_QPA_PLATFORM=windows
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3040858Z SKIPPED [1] tests\test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3041347Z SKIPPED [1] tests\test_wintoast.py:65: elsewhere than Windows
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3041690Z SKIPPED [1] tests\test_xkb.py:25: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3042106Z SKIPPED [1] tests\test_xkb.py:33: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3042461Z SKIPPED [1] tests\test_xkb.py:44: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3042788Z SKIPPED [1] tests\test_xkb.py:54: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3043118Z SKIPPED [1] tests\test_xkb.py:61: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3043446Z SKIPPED [1] tests\test_xkb.py:75: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3043773Z SKIPPED [1] tests\test_xkb.py:93: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3044114Z SKIPPED [1] tests\test_xkb.py:100: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3044452Z SKIPPED [1] tests\test_xkb.py:111: libxkbcommon isn't installed
+test (windows-latest, 3.14)	Every test	2026-11-15T15:28:00.3044798Z ================ 1257 passed, 180 skipped in 224.20s (0:03:44) ================
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	﻿2026-11-15T15:28:00.9560598Z ##[group]Run tests=(tests/test_windows.py -k "tells_the_display or drop_target or zip or paste")
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9561290Z [36;1mtests=(tests/test_windows.py -k "tells_the_display or drop_target or zip or paste")[0m
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9561921Z [36;1mif [ "$COVER" = true ]; then python -m coverage run --parallel-mode -m pytest "${tests[@]}"; else python -m pytest "${tests[@]}"; fi[0m
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9575523Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9575896Z env:
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9576113Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9576377Z   QT_QPA_PLATFORM: windows
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9576611Z   CHATMON_TEST_CLIPBOARD: 1
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9576835Z   COVER: true
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9577106Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9577556Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9577964Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9578409Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9578776Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:00.9579076Z ##[endgroup]
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7141611Z ============================= test session starts =============================
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7142112Z platform win32 -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7142457Z rootdir: D:\a\chatmon\chatmon
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7142724Z configfile: pyproject.toml
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7143030Z plugins: hypothesis-6.170.14, timeout-2.4.0
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7143301Z timeout: 120.0s
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7143518Z timeout method: thread
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7143749Z timeout func_only: False
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7144003Z collected 35 items / 31 deselected / 4 selected
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:01.7144205Z 
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:05.6891643Z tests\test_windows.py ....                                               [100%]
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:05.6892138Z 
+test (windows-latest, 3.14)	What Windows tells Chatmon's own windows, on its real windowing	2026-11-15T15:28:05.6892362Z ====================== 4 passed, 31 deselected in 4.19s =======================
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	﻿2026-11-15T15:28:05.8295400Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8295913Z with:
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8296140Z   name: coverage-windows-latest-3.14
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8296393Z   path: .coverage.*
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8296615Z   include-hidden-files: true
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8296852Z   retention-days: 3
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8297062Z   if-no-files-found: error
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8297248Z   compression-level: 6
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8297438Z   overwrite: false
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8297640Z   archive: true
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8297834Z env:
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8298034Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8298615Z   QT_QPA_PLATFORM: offscreen
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8298857Z   CHATMON_TEST_CLIPBOARD: 1
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8299062Z   COVER: true
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8299332Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8299736Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8300403Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8300766Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8301109Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.8301403Z ##[endgroup]
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.9723478Z With the provided path, there will be 2 files uploaded
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.9727593Z Artifact name is valid!
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:05.9728640Z Root directory input is valid!
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:06.3220533Z Uploading artifact: coverage-windows-latest-3.14.zip
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:06.3252294Z Beginning upload of artifact content to blob storage
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:06.9387029Z Uploaded bytes 501393
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:07.0006242Z Finished uploading artifact content to blob storage!
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:07.0007278Z SHA256 digest of uploaded artifact is ed7d9d9d0a4293b5f38322e07d7b0d568e55c8922c38783dcb2fae46b4d7ace7
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:07.0007938Z Finalizing artifact upload
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:07.5248248Z Artifact coverage-windows-latest-3.14 successfully finalized. Artifact ID 14168012374
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:07.5249336Z Artifact coverage-windows-latest-3.14 has been successfully uploaded! Final size is 501393 bytes. Artifact ID is 14168012374
+test (windows-latest, 3.14)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T15:28:07.5256507Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43729628408/artifacts/14168012374
+test (windows-latest, 3.14)	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T15:28:07.5545801Z Post job cleanup.
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T15:28:07.6982686Z Post job cleanup.
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:07.8394793Z [command]"C:\Program Files\Git\bin\git.exe" version
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:07.8687363Z git version 2.56.0.windows.4
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:07.8755906Z Temporarily overriding HOME='D:\a\_temp\04d8b6e9-7642-46a1-9c2f-1c958e55ef5b' before making global git config changes
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:07.8756878Z Adding repository directory to the temporary git global config as a safe directory
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:07.8764304Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:07.9127401Z Removing SSH command configuration
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:07.9137952Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:07.9511313Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:08.4164768Z Removing HTTP extra header
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:08.4173306Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:08.4479451Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:08.9250211Z Removing includeIf entries pointing to credentials config files
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:08.9259952Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (windows-latest, 3.14)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T15:28:08.9556038Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+test (windows-latest, 3.14)	Complete job	﻿2026-11-15T15:28:09.4488282Z Cleaning up orphan processes

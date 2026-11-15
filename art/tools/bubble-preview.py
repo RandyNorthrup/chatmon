@@ -21,10 +21,10 @@ if os.name == "nt":  # the offscreen platform has no fonts of its own
     os.environ.setdefault("QT_QPA_FONTDIR", str(Path(os.environ.get("WINDIR", r"C:\Windows"), "Fonts")))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from PIL import Image, ImageDraw  # noqa: E402
-from PyQt6.QtCore import QRectF, QSizeF, Qt  # noqa: E402
-from PyQt6.QtGui import QColor, QFont, QFontDatabase, QFontMetricsF, QImage, QPainter, QPen  # noqa: E402
-from PyQt6.QtWidgets import QApplication  # noqa: E402
+from PIL import Image, ImageDraw
+from PyQt6.QtCore import QRectF, QSizeF, Qt
+from PyQt6.QtGui import QColor, QFont, QFontDatabase, QFontMetricsF, QImage, QPainter, QPen
+from PyQt6.QtWidgets import QApplication
 
 BACKGROUNDS = {"dark": "#1e2128", "light": "#e9ebf0"}
 FPS = 30

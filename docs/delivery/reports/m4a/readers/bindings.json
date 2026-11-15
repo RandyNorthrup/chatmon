@@ -1,0 +1,816 @@
+{
+ "plan": "docs/delivery/m4a-platform-awareness.md",
+ "section": "docs/delivery/reports/m4a/readers/section.md",
+ "rules": {
+  "docs/delivery/ROADMAP.md": "5c6093e",
+  "pyproject.toml": "5c6093e"
+ },
+ "inputs_add": [],
+ "task_changes_add": {},
+ "stale_reason": "Stale at M4A's reopening for M4A-12 (2026-11-15, wave4/a11y): a11y.py, linuxsession.py and presence.py changed, later merges changed ROADMAP.md, pyproject.toml, macnative.py and wave 4's scripts, and the plan gained a requirement; the R10- receipts re-ran its check on the changed files",
+ "receipts": [
+  {
+   "id": "R10-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "AC-01a",
+    "AC-01b",
+    "AC-01c",
+    "AC-02",
+    "AC-03",
+    "AC-04a",
+    "AC-04b",
+    "AC-04c",
+    "AC-05",
+    "AC-06a",
+    "AC-06b",
+    "AC-07a",
+    "AC-07b",
+    "AC-08",
+    "AC-09a",
+    "AC-09b",
+    "AC-10",
+    "AC-11",
+    "AC-12a",
+    "AC-12b",
+    "AC-12c",
+    "AC-12d",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/readiness.md",
+   "method": "Requirements review for the reopening (readiness.md): M4A-12 from the wayland worker's finding, at-spi2-core 2.62's D-Bus API as observed in WSL and its NEWS, checked for coverage, conflicts (IsEnabled alone not counted), failure behavior, non-blocking, ownership and its effect on the closed tasks."
+  },
+  {
+   "id": "R10-BEH-WINDOWS-TESTS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-01a",
+    "AC-01b",
+    "AC-01c",
+    "AC-02",
+    "AC-03",
+    "AC-04a",
+    "AC-04c",
+    "AC-05",
+    "AC-06a",
+    "AC-06b",
+    "AC-07a",
+    "AC-07b",
+    "AC-08",
+    "AC-09a",
+    "AC-09b",
+    "AC-10",
+    "AC-11",
+    "AC-12a",
+    "AC-12b",
+    "AC-12c",
+    "AC-12d",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/m4a-tests-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-rA",
+    "tests/test_screen_readers.py",
+    "tests/test_a11y.py",
+    "tests/test_presence.py",
+    "tests/test_linuxsession.py",
+    "tests/test_winlock.py",
+    "tests/test_heads_up.py",
+    "tests/test_platform_events.py",
+    "tests/test_macnative.py",
+    "tests/test_portal_bus.py"
+   ],
+   "exit_code": 0,
+   "method": "M4A's tests on this Windows 11 workstation (offscreen Qt, the shared venv, PyQt6 6.11) at 5c6093e: 65 passed, 38 skipped, every skip with its reason (the other platforms' end-to-end tests, and Qt's contrast signal, which 6.11 wraps as a method). tests/test_screen_readers.py checks each Linux source with real D-Bus messages and /proc as a folder; the UI Automation client test ran, with comtypes 1.5.0."
+  },
+  {
+   "id": "R10-BEH-WINDOWS-SUITE",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-01a",
+    "AC-01b",
+    "AC-01c",
+    "AC-02",
+    "AC-03",
+    "AC-04a",
+    "AC-04c",
+    "AC-05",
+    "AC-06a",
+    "AC-06b",
+    "AC-07a",
+    "AC-07b",
+    "AC-08",
+    "AC-09a",
+    "AC-09b",
+    "AC-10",
+    "AC-11",
+    "AC-12a",
+    "AC-12b",
+    "AC-12c",
+    "AC-12d",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on Windows at 5c6093e: 1256 passed, 178 skipped, exit 0."
+  },
+  {
+   "id": "R10-BEH-WSL-TESTS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-01a",
+    "AC-01b",
+    "AC-02",
+    "AC-03",
+    "AC-04a",
+    "AC-04b",
+    "AC-04c",
+    "AC-05",
+    "AC-06a",
+    "AC-06b",
+    "AC-07a",
+    "AC-07b",
+    "AC-08",
+    "AC-09b",
+    "AC-10",
+    "AC-11",
+    "AC-12a",
+    "AC-12b",
+    "AC-12c",
+    "AC-12d",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/suite-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "bash",
+    "/mnt/c/Users/Randy/Coding/chatmon-wt/a11y/docs/delivery/reports/m4a/readers/wsl_batch_2.sh"
+   ],
+   "exit_code": 0,
+   "method": "M4A's tests in WSL (Arch: at-spi2-core 2.62.1, Orca 51.1, PyQt6 6.12.1 in /var/tmp/m4a-venv) under xvfb-run -a, on the worktree's files at 5c6093e: 78 passed, 25 skipped (the other platforms'). Among them, on private session buses: at-spi2-core's own launcher with a reader's process starting as IsEnabled turns on (the launcher never started by asking), a pretend launcher before 2.62, GNOME's setting through gsettings on a keyfile, Orca's remote controller coming and going, and the portal, notification servers and UPower tests."
+  },
+  {
+   "id": "R10-BEH-WSL-SWAY",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-12b",
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/sway-readers.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "bash",
+    "/mnt/c/Users/Randy/Coding/chatmon-wt/a11y/docs/delivery/reports/m4a/readers/wsl_batch_2.sh"
+   ],
+   "exit_code": 0,
+   "method": "The real-sway screen-reader tests in WSL (/var/tmp/wayland-venv, PyQt6 6.11) at 5c6093e, with the real Orca 51.1 and at-spi2-core 2.62.1: 7 passed, 0 skipped. Chatmon, started before the reader's remote controller comes up, finds Orca and speaks through it, and moves the ask box to a window (screen_reader_changed)."
+  },
+  {
+   "id": "R10-RED-AC-12a-uid",
+   "kind": "red",
+   "acceptance": [
+    "AC-12a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12a-uid",
+   "method": "Red drill AC-12a-uid on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12a-comm-newline",
+   "kind": "red",
+   "acceptance": [
+    "AC-12a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12a-comm-newline",
+   "method": "Red drill AC-12a-comm-newline on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12b-orca-order",
+   "kind": "red",
+   "acceptance": [
+    "AC-12b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12b-orca-order",
+   "method": "Red drill AC-12b-orca-order on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12c-old-at-spi",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12c-old-at-spi",
+   "method": "Red drill AC-12c-old-at-spi on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12c-is-enabled-alone",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12c-is-enabled-alone",
+   "method": "Red drill AC-12c-is-enabled-alone on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12c-no-rescan-on-status",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12c-no-rescan-on-status",
+   "method": "Red drill AC-12c-no-rescan-on-status on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12c-bus-gone",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12c-bus-gone",
+   "method": "Red drill AC-12c-bus-gone on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12d-gnome",
+   "kind": "red",
+   "acceptance": [
+    "AC-12d"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12d-gnome",
+   "method": "Red drill AC-12d-gnome on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12e-orca-speaks",
+   "kind": "red",
+   "acceptance": [
+    "AC-12b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12e-orca-speaks",
+   "method": "Red drill AC-12e-orca-speaks on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-AC-12f-desk-signal",
+   "kind": "red",
+   "acceptance": [
+    "AC-12e"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-results.json",
+   "drill": "AC-12f-desk-signal",
+   "method": "Red drill AC-12f-desk-signal on Windows at 5c6093e (tests/drills/run.py, in a temporary copy): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-L-AC-12c-status-unheard",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-linux-results.json",
+   "drill": "L-AC-12c-status-unheard",
+   "method": "Red drill L-AC-12c-status-unheard in WSL at 5c6093e (docs/delivery/reports/wave4/wsl_drills.py, under xvfb-run -a): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-L-AC-12c-not-read",
+   "kind": "red",
+   "acceptance": [
+    "AC-12c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-linux-results.json",
+   "drill": "L-AC-12c-not-read",
+   "method": "Red drill L-AC-12c-not-read in WSL at 5c6093e (docs/delivery/reports/wave4/wsl_drills.py, under xvfb-run -a): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-L-AC-12d-gnome-key",
+   "kind": "red",
+   "acceptance": [
+    "AC-12d"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-linux-results.json",
+   "drill": "L-AC-12d-gnome-key",
+   "method": "Red drill L-AC-12d-gnome-key in WSL at 5c6093e (docs/delivery/reports/wave4/wsl_drills.py, under xvfb-run -a): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-L-AC-12b-orca-unwatched",
+   "kind": "red",
+   "acceptance": [
+    "AC-12b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-linux-results.json",
+   "drill": "L-AC-12b-orca-unwatched",
+   "method": "Red drill L-AC-12b-orca-unwatched in WSL at 5c6093e (docs/delivery/reports/wave4/wsl_drills.py, under xvfb-run -a): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-01a-portal-key",
+   "kind": "red",
+   "acceptance": [
+    "AC-01a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-01a-portal-key",
+   "method": "Red drill AC-01a-portal-key on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-01a-portal-flag",
+   "kind": "red",
+   "acceptance": [
+    "AC-01a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-01a-portal-flag",
+   "method": "Red drill AC-01a-portal-flag on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-01b-gnome-skipped",
+   "kind": "red",
+   "acceptance": [
+    "AC-01b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-01b-gnome-skipped",
+   "method": "Red drill AC-01b-gnome-skipped on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-01c-mac-contrast",
+   "kind": "red",
+   "acceptance": [
+    "AC-01c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-01c-mac-contrast",
+   "method": "Red drill AC-01c-mac-contrast on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-02-any-monitor",
+   "kind": "red",
+   "acceptance": [
+    "AC-02"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-02-any-monitor",
+   "method": "Red drill AC-02-any-monitor on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-03-sleep-wake",
+   "kind": "red",
+   "acceptance": [
+    "AC-03"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-03-sleep-wake",
+   "method": "Red drill AC-03-sleep-wake on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-04a-setting-changed-ignored",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-04a-setting-changed-ignored",
+   "method": "Red drill AC-04a-setting-changed-ignored on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-04a-no-dedupe",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-04a-no-dedupe",
+   "method": "Red drill AC-04a-no-dedupe on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-04c-other-windows-copy",
+   "kind": "red",
+   "acceptance": [
+    "AC-04c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-04c-other-windows-copy",
+   "method": "Red drill AC-04c-other-windows-copy on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-04c-screen-reader",
+   "kind": "red",
+   "acceptance": [
+    "AC-04c"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-04c-screen-reader",
+   "method": "Red drill AC-04c-screen-reader on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-05-mako-modes",
+   "kind": "red",
+   "acceptance": [
+    "AC-05"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-05-mako-modes",
+   "method": "Red drill AC-05-mako-modes on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-05-dnd-ignored",
+   "kind": "red",
+   "acceptance": [
+    "AC-05"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-05-dnd-ignored",
+   "method": "Red drill AC-05-dnd-ignored on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-06a-battery-ignored",
+   "kind": "red",
+   "acceptance": [
+    "AC-06a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-06a-battery-ignored",
+   "method": "Red drill AC-06a-battery-ignored on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-06b-low-power",
+   "kind": "red",
+   "acceptance": [
+    "AC-06b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-06b-low-power",
+   "method": "Red drill AC-06b-low-power on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-07a-transient",
+   "kind": "red",
+   "acceptance": [
+    "AC-07a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-07a-transient",
+   "method": "Red drill AC-07a-transient on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-07a-urgency-byte",
+   "kind": "red",
+   "acceptance": [
+    "AC-07a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-07a-urgency-byte",
+   "method": "Red drill AC-07a-urgency-byte on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-07b-replaced-buttons",
+   "kind": "red",
+   "acceptance": [
+    "AC-07b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-07b-replaced-buttons",
+   "method": "Red drill AC-07b-replaced-buttons on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-07b-other-apps",
+   "kind": "red",
+   "acceptance": [
+    "AC-07b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-07b-other-apps",
+   "method": "Red drill AC-07b-other-apps on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-08-no-fallback",
+   "kind": "red",
+   "acceptance": [
+    "AC-08"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-08-no-fallback",
+   "method": "Red drill AC-08-no-fallback on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-09a-client-side",
+   "kind": "red",
+   "acceptance": [
+    "AC-09a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-09a-client-side",
+   "method": "Red drill AC-09a-client-side on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-09a-not-handed-out",
+   "kind": "red",
+   "acceptance": [
+    "AC-09a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-09a-not-handed-out",
+   "method": "Red drill AC-09a-not-handed-out on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-09a-host-provider",
+   "kind": "red",
+   "acceptance": [
+    "AC-09a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-09a-host-provider",
+   "method": "Red drill AC-09a-host-provider on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-09b-behind",
+   "kind": "red",
+   "acceptance": [
+    "AC-09b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-09b-behind",
+   "method": "Red drill AC-09b-behind on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-09b-no-notification",
+   "kind": "red",
+   "acceptance": [
+    "AC-09b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-09b-no-notification",
+   "method": "Red drill AC-09b-no-notification on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-10-plugged",
+   "kind": "red",
+   "acceptance": [
+    "AC-10"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-10-plugged",
+   "method": "Red drill AC-10-plugged on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-11-told-twice",
+   "kind": "red",
+   "acceptance": [
+    "AC-11"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-11-told-twice",
+   "method": "Red drill AC-11-told-twice on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-11-seen-inverted",
+   "kind": "red",
+   "acceptance": [
+    "AC-11"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-11-seen-inverted",
+   "method": "Red drill AC-11-seen-inverted on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-04a-listener-outlives-desk",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-04a-listener-outlives-desk",
+   "method": "Red drill AC-04a-listener-outlives-desk on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-04b-old-qt-hints",
+   "kind": "red",
+   "acceptance": [
+    "AC-04b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-04b-old-qt-hints",
+   "method": "Red drill AC-04b-old-qt-hints on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-AC-01b-old-qt-contrast",
+   "kind": "red",
+   "acceptance": [
+    "AC-01b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-results.json",
+   "drill": "AC-01b-old-qt-contrast",
+   "method": "Red drill AC-01b-old-qt-contrast on Windows at b5d018a (tests/drills/run.py, wave4/drill-spec.json; its drilled files and tests are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-01a-read-fallback",
+   "kind": "red",
+   "acceptance": [
+    "AC-01a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-01a-read-fallback",
+   "method": "Red drill L-AC-01a-read-fallback in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-04a-asked-each-time",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-04a-asked-each-time",
+   "method": "Red drill L-AC-04a-asked-each-time in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-05-starts-services",
+   "kind": "red",
+   "acceptance": [
+    "AC-05"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-05-starts-services",
+   "method": "Red drill L-AC-05-starts-services in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-05-dunst-question",
+   "kind": "red",
+   "acceptance": [
+    "AC-05"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-05-dunst-question",
+   "method": "Red drill L-AC-05-dunst-question in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-06a-upower-not-followed",
+   "kind": "red",
+   "acceptance": [
+    "AC-06a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-06a-upower-not-followed",
+   "method": "Red drill L-AC-06a-upower-not-followed in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-07a-not-replaced",
+   "kind": "red",
+   "acceptance": [
+    "AC-07a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-07a-not-replaced",
+   "method": "Red drill L-AC-07a-not-replaced in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-07b-action-unheard",
+   "kind": "red",
+   "acceptance": [
+    "AC-07b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-07b-action-unheard",
+   "method": "Red drill L-AC-07b-action-unheard in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-10-not-one-call",
+   "kind": "red",
+   "acceptance": [
+    "AC-10"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-10-not-one-call",
+   "method": "Red drill L-AC-10-not-one-call in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-04a-listener-outlives-desk",
+   "kind": "red",
+   "acceptance": [
+    "AC-04a"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-04a-listener-outlives-desk",
+   "method": "Red drill L-AC-04a-listener-outlives-desk in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-02-x11-place",
+   "kind": "red",
+   "acceptance": [
+    "AC-02"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-results.json",
+   "drill": "L-AC-02-x11-place",
+   "method": "Red drill L-AC-02-x11-place in WSL at b5d018a (wsl_drills.py, wave4/drill-spec-linux.json, under xvfb-run -a; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  },
+  {
+   "id": "R10-RED-W4-L-AC-04b-qt-signal",
+   "kind": "red",
+   "acceptance": [
+    "AC-04b"
+   ],
+   "artifact": "docs/delivery/reports/m4a/readers/drills-w4-linux-qt612-results.json",
+   "results": "docs/delivery/reports/m4a/readers/drills-w4-linux-qt612-results.json",
+   "drill": "W4-L-AC-04b-qt-signal",
+   "method": "Red drill W4-L-AC-04b-qt-signal in WSL at b5d018a on PyQt6 6.12.1 (wsl_drills.py, wave4/drill-spec-linux-qt612.json; its files are unchanged since, to 5c6093e): green, then the mutation made the named test fail with pytest's tests-failed exit, then the drilled file's own bytes back (SHA-256) and green again. The results file has each run's exit and the failing test; the log beside it, each run's output."
+  }
+ ],
+ "tasks": {
+  "T-04": {
+   "status": "implemented"
+  },
+  "T-09": {
+   "status": "implemented"
+  }
+ },
+ "pending": [
+  {
+   "id": "CI-macos",
+   "description": "T-04 and T-09's end-to-end checks run on macOS only: CI's macOS legs. Their files changed since CI last ran them (macnative.py in another worker's merge, presence.py here), so they wait for the next CI run.",
+   "next_action": "Read tests/test_macnative.py::test_sleep_wake_displays_accessibility_and_low_power_are_heard and tests/test_presence.py::test_macos_reads_increase_contrast from the next CI run on the merged tree; on a pass, T-04 and T-09 are verified."
+  },
+  {
+   "id": "CI-linux",
+   "description": "tests/test_screen_readers.py's bus tests ran in WSL against at-spi2-core 2.62.1. CI's Ubuntu 24.04 legs and the distribution containers have an older at-spi2-core (2.52 keeps ScreenReaderEnabled), or none.",
+   "next_action": "Read tests/test_screen_readers.py and tests/test_a11y.py from the next CI run: each runs, or skips with its reason (no at-spi2-core, no gsettings schema), and passes."
+  }
+ ],
+ "next_action": "Merge wave4/a11y; read the next CI run for CI-macos and CI-linux.",
+ "source_revision": "5c6093e57312e0ce4b310d959b086787e276cd5a"
+}

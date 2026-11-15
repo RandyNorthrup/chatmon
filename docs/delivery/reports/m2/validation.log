@@ -1,0 +1,17 @@
+$ verify-delivery.py --stage readiness
+PASS: readiness record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts
+Structural and recorded-evidence checks; semantic review remains required.
+exit 0
+$ verify-delivery.py --stage closure
+FAIL: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+outcome-unresolved | P-M2-ci | Read the CI results for wave1/m2's merge on Linux and macOS; fix any failure in M2's files and re-run this plan's checks.
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1
+$ verify-delivery.py --stage resume
+FAIL: resume record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, checkpoint-freshness
+outcome-unresolved | P-M2-ci | Read the CI results for wave1/m2's merge on Linux and macOS; fix any failure in M2's files and re-run this plan's checks.
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

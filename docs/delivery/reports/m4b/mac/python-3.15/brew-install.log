@@ -1,0 +1,284 @@
+Warning: You are using macOS on Intel x86_64.
+We do not provide support for this platform (as-of September 2026, announced August 2025).
+
+Apple have dropped Intel x86_64 support in macOS Golden Gate (27).
+GitHub Actions are dropping macOS Intel x86_64 runners in 2027.
+Homebrew is a non-profit project run entirely by volunteers, not employees.
+If the biggest companies in the world cannot support macOS Intel x86_64
+any longer, sadly neither can we.
+
+Homebrew no longer builds bottles for this configuration.
+Consider MacPorts, which provides binary packages for this macOS version:
+  https://www.macports.org
+
+Warning: The following taps are not trusted:
+  getsentry/xcodebuildmcp
+  mongodb/brew
+  stripe/stripe-cli
+
+Homebrew is currently ignoring formulae, casks and commands
+from these taps because tap trust is required.
+Prefer trusting only the specific formulae, casks or commands you need.
+Trust installed formulae from these taps with:
+  brew trust --formula getsentry/xcodebuildmcp/xcodebuildmcp
+  brew trust --formula mongodb/brew/mongodb-community mongodb/brew/mongodb-database-tools
+  brew trust --formula stripe/stripe-cli/stripe
+Trust other specific casks and commands with:
+  brew trust --cask <user>/<tap>/<cask>
+  brew trust --command <user>/<tap>/<command>
+Whole-tap trust is broader and includes all current and future formulae,
+casks and commands from the listed taps. Trust whole taps with:
+  brew trust getsentry/xcodebuildmcp mongodb/brew stripe/stripe-cli
+Untap them with:
+  brew untap getsentry/xcodebuildmcp mongodb/brew stripe/stripe-cli
+For more information, see:
+  https://docs.brew.sh/Tap-Trust
+
+Warning: `$HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK` is set: not checking for outdated
+dependents or dependents with broken linkage!
+==> Would install 1 formula:
+python@3.15 3.15.2
+==> Would install 1 dependency for python@3.15:
+openssl@4 4.1.0
+==> Would upgrade 6 dependencies for python@3.15:
+ca-certificates  2026-08-13 -> 2026-11-05
+readline         8.3.3      -> 8.3.6
+sqlite           3.53.2     -> 3.54.1
+xz               5.8.3      -> 5.8.4
+cmake            4.3.4      -> 4.5.0
+lz4              1.10.0     -> 1.11.1
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/0a752f1cebe5c6700d050b7ab5a86a03d26bc0c6/Formula/o/openssl@4.rb
+Already downloaded: /Users/user/Library/Caches/Homebrew/downloads/99e1137b2c409829713c77ffc6f7c4e8d9aede85d74cb66d6f98b37cd41b8a2f--openssl@4.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/0a752f1cebe5c6700d050b7ab5a86a03d26bc0c6/Formula/r/readline.rb
+Already downloaded: /Users/user/Library/Caches/Homebrew/downloads/5df67404b4776aa7d2f1de88cb7e30c3f342ddcd45aaf9e3f9eab1f0b3c8075d--readline.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/0a752f1cebe5c6700d050b7ab5a86a03d26bc0c6/Formula/s/sqlite.rb
+Already downloaded: /Users/user/Library/Caches/Homebrew/downloads/2e8f918b6e4c98f2f112dfb6e53506634ffd45e33b5c91ff37e08c3da888ca53--sqlite.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/0a752f1cebe5c6700d050b7ab5a86a03d26bc0c6/Formula/x/xz.rb
+Already downloaded: /Users/user/Library/Caches/Homebrew/downloads/2328bd941bae2d20f11518d5a459cfa0e26e9c951d6fe446a7fab83b467faf77--xz.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/0a752f1cebe5c6700d050b7ab5a86a03d26bc0c6/Formula/c/cmake.rb
+Already downloaded: /Users/user/Library/Caches/Homebrew/downloads/5e70ae4c7a7d1a6722ce8b3dc981fa3d46d3d60e6e8c3f63956b47d36fd5f1a0--cmake.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/0a752f1cebe5c6700d050b7ab5a86a03d26bc0c6/Formula/l/lz4.rb
+Already downloaded: /Users/user/Library/Caches/Homebrew/downloads/2b65de0b071d90f083fd8d5c77c2e7e7b8ea9d3d354eb595ecd6e96420ac7c87--lz4.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/0a752f1cebe5c6700d050b7ab5a86a03d26bc0c6/Patches/python/3.13-sysconfig.diff
+==> Fetching downloads for: python@3.15
+✔︎ API Source python@3.15.rb
+✔︎ Bottle Manifest ca-certificates (2026-11-05)
+✔︎ Bottle ca-certificates (2026-11-05)
+✔︎ API Source openssl@4.rb
+✔︎ Formula openssl@4 (4.1.0)
+✔︎ API Source readline.rb
+✔︎ Patch readline83-001
+✔︎ Patch readline83-002
+✔︎ Patch readline83-003
+✔︎ Patch readline83-004
+✔︎ Patch readline83-005
+✔︎ Patch readline83-006
+✔︎ Formula readline (8.3.6)
+✔︎ API Source sqlite.rb
+✔︎ Formula sqlite (3.54.1)
+✔︎ API Source xz.rb
+✔︎ Formula xz (5.8.4)
+✔︎ API Source cmake.rb
+✔︎ Formula cmake (4.5.0)
+✔︎ API Source lz4.rb
+✔︎ Formula lz4 (1.11.1)
+✔︎ Resource python@3.15--flit-core
+✔︎ Resource python@3.15--pip
+✔︎ Formula python@3.15 (3.15.2)
+Warning: A newer Command Line Tools release is available.
+Update them from Software Update in System Settings.
+
+If that doesn't show you any updates, run:
+  sudo rm -rf /Library/Developer/CommandLineTools
+  sudo xcode-select --install
+
+Alternatively, manually download them from:
+  https://developer.apple.com/download/all/.
+You should download the Command Line Tools for Xcode 26.3.
+
+==> Installing dependencies for python@3.15: ca-certificates, openssl@4, readline, sqlite, xz, cmake and lz4
+==> Upgrading python@3.15 dependency: ca-certificates (2026-08-13 -> 2026-11-05)
+==> Pouring ca-certificates--2026-11-05.all.bottle.tar.gz
+🍺  /usr/local/Cellar/ca-certificates/2026-11-05: 5 files, 194.7KB
+==> Installing python@3.15 dependency: openssl@4 (4.1.0)
+Warning: A newer Command Line Tools release is available.
+Update them from Software Update in System Settings.
+
+If that doesn't show you any updates, run:
+  sudo rm -rf /Library/Developer/CommandLineTools
+  sudo xcode-select --install
+
+Alternatively, manually download them from:
+  https://developer.apple.com/download/all/.
+You should download the Command Line Tools for Xcode 26.3.
+
+[34m==>[0m [1mperl ./Configure --prefix=/usr/local/Cellar/openssl@4/4.1.0 --openssldir=/us[0m
+[34m==>[0m [1mmake[0m
+[34m==>[0m [1mmake install MANDIR=/usr/local/Cellar/openssl@4/4.1.0/share/man MANSUFFIX=ss[0m
+Unlinking /usr/local/Cellar/openssl@3/3.6.2... 6560 symlinks removed.
+🍺  /usr/local/Cellar/openssl@4/4.1.0: 6,860 files, 25.1MB, built in 3 minutes 11 seconds
+==> Upgrading python@3.15 dependency: readline (8.3.3 -> 8.3.6)
+Warning: A newer Command Line Tools release is available.
+Update them from Software Update in System Settings.
+
+If that doesn't show you any updates, run:
+  sudo rm -rf /Library/Developer/CommandLineTools
+  sudo xcode-select --install
+
+Alternatively, manually download them from:
+  https://developer.apple.com/download/all/.
+You should download the Command Line Tools for Xcode 26.3.
+
+[34m==>[0m [1mPatching[0m
+[34m==>[0m [1mApplying readline83-001[0m
+patching file input.c
+patching file patchlevel
+[34m==>[0m [1mApplying readline83-002[0m
+patching file display.c
+patching file patchlevel
+[34m==>[0m [1mApplying readline83-003[0m
+patching file input.c
+patching file isearch.c
+patching file patchlevel
+[34m==>[0m [1mApplying readline83-004[0m
+patching file display.c
+patching file patchlevel
+[34m==>[0m [1mApplying readline83-005[0m
+patching file display.c
+patching file patchlevel
+[34m==>[0m [1mApplying readline83-006[0m
+patching file display.c
+patching file patchlevel
+[34m==>[0m [1m./configure --with-curses[0m
+[34m==>[0m [1mmake install SHLIB_LIBS=-lcurses[0m
+🍺  /usr/local/Cellar/readline/8.3.6: 56 files, 2.6MB, built in 25 seconds
+==> Upgrading python@3.15 dependency: sqlite (3.53.2 -> 3.54.1)
+Warning: A newer Command Line Tools release is available.
+Update them from Software Update in System Settings.
+
+If that doesn't show you any updates, run:
+  sudo rm -rf /Library/Developer/CommandLineTools
+  sudo xcode-select --install
+
+Alternatively, manually download them from:
+  https://developer.apple.com/download/all/.
+You should download the Command Line Tools for Xcode 26.3.
+
+[34m==>[0m [1m./configure --enable-readline --disable-editline --enable-session --with-rea[0m
+[34m==>[0m [1mmake install[0m
+🍺  /usr/local/Cellar/sqlite/3.54.1: 13 files, 5.4MB, built in 48 seconds
+==> Upgrading python@3.15 dependency: xz (5.8.3 -> 5.8.4)
+Warning: A newer Command Line Tools release is available.
+Update them from Software Update in System Settings.
+
+If that doesn't show you any updates, run:
+  sudo rm -rf /Library/Developer/CommandLineTools
+  sudo xcode-select --install
+
+Alternatively, manually download them from:
+  https://developer.apple.com/download/all/.
+You should download the Command Line Tools for Xcode 26.3.
+
+[34m==>[0m [1m./configure --disable-silent-rules --disable-nls[0m
+[34m==>[0m [1mmake check[0m
+[34m==>[0m [1mmake install[0m
+🍺  /usr/local/Cellar/xz/5.8.4: 96 files, 2.5MB, built in 49 seconds
+==> Upgrading python@3.15 dependency: cmake (4.3.4 -> 4.5.0)
+Warning: A newer Command Line Tools release is available.
+Update them from Software Update in System Settings.
+
+If that doesn't show you any updates, run:
+  sudo rm -rf /Library/Developer/CommandLineTools
+  sudo xcode-select --install
+
+Alternatively, manually download them from:
+  https://developer.apple.com/download/all/.
+You should download the Command Line Tools for Xcode 26.3.
+
+[34m==>[0m [1m./bootstrap --prefix=/usr/local/Cellar/cmake/4.5.0 --no-system-libs --parall[0m
+[34m==>[0m [1mmake[0m
+[34m==>[0m [1mmake install[0m
+🍺  /usr/local/Cellar/cmake/4.5.0: 4,291 files, 75.4MB, built in 10 minutes
+==> Upgrading python@3.15 dependency: lz4 (1.10.0 -> 1.11.1)
+Warning: A newer Command Line Tools release is available.
+Update them from Software Update in System Settings.
+
+If that doesn't show you any updates, run:
+  sudo rm -rf /Library/Developer/CommandLineTools
+  sudo xcode-select --install
+
+Alternatively, manually download them from:
+  https://developer.apple.com/download/all/.
+You should download the Command Line Tools for Xcode 26.3.
+
+[34m==>[0m [1mmake install PREFIX=/usr/local/Cellar/lz4/1.11.1[0m
+[34m==>[0m [1mcmake -S build/cmake -B build -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=ON [0m
+[34m==>[0m [1mcmake --build build[0m
+[34m==>[0m [1mcmake --install build[0m
+🍺  /usr/local/Cellar/lz4/1.11.1: 28 files, 784KB, built in 15 seconds
+==> Installing python@3.15
+[34m==>[0m [1mPatching[0m
+[34m==>[0m [1mApplying python/3.13-sysconfig.diff[0m
+patching file 'Lib/sysconfig/__init__.py'
+[34m==>[0m [1m./configure --enable-ipv6 --datarootdir=/usr/local/Cellar/python@3.15/3.15.2[0m
+[34m==>[0m [1mmake[0m
+[34m==>[0m [1mmake install PYTHONAPPSDIR=/usr/local/Cellar/python@3.15/3.15.2[0m
+[34m==>[0m [1mmake frameworkinstallextras PYTHONAPPSDIR=/usr/local/Cellar/python@3.15/3.15[0m
+[34m==>[0m [1m/usr/local/Cellar/python@3.15/3.15.2/bin/python3.15 -m venv /private/tmp/s-Y[0m
+[34m==>[0m [1m/private/tmp/s-YdmhLAQL/pythonA3.15-20261115-13668-d4ydyz/Python-3.15.2/whl_[0m
+[34m==>[0m [1m/private/tmp/s-YdmhLAQL/pythonA3.15-20261115-13668-d4ydyz/Python-3.15.2/whl_[0m
+[34m==>[0m [1m/usr/local/Cellar/python@3.15/3.15.2/bin/python3.15 -Im ensurepip[0m
+[34m==>[0m [1m/usr/local/Cellar/python@3.15/3.15.2/bin/python3.15 -Im pip install -v --no-[0m
+Warning: These files were overwritten during the `brew link` step:
+/usr/local/bin/idle3
+/usr/local/bin/pip3
+/usr/local/bin/pydoc3
+/usr/local/bin/python3
+/usr/local/bin/python3-config
+/usr/local/share/man/man1/python3.1
+/usr/local/lib/pkgconfig/python3-embed.pc
+/usr/local/lib/pkgconfig/python3.pc
+/usr/local/Frameworks/Python.framework/Headers
+/usr/local/Frameworks/Python.framework/Python
+/usr/local/Frameworks/Python.framework/Resources
+/usr/local/Frameworks/Python.framework/Versions/Current
+
+They have been backed up to: /Users/user/Library/Caches/Homebrew/Backup
+
+This is a Tier 3 configuration:
+  https://docs.brew.sh/Support-Tiers#tier-3
+You can report issues with Tier 3 configurations to Homebrew/* repositories!
+  
+Read the above document before opening any issues or PRs.
+==> Summary
+🍺  /usr/local/Cellar/python@3.15/3.15.2: 10,548 files, 259MB, built in 6 minutes
+==> Caveats
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/cmake
+==> cmake
+To install the CMake documentation, run:
+  brew install cmake-docs
+==> python@3.15
+Python is installed as
+  /usr/local/bin/python3
+
+Unversioned symlinks `python`, `python-config`, `pip` etc. pointing to
+`python3`, `python3-config`, `pip3` etc., respectively, are installed into
+  /usr/local/opt/python@3.15/libexec/bin
+
+`idle3.15` requires tkinter, which is available separately:
+  brew install python-tk@3.15
+
+`dbm.gnu` is available separately:
+  brew install python-gdbm@3.15
+
+For more information about Homebrew and Python, see: https://docs.brew.sh/Homebrew-and-Python
+
+The following python@3.15 executables are shadowed by commands in /usr/bin:
+pip3
+python3
+Running these by name will not invoke the version provided by Homebrew
+because the shadowing commands come earlier in your PATH.
+Disable this behaviour by setting `HOMEBREW_NO_PATH_SHADOW_CHECK=1`.
+Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+# brew exit 0

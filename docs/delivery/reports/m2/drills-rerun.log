@@ -1,0 +1,77 @@
+red drills from docs\delivery\reports\m2\drill-spec.json
+python: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-1cea8jnt
+copied 213 files
+
+=== drill M2-01-images-left (M2-01) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_safety.py
+-- green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.90s
+-- red: exit 1
+        message.paint(p, message.size.width() / 2, 1.5)
+        p.end()
+        assert asked, "the laid-out document asked for the picture: the test reaches the place it guards"
+>       assert_never_read(message.doc, asked, files)
+
+tests\test_bubble_safety.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+doc = <chatmon.richtext.SafeDocument object at 0x0000019FB4DF5130>
+calls = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_a_speech_bubble_never_rea1/image.png', <...-Randy/pytest-1040/test_a_speech_bubble_never_rea1/image.png', <PyQt6.QtGui.QImage object at 0x0000019FB4E52750>), ...]
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_a_speech_bubble_never_rea1/...ile:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_a_speech_bubble_never_rea1/background.png'))}
+
+    def assert_never_read(doc: QTextDocument, calls, files) -> None:
+        leaked = [url for url, result in calls if secret(result, files)]
+        assert leaked == [], f"a picture's bytes were read for {leaked}"
+        assert all(url != files["background"][1].toString() for url, _ in calls), "HTML was read: its picture was asked for"
+>       assert images(doc) == 0, "an image was left in, for the screen to look for its @2x file"
+E       AssertionError: an image was left in, for the screen to look for its @2x file
+E       assert 3 == 0
+E        +  where 3 = images(<chatmon.richtext.SafeDocument object at 0x0000019FB4DF5130>)
+
+tests\test_bubble_safety.py:84: AssertionError
+_____________ test_the_ask_box_never_reads_a_file_an_answer_names _____________
+
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_the_ask_box_never_reads_a0/...ile:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_the_ask_box_never_reads_a0/background.png'))}
+asked = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_the_ask_box_never_reads_a0/image.png', <...-Randy/pytest-1040/test_the_ask_box_never_reads_a0/image.png', <PyQt6.QtGui.QImage object at 0x0000019FB4E53150>), ...]
+
+    def test_the_ask_box_never_reads_a_file_an_answer_names(files, asked):
+        box = AskBox()
+        try:
+            box.open(QPoint(600, 600), "Ask Sparky", "Enter to ask", "Ask anything", text="**You:** hi\n\nA first answer.", activate=False)
+            box.grab()  # laid out and drawn
+            box.set_answer(attack(files), at_end=True)
+            drawn = box.grab().toImage()
+            doc = box.answer.document()
+            assert asked, "the laid-out document asked for the picture: the test reaches the place it guards"
+>           assert_never_read(doc, asked, files)
+
+tests\test_bubble_safety.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+doc = <chatmon.richtext.SafeDocument object at 0x0000019FB4DF6710>
+calls = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_the_ask_box_never_reads_a0/image.png', <...-Randy/pytest-1040/test_the_ask_box_never_reads_a0/image.png', <PyQt6.QtGui.QImage object at 0x0000019FB4E53150>), ...]
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_the_ask_box_never_reads_a0/...ile:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-1040/test_the_ask_box_never_reads_a0/background.png'))}
+
+    def assert_never_read(doc: QTextDocument, calls, files) -> None:
+        leaked = [url for url, result in calls if secret(result, files)]
+        assert leaked == [], f"a picture's bytes were read for {leaked}"
+        assert all(url != files["background"][1].toString() for url, _ in calls), "HTML was read: its picture was asked for"
+>       assert images(doc) == 0, "an image was left in, for the screen to look for its @2x file"
+E       AssertionError: an image was left in, for the screen to look for its @2x file
+E       assert 3 == 0
+E        +  where 3 = images(<chatmon.richtext.SafeDocument object at 0x0000019FB4DF6710>)
+
+tests\test_bubble_safety.py:84: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_safety.py::test_a_speech_bubble_never_reads_a_file_an_answer_names[electric]
+FAILED tests/test_bubble_safety.py::test_a_speech_bubble_never_reads_a_file_an_answer_names[plain]
+FAILED tests/test_bubble_safety.py::test_the_ask_box_never_reads_a_file_an_answer_names
+3 failed, 2 passed in 0.55s
+-- restored green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.79s
+
+=== summary
+PASS M2-01-images-left

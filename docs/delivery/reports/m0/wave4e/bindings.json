@@ -1,0 +1,540 @@
+{
+ "plan": "docs/delivery/m0-app-core.md",
+ "section": "docs/delivery/reports/m0/wave4e/section.md",
+ "rules": {},
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "task_changes_add": {
+  "T-M0-13": [
+   {
+    "path": "chatmon/log.py",
+    "action": "modify"
+   },
+   {
+    "path": "tests/test_log.py",
+    "action": "modify"
+   }
+  ],
+  "T-M0-05": [
+   {
+    "path": "chatmon/offline.py",
+    "action": "modify"
+   }
+  ]
+ },
+ "stale_reason": "Stale at wave 4's final round (2026-11-15): the quit guard (chatmon/app.py, tests/test_app_smoke.py), the toast fix (tests/test_wintoast.py) and the macOS owner test (tests/test_install_update.py) changed files it was bound to; the W4E- receipts re-ran its check on 45a17b3 or read it from CI run 43743804662",
+ "receipts": [
+  {
+   "id": "W4E-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "M0-01.A1",
+    "M0-01.A2",
+    "M0-01.A3",
+    "M0-01.A4",
+    "M0-01.A5",
+    "M0-02.A1",
+    "M0-02.A2",
+    "M0-02.A3",
+    "M0-02.A4",
+    "M0-03.A1",
+    "M0-03.A2",
+    "M0-03.A3",
+    "M0-04.A1",
+    "M0-04.A2",
+    "M0-04.A3",
+    "M0-05.A1",
+    "M0-05.A2",
+    "M0-06.A1",
+    "M0-06.A2",
+    "M0-07.A1",
+    "M0-08.A1",
+    "M0-08.A2",
+    "M0-09.A1",
+    "M0-10.A1",
+    "M0-10.A2",
+    "M0-11.A1",
+    "M0-12.A1",
+    "M0-12.A2",
+    "M0-12.A3",
+    "M0-13.A1",
+    "M0-CLI.A1"
+   ],
+   "artifact": "docs/delivery/reports/m0/wave4e/readiness.md",
+   "method": "Requirements review, final round, at 45a17b3 (readiness.md): M0-01 to M0-13 and M0-CLI re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and the quit guard's changes to chatmon/app.py and tests/test_app_smoke.py (a system watcher's late callback does nothing after quit); no conflict or gap."
+  },
+  {
+   "id": "W4E-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "M0-01.A1",
+    "M0-01.A2",
+    "M0-01.A3",
+    "M0-01.A4",
+    "M0-01.A5",
+    "M0-02.A1",
+    "M0-02.A2",
+    "M0-02.A3",
+    "M0-02.A4",
+    "M0-03.A1",
+    "M0-03.A2",
+    "M0-03.A3",
+    "M0-04.A1",
+    "M0-04.A2",
+    "M0-04.A3",
+    "M0-05.A1",
+    "M0-05.A2",
+    "M0-06.A1",
+    "M0-06.A2",
+    "M0-07.A1",
+    "M0-08.A1",
+    "M0-08.A2",
+    "M0-09.A1",
+    "M0-10.A1",
+    "M0-10.A2",
+    "M0-11.A1",
+    "M0-12.A1",
+    "M0-12.A2",
+    "M0-12.A3",
+    "M0-CLI.A1"
+   ],
+   "artifact": "docs/delivery/reports/wave4e/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 45a17b3's source on this Windows 11 workstation (offscreen Qt, the shared venv, a CHATMON_INSTANCE of its own), which runs every test these criteria's earlier receipts named: 1259 passed, 179 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. M0-13.A1 is left out: its test is POSIX-only and skips here (CI's and WSL's receipts cover it). M0-03.A3 is in: tests/test_app_smoke.py::test_the_chats_menu_lists_chats_without_reading_any_whole, the coordinator's new menu-level test, and test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window passed here. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-BEH-CI-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "M0-12.A1",
+    "M0-13.A1"
+   ],
+   "artifact": "docs/delivery/reports/m0/ci/ci-132902559367-test-ubuntu-24.04-3.15.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43743804662",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132902559367",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43743804662 on 45a17b3, job test (ubuntu-24.04, 3.15), every test under xvfb-run: tests/test_app_smoke.py::test_chatmon_ask_from_a_terminal_reaches_it (M0-12.A1: chatmon ask from a terminal reaches the running Chatmon) and tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link (M0-13.A1: the log made 0600, an older one at the umask made 0600, never opened through a link) passed. Both also passed on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the ubuntu:24.04, debian:trixie and fedora:44 containers; both skip on Windows. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 45a17b3's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-45a17b3.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-BEH-CI-MACOS",
+   "kind": "behavior",
+   "acceptance": [
+    "M0-12.A1",
+    "M0-13.A1"
+   ],
+   "artifact": "docs/delivery/reports/m0/ci/ci-132902559594-test-macos-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43743804662",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "132902559594",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "CI run 43743804662 on 45a17b3, job test (macos-latest, 3.14): the same two POSIX tests (M0-12.A1, M0-13.A1) passed on macOS, as on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 45a17b3's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-45a17b3.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-01-heads-up-not-lost",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-01-heads-up-not-lost",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-01-heads-up-not-lost through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-01-minimum-time",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A4"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-01-minimum-time",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-01-minimum-time through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-01-never-dropped",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-01-never-dropped",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-01-never-dropped through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-01-pushed-comes-back",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-01-pushed-comes-back",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-01-pushed-comes-back through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-01-quiet-holds",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A5"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-01-quiet-holds",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-01-quiet-holds through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-02-both-answered",
+   "kind": "red",
+   "acceptance": [
+    "M0-02.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-02-both-answered",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-02-both-answered through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-02-nothing-vanishes",
+   "kind": "red",
+   "acceptance": [
+    "M0-02.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-02-nothing-vanishes",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-02-nothing-vanishes through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-02-second-waits",
+   "kind": "red",
+   "acceptance": [
+    "M0-02.A1",
+    "M0-02.A4"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-02-second-waits",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-02-second-waits through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-03-agents-on-open-only",
+   "kind": "red",
+   "acceptance": [
+    "M0-03.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-03-agents-on-open-only",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-03-agents-on-open-only through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-03-tick-only-labels",
+   "kind": "red",
+   "acceptance": [
+    "M0-03.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-03-tick-only-labels",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-03-tick-only-labels through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-06-ask-box-doesnt-wait",
+   "kind": "red",
+   "acceptance": [
+    "M0-06.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-06-ask-box-doesnt-wait",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-06-ask-box-doesnt-wait through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-06-readings-off-thread",
+   "kind": "red",
+   "acceptance": [
+    "M0-06.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-06-readings-off-thread",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-06-readings-off-thread through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-07-state-name-wins",
+   "kind": "red",
+   "acceptance": [
+    "M0-07.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-07-state-name-wins",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-07-state-name-wins through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-08-hung-check-stopped",
+   "kind": "red",
+   "acceptance": [
+    "M0-08.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-08-hung-check-stopped",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-08-hung-check-stopped through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-08-late-answer-ignored",
+   "kind": "red",
+   "acceptance": [
+    "M0-08.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-08-late-answer-ignored",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-08-late-answer-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-10-connection-cap",
+   "kind": "red",
+   "acceptance": [
+    "M0-10.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-10-connection-cap",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-10-connection-cap through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-10-read-buffer",
+   "kind": "red",
+   "acceptance": [
+    "M0-10.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-10-read-buffer",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-10-read-buffer through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-11-unparseable-remind",
+   "kind": "red",
+   "acceptance": [
+    "M0-11.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-11-unparseable-remind",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-11-unparseable-remind through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-12-ask-prefilled",
+   "kind": "red",
+   "acceptance": [
+    "M0-12.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-12-ask-prefilled",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-12-ask-prefilled through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-12-ask-sent",
+   "kind": "red",
+   "acceptance": [
+    "M0-12.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-12-ask-sent",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-12-ask-sent through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-12-hooks-connect-all",
+   "kind": "red",
+   "acceptance": [
+    "M0-CLI.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-12-hooks-connect-all",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-12-hooks-connect-all through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-12-status-brain",
+   "kind": "red",
+   "acceptance": [
+    "M0-12.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-results.json",
+   "drill": "M0-12-status-brain",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills.log",
+   "method": "Red drill M0-12-status-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-01-priority",
+   "kind": "red",
+   "acceptance": [
+    "M0-01.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new-results.json",
+   "drill": "W4-M0-01-priority",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new.log",
+   "method": "Red drill W4-M0-01-priority through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-03-light-copies-v2",
+   "kind": "red",
+   "acceptance": [
+    "M0-03.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new-results.json",
+   "drill": "W4-M0-03-light-copies-v2",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new.log",
+   "method": "Red drill W4-M0-03-light-copies-v2 through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-03-light-limit",
+   "kind": "red",
+   "acceptance": [
+    "M0-03.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new-results.json",
+   "drill": "W4-M0-03-light-limit",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new.log",
+   "method": "Red drill W4-M0-03-light-limit through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-04-appearance",
+   "kind": "red",
+   "acceptance": [
+    "M0-04.A1",
+    "M0-04.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new-results.json",
+   "drill": "W4-M0-04-appearance",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new.log",
+   "method": "Red drill W4-M0-04-appearance through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-04-reload-under-help",
+   "kind": "red",
+   "acceptance": [
+    "M0-04.A3"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new-results.json",
+   "drill": "W4-M0-04-reload-under-help",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new.log",
+   "method": "Red drill W4-M0-04-reload-under-help through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-05-english-loses",
+   "kind": "red",
+   "acceptance": [
+    "M0-05.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new2-results.json",
+   "drill": "W4-M0-05-english-loses",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new2.log",
+   "method": "Red drill W4-M0-05-english-loses through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-05-hide-not-kept",
+   "kind": "red",
+   "acceptance": [
+    "M0-05.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new-results.json",
+   "drill": "W4-M0-05-hide-not-kept",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new.log",
+   "method": "Red drill W4-M0-05-hide-not-kept through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-05-language-table-ignored",
+   "kind": "red",
+   "acceptance": [
+    "M0-05.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new2-results.json",
+   "drill": "W4-M0-05-language-table-ignored",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new2.log",
+   "method": "Red drill W4-M0-05-language-table-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-09-password-read-out",
+   "kind": "red",
+   "acceptance": [
+    "M0-09.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new-results.json",
+   "drill": "W4-M0-09-password-read-out",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new.log",
+   "method": "Red drill W4-M0-09-password-read-out through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-12-come-forward",
+   "kind": "red",
+   "acceptance": [
+    "M0-12.A2"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-new-results.json",
+   "drill": "W4-M0-12-come-forward",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-new.log",
+   "method": "Red drill W4-M0-12-come-forward through tests/drills/run.py on this Windows workstation, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-13-log-followed-through-a-link",
+   "kind": "red",
+   "acceptance": [
+    "M0-13.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-linux-results.json",
+   "drill": "W4-M0-13-log-followed-through-a-link",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-linux.log",
+   "method": "Red drill W4-M0-13-log-followed-through-a-link in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  },
+  {
+   "id": "W4E-RED-M0-13-log-left-at-the-umask",
+   "kind": "red",
+   "acceptance": [
+    "M0-13.A1"
+   ],
+   "results": "docs/delivery/reports/m0/wave4e/drills-linux-results.json",
+   "drill": "W4-M0-13-log-left-at-the-umask",
+   "artifact": "docs/delivery/reports/m0/wave4e/drills-linux.log",
+   "method": "Red drill W4-M0-13-log-left-at-the-umask in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 45a17b3's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 45a17b3, the quit guard and the toast fix merged."
+  }
+ ],
+ "tasks": {},
+ "pending": [],
+ "next_action": "None in M0 on 45a17b3.",
+ "source_revision": "45a17b37fb25590a62fe3391379f7c8d2870da29"
+}

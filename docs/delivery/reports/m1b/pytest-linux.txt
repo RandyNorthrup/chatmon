@@ -1,0 +1,15 @@
+...............................................s........................ [ 48%]
+............................s...s......................sss......s....... [ 96%]
+......                                                                   [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_chats.py:355: the roaming app-data folder is Windows'
+SKIPPED [1] tests/test_brains.py:589: cmd.exe and the tools npm installs as .cmd files are Windows'
+SKIPPED [1] tests/test_brains.py:678: Windows' process tree
+SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+143 passed, 7 skipped in 21.69s
+pytest exit=0
+Python 3.14.9
+Linux 6.18.58.1-microsoft-standard-WSL2

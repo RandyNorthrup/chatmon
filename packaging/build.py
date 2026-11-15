@@ -10,7 +10,8 @@
       home of its own and without a screen (Qt's offscreen platform).
 
 Needs Nuitka and Visual Studio's C compiler (windows), PyInstaller (macos), Inno Setup 6's ISCC (windows: on PATH, in its usual folders, or $ISCC)
-and nfpm (linux: on PATH or $NFPM). Only the standard library here, so smoke runs on any Python.
+and nfpm (linux: on PATH or $NFPM). Only the standard library at the top, so smoke runs on any Python; the Windows and
+macOS builds import PyQt6 and chatmon where they need them (which of Qt's translations to carry).
 """
 
 from __future__ import annotations
@@ -29,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGING = ROOT / "packaging"
 BUILD = ROOT / "build"
 DIST = ROOT / "dist"
+LOCALE = ROOT / "chatmon" / "locale"  # Chatmon's translations: the languages its installers speak
 BUNDLE_ID = "io.github.randynorthrup.chatmon"
 
 
@@ -37,9 +39,14 @@ def version() -> str:
     return re.search(r'__version__ = "([^"]+)"', text).group(1)
 
 
+def _chatmon_importable() -> None:
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+
+
 def notes(v: str) -> str:
     """A release's notes: its part of chatmon/changelog.md, then how to install it."""
-    sys.path.insert(0, str(ROOT))
+    _chatmon_importable()
     from chatmon import changelog
 
     release = changelog.find(v)
@@ -51,13 +58,54 @@ def notes(v: str) -> str:
         + "Chatmon 0.6.0 and later update themselves (**Help & updates** in the menu); coming from 0.5 or earlier, install "
         + "this one by hand, once. Download the installer for your computer below; `SHA256SUMS.txt` lists each file's "
         + "checksum, and `SHA256SUMS.txt.sig` is its signature by Chatmon's release key.\n\n"
-        + "```sh\npipx install --force git+https://github.com/RandyNorthrup/chatmon\n```\n"
+        # Pinned to this release's tag: the notes stay true after the next one, and main is never installed.
+        + f"```sh\npipx install --force git+https://github.com/RandyNorthrup/chatmon@v{v}\n```\n"
     )
+
+
+def qt_translations() -> list[Path]:
+    """Qt's translations of its own words (qtbase_<lang>.qm) that the installers carry: for each language Chatmon
+    has a translation for (LOCALE), the file Qt itself loads for it, from the Qt the build runs with, as
+    chatmon/i18n.py finds it at run time ("pt" is qtbase_pt_BR.qm). English is Qt's own language, so English alone
+    carries none, and no other of Qt's languages ever ships: nothing would load it."""
+    _chatmon_importable()
+    from PyQt6 import QtCore
+
+    from chatmon import i18n
+
+    qt = QtCore.QLibraryInfo.path(QtCore.QLibraryInfo.LibraryPath.TranslationsPath)
+    found = set()
+    for code in i18n.available(LOCALE)[1:]:
+        translator = i18n.qt_translator(QtCore, code, [qt])
+        if translator is None:
+            print(f"Qt has no translation of its own words for {code} in {qt}: its buttons stay in English there", flush=True)
+        else:
+            found.add(Path(translator.filePath()))
+    return sorted(found)
+
+
+def nuitka_qt_translations() -> list[str]:
+    """Nuitka's options putting qt_translations() where chatmon/i18n.py looks in the built app (i18n.QT_FROZEN)."""
+    _chatmon_importable()
+    from chatmon import i18n
+
+    return [f"--include-data-files={qm}={(i18n.QT_FROZEN / qm.name).as_posix()}" for qm in qt_translations()]
+
+
+def pyinstaller_datas(datas: list[tuple[str, str, str]]) -> list[tuple[str, str, str]]:
+    """PyInstaller's data files (chatmon.spec's a.datas: name in the app, source, kind) with Qt's translations
+    narrowed to qt_translations(). PyQt6's hooks collect every language of Qt's (qt_*, qtbase_*, and each Qt
+    module's), and Chatmon loads only qtbase, and only in a language it speaks."""
+    _chatmon_importable()
+    from chatmon import i18n
+
+    kept = [d for d in datas if not (Path(d[0]).parent == i18n.QT_FROZEN and Path(d[0]).suffix == ".qm")]
+    return kept + [(str(i18n.QT_FROZEN / qm.name), str(qm), "DATA") for qm in qt_translations()]
 
 
 def run(*argv, **kwargs) -> subprocess.CompletedProcess:
     print("+", " ".join(str(a) for a in argv), flush=True)
-    return subprocess.run([str(a) for a in argv], check=True, **kwargs)
+    return subprocess.run([str(a) for a in argv], check=True, **kwargs)  # noqa: S603 - the build's own steps, each one printed
 
 
 def pyinstaller() -> Path:
@@ -76,7 +124,9 @@ def nuitka(out: Path, mode: str, *options: str) -> Path:
     shutil.rmtree(out, ignore_errors=True)
     run(
         sys.executable, "-m", "nuitka", f"--mode={mode}", "--deployment",
-        "--enable-plugin=pyqt6", "--noinclude-qt-translations",
+        # Qt's own words in the languages Chatmon speaks, and no others (none with English alone). Nuitka's plugin
+        # copies Qt's translations only for QtWebEngine, which Chatmon doesn't use; said outright all the same.
+        "--enable-plugin=pyqt6", "--noinclude-qt-translations", *nuitka_qt_translations(),
         "--include-package=chatmon", "--include-package-data=chatmon",  # its modules imported where used, its pictures
         "--nofollow-import-to=tkinter,unittest,pydoc_data,test",
         "--python-flag=no_site", "--python-flag=isolated",  # nothing from PYTHONPATH, user site-packages or the current folder
@@ -114,7 +164,7 @@ def _pe_overlay(exe: Path) -> int:
 
 def windows() -> Path:
     v = version()
-    numbers = ".".join((re.findall(r"\d+", v)[:3] + ["0", "0", "0", "0"])[:4])
+    numbers = ".".join([*re.findall(r"\d+", v)[:3], "0", "0", "0", "0"][:4])
     common = (
         # Which DLLs each needs, read from their import tables by pefile (Nuitka's own copy), not by a
         # Dependency Walker Nuitka would download unchecked from its website.
@@ -166,6 +216,11 @@ def macos() -> list[Path]:
     v = version()
     arch = {"x86_64": "intel", "arm64": "arm64"}.get(platform.machine(), platform.machine())
     app = pyinstaller() / "Chatmon.app"
+    # Root's side of installing an update, inside the app (and so sealed by its signature): updates.py runs it
+    # from a copy of the app it has checked is root's alone, as the .pkg installs it.
+    helper = app / "Contents" / "Resources" / "install-update"
+    helper.write_bytes((PACKAGING / "macos" / "install-update").read_bytes().replace(b"\r\n", b"\n"))
+    helper.chmod(0o755)
     run("codesign", "--force", "--deep", "--sign", "-", app)  # ad hoc: Apple silicon runs nothing unsigned
     work = BUILD / "macos"
     shutil.rmtree(work, ignore_errors=True)
@@ -180,8 +235,10 @@ def macos() -> list[Path]:
     run("plutil", "-replace", "0.BundleIsRelocatable", "-bool", "NO", work / "component.plist")
     # And it replaces an older version's bundle whole: nothing of that one is left in it to run.
     run("plutil", "-replace", "0.BundleOverwriteAction", "-string", "upgrade", work / "component.plist")
+    # Installed as root's (--ownership recommended, pkgbuild's default, said outright): updating checks the
+    # update with the app's own code, which must be root's alone to be trusted (chatmon/updates.py).
     run("pkgbuild", "--root", work / "root", "--component-plist", work / "component.plist", "--identifier", BUNDLE_ID, "--version", v,
-        "--install-location", "/", "--scripts", scripts, work / "Chatmon.pkg")
+        "--ownership", "recommended", "--install-location", "/", "--scripts", scripts, work / "Chatmon.pkg")
     run("productbuild", "--synthesize", "--package", work / "Chatmon.pkg", work / "distribution.xml")
     distribution = (work / "distribution.xml").read_text(encoding="utf-8")  # the installer's window says "Chatmon"
     (work / "distribution.xml").write_text(distribution.replace("<options ", "<title>Chatmon</title>\n    <options ", 1), encoding="utf-8")
@@ -253,15 +310,19 @@ def linux() -> list[Path]:
 
 def smoke(cli: str, app: str, expected: str | None = None) -> None:
     cli, app = (shutil.which(p) or str(Path(p).resolve()) for p in (cli, app))  # a command's name, or a path to it
-    home =Path(tempfile.mkdtemp(prefix="cm-", dir=None if sys.platform == "win32" else "/tmp"))  # a short path: macOS caps socket paths
+    home =Path(tempfile.mkdtemp(prefix="cm-", dir=None if sys.platform == "win32" else "/tmp"))  # noqa: S108 - mkdtemp, private; a short path, as macOS caps socket paths
     env = dict(os.environ, QT_QPA_PLATFORM="offscreen", HOME=str(home), USERPROFILE=str(home), APPDATA=str(home / "AppData"),
-               XDG_CONFIG_HOME=str(home / ".config"), XDG_STATE_HOME=str(home / ".state"), XDG_RUNTIME_DIR=str(home))
+               LOCALAPPDATA=str(home / "AppData" / "Local"), XDG_CONFIG_HOME=str(home / ".config"), XDG_STATE_HOME=str(home / ".state"),
+               XDG_RUNTIME_DIR=str(home))
+    # An address of its own (paths.INSTANCE_ENV), whatever Chatmon you have running: on Windows the pipe is named
+    # after your account, whatever the folders. (USERNAME did that for Chatmons before 0.6.)
+    env["CHATMON_INSTANCE"] = f"smoke-{os.getpid()}"
     if sys.platform == "win32":
-        env["USERNAME"] = f"chatmon-smoke-{os.getpid()}"  # a pipe of its own, whatever Chatmon you have running
+        env["USERNAME"] = f"chatmon-smoke-{os.getpid()}"
     env.pop("CHATMON_INTERNAL", None)
 
     def say(*args: str, timeout: float = 30) -> subprocess.CompletedProcess:
-        return subprocess.run([cli, *args], env=env, capture_output=True, text=True, timeout=timeout)
+        return subprocess.run([cli, *args], env=env, capture_output=True, text=True, timeout=timeout)  # noqa: S603 - the build being checked
 
     shown = say("--version").stdout.strip()
     print(f"{cli} --version: {shown}")
@@ -269,7 +330,7 @@ def smoke(cli: str, app: str, expected: str | None = None) -> None:
         sys.exit(f"expected version {expected}")
     log = home / "app-output.txt"
     with open(log, "w") as out:
-        running = subprocess.Popen([app], env=env, stdout=out, stderr=subprocess.STDOUT)
+        running = subprocess.Popen([app], env=env, stdout=out, stderr=subprocess.STDOUT)  # noqa: S603 - the build being checked
     try:
         deadline = time.monotonic() + 90
         while time.monotonic() < deadline:
@@ -306,7 +367,7 @@ def _stack(pid: int) -> str:
     `sample` (native stacks of every thread), else nothing."""
     if sys.platform == "darwin" and shutil.which("sample"):
         try:
-            shown = subprocess.run(["sample", str(pid), "3"], capture_output=True, text=True, timeout=60)
+            shown = subprocess.run(["sample", str(pid), "3"], capture_output=True, text=True, timeout=60)  # noqa: S603, S607 - macOS's own sample, found just above
             return "where it was:\n" + (shown.stdout or shown.stderr)[-12000:]
         except (OSError, subprocess.SubprocessError) as exc:
             return f"(couldn't sample it: {exc})"

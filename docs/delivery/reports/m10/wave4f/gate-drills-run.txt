@@ -1,0 +1,7 @@
+
+=== summary
+PASS signal-from-qtcore
+PASS parent-unignored
+PASS constructor-untyped
+PASS null-image-unchecked
+PASS alias-mistyped

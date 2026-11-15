@@ -1,0 +1,302 @@
+[
+  {
+    "id": "D-03A-escaped",
+    "requirement": "AC-03A",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "return ET.tostring(toast, encoding=\"unicode\")",
+      "replace": "return ET.tostring(toast, encoding=\"unicode\").replace(\"&lt;\", \"<\").replace(\"&gt;\", \">\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+    ],
+    "expected": [
+      "test_text_from_an_agent_is_text_never_markup"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "7846bd59156595fe5a8ad37b0fcd1a2eb215cb6293157ec5a074cabbc72c6603",
+    "mutated_exit": 1,
+    "observed": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03A-control-chars",
+    "requirement": "AC-03A",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "return NOT_XML.sub(\"\", str(text))",
+      "replace": "return str(text)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+    ],
+    "expected": [
+      "test_text_from_an_agent_is_text_never_markup"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "4563873bb19df6529440afd29be9116cbdfe6deab43678387b1b46d13126d7c8",
+    "mutated_exit": 1,
+    "observed": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03A-reminder-button",
+    "requirement": "AC-03A",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "        if not buttons:  # Windows' own Dismiss, so the scenario holds",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_reminder_stays_until_answered"
+    ],
+    "expected": [
+      "test_a_reminder_stays_until_answered"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "5be8549db801c4f83d129237cd921219216fcb3faa51e5b618c980e4d87ec0c4",
+    "mutated_exit": 1,
+    "observed": "____________________ test_a_reminder_stays_until_answered _____________________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03A-five-buttons",
+    "requirement": "AC-03A",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "if len(buttons) > MAX_BUTTONS:",
+      "replace": "if len(buttons) >= MAX_BUTTONS:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused"
+    ],
+    "expected": [
+      "test_too_many_buttons_or_an_unknown_scenario_is_refused"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "970473229a83ffee2577e349d8b438e63620a8d4bca1668dbd48c0f359078239",
+    "mutated_exit": 1,
+    "observed": "___________ test_too_many_buttons_or_an_unknown_scenario_is_refused ___________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03B-setting",
+    "requirement": "AC-03B",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "        if setting in WHY_NOT:\n",
+      "replace": "        if setting != ENABLED:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried"
+    ],
+    "expected": [
+      "test_only_a_real_no_keeps_a_toast_from_being_tried"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "fe1d2cf3103080b90b717a6d4fbbffe1c4734fe3dcf71b82511dba75235e073a",
+    "mutated_exit": 1,
+    "observed": "_____________ test_only_a_real_no_keeps_a_toast_from_being_tried ______________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03C-qt-thread",
+    "requirement": "AC-03C",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "self._heard.emit(\"failed\", tag, code.value)",
+      "replace": "self.failed.emit(tag, code.value)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+    ],
+    "expected": [
+      "test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "7471923cb1c1f4d04426e417dd497479cc6b7249406675c4fcc0bb8b8aa11e38",
+    "mutated_exit": 1,
+    "observed": "________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03C-button",
+    "requirement": "AC-03C",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "                    index = parsed[1]\n",
+      "replace": "                    index = BODY\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+    ],
+    "expected": [
+      "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "43adc1a200b45eecd4f763038f019a85bf2effa0277bf53e1d9b561b28d8b6e2",
+    "mutated_exit": 1,
+    "observed": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03C-action",
+    "requirement": "AC-03C",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "                action()\n",
+      "replace": "                pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+    ],
+    "expected": [
+      "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "008d67a858b86dd0b80faee36b4c608d28dd1719b6b46515c8f7d507b1dfcca5",
+    "mutated_exit": 1,
+    "observed": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-03D-icon",
+    "requirement": "AC-03D",
+    "file": "chatmon/wintoast.py",
+    "mutation": {
+      "find": "        if icon:\n",
+      "replace": "        if not icon:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon"
+    ],
+    "expected": [
+      "test_a_pip_install_tells_windows_its_name_and_icon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "baseline_exit": 0,
+    "mutated_sha256": "29b73e052b3fc6eaf3722b77f5b81e83c2e4ce319f098d61d5c9a9e0e3ffe6ce",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_pip_install_tells_windows_its_name_and_icon ______________",
+    "after_sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c",
+    "restored_exit": 0
+  },
+  {
+    "id": "D-00A-eager-objc",
+    "requirement": "AC-00A",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "_sounds = Sounds()\n",
+      "replace": "_sounds = Sounds()\nMacPlayer()\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_m4b_imports.py::test_it_imports_here"
+    ],
+    "expected": [
+      "test_it_imports_here[sound]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "baseline_exit": 0,
+    "mutated_sha256": "4287d58a512459251c8717ac2be048b21782a15ede6dc515280eb5ea637cf0b5",
+    "mutated_exit": 1,
+    "observed": "_________________________ test_it_imports_here[sound] _________________________",
+    "after_sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be",
+    "restored_exit": 0
+  }
+]

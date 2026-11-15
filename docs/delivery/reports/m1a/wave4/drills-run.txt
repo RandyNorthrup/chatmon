@@ -1,0 +1,19 @@
+
+=== summary
+PASS AC-01-VERIFY-signature
+PASS AC-01-VERIFY-version
+PASS AC-01-USER-handoff
+PASS AC-03-sqos
+PASS AC-03-owner
+PASS AC-04-gate
+PASS AC-05-revocation-asked
+PASS AC-05-try-later
+PASS AC-06-hold
+PASS AC-08-codex-top
+PASS AC-09-ORDER-swap
+PASS AC-09-ORDER-look-first
+PASS AC-09-REMOTE-drive
+PASS AC-11-local
+PASS AC-11-newer-wins
+PASS AC-12-kind
+PASS AC-M6A-14-pin

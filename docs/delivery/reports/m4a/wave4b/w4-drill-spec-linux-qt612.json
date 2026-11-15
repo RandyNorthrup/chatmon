@@ -1,0 +1,17 @@
+{
+  "drills": [
+    {
+      "id": "W4-L-AC-04b-qt-signal",
+      "requirement": "AC-04b",
+      "file": "chatmon/presence.py",
+      "find": "            changed.connect(self.settings_changed)\n        except (AttributeError, ImportError, RuntimeError, TypeError):",
+      "replace": "            changed.connect(lambda *_: None)\n        except (AttributeError, ImportError, RuntimeError, TypeError):",
+      "test": [
+        "tests/test_presence.py::test_qts_contrast_change_is_passed_on"
+      ],
+      "expect": [
+        "test_qts_contrast_change_is_passed_on"
+      ]
+    }
+  ]
+}

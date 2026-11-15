@@ -1,9 +1,14 @@
 """Where the companion keeps its settings and state, and how others reach it,
-on Linux, macOS and Windows."""
+on Linux, macOS and Windows.
+
+On Windows that's %LOCALAPPDATA%\\chatmon, this computer's own: never the roaming
+profile, which can follow you to other PCs (and your chats with it). Versions
+before 0.10 kept it all in %APPDATA%\\chatmon; `migrate()` moves it, once."""
 
 from __future__ import annotations
 
 import getpass
+import logging
 import os
 import re
 import shutil
@@ -12,14 +17,30 @@ import sys
 import time
 from pathlib import Path
 
+logger = logging.getLogger(__name__)
+
 APP = "chatmon"
 LEGACY_APP = "penguin-companion"  # its name before 0.3.0
 RENAMED = ".renamed"  # left in the state folder by `migrate()`, until the app has started once since
+# A Chatmon of its own, apart from the one you use: another address (pipe or socket) for the app, its command
+# line and hooks alike. The tests and `packaging/build.py smoke` set it; nobody else needs to. The address is
+# still yours alone, and checked as yours, whatever it's called.
+INSTANCE_ENV = "CHATMON_INSTANCE"
+
+
+def _roaming() -> Path:
+    """Windows: the roaming profile, where Chatmon kept everything before 0.10."""
+    return Path(os.environ.get("APPDATA") or Path.home() / "AppData" / "Roaming")
+
+
+def _local() -> Path:
+    """Windows: this computer's own application data."""
+    return Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
 
 
 def _base(xdg_var: str, xdg_default: Path) -> Path:
     if sys.platform == "win32":
-        return Path(os.environ.get("APPDATA") or Path.home() / "AppData" / "Roaming")
+        return _local()
     if sys.platform == "darwin":
         return Path.home() / "Library" / "Application Support"
     value = os.environ.get(xdg_var)
@@ -34,24 +55,89 @@ def _roots(app: str) -> list[Path]:
 
 def migrate() -> list[tuple[Path, Path]]:
     """Move the settings and state of the old name, penguin-companion, to Chatmon's folders: once, on the
-    first run after the rename, and only where Chatmon has none of its own yet. Returns what it moved."""
+    first run after the rename, and only where Chatmon has none of its own yet. Returns what it moved. On
+    Windows, then, what's in the roaming profile moves to this computer's own folder (_move_to_local)."""
     moved = []
-    for new in _roots(APP):
+    # On Windows the old name's folder is in the roaming profile, where Chatmon's was too, so it goes there first.
+    news = [_roaming() / APP] if sys.platform == "win32" else _roots(APP)
+    for new in news:
         old = new.with_name(LEGACY_APP)
-        if old.is_dir() and not new.exists():
+        if old.is_dir() and not new.exists() and not (sys.platform == "win32" and _has_own(_local() / APP)):
             try:
                 os.replace(old, new)  # the same parent folder, so the same disk: a rename
             except OSError as exc:
-                print(f"{APP}: couldn't move {old} to {new}: {exc}", file=sys.stderr)
+                logger.warning("couldn't move %s to %s: %s", old, new, exc)
                 continue
             moved.append((old, new))
     if moved:  # whichever command ran first (a hook's notify, likely), the app hears of it when it starts
         try:
             state_dir().mkdir(parents=True, exist_ok=True)
             (state_dir() / RENAMED).touch()
-        except OSError:
-            pass
+        except OSError as exc:
+            logger.debug("couldn't leave the mark that says Chatmon was renamed: %s", exc)
+    if sys.platform == "win32":
+        _move_to_local()
     return moved
+
+
+def _has_own(folder: Path) -> bool:
+    """Chatmon's settings or state are in `folder` (not just its downloaded updates)."""
+    return (folder / "config.toml").exists() or (folder / "state").exists()
+
+
+def _move_to_local() -> None:
+    """Windows: everything in %APPDATA%\\chatmon (where versions before 0.10 kept settings and chats) into
+    %LOCALAPPDATA%\\chatmon, once, leaving nothing in the roaming profile. A rename when it can be; else (another
+    volume, as for a profile redirected to a server, or a folder that's there already) each file is moved,
+    keeping the newer of one found in both. Anything in use is finished the next time Chatmon starts."""
+    old, new = _roaming() / APP, _local() / APP
+    if not old.is_dir() or old.resolve() == new.resolve():
+        return
+    try:
+        new.parent.mkdir(parents=True, exist_ok=True)
+        if not new.exists():
+            try:
+                os.replace(old, new)
+                return
+            except OSError as exc:  # moved file by file
+                logger.debug("couldn't rename %s to %s, so it's moved file by file: %s", old, new, exc)
+        _merge(old, new)
+    except OSError as exc:
+        logger.warning("couldn't move %s to %s yet: %s", old, new, exc)
+
+
+def _merge(old: Path, new: Path) -> None:
+    new.mkdir(exist_ok=True)
+    for item in list(old.iterdir()):
+        target = new / item.name
+        try:
+            if item.is_dir() and not item.is_symlink():
+                if target.exists() and not target.is_dir():
+                    continue  # a file there by that name: left as it is, and this one too
+                if not target.exists():
+                    try:
+                        os.replace(item, target)
+                        continue
+                    except OSError:
+                        pass
+                _merge(item, target)
+                continue
+            if target.is_dir():
+                continue
+            if target.exists() and target.stat().st_mtime >= item.stat().st_mtime:
+                item.unlink()  # the one already here is as new or newer
+                continue
+            try:
+                os.replace(item, target)
+            except OSError:  # another volume
+                shutil.copy2(item, target)
+                item.unlink()
+        except OSError as exc:
+            logger.warning("couldn't move %s yet: %s", item, exc)
+    try:
+        old.rmdir()
+    except OSError as exc:  # something's still in it: next time
+        logger.debug("couldn't remove %s yet: %s", old, exc)
 
 
 def first_run_since_rename() -> bool:
@@ -61,8 +147,8 @@ def first_run_since_rename() -> bool:
         mark.unlink()
     except FileNotFoundError:
         return False
-    except OSError:
-        pass
+    except OSError as exc:
+        logger.debug("couldn't remove %s: %s", mark, exc)
     return True
 
 
@@ -94,26 +180,35 @@ SOCKET_PATH_MAX = 103  # bytes in a Unix socket's address on macOS (sun_path), l
 _CS_DARWIN_USER_TEMP_DIR = 65537  # confstr: your own temporary folder, /var/folders/…/T/, yours alone (0700)
 
 
+def instance() -> str:
+    """The name of a Chatmon of its own (INSTANCE_ENV), or "" for yours: letters, digits, - and _ only."""
+    value = os.environ.get(INSTANCE_ENV, "")
+    return value if re.fullmatch(r"[A-Za-z0-9_-]{1,40}", value) else ""
+
+
 def socket_path() -> Path:
+    name = f"{APP}-{instance()}.sock" if instance() else f"{APP}.sock"
     run = os.environ.get("XDG_RUNTIME_DIR")
     if run:
-        return Path(run) / f"{APP}.sock"
+        return Path(run) / name
     # No runtime folder (macOS, an ssh session, a container): a folder of our own, not the shared /tmp, where
     # another user could take the name first and hear every agent's events.
     folder = state_dir() / "run"
-    path = folder / f"{APP}.sock"
+    path = folder / name
     if sys.platform == "darwin" and len(os.fsencode(path)) > SOCKET_PATH_MAX:
         # A user name of more than about 37 characters makes it too long to be a socket's address. macOS keeps
         # a temporary folder for each user, open to them alone: the same for the app, the CLI and every hook.
         try:
-            return Path(os.confstr(_CS_DARWIN_USER_TEMP_DIR)) / f"{APP}.sock"
-        except (OSError, ValueError, TypeError):
-            pass
+            temp = os.confstr(_CS_DARWIN_USER_TEMP_DIR)
+            if temp is not None:  # None: no such folder, so the usual one
+                return Path(temp) / name
+        except (OSError, ValueError, TypeError) as exc:
+            logger.debug("couldn't find your own temporary folder for the socket: %s", exc)
     try:
         folder.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(folder, 0o700)
-    except OSError:
-        pass
+    except OSError as exc:
+        logger.debug("couldn't set up %s, the socket's private folder: %s", folder, exc)
     return path
 
 
@@ -124,7 +219,8 @@ def server_name() -> str:
         from . import winpipe
 
         identity = winpipe.my_identity()  # your SID and this session's number (see there why)
-        return f"{APP}-{identity}" if identity else f"{APP}-{getpass.getuser()}"
+        name = f"{APP}-{identity}" if identity else f"{APP}-{getpass.getuser()}"
+        return f"{name}-{instance()}" if instance() else name
     return str(socket_path())
 
 
@@ -175,23 +271,26 @@ def login_environment(timeout: float = 4.0) -> list[str]:
         # print comes before the marker, and only what follows it is read.
         proc = None
         try:
-            proc = subprocess.Popen(
+            proc = subprocess.Popen(  # noqa: S603 - your own login shell, with a fixed command
                 [shell, "-l", "-i", "-c", f"printf '%s\\0' {_SENTINEL.decode()}; /usr/bin/env -0"],
                 stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, start_new_session=True,
             )
             out, _ = proc.communicate(timeout=timeout)
             if _SENTINEL + b"\0" in out:
                 for item in out.split(_SENTINEL + b"\0", 1)[1].split(b"\0"):
-                    name, eq, value = item.partition(b"=")
-                    if eq and re.fullmatch(rb"[A-Za-z_][A-Za-z0-9_]*", name):
-                        found[name.decode()] = value.decode("utf-8", "replace")
-        except (OSError, subprocess.SubprocessError):
+                    raw_name, eq, raw_value = item.partition(b"=")
+                    if eq and re.fullmatch(rb"[A-Za-z_][A-Za-z0-9_]*", raw_name):
+                        found[raw_name.decode()] = raw_value.decode("utf-8", "replace")
+        except (OSError, subprocess.SubprocessError) as exc:
+            logger.debug("couldn't read your login shell's environment: %s", exc)  # what went wrong, never what it said
             if proc is not None:
                 try:
                     os.killpg(proc.pid, 9)
                 except OSError:
                     pass
                 proc.wait()
+                if proc.stdout is not None:  # communicate() closes it only when it gets to the end
+                    proc.stdout.close()
     usual = ["/opt/homebrew/bin", "/usr/local/bin", str(Path.home() / ".local" / "bin"), str(Path.home() / ".npm-global" / "bin")]
     path = found.get("PATH") or os.pathsep.join([*usual, os.environ.get("PATH", "")])
     adopted = []

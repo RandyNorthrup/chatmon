@@ -1,0 +1,26 @@
+M4A readiness review, fourth pass (after merging improve/assessment-fixes at b401cc7), 2026-11-14
+
+Why again: the merge changed this plan's rules and shared inputs (pyproject.toml: strict pytest settings,
+pytest-timeout, warnings as errors, mypy; tests/conftest.py; tests/drills/run.py, which now writes results to
+<log>-results.json; ROADMAP.md's drill-spec name), and CI run 43652236327 found two M4A tests failing where CI runs
+them. The plan gains a "CI follow-up" section.
+
+1. test_qts_contrast_change_is_passed_on failed in the distribution containers (Ubuntu 24.04, Qt 6.4; Debian 13,
+   Qt 6.8): the test called QStyleHints.accessibility(), which is Qt 6.10's, before its skip check. The product code
+   already caught that (Desk._watch_qt_contrast and _qt_high_contrast catch AttributeError); the test now skips
+   before Qt 6.10, and a new test checks the product code with a QStyleHints that has no accessibility(), with red
+   drills on both guards. This serves AC-04b and AC-01b, owned by T-01; no criterion changes.
+2. test_x11_says_where_a_window_is failed on CI's Ubuntu runners, which now run pytest under xvfb-run: it made its
+   window with Qt's xcb platform, which needs libxcb-cursor0, absent there. The assumption that an X display means
+   Qt's xcb platform starts was wrong. The test now makes an override-redirect window with Xlib (no window manager
+   moves it) and checks Chatmon's X11 reader against it; it ran under xvfb-run in WSL, and its red drill was killed
+   there. AC-02, T-01; no criterion changes.
+3. Every earlier receipt is bound to inputs the merge changed, so each is marked stale and its check run again:
+   the M4A tests and the whole suite on Windows and on Linux (under xvfb-run, as CI), every red drill on both, and
+   mypy (--platform linux, win32, darwin) with the project's pinned PyQt6 6.11 stubs.
+4. Noted for the coordinator, not changed: with PyQt6 6.12's own stubs, mypy reports errors in sysnotify.py and
+   report.py, because those stubs type static constructors and QObject's parent as typing.Self. CI pins 6.11.
+
+Coverage, ownership, conflicts and failure behavior from the earlier reviews hold.
+
+Result: ready.

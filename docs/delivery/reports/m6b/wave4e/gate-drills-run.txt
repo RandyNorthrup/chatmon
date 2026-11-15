@@ -1,0 +1,18 @@
+
+=== summary
+PASS ruff-UP
+PASS ruff-C4
+PASS ruff-PIE
+PASS ruff-PERF
+PASS ruff-RUF
+PASS ruff-S
+PASS ruff-DTZ
+PASS ruff-BLE
+PASS ruff-C90
+PASS ruff-S101-in-chatmon
+PASS ruff-app
+PASS ruff-app-test
+PASS mypy-brains
+PASS mypy-winpipe
+PASS mypy-app
+PASS mypy-menus

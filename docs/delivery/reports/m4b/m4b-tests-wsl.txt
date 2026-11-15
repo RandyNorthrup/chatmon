@@ -1,0 +1,26 @@
+$ uname -sr; python and PyQt6 versions
+Linux 6.18.58.1-microsoft-standard-WSL2
+3.14.9 6.12.1
+pytest 9.2.0
+$ env -u WAYLAND_DISPLAY QT_QPA_PLATFORM=offscreen python -m pytest -q -p no:cacheprovider -W error::ResourceWarning tests/test_hotkey.py tests/test_hotkey_portal.py tests/test_sound.py tests/test_wintoast.py tests/test_wincaret.py tests/test_m4b_imports.py
+.........................sssss..................s.s.........sssssssss... [ 92%]
+......                                                                   [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_hotkey.py:124: Windows only
+SKIPPED [1] tests/test_hotkey.py:150: Windows only
+SKIPPED [1] tests/test_hotkey.py:167: Windows only
+SKIPPED [1] tests/test_hotkey.py:221: macOS only
+SKIPPED [1] tests/test_hotkey.py:238: macOS only
+SKIPPED [1] tests/test_sound.py:181: Windows only
+SKIPPED [1] tests/test_sound.py:232: macOS only
+SKIPPED [1] tests/test_wintoast.py:110: Windows only
+SKIPPED [1] tests/test_wintoast.py:124: Windows only
+SKIPPED [1] tests/test_wintoast.py:149: Windows only
+SKIPPED [1] tests/test_wintoast.py:209: Windows only
+SKIPPED [1] tests/test_wintoast.py:233: Windows only
+SKIPPED [1] tests/test_wintoast.py:253: Windows only
+SKIPPED [1] tests/test_wintoast.py:273: Windows only
+SKIPPED [1] tests/test_wincaret.py:52: Windows only
+SKIPPED [1] tests/test_wincaret.py:87: Windows only
+62 passed, 16 skipped in 17.35s
+exit 0

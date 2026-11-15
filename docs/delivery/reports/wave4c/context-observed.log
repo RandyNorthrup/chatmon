@@ -1,0 +1,40 @@
+# Observed 2026-11-15T15:49:12Z on the Windows 11 workstation, for wave 4's round three (3586a0d)
+$ python verify-delivery.py --observe-context
+{
+  "platform": "windows",
+  "tools": {
+    "python": "3.14.10"
+  }
+}
+$ .venv python -c (test tool versions, and Qt at run time)
+python 3.14.10
+pytest 9.2.0
+PyQt6 6.11.0
+hypothesis 6.170.15
+tzdata 2026.6
+pytest-timeout 2.4.0
+coverage 7.17.0
+mypy 2.4.1
+zizmor 1.31.1
+comtypes 1.5.0
+Qt 6.11.2
+$ ruff --version
+ruff 0.17.4
+$ actionlint -version
+1.7.12
+$ uv --version
+uv 0.12.7 (61291a8ca 2026-08-27 x86_64-pc-windows-msvc)
+$ %TEMP%\m10-qt6121 python -c (PyQt6-next, M10)
+PyQt6 6.12.1 Qt 6.12.0
+mypy 2.4.1 (compiled: yes)
+$ wsl: shellcheck --version, podman --version, sway, orca, at-spi2-core
+version: 0.11.0
+podman version 6.2.0
+sway version 1.12
+orca 51.1-1
+at-spi2-core 2.62.1-1
+$ wsl: /var/tmp/plans-venv and /var/tmp/m4a-venv
+3.14.9 PyQt6 6.11.0 Qt 6.11.2 pytest 9.2.0
+3.14.9 PyQt6 6.12.1 Qt 6.12.0 pytest 9.2.0
+mypy 2.4.1 (compiled: yes)
+uv 0.13.6 (x86_64-unknown-linux-gnu)

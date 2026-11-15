@@ -1,0 +1,287 @@
+$ python -m pytest -q -p no:cacheprovider -rs   (Windows 11, LOCALAPPDATA=a fresh scratch folder, 6c65c95)
+..s.s...............................s................................F.. [ 10%]
+............ssss............FFF.FF...................................... [ 21%]
+s.s...ssss..s........................................................... [ 32%]
+........................................................................ [ 42%]
+......................sss....ss.ssss...........s...ssssssssssssssssss... [ 53%]
+sssssss................................................................. [ 64%]
+...................ssssssss.........s...s....s.......................... [ 75%]
+........................ss.............................................. [ 85%]
+.........ss.......sssssssssss.ssssssss..................s....F.........s [ 96%]
+.................sssss                                                   [100%]
+================================== FAILURES ===================================
+___________________________ test_a_hook_reaches_it ____________________________
+
+companion = <chatmon.app.Companion object at 0x000001BE62632B70>
+
+    def test_a_hook_reaches_it(companion):
+        """A separate process, as a hook would be, says something and hears back."""
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        code = (
+            "import sys; sys.path.insert(0, sys.argv[1]);"
+            "from chatmon import events;"
+            "sys.exit(0 if events.send({'type': 'say', 'text': 'hello from a hook'}, timeout=5) else 1)"
+        )
+        proc = subprocess.Popen([sys.executable, "-c", code, root])
+        deadline = time.monotonic() + 20
+        while proc.poll() is None and time.monotonic() < deadline:
+            spin(0.05)
+        assert proc.returncode == 0
+        spin(0.2)
+>       assert companion.stage.bubble.title == "Sparky" and "hello from a hook" in companion.stage.bubble.doc.toPlainText()
+E       AssertionError: assert ('' == 'Sparky'
+E         
+E         - Sparky)
+
+tests\test_app_smoke.py:89: AssertionError
+___________________ test_chats_can_go_unkept_and_be_cleared ___________________
+
+companion = <chatmon.app.Companion object at 0x000001BE62E3EF30>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BE64066200>
+
+    def test_chats_can_go_unkept_and_be_cleared(companion, monkeypatch):
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        c.open_ask()
+        c.submit("one")
+        brain.answer("1")
+>       assert len(c.chat_book.recent()) == 1
+E       AssertionError: assert 4 == 1
+E        +  where 4 = len([Chat(id='60c0daca040c45069a0920afc621efee', title='one', created=1794687075.6774871, updated=1794687075.7019546, mess..., attached=[], brain='Pretend API')], pinned=False, named=False, keep=True, instructions='', summary='', summarized=0)])
+E        +    where [Chat(id='60c0daca040c45069a0920afc621efee', title='one', created=1794687075.6774871, updated=1794687075.7019546, mess..., attached=[], brain='Pretend API')], pinned=False, named=False, keep=True, instructions='', summary='', summarized=0)] = recent()
+E        +      where recent = <chatmon.chats.ChatBook object at 0x000001BE62E62A50>.recent
+E        +        where <chatmon.chats.ChatBook object at 0x000001BE62E62A50> = <chatmon.app.Companion object at 0x000001BE62E3EF30>.chat_book
+
+tests\test_app_smoke.py:684: AssertionError
+_____________ test_chats_can_be_renamed_pinned_saved_and_deleted ______________
+
+companion = <chatmon.app.Companion object at 0x000001BE63FD6490>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BE64065C50>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-804/test_chats_can_be_renamed_pinn0')
+
+    def test_chats_can_be_renamed_pinned_saved_and_deleted(companion, monkeypatch, tmp_path):
+        from chatmon import app as appmod
+    
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        for question in ("first question", "second question"):
+            c._new_chat()
+            c.open_ask()
+            c.submit(question)
+            brain.answer(f"answer to {question}")
+        first = next(ch for ch in c.chat_book.recent() if ch.title == "first question")
+    
+        c._ask_new_name(first.id)  # the box asks for the name, the current one ready to type over
+        assert c.ask_box.title.text() == "Rename this chat" and c.ask_box.entry.text() == "first question"
+        assert not c.ask_box.attach_button.isVisibleTo(c.ask_box)
+        c.submit("  Cat   names \n")
+        renamed = c.chat_book.load(first.id)
+        assert renamed.title == "Cat names" and renamed.named
+        assert c.ask_box.title.text().startswith("Ask")  # and back to the chat
+    
+        c._pin_chat(first.id, True)
+>       assert [ch.title for ch in c.chat_book.recent()] == ["Cat names", "second question"]  # pinned first, though older
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert ['Cat names',...e for a cat?"] == ['Cat names',...ond question']
+E         
+E         Left contains 4 more items, first extra item: 'one'
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:715: AssertionError
+____________________ test_older_chats_are_one_menu_further ____________________
+
+companion = <chatmon.app.Companion object at 0x000001BE6406E7B0>
+
+    def test_older_chats_are_one_menu_further(companion):
+        from chatmon import chats
+    
+        c = companion
+        for i in range(c.RECENT_CHATS + 3):
+            chat = chats.Chat()
+            chat.add(chats.Message("user", f"chat {i}", at=1000.0 + i))
+            c.chat_book.save(chat)
+        c._fill_menu()
+        chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
+>       older = next(a.menu() for a in chats_menu.actions() if a.text() == "Older chats (3)")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_app_smoke.py:743: StopIteration
+______________ test_an_answer_for_a_chat_youve_left_goes_nowhere ______________
+
+companion = <chatmon.app.Companion object at 0x000001BE63FFB390>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BE64064750>
+
+    def test_an_answer_for_a_chat_youve_left_goes_nowhere(companion, monkeypatch):
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        cancelled = []
+        monkeypatch.setattr(c.asker, "cancel", lambda: cancelled.append(True))
+        c.open_ask()
+        c.submit("a secret question")
+        asked_in = c.chat.id
+        c._new_chat()  # while it's thinking
+        assert cancelled and c._asking is None
+        brain.answer("the secret answer")  # arrives anyway
+>       assert c.chat.messages == [] and c.chat_book.load(asked_in) is None and c.chat_book.recent() == []
+E       AssertionError: assert ([] == []
+E         
+E         Use -v to get more diff and None is None and [Chat(id='014...rized=0), ...] == []
+E        +  where None = load('d888936741924c7588ea0692f11e80ee')
+E        +    where load = <chatmon.chats.ChatBook object at 0x000001BE63FB47D0>.load
+E        +      where <chatmon.chats.ChatBook object at 0x000001BE63FB47D0> = <chatmon.app.Companion object at 0x000001BE63FFB390>.chat_book
+E         
+E         Left contains 21 more items, first extra item: Chat(id='01487c6ca52a4ba5a598428cfcc62ae8', title='Cat names', created=1794687075.7694137, updated=1794687075.7726412,...='', attached=[], brain='Pretend API')], pinned=True, named=True, keep=True, instructions='', summary='', summarized=0)
+E         Use -v to get more diff)
+
+tests\test_app_smoke.py:768: AssertionError
+__________ test_turning_history_back_on_keeps_only_whats_said_after ___________
+
+companion = <chatmon.app.Companion object at 0x000001BE68A07430>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BE64064D00>
+
+    def test_turning_history_back_on_keeps_only_whats_said_after(companion, monkeypatch):
+        c = companion
+        brain = PretendBrain(c, monkeypatch)
+        c._set_keep_chats(False)
+        c.open_ask()
+        c.submit("said while off")
+        brain.answer("not kept")
+        c._set_keep_chats(True)
+        c.submit("said after")
+        brain.answer("still the same chat")
+>       assert c.chat_book.recent() == []  # that chat began while off: it stays unsaved
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert [Chat(id='014...rized=0), ...] == []
+E         
+E         Left contains 21 more items, first extra item: Chat(id='01487c6ca52a4ba5a598428cfcc62ae8', title='Cat names', created=1794687075.7694137, updated=1794687075.7726412,...='', attached=[], brain='Pretend API')], pinned=True, named=True, keep=True, instructions='', summary='', summarized=0)
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:786: AssertionError
+____________________ test_without_a_console_it_keeps_a_log ____________________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-804/test_without_a_console_it_keep0')
+
+    def test_without_a_console_it_keeps_a_log(tmp_path):
+        """pythonw has no stdout or stderr; what Chatmon says about problems goes to a log file instead."""
+        code = (
+            "import sys; sys.path.insert(0, sys.argv[1]);"
+            "from chatmon import app; app._log_without_a_console();"
+            "print('a warning', file=sys.stderr); sys.stderr.flush()"
+        )
+        pythonw = os.path.join(os.path.dirname(sys.executable), "pythonw.exe")
+        if not os.path.exists(pythonw):
+            pytest.skip("no pythonw.exe next to this Python")
+        env = dict(os.environ, APPDATA=str(tmp_path))
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        subprocess.run([pythonw, "-c", code, root], env=env, timeout=60, check=True)
+        log = tmp_path / "chatmon" / "state" / "chatmon.log"
+>       assert "a warning" in log.read_text(encoding="utf-8")
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_windows.py:516: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Python314\Lib\pathlib\__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-804/test_without_a_console_it_keep0/chatmon/state/chatmon.log')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-804\\test_without_a_console_it_keep0\\chatmon\\state\\chatmon.log'
+
+C:\Python314\Lib\pathlib\__init__.py:771: FileNotFoundError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_a11y.py:46: Linux with dbus-run-session
+SKIPPED [1] tests\test_a11y.py:70: macOS
+SKIPPED [1] tests\test_agents.py:505: POSIX permissions
+SKIPPED [1] tests\test_app_smoke.py:337: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:361: a Windows pipe takes a sender's bytes only once Chatmon reads that connection, so a message can't wait unread for it this way
+SKIPPED [1] tests\test_app_smoke.py:393: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:413: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_attachments.py:47: POSIX file types
+SKIPPED [1] tests\test_attachments.py:73: POSIX file types
+SKIPPED [1] tests\test_attachments.py:131: making links needs Developer Mode or an administrator here
+SKIPPED [1] tests\test_attachments.py:137: Linux statfs and mountinfo
+SKIPPED [1] tests\test_attachments.py:154: Linux paths, resolved as Linux does
+SKIPPED [1] tests\test_attachments.py:169: macOS statfs
+SKIPPED [1] tests\test_autostart.py:23: the XDG autostart entry
+SKIPPED [1] tests\test_events.py:106: a named pipe there
+SKIPPED [1] tests\test_events.py:117: macOS's temporary folder of your own
+SKIPPED [1] tests\test_events.py:130: a named pipe there
+SKIPPED [1] tests\test_events.py:180: a named pipe there
+SKIPPED [1] tests\test_events.py:243: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:285: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_events.py:308: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:336: a pretend shell script: not on Windows
+SKIPPED [1] tests\test_events.py:353: Windows: the pipe's first instance does this
+SKIPPED [1] tests\test_heads_up.py:135: macOS only
+SKIPPED [1] tests\test_install_update.py:122: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:133: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:141: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:149: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:159: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:167: root's side is sh, on Linux and macOS
+SKIPPED [4] tests\test_install_update.py:175: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:197: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:207: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:256: root's side is sh, on Linux and macOS
+SKIPPED [3] tests\test_install_update.py:267: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:282: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_install_update.py:291: root's side is sh, on Linux and macOS
+SKIPPED [1] tests\test_linuxsession.py:28: no PackageKit here
+SKIPPED [1] tests\test_macnative.py:20: macOS only
+SKIPPED [1] tests\test_macnative.py:54: macOS only
+SKIPPED [1] tests\test_macnative.py:88: macOS only
+SKIPPED [1] tests\test_macnative.py:116: macOS only
+SKIPPED [1] tests\test_macnative.py:134: macOS only
+SKIPPED [1] tests\test_macnative.py:162: macOS only
+SKIPPED [1] tests\test_packaging.py:48: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [1] tests\test_packaging.py:64: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [5] tests\test_packaging.py:71: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [1] tests\test_packaging.py:97: an sh script run as root on macOS (and portable to Linux, for its tests)
+SKIPPED [1] tests\test_portal_bus.py:41: Linux with dbus-run-session
+SKIPPED [1] tests\test_presence.py:70: macOS only
+SKIPPED [1] tests\test_presence.py:139: no GNOME session here
+SKIPPED [1] tests\test_rename.py:62: Windows keeps it in the registry
+SKIPPED [1] tests\test_rename.py:74: Windows keeps it in the registry
+SKIPPED [2] tests\test_updates.py:524: pkexec: Linux
+SKIPPED [1] tests\test_wayland.py:46: Wayland sockets are Unix paths
+SKIPPED [1] tests\test_wayland.py:203: no Wayland protocol files installed
+SKIPPED [1] tests\test_wayland.py:311: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:413: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:424: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:438: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:524: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:546: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:570: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:579: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:590: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:643: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:694: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:724: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:758: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:771: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:784: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:797: Wayland is Linux only
+SKIPPED [1] tests\test_wayland.py:866: Wayland is Linux only
+SKIPPED [1] tests\test_windows.py:416: needs QT_QPA_PLATFORM=windows
+SKIPPED [1] tests\test_windows.py:788: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+SKIPPED [1] tests\test_xkb.py:25: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:33: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:44: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:54: libxkbcommon isn't installed
+SKIPPED [1] tests\test_xkb.py:61: libxkbcommon isn't installed
+7 failed, 573 passed, 90 skipped in 147.11s (0:02:27)
+exit 1

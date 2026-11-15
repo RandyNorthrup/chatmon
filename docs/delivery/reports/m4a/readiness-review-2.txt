@@ -1,0 +1,37 @@
+M4A readiness review, second pass (plan scope_revision 2), 2026-11-14
+
+Why again: the plan was amended after implementation started, so the first review (readiness-review.txt) no longer
+covers its text. What changed, and the review of each change:
+
+1. New product file chatmon/winuia.py (UI Automation announcer, Windows only), split out of a11y.py because it is
+   a COM object and a native event filter of its own, like winlock.py and winfocus.py. It is a new file this
+   milestone creates, which the roadmap allows; it serves AC-09a and AC-09b, owned by T-07.
+2. The Linux listeners named in the Design section live in linuxsession.py (PortalSettings, NotificationDnd)
+   rather than in presence.py: presence.py is imported on every platform without QtDBus, and a D-Bus slot needs
+   QtDBus at class definition. Same criteria, same task (T-01, T-03 now also change chatmon/linuxsession.py).
+3. New test helpers: tests/uia_client.py (a UI Automation client using comtypes, a test-only tool; the end-to-end
+   test skips without it) and tests/private_bus.py (runs a fake service and a client on a private bus standing in
+   for the system bus). Both are new test files.
+4. Findings added from implementation:
+   - PyQt6 6.11 wraps QAccessibilityHints.contrastPreferenceChanged as a method, not a signal (PyQt6 6.12.1 has
+     it right). AC-04b's test skips where the binding has no signal; it runs on Linux (WSL, PyQt6 6.12.1) and on
+     CI, whose pip PyQt6 is current. Windows and macOS changes also arrive through WM_SETTINGCHANGE and
+     NSWorkspace, so nothing is lost on 6.11.
+   - UI Automation drops a notification raised right after its window is first shown; the announcer is made
+     when a screen reader is found (a11y.reader) and reports "not now" for its first second, so the notification
+     fallback says that one. Recorded in winuia.py and covered by the end-to-end test ("too soon False").
+   - _GSetting could abort the process if deleted while its first `gsettings get` was still running (its
+     finished signal reached a half-deleted object). close() now disconnects and ends both commands. Found by
+     the WSL run, where gsettings exists.
+5. AC-01c (macOS high contrast) moves from T-01 to a task of its own, T-09: its end-to-end check runs only on CI's
+   macOS runner, and T-02 and T-03 depend on T-01, which shouldn't wait on it.
+6. A red drill showed UI Automation passes a notification on whether or not the provider uses COM threading, and
+   that the WM_GETOBJECT answer and the IsControlElement property aren't needed for delivery to the test's client
+   (UI Automation's default already counts an element as a control); declaring the provider client-side, raising on
+   the host provider, or raising right after the window is shown loses it. The plan's M4A-09 finding and winuia.py
+   say so; the provider keeps its WM_GETOBJECT answer (a window that hands out Qt's provider lost the event in a
+   probe) and names itself, which the end-to-end test checks.
+7. Criteria are unchanged in meaning; coverage, conflicts, failure behavior and ownership from the first review
+   still hold. The comtypes test dependency is an integration note for M6A (test extras on Windows).
+
+Result: ready.

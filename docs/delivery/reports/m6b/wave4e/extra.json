@@ -1,0 +1,134 @@
+{
+ "readiness_method": "Requirements review, final round, at 45a17b3 (readiness.md): M6B-01 to M6B-03, M6B-RW and M6B-LEFT re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and the M6A and M8 plans it takes as inputs; no conflict or gap; the quit guard's new ignore names its code and reason, and M6B-02.A1's 6.12 half, failing in round three, is checked again.",
+ "windows_note": "Every criterion's tests ran here; the Linux-only overlay and log-mode tests skip on Windows, and CI's and WSL's receipts add them.",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "drill_acceptance": {},
+ "results_where": {
+  "gate-drills-results.json": "through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4e/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again"
+ },
+ "observe_add": [
+  "tests/test_log.py",
+  "tests/test_imports.py",
+  "tests/test_wayland.py"
+ ],
+ "ci": [
+  {
+   "id": "W4E-BEH-CI-LINT",
+   "leg": "ubu3.15",
+   "log": "ci-132902559087-lint.log",
+   "acceptance": [
+    "M6B-01.A1",
+    "M6B-01.A3"
+   ],
+   "no_cilog": true,
+   "method": "CI run 43743804662 on 45a17b3, job lint. It ran ruff check . with pyproject.toml's settings: the eleven families, max-complexity 15, RUF001-003 ignored, S101 allowed only in tests, and no per-file exemption left for the eight hub files. The result was 'All checks passed!', and the job succeeded. ruff is pinned in packaging/requirements-dev.txt, which the job installed with --require-hashes."
+  },
+  {
+   "id": "W4E-BEH-CI-TYPES-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132902559329-types-linux.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "CI run 43743804662 on 45a17b3, job types (linux): mypy --platform linux on [tool.mypy], which has no overrides and no exemption list. It passed with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt), and the job succeeded. That is M6B-02.A1's 6.11 half; its 6.12 half is W4E-BEH-WSL-MYPY-6121."
+  },
+  {
+   "id": "W4E-BEH-CI-TYPES-WIN32",
+   "leg": "ubu3.15",
+   "log": "ci-132902559380-types-win32.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "CI run 43743804662 on 45a17b3, job types (win32): mypy --platform win32 passed with no module exempt."
+  },
+  {
+   "id": "W4E-BEH-CI-TYPES-DARWIN",
+   "leg": "ubu3.15",
+   "log": "ci-132902559239-types-darwin.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "CI run 43743804662 on 45a17b3, job types (darwin): mypy --platform darwin passed with no module exempt."
+  },
+  {
+   "id": "W4E-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132902559367-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43743804662 on 45a17b3, job test (ubuntu-24.04, 3.15), every test under xvfb-run. Every warning is an error there (pyproject.toml), and every test these criteria's drills name passed, apart from the Windows-only installer test (tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change), which skips there: the log's 0600 and no-link test, tests/test_imports.py on Linux, the overlay's keymap and debug-log tests in tests/test_wayland.py, and the suite's own ResourceWarning-free run. That is integration note 1's Linux xvfb run. The Qt 6.4-era distribution containers (ubuntu:24.04, debian:trixie, fedora:44 on their own PyQt6) passed the whole suite too."
+  },
+  {
+   "id": "W4E-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132902559594-test-macos-latest-3.14.log",
+   "method": "CI run 43743804662 on 45a17b3, job test (macos-latest, 3.14): the same tests passed on macOS (the Windows-only installer test skipping there too), with every warning an error, as on the 3.11 and 3.15 legs. fb19cb9's change keeps the log tests to themselves on macOS, and they still do. That is integration note 1's macOS run."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4E-BEH-TEMPLATE",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "artifact": "docs/delivery/reports/wave4e/extract-strings-check.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "packaging/extract_strings.py",
+    "--check"
+   ],
+   "exit_code": 0,
+   "method": "packaging/extract_strings.py --check at 45a17b3 on this workstation, exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes, so the split-out helpers changed no marked string."
+  },
+  {
+   "id": "W4E-BEH-WSL-MYPY-6121",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave4e/mypy-pyqt6-6.12.1-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/m4a-venv/bin/python",
+    "-m",
+    "mypy",
+    "--platform",
+    "linux",
+    "--no-incremental",
+    "--cache-dir",
+    "/var/tmp/plansfinal-mypy-linux"
+   ],
+   "exit_code": 0,
+   "method": "M6B-02.A1's 6.12 half: mypy 2.4.1 with PyQt6 6.12.1's stubs (/var/tmp/m4a-venv in WSL Arch) on 45a17b3's files, --platform linux: 'Success: no issues found in 70 source files'. win32 and darwin the same (mypy-pyqt6-6.12.1-win32.log, -darwin.log), and so did M10's run here (../m10/wave4e/mypy-6121.log). Round three's one error, chatmon/app.py's removeEventFilter(self), is gone: the quit guard gave the line its arg-type ignore with the reason."
+  }
+ ],
+ "pending": [],
+ "next_action": "None in M6B on 45a17b3.",
+ "windows_acceptance": [
+  "M6B-01.A2",
+  "M6B-02.A2",
+  "M6B-03.A1",
+  "M6B-03.A2",
+  "M6B-03.A3",
+  "M6B-03.A4",
+  "M6B-03.A5",
+  "M6B-03.A6",
+  "M6B-LEFT.A1",
+  "M6B-LEFT.A2",
+  "M6B-LEFT.A3",
+  "M6B-LEFT.A4",
+  "M6B-RW.A1"
+ ],
+ "tasks": {}
+}

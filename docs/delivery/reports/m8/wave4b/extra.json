@@ -1,0 +1,47 @@
+{
+ "readiness_method": "Requirements review, round two, at bf9d8ac (readiness.md): M8-01 and its ten criteria re-read against ASSESSMENT.md, the amended ROADMAP.md (the translation decision unchanged) and pyproject.toml as they are now, and the M0, M5 and M7 plans it takes as inputs (re-bound in this wave first); no conflict or gap; the next push's CI run it named has happened.",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "drill_acceptance": {},
+ "observe_add": [
+  "tests/test_i18n.py",
+  "tests/test_i18n_app.py",
+  "tests/test_chatswin.py",
+  "tests/test_package_data.py"
+ ],
+ "ci": [
+  {
+   "id": "W4B-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132773560297-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (ubuntu-24.04, 3.15). Every test these criteria's drills run passed there, all of tests/test_i18n.py, tests/test_i18n_app.py and tests/test_chatswin.py among them, as on ubuntu 3.11 and ubuntu-24.04-arm 3.14. The three distro containers passed them too, except test_qts_own_words_and_a_chosen_languages_dates_follow_it, which skips there with its reason: Qt's own translations aren't installed. This is the Linux leg the plan's closing next action named."
+  },
+  {
+   "id": "W4B-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132773560342-test-macos-latest-3.14.log",
+   "method": "CI run 43701523023 on bf9d8ac, job test (macos-latest, 3.14). The same tests passed on macOS, as on the 3.11 and 3.15 legs, except tests/test_i18n.py::test_the_command_line_reads_the_same_preferred_languages_as_qt, which skips on macOS with its reason. This is the macOS leg the plan's closing next action named."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4B-BEH-TEMPLATE",
+   "kind": "behavior",
+   "acceptance": [
+    "M8-01.A7"
+   ],
+   "artifact": "docs/delivery/reports/wave4b/extract-strings-check.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "packaging/extract_strings.py",
+    "--check"
+   ],
+   "exit_code": 0,
+   "method": "packaging/extract_strings.py --check at bf9d8ac on this workstation, exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes from today's marked strings, and none of them is a string that couldn't be translated. Evidence for fb19cb9; two other workers are changing code at the same time, so their merges will need this re-checked, since any new string must be in the template."
+  }
+ ],
+ "pending": [],
+ "next_action": "None in M8 on bf9d8ac. When the first translation ships, include its qtbase_<lang>.qm in the Nuitka build (it passes --noinclude-qt-translations). The other workers' merges change files these receipts are bound to, and any string they add must be in the template: re-run the suite, extract_strings.py --check and this plan's drill specs in wave4/ on the merged tree."
+}

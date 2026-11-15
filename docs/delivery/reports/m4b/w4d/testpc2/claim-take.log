@@ -1,0 +1,9 @@
+bc7cdb61c5e381494adbb2532c3fea67a1196c6726eae108505eccc56db9bf8a  claim.ps1
+84b03d18c0bcc37910bbce0b5080057e539a4e09064ae4fdc3ee68c1dfdc2cd9  cleanup.ps1
+8ecbc2ad9cc87a16bfec5196fb720676c9ee5c2445d52a3c6011c42c845a0a4f  precheck.ps1
+618d01c35628a8c51c48ca4c053c33ba9c7908c7484809e483dd544e909afd3d  setup.ps1
+e13f4fe7efd73968a38b7ae5d3adb235b6af4f1b5019882327889f13e065ee90  task.ps1
+-- other claims:
+-- chatmon.txt:
+console 2026-11-15 09:24 -08:00 until 2026-11-15 11:24 -08:00: Chatmon M4B toast drill (AC-03E), a scheduled task in Technician's console session showing and hiding toasts
+drive 0025_38B8_21B7_37C0. 2026-11-15 09:24 -08:00 until 2026-11-15 11:24 -08:00: Chatmon writes W:\chatmon-m4b only (source, venv, logs), no erase; removed at the end

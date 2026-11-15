@@ -7,8 +7,10 @@ Finished. https://www.freedesktop.org/software/PackageKit/gtk-doc/api-reference.
 
 from __future__ import annotations
 
-from PyQt6.QtCore import QMetaType, QObject, QTimer, QVariant, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import QMetaType, QObject, QTimer, QVariant, pyqtSlot
 from PyQt6.QtDBus import QDBusConnection, QDBusMessage, QDBusPendingCallWatcher, QDBusPendingReply
+
+from .qtsignal import pyqtSignal
 
 SERVICE = "org.freedesktop.PackageKit"
 PATH = "/org/freedesktop/PackageKit"
@@ -21,7 +23,7 @@ TIMEOUT_MS = 120_000
 
 def present() -> bool:
     """PackageKit is on this system: running, or one the system bus starts when asked."""
-    bus = QDBusConnection.systemBus()
+    bus: QDBusConnection = QDBusConnection.systemBus()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
     if not bus.isConnected():
         return False
     for method in ("ListNames", "ListActivatableNames"):
@@ -37,13 +39,15 @@ class UpdateCount(QObject):
     counted = pyqtSignal(object)
 
     def __init__(self, parent: QObject | None = None):
-        super().__init__(parent)
-        self._bus = QDBusConnection.systemBus()
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
+        self._bus: QDBusConnection = QDBusConnection.systemBus()
         self._path: str | None = None
         self._count = 0
         self._done = False
         self._watchers: list[QDBusPendingCallWatcher] = []
-        self._timer = QTimer(self, singleShot=True, interval=TIMEOUT_MS)
+        self._timer = QTimer(self)
+        self._timer.setSingleShot(True)
+        self._timer.setInterval(TIMEOUT_MS)
         self._timer.timeout.connect(lambda: self._finish(None))
 
     def start(self) -> None:
@@ -77,8 +81,8 @@ class UpdateCount(QObject):
         then(reply)
 
     def _created(self, reply: QDBusMessage) -> None:
-        path = reply.arguments()[0] if reply.arguments() else None
-        path = path.path() if hasattr(path, "path") else path  # a QDBusObjectPath
+        first = reply.arguments()[0] if reply.arguments() else None
+        path = first.path() if first is not None and hasattr(first, "path") else first  # a QDBusObjectPath
         if not path:
             self._finish(None)
             return
@@ -86,7 +90,7 @@ class UpdateCount(QObject):
         # Listening before asking: the signals can't come before we hear them.
         for name, slot in (("Package", self._package), ("Finished", self._finished), ("ErrorCode", self._error)):
             self._bus.connect(SERVICE, self._path, TRANSACTION, name, slot)
-        message = QDBusMessage.createMethodCall(SERVICE, self._path, TRANSACTION, "GetUpdates")
+        message: QDBusMessage = QDBusMessage.createMethodCall(SERVICE, self._path, TRANSACTION, "GetUpdates")
         message.setArguments([_uint64(FILTER_NONE)])
         self._call(message, lambda _reply: None)  # the answer is the signals
 
@@ -122,5 +126,5 @@ class UpdateCount(QObject):
 
 def _uint64(n: int) -> QVariant:
     v = QVariant(n)
-    v.convert(QMetaType(QMetaType.Type.ULongLong.value))
+    v.convert(QMetaType(QMetaType.Type.ULongLong.value))  # type: ignore[call-overload]  # PyQt6's stub types the member's int value as the enum
     return v

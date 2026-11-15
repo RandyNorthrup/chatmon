@@ -56,7 +56,11 @@ def test_notify_ignores_the_companions_own_questions(monkeypatch):
 
 
 def test_send_without_a_running_companion(monkeypatch, tmp_path):
+    """An address of the test's own: on Windows the real pipe's name is yours whatever the folders, and a
+    Chatmon you have running would be told to show itself."""
     monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path))
+    if sys.platform == "win32":
+        monkeypatch.setattr(events.paths, "server_name", lambda: f"chatmon-test-{tmp_path.name}-absent")
     assert events.send({"type": "show"}) is False
 
 
@@ -74,11 +78,15 @@ def test_notify_never_waits_on_an_open_stdin(monkeypatch):
     monkeypatch.setattr(events, "send", lambda m, timeout=0.5: sent.append(m) or True)
     monkeypatch.delenv(events.INTERNAL_ENV, raising=False)
     read_end, write_end = os.pipe()  # a hook runner that never closes stdin
-    monkeypatch.setattr("sys.stdin", os.fdopen(read_end, "r"))
-    started = time.monotonic()
-    assert cli.notify(["done", "--source", "x", "--stdin"]) == 0
-    assert time.monotonic() - started < 2 and sent[0]["event"] == "done"
-    os.close(write_end)
+    stdin = os.fdopen(read_end, "r")
+    monkeypatch.setattr("sys.stdin", stdin)
+    try:
+        started = time.monotonic()
+        assert cli.notify(["done", "--source", "x", "--stdin"]) == 0
+        assert time.monotonic() - started < 2 and sent[0]["event"] == "done"
+    finally:
+        os.close(write_end)  # the reader notify left waiting comes to the end of it, and lets go of the file
+        stdin.close()
 
 
 def test_payload_messages_from_other_agents():
@@ -115,6 +123,7 @@ def test_a_long_user_name_puts_the_socket_in_your_own_temporary_folder(monkeypat
     """A socket's address is 104 bytes on macOS: past about 37 characters of user name, the usual path won't
     fit. Then it's in the temporary folder macOS keeps for you alone, the same for every process of yours."""
     monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("CHATMON_INSTANCE", raising=False)  # your own socket's name, not the test run's
     monkeypatch.setattr(paths.Path, "home", lambda: Path("/Users") / ("a" * 40))
     sock = paths.socket_path()
     assert len(os.fsencode(sock)) <= paths.SOCKET_PATH_MAX and sock.name == "chatmon.sock"
@@ -169,7 +178,7 @@ def test_run_from_source_it_is_not_frozen():
 
 def test_quit_says_when_nothing_is_running(monkeypatch, capsys):
     monkeypatch.setattr(events, "send", lambda m, timeout=0.5: False)
-    monkeypatch.setattr(paths, "migrate", lambda: [])  # never the real settings folders
+    monkeypatch.setattr(paths, "migrate", list)  # never the real settings folders
     assert cli.main(["quit"]) == 1 and "isn't running" in capsys.readouterr().err
 
 
@@ -292,6 +301,7 @@ def test_only_one_chatmon_holds_the_lock(tmp_path, monkeypatch):
     finally:
         holder.kill()
         holder.wait()
+        holder.stdout.close()
     monkeypatch.setattr(appmod, "_instance_lock", None)
     assert appmod._hold_instance_lock(lock) is True and appmod._instance_lock is not None
     os.close(appmod._instance_lock)

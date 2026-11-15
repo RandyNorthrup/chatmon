@@ -10,7 +10,8 @@ from chatmon import autostart, paths
 @pytest.fixture
 def home(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setenv("APPDATA", str(tmp_path / "AppData"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "AppData" / "Roaming"))
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "AppData" / "Local"))
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / ".config"))
     monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / ".state"))
     monkeypatch.setattr(paths.Path, "home", lambda: tmp_path)
@@ -18,6 +19,10 @@ def home(tmp_path, monkeypatch):
 
 
 def _old(new):
+    """The old name's folder: beside Chatmon's, except on Windows, where it was in the roaming profile (as
+    Chatmon's own was before 0.10)."""
+    if sys.platform == "win32" and new == paths.config_dir():
+        return paths._roaming() / paths.LEGACY_APP
     return new.with_name(paths.LEGACY_APP)
 
 

@@ -1,0 +1,7 @@
+# Everything CI runs, for working on Chatmon: the tests' list, plus the linters and the type checker.
+# requirements-dev.txt is this list locked with hashes, and pyproject.toml's `dev` extra pins the same
+# versions; change both, then lock again (CONTRIBUTING.md).
+-r requirements-test.in
+ruff==0.17.3
+mypy==2.4.1
+zizmor==1.31.1  # GitHub Actions workflows' security audit

@@ -1,0 +1,46 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/plans2/docs/delivery/reports/m4b/wave4b/wsl-drill-spec-new.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-9b9gmzwm
+copied 310 files
+
+=== drill W4-L-02E-linux-player (AC-02E) on chatmon/sound.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.58s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_linux_players_follow_the_sound_server_and_never_make_you_wait ______
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-376/test_linux_players_follow_the_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x712142efad70>
+cues = PosixPath('/tmp/pytest-of-randy/pytest-376/test_linux_players_follow_the_0')
+
+    @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Linux only")
+    def test_linux_players_follow_the_sound_server_and_never_make_you_wait(tmp_path, monkeypatch, cues):
+        bin_dir, runtime, log = tmp_path / "bin", tmp_path / "run", tmp_path / "played.log"
+        bin_dir.mkdir()
+        (runtime / "pulse").mkdir(parents=True)
+        for name in sound.LINUX_PLAYERS:  # each pretends to play for a second, then says what it was asked
+            script = bin_dir / name
+            script.write_text(f'#!/bin/sh\nsleep 1\necho "$(basename "$0") $*" >> "{log}"\n')
+            script.chmod(0o755)
+        monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}")
+    
+>       assert [p.name for p in sound.linux_players(str(runtime))] == ["canberra-gtk-play"]  # no sound server running
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ['pw-play', '...rra-gtk-play'] == ['canberra-gtk-play']
+E         
+E         At index 0 diff: 'pw-play' != 'canberra-gtk-play'
+E         Left contains one more item: 'canberra-gtk-play'
+E         Use -v to get more diff
+
+tests/test_sound.py:241: AssertionError
+1 failed in 0.56s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.63s
+
+=== summary
+PASS W4-L-02E-linux-player

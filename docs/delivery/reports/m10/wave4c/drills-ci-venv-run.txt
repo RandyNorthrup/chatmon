@@ -1,0 +1,3 @@
+
+=== summary
+PASS M10-01-announcement-not-important

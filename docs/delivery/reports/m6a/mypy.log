@@ -1,0 +1,15 @@
+# mypy 2.4.1 with pyproject.toml's [tool.mypy], on the M6A tree after merging improve/assessment-fixes at c6ca786 (M2, M3 and M4B in), 2026-11-14T21:53:47Z
+$ python -m mypy --platform linux --no-incremental
+Success: no issues found in 65 source files
+exit 0
+$ python -m mypy --platform win32 --no-incremental
+Success: no issues found in 65 source files
+exit 0
+$ python -m mypy --platform darwin --no-incremental
+Success: no issues found in 65 source files
+exit 0
+
+# Without the exemption list, the modules with an error on at least one platform (47):
+a11y agents app attachments backup brains bubble bubbleart cli clickthrough commands context ed25519 events heads_up hotkey keychain layer libdbus linuxsession macnative menus messages offline packagekit paths penguin portal portowner presence reminders richtext settings settingswin sound sprites stagemenu updates wayland windrop winfocus winlock winpipe winrt wintoast wintrust xkb 
+# so gated, passing on all three (18 of 65): __init__ __main__ asking autostart behavior changelog chats companions highlight localefmt memory releasecheck report shortcutportal styles sysnotify wincaret winfiles 
+# Since 4fdf790: stagemenu.py (changed by M3) now fails, exempt; new and passing, gated: highlight.py (M2), shortcutportal.py, wincaret.py (M4B); new and failing, exempt: richtext.py (M2), hotkey.py, libdbus.py, sound.py, winrt.py, wintoast.py (M4B).

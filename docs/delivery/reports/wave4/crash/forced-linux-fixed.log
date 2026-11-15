@@ -1,0 +1,26 @@
+# forced_repro.py in a fedora:44 container (Python 3.14.10, PyQt6 6.11.0, Qt 6.11.2, CI's packages), offscreen, as CI's user; source: bf9d8ac + this commit's harness and app.py
+## run 1
+ 0.76 s: two companion tests done; top-level windows 24
+ 7.87 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.13 s: the first freed by the harness, between tests: True
+# exit 0
+## run 2
+ 0.71 s: two companion tests done; top-level windows 24
+ 7.82 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.08 s: the first freed by the harness, between tests: True
+# exit 0
+## run 3
+ 0.70 s: two companion tests done; top-level windows 24
+ 7.81 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.07 s: the first freed by the harness, between tests: True
+# exit 0
+## run 4
+ 0.72 s: two companion tests done; top-level windows 24
+ 7.83 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.10 s: the first freed by the harness, between tests: True
+# exit 0
+## run 5
+ 0.74 s: two companion tests done; top-level windows 24
+ 7.85 s: setWindowIcon's loops done; windows freed inside them: 0
+ 8.11 s: the first freed by the harness, between tests: True
+# exit 0

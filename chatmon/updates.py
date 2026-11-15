@@ -2,44 +2,50 @@
 making sure it's the real one, and installing it when you say so.
 
 What's sent: the request for the latest release (to api.github.com, as "Chatmon/<version>"), and the
-downloads. What makes a download the real one, on every platform: the release's list of checksums,
-SHA256SUMS.txt, must be signed by Chatmon's release key (Ed25519; only its public half is here), and the
-download must match the checksum that list gives it. On Windows the installer must also be signed by Randy
+downloads. What makes a download the real one, on every platform (releasecheck.py): the release's list of
+checksums, SHA256SUMS.txt, must be signed by Chatmon's release key (Ed25519; only its public half is here), and
+the download must match the checksum that list gives it. On Windows the installer must also be signed by Randy
 Northrup's own certificate from Microsoft's identity-verified code signing, which Windows checks again as it
-runs it. Everything is checked again just before it's installed; on macOS and Linux, that's done as root on
-a copy only root can change. Where Chatmon can't install an update itself (run from a source checkout, or a
-pip install of your own), it only says one is out, and how to get it.
+runs it. Everything is checked again just before it's installed. On macOS and Linux root does that itself, on
+copies only root can change, with the check and the release key of the Chatmon installed (never code you could
+change), and installs only a newer Chatmon: what it's handed is the download and the signed list, never a
+checksum to take on trust. Where Chatmon can't install an update itself (run from a source checkout, or a pip
+install of your own), it only says one is out, and how to get it.
 """
 
 from __future__ import annotations
 
-import hashlib
 import json
+import logging
 import os
 import platform
 import re
+import shlex
 import shutil
+import stat
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import BinaryIO
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QUrl, pyqtSignal
+from PyQt6.QtCore import QObject, QProcess, QProcessEnvironment, QTimer, QUrl
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
-from . import __version__, changelog, ed25519, paths
+from . import __version__, changelog, paths, releasecheck
+from .i18n import _
+from .qtsignal import pyqtSignal
+from .releasecheck import DEB, MACOS, MANUAL, PIPX, RPM, SUMS, SUMS_SIG, WINDOWS, sha256, signed_sums
+
+logger = logging.getLogger(__name__)
 
 REPO = "RandyNorthrup/chatmon"
 LATEST = f"https://api.github.com/repos/{REPO}/releases/latest"
 PAGE = f"https://github.com/{REPO}/releases/latest"
 DOWNLOADS = f"https://github.com/{REPO}/releases/download/"
-SUMS = "SHA256SUMS.txt"
-SUMS_SIG = "SHA256SUMS.txt.sig"  # its Ed25519 signature: 64 bytes
-# Chatmon's release key, whose private half is a secret of the repository's `release` environment: the
-# Packages workflow signs each release's SHA256SUMS.txt with it. More than one: a new key goes in here, in
-# a release the old one signs, before releases are signed with it.
-RELEASE_KEYS = ("bbd18835445b00c2582eb08bf1954af37966075ab3a0afdb4a32612e9a6090cf",)
+RELEASE_KEYS = releasecheck.RELEASE_KEYS  # the keys a release's list of checksums may be signed with
 SECURE = "https://"  # where every download must come from, after any redirect
 MAX_DOWNLOAD = 400 * 2**20  # bytes: far past any installer, short of filling a disk
 MAX_REPLY = 1 * 2**20  # bytes of GitHub's answer about a release, or of its checksums
@@ -53,9 +59,12 @@ IDENTITY = "1.3.6.1.4.1.311.97.15158122.532186155.467764996.339863661"
 CHECK_EVERY = 20 * 3600  # seconds between automatic checks: about once a day, whenever Chatmon runs
 HELPER = "/usr/lib/chatmon/install-update"  # the .deb's and .rpm's own: root's side of installing an update
 PKEXEC = "/usr/bin/pkexec"
-
-# How this Chatmon was installed, which decides how it updates.
-WINDOWS, MACOS, DEB, RPM, PIPX, MANUAL = "windows", "macos", "deb", "rpm", "pipx", "manual"
+SYSTEM_PACKAGE = Path("/usr/lib/chatmon")  # where the .deb and .rpm put Chatmon's package
+# Asking the system's package manager whether it installed Chatmon: the first that says yes is how.
+PACKAGE_QUERIES = ((DEB, ["/usr/bin/dpkg-query", "-W", "chatmon"]), (RPM, ["/usr/bin/rpm", "-q", "chatmon"]))
+MAC_APP = Path("/Applications/Chatmon.app")  # where the .pkg installs it
+INSTALLING = "install-"  # the start of each fresh folder a Windows installer is run from (prepare)
+RETRY_AFTER = 3600  # seconds until a download that couldn't be checked yet (TryLater) is looked at again
 
 
 def newer(version: str, than: str = __version__) -> bool:
@@ -64,9 +73,9 @@ def newer(version: str, than: str = __version__) -> bool:
 
 def _editable() -> bool:
     """Installed from a folder you can edit (pip install -e, pipx install -e): yours to update."""
-    try:
-        from importlib.metadata import PackageNotFoundError, distribution
+    from importlib.metadata import PackageNotFoundError, distribution
 
+    try:
         info = json.loads(distribution("chatmon").read_text("direct_url.json") or "{}")
     except (PackageNotFoundError, ValueError, OSError):
         return False
@@ -79,19 +88,20 @@ def install_kind() -> str:
         if sys.platform == "win32" and (Path(sys.executable).parent / "unins000.exe").exists():
             return WINDOWS
         # Only the one in Applications, where the .pkg installs it (a copy run from elsewhere would get a
-        # second Chatmon in Applications, and not be updated itself).
-        if sys.platform == "darwin" and Path(sys.executable).resolve().is_relative_to("/Applications/Chatmon.app"):
+        # second Chatmon in Applications, and not be updated itself), and only as the .pkg left it, the
+        # system's: root checks an update with the app's own code, and an app you could change can't vouch.
+        if sys.platform == "darwin" and Path(sys.executable).resolve().is_relative_to(MAC_APP) and root_owned(MAC_APP):
             return MACOS
         return MANUAL
     package = Path(__file__).resolve().parent
-    if sys.platform.startswith("linux") and package.parent == Path("/usr/lib/chatmon"):
-        for kind, query in ((DEB, ["/usr/bin/dpkg-query", "-W", "chatmon"]), (RPM, ["/usr/bin/rpm", "-q", "chatmon"])):
+    if sys.platform.startswith("linux") and package.parent == SYSTEM_PACKAGE:
+        for kind, query in PACKAGE_QUERIES:
             if os.path.exists(query[0]):
                 try:
-                    if subprocess.run(query, capture_output=True, timeout=10).returncode == 0:
+                    if subprocess.run(query, capture_output=True, timeout=10).returncode == 0:  # noqa: S603 - a fixed package-manager query
                         return kind
-                except (OSError, subprocess.SubprocessError):
-                    pass
+                except (OSError, subprocess.SubprocessError) as exc:
+                    logger.debug("couldn't ask %s whether it installed Chatmon: %s", query[0], exc)
         return MANUAL
     if _editable():
         return MANUAL
@@ -102,31 +112,34 @@ def install_kind() -> str:
     return MANUAL
 
 
+def root_owned(app: Path) -> bool:
+    """macOS: a Chatmon.app as its .pkg leaves it, root's and writable by root alone, at its top. (Root's side
+    checks every file of its own copy of it before trusting any.)"""
+    try:
+        for folder in (app, app / "Contents", app / "Contents" / "MacOS", app / "Contents" / "Resources"):
+            info = os.lstat(folder)
+            if info.st_uid != 0 or not stat.S_ISDIR(info.st_mode) or info.st_mode & (stat.S_IWGRP | stat.S_IWOTH):
+                return False
+    except OSError:
+        return False
+    return True
+
+
 def asset_name(kind: str, version: str, machine: str | None = None) -> str | None:
     """The release file that updates this kind of install."""
-    machine = (machine or platform.machine()).lower()
-    if kind == WINDOWS:
-        return f"Chatmon-{version}-windows-x64-setup.exe"
-    if kind == MACOS:
-        return f"Chatmon-{version}-macos-{'arm64' if machine in ('arm64', 'aarch64') else 'intel'}.pkg"
-    if kind == DEB:
-        return f"chatmon_{version}-1_all.deb"
-    if kind == RPM:
-        return f"chatmon-{version}-1.noarch.rpm"
-    if kind == PIPX:
-        return f"chatmon-{version}-py3-none-any.whl"
-    return None
+    return releasecheck.asset_name(kind, version, machine or platform.machine())
 
 
 def how_to_update(kind: str, version: str) -> str:
     """For a Chatmon that can't update itself: how to get the new one."""
-    if kind != MANUAL:
-        return "Download its installer from the release page, and run it."
+    if kind != MANUAL or paths.frozen():
+        return _("Download its installer from the release page, and run it.")
     if _editable():
-        return "This Chatmon runs from a folder you installed it from: `git pull` there to update."
+        return _("This Chatmon runs from a folder you installed it from: `{command}` there to update.").format(command="git pull")
     if "pipx" in Path(sys.prefix).parts:
-        return f"Quit Chatmon, then run `pipx install --force git+https://github.com/{REPO}@v{version}`."
-    return f"Update with `pip install --upgrade git+https://github.com/{REPO}@v{version}`, or download an installer from the release page."
+        return _("Quit Chatmon, then run `{command}`.").format(command=f"pipx install --force git+https://github.com/{REPO}@v{version}")
+    return _("Update with `{command}`, or download an installer from the release page.").format(
+        command=f"pip install --upgrade git+https://github.com/{REPO}@v{version}")
 
 
 @dataclass
@@ -154,29 +167,10 @@ def parse_release(data: object) -> Release | None:
     return Release(tag[1:], str(data.get("body") or ""), page if page.startswith(f"https://github.com/{REPO}/") else PAGE, assets)
 
 
-def signed_sums(text: bytes, signature: bytes, keys=RELEASE_KEYS) -> dict[str, str] | None:
-    """The checksums in a release's SHA256SUMS.txt, if Chatmon's release key signed it; None if it didn't."""
-    if not any(ed25519.verify(bytes.fromhex(key), text, signature) for key in keys):
-        return None
-    return parse_sums(text.decode("utf-8", errors="replace"))
-
-
-def parse_sums(text: str) -> dict[str, str]:
-    """SHA256SUMS.txt: "<hex>  <name>" a line (sha256sum's own format; "*" marks binary mode)."""
-    out = {}
-    for line in text.splitlines():
-        m = re.fullmatch(r"([0-9a-fA-F]{64}) [ *](.+)", line.strip())
-        if m:
-            out[m.group(2).strip()] = m.group(1).lower()
-    return out
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(1 << 20), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def sums_for(download: Path) -> tuple[Path, Path]:
+    """Where the signed list of checksums that vouched for a download, and its signature, wait beside it: what
+    root checks again, itself, before installing it."""
+    return download.with_name(f"{download.name}.{SUMS}"), download.with_name(f"{download.name}.{SUMS_SIG}")
 
 
 def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
@@ -191,16 +185,71 @@ def windows_signer(path: Path) -> tuple[str, str, str, list[str]]:
         return "Unknown", str(exc)[:200], "", []
 
 
+class TryLater(str):
+    """Why a download can't be installed yet, for a reason that may pass: Windows couldn't look up whether its
+    certificate has been revoked (no connection to the certificate's servers). Never installed meanwhile; the
+    updater looks again later."""
+
+
 def verify(path: Path, expected: str, kind: str) -> str | None:
     """Why this download mustn't be installed, or None: it's the one the release's signed list gives (and,
-    on Windows, signed by Randy Northrup). Slow: off the screen's thread."""
+    on Windows, signed by Randy Northrup, with a certificate that hasn't been revoked). A TryLater says why not
+    yet. Slow: off the screen's thread."""
     if sha256(path) != expected:
-        return "the download doesn't match the release's checksum"
+        return _("the download doesn't match the release's checksum")
     if kind == WINDOWS:
         status, signer, issuer, usages = windows_signer(path)
+        if status == "Revoked":
+            if signer:
+                return _("its signing certificate has been revoked ({signer})").format(signer=signer)
+            return _("its signing certificate has been revoked")
+        if status == "RevocationUnknown":
+            return TryLater(_("Windows couldn't check that its signing certificate hasn't been revoked (are you offline?)"))
         if status != "Valid" or not SIGNER.fullmatch(signer) or not ISSUER.fullmatch(issuer) or IDENTITY not in usages:
-            return f"its signature isn't Randy Northrup's ({status}{', ' + signer if signer else ''})"
+            # Translators: {status} is Windows' own name for what's wrong with the signature, such as NotTrusted.
+            if signer:
+                return _("its signature isn't Randy Northrup's ({status}, {signer})").format(status=status, signer=signer)
+            return _("its signature isn't Randy Northrup's ({status})").format(status=status)
     return None
+
+
+@dataclass
+class Prepared:
+    """A download checked again just before it's installed, and the file to install it from."""
+
+    path: Path
+    hold: int | None = None  # Windows: wintrust.hold's handle, which keeps `path` as it is until Chatmon quits
+
+
+def prepare(download: Path, expected: str, kind: str) -> Prepared | str:
+    """Checked again just before it's installed (it may have waited days for you to say yes): the file to
+    install, or why not (a TryLater: not yet). On Windows that's a copy in a fresh folder, held so that nobody
+    can write, rename or delete it, nor rename its folder, from before the check until Chatmon quits (the
+    installer, started from it, reads itself as it goes): what's checked is what runs. Slow: off the screen's
+    thread."""
+    if kind != WINDOWS:
+        why = verify(download, expected, kind)
+        return why if why is not None else Prepared(download)
+    place = Path(tempfile.mkdtemp(prefix=INSTALLING, dir=download.parent))
+    copy = place / download.name
+    hold = None
+    try:
+        shutil.copyfile(download, copy)
+        if sys.platform == "win32":
+            from . import wintrust
+
+            hold = wintrust.hold(copy)
+        why = verify(copy, expected, kind)
+    except OSError as exc:
+        why = _("it couldn't be copied to be installed ({error})").format(error=exc.strerror or exc)
+    if why is None:
+        return Prepared(copy, hold)
+    if hold is not None:
+        from . import wintrust
+
+        wintrust.release(hold)
+    shutil.rmtree(place, ignore_errors=True)
+    return why
 
 
 def folder() -> Path:
@@ -219,28 +268,51 @@ def folder() -> Path:
     return path
 
 
-# macOS: run as root (macOS asks for your password), on a copy in a folder only root can change, checked
-# again there. The path and checksum come in as data (quoted form), never as part of the script itself.
+# macOS: root's side of installing an update (macOS asks for your password first). The AppleScript only hands
+# _MACOS_ROOT, and the paths of the download and its signed list, to a shell as data (quoted form): none of it
+# is ever part of the script itself.
 _MACOS_SCRIPT = (
+    'set c to system attribute "CHATMON_ROOT"\n'
     'set f to system attribute "CHATMON_UPDATE"\n'
-    'set h to system attribute "CHATMON_SHA256"\n'
-    'do shell script "d=$(/usr/bin/mktemp -d /private/tmp/chatmon-update.XXXXXXXX) && trap \'/bin/rm -rf \\"$d\\"\' EXIT && '
-    '/bin/cp -- " & quoted form of f & " \\"$d/update.pkg\\" && '
-    '[ \\"$(/usr/bin/shasum -a 256 \\"$d/update.pkg\\" | /usr/bin/cut -d\' \' -f1)\\" = " & quoted form of h & " ] && '
-    '/usr/sbin/installer -pkg \\"$d/update.pkg\\" -target /" with administrator privileges'
+    'set s to system attribute "CHATMON_SUMS"\n'
+    'set g to system attribute "CHATMON_SIG"\n'
+    'do shell script "/bin/sh -c " & quoted form of c & " chatmon-update " & quoted form of f & " " & quoted form of s & " " '
+    '& quoted form of g with administrator privileges'
 )
+# What runs as root: a copy of Chatmon.app in a folder only root can write, then checked: every file of it must be
+# root's and writable by root alone, as the .pkg installs it. Checking the copy leaves no moment to swap the app
+# between the check and its use, and nobody but root can make a root-owned file. Only then does the copy's own
+# install-update (packaging/macos/install-update) check the download, with the copy's own Python and release key
+# (releasecheck.py: signed, and newer than this Chatmon), and install it.
+_MACOS_ROOT = """set -eu
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+export PATH
+umask 077
+app=/Applications/Chatmon.app
+d=$(mktemp -d /private/tmp/chatmon-update.XXXXXXXX)
+trap 'rm -rf "$d"' EXIT
+ditto --noqtn "$app" "$d/Chatmon.app"
+if [ -n "$(find "$d/Chatmon.app" \\( ! -user root -o -perm +022 \\) -print | head -n 1)" ]; then
+    echo "Chatmon.app isn't the system's own (its .pkg didn't install it), so it can't check its own update: install this one from the release page." >&2
+    exit 3
+fi
+/bin/sh "$d/Chatmon.app/Contents/Resources/install-update" "$d" "$@"
+"""
 
 
-def installer_command(kind: str, path: Path, expected: str = "") -> tuple[str, list[str], dict[str, str]] | None:
-    """(program, arguments, environment) that installs a verified download; None where it can't be done here."""
+def installer_command(kind: str, path: Path) -> tuple[str, list[str], dict[str, str]] | None:
+    """(program, arguments, environment) that installs a verified download; None where it can't be done here.
+    On macOS and Linux root gets the download and the signed list beside it (sums_for), to check itself."""
     if kind == WINDOWS:
         # Silent, as the last install was (for you, or for everyone), and Chatmon starts again afterwards.
         # An install for everyone asks Windows to elevate it, and Windows checks its signature as it does.
         return str(path), ["/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/relaunch=1"], {}
+    sums, signature = sums_for(path)
     if kind == MACOS:
-        return "/usr/bin/osascript", ["-e", _MACOS_SCRIPT], {"CHATMON_UPDATE": str(path), "CHATMON_SHA256": expected}
+        env = {"CHATMON_ROOT": _MACOS_ROOT, "CHATMON_UPDATE": str(path), "CHATMON_SUMS": str(sums), "CHATMON_SIG": str(signature)}
+        return "/usr/bin/osascript", ["-e", _MACOS_SCRIPT], env
     if kind in (DEB, RPM) and os.access(PKEXEC, os.X_OK) and os.access(HELPER, os.X_OK):
-        return PKEXEC, [HELPER, str(path), expected], {}
+        return PKEXEC, [HELPER, str(path), str(sums), str(signature)], {}
     if kind == PIPX:
         pipx = shutil.which("pipx")  # your own tool, run as you: no more than you could do yourself
         if pipx:
@@ -268,10 +340,16 @@ def metered() -> bool:
 
         if QNetworkInformation.instance() is None and not QNetworkInformation.loadDefaultBackend():
             return False
-        info = QNetworkInformation.instance()
+        info: QNetworkInformation | None = QNetworkInformation.instance()  # typed: PyQt6 6.12.1's stubs give static constructors an unbound Self
         return bool(info is not None and info.isMetered())
     except (ImportError, AttributeError, RuntimeError):
         return False
+
+
+# What the last `failed` was about, in `Updater.failure`: words are for people, so the app tells them apart by this.
+CHECK_FAILED = "check"  # looking for, downloading or checking a release
+INSTALL_FAILED = "install"  # an install that was tried and didn't go through ("The update wasn't installed…")
+NOT_READY = "not ready"  # install() with nothing ready, or a Chatmon that can't install itself
 
 
 class Updater(QObject):
@@ -285,18 +363,26 @@ class Updater(QObject):
     handed_over = pyqtSignal()  # Windows' installer has it from here, and quits Chatmon when it's ready to
 
     def __init__(self, background, parent: QObject | None = None):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self._nam = QNetworkAccessManager(self)
         self._background = background  # runs slow work (hashing, the signature check) off the screen's thread
         self._reply: QNetworkReply | None = None
-        self._file = None
+        self._file: BinaryIO | None = None  # the download, as it's written
         self._got = 0
         self._by_hand = False  # you asked: download even on a metered connection
         self.kind: str | None = None
         self.release: Release | None = None
         self.ready: Path | None = None  # the verified download, for self.release
         self._expected = ""  # its checksum, from the signed list: checked again just before it's installed
+        self._signed: tuple[bytes, bytes] = (b"", b"")  # that list and its signature, for root to check again
+        self._held: Prepared | None = None  # Windows: the installer's held copy, kept as it is until Chatmon quits
         self.busy = False
+        self.metered = False  # the last newer_only was because the connection is metered (asking downloads it)
+        self.failure: str | None = None  # what the last `failed` was about: CHECK_FAILED, INSTALL_FAILED or NOT_READY
+        self.retry = QTimer(self)  # a check that couldn't finish for now (TryLater), tried again
+        self.retry.setSingleShot(True)
+        self.retry.setInterval(RETRY_AFTER * 1000)
+        self.retry.timeout.connect(lambda: self.check(self.kind))
 
     # -- checking
 
@@ -306,6 +392,7 @@ class Updater(QObject):
         if self.busy:
             return
         self.busy = True
+        self.retry.stop()
         self._by_hand = by_hand
         if kind is None and self.kind is None:
             self._background.run(install_kind, self._kind_known)
@@ -314,6 +401,8 @@ class Updater(QObject):
         self._get(LATEST, self._latest)
 
     def _kind_known(self, kind) -> None:
+        if not isinstance(kind, str):
+            logger.debug("couldn't tell how Chatmon was installed, so it's taken as by hand: %s", kind)
         self.kind = kind if isinstance(kind, str) else MANUAL
         self._get(LATEST, self._latest)
 
@@ -328,6 +417,8 @@ class Updater(QObject):
         """A small reply (MAX_REPLY at most), whole, to `then`."""
         reply = self._nam.get(self._request(url))
         self._reply = reply
+        if reply is None:  # never: Qt always makes one (PyQt6's stub allows None)
+            return
         reply.downloadProgress.connect(lambda got, _total: reply.abort() if got > MAX_REPLY else None)
         reply.finished.connect(lambda: self._got_reply(reply, then))
 
@@ -335,10 +426,10 @@ class Updater(QObject):
         self._reply = None
         reply.deleteLater()
         if reply.error() != QNetworkReply.NetworkError.NoError:
-            return self._fail(f"couldn't reach GitHub ({reply.errorString()})")
-        raw = bytes(reply.readAll())
+            return self._fail(_("couldn't reach GitHub ({error})").format(error=reply.errorString()))
+        raw = reply.readAll().data()
         if len(raw) > MAX_REPLY:
-            return self._fail("GitHub's answer was far bigger than it should be")
+            return self._fail(_("GitHub's answer was far bigger than it should be"))
         then(raw)
 
     def _latest(self, raw: bytes) -> None:
@@ -347,53 +438,66 @@ class Updater(QObject):
         except (ValueError, RecursionError):
             release = None
         if release is None:
-            return self._fail("GitHub's answer about the latest release wasn't readable")
+            return self._fail(_("GitHub's answer about the latest release wasn't readable"))
         if not newer(release.version):
             self.busy = False
             self.up_to_date.emit()
             return
         self.release = release
-        name = asset_name(self.kind, release.version)
-        if name is None or name not in release.assets or not {SUMS, SUMS_SIG} <= set(release.assets) or installer_command(self.kind, folder() / name) is None:
-            return self._only_tell(how_to_update(self.kind, release.version))
+        kind = self.kind or MANUAL  # known by now: check() learns it before asking GitHub
+        name = asset_name(kind, release.version)
+        if name is None or name not in release.assets or not {SUMS, SUMS_SIG} <= set(release.assets) or installer_command(kind, folder() / name) is None:
+            return self._only_tell(how_to_update(kind, release.version))
         done = folder() / name
-        if self.ready == done and done.exists() and self._expected:
+        if self.ready == done and self._expected and all(p.exists() for p in (done, *sums_for(done))):
             self.busy = False
             self.available.emit(release)
             return
         if not self._by_hand and metered():
-            return self._only_tell("You're on a metered connection, so I haven't downloaded it. **Check for updates now** in my menu downloads it anyway.")
-        self._get(release.assets[SUMS_SIG], lambda sig: self._get(release.assets[SUMS], lambda text: self._sums(text, sig, name)))
+            return self._only_tell(_("You're on a metered connection, so I haven't downloaded it. **Check for updates now** in my menu downloads it anyway."), metered=True)
+        self._get(release.assets[SUMS_SIG], lambda sig: self._get(release.assets[SUMS], lambda text: self._sums(text, sig, name, release.assets[name])))
 
-    def _only_tell(self, how: str) -> None:
+    def _only_tell(self, how: str, metered: bool = False) -> None:
         self.busy = False
+        self.metered = metered
         self.newer_only.emit(self.release, how)
+
+    def _failed(self, failure: str, why: str) -> None:
+        """Say why something failed, and what it was about (self.failure)."""
+        self.failure = failure
+        self.failed.emit(why)
 
     # -- downloading
 
-    def _sums(self, text: bytes, signature: bytes, name: str) -> None:
+    def _sums(self, text: bytes, signature: bytes, name: str, url: str) -> None:
+        """The signed list and its signature are in: check them, then download `name` from `url`."""
         sums = signed_sums(text, signature)
         if sums is None:
-            return self._fail("its list of checksums isn't signed with Chatmon's release key")
+            return self._fail(_("its list of checksums isn't signed with Chatmon's release key"))
         expected = sums.get(name)
         if expected is None:
-            return self._fail(f"the release's signed list has no checksum for {name}")
+            return self._fail(_("the release's signed list has no checksum for {file}").format(file=name))
+        self._signed = (text, signature)
         part = folder() / (name + ".part")
         try:
-            for old in folder().iterdir():  # last time's, of whatever version
-                if old.name != name and old.is_file():
+            for old in folder().iterdir():  # last time's, of whatever version (this one's are all named after it)
+                if not old.name.startswith(name) and old.is_file():
                     old.unlink()
+                elif old.name.startswith(INSTALLING) and old.is_dir():  # an installer's copy, no longer held
+                    shutil.rmtree(old, ignore_errors=True)
             self._file = open(part, "wb")
         except OSError as exc:
-            return self._fail(f"couldn't save the download ({exc.strerror or exc})")
+            return self._fail(_("couldn't save the download ({error})").format(error=exc.strerror or exc))
         self._got = 0
-        reply = self._nam.get(self._request(self.release.assets[name]))
+        reply = self._nam.get(self._request(url))
         self._reply = reply
+        if reply is None:  # never, as in _get
+            return
         reply.readyRead.connect(lambda: self._chunk(reply))
         reply.finished.connect(lambda: self._downloaded(reply, part, name, expected))
 
     def _chunk(self, reply: QNetworkReply) -> None:
-        data = bytes(reply.readAll())
+        data = reply.readAll().data()
         self._got += len(data)
         if self._got > MAX_DOWNLOAD:
             reply.abort()
@@ -401,7 +505,8 @@ class Updater(QObject):
         if self._file is not None:
             try:
                 self._file.write(data)
-            except OSError:
+            except OSError as exc:  # the person hears the download didn't finish; this is why
+                logger.debug("couldn't write the download: %s", exc)
                 reply.abort()
 
     def _downloaded(self, reply: QNetworkReply, part: Path, name: str, expected: str) -> None:
@@ -414,19 +519,26 @@ class Updater(QObject):
         url = reply.url().toString()
         if reply.error() != QNetworkReply.NetworkError.NoError or self._got > MAX_DOWNLOAD or not url.startswith(SECURE):
             part.unlink(missing_ok=True)
-            return self._fail(f"the download didn't finish ({reply.errorString()})")
-        kind = self.kind
+            return self._fail(_("the download didn't finish ({error})").format(error=reply.errorString()))
+        kind = self.kind or MANUAL  # known by now, as in _latest
         self._background.run(lambda: verify(part, expected, kind), lambda why: self._verified(why, part, folder() / name, expected))
 
     def _verified(self, why, part: Path, done: Path, expected: str) -> None:
+        if isinstance(why, TryLater):
+            part.unlink(missing_ok=True)
+            self._fail(_("{why}; I'll look again in an hour").format(why=why))
+            self.retry.start()
+            return
         if why is not None:
             part.unlink(missing_ok=True)
-            return self._fail(str(why) if not isinstance(why, Exception) else f"couldn't check the download ({why})")
+            return self._fail(str(why) if not isinstance(why, Exception) else _("couldn't check the download ({error})").format(error=why))
         try:
+            for path, data in zip(sums_for(done), self._signed, strict=True):
+                path.write_bytes(data)
             os.replace(part, done)
         except OSError as exc:
             part.unlink(missing_ok=True)
-            return self._fail(f"couldn't keep the download ({exc.strerror or exc})")
+            return self._fail(_("couldn't keep the download ({error})").format(error=exc.strerror or exc))
         self.ready, self._expected = done, expected
         self.busy = False
         self.available.emit(self.release)
@@ -437,31 +549,49 @@ class Updater(QObject):
         """Install the verified download. Windows' installer takes over (it asks Chatmon to quit when it's
         ready, and starts it again); elsewhere the system asks for your password, then Chatmon starts again."""
         if self.ready is None or self.release is None or not self.ready.exists() or self.busy:
-            return self.failed.emit("There's no update ready to install.")
-        if installer_command(self.kind, self.ready, self._expected) is None:
-            return self.failed.emit("This Chatmon can't install updates itself.")
+            return self._failed(NOT_READY, _("There's no update ready to install."))
+        kind = self.kind or MANUAL  # known: a download is ready
+        if installer_command(kind, self.ready) is None:
+            return self._failed(NOT_READY, _("This Chatmon can't install updates itself."))
         self.busy = True
         # Checked again, just before: it may have waited days for you to say yes.
-        ready, expected, kind = self.ready, self._expected, self.kind
-        self._background.run(lambda: verify(ready, expected, kind), self._install_checked)
+        ready, expected = self.ready, self._expected
+        self._background.run(lambda: prepare(ready, expected, kind), self._install_checked)
 
-    def _install_checked(self, why) -> None:
-        if why is not None:
+    def _install_checked(self, prepared) -> None:
+        if isinstance(prepared, TryLater):  # not known bad: kept, to try again
             self.busy = False
-            self.ready.unlink(missing_ok=True)
+            return self._failed(INSTALL_FAILED, _("The update wasn't installed yet: {why}. Try again once you're online.").format(why=prepared))
+        if not isinstance(prepared, Prepared):
+            self.busy = False
+            if isinstance(prepared, Exception):
+                logger.debug("checking the update again before installing it failed", exc_info=prepared)
+            if self.ready is not None:  # always: install() had it
+                self.ready.unlink(missing_ok=True)
             self.ready = None
-            return self.failed.emit(f"The update wasn't installed: {why if not isinstance(why, Exception) else 'it could not be checked'}.")
-        program, args, env = installer_command(self.kind, self.ready, self._expected)
+            why = prepared if not isinstance(prepared, Exception) else _("it could not be checked")
+            return self._failed(INSTALL_FAILED, _("The update wasn't installed: {why}.").format(why=why))
+        command = installer_command(self.kind or MANUAL, prepared.path)
+        if command is None:  # install() found one a moment ago: gone since (pipx uninstalled meanwhile, say)
+            self.busy = False
+            return self._failed(NOT_READY, _("This Chatmon can't install updates itself."))
+        program, args, env = command
         if self.kind == WINDOWS:
             # Chatmon stays: the installer asks it to quit (`chatmon quit`) once it's going ahead, and starts it
-            # again after. Turned down (Windows asking to install for everyone, say), Chatmon is still here.
+            # again after. Turned down (Windows asking to install for everyone, say), Chatmon is still here. Its
+            # copy stays held until Chatmon quits (the installer reads itself as it goes).
             self.busy = False
-            if not QProcess.startDetached(program, args, str(self.ready.parent))[0]:
-                return self.failed.emit("The update wasn't installed: its installer couldn't start.")
+            if self._held is not None and self._held.hold is not None:
+                from . import wintrust
+
+                wintrust.release(self._held.hold)  # a copy from an install that was turned down
+            self._held = prepared
+            if not QProcess.startDetached(program, args, str(prepared.path.parent))[0]:
+                return self._failed(INSTALL_FAILED, _("The update wasn't installed: its installer couldn't start."))
             self.handed_over.emit()
             return
         proc = QProcess(self)
-        environment = QProcessEnvironment.systemEnvironment()
+        environment: QProcessEnvironment = QProcessEnvironment.systemEnvironment()
         for key, value in env.items():
             environment.insert(key, value)
         proc.setProcessEnvironment(environment)
@@ -475,28 +605,36 @@ class Updater(QObject):
         if error == QProcess.ProcessError.FailedToStart:
             proc.deleteLater()
             self.busy = False
-            self.failed.emit(f"The update wasn't installed: {Path(proc.program()).name} couldn't start.")
+            self._failed(INSTALL_FAILED, _("The update wasn't installed: {program} couldn't start.").format(program=Path(proc.program()).name))
 
     def _installed(self, proc: QProcess, code: int) -> None:
         if sip.isdeleted(proc):  # Chatmon quitting while it ran
             return
-        err = bytes(proc.readAllStandardError()).decode("utf-8", errors="replace").strip()
+        err = proc.readAllStandardError().data().decode("utf-8", errors="replace").strip()
         proc.deleteLater()
         self.busy = False
+        ready = self.ready  # always there: install() had it
         if code != 0:
             if self.kind in (DEB, RPM) and code == 126:  # pkexec: the password prompt was dismissed
-                return self.failed.emit("The update wasn't installed: the password prompt was closed.")
-            if self.kind in (DEB, RPM) and code == 127:  # pkexec: no prompt to ask with, or not allowed
-                return self.failed.emit(
-                    "The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
-                    f"In a terminal: `sudo {HELPER} '{self.ready}' {self._expected}`"
+                return self._failed(INSTALL_FAILED, _("The update wasn't installed: the password prompt was closed."))
+            if self.kind in (DEB, RPM) and code == 127 and ready is not None:  # pkexec: no prompt to ask with, or not allowed
+                command = f"sudo {shlex.join([HELPER, str(ready), *map(str, sums_for(ready))])}"
+                return self._failed(
+                    INSTALL_FAILED,
+                    _("The update wasn't installed: there's no password prompt running to ask you (a polkit agent). "
+                      "In a terminal: `{command}`").format(command=command)
                 )
-            detail = err.splitlines()[-1] if err else f"exit code {code}"
-            return self.failed.emit(f"The update wasn't installed ({detail}).")
-        relaunch = relaunch_command(self.kind)
+            detail = err.splitlines()[-1] if err else _("exit code {code}").format(code=code)
+            # Root's own check (releasecheck.py, which loads nothing it needn't, translations included) said why,
+            # in an English sentence that starts so.
+            if detail.startswith("The update wasn't installed"):
+                return self._failed(INSTALL_FAILED, detail)
+            return self._failed(INSTALL_FAILED, _("The update wasn't installed ({detail}).").format(detail=detail))
+        relaunch = relaunch_command(self.kind or MANUAL)
         if relaunch is not None:
             QProcess.startDetached(*relaunch)
-        self.ready.unlink(missing_ok=True)
+        if ready is not None:
+            ready.unlink(missing_ok=True)
         self.installing.emit()
 
     def _fail(self, why: str) -> None:
@@ -504,7 +642,7 @@ class Updater(QObject):
         if self._file is not None:
             self._file.close()
             self._file = None
-        self.failed.emit(f"Couldn't check for updates: {why}.")
+        self._failed(CHECK_FAILED, _("Couldn't check for updates: {why}.").format(why=why))
 
     def cancel(self) -> None:
         if self._reply is not None:

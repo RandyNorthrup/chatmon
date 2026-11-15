@@ -1,5 +1,6 @@
 """Starting at login: the desktop entry on Linux, written as the freedesktop spec says."""
 
+import logging
 import sys
 
 import pytest
@@ -94,13 +95,16 @@ def test_an_older_launch_agent_becomes_the_login_item(tmp_path, monkeypatch):
     assert not autostart.refresh()  # once
 
 
-def test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent(tmp_path, monkeypatch, capsys):
+def test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent(tmp_path, monkeypatch, caplog):
     from chatmon import macnative
 
     items = PretendLoginItems(macnative.NOT_FOUND, refuses="Operation not permitted")
     agent = items.install(monkeypatch, tmp_path)
+    caplog.set_level(logging.WARNING, logger="chatmon.autostart")
     autostart.set_enabled(True)
-    assert agent.exists() and autostart.enabled() and "Operation not permitted" in capsys.readouterr().err
+    warned = [r.getMessage() for r in caplog.records if r.name == "chatmon.autostart" and r.levelno == logging.WARNING]
+    assert warned == ["couldn't add Chatmon to Login Items (Operation not permitted), so a LaunchAgent starts it"]
+    assert agent.exists() and autostart.enabled()
     assert autostart.plistlib.loads(agent.read_bytes())["ProgramArguments"] == ["/Applications/Chatmon.app/Contents/MacOS/Chatmon"]
     items.refuses, items.status = None, macnative.ENABLED
     autostart.set_enabled(False)

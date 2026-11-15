@@ -1,0 +1,28 @@
+# The workflows' gates, as ci.yml's lint job runs them, 2026-11-14T21:54:40Z
+
+## actionlint 1.7.12 on Linux (WSL Arch) with shellcheck 0.11.0 checking each run: script
+$ actionlint -verbose
+verbose: Linting all workflow files in repository: /mnt/c/Users/Randy/Coding/chatmon-wt/m6a
+verbose: Collected 2 YAML files
+verbose: Linting 2 files
+verbose: Found 0 parse errors in 1 ms for .github/workflows/ci.yml
+verbose: Found 0 parse errors in 2 ms for .github/workflows/packages.yml
+verbose: Rule "pyflakes" was disabled: exec: "pyflakes": executable file not found in $PATH
+verbose: Rule "pyflakes" was disabled: exec: "pyflakes": executable file not found in $PATH
+verbose: Found total 0 errors in 772 ms for .github/workflows/packages.yml
+verbose: Found total 0 errors in 815 ms for .github/workflows/ci.yml
+verbose: Found 0 errors in 2 files
+exit 0
+
+## zizmor 1.31.1, offline, regular persona
+$ zizmor --no-online-audits .github
+No findings to report. Good job! (13 suppressed)
+exit 0
+
+## the script the distro job runs (shellcheck -s sh)
+$ shellcheck -s sh .github/scripts/distro-tests.sh -> exit 0
+
+## zizmor 1.31.1 with its online audits too (impostor-commit, ref-confusion, known-vulnerable-actions, stale-action-refs), using the gh CLI's token, read-only, 2026-11-14T22:11:01Z
+$ GH_TOKEN=<gh auth token> zizmor .github
+No findings to report. Good job! (13 suppressed)
+exit 0

@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.7, pytest-9.2.0, pluggy-1.7.0
+rootdir: /Users/user/chatmon-drills-tmp/src
+configfile: pyproject.toml
+plugins: hypothesis-6.170.14, timeout-2.4.0
+timeout: 120.0s
+timeout method: signal
+timeout func_only: False
+collected 8 items
+
+tests/test_macnative.py ........                                         [100%]
+
+============================== 8 passed in 2.54s ===============================
+# exit 0

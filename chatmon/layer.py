@@ -14,8 +14,10 @@ left as an XWayland window, which a compositor would put under the overlay,
 decorate with its borders and keep the keyboard from.
 
 The stage paints into shared-memory buffers here, through the small Wayland
-client in wayland.py; the pointer and keyboard events that land on it go back
-to the stage, the keys through libxkbcommon (xkb.py). Used when the compositor
+client in wayland.py: the size of what it shows, on a subsurface that moves
+with it, where the compositor has subsurfaces and viewports (see MAX_BUFFERS).
+The pointer and keyboard events that land on it go back to the stage, the keys
+through libxkbcommon (xkb.py). Used when the compositor
 offers zwlr_layer_shell_v1 (not GNOME, which keeps the X window: Mutter does
 read X input shapes and lets a clicked X window take the keyboard).
 """
@@ -23,33 +25,35 @@ read X input shapes and lets a clicked X window take the keyboard).
 from __future__ import annotations
 
 import ctypes
+import logging
 import math
 import threading
+import time
 from dataclasses import dataclass, field
+from functools import partial
 import mmap
 import os
 import sys
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer
 from PyQt6.QtGui import QGuiApplication, QImage, QPainter, QRegion, QScreen
 
 from . import wayland, xkb
+from .qtsignal import pyqtSignal
 from .wayland import DISPLAY_ID, Connection, decode
 
+logger = logging.getLogger(__name__)  # CHATMON_DEBUG: the overlay's focus changes too (log.setup)
+
 STAGE_ENV = "CHATMON_STAGE"  # "window" keeps the X window on Wayland too
-DEBUG = bool(os.environ.get("CHATMON_DEBUG"))  # log the overlay's focus changes to stderr
-
-
-def _debug(message: str) -> None:
-    if DEBUG:
-        print(f"chatmon [overlay] {message}", file=sys.stderr, flush=True)
 NAMESPACE = "chatmon"  # the layer's name, for compositor rules
 
 # Opcodes (requests unless they say event), from the protocol XML files.
 REGISTRY_BIND = 0
 EV_REGISTRY_GLOBAL, EV_REGISTRY_GLOBAL_REMOVE = 0, 1
 COMPOSITOR_CREATE_SURFACE, COMPOSITOR_CREATE_REGION = 0, 1
+SUBCOMPOSITOR_GET_SUBSURFACE = 1
+SUBSURFACE_DESTROY, SUBSURFACE_SET_POSITION = 0, 1
 SHM_CREATE_POOL = 0
 SHM_POOL_CREATE_BUFFER, SHM_POOL_DESTROY = 0, 1
 BUFFER_DESTROY = 0
@@ -117,6 +121,7 @@ EV_LOCK_LOCKED, EV_LOCK_UNLOCKED = 0, 1
 IDLE_AFTER_MS = 300_000
 ANCHOR_ALL = 1 | 2 | 4 | 8  # top, bottom, left, right: the whole output
 KEYBOARD_NONE, KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND = 0, 1, 2  # on_demand: layer-shell version 4
+HANDOVER_GRACE = 0.5  # s: the keyboard gone this soon after a handover to on_demand was the compositor's doing
 KEYMAP_XKB_V1 = 1
 SHM_ARGB8888 = 0  # premultiplied, byte order B G R A: QImage's ARGB32_Premultiplied on little-endian
 CAP_POINTER, CAP_KEYBOARD = 1, 2
@@ -125,11 +130,24 @@ AXIS_VERTICAL = 0
 CURSOR_SHAPES = {"default": 1, "pointer": 4, "text": 9, "grab": 16, "grabbing": 17}
 WHEEL_PER_PIXEL = 8  # Qt's angle delta (120 a notch) per pixel of Wayland scroll (15 a notch)
 REPEAT_RATE, REPEAT_DELAY = 25, 600  # until the compositor says (wl_keyboard version 4)
-MAX_BUFFERS = 3
+# A layer surface anchored to every edge is the size of the output, and moving a smaller one would lag a frame
+# behind the chatmon. So the layer surface shows one see-through pixel stretched over the output (wp_viewporter),
+# and what's drawn (the chatmon, its bubble, a menu, the ask box) is on a subsurface over it, in a buffer the size
+# of what's shown plus a margin to move in. A synchronized subsurface's position and pixels change with its
+# parent's commit, in the same frame: moving it is as free of lag and trails as drawing elsewhere on one surface.
+# Without a subcompositor or a viewporter, buffers cover the output, as before: some 33 MB each at 4K and a scale
+# of 2. Either way two at most, one painted while the compositor holds the other, and the spare let go once the
+# stage has been still TRIM_AFTER_MS.
+MAX_BUFFERS = 2
+TRIM_AFTER_MS = 2000
+CONTENT_MARGIN = 32  # logical px around what's shown: room to move in before the subsurface goes along
+CONTENT_QUANTUM = 32  # logical px: the content buffer's sides are multiples of this, so small changes keep it
+CONTENT_SHRINK = 4  # a buffer this many times the area it needs is made smaller
 
 # The interfaces we bind, and the newest version of each we speak.
 WANTED = {
     "wl_compositor": 6,  # 4: damage_buffer; 6: preferred_buffer_scale
+    "wl_subcompositor": 1,  # buffers the size of what's shown (with wp_viewporter)
     "wl_shm": 1,
     "wl_seat": 5,
     "wl_output": 4,  # 4: name
@@ -165,7 +183,8 @@ def offered(env=os.environ) -> bool:
     try:
         conn.request(DISPLAY_ID, 1, "n", conn.new_id(global_))  # wl_display.get_registry
         return conn.roundtrip() and all(found.get(name, 0) >= version for name, version in NEEDED.items())
-    except (OSError, wayland.WaylandError):
+    except (OSError, wayland.WaylandError) as exc:
+        logger.debug("couldn't ask the compositor what it offers: %s", exc)
         return False
     finally:
         conn.close()
@@ -186,6 +205,22 @@ class Output:
         self.scale = 1
 
 
+def _memfd() -> int:
+    """A file in memory for a buffer's pixels, shared with the compositor, not inherited."""
+    if not sys.platform.startswith("linux"):  # memfd_create is Linux's, as the overlay is
+        raise OSError("shared-memory buffers are made on Linux only")
+    return os.memfd_create("chatmon", os.MFD_CLOEXEC)
+
+
+def _grid(scale: float) -> int:
+    """The fewest surface pixels that are whole device pixels at this scale (1 at whole scales, 2 at 1.5, 4 at
+    1.25): the subsurface is placed and sized in steps of it, so its pixels sit on the screen's, sharp."""
+    for step in range(1, 17):
+        if abs(step * scale - round(step * scale)) < 1e-6:
+            return step
+    return 1  # a scale of no small fraction: the nearest pixels, a little soft
+
+
 class Buffer:
     """One shared-memory buffer the stage paints into, and what it's missing."""
 
@@ -194,7 +229,7 @@ class Buffer:
         self.width, self.height = width, height
         stride = width * 4
         size = stride * height
-        fd = os.memfd_create("chatmon", os.MFD_CLOEXEC)
+        fd = _memfd()
         try:
             os.ftruncate(fd, size)
             self.map = mmap.mmap(fd, size)
@@ -205,8 +240,9 @@ class Buffer:
             conn.request(pool, SHM_POOL_DESTROY)  # the buffer keeps it alive
         finally:
             os.close(fd)  # request() sent a copy
-        self._pixels = ctypes.c_char.from_buffer(self.map)
-        self.image = QImage(sip.voidptr(ctypes.addressof(self._pixels)), width, height, stride, QImage.Format.Format_ARGB32_Premultiplied)
+        self._pixels: ctypes.c_char | None = ctypes.c_char.from_buffer(self.map)
+        # PyQt6 takes the pixels' address as a sip.voidptr; its stub knows only bytes, which would be a copy.
+        self.image: QImage | None = QImage(sip.voidptr(ctypes.addressof(self._pixels)), width, height, stride, QImage.Format.Format_ARGB32_Premultiplied)  # type: ignore[call-overload]
         self.busy = False  # the compositor has it
         self.stale = QRegion()  # what changed on the stage since this one was painted
 
@@ -235,12 +271,14 @@ class PipeReader(QObject):
     finished = pyqtSignal(bytes)
 
     def __init__(self, fd: int, limit: int, parent: QObject):
-        super().__init__(parent)
+        super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self.fd, self.limit, self.data = fd, limit, bytearray()
-        os.set_blocking(fd, False)
-        self.notifier = QSocketNotifier(fd, QSocketNotifier.Type.Read, self)
+        if sys.platform != "win32" or sys.version_info >= (3, 12):  # Windows' os has it from 3.12 (mypy checks 3.11)
+            os.set_blocking(fd, False)
+        self.notifier = QSocketNotifier(sip.voidptr(fd), QSocketNotifier.Type.Read, self)  # Qt's qintptr: PyQt6 makes an int one too
         self.notifier.activated.connect(self._read)
-        self.timer = QTimer(self, singleShot=True)
+        self.timer = QTimer(self)
+        self.timer.setSingleShot(True)
         self.timer.timeout.connect(self._end)
         self.timer.start(5000)  # an app that never finishes writing
 
@@ -249,7 +287,8 @@ class PipeReader(QObject):
             chunk = os.read(self.fd, 65536)
         except BlockingIOError:
             return
-        except OSError:
+        except OSError as exc:
+            logger.debug("couldn't read what was pasted or dropped: %s", exc)
             chunk = b""
         self.data += chunk
         if not chunk or len(self.data) >= self.limit:
@@ -263,6 +302,13 @@ class PipeReader(QObject):
         os.close(self.fd)
         self.fd = -1
         self.finished.emit(bytes(self.data[: self.limit]))
+
+
+def _pipe() -> tuple[int, int]:
+    """A pipe for another app to write a paste or a drop into: (reading end, writing end), neither inherited."""
+    if not sys.platform.startswith("linux"):  # pipe2 is Linux's, as the overlay is
+        raise OSError("pipes for pastes are made on Linux only")
+    return os.pipe2(os.O_CLOEXEC)
 
 
 @dataclass(frozen=True)
@@ -328,12 +374,13 @@ class Selection:
         return self.current is not None and bool(self.offers.get(self.current, set()) & set(TEXT_TYPES))
 
     def paste(self, then) -> None:
-        if not self.has_text():
+        offer = self.current
+        if offer is None or not self.has_text():
             return
-        types = self.offers[self.current]
+        types = self.offers[offer]
         mime = next(t for t in TEXT_TYPES if t in types)
-        read_fd, write_fd = os.pipe2(os.O_CLOEXEC)
-        self.conn.request(self.current, self.ch.offer_receive, "sh", mime, write_fd)
+        read_fd, write_fd = _pipe()
+        self.conn.request(offer, self.ch.offer_receive, "sh", mime, write_fd)
         os.close(write_fd)  # request() sent a copy; the other app has the writing end
         self.surface._flush()
         reader = PipeReader(read_fd, PASTE_MAX, self.surface)
@@ -353,7 +400,7 @@ class Selection:
         mime = next((t for t in RICH_TYPES if t in types), None) or next((t for t in TEXT_TYPES if t in types), None)
         if mime is None:
             return
-        read_fd, write_fd = os.pipe2(os.O_CLOEXEC)
+        read_fd, write_fd = _pipe()
         self.conn.request(self.current, self.ch.offer_receive, "sh", mime, write_fd)
         os.close(write_fd)
         self.surface._flush()
@@ -383,7 +430,7 @@ class Selection:
         if opcode == self.ch.ev_data_offer:  # an object the compositor made; its types follow
             (offer,) = decode("n", args)
             self.offers[offer] = set()
-            self.conn.listen(offer, lambda op, a, o=offer: self._offer_event(o, op, a))
+            self.conn.listen(offer, partial(self._offer_event, offer))
         elif opcode == self.ch.ev_selection:
             (offer,) = decode("o", args)
             if self.current is not None and self.current != offer:
@@ -414,17 +461,20 @@ class Selection:
 
     def _drag_to(self, x: float, y: float) -> None:
         """Say whether a drop here would be taken, and as what (only when that changes)."""
+        offer = self.drag
+        if offer is None:  # never: it's asked only while something is dragged here
+            return
         _local, gpos = self.surface._local(x, y)
-        types = self.offers.get(self.drag, set())
+        types = self.offers.get(offer, set())
         mime = None
         if getattr(self.surface.stage, "drop_at", lambda _pos: False)(gpos):
             mime = next((t for t in RICH_TYPES if t in types), None) or next((t for t in TEXT_TYPES if t in types), None)
         if mime == self.drag_type:
             return
         self.drag_type = mime
-        self.conn.request(self.drag, DATA_OFFER_ACCEPT, "us", self.drag_serial, mime)  # None: not here
+        self.conn.request(offer, DATA_OFFER_ACCEPT, "us", self.drag_serial, mime)  # None: not here
         if mime is not None:
-            self.conn.request(self.drag, DATA_OFFER_SET_ACTIONS, "uu", DND_ACTION_COPY, DND_ACTION_COPY)
+            self.conn.request(offer, DATA_OFFER_SET_ACTIONS, "uu", DND_ACTION_COPY, DND_ACTION_COPY)
         self.surface._flush()
 
     def _drop(self) -> None:
@@ -433,7 +483,7 @@ class Selection:
             self._end_drag()
             return
         self.dropped = True
-        read_fd, write_fd = os.pipe2(os.O_CLOEXEC)
+        read_fd, write_fd = _pipe()
         self.conn.request(offer, self.ch.offer_receive, "sh", mime, write_fd)
         os.close(write_fd)
         self.surface._flush()
@@ -588,7 +638,10 @@ class LayerSurface(QObject):
         self._seat_versions: dict[int, int] = {}
         self._registry = conn.new_id(self._registry_event)
         conn.request(DISPLAY_ID, 1, "n", self._registry)  # wl_display.get_registry
-        self._surface = self._layer = self._viewport = self._fractional = None
+        self._surface: int | None = None
+        self._layer: int | None = None
+        self._viewport: int | None = None
+        self._fractional: int | None = None
         self._output: Output | None = None
         self._qt_origin = QPointF()  # top-left, in Qt's coordinates, of the screen the surface is on
         self._qt_width = 1
@@ -596,6 +649,13 @@ class LayerSurface(QObject):
         self._preferred_int = 0  # wl_surface.preferred_buffer_scale
         self._preferred_120 = 0  # wp_fractional_scale, in 120ths
         self._buffers: list[Buffer] = []
+        # What's drawn, on a subsurface of its own size (see MAX_BUFFERS), where the compositor allows it.
+        self._sub: int | None = None  # its wl_surface
+        self._subsurface: int | None = None
+        self._sub_viewport: int | None = None
+        self._backdrop: Buffer | None = None  # the layer surface's one see-through pixel
+        self._extent: QRect | None = None  # what the stage says it draws, in its coordinates; None: it hasn't said
+        self._box: QRect | None = None  # where the subsurface is, in surface (logical) pixels; None: unmapped
         self._pending = QRegion()  # changed since the last commit
         self._frame_pending = False
         self._input: tuple | None = None
@@ -606,12 +666,14 @@ class LayerSurface(QObject):
         self._screen_later: tuple[QScreen, QRect] | None = None
         self._cursor = "default"
         self._enter_serial = 0
-        self._xkb_lib = None
+        self._xkb_lib: ctypes.CDLL | None = None
         self._keyboard: xkb.Keyboard | None = None
         self._kb_focus = False  # whether the keyboard is ours
         self._kb_wanted = False  # whether the stage wants it (the ask box is open)
         self._kb_grab = False
         self._kb_mode = KEYBOARD_NONE
+        self._on_demand_holds = True  # until a compositor takes the keyboard away on the handover (focus_keyboard)
+        self._handed_over_at: float | None = None  # when a grab was last handed over to on_demand
         self._raised = False  # wanted above full-screen windows (an alert, the ask box), whichever surface is up
         self._layer_level = LAYER_OVERLAY  # where the surface up now is
         self._idle: int | None = None
@@ -627,6 +689,10 @@ class LayerSurface(QObject):
         self._present_timer = QTimer(self)
         self._present_timer.setSingleShot(True)
         self._present_timer.timeout.connect(self._present)
+        self._trim_timer = QTimer(self)
+        self._trim_timer.setSingleShot(True)
+        self._trim_timer.timeout.connect(self._trim)
+        self._shown: Buffer | None = None  # the buffer last attached: what the compositor shows
 
     @classmethod
     def create(cls, stage) -> LayerSurface | None:
@@ -651,9 +717,9 @@ class LayerSurface(QObject):
         self._add_lock_watch()
         for selection in self.selections.values():
             selection.add_devices()
-        self._notifier = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Type.Read, self)
+        self._notifier = QSocketNotifier(sip.voidptr(self.conn.fileno()), QSocketNotifier.Type.Read, self)  # as PipeReader's
         self._notifier.activated.connect(self._readable)
-        self._write_notifier = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Type.Write, self)
+        self._write_notifier = QSocketNotifier(sip.voidptr(self.conn.fileno()), QSocketNotifier.Type.Write, self)
         self._write_notifier.setEnabled(False)
         self._write_notifier.activated.connect(self._flush)
 
@@ -670,7 +736,7 @@ class LayerSurface(QObject):
             return
         self._qt_origin, self._qt_width = origin, width
         self._output = output
-        _debug(f"surface for screen {screen.name()} {geometry} on output {output.name if output else None}")
+        logger.debug("surface for screen %s %s on output %s", screen.name(), geometry, output.name if output else None)
         self._destroy_surface()
         self._create_surface()
 
@@ -679,6 +745,13 @@ class LayerSurface(QObject):
             buf.stale = buf.stale.united(region)
         self._pending = self._pending.united(region)
         self._schedule()
+
+    def set_extent(self, rect: QRect) -> None:
+        """Where everything the stage draws is (its coordinates), all of it: the subsurface covers that, so
+        nothing is drawn outside it. An empty one: nothing is drawn."""
+        if rect != self._extent:
+            self._extent = QRect(rect)
+            self._schedule()
 
     def set_input(self, rects) -> None:
         """Where it takes clicks: (x, y, w, h) tuples, or QRects."""
@@ -720,9 +793,17 @@ class LayerSurface(QObject):
         self.selections["clipboard"].paste_rich(then)
 
     def copy(self, text: str, which: str = "clipboard") -> None:
-        """Put text on the clipboard (or primary selection), for any app to paste."""
+        """Put text on the clipboard (or primary selection), for any app to paste.
+
+        The clipboard's text goes on Qt's own clipboard too, for Chatmon's own windows (Settings, Chats): they
+        paste from Qt's, which on Wayland asks the compositor, which asks this connection, whose events wait on
+        the very thread Qt is then blocked in (a two-second freeze and nothing pasted, on sway). Qt keeps what it
+        was given in memory for them, and offers it to other apps itself if the compositor takes its offer."""
         self.selections[which].copy(text)
         self._flush()
+        board = QGuiApplication.clipboard() if which == "clipboard" and text else None
+        if board is not None:
+            board.setText(text)
 
     def set_text_input(self, state: TextState | None) -> None:
         """The text field that has the focus on the stage (None: none does),
@@ -743,6 +824,13 @@ class LayerSurface(QObject):
         say a terminal, when you opened the box from the tray. Without `grab`
         it's `on_demand` from the start: the box gets the keyboard when you
         click it.
+
+        Some compositors take the keyboard away from an `on_demand` surface
+        as soon as it stops being `exclusive` (sway 1.12 gives it back to the
+        window it came from, on the commit that changes it). Where that
+        happens the overlay takes it again and stays `exclusive` while it
+        wants the keyboard, as a launcher does: Esc or a click on the chatmon
+        closes the box, and with it the grab.
         """
         self._kb_wanted = on
         self._kb_grab = on and grab
@@ -750,7 +838,7 @@ class LayerSurface(QObject):
         if not on:
             self._stop_repeat()
             mode = KEYBOARD_NONE
-        elif on_demand and (not grab or (self._kb_focus and self._pointer_inside())):
+        elif on_demand and (not grab or (self._on_demand_holds and self._kb_focus and self._pointer_inside())):
             mode = KEYBOARD_ON_DEMAND
         else:
             mode = KEYBOARD_EXCLUSIVE  # also all an older layer shell has
@@ -758,8 +846,19 @@ class LayerSurface(QObject):
 
     def _maybe_on_demand(self) -> None:
         """While grabbing: hand over to on_demand once that keeps the keyboard here."""
-        if self._kb_wanted and self._kb_mode == KEYBOARD_EXCLUSIVE and self._kb_focus and self._pointer_inside():
+        if self._on_demand_holds and self._kb_wanted and self._kb_mode == KEYBOARD_EXCLUSIVE and self._kb_focus and self._pointer_inside():
             self.focus_keyboard(True, self._kb_grab)
+
+    def _dropped_on_handover(self) -> bool:
+        """The keyboard went away just as a grab was handed over to on_demand, with nothing done meanwhile: the
+        compositor's doing, not yours. From now on keep grabs exclusive, and take this one back."""
+        handed = self._handed_over_at
+        if not (self._kb_grab and self._kb_mode == KEYBOARD_ON_DEMAND and handed is not None and time.monotonic() - handed < HANDOVER_GRACE):
+            return False
+        logger.debug("the compositor took the keyboard back on the handover to on_demand; keeping grabs exclusive")
+        self._on_demand_holds = False
+        self.focus_keyboard(True, True)
+        return True
 
     def _pointer_inside(self) -> bool:
         """Whether the pointer is on something of ours (the input region), not
@@ -772,6 +871,7 @@ class LayerSurface(QObject):
     def close(self) -> None:
         self._closing = True
         self._present_timer.stop()
+        self._trim_timer.stop()
         self._stop_repeat()
         self._destroy_surface()
         for _pointer, device in self.pointers.values():
@@ -809,7 +909,7 @@ class LayerSurface(QObject):
             if notifier is not None:
                 notifier.setEnabled(False)
         # Without the compositor there's no screen to be on; say why rather than linger unseen.
-        print(f"chatmon: lost the Wayland connection ({self.conn.error or 'closed'}); quitting.", file=sys.stderr)
+        logger.warning("lost the Wayland connection (%s); quitting.", self.conn.error or "closed")
         QGuiApplication.quit()
 
     # -- globals
@@ -825,10 +925,10 @@ class LayerSurface(QObject):
             if interface == "wl_output":
                 output = Output(oid, use)
                 self.outputs[name] = output
-                self.conn.listen(oid, lambda op, a, o=output: self._output_event(o, op, a))
+                self.conn.listen(oid, partial(self._output_event, output))
             elif interface == "wl_seat":
                 self._seat_versions[oid] = use
-                self.conn.listen(oid, lambda op, a, s=oid: self._seat_event(s, op, a))
+                self.conn.listen(oid, partial(self._seat_event, oid))
                 if self._notifier is not None:  # a seat that came later
                     self._add_text_inputs()
                     self._add_idle_watch()
@@ -838,11 +938,11 @@ class LayerSurface(QObject):
                 self.globals[interface] = (oid, use)
         elif opcode == EV_REGISTRY_GLOBAL_REMOVE:
             (name,) = decode("u", args)
-            output = self.outputs.pop(name, None)
-            if output is not None:
-                if output.version >= 3:
-                    self.conn.request(output.id, OUTPUT_RELEASE)
-                self.conn.forget(output.id)
+            gone = self.outputs.pop(name, None)
+            if gone is not None:
+                if gone.version >= 3:
+                    self.conn.request(gone.id, OUTPUT_RELEASE)
+                self.conn.forget(gone.id)
                 # A layer surface on it gets `closed`, and comes back on another screen.
 
     def _output_event(self, output: Output, opcode: int, args: bytes) -> None:
@@ -956,18 +1056,10 @@ class LayerSurface(QObject):
 
     def _keyboard_event(self, opcode: int, args: bytes) -> None:
         if opcode == EV_KEYBOARD_KEYMAP:
-            fmt, size = decode("uhu", args)
-            fd = self.conn.take_fd()
-            try:
-                if fmt == KEYMAP_XKB_V1:
-                    with mmap.mmap(fd, size, mmap.MAP_PRIVATE, mmap.PROT_READ) as m:
-                        text = m[:size].rstrip(b"\0").decode("utf-8", errors="replace")
-                    self._set_keymap(text)
-            finally:
-                os.close(fd)
+            self._keymap_event(args)
         elif opcode == EV_KEYBOARD_ENTER:
             serial, surface = decode("uo", args[:8])
-            _debug(f"keyboard enter (ours: {surface == self._surface})")
+            logger.debug("keyboard enter (ours: %s)", surface == self._surface)
             if surface == self._surface:
                 self._input_serial = serial
             if surface == self._surface:
@@ -975,11 +1067,12 @@ class LayerSurface(QObject):
                 self.stage.keyboard_focus(True)
                 self._maybe_on_demand()
         elif opcode == EV_KEYBOARD_LEAVE:
-            _debug("keyboard leave")
+            logger.debug("keyboard leave")
             if self._kb_focus:
                 self._kb_focus = False
                 self._stop_repeat()
-                self.stage.keyboard_focus(False)
+                if not self._dropped_on_handover():  # taken back at once: the stage never knew it had gone
+                    self.stage.keyboard_focus(False)
         elif opcode == EV_KEYBOARD_MODIFIERS:
             _serial, depressed, latched, locked, group = decode("uuuuu", args)
             if self._keyboard is not None:
@@ -987,26 +1080,42 @@ class LayerSurface(QObject):
         elif opcode == EV_KEYBOARD_REPEAT_INFO:
             self._repeat_rate, self._repeat_delay = decode("ii", args)
         elif opcode == EV_KEYBOARD_KEY and self._kb_focus and self._keyboard is not None:
-            serial, _time, code, state = decode("uuuu", args)
-            self._input_serial = serial
-            if state == 1:
-                key = self._keyboard.press(code)
+            self._key_event(self._keyboard, args)
+
+    def _keymap_event(self, args: bytes) -> None:
+        """The compositor's keymap, in a file it hands over: read it, and type with it from now on."""
+        fmt, size = decode("uhu", args)
+        fd = self.conn.take_fd()
+        try:
+            if fmt == KEYMAP_XKB_V1 and sys.platform != "win32":  # Windows' mmap has no MAP_PRIVATE (nor Wayland)
+                with mmap.mmap(fd, size, mmap.MAP_PRIVATE, mmap.PROT_READ) as m:
+                    text = m[:size].rstrip(b"\0").decode("utf-8", errors="replace")
+                self._set_keymap(text)
+        finally:
+            os.close(fd)
+
+    def _key_event(self, keyboard: xkb.Keyboard, args: bytes) -> None:
+        """A key pressed or let go while the overlay has the keyboard: to the stage, repeating while it's held."""
+        serial, _time, code, state = decode("uuuu", args)
+        self._input_serial = serial
+        if state == 1:
+            key = keyboard.press(code)
+            self._stop_repeat()
+            if key is not None:
+                self.stage.key(key, True, False)
+                if self._repeat_rate > 0 and keyboard.repeats(code):
+                    self._repeat_key = (code, key)
+                    self._repeat_timer.start(max(1, self._repeat_delay))
+        else:
+            if self._repeat_key is not None and self._repeat_key[0] == code:
                 self._stop_repeat()
-                if key is not None:
-                    self.stage.key(key, True, False)
-                    if self._repeat_rate > 0 and self._keyboard.repeats(code):
-                        self._repeat_key = (code, key)
-                        self._repeat_timer.start(max(1, self._repeat_delay))
-            else:
-                if self._repeat_key is not None and self._repeat_key[0] == code:
-                    self._stop_repeat()
-                self.stage.key(self._keyboard.release(code), False, False)
+            self.stage.key(keyboard.release(code), False, False)
 
     def _set_keymap(self, text: str) -> None:
         if self._xkb_lib is None:
             self._xkb_lib = xkb.library()
         if self._xkb_lib is None:
-            print("chatmon: libxkbcommon not found; can't type in the ask box.", file=sys.stderr)
+            logger.warning("libxkbcommon not found; can't type in the ask box.")
             return
         if self._keyboard is not None:
             self._keyboard.close()
@@ -1014,7 +1123,7 @@ class LayerSurface(QObject):
             self._keyboard = xkb.Keyboard(self._xkb_lib, text)
         except ValueError as exc:
             self._keyboard = None
-            print(f"chatmon: {exc}", file=sys.stderr)
+            logger.warning("%s", exc)
 
     def _repeat(self) -> None:
         if self._repeat_key is None or not self._kb_focus:
@@ -1028,10 +1137,11 @@ class LayerSurface(QObject):
         self._repeat_timer.stop()
 
     def _set_keyboard_mode(self, mode: int) -> None:
-        _debug(f"keyboard interactivity {self._kb_mode} -> {mode} (focus={self._kb_focus}, pointer_on={self._pointer_on})")
-        if mode == self._kb_mode or self._layer is None:
+        logger.debug("keyboard interactivity %s -> %s (focus=%s, pointer_on=%s)", self._kb_mode, mode, self._kb_focus, self._pointer_on)
+        if mode == self._kb_mode or self._layer is None or self._surface is None:  # the two come and go together
             self._kb_mode = mode
             return
+        self._handed_over_at = time.monotonic() if (self._kb_mode, mode) == (KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND) else None
         self._kb_mode = mode
         self.conn.request(self._layer, LAYER_SURFACE_SET_KEYBOARD_INTERACTIVITY, "u", mode)
         self.conn.request(self._surface, SURFACE_COMMIT)
@@ -1079,7 +1189,7 @@ class LayerSurface(QObject):
         the layer that gives way to full-screen windows, as layer-shell means it to."""
         self._raised = on
         layer = LAYER_OVERLAY if on else LAYER_TOP
-        if self._layer is None or layer == self._layer_level or self.globals["zwlr_layer_shell_v1"][1] < 2:
+        if self._layer is None or self._surface is None or layer == self._layer_level or self.globals["zwlr_layer_shell_v1"][1] < 2:
             return
         self._layer_level = layer
         self.conn.request(self._layer, LAYER_SURFACE_SET_LAYER, "u", layer)
@@ -1095,7 +1205,7 @@ class LayerSurface(QObject):
         for seat in self._seat_versions:
             if seat not in self.text_inputs:
                 ti = TextInput(self.conn.new_id())
-                self.conn.listen(ti.id, lambda op, a, t=ti: self._text_input_event(t, op, a))
+                self.conn.listen(ti.id, partial(self._text_input_event, ti))
                 self.conn.request(manager[0], TEXT_INPUT_MANAGER_GET, "no", ti.id, seat)
                 self.text_inputs[seat] = ti
 
@@ -1114,7 +1224,8 @@ class LayerSurface(QObject):
         sent = self._wire_state(state)
         if ti.enabled and sent == ti.sent:
             return
-        _debug(f"text input {'update' if ti.enabled else 'enable'}: {sent}")
+        # Never the text itself (what's typed in the ask box): only where the cursor is in it, and its length.
+        logger.debug("text input %s: cursor %s, anchor %s, %s bytes of text", "update" if ti.enabled else "enable", sent[1], sent[2], _utf8_len(sent[0]))
         if not ti.enabled:
             ti.enabled = True
             c.request(ti.id, TI_ENABLE)
@@ -1139,7 +1250,7 @@ class LayerSurface(QObject):
         return text, cursor, anchor, rect
 
     def _text_input_event(self, ti: TextInput, opcode: int, args: bytes) -> None:
-        _debug(f"text input event {opcode} {args[:40]!r}")
+        logger.debug("text input event %s, %s bytes", opcode, len(args))  # not the bytes: they carry what's typed
         if opcode == EV_TI_ENTER:
             (surface,) = decode("o", args)
             ti.entered = surface == self._surface
@@ -1170,16 +1281,32 @@ class LayerSurface(QObject):
 
     # -- the surface
 
+    def _content_sized(self) -> bool:
+        """Whether what's shown gets buffers of its own size, on a subsurface (see MAX_BUFFERS)."""
+        return "wl_subcompositor" in self.globals and "wp_viewporter" in self.globals
+
     def _create_surface(self) -> None:
         c = self.conn
         compositor = self.globals["wl_compositor"][0]
         self._surface = c.new_id(self._surface_event)
         c.request(compositor, COMPOSITOR_CREATE_SURFACE, "n", self._surface)
-        if "wp_viewporter" in self.globals and "wp_fractional_scale_manager_v1" in self.globals:
+        if "wp_viewporter" in self.globals and ("wp_fractional_scale_manager_v1" in self.globals or self._content_sized()):
             self._viewport = c.new_id()
             c.request(self.globals["wp_viewporter"][0], VIEWPORTER_GET_VIEWPORT, "no", self._viewport, self._surface)
+        if self._viewport is not None and "wp_fractional_scale_manager_v1" in self.globals:
             self._fractional = c.new_id(self._fractional_event)
             c.request(self.globals["wp_fractional_scale_manager_v1"][0], FRACTIONAL_GET, "no", self._fractional, self._surface)
+        if self._content_sized():
+            # Takes no clicks (an empty input region): the pointer, drops and the keyboard stay the layer
+            # surface's, in its coordinates, wherever the subsurface is.
+            self._sub = c.new_id()
+            c.request(compositor, COMPOSITOR_CREATE_SURFACE, "n", self._sub)
+            self._subsurface = c.new_id()
+            c.request(self.globals["wl_subcompositor"][0], SUBCOMPOSITOR_GET_SUBSURFACE, "noo", self._subsurface, self._sub, self._surface)
+            self._sub_viewport = c.new_id()
+            c.request(self.globals["wp_viewporter"][0], VIEWPORTER_GET_VIEWPORT, "no", self._sub_viewport, self._sub)
+            self._send_input([], self._sub)
+            c.request(self._sub, SURFACE_COMMIT)  # synchronized (a new subsurface is): applied with its parent's commits
         self._layer = c.new_id(self._layer_event)
         output = self._output.id if self._output is not None else None
         # The top layer, under a full-screen video, game or slides, where layer-shell has one (version 2 can
@@ -1200,6 +1327,18 @@ class LayerSurface(QObject):
         for buf in self._buffers:
             buf.destroy()
         self._buffers = []
+        self._shown = None
+        if self._backdrop is not None:
+            self._backdrop.destroy()
+            self._backdrop = None
+        if self._sub_viewport is not None:
+            c.request(self._sub_viewport, VIEWPORT_DESTROY)
+        if self._subsurface is not None:
+            c.request(self._subsurface, SUBSURFACE_DESTROY)
+        if self._sub is not None:
+            c.request(self._sub, SURFACE_DESTROY)
+            c.forget(self._sub)
+        self._sub = self._subsurface = self._sub_viewport = self._box = None
         if self._viewport is not None:
             c.request(self._viewport, VIEWPORT_DESTROY)
         if self._fractional is not None:
@@ -1219,7 +1358,9 @@ class LayerSurface(QObject):
     def _layer_event(self, opcode: int, args: bytes) -> None:
         if opcode == EV_LAYER_SURFACE_CONFIGURE:
             serial, width, height = decode("uuu", args)
-            _debug(f"configure {width}x{height}")
+            logger.debug("configure %sx%s", width, height)
+            if self._layer is None:  # never: its events stop with it (forget)
+                return
             self.conn.request(self._layer, LAYER_SURFACE_ACK_CONFIGURE, "u", serial)
             if (width, height) != self._size:
                 self._size = (width, height)
@@ -1227,7 +1368,7 @@ class LayerSurface(QObject):
             else:
                 self._schedule()
         elif opcode == EV_LAYER_SURFACE_CLOSED:
-            _debug("closed by the compositor")
+            logger.debug("closed by the compositor")
             # Its screen went away: start again wherever the stage is now.
             self._destroy_surface()
             if not self._closing:
@@ -1260,8 +1401,8 @@ class LayerSurface(QObject):
         """Wayland's logical pixels per Qt pixel (1 unless XWayland is scaled differently)."""
         return self._size[0] / self._qt_width if self._size else 1.0
 
-    def _buffer_size(self) -> tuple[int, int]:
-        w, h = self._size
+    def _buffer_size(self, size: tuple[int, int]) -> tuple[int, int]:
+        w, h = size
         s = self._scale()
         if self._viewport is not None:
             return max(1, round(w * s)), max(1, round(h * s))
@@ -1275,10 +1416,18 @@ class LayerSurface(QObject):
         for buf in self._buffers:
             buf.destroy()
         self._buffers = []
+        self._shown = None
+        self._box = None  # placed again, in buffers made for the new scale
         if self._viewport is not None:
             self.conn.request(self._viewport, VIEWPORT_SET_DESTINATION, "ii", *self._size)
         else:
             self.conn.request(self._surface, SURFACE_SET_BUFFER_SCALE, "i", max(1, round(self._scale())))
+        if self._sub is not None and self._backdrop is None:
+            # The layer surface's own content: one see-through pixel, stretched over the output by its viewport,
+            # attached once (the commit that follows maps it).
+            self._backdrop = Buffer(self.conn, self.globals["wl_shm"][0], 1, 1, lambda _buf: None)
+            self.conn.request(self._surface, SURFACE_ATTACH, "oii", self._backdrop.id, 0, 0)
+            self.conn.request(self._surface, SURFACE_DAMAGE_BUFFER, "iiii", 0, 0, 1, 1)
         self._pending = QRegion(0, 0, self._qt_width, math.ceil(self._size[1] / self._k()))
         self._schedule()
         scale = self.device_scale()
@@ -1299,68 +1448,194 @@ class LayerSurface(QObject):
             self._send_input(self._input or ())
             self._input_dirty = False
             commit = True
-        if not self._pending.isEmpty() and not self._frame_pending:
-            buf = self._free_buffer()
+        if self._sub is not None:
+            content, backdrop = self._present_content(), self._backdrop_waiting()  # both asked: each notes what it sent
+            commit = content or backdrop or commit
+        elif not self._pending.isEmpty() and not self._frame_pending:
+            buf = self._free_buffer(*self._buffer_size(self._size), QRect(0, 0, self._qt_width, math.ceil(self._size[1] / self._k())))
             if buf is not None:
-                self._paint(buf)
-                c.request(self._surface, SURFACE_ATTACH, "oii", buf.id, 0, 0)
-                for r in self._to_buffer(self._pending, buf):
-                    c.request(self._surface, SURFACE_DAMAGE_BUFFER, "iiii", r.x(), r.y(), r.width(), r.height())
-                buf.busy = True
-                self._pending = QRegion()
-                callback = c.new_id(self._frame_done)
-                c.request(self._surface, SURFACE_FRAME, "n", callback)
-                self._frame_pending = True
+                self._draw(buf, self._surface)
                 commit = True
         if commit:
             c.request(self._surface, SURFACE_COMMIT)
         self._flush()
 
+    def _backdrop_waiting(self) -> bool:
+        """The layer surface's pixel, attached by _rescale, waits for a commit to be shown (once)."""
+        backdrop = self._backdrop
+        if backdrop is None or backdrop.busy:
+            return False
+        backdrop.busy = True  # attached for good: it's never drawn on again
+        return True
+
+    def _present_content(self) -> bool:
+        """The subsurface moved, resized or drawn again as the stage changed, its new place and pixels sent for the
+        layer surface's next commit to show together. True: there's something for that commit."""
+        c, sub, subsurface, viewport = self.conn, self._sub, self._subsurface, self._sub_viewport
+        if sub is None or subsurface is None or viewport is None:  # never: asked only while there's a subsurface
+            return False
+        box = self._content_box()
+        if box is None:
+            self._pending = QRegion()
+            if self._box is None:
+                return False
+            self._box = None  # nothing drawn at all: no subsurface shown
+            c.request(sub, SURFACE_ATTACH, "oii", 0, 0, 0)
+            c.request(sub, SURFACE_COMMIT)
+            return True
+        if (box == self._box and self._pending.isEmpty()) or self._frame_pending:
+            return False  # nothing new, or after the frame callback, which looks again
+        if box != self._box:
+            if self._box is None or box.size() != self._box.size():
+                for old in self._buffers:  # made for another size: one of this size comes next
+                    old.destroy()
+                self._buffers, self._shown = [], None
+            for kept in self._buffers:  # the same size somewhere else: drawn again there, in full
+                kept.stale = QRegion(self._qt_rect(box))
+        scale = self._scale()
+        buf = self._free_buffer(max(1, round(box.width() * scale)), max(1, round(box.height() * scale)), self._qt_rect(box))
+        if buf is None:
+            return False  # one comes back with wl_buffer.release: a move waits for it, never shown without its pixels
+        if box != self._box:
+            self._box = box
+            c.request(subsurface, SUBSURFACE_SET_POSITION, "ii", box.x(), box.y())
+            c.request(viewport, VIEWPORT_SET_DESTINATION, "ii", box.width(), box.height())
+            self._pending = QRegion(self._qt_rect(box))
+        self._draw(buf, sub)
+        c.request(sub, SURFACE_COMMIT)  # held until the layer surface's commit (a synchronized subsurface)
+        return True
+
+    def _content_box(self) -> QRect | None:
+        """Where the subsurface goes, in surface pixels: round what the stage draws, with CONTENT_MARGIN to move in,
+        on whole device pixels; where it is already while that still holds it and isn't far too big. None: nothing
+        is drawn."""
+        width, height = self._size or (1, 1)
+        k = self._k()
+        extent = self._extent if self._extent is not None else QRect(0, 0, self._qt_width, math.ceil(height / k))
+        x0, y0 = max(0, math.floor(extent.x() * k)), max(0, math.floor(extent.y() * k))
+        x1, y1 = min(width, math.ceil((extent.x() + extent.width()) * k)), min(height, math.ceil((extent.y() + extent.height()) * k))
+        if extent.isEmpty() or x1 <= x0 or y1 <= y0:
+            return None
+        need = QRect(x0, y0, x1 - x0, y1 - y0)
+        room = (min(width, need.width() + 2 * CONTENT_MARGIN), min(height, need.height() + 2 * CONTENT_MARGIN))
+        box = self._box
+        if box is not None and box.contains(need) and box.width() * box.height() <= CONTENT_SHRINK * room[0] * room[1]:
+            return box
+        grid = _grid(self._scale())
+        quantum = grid * math.ceil(CONTENT_QUANTUM / grid)
+        place = []
+        for lo, size, wanted, total in ((x0, need.width(), room[0], width), (y0, need.height(), room[1], height)):
+            side = math.ceil(wanted / quantum) * quantum
+            if side >= total - grid:  # as big as the output, or nearly: all of it
+                place.append((0, total))
+                continue
+            at = math.floor((lo + size / 2 - side / 2) / grid) * grid
+            place.append((min(max(0, at), (total - side) // grid * grid), side))
+        (x, w), (y, h) = place
+        box = QRect(x, y, w, h)
+        return box if box.contains(need) else QRect(0, 0, width, height)
+
+    def _qt_rect(self, box: QRect) -> QRect:
+        """A rectangle in surface pixels, in the stage's (Qt's) coordinates, rounded outward."""
+        k = self._k()
+        x0, y0 = math.floor(box.x() / k), math.floor(box.y() / k)
+        return QRect(x0, y0, math.ceil((box.x() + box.width()) / k) - x0, math.ceil((box.y() + box.height()) / k) - y0)
+
     def _frame_done(self, _opcode: int, _args: bytes) -> None:
         self._frame_pending = False
-        if not self._pending.isEmpty():
-            self._schedule()
+        self._present_if_due()
 
     def _released(self, buf: Buffer) -> None:
         buf.busy = False
-        if not self._pending.isEmpty():
+        self._present_if_due()
+
+    def _present_if_due(self) -> None:
+        """Present again if something waited: a change, or the subsurface due to move."""
+        moving = self._sub is not None and self._size is not None and self._content_box() != self._box
+        if not self._pending.isEmpty() or moving:
             self._schedule()
 
-    def _free_buffer(self) -> Buffer | None:
+    def _trim(self) -> None:
+        """The stage has been still a while: keep one buffer, the one on screen, and let the other go (it was
+        only needed while frames came faster than the compositor gave buffers back)."""
+        if self._closing or len(self._buffers) <= 1:
+            return
+        keep = self._shown if self._shown in self._buffers else self._buffers[0]
+        for buf in list(self._buffers):
+            if buf is not keep and not buf.busy:
+                buf.destroy()
+                self._buffers.remove(buf)
+        self._flush()
+
+    def _free_buffer(self, width: int, height: int, covers: QRect) -> Buffer | None:
+        """A buffer the compositor isn't holding; one made `width` x `height`, covering `covers` of the stage, if
+        need be."""
         for buf in self._buffers:
             if not buf.busy:
                 return buf
         if len(self._buffers) >= MAX_BUFFERS:
             return None  # one comes back with wl_buffer.release
-        w, h = self._buffer_size()
-        buf = Buffer(self.conn, self.globals["wl_shm"][0], w, h, self._released)
-        buf.stale = QRegion(0, 0, self._qt_width, math.ceil(h / self._dpr(buf)))
+        buf = Buffer(self.conn, self.globals["wl_shm"][0], width, height, self._released)
+        buf.stale = QRegion(covers)
         self._buffers.append(buf)
         return buf
 
+    def _draw(self, buf: Buffer, surface: int) -> None:
+        """Paint what changed into `buf` and attach it to `surface`, asking to hear when to draw the next."""
+        c = self.conn
+        self._paint(buf)
+        c.request(surface, SURFACE_ATTACH, "oii", buf.id, 0, 0)
+        for r in self._to_buffer(self._pending, buf):
+            c.request(surface, SURFACE_DAMAGE_BUFFER, "iiii", r.x(), r.y(), r.width(), r.height())
+        buf.busy = True
+        self._shown = buf
+        self._pending = QRegion()
+        self._trim_timer.start(TRIM_AFTER_MS)  # from the last frame: still that long, the spare goes
+        callback = c.new_id(self._frame_done)
+        c.request(surface, SURFACE_FRAME, "n", callback)
+        self._frame_pending = True
+
+    def _covered(self) -> QRect:
+        """What of the stage the buffers hold, in its coordinates: the subsurface's part, or all of it."""
+        if self._sub is not None and self._box is not None:
+            return self._qt_rect(self._box)
+        return QRect(0, 0, self._qt_width, math.ceil(self._size[1] / self._k()) if self._size else 1)
+
     def _dpr(self, buf: Buffer) -> float:
-        return buf.width / self._qt_width
+        return buf.width / max(1, self._covered().width())
 
     def _paint(self, buf: Buffer) -> None:
-        if buf.stale.isEmpty():
-            return
-        buf.image.setDevicePixelRatio(self._dpr(buf))
-        p = QPainter(buf.image)
-        p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
-        p.setClipRegion(buf.stale)
-        self.stage.paint(p, buf.stale)
-        p.end()
+        image = buf.image
+        covered = self._covered()
+        region = buf.stale.intersected(QRegion(covered))
         buf.stale = QRegion()
+        if region.isEmpty() or image is None:  # None: destroyed, and out of _buffers, so never painted
+            return
+        image.setDevicePixelRatio(self._dpr(buf))
+        p = QPainter(image)
+        p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        p.translate(-QPointF(covered.topLeft()))  # the stage draws in its own coordinates
+        p.setClipRegion(region)
+        self.stage.paint(p, region)
+        p.end()
 
     def _to_buffer(self, region: QRegion, buf: Buffer) -> list[QRect]:
         """Buffer pixels to damage. PyQt6 can't list a region's rectangles, so
         its bounding box: the penguin and its bubble are next to each other."""
-        r, d = region.boundingRect(), self._dpr(buf)
+        covered = self._covered()
+        r, d = region.boundingRect().intersected(covered), self._dpr(buf)
+        if r.isEmpty():
+            return []
+        r = r.translated(-covered.topLeft())
         x0, y0 = math.floor(r.x() * d), math.floor(r.y() * d)
-        x1, y1 = math.ceil((r.x() + r.width()) * d), math.ceil((r.y() + r.height()) * d)
+        x1, y1 = min(buf.width, math.ceil((r.x() + r.width()) * d)), min(buf.height, math.ceil((r.y() + r.height()) * d))
         return [QRect(x0, y0, x1 - x0, y1 - y0)]
 
-    def _send_input(self, rects) -> None:
+    def _send_input(self, rects, surface: int | None = None) -> None:
+        """Where `surface` (the layer surface's, unless named) takes clicks: stage rectangles, in its pixels."""
+        surface = surface or self._surface
+        if surface is None:  # never: it's sent only to a surface there is
+            return
         c = self.conn
         region = c.new_id()
         c.request(self.globals["wl_compositor"][0], COMPOSITOR_CREATE_REGION, "n", region)
@@ -1374,5 +1649,5 @@ class LayerSurface(QObject):
                 x0, y0 = math.floor(x * k), math.floor(y * k)
                 rows.append((x0, y0, math.ceil((x + w) * k) - x0, math.ceil((y + h) * k) - y0))
         c.requests(region, REGION_ADD, "iiii", rows)  # a sprite's outline is some fifty of them, as it walks
-        c.request(self._surface, SURFACE_SET_INPUT_REGION, "o", region)
+        c.request(surface, SURFACE_SET_INPUT_REGION, "o", region)
         c.request(region, REGION_DESTROY)

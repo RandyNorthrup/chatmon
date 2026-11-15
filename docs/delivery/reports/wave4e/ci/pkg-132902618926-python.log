@@ -1,0 +1,1243 @@
+python	Set up job	﻿2026-11-15T17:55:39.7438535Z Current runner version: '2.338.2'
+python	Set up job	2026-11-15T17:55:39.7458735Z ##[group]Runner Image Provisioner
+python	Set up job	2026-11-15T17:55:39.7459415Z Hosted Compute Agent
+python	Set up job	2026-11-15T17:55:39.7459884Z Version: 20261103.629
+python	Set up job	2026-11-15T17:55:39.7460337Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+python	Set up job	2026-11-15T17:55:39.7460875Z Build Date: 2026-11-03T17:26:59Z
+python	Set up job	2026-11-15T17:55:39.7461365Z Worker ID: {d21b9403-58d2-4322-b3e2-2230dc26c5e9}
+python	Set up job	2026-11-15T17:55:39.7462097Z Region: us-west-2
+python	Set up job	2026-11-15T17:55:39.7462485Z Cloud: AWS
+python	Set up job	2026-11-15T17:55:39.7462891Z ##[endgroup]
+python	Set up job	2026-11-15T17:55:39.7463877Z ##[group]Operating System
+python	Set up job	2026-11-15T17:55:39.7464319Z Ubuntu
+python	Set up job	2026-11-15T17:55:39.7464693Z 24.04.5
+python	Set up job	2026-11-15T17:55:39.7465048Z LTS
+python	Set up job	2026-11-15T17:55:39.7465448Z ##[endgroup]
+python	Set up job	2026-11-15T17:55:39.7465844Z ##[group]Runner Image
+python	Set up job	2026-11-15T17:55:39.7466281Z Image: ubuntu-24.04
+python	Set up job	2026-11-15T17:55:39.7466686Z Version: 20261111.127.1
+python	Set up job	2026-11-15T17:55:39.7467500Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+python	Set up job	2026-11-15T17:55:39.7468861Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+python	Set up job	2026-11-15T17:55:39.7469537Z ##[endgroup]
+python	Set up job	2026-11-15T17:55:39.7470337Z ##[group]GITHUB_TOKEN Permissions
+python	Set up job	2026-11-15T17:55:39.7472179Z Contents: read
+python	Set up job	2026-11-15T17:55:39.7472624Z Metadata: read
+python	Set up job	2026-11-15T17:55:39.7473005Z ##[endgroup]
+python	Set up job	2026-11-15T17:55:39.7474636Z Secret source: Actions
+python	Set up job	2026-11-15T17:55:39.7475282Z Cache mode: write
+python	Set up job	2026-11-15T17:55:39.7475778Z Prepare workflow directory
+python	Set up job	2026-11-15T17:55:39.7753400Z Prepare all required actions
+python	Set up job	2026-11-15T17:55:39.7791288Z Getting action download info
+python	Set up job	2026-11-15T17:55:40.1279177Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+python	Set up job	2026-11-15T17:55:41.6096316Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+python	Set up job	2026-11-15T17:55:41.7321337Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+python	Set up job	2026-11-15T17:55:42.0230041Z Complete job name: python
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T17:55:42.1058590Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1059989Z with:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1060816Z   persist-credentials: false
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1061956Z   repository: RandyNorthrup/chatmon
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1068081Z   token: ***
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1068824Z   ssh-strict: true
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1069573Z   ssh-user: git
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1070319Z   clean: true
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1071098Z   sparse-checkout-cone-mode: true
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1072124Z   fetch-depth: 1
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1072891Z   fetch-tags: false
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1073676Z   show-progress: true
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1074473Z   lfs: false
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1075198Z   submodules: false
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1076005Z   set-safe-directory: true
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1076890Z   allow-unsafe-pr-checkout: false
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1077991Z env:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1078934Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:42.1079804Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.9124267Z Syncing repository: RandyNorthrup/chatmon
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.9125879Z ##[group]Getting Git version info
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.9126293Z Working directory is '/home/runner/work/chatmon/chatmon'
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.9126952Z [command]/usr/bin/git version
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1227479Z git version 2.56.1
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1242147Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1249960Z Temporarily overriding HOME='/home/runner/work/_temp/f794ce69-e96c-4204-85fb-3aaee1d99d42' before making global git config changes
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1250918Z Adding repository directory to the temporary git global config as a safe directory
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1255645Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1311733Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1313785Z ##[group]Determining repository object format
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1314729Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1315299Z ##[group]Initializing the repository
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1318094Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1501937Z hint: Using 'master' as the name for the initial branch. This default branch name
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1502856Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1503326Z hint: to use in all of your new repositories, which will suppress this warning,
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1503734Z hint: call:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1503983Z hint:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1504337Z hint: 	git config --global init.defaultBranch <name>
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1504909Z hint:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1505278Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1505761Z hint: 'development'. The just-created branch can be renamed via this command:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1506133Z hint:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1506436Z hint: 	git branch -m <name>
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1506713Z hint:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1507053Z hint: Disable this message with "git config set advice.defaultBranchName false"
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1514078Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1522439Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1583009Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1584026Z ##[group]Disabling automatic garbage collection
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1585502Z [command]/usr/bin/git config --local gc.auto 0
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1609008Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1609573Z ##[group]Setting up auth
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1609940Z Removing SSH command configuration
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1614446Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1640377Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4214543Z Removing HTTP extra header
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4218319Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4250903Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4403157Z Removing includeIf entries pointing to credentials config files
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4406720Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4429940Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4585030Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4610528Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4631083Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4651841Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4673372Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4692303Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4693028Z ##[group]Fetching the repository
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4697941Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +eb8a996c4d85255e18e7180c2ed22dfebbcc333b:refs/remotes/pull/18/merge
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1128560Z From https://github.com/RandyNorthrup/chatmon
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1129871Z  * [new ref]         eb8a996c4d85255e18e7180c2ed22dfebbcc333b -> pull/18/merge
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1133214Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1133835Z ##[group]Determining the checkout info
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1134257Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1138977Z [command]/usr/bin/git sparse-checkout disable
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1222474Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1246049Z ##[group]Checking out the ref
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.1248813Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/18/merge
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8091319Z Note: switching to 'refs/remotes/pull/18/merge'.
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8091949Z 
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8092302Z You are in 'detached HEAD' state. You can look around, make experimental
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8092824Z changes and commit them, and you can discard any commits you make in this
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8093320Z state without impacting any branches by switching back to a branch.
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8093580Z 
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8094900Z If you want to create a new branch to retain commits you create, you may
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8095401Z do so (now or later) by using -c with the switch command. Example:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8095716Z 
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8095841Z   git switch -c <new-branch-name>
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8096043Z 
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8096158Z Or undo this operation with:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8096385Z 
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8096543Z   git switch -
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8096711Z 
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8096960Z Turn off this advice by setting config variable advice.detachedHead to false
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8097235Z 
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8097578Z HEAD is now at eb8a996 Merge 45a17b37fb25590a62fe3391379f7c8d2870da29 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8135466Z ##[endgroup]
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8177884Z [command]/usr/bin/git log -1 --format=%H
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8200268Z eb8a996c4d85255e18e7180c2ed22dfebbcc333b
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8210986Z ##[group]Removing auth
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8211534Z Removing SSH command configuration
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8212008Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8235032Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8393869Z Removing HTTP extra header
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8397190Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8420081Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8570311Z Removing includeIf entries pointing to credentials config files
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8573473Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8596998Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8597696Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8598161Z includeif.gitdir:/github/workspace/.git.path
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8598539Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8603827Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8619617Z /home/runner/work/_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8627156Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-511bf83d\-9355\-4d21\-8781\-1020c6323fab\.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8652723Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8668478Z /home/runner/work/_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8674429Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-511bf83d\-9355\-4d21\-8781\-1020c6323fab\.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8701126Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8718277Z /github/runner_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8724023Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-511bf83d\-9355\-4d21\-8781\-1020c6323fab\.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8744963Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8760132Z /github/runner_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8766859Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-511bf83d\-9355\-4d21\-8781\-1020c6323fab\.config
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8790187Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8945276Z Removing credentials config '/home/runner/work/_temp/git-credentials-511bf83d-9355-4d21-8781-1020c6323fab.config'
+python	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:49.8951637Z ##[endgroup]
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T17:55:49.9231732Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9232148Z with:
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9232370Z   python-version: 3.14
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9232655Z   check-latest: false
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9234390Z   token: ***
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9234690Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9235054Z   update-environment: true
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9235302Z   allow-prereleases: false
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9235552Z   freethreaded: false
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9235797Z env:
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9236012Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:49.9236267Z ##[endgroup]
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:50.0171199Z ##[group]Installed versions
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:50.1719673Z Successfully set up CPython (3.14.10)
+python	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:55:50.1720643Z ##[endgroup]
+python	Date the build by its commit	﻿2026-11-15T17:55:50.1831039Z ##[group]Run echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+python	Date the build by its commit	2026-11-15T17:55:50.1832096Z [36;1mecho "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"[0m
+python	Date the build by its commit	2026-11-15T17:55:50.2312232Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+python	Date the build by its commit	2026-11-15T17:55:50.2312664Z env:
+python	Date the build by its commit	2026-11-15T17:55:50.2312929Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	Date the build by its commit	2026-11-15T17:55:50.2313329Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Date the build by its commit	2026-11-15T17:55:50.2313730Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	Date the build by its commit	2026-11-15T17:55:50.2314093Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Date the build by its commit	2026-11-15T17:55:50.2314463Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Date the build by its commit	2026-11-15T17:55:50.2314826Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Date the build by its commit	2026-11-15T17:55:50.2315195Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	Date the build by its commit	2026-11-15T17:55:50.2315498Z ##[endgroup]
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	﻿2026-11-15T17:55:50.2734370Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-build.txt
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2734998Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-build.txt[0m
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2764129Z shell: /usr/bin/bash -e {0}
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2764462Z env:
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2764694Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2765070Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2765578Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2765957Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2766352Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2766711Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2767073Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2767384Z   SOURCE_DATE_EPOCH: 1794765319
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:50.2767629Z ##[endgroup]
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.5449369Z Ignoring colorama: markers 'os_name == "nt" or sys_platform == "win32"' don't match your environment
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.5450446Z Ignoring pywin32-ctypes: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "win32"' don't match your environment
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.6462607Z Collecting build==1.6.1 (from -r packaging/requirements-build.txt (line 3))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.7012923Z   Downloading build-1.6.1-py3-none-any.whl (31 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.7319686Z Collecting certifi==2026.10.23 (from -r packaging/requirements-build.txt (line 7))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.7408203Z   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.8358398Z Collecting cffi==2.1.1 (from -r packaging/requirements-build.txt (line 11))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.8454634Z   Downloading cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.9337801Z Collecting charset-normalizer==3.5.2 (from -r packaging/requirements-build.txt (line 113))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:54.9451789Z   Downloading charset_normalizer-3.5.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (255 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.0605601Z Collecting cryptography==50.0.2 (from -r packaging/requirements-build.txt (line 293))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.0705574Z   Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.1400134Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 159.0 MB/s  0:00:00
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.1603988Z Collecting docutils==0.23 (from -r packaging/requirements-build.txt (line 354))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.1689627Z   Downloading docutils-0.23-py3-none-any.whl (634 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.1738567Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 123.0 MB/s  0:00:00
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.1904550Z Collecting id==1.6.1 (from -r packaging/requirements-build.txt (line 358))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.1991762Z   Downloading id-1.6.1-py3-none-any.whl (14 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.2151687Z Collecting idna==3.20 (from -r packaging/requirements-build.txt (line 362))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.2258596Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.2650451Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-build.txt (line 366))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.2735031Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.2905117Z Collecting jaraco-classes==3.4.0 (from -r packaging/requirements-build.txt (line 370))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.2989569Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.3150161Z Collecting jaraco-context==6.1.2 (from -r packaging/requirements-build.txt (line 374))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.3238711Z   Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.3421933Z Collecting jaraco-functools==4.6.0 (from -r packaging/requirements-build.txt (line 378))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.3522973Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.3673491Z Collecting jeepney==0.9.0 (from -r packaging/requirements-build.txt (line 382))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.3760957Z   Downloading jeepney-0.9.0-py3-none-any.whl (49 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.3987139Z Collecting keyring==25.7.0 (from -r packaging/requirements-build.txt (line 388))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.4072206Z   Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.4249759Z Collecting markdown-it-py==4.2.0 (from -r packaging/requirements-build.txt (line 392))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.4340536Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.4500256Z Collecting mdurl==0.1.2 (from -r packaging/requirements-build.txt (line 396))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.4582235Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.4762994Z Collecting more-itertools==11.2.1 (from -r packaging/requirements-build.txt (line 400))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.4846650Z   Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.5152685Z Collecting nh3==0.3.7 (from -r packaging/requirements-build.txt (line 406))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.5240940Z   Downloading nh3-0.3.7-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (832 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.5287143Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 832.2/832.2 kB 206.2 MB/s  0:00:00
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.5442846Z Collecting packaging==26.3 (from -r packaging/requirements-build.txt (line 435))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.5539803Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.5699194Z Collecting pluggy==1.7.0 (from -r packaging/requirements-build.txt (line 443))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.5784241Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.5934961Z Collecting pycparser==3.12 (from -r packaging/requirements-build.txt (line 447))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.6018278Z   Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.6196797Z Collecting pygments==2.21.0 (from -r packaging/requirements-build.txt (line 451))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.6281720Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.6363837Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 154.4 MB/s  0:00:00
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.6521157Z Collecting pyproject-hooks==1.3.3 (from -r packaging/requirements-build.txt (line 458))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.6610815Z   Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.6838650Z Collecting pytest==9.2.0 (from -r packaging/requirements-build.txt (line 462))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.6921736Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.7139791Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-build.txt (line 468))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.7228635Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.7413058Z Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.7498946Z   Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.7707766Z Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.7790182Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.7949741Z Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.8040094Z   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.8196760Z Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.8280935Z   Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.8521092Z Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.8605041Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.8769161Z Collecting secretstorage==3.5.0 (from -r packaging/requirements-build.txt (line 498))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.8849521Z   Downloading secretstorage-3.5.0-py3-none-any.whl (15 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.9320549Z Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.9410289Z   Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.9454746Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 876.3/876.3 kB 221.7 MB/s  0:00:00
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.9703762Z Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.9789869Z   Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:55.9996882Z Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:56.0080032Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:56.0272680Z Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:56.0354055Z   Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:56.3988180Z Installing collected packages: urllib3, setuptools, rfc3986, pyproject-hooks, pygments, pycparser, pluggy, packaging, nh3, more-itertools, mdurl, jeepney, jaraco-context, iniconfig, idna, docutils, charset-normalizer, certifi, wheel, requests, readme-renderer, pytest, markdown-it-py, jaraco-functools, jaraco-classes, id, cffi, build, rich, requests-toolbelt, pytest-timeout, cryptography, secretstorage, keyring, twine
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:59.0187310Z 
+python	Run python -m pip install --require-hashes -r packaging/requirements-build.txt	2026-11-15T17:55:59.0210942Z Successfully installed build-1.6.1 certifi-2026.10.23 cffi-2.1.1 charset-normalizer-3.5.2 cryptography-50.0.2 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 jeepney-0.9.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pycparser-3.12 pygments-2.21.0 pyproject-hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 secretstorage-3.5.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+python	Run python -m build --no-isolation	﻿2026-11-15T17:55:59.1509790Z ##[group]Run python -m build --no-isolation
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1510197Z [36;1mpython -m build --no-isolation[0m
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1537908Z shell: /usr/bin/bash -e {0}
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1538219Z env:
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1538480Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1538840Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1539239Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1539628Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1539972Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1540353Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1540719Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1541032Z   SOURCE_DATE_EPOCH: 1794765319
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.1541285Z ##[endgroup]
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.2701881Z * Getting build dependencies for sdist...
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.6981701Z running egg_info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.6997914Z creating chatmon.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.6998520Z writing chatmon.egg-info/PKG-INFO
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7010378Z writing dependency_links to chatmon.egg-info/dependency_links.txt
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7012534Z writing entry points to chatmon.egg-info/entry_points.txt
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7018222Z writing requirements to chatmon.egg-info/requires.txt
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7018650Z writing top-level names to chatmon.egg-info/top_level.txt
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7019350Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7094427Z reading manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7095223Z adding license file 'LICENSE'
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7108360Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.7548430Z * Building sdist...
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.8854990Z running sdist
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.8855496Z running egg_info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.8890996Z writing chatmon.egg-info/PKG-INFO
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.8904494Z writing dependency_links to chatmon.egg-info/dependency_links.txt
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.8907255Z writing entry points to chatmon.egg-info/entry_points.txt
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.8912959Z writing requirements to chatmon.egg-info/requires.txt
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.8913704Z writing top-level names to chatmon.egg-info/top_level.txt
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.8989539Z reading manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9004109Z adding license file 'LICENSE'
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9019422Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9021853Z running check
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9232197Z creating chatmon-0.10.0
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9232698Z creating chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9233358Z creating chatmon-0.10.0/chatmon.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9233811Z creating chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9234425Z creating chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9235347Z creating chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9235827Z creating chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9236404Z creating chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9236715Z creating chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9237059Z creating chatmon-0.10.0/chatmon/integrations/claude/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9237692Z creating chatmon-0.10.0/chatmon/integrations/claude/chatmon/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9238184Z creating chatmon-0.10.0/chatmon/integrations/claude/chatmon/hooks
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9238614Z creating chatmon-0.10.0/chatmon/locale
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9238934Z creating chatmon-0.10.0/chatmon/phrases
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9239276Z creating chatmon-0.10.0/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9239625Z creating chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9239939Z copying files to chatmon-0.10.0...
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9240252Z copying LICENSE -> chatmon-0.10.0
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9240946Z copying README.md -> chatmon-0.10.0
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9242036Z copying pyproject.toml -> chatmon-0.10.0
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9243018Z copying chatmon/__init__.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9247516Z copying chatmon/__main__.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9248066Z copying chatmon/a11y.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9248454Z copying chatmon/agents.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9248856Z copying chatmon/app.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9249198Z copying chatmon/asking.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9249626Z copying chatmon/attachments.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9250024Z copying chatmon/autostart.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9250450Z copying chatmon/backup.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9250807Z copying chatmon/behavior.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9251170Z copying chatmon/brains.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9251730Z copying chatmon/bubble.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9252149Z copying chatmon/bubbleart.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9252558Z copying chatmon/changelog.md -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9252933Z copying chatmon/changelog.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9253375Z copying chatmon/chats.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9253787Z copying chatmon/chatswin.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9254177Z copying chatmon/cli.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9254569Z copying chatmon/clickthrough.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9254962Z copying chatmon/commands.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9255389Z copying chatmon/companions.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9255807Z copying chatmon/context.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9256244Z copying chatmon/ed25519.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9256620Z copying chatmon/events.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9256990Z copying chatmon/heads_up.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9257515Z copying chatmon/highlight.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9257916Z copying chatmon/hotkey.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9258329Z copying chatmon/i18n.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9258858Z copying chatmon/keychain.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9259366Z copying chatmon/layer.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9260135Z copying chatmon/libdbus.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9260627Z copying chatmon/linuxsession.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9261092Z copying chatmon/localefmt.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9261850Z copying chatmon/log.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9262413Z copying chatmon/macnative.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9262925Z copying chatmon/memory.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9263323Z copying chatmon/menus.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9263955Z copying chatmon/messages.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9264506Z copying chatmon/offline.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9265134Z copying chatmon/packagekit.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9265541Z copying chatmon/paths.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9265983Z copying chatmon/penguin.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9266659Z copying chatmon/portal.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9267100Z copying chatmon/portowner.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9267552Z copying chatmon/presence.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9268052Z copying chatmon/qtsignal.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9268458Z copying chatmon/releasecheck.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9268954Z copying chatmon/reminders.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9269478Z copying chatmon/report.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9269979Z copying chatmon/richtext.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9270680Z copying chatmon/settings.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9272053Z copying chatmon/settingswin.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9272632Z copying chatmon/shortcutportal.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9273164Z copying chatmon/sound.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9273797Z copying chatmon/sprites.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9274460Z copying chatmon/stagemenu.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9275269Z copying chatmon/styles.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9275909Z copying chatmon/sysnotify.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9276475Z copying chatmon/updates.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9277255Z copying chatmon/wayland.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9277871Z copying chatmon/wincaret.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9278490Z copying chatmon/windrop.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9279130Z copying chatmon/winfiles.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9279663Z copying chatmon/winfocus.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9280676Z copying chatmon/winlock.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9281379Z copying chatmon/winpipe.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9292404Z copying chatmon/winrt.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9292888Z copying chatmon/wintoast.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9293323Z copying chatmon/wintrust.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9293722Z copying chatmon/winuia.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9294124Z copying chatmon/xkb.py -> chatmon-0.10.0/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9294630Z copying chatmon.egg-info/PKG-INFO -> chatmon-0.10.0/chatmon.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9295057Z copying chatmon.egg-info/SOURCES.txt -> chatmon-0.10.0/chatmon.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9295670Z copying chatmon.egg-info/dependency_links.txt -> chatmon-0.10.0/chatmon.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9296246Z copying chatmon.egg-info/entry_points.txt -> chatmon-0.10.0/chatmon.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9296779Z copying chatmon.egg-info/requires.txt -> chatmon-0.10.0/chatmon.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9297186Z copying chatmon.egg-info/top_level.txt -> chatmon-0.10.0/chatmon.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9297689Z copying chatmon/anim/alert.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9298088Z copying chatmon/anim/beam.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9298426Z copying chatmon/anim/charge.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9298921Z copying chatmon/anim/hop.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9299303Z copying chatmon/anim/idle.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9299951Z copying chatmon/anim/manifest.json -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9300417Z copying chatmon/anim/peek.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9302462Z copying chatmon/anim/sleep.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9304564Z copying chatmon/anim/talk.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9306552Z copying chatmon/anim/think.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9308719Z copying chatmon/anim/turn.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9310454Z copying chatmon/anim/walk.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9312865Z copying chatmon/anim/wave.png -> chatmon-0.10.0/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9314973Z copying chatmon/anim/fairy-axolotl/alert.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9317492Z copying chatmon/anim/fairy-axolotl/beam.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9319866Z copying chatmon/anim/fairy-axolotl/charge.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9322542Z copying chatmon/anim/fairy-axolotl/hop.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9324815Z copying chatmon/anim/fairy-axolotl/idle.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9327030Z copying chatmon/anim/fairy-axolotl/manifest.json -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9327695Z copying chatmon/anim/fairy-axolotl/peek.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9329935Z copying chatmon/anim/fairy-axolotl/sleep.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9332252Z copying chatmon/anim/fairy-axolotl/talk.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9334382Z copying chatmon/anim/fairy-axolotl/think.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9336856Z copying chatmon/anim/fairy-axolotl/turn.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9339324Z copying chatmon/anim/fairy-axolotl/walk.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9342718Z copying chatmon/anim/fairy-axolotl/wave.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9344866Z copying chatmon/anim/fire-red-panda/alert.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9347076Z copying chatmon/anim/fire-red-panda/beam.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9349290Z copying chatmon/anim/fire-red-panda/charge.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9351917Z copying chatmon/anim/fire-red-panda/hop.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9353874Z copying chatmon/anim/fire-red-panda/idle.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9355915Z copying chatmon/anim/fire-red-panda/manifest.json -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9356523Z copying chatmon/anim/fire-red-panda/peek.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9358206Z copying chatmon/anim/fire-red-panda/sleep.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9359954Z copying chatmon/anim/fire-red-panda/talk.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9362321Z copying chatmon/anim/fire-red-panda/think.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9364739Z copying chatmon/anim/fire-red-panda/turn.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9366853Z copying chatmon/anim/fire-red-panda/walk.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9369380Z copying chatmon/anim/fire-red-panda/wave.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9371356Z copying chatmon/anim/ghost-rabbit/alert.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9373732Z copying chatmon/anim/ghost-rabbit/beam.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9375493Z copying chatmon/anim/ghost-rabbit/charge.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9377896Z copying chatmon/anim/ghost-rabbit/hop.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9379507Z copying chatmon/anim/ghost-rabbit/idle.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9380987Z copying chatmon/anim/ghost-rabbit/manifest.json -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9381823Z copying chatmon/anim/ghost-rabbit/peek.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9384862Z copying chatmon/anim/ghost-rabbit/sleep.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9386747Z copying chatmon/anim/ghost-rabbit/talk.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9388531Z copying chatmon/anim/ghost-rabbit/think.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9390356Z copying chatmon/anim/ghost-rabbit/turn.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9392210Z copying chatmon/anim/ghost-rabbit/walk.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9394195Z copying chatmon/anim/ghost-rabbit/wave.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9396110Z copying chatmon/anim/leaf-pangolin/alert.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9398009Z copying chatmon/anim/leaf-pangolin/beam.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9400158Z copying chatmon/anim/leaf-pangolin/charge.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9403496Z copying chatmon/anim/leaf-pangolin/hop.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9405402Z copying chatmon/anim/leaf-pangolin/idle.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9407436Z copying chatmon/anim/leaf-pangolin/manifest.json -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9408040Z copying chatmon/anim/leaf-pangolin/peek.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9409776Z copying chatmon/anim/leaf-pangolin/sleep.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9411923Z copying chatmon/anim/leaf-pangolin/talk.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9414126Z copying chatmon/anim/leaf-pangolin/think.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9416266Z copying chatmon/anim/leaf-pangolin/turn.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9418257Z copying chatmon/anim/leaf-pangolin/walk.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9420726Z copying chatmon/anim/leaf-pangolin/wave.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9423094Z copying chatmon/bubbles/electric-arcs.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9423771Z copying chatmon/bubbles/electric-current.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9424398Z copying chatmon/bubbles/electric-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9424976Z copying chatmon/bubbles/fairy-sparkles.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9425501Z copying chatmon/bubbles/fairy-still-b.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9426020Z copying chatmon/bubbles/fairy-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9426591Z copying chatmon/bubbles/fire-embers.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9427134Z copying chatmon/bubbles/fire-flames.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9429995Z copying chatmon/bubbles/fire-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9430608Z copying chatmon/bubbles/ghost-mist-a.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9431223Z copying chatmon/bubbles/ghost-mist-b.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9432081Z copying chatmon/bubbles/ghost-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9432707Z copying chatmon/bubbles/leaf-crawler.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9433365Z copying chatmon/bubbles/leaf-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9434690Z copying chatmon/bubbles/manifest.json -> chatmon-0.10.0/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9435422Z copying chatmon/integrations/claude/.claude-plugin/marketplace.json -> chatmon-0.10.0/chatmon/integrations/claude/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9436341Z copying chatmon/integrations/claude/chatmon/.claude-plugin/plugin.json -> chatmon-0.10.0/chatmon/integrations/claude/chatmon/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9437118Z copying chatmon/integrations/claude/chatmon/hooks/hooks.json -> chatmon-0.10.0/chatmon/integrations/claude/chatmon/hooks
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9437805Z copying chatmon/locale/chatmon.pot -> chatmon-0.10.0/chatmon/locale
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9438231Z copying chatmon/phrases/en.json -> chatmon-0.10.0/chatmon/phrases
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9438793Z copying chatmon/sounds/done.wav -> chatmon-0.10.0/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9439290Z copying chatmon/sounds/error.wav -> chatmon-0.10.0/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9439699Z copying chatmon/sounds/focus-done.wav -> chatmon-0.10.0/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9440184Z copying chatmon/sounds/needs-you.wav -> chatmon-0.10.0/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9440701Z copying chatmon/sounds/pop.wav -> chatmon-0.10.0/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9441190Z copying chatmon/sounds/reminder.wav -> chatmon-0.10.0/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9442754Z copying chatmon/sounds/success.wav -> chatmon-0.10.0/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9443432Z copying tests/test_a11y.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9443879Z copying tests/test_agents.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9444441Z copying tests/test_anim_strips.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9444928Z copying tests/test_app_answers.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9445333Z copying tests/test_app_m7.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9445947Z copying tests/test_app_reminders.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9446514Z copying tests/test_app_smoke.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9447165Z copying tests/test_ask_box.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9447588Z copying tests/test_asking.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9448198Z copying tests/test_attachments.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9448615Z copying tests/test_autostart.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9449027Z copying tests/test_backup.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9449408Z copying tests/test_behavior.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9449827Z copying tests/test_brains.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9450284Z copying tests/test_bubble_safety.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9450722Z copying tests/test_bubble_styles.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9451198Z copying tests/test_chats.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9451968Z copying tests/test_chatswin.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9452433Z copying tests/test_cli.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9452938Z copying tests/test_clickthrough.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9453385Z copying tests/test_commands.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9453789Z copying tests/test_companions.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9454163Z copying tests/test_context.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9454577Z copying tests/test_contrast.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9455064Z copying tests/test_events.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9455592Z copying tests/test_heads_up.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9456024Z copying tests/test_hotkey.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9456677Z copying tests/test_hotkey_portal.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9457321Z copying tests/test_i18n.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9457702Z copying tests/test_i18n_app.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9458101Z copying tests/test_imports.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9458534Z copying tests/test_install_update.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9458940Z copying tests/test_keychain.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9459378Z copying tests/test_linux_desktop.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9459797Z copying tests/test_linuxsession.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9460304Z copying tests/test_localefmt.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9460681Z copying tests/test_log.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9461061Z copying tests/test_m4b_imports.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9461624Z copying tests/test_macnative.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9462081Z copying tests/test_messages.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9462590Z copying tests/test_offline.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9463062Z copying tests/test_overlay_stage.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9463549Z copying tests/test_package_data.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9464004Z copying tests/test_packaging.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9464461Z copying tests/test_parser_properties.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9465049Z copying tests/test_paths.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9465466Z copying tests/test_platform_events.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9465901Z copying tests/test_portal_bus.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9466338Z copying tests/test_portowner.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9466733Z copying tests/test_presence.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9467160Z copying tests/test_releasecheck.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9467724Z copying tests/test_reminders.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9468213Z copying tests/test_rename.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9468631Z copying tests/test_requirements.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9469040Z copying tests/test_rich_text.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9469465Z copying tests/test_screen_readers.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9469889Z copying tests/test_settings.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9472700Z copying tests/test_settingswin.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9473150Z copying tests/test_sound.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9483050Z copying tests/test_speech_bubble.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9484326Z copying tests/test_sprites.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9484954Z copying tests/test_stage_features.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9485494Z copying tests/test_stage_screens.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9486189Z copying tests/test_stage_timer.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9486760Z copying tests/test_stagemenu.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9487320Z copying tests/test_streaming.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9487672Z copying tests/test_sway.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9488015Z copying tests/test_updates.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9488394Z copying tests/test_wayland.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9488769Z copying tests/test_wincaret.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9489093Z copying tests/test_windows.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9489418Z copying tests/test_winfiles.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9489732Z copying tests/test_winlock.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9490081Z copying tests/test_winpipe.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9490392Z copying tests/test_wintoast.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9490753Z copying tests/test_wintrust.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9491253Z copying tests/test_xkb.py -> chatmon-0.10.0/tests
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9498919Z Writing chatmon-0.10.0/setup.cfg
+python	Run python -m build --no-isolation	2026-11-15T17:55:59.9500530Z Creating tar archive
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.6589743Z removing 'chatmon-0.10.0' (and everything under it)
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.8161222Z * Building wheel from sdist
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.8170350Z * Getting build dependencies for wheel...
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9507173Z running egg_info
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9524571Z writing chatmon.egg-info/PKG-INFO
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9539552Z writing dependency_links to chatmon.egg-info/dependency_links.txt
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9540146Z writing entry points to chatmon.egg-info/entry_points.txt
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9547079Z writing requirements to chatmon.egg-info/requires.txt
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9547904Z writing top-level names to chatmon.egg-info/top_level.txt
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9623721Z reading manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9637363Z adding license file 'LICENSE'
+python	Run python -m build --no-isolation	2026-11-15T17:56:00.9654630Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.0002039Z * Building wheel...
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1288273Z running bdist_wheel
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1366541Z running build
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1367017Z running build_py
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1388847Z creating build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1389452Z copying chatmon/winrt.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1391383Z copying chatmon/highlight.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1392088Z copying chatmon/cli.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1392540Z copying chatmon/updates.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1395272Z copying chatmon/heads_up.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1395744Z copying chatmon/styles.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1396221Z copying chatmon/agents.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1396689Z copying chatmon/releasecheck.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1397619Z copying chatmon/sprites.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1398167Z copying chatmon/wincaret.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1398658Z copying chatmon/stagemenu.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1401074Z copying chatmon/qtsignal.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1401751Z copying chatmon/behavior.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1402199Z copying chatmon/wayland.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1402783Z copying chatmon/menus.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1403205Z copying chatmon/context.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1403619Z copying chatmon/memory.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1404147Z copying chatmon/localefmt.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1404628Z copying chatmon/portowner.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1405114Z copying chatmon/backup.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1405862Z copying chatmon/winfocus.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1406497Z copying chatmon/winpipe.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1407646Z copying chatmon/winlock.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1408110Z copying chatmon/app.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1410572Z copying chatmon/events.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1411124Z copying chatmon/winuia.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1412140Z copying chatmon/offline.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1413068Z copying chatmon/commands.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1413839Z copying chatmon/changelog.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1414626Z copying chatmon/sysnotify.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1415409Z copying chatmon/layer.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1416640Z copying chatmon/chatswin.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1417194Z copying chatmon/companions.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1417951Z copying chatmon/settingswin.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1418779Z copying chatmon/messages.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1419553Z copying chatmon/brains.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1420786Z copying chatmon/windrop.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1421647Z copying chatmon/__init__.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1422513Z copying chatmon/shortcutportal.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1423283Z copying chatmon/asking.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1423945Z copying chatmon/settings.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1424778Z copying chatmon/a11y.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1425576Z copying chatmon/wintoast.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1426425Z copying chatmon/bubbleart.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1427795Z copying chatmon/libdbus.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1428263Z copying chatmon/clickthrough.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1428928Z copying chatmon/wintrust.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1429784Z copying chatmon/penguin.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1430859Z copying chatmon/packagekit.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1431850Z copying chatmon/paths.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1432901Z copying chatmon/__main__.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1433584Z copying chatmon/portal.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1434270Z copying chatmon/sound.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1435040Z copying chatmon/keychain.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1436005Z copying chatmon/log.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1436746Z copying chatmon/bubble.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1437945Z copying chatmon/reminders.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1438773Z copying chatmon/chats.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1439507Z copying chatmon/ed25519.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1440322Z copying chatmon/linuxsession.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1441201Z copying chatmon/i18n.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1442344Z copying chatmon/winfiles.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1443293Z copying chatmon/macnative.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1444217Z copying chatmon/attachments.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1445078Z copying chatmon/presence.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1445853Z copying chatmon/hotkey.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1446751Z copying chatmon/xkb.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1447553Z copying chatmon/richtext.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1448322Z copying chatmon/report.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1449082Z copying chatmon/autostart.py -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1463281Z creating build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1463866Z copying chatmon/anim/alert.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1467483Z copying chatmon/anim/sleep.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1469855Z copying chatmon/anim/charge.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1473522Z copying chatmon/anim/turn.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1475532Z copying chatmon/anim/walk.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1477979Z copying chatmon/anim/talk.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1480454Z copying chatmon/anim/idle.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1483167Z copying chatmon/anim/hop.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1485528Z copying chatmon/anim/think.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1487736Z copying chatmon/anim/wave.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1490233Z copying chatmon/anim/beam.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1493462Z copying chatmon/anim/peek.png -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1495563Z copying chatmon/anim/manifest.json -> build/lib/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1496247Z creating build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1497061Z copying chatmon/anim/fairy-axolotl/alert.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1500297Z copying chatmon/anim/fairy-axolotl/sleep.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1503430Z copying chatmon/anim/fairy-axolotl/charge.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1506175Z copying chatmon/anim/fairy-axolotl/turn.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1509027Z copying chatmon/anim/fairy-axolotl/walk.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1512926Z copying chatmon/anim/fairy-axolotl/talk.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1515583Z copying chatmon/anim/fairy-axolotl/idle.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1518372Z copying chatmon/anim/fairy-axolotl/hop.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1520871Z copying chatmon/anim/fairy-axolotl/think.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1524169Z copying chatmon/anim/fairy-axolotl/wave.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1526705Z copying chatmon/anim/fairy-axolotl/beam.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1529359Z copying chatmon/anim/fairy-axolotl/peek.png -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1532230Z creating build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1532947Z copying chatmon/anim/fire-red-panda/alert.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1536155Z copying chatmon/anim/fire-red-panda/sleep.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1538289Z copying chatmon/anim/fire-red-panda/charge.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1541159Z copying chatmon/anim/fire-red-panda/turn.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1544218Z copying chatmon/anim/fire-red-panda/walk.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1547270Z copying chatmon/anim/fire-red-panda/talk.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1549734Z copying chatmon/anim/fire-red-panda/idle.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1552352Z copying chatmon/anim/fire-red-panda/hop.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1554768Z copying chatmon/anim/fire-red-panda/think.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1557578Z copying chatmon/anim/fire-red-panda/wave.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1560020Z copying chatmon/anim/fire-red-panda/beam.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1563299Z copying chatmon/anim/fire-red-panda/peek.png -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1565537Z creating build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1566398Z copying chatmon/anim/ghost-rabbit/alert.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1568889Z copying chatmon/anim/ghost-rabbit/sleep.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1570967Z copying chatmon/anim/ghost-rabbit/charge.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1574412Z copying chatmon/anim/ghost-rabbit/turn.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1576358Z copying chatmon/anim/ghost-rabbit/walk.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1578693Z copying chatmon/anim/ghost-rabbit/talk.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1580889Z copying chatmon/anim/ghost-rabbit/idle.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1583124Z copying chatmon/anim/ghost-rabbit/hop.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1585295Z copying chatmon/anim/ghost-rabbit/think.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1587575Z copying chatmon/anim/ghost-rabbit/wave.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1589825Z copying chatmon/anim/ghost-rabbit/beam.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1592156Z copying chatmon/anim/ghost-rabbit/peek.png -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1595626Z creating build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1596291Z copying chatmon/anim/leaf-pangolin/alert.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1599054Z copying chatmon/anim/leaf-pangolin/sleep.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1601623Z copying chatmon/anim/leaf-pangolin/charge.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1605082Z copying chatmon/anim/leaf-pangolin/turn.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1607479Z copying chatmon/anim/leaf-pangolin/walk.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1610480Z copying chatmon/anim/leaf-pangolin/talk.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1613371Z copying chatmon/anim/leaf-pangolin/idle.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1615872Z copying chatmon/anim/leaf-pangolin/hop.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1618093Z copying chatmon/anim/leaf-pangolin/think.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1620422Z copying chatmon/anim/leaf-pangolin/wave.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1623329Z copying chatmon/anim/leaf-pangolin/beam.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1626030Z copying chatmon/anim/leaf-pangolin/peek.png -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1628223Z copying chatmon/anim/fairy-axolotl/manifest.json -> build/lib/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1629124Z copying chatmon/anim/fire-red-panda/manifest.json -> build/lib/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1629843Z copying chatmon/anim/ghost-rabbit/manifest.json -> build/lib/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1630625Z copying chatmon/anim/leaf-pangolin/manifest.json -> build/lib/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1631169Z creating build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1631918Z copying chatmon/bubbles/electric-current.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1633098Z copying chatmon/bubbles/fire-still.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1634368Z copying chatmon/bubbles/fire-embers.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1635101Z copying chatmon/bubbles/fairy-still.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1636120Z copying chatmon/bubbles/leaf-crawler.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1637271Z copying chatmon/bubbles/electric-still.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1638315Z copying chatmon/bubbles/ghost-still.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1639366Z copying chatmon/bubbles/fairy-sparkles.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1640166Z copying chatmon/bubbles/ghost-mist-a.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1640998Z copying chatmon/bubbles/fairy-still-b.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1641999Z copying chatmon/bubbles/electric-arcs.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1643440Z copying chatmon/bubbles/fire-flames.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1646930Z copying chatmon/bubbles/ghost-mist-b.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1648031Z copying chatmon/bubbles/leaf-still.png -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1648760Z copying chatmon/bubbles/manifest.json -> build/lib/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1649442Z copying chatmon/changelog.md -> build/lib/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1650006Z creating build/lib/chatmon/integrations/claude/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1650966Z copying chatmon/integrations/claude/.claude-plugin/marketplace.json -> build/lib/chatmon/integrations/claude/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1651757Z creating build/lib/chatmon/integrations/claude/chatmon/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1652333Z copying chatmon/integrations/claude/chatmon/.claude-plugin/plugin.json -> build/lib/chatmon/integrations/claude/chatmon/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1653028Z creating build/lib/chatmon/integrations/claude/chatmon/hooks
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1653848Z copying chatmon/integrations/claude/chatmon/hooks/hooks.json -> build/lib/chatmon/integrations/claude/chatmon/hooks
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1654324Z creating build/lib/chatmon/locale
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1654709Z copying chatmon/locale/chatmon.pot -> build/lib/chatmon/locale
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1655050Z creating build/lib/chatmon/phrases
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1655491Z copying chatmon/phrases/en.json -> build/lib/chatmon/phrases
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1656047Z creating build/lib/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1656424Z copying chatmon/sounds/done.wav -> build/lib/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1657322Z copying chatmon/sounds/reminder.wav -> build/lib/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1658464Z copying chatmon/sounds/focus-done.wav -> build/lib/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1659428Z copying chatmon/sounds/success.wav -> build/lib/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1660191Z copying chatmon/sounds/needs-you.wav -> build/lib/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1661035Z copying chatmon/sounds/error.wav -> build/lib/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1662280Z copying chatmon/sounds/pop.wav -> build/lib/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1702219Z installing to build/bdist.linux-x86_64/wheel
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1702676Z running install
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1749394Z running install_lib
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1767614Z creating build/bdist.linux-x86_64/wheel
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1769108Z creating build/bdist.linux-x86_64/wheel/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1769784Z copying build/lib/chatmon/winrt.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1770594Z copying build/lib/chatmon/highlight.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1772302Z creating build/bdist.linux-x86_64/wheel/chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1773056Z copying build/lib/chatmon/sounds/done.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1774046Z copying build/lib/chatmon/sounds/reminder.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1775143Z copying build/lib/chatmon/sounds/focus-done.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1776193Z copying build/lib/chatmon/sounds/success.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1777085Z copying build/lib/chatmon/sounds/needs-you.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1777976Z copying build/lib/chatmon/sounds/error.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1778839Z copying build/lib/chatmon/sounds/pop.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1779391Z copying build/lib/chatmon/cli.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1779858Z copying build/lib/chatmon/updates.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1780320Z copying build/lib/chatmon/heads_up.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1780787Z copying build/lib/chatmon/styles.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1781317Z copying build/lib/chatmon/agents.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1782007Z copying build/lib/chatmon/releasecheck.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1782574Z copying build/lib/chatmon/sprites.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1783363Z copying build/lib/chatmon/wincaret.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1784744Z creating build/bdist.linux-x86_64/wheel/chatmon/locale
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1785533Z copying build/lib/chatmon/locale/chatmon.pot -> build/bdist.linux-x86_64/wheel/./chatmon/locale
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1786473Z copying build/lib/chatmon/stagemenu.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1787305Z copying build/lib/chatmon/qtsignal.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1788010Z copying build/lib/chatmon/behavior.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1788562Z copying build/lib/chatmon/wayland.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1789078Z copying build/lib/chatmon/menus.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1789523Z copying build/lib/chatmon/context.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1789981Z copying build/lib/chatmon/memory.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1790524Z copying build/lib/chatmon/localefmt.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1791071Z copying build/lib/chatmon/portowner.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1791714Z copying build/lib/chatmon/backup.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1792225Z copying build/lib/chatmon/winfocus.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1792717Z copying build/lib/chatmon/changelog.md -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1793235Z copying build/lib/chatmon/winpipe.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1793730Z copying build/lib/chatmon/winlock.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1794213Z copying build/lib/chatmon/app.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1795249Z creating build/bdist.linux-x86_64/wheel/chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1795838Z copying build/lib/chatmon/anim/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1798011Z copying build/lib/chatmon/anim/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1799941Z copying build/lib/chatmon/anim/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1803257Z creating build/bdist.linux-x86_64/wheel/chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1804438Z copying build/lib/chatmon/anim/fairy-axolotl/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1807396Z copying build/lib/chatmon/anim/fairy-axolotl/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1809704Z copying build/lib/chatmon/anim/fairy-axolotl/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1812509Z copying build/lib/chatmon/anim/fairy-axolotl/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1815422Z copying build/lib/chatmon/anim/fairy-axolotl/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1818710Z copying build/lib/chatmon/anim/fairy-axolotl/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1821010Z copying build/lib/chatmon/anim/fairy-axolotl/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1824055Z copying build/lib/chatmon/anim/fairy-axolotl/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1826398Z copying build/lib/chatmon/anim/fairy-axolotl/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1828668Z copying build/lib/chatmon/anim/fairy-axolotl/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1829748Z copying build/lib/chatmon/anim/fairy-axolotl/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1832040Z copying build/lib/chatmon/anim/fairy-axolotl/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1834709Z copying build/lib/chatmon/anim/fairy-axolotl/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1837726Z creating build/bdist.linux-x86_64/wheel/chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1838592Z copying build/lib/chatmon/anim/fire-red-panda/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1841118Z copying build/lib/chatmon/anim/fire-red-panda/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1843746Z copying build/lib/chatmon/anim/fire-red-panda/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1846402Z copying build/lib/chatmon/anim/fire-red-panda/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1848864Z copying build/lib/chatmon/anim/fire-red-panda/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1851764Z copying build/lib/chatmon/anim/fire-red-panda/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1854200Z copying build/lib/chatmon/anim/fire-red-panda/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1856673Z copying build/lib/chatmon/anim/fire-red-panda/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1858772Z copying build/lib/chatmon/anim/fire-red-panda/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1861328Z copying build/lib/chatmon/anim/fire-red-panda/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1862614Z copying build/lib/chatmon/anim/fire-red-panda/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1864697Z copying build/lib/chatmon/anim/fire-red-panda/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1867150Z copying build/lib/chatmon/anim/fire-red-panda/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1869350Z copying build/lib/chatmon/anim/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1871335Z copying build/lib/chatmon/anim/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1873841Z copying build/lib/chatmon/anim/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1875959Z copying build/lib/chatmon/anim/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1878112Z copying build/lib/chatmon/anim/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1880418Z creating build/bdist.linux-x86_64/wheel/chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1881667Z copying build/lib/chatmon/anim/ghost-rabbit/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1884296Z copying build/lib/chatmon/anim/ghost-rabbit/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1886396Z copying build/lib/chatmon/anim/ghost-rabbit/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1888776Z copying build/lib/chatmon/anim/ghost-rabbit/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1890786Z copying build/lib/chatmon/anim/ghost-rabbit/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1893231Z copying build/lib/chatmon/anim/ghost-rabbit/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1895308Z copying build/lib/chatmon/anim/ghost-rabbit/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1896942Z copying build/lib/chatmon/anim/ghost-rabbit/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1898886Z copying build/lib/chatmon/anim/ghost-rabbit/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1901027Z copying build/lib/chatmon/anim/ghost-rabbit/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1902308Z copying build/lib/chatmon/anim/ghost-rabbit/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1904259Z copying build/lib/chatmon/anim/ghost-rabbit/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1906374Z copying build/lib/chatmon/anim/ghost-rabbit/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1909625Z copying build/lib/chatmon/anim/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1912018Z copying build/lib/chatmon/anim/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1912880Z copying build/lib/chatmon/anim/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1915009Z copying build/lib/chatmon/anim/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1917275Z copying build/lib/chatmon/anim/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1919774Z creating build/bdist.linux-x86_64/wheel/chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1920653Z copying build/lib/chatmon/anim/leaf-pangolin/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1923745Z copying build/lib/chatmon/anim/leaf-pangolin/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1926002Z copying build/lib/chatmon/anim/leaf-pangolin/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1928708Z copying build/lib/chatmon/anim/leaf-pangolin/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1930997Z copying build/lib/chatmon/anim/leaf-pangolin/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1934473Z copying build/lib/chatmon/anim/leaf-pangolin/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1936574Z copying build/lib/chatmon/anim/leaf-pangolin/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1938752Z copying build/lib/chatmon/anim/leaf-pangolin/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1940888Z copying build/lib/chatmon/anim/leaf-pangolin/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1943427Z copying build/lib/chatmon/anim/leaf-pangolin/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1944655Z copying build/lib/chatmon/anim/leaf-pangolin/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1946359Z copying build/lib/chatmon/anim/leaf-pangolin/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1948844Z copying build/lib/chatmon/anim/leaf-pangolin/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1951300Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1952495Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1953426Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1954387Z copying build/lib/chatmon/integrations/claude/.claude-plugin/marketplace.json -> build/bdist.linux-x86_64/wheel/./chatmon/integrations/claude/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1955288Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude/chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1956013Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude/chatmon/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1957020Z copying build/lib/chatmon/integrations/claude/chatmon/.claude-plugin/plugin.json -> build/bdist.linux-x86_64/wheel/./chatmon/integrations/claude/chatmon/.claude-plugin
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1958090Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude/chatmon/hooks
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1959009Z copying build/lib/chatmon/integrations/claude/chatmon/hooks/hooks.json -> build/bdist.linux-x86_64/wheel/./chatmon/integrations/claude/chatmon/hooks
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1959893Z copying build/lib/chatmon/events.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1960579Z copying build/lib/chatmon/winuia.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1961370Z copying build/lib/chatmon/offline.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1962282Z copying build/lib/chatmon/commands.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1963092Z copying build/lib/chatmon/changelog.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1963777Z copying build/lib/chatmon/sysnotify.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1964455Z copying build/lib/chatmon/layer.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1965118Z copying build/lib/chatmon/chatswin.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1965805Z copying build/lib/chatmon/companions.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1966536Z copying build/lib/chatmon/settingswin.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1967189Z copying build/lib/chatmon/messages.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1967920Z copying build/lib/chatmon/brains.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1968573Z copying build/lib/chatmon/windrop.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1969250Z copying build/lib/chatmon/__init__.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1969914Z copying build/lib/chatmon/shortcutportal.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1970700Z copying build/lib/chatmon/asking.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1971363Z copying build/lib/chatmon/settings.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1972298Z copying build/lib/chatmon/a11y.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1972988Z copying build/lib/chatmon/wintoast.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1973650Z copying build/lib/chatmon/bubbleart.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1974295Z copying build/lib/chatmon/libdbus.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1975028Z copying build/lib/chatmon/clickthrough.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1975696Z copying build/lib/chatmon/wintrust.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1976390Z copying build/lib/chatmon/penguin.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1977098Z copying build/lib/chatmon/packagekit.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1977762Z copying build/lib/chatmon/paths.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1978440Z copying build/lib/chatmon/__main__.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1979095Z copying build/lib/chatmon/portal.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1979758Z copying build/lib/chatmon/sound.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1980443Z copying build/lib/chatmon/keychain.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1981118Z copying build/lib/chatmon/log.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1982005Z copying build/lib/chatmon/bubble.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1982651Z copying build/lib/chatmon/reminders.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1983404Z copying build/lib/chatmon/chats.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1984011Z copying build/lib/chatmon/ed25519.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1984650Z copying build/lib/chatmon/linuxsession.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1985507Z creating build/bdist.linux-x86_64/wheel/chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1986216Z copying build/lib/chatmon/bubbles/electric-current.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1987086Z copying build/lib/chatmon/bubbles/fire-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1988056Z copying build/lib/chatmon/bubbles/fire-embers.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1988847Z copying build/lib/chatmon/bubbles/fairy-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1989711Z copying build/lib/chatmon/bubbles/leaf-crawler.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1990628Z copying build/lib/chatmon/bubbles/electric-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1991678Z copying build/lib/chatmon/bubbles/ghost-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1992509Z copying build/lib/chatmon/bubbles/fairy-sparkles.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1993317Z copying build/lib/chatmon/bubbles/ghost-mist-a.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1994194Z copying build/lib/chatmon/bubbles/fairy-still-b.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1995171Z copying build/lib/chatmon/bubbles/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1996110Z copying build/lib/chatmon/bubbles/electric-arcs.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1996918Z copying build/lib/chatmon/bubbles/fire-flames.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1998690Z copying build/lib/chatmon/bubbles/ghost-mist-b.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.1999549Z copying build/lib/chatmon/bubbles/leaf-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2001072Z creating build/bdist.linux-x86_64/wheel/chatmon/phrases
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2002076Z copying build/lib/chatmon/phrases/en.json -> build/bdist.linux-x86_64/wheel/./chatmon/phrases
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2002853Z copying build/lib/chatmon/i18n.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2003702Z copying build/lib/chatmon/winfiles.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2004439Z copying build/lib/chatmon/macnative.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2005133Z copying build/lib/chatmon/attachments.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2005878Z copying build/lib/chatmon/presence.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2006541Z copying build/lib/chatmon/hotkey.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2007173Z copying build/lib/chatmon/xkb.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2007881Z copying build/lib/chatmon/richtext.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2008534Z copying build/lib/chatmon/report.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2009177Z copying build/lib/chatmon/autostart.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2010403Z running install_egg_info
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2030252Z running egg_info
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2046865Z writing chatmon.egg-info/PKG-INFO
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2060838Z writing dependency_links to chatmon.egg-info/dependency_links.txt
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2063893Z writing entry points to chatmon.egg-info/entry_points.txt
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2070967Z writing requirements to chatmon.egg-info/requires.txt
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2072525Z writing top-level names to chatmon.egg-info/top_level.txt
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2111920Z reading manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2126060Z adding license file 'LICENSE'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2142764Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2144597Z Copying chatmon.egg-info to build/bdist.linux-x86_64/wheel/./chatmon-0.10.0-py3.14.egg-info
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2162758Z running install_scripts
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2168653Z creating build/bdist.linux-x86_64/wheel/chatmon-0.10.0.dist-info/WHEEL
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2172413Z creating '/home/runner/work/chatmon/chatmon/dist/.tmp-z1o3fc5z/chatmon-0.10.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2175228Z adding 'chatmon/__init__.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2176868Z adding 'chatmon/__main__.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2180739Z adding 'chatmon/a11y.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2190954Z adding 'chatmon/agents.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2242096Z adding 'chatmon/app.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2245484Z adding 'chatmon/asking.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2249438Z adding 'chatmon/attachments.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2251874Z adding 'chatmon/autostart.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2255232Z adding 'chatmon/backup.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2259590Z adding 'chatmon/behavior.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2286698Z adding 'chatmon/brains.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2305807Z adding 'chatmon/bubble.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2322397Z adding 'chatmon/bubbleart.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2330429Z adding 'chatmon/changelog.md'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2330964Z adding 'chatmon/changelog.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2335195Z adding 'chatmon/chats.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2337406Z adding 'chatmon/chatswin.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2344089Z adding 'chatmon/cli.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2346523Z adding 'chatmon/clickthrough.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2350341Z adding 'chatmon/commands.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2351987Z adding 'chatmon/companions.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2354900Z adding 'chatmon/context.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2356566Z adding 'chatmon/ed25519.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2359064Z adding 'chatmon/events.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2362624Z adding 'chatmon/heads_up.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2365373Z adding 'chatmon/highlight.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2371709Z adding 'chatmon/hotkey.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2376761Z adding 'chatmon/i18n.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2381338Z adding 'chatmon/keychain.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2400231Z adding 'chatmon/layer.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2404659Z adding 'chatmon/libdbus.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2410090Z adding 'chatmon/linuxsession.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2412446Z adding 'chatmon/localefmt.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2414447Z adding 'chatmon/log.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2421611Z adding 'chatmon/macnative.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2423766Z adding 'chatmon/memory.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2428917Z adding 'chatmon/menus.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2431284Z adding 'chatmon/messages.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2439229Z adding 'chatmon/offline.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2441102Z adding 'chatmon/packagekit.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2446119Z adding 'chatmon/paths.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2464103Z adding 'chatmon/penguin.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2466465Z adding 'chatmon/portal.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2468807Z adding 'chatmon/portowner.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2475083Z adding 'chatmon/presence.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2476345Z adding 'chatmon/qtsignal.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2478449Z adding 'chatmon/releasecheck.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2486237Z adding 'chatmon/reminders.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2487959Z adding 'chatmon/report.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2491985Z adding 'chatmon/richtext.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2498164Z adding 'chatmon/settings.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2504326Z adding 'chatmon/settingswin.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2507163Z adding 'chatmon/shortcutportal.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2510980Z adding 'chatmon/sound.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2514004Z adding 'chatmon/sprites.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2519918Z adding 'chatmon/stagemenu.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2523113Z adding 'chatmon/styles.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2525440Z adding 'chatmon/sysnotify.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2533858Z adding 'chatmon/updates.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2536962Z adding 'chatmon/wayland.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2538565Z adding 'chatmon/wincaret.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2541947Z adding 'chatmon/windrop.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2543608Z adding 'chatmon/winfiles.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2545183Z adding 'chatmon/winfocus.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2547561Z adding 'chatmon/winlock.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2550880Z adding 'chatmon/winpipe.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2553814Z adding 'chatmon/winrt.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2558927Z adding 'chatmon/wintoast.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2562160Z adding 'chatmon/wintrust.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2565081Z adding 'chatmon/winuia.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2568207Z adding 'chatmon/xkb.py'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2657156Z adding 'chatmon/anim/alert.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2739725Z adding 'chatmon/anim/beam.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2840730Z adding 'chatmon/anim/charge.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2900444Z adding 'chatmon/anim/hop.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2973953Z adding 'chatmon/anim/idle.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.2976583Z adding 'chatmon/anim/manifest.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3047500Z adding 'chatmon/anim/peek.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3119729Z adding 'chatmon/anim/sleep.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3192893Z adding 'chatmon/anim/talk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3268189Z adding 'chatmon/anim/think.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3329777Z adding 'chatmon/anim/turn.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3402933Z adding 'chatmon/anim/walk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3479298Z adding 'chatmon/anim/wave.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3581270Z adding 'chatmon/anim/fairy-axolotl/alert.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3671138Z adding 'chatmon/anim/fairy-axolotl/beam.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3761829Z adding 'chatmon/anim/fairy-axolotl/charge.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3837916Z adding 'chatmon/anim/fairy-axolotl/hop.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3921938Z adding 'chatmon/anim/fairy-axolotl/idle.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.3925507Z adding 'chatmon/anim/fairy-axolotl/manifest.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4024640Z adding 'chatmon/anim/fairy-axolotl/peek.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4108954Z adding 'chatmon/anim/fairy-axolotl/sleep.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4193435Z adding 'chatmon/anim/fairy-axolotl/talk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4284106Z adding 'chatmon/anim/fairy-axolotl/think.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4380948Z adding 'chatmon/anim/fairy-axolotl/turn.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4513649Z adding 'chatmon/anim/fairy-axolotl/walk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4598964Z adding 'chatmon/anim/fairy-axolotl/wave.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4689413Z adding 'chatmon/anim/fire-red-panda/alert.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4778643Z adding 'chatmon/anim/fire-red-panda/beam.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4880487Z adding 'chatmon/anim/fire-red-panda/charge.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.4950634Z adding 'chatmon/anim/fire-red-panda/hop.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5025681Z adding 'chatmon/anim/fire-red-panda/idle.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5028581Z adding 'chatmon/anim/fire-red-panda/manifest.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5103113Z adding 'chatmon/anim/fire-red-panda/peek.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5171210Z adding 'chatmon/anim/fire-red-panda/sleep.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5250069Z adding 'chatmon/anim/fire-red-panda/talk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5339861Z adding 'chatmon/anim/fire-red-panda/think.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5421760Z adding 'chatmon/anim/fire-red-panda/turn.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5532924Z adding 'chatmon/anim/fire-red-panda/walk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5611390Z adding 'chatmon/anim/fire-red-panda/wave.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5689555Z adding 'chatmon/anim/ghost-rabbit/alert.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5755623Z adding 'chatmon/anim/ghost-rabbit/beam.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5843652Z adding 'chatmon/anim/ghost-rabbit/charge.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5905985Z adding 'chatmon/anim/ghost-rabbit/hop.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5955136Z adding 'chatmon/anim/ghost-rabbit/idle.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.5957791Z adding 'chatmon/anim/ghost-rabbit/manifest.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6087075Z adding 'chatmon/anim/ghost-rabbit/peek.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6154620Z adding 'chatmon/anim/ghost-rabbit/sleep.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6221344Z adding 'chatmon/anim/ghost-rabbit/talk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6288643Z adding 'chatmon/anim/ghost-rabbit/think.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6345455Z adding 'chatmon/anim/ghost-rabbit/turn.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6412227Z adding 'chatmon/anim/ghost-rabbit/walk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6479465Z adding 'chatmon/anim/ghost-rabbit/wave.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6554209Z adding 'chatmon/anim/leaf-pangolin/alert.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6644200Z adding 'chatmon/anim/leaf-pangolin/beam.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6747145Z adding 'chatmon/anim/leaf-pangolin/charge.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6817514Z adding 'chatmon/anim/leaf-pangolin/hop.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6891962Z adding 'chatmon/anim/leaf-pangolin/idle.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6896614Z adding 'chatmon/anim/leaf-pangolin/manifest.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.6965853Z adding 'chatmon/anim/leaf-pangolin/peek.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7042060Z adding 'chatmon/anim/leaf-pangolin/sleep.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7119607Z adding 'chatmon/anim/leaf-pangolin/talk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7196529Z adding 'chatmon/anim/leaf-pangolin/think.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7280193Z adding 'chatmon/anim/leaf-pangolin/turn.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7387779Z adding 'chatmon/anim/leaf-pangolin/walk.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7463787Z adding 'chatmon/anim/leaf-pangolin/wave.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7473752Z adding 'chatmon/bubbles/electric-arcs.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7479006Z adding 'chatmon/bubbles/electric-current.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7493979Z adding 'chatmon/bubbles/electric-still.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7496995Z adding 'chatmon/bubbles/fairy-sparkles.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7501631Z adding 'chatmon/bubbles/fairy-still-b.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7513331Z adding 'chatmon/bubbles/fairy-still.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7515272Z adding 'chatmon/bubbles/fire-embers.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7648311Z adding 'chatmon/bubbles/fire-flames.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7664331Z adding 'chatmon/bubbles/fire-still.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7669496Z adding 'chatmon/bubbles/ghost-mist-a.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7673270Z adding 'chatmon/bubbles/ghost-mist-b.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7687887Z adding 'chatmon/bubbles/ghost-still.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7702911Z adding 'chatmon/bubbles/leaf-crawler.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7727994Z adding 'chatmon/bubbles/leaf-still.png'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7730216Z adding 'chatmon/bubbles/manifest.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7732443Z adding 'chatmon/integrations/claude/.claude-plugin/marketplace.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7733648Z adding 'chatmon/integrations/claude/chatmon/.claude-plugin/plugin.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7734847Z adding 'chatmon/integrations/claude/chatmon/hooks/hooks.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7750346Z adding 'chatmon/locale/chatmon.pot'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7753414Z adding 'chatmon/phrases/en.json'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7770185Z adding 'chatmon/sounds/done.wav'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7786696Z adding 'chatmon/sounds/error.wav'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7816917Z adding 'chatmon/sounds/focus-done.wav'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7840557Z adding 'chatmon/sounds/needs-you.wav'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7844427Z adding 'chatmon/sounds/pop.wav'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7884531Z adding 'chatmon/sounds/reminder.wav'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7908833Z adding 'chatmon/sounds/success.wav'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7909636Z adding 'chatmon-0.10.0.dist-info/licenses/LICENSE'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7926389Z adding 'chatmon-0.10.0.dist-info/METADATA'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7926883Z adding 'chatmon-0.10.0.dist-info/WHEEL'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7927431Z adding 'chatmon-0.10.0.dist-info/entry_points.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7927878Z adding 'chatmon-0.10.0.dist-info/top_level.txt'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7932540Z adding 'chatmon-0.10.0.dist-info/RECORD'
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.7935910Z removing build/bdist.linux-x86_64/wheel
+python	Run python -m build --no-isolation	2026-11-15T17:56:01.8403030Z Successfully built chatmon-0.10.0.tar.gz and chatmon-0.10.0-py3-none-any.whl
+python	Run python -m twine check --strict dist/*	﻿2026-11-15T17:56:01.8640716Z ##[group]Run python -m twine check --strict dist/*
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8641117Z [36;1mpython -m twine check --strict dist/*[0m
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8669539Z shell: /usr/bin/bash -e {0}
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8669945Z env:
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8670216Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8670569Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8670971Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8671377Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8671899Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8672258Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8672775Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8673111Z   SOURCE_DATE_EPOCH: 1794765319
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:01.8673363Z ##[endgroup]
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:02.5364650Z Checking dist/chatmon-0.10.0-py3-none-any.whl: [32mPASSED[0m
+python	Run python -m twine check --strict dist/*	2026-11-15T17:56:02.6304453Z Checking dist/chatmon-0.10.0.tar.gz: [32mPASSED[0m
+python	The wheel and sdist hold every file of chatmon the repository tracks	﻿2026-11-15T17:56:02.6837199Z ##[group]Run python -m pytest -p no:cacheprovider tests/test_package_data.py
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6837728Z [36;1mpython -m pytest -p no:cacheprovider tests/test_package_data.py[0m
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6866859Z shell: /usr/bin/bash -e {0}
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6867273Z env:
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6867526Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6867848Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6868248Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6868640Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6868971Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6869352Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6869732Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6870058Z   SOURCE_DATE_EPOCH: 1794765319
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6870321Z   CHATMON_DIST: dist
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:02.6870531Z ##[endgroup]
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7951909Z ============================= test session starts ==============================
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7952497Z platform linux -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7953113Z rootdir: /home/runner/work/chatmon/chatmon
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7953408Z configfile: pyproject.toml
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7953663Z plugins: timeout-2.4.0
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7953939Z timeout: 120.0s
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7954173Z timeout method: signal
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7954424Z timeout func_only: False
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7954690Z collected 5 items
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.7954803Z 
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.8787757Z tests/test_package_data.py .....                                         [100%]
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.8788204Z 
+python	The wheel and sdist hold every file of chatmon the repository tracks	2026-11-15T17:56:03.8788351Z ============================== 5 passed in 0.09s ===============================
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	﻿2026-11-15T17:56:03.9266055Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9266455Z with:
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9266688Z   name: package-python
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9266919Z   path: dist/*
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9267213Z   if-no-files-found: error
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9267457Z   compression-level: 6
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9267707Z   overwrite: false
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9267988Z   include-hidden-files: false
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9268228Z   archive: true
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9268486Z env:
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9268712Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9269027Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9269425Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9269829Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9270226Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9270575Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9271044Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9271361Z   SOURCE_DATE_EPOCH: 1794765319
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:03.9271875Z ##[endgroup]
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:04.0450204Z With the provided path, there will be 2 files uploaded
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:04.0454120Z Artifact name is valid!
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:04.0454536Z Root directory input is valid!
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:04.5289869Z Uploading artifact: package-python.zip
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:04.5317636Z Beginning upload of artifact content to blob storage
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:06.2097536Z Uploaded bytes 8388608
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:06.3782599Z Uploaded bytes 16777216
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:06.5431989Z Uploaded bytes 25165824
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:06.5736381Z Uploaded bytes 33554432
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:06.7181870Z Uploaded bytes 41943040
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:06.8324279Z Uploaded bytes 50331648
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:06.9842706Z Uploaded bytes 54015726
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:07.0747758Z Finished uploading artifact content to blob storage!
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:07.0770248Z SHA256 digest of uploaded artifact is c78514558d51a36d3e052d20aece7597a0adc42a74bc69bc2d1b6ed9363fdf96
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:07.0771804Z Finalizing artifact upload
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:07.6469344Z Artifact package-python successfully finalized. Artifact ID 14173770959
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:07.6470007Z Artifact package-python has been successfully uploaded! Final size is 54015726 bytes. Artifact ID is 14173770959
+python	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T17:56:07.6474577Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43743804716/artifacts/14173770959
+python	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T17:56:07.6762429Z Post job cleanup.
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T17:56:07.7759040Z Post job cleanup.
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8420545Z [command]/usr/bin/git version
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8453386Z git version 2.56.1
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8477291Z Temporarily overriding HOME='/home/runner/work/_temp/d63ba558-2f18-41fb-b384-8985083af236' before making global git config changes
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8478573Z Adding repository directory to the temporary git global config as a safe directory
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8481622Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8507978Z Removing SSH command configuration
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8512808Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8539033Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8705098Z Removing HTTP extra header
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8709207Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8738008Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8890732Z Removing includeIf entries pointing to credentials config files
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8896929Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.8920967Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python	Complete job	﻿2026-11-15T17:56:07.9196145Z Cleaning up orphan processes

@@ -1,0 +1,2560 @@
+red drills from docs\delivery\reports\m2\drill-spec.json
+python: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-xv4n3x6c
+copied 213 files
+
+=== drill M2-01-loads (M2-01) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_safety.py
+-- green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 1.08s
+-- red: exit 1
+E       AssertionError: a picture's bytes were read for ['file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_a_speech_bubble_never_rea1/image.png']
+E       assert ['file:///C:/...a1/image.png'] == []
+E         
+E         Left contains one more item: 'file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_a_speech_bubble_never_rea1/image.png'
+E         Use -v to get more diff
+
+tests\test_bubble_safety.py:82: AssertionError
+_____________ test_the_ask_box_never_reads_a_file_an_answer_names _____________
+
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_the_ask_box_never_reads_a0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_the_ask_box_never_reads_a0/background.png'))}
+asked = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_the_ask_box_never_reads_a0/image.png', <P...%5CRandy%5CAppData%5CLocal%5CTemp%5Cpytest-of-Randy%5Cpytest-909%5Ctest_the_ask_box_never_reads_a0%5Cimage.png', None)]
+
+    def test_the_ask_box_never_reads_a_file_an_answer_names(files, asked):
+        box = AskBox()
+        try:
+            box.open(QPoint(600, 600), "Ask Sparky", "Enter to ask", "Ask anything", text="**You:** hi\n\nA first answer.", activate=False)
+            box.grab()  # laid out and drawn
+            box.set_answer(attack(files), at_end=True)
+            drawn = box.grab().toImage()
+            doc = box.answer.document()
+            assert asked, "the laid-out document asked for the picture: the test reaches the place it guards"
+>           assert_never_read(doc, asked, files)
+
+tests\test_bubble_safety.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+doc = <chatmon.richtext.SafeDocument object at 0x000002B0CF2CD450>
+calls = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_the_ask_box_never_reads_a0/image.png', <P...%5CRandy%5CAppData%5CLocal%5CTemp%5Cpytest-of-Randy%5Cpytest-909%5Ctest_the_ask_box_never_reads_a0%5Cimage.png', None)]
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_the_ask_box_never_reads_a0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_the_ask_box_never_reads_a0/background.png'))}
+
+    def assert_never_read(doc: QTextDocument, calls, files) -> None:
+        leaked = [url for url, result in calls if secret(result, files)]
+>       assert leaked == [], f"a picture's bytes were read for {leaked}"
+E       AssertionError: a picture's bytes were read for ['file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_the_ask_box_never_reads_a0/image.png']
+E       assert ['file:///C:/...a0/image.png'] == []
+E         
+E         Left contains one more item: 'file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_the_ask_box_never_reads_a0/image.png'
+E         Use -v to get more diff
+
+tests\test_bubble_safety.py:82: AssertionError
+_____________ test_a_resource_request_gets_nothing_from_anywhere ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002B0CE1A65D0>
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_a_resource_request_gets_n0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-909/test_a_resource_request_gets_n0/background.png'))}
+
+    def test_a_resource_request_gets_nothing_from_anywhere(qapp, files):
+        doc = richtext.SafeDocument()
+        image = doc.loadResource(QTextDocument.ResourceType.ImageResource.value, files["image"][1])
+>       assert isinstance(image, QImage) and (image.width(), image.height()) == (1, 1)  # not empty: Qt would read the file itself
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (False)
+E        +  where False = isinstance(<PyQt6.QtGui.QPixmap object at 0x000002B0CF3427D0>, QImage)
+
+tests\test_bubble_safety.py:162: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_safety.py::test_a_speech_bubble_never_reads_a_file_an_answer_names[electric]
+FAILED tests/test_bubble_safety.py::test_a_speech_bubble_never_reads_a_file_an_answer_names[plain]
+FAILED tests/test_bubble_safety.py::test_the_ask_box_never_reads_a_file_an_answer_names
+FAILED tests/test_bubble_safety.py::test_a_resource_request_gets_nothing_from_anywhere
+4 failed, 1 passed in 0.67s
+-- restored green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.90s
+
+=== drill M2-01-empty-image (M2-01) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_safety.py
+-- green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.89s
+-- red: exit 1
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/background.png'))}
+asked = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/image.png', b'...s%5CRandy%5CAppData%5CLocal%5CTemp%5Cpytest-of-Randy%5Cpytest-913%5Ctest_the_ask_box_never_reads_a0%5Cimage.png', b'')]
+
+    def test_the_ask_box_never_reads_a_file_an_answer_names(files, asked):
+        box = AskBox()
+        try:
+            box.open(QPoint(600, 600), "Ask Sparky", "Enter to ask", "Ask anything", text="**You:** hi\n\nA first answer.", activate=False)
+            box.grab()  # laid out and drawn
+            box.set_answer(attack(files), at_end=True)
+            drawn = box.grab().toImage()
+            doc = box.answer.document()
+            assert asked, "the laid-out document asked for the picture: the test reaches the place it guards"
+>           assert_never_read(doc, asked, files)
+
+tests\test_bubble_safety.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+doc = <chatmon.richtext.SafeDocument object at 0x0000019679B7D590>
+calls = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/image.png', b'...s%5CRandy%5CAppData%5CLocal%5CTemp%5Cpytest-of-Randy%5Cpytest-913%5Ctest_the_ask_box_never_reads_a0%5Cimage.png', b'')]
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/background.png'))}
+
+    def assert_never_read(doc: QTextDocument, calls, files) -> None:
+        leaked = [url for url, result in calls if secret(result, files)]
+        assert leaked == [], f"a picture's bytes were read for {leaked}"
+        assert all(url != files["background"][1].toString() for url, _ in calls), "HTML was read: its picture was asked for"
+        assert images(doc) == 0, "an image was left in, for the screen to look for its @2x file"
+        for _, url in files.values():
+            # Qt keeps a picture it read itself (when a request came back empty) as the document's resource. (Asking
+            # here asks the document again, for whatever it hasn't kept: so this comes last.)
+>           assert not secret(doc.resource(QTextDocument.ResourceType.ImageResource.value, url), files), f"Qt read {url.toString()} itself"
+E           AssertionError: Qt read file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/image.png itself
+E           assert not True
+E            +  where True = secret(<PyQt6.QtGui.QImage object at 0x0000019679BEA550>, {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/background.png'))})
+E            +    where <PyQt6.QtGui.QImage object at 0x0000019679BEA550> = <built-in method resource of SafeDocument object at 0x0000019679B7D590>(2, PyQt6.QtCore.QUrl('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_the_ask_box_never_reads_a0/image.png'))
+E            +      where <built-in method resource of SafeDocument object at 0x0000019679B7D590> = <chatmon.richtext.SafeDocument object at 0x0000019679B7D590>.resource
+E            +      and   2 = <ResourceType.ImageResource: 2>.value
+E            +        where <ResourceType.ImageResource: 2> = <enum 'ResourceType'>.ImageResource
+E            +          where <enum 'ResourceType'> = QTextDocument.ResourceType
+
+tests\test_bubble_safety.py:88: AssertionError
+_____________ test_a_resource_request_gets_nothing_from_anywhere ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000019678A565D0>
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_a_resource_request_gets_n0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-913/test_a_resource_request_gets_n0/background.png'))}
+
+    def test_a_resource_request_gets_nothing_from_anywhere(qapp, files):
+        doc = richtext.SafeDocument()
+        image = doc.loadResource(QTextDocument.ResourceType.ImageResource.value, files["image"][1])
+>       assert isinstance(image, QImage) and (image.width(), image.height()) == (1, 1)  # not empty: Qt would read the file itself
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert (False)
+E        +  where False = isinstance(b'', QImage)
+
+tests\test_bubble_safety.py:162: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_safety.py::test_a_speech_bubble_never_reads_a_file_an_answer_names[electric]
+FAILED tests/test_bubble_safety.py::test_a_speech_bubble_never_reads_a_file_an_answer_names[plain]
+FAILED tests/test_bubble_safety.py::test_the_ask_box_never_reads_a_file_an_answer_names
+FAILED tests/test_bubble_safety.py::test_a_resource_request_gets_nothing_from_anywhere
+4 failed, 1 passed in 0.70s
+-- restored green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.89s
+
+=== drill M2-01-html (M2-01) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_safety.py
+-- green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.89s
+-- red: exit 1
+
+tests\test_bubble_safety.py:116: AssertionError
+_______ test_a_speech_bubble_never_reads_a_file_an_answer_names[plain] ________
+
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-917/test_a_speech_bubble_never_rea1/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-917/test_a_speech_bubble_never_rea1/background.png'))}
+asked = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-917/test_a_speech_bubble_never_rea1/image.png', <P...f-Randy/pytest-917/test_a_speech_bubble_never_rea1/image.png', <PyQt6.QtGui.QImage object at 0x00000208D8FF2E50>), ...]
+style = 'plain'
+
+    @pytest.mark.parametrize("style", ["electric", "plain"])
+    def test_a_speech_bubble_never_reads_a_file_an_answer_names(files, asked, style):
+        message = SpeechBubble()
+        message.set_style(styles.get(style), False)
+        message.show("Hi", "a first message, drawn before the second", [], None, 0.0)
+        canvas = QImage(800, 600, QImage.Format.Format_ARGB32_Premultiplied)
+        canvas.setDevicePixelRatio(2.0)  # a scaled screen: where Qt looks for a picture's @2x file
+        canvas.fill(QColor(0, 0, 0, 0))
+        p = QPainter(canvas)
+        message.paint(p, message.size.width() / 2, 0.5)  # laid out and drawn: the next text goes into a laid-out document
+        p.end()
+        message.show("Hi", attack(files), [], None, 1.0)
+        canvas.fill(QColor(0, 0, 0, 0))
+        p = QPainter(canvas)
+        message.paint(p, message.size.width() / 2, 1.5)
+        p.end()
+        assert asked, "the laid-out document asked for the picture: the test reaches the place it guards"
+        assert_never_read(message.doc, asked, files)
+        shown = message.doc.toPlainText()
+        assert shown.count("[image]") == 3
+>       assert '<img src="' in shown and "background-image" in shown, "HTML was read: it doesn't show as the text it is"
+E       AssertionError: HTML was read: it doesn't show as the text it is
+E       assert ('<img src="' in 'Look: [image] and [image] and [image]\n')
+
+tests\test_bubble_safety.py:116: AssertionError
+_____________ test_the_ask_box_never_reads_a_file_an_answer_names _____________
+
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-917/test_the_ask_box_never_reads_a0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-917/test_the_ask_box_never_reads_a0/background.png'))}
+asked = [('file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-917/test_the_ask_box_never_reads_a0/image.png', <P...f-Randy/pytest-917/test_the_ask_box_never_reads_a0/image.png', <PyQt6.QtGui.QImage object at 0x00000208D9038050>), ...]
+
+    def test_the_ask_box_never_reads_a_file_an_answer_names(files, asked):
+        box = AskBox()
+        try:
+            box.open(QPoint(600, 600), "Ask Sparky", "Enter to ask", "Ask anything", text="**You:** hi\n\nA first answer.", activate=False)
+            box.grab()  # laid out and drawn
+            box.set_answer(attack(files), at_end=True)
+            drawn = box.grab().toImage()
+            doc = box.answer.document()
+            assert asked, "the laid-out document asked for the picture: the test reaches the place it guards"
+            assert_never_read(doc, asked, files)
+            shown = box.answer.toPlainText()
+            assert shown.count("[image]") == 3
+>           assert '<img src="' in shown, "HTML was read: it doesn't show as the text it is"
+E           AssertionError: HTML was read: it doesn't show as the text it is
+E           assert '<img src="' in 'Look: [image] and [image] and [image]\n'
+
+tests\test_bubble_safety.py:132: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_safety.py::test_a_speech_bubble_never_reads_a_file_an_answer_names[electric]
+FAILED tests/test_bubble_safety.py::test_a_speech_bubble_never_reads_a_file_an_answer_names[plain]
+FAILED tests/test_bubble_safety.py::test_the_ask_box_never_reads_a_file_an_answer_names
+3 failed, 2 passed in 0.62s
+-- restored green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.91s
+
+=== drill M2-01-images-left (M2-01) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_safety.py
+-- green: exit 0, 5 passed
+.....                                                                    [100%]
+5 passed in 0.91s
+
+=== drill M2-01-title-markup (M2-01) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_safety.py::test_a_title_hint_or_attachment_name_is_shown_as_text
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.45s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_a_title_hint_or_attachment_name_is_shown_as_text ____________
+
+files = {'image': (WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-922/test_a_title_hint_or_attachmen0/i...file:///C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-922/test_a_title_hint_or_attachmen0/background.png'))}
+
+    def test_a_title_hint_or_attachment_name_is_shown_as_text(files):
+        """Labels and tooltips read text that looks like HTML as HTML; a chat's title or a file's name can."""
+        tag = f'<img src="{files["image"][1].toString()}">'
+        box = AskBox()
+        try:
+            box.open(QPoint(600, 600), tag, tag, "Ask anything", activate=False)
+            box.set_attachments([f"{tag} (2 KB)"])
+>           assert magenta_pixels(box.grab().toImage()) == 0
+E           assert 690 == 0
+E            +  where 690 = magenta_pixels(<PyQt6.QtGui.QImage object at 0x000001F59C405C50>)
+E            +    where <PyQt6.QtGui.QImage object at 0x000001F59C405C50> = <built-in method toImage of QPixmap object at 0x000001F59C405950>()
+E            +      where <built-in method toImage of QPixmap object at 0x000001F59C405950> = <PyQt6.QtGui.QPixmap object at 0x000001F59C405950>.toImage
+E            +        where <PyQt6.QtGui.QPixmap object at 0x000001F59C405950> = <built-in method grab of AskBox object at 0x000001F59B2C2710>()
+E            +          where <built-in method grab of AskBox object at 0x000001F59B2C2710> = <chatmon.bubble.AskBox object at 0x000001F59B2C2710>.grab
+
+tests\test_bubble_safety.py:146: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_safety.py::test_a_title_hint_or_attachment_name_is_shown_as_text
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== drill M2-05-palette (M2-05) on chatmon/styles.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_contrast.py
+-- green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.75s
+-- red: exit 1
+    
+        assert c.fill == role(QPalette.ColorRole.Base) and c.body == role(QPalette.ColorRole.Text)
+        assert c.link == role(QPalette.ColorRole.Link)
+>       assert c.selection == role(QPalette.ColorRole.Highlight) and c.selection_text == role(QPalette.ColorRole.HighlightedText)
+E       AssertionError: assert (<PyQt6.QtGui.QColor object at 0x0000020A5AEECCD0> == <PyQt6.QtGui.QColor object at 0x0000020A5AEED1D0>)
+E        +  where <PyQt6.QtGui.QColor object at 0x0000020A5AEECCD0> = Colours(fill=<PyQt6.QtGui.QColor object at 0x0000020A5AEECB50>, title=<PyQt6.QtGui.QColor object at 0x0000020A5AEEC850..._fill=<PyQt6.QtGui.QColor object at 0x0000020A5AEECCD0>, hover_text=<PyQt6.QtGui.QColor object at 0x0000020A5AEECC50>)).selection
+E        +  and   <PyQt6.QtGui.QColor object at 0x0000020A5AEED1D0> = <function test_the_plain_style_wears_a_high_contrast_theme_as_it_is.<locals>.role at 0x0000020A5AEC3E20>(<ColorRole.Highlight: 12>)
+E        +    where <ColorRole.Highlight: 12> = <enum 'ColorRole'>.Highlight
+E        +      where <enum 'ColorRole'> = QPalette.ColorRole
+
+tests\test_contrast.py:126: AssertionError
+_ test_the_plain_style_wears_a_high_contrast_theme_as_it_is[windows high contrast white] _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000020A59C86530>
+name = 'windows high contrast white'
+
+    @pytest.mark.parametrize("name", list(HIGH_CONTRAST))
+    def test_the_plain_style_wears_a_high_contrast_theme_as_it_is(qapp, name):
+        pal = HIGH_CONTRAST[name]
+        c = styles.get("plain").colours(pal)
+    
+        def role(r):
+            return QColor(pal.color(QPalette.ColorGroup.Active, r))
+    
+        assert c.fill == role(QPalette.ColorRole.Base) and c.body == role(QPalette.ColorRole.Text)
+        assert c.link == role(QPalette.ColorRole.Link)
+>       assert c.selection == role(QPalette.ColorRole.Highlight) and c.selection_text == role(QPalette.ColorRole.HighlightedText)
+E       AssertionError: assert (<PyQt6.QtGui.QColor object at 0x0000020A5AF09750> == <PyQt6.QtGui.QColor object at 0x0000020A5AF08B50>)
+E        +  where <PyQt6.QtGui.QColor object at 0x0000020A5AF09750> = Colours(fill=<PyQt6.QtGui.QColor object at 0x0000020A5AEEC550>, title=<PyQt6.QtGui.QColor object at 0x0000020A5AEEC2D0..._fill=<PyQt6.QtGui.QColor object at 0x0000020A5AF09750>, hover_text=<PyQt6.QtGui.QColor object at 0x0000020A5AF09850>)).selection
+E        +  and   <PyQt6.QtGui.QColor object at 0x0000020A5AF08B50> = <function test_the_plain_style_wears_a_high_contrast_theme_as_it_is.<locals>.role at 0x0000020A5AEC2560>(<ColorRole.Highlight: 12>)
+E        +    where <ColorRole.Highlight: 12> = <enum 'ColorRole'>.Highlight
+E        +      where <enum 'ColorRole'> = QPalette.ColorRole
+
+tests\test_contrast.py:126: AssertionError
+_____________ test_the_plain_bubble_draws_in_the_palettes_colours _____________
+
+high_contrast = <PyQt6.QtGui.QPalette object at 0x0000020A59D5CA50>
+
+    def test_the_plain_bubble_draws_in_the_palettes_colours(high_contrast):
+        """The plain bubble's border and its first button take Highlight; no fixed cyan is left."""
+        message = SpeechBubble()
+        message.set_style(styles.get("plain"), False)
+        message.show("Reminder", "Stretch, and see [the notes](https://example.com).", [("Done", None), ("Later", None)], None, 0.0)
+        img = QImage(message.size.toSize().width() + 10, message.size.toSize().height() + 10, QImage.Format.Format_ARGB32_Premultiplied)
+        img.fill(QColor(0, 0, 0, 0))
+        p = QPainter(img)
+        message.paint(p, message.size.width() / 2, 1.0)
+        p.end()
+        highlight = high_contrast.color(QPalette.ColorGroup.Active, QPalette.ColorRole.Highlight)
+>       assert colour_count(img, highlight) > 100  # the border and the first button
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 > 100
+E        +  where 0 = colour_count(<PyQt6.QtGui.QImage object at 0x0000020A5AEED1D0>, <PyQt6.QtGui.QColor object at 0x0000020A5AF08C50>)
+
+tests\test_contrast.py:165: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_contrast.py::test_the_plain_style_wears_a_high_contrast_theme_as_it_is[windows high contrast black]
+FAILED tests/test_contrast.py::test_the_plain_style_wears_a_high_contrast_theme_as_it_is[windows high contrast white]
+FAILED tests/test_contrast.py::test_the_plain_bubble_draws_in_the_palettes_colours
+3 failed, 30 passed in 1.08s
+-- restored green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.90s
+
+=== drill M2-05-readable (M2-05) on chatmon/styles.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_contrast.py
+-- green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.82s
+-- red: exit 1
+E         Left contains 30 more items, first extra item: ('hint', 3.55)
+E         Use -v to get more diff
+
+tests\test_contrast.py:82: AssertionError
+___________ test_the_plain_style_reads_whatever_the_palette[light] ____________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000021BC0042530>
+name = 'light'
+
+    @pytest.mark.parametrize("name", list(ORDINARY))
+    def test_the_plain_style_reads_whatever_the_palette(qapp, name):
+        pal = ORDINARY[name]
+        c = styles.get("plain").colours(pal)
+>       assert [(w, round(wcag(fg, bg), 2)) for w, fg, bg, need in pairs(c) if wcag(fg, bg) < need] == []
+E       AssertionError: assert [('selected t...it up', 3.77)] == []
+E         
+E         Left contains 3 more items, first extra item: ('selected text', 3.77)
+E         Use -v to get more diff
+
+tests\test_contrast.py:136: AssertionError
+____________ test_the_plain_style_reads_whatever_the_palette[dark] ____________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000021BC0042530>
+name = 'dark'
+
+    @pytest.mark.parametrize("name", list(ORDINARY))
+    def test_the_plain_style_reads_whatever_the_palette(qapp, name):
+        pal = ORDINARY[name]
+        c = styles.get("plain").colours(pal)
+>       assert [(w, round(wcag(fg, bg), 2)) for w, fg, bg, need in pairs(c) if wcag(fg, bg) < need] == []
+E       AssertionError: assert [('selected t...it up', 4.17)] == []
+E         
+E         Left contains 3 more items, first extra item: ('selected text', 4.17)
+E         Use -v to get more diff
+
+tests\test_contrast.py:136: AssertionError
+___________ test_the_plain_style_reads_whatever_the_palette[faint] ____________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000021BC0042530>
+name = 'faint'
+
+    @pytest.mark.parametrize("name", list(ORDINARY))
+    def test_the_plain_style_reads_whatever_the_palette(qapp, name):
+        pal = ORDINARY[name]
+        c = styles.get("plain").colours(pal)
+>       assert [(w, round(wcag(fg, bg), 2)) for w, fg, bg, need in pairs(c) if wcag(fg, bg) < need] == []
+E       AssertionError: assert [('title', 2....', 2.85), ...] == []
+E         
+E         Left contains 17 more items, first extra item: ('title', 2.85)
+E         Use -v to get more diff
+
+tests\test_contrast.py:136: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_contrast.py::test_every_painted_style_reads_on_every_part_of_its_bubble[ghost]
+FAILED tests/test_contrast.py::test_every_painted_style_reads_on_every_part_of_its_bubble[fairy]
+FAILED tests/test_contrast.py::test_every_painted_style_reads_on_every_part_of_its_bubble[leaf]
+FAILED tests/test_contrast.py::test_the_plain_style_reads_whatever_the_palette[light]
+FAILED tests/test_contrast.py::test_the_plain_style_reads_whatever_the_palette[dark]
+FAILED tests/test_contrast.py::test_the_plain_style_reads_whatever_the_palette[faint]
+6 failed, 27 passed in 0.87s
+-- restored green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.80s
+
+=== drill M2-05-link-colour (M2-05) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_contrast.py
+-- green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.88s
+-- red: exit 1
+        try:
+            box.set_style(styles.get(name), False)
+            box.open(QPoint(600, 600), "Ask", "hint", "", text="See [this](https://example.com).", activate=False)
+            for doc in (message.doc, box.answer.document()):
+                found = []
+                block = doc.begin()
+                while block.isValid():
+                    it = block.begin()
+                    while not it.atEnd():
+                        f = it.fragment().charFormat()
+                        if f.isAnchor() and not f.anchorHref().startswith("chatmon-copy:"):
+                            found.append((f.foreground().color().name(), f.fontUnderline()))
+                        it += 1
+                    block = block.next()
+>               assert found and all(c == want.name() and underlined for c, underlined in found), (name, found)
+E               AssertionError: ('fairy', [('#0000ff', False), ('#0000ff', False)])
+E               assert ([('#0000ff', False), ('#0000ff', False)] and False)
+E                +  where False = all(<generator object test_links_in_answers_wear_the_styles_colour_not_the_apps.<locals>.<genexpr> at 0x0000027DF98DE890>)
+
+tests\test_contrast.py:199: AssertionError
+_______ test_links_in_answers_wear_the_styles_colour_not_the_apps[leaf] _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000027DF86A6530>
+name = 'leaf'
+
+    @pytest.mark.parametrize("name", PAINTED)
+    def test_links_in_answers_wear_the_styles_colour_not_the_apps(qapp, name):
+        """Qt colours a link as it reads markdown, in the app palette's colour: blue on a dark bubble, beige on pink."""
+        want = QColor(styles.get(name).link)
+        message = SpeechBubble()
+        message.set_style(styles.get(name), False)
+        message.show("Hi", "See [this](https://example.com) and https://example.org", [], None, 0.0)
+        box = AskBox()
+        try:
+            box.set_style(styles.get(name), False)
+            box.open(QPoint(600, 600), "Ask", "hint", "", text="See [this](https://example.com).", activate=False)
+            for doc in (message.doc, box.answer.document()):
+                found = []
+                block = doc.begin()
+                while block.isValid():
+                    it = block.begin()
+                    while not it.atEnd():
+                        f = it.fragment().charFormat()
+                        if f.isAnchor() and not f.anchorHref().startswith("chatmon-copy:"):
+                            found.append((f.foreground().color().name(), f.fontUnderline()))
+                        it += 1
+                    block = block.next()
+>               assert found and all(c == want.name() and underlined for c, underlined in found), (name, found)
+E               AssertionError: ('leaf', [('#0000ff', False), ('#0000ff', False)])
+E               assert ([('#0000ff', False), ('#0000ff', False)] and False)
+E                +  where False = all(<generator object test_links_in_answers_wear_the_styles_colour_not_the_apps.<locals>.<genexpr> at 0x0000027DF98DF790>)
+
+tests\test_contrast.py:199: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_contrast.py::test_links_in_answers_wear_the_styles_colour_not_the_apps[electric]
+FAILED tests/test_contrast.py::test_links_in_answers_wear_the_styles_colour_not_the_apps[fire]
+FAILED tests/test_contrast.py::test_links_in_answers_wear_the_styles_colour_not_the_apps[ghost]
+FAILED tests/test_contrast.py::test_links_in_answers_wear_the_styles_colour_not_the_apps[fairy]
+FAILED tests/test_contrast.py::test_links_in_answers_wear_the_styles_colour_not_the_apps[leaf]
+5 failed, 28 passed in 0.90s
+-- restored green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.79s
+
+=== drill M2-20-fairy-link (M2-20) on chatmon/styles.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_contrast.py
+-- green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.82s
+-- red: exit 1
+.........F....F..................                                        [100%]
+================================== FAILURES ===================================
+______ test_every_painted_style_reads_on_every_part_of_its_bubble[fairy] ______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000014C59BAE530>
+name = 'fairy'
+
+    @pytest.mark.parametrize("name", PAINTED)
+    def test_every_painted_style_reads_on_every_part_of_its_bubble(qapp, name):
+        c = styles.get(name).colours()
+        short = []
+        for pixel in text_area_pixels(name):  # the worst spot of the fill, not its average
+            real = styles.Colours(**{**c.__dict__, "fill": pixel})
+            short += [(what, round(wcag(fg, bg), 2)) for what, fg, bg, need in pairs(real) if wcag(fg, bg) < need]
+>       assert short == [], f"{name}: {sorted(set(short))}"
+E       AssertionError: fairy: [('link', 2.57), ('link', 2.59), ('link', 2.61), ('link', 2.64), ('link', 2.66), ('link', 2.68), ('link', 2.7), ("link in code's panel", 2.26)]
+E       assert [('link', 2.5...", 2.26), ...] == []
+E         
+E         Left contains 30 more items, first extra item: ('link', 2.57)
+E         Use -v to get more diff
+
+tests\test_contrast.py:82: AssertionError
+__________ test_links_and_selections_reach_aa_on_their_bubble[fairy] __________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000014C59BAE530>
+name = 'fairy'
+
+    @pytest.mark.parametrize("name", PAINTED)
+    def test_links_and_selections_reach_aa_on_their_bubble(qapp, name):
+        """M2-20 on its own: the pairs the assessment found short (fairy's links were 2.6:1)."""
+        c = styles.get(name).colours()
+>       assert wcag(c.link, c.fill) >= TEXT, f"{name} links: {wcag(c.link, c.fill):.2f}"
+E       AssertionError: fairy links: 2.62
+E       assert 2.623878276010981 >= 4.5
+E        +  where 2.623878276010981 = wcag(<PyQt6.QtGui.QColor object at 0x0000014C59E8A950>, <PyQt6.QtGui.QColor object at 0x0000014C59E8A650>)
+E        +    where <PyQt6.QtGui.QColor object at 0x0000014C59E8A950> = Colours(fill=<PyQt6.QtGui.QColor object at 0x0000014C59E8A650>, title=<PyQt6.QtGui.QColor object at 0x0000014C59E8A7D0..._fill=<PyQt6.QtGui.QColor object at 0x0000014C59E8AF50>, hover_text=<PyQt6.QtGui.QColor object at 0x0000014C59E8B0D0>)).link
+E        +    and   <PyQt6.QtGui.QColor object at 0x0000014C59E8A650> = Colours(fill=<PyQt6.QtGui.QColor object at 0x0000014C59E8A650>, title=<PyQt6.QtGui.QColor object at 0x0000014C59E8A7D0..._fill=<PyQt6.QtGui.QColor object at 0x0000014C59E8AF50>, hover_text=<PyQt6.QtGui.QColor object at 0x0000014C59E8B0D0>)).fill
+
+tests\test_contrast.py:89: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_contrast.py::test_every_painted_style_reads_on_every_part_of_its_bubble[fairy]
+FAILED tests/test_contrast.py::test_links_and_selections_reach_aa_on_their_bubble[fairy]
+2 failed, 31 passed in 0.89s
+-- restored green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.88s
+
+=== drill M2-20-selected-text (M2-20) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_contrast.py
+-- green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.87s
+-- red: exit 1
+        box = AskBox()
+        try:
+            box.set_style(styles.get(name), False)
+            box.open(QPoint(600, 600), "Ask", "hint", "", text="Some words to select, enough of them to see.", activate=False)
+            box.answer.selectAll()
+            drawn = box.answer.viewport().grab().toImage()
+            assert colour_count(drawn, c.selection) > 50, name
+            pal = box.answer.palette()
+>           assert pal.color(QPalette.ColorRole.Highlight) == c.selection and pal.color(QPalette.ColorRole.HighlightedText) == c.selection_text
+E           AssertionError: assert (<PyQt6.QtGui.QColor object at 0x000001C546BB87D0> == <PyQt6.QtGui.QColor object at 0x000001C546B5B750> and <PyQt6.QtGui.QColor object at 0x000001C546BB8350> == <PyQt6.QtGui.QColor object at 0x000001C546B5B850>)
+E            +  where <PyQt6.QtGui.QColor object at 0x000001C546BB87D0> = <built-in method color of QPalette object at 0x000001C546BB86D0>(<ColorRole.Highlight: 12>)
+E            +    where <built-in method color of QPalette object at 0x000001C546BB86D0> = <PyQt6.QtGui.QPalette object at 0x000001C546BB86D0>.color
+E            +    and   <ColorRole.Highlight: 12> = <enum 'ColorRole'>.Highlight
+E            +      where <enum 'ColorRole'> = QPalette.ColorRole
+E            +  and   <PyQt6.QtGui.QColor object at 0x000001C546B5B750> = Colours(fill=<PyQt6.QtGui.QColor object at 0x000001C546B5B350>, title=<PyQt6.QtGui.QColor object at 0x000001C546B5B4D0..._fill=<PyQt6.QtGui.QColor object at 0x000001C546B5BC50>, hover_text=<PyQt6.QtGui.QColor object at 0x000001C546B5BDD0>)).selection
+E            +  and   <PyQt6.QtGui.QColor object at 0x000001C546BB8350> = <built-in method color of QPalette object at 0x000001C546BB86D0>(<ColorRole.HighlightedText: 13>)
+E            +    where <built-in method color of QPalette object at 0x000001C546BB86D0> = <PyQt6.QtGui.QPalette object at 0x000001C546BB86D0>.color
+E            +    and   <ColorRole.HighlightedText: 13> = <enum 'ColorRole'>.HighlightedText
+E            +      where <enum 'ColorRole'> = QPalette.ColorRole
+E            +  and   <PyQt6.QtGui.QColor object at 0x000001C546B5B850> = Colours(fill=<PyQt6.QtGui.QColor object at 0x000001C546B5B350>, title=<PyQt6.QtGui.QColor object at 0x000001C546B5B4D0..._fill=<PyQt6.QtGui.QColor object at 0x000001C546B5BC50>, hover_text=<PyQt6.QtGui.QColor object at 0x000001C546B5BDD0>)).selection_text
+
+tests\test_contrast.py:216: AssertionError
+____ test_selected_text_in_the_ask_box_wears_the_selection_colours[plain] _____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001C546906530>
+name = 'plain'
+
+    @pytest.mark.parametrize("name", PAINTED + ["plain"])
+    def test_selected_text_in_the_ask_box_wears_the_selection_colours(qapp, name):
+        c = styles.get(name).colours()
+        box = AskBox()
+        try:
+            box.set_style(styles.get(name), False)
+            box.open(QPoint(600, 600), "Ask", "hint", "", text="Some words to select, enough of them to see.", activate=False)
+            box.answer.selectAll()
+            drawn = box.answer.viewport().grab().toImage()
+            assert colour_count(drawn, c.selection) > 50, name
+            pal = box.answer.palette()
+>           assert pal.color(QPalette.ColorRole.Highlight) == c.selection and pal.color(QPalette.ColorRole.HighlightedText) == c.selection_text
+E           AssertionError: assert (<PyQt6.QtGui.QColor object at 0x000001C546BB9D50> == <PyQt6.QtGui.QColor object at 0x000001C546BB8850> and <PyQt6.QtGui.QColor object at 0x000001C546BB9F50> == <PyQt6.QtGui.QColor object at 0x000001C546BB8950>)
+E            +  where <PyQt6.QtGui.QColor object at 0x000001C546BB9D50> = <built-in method color of QPalette object at 0x000001C546BB9DD0>(<ColorRole.Highlight: 12>)
+E            +    where <built-in method color of QPalette object at 0x000001C546BB9DD0> = <PyQt6.QtGui.QPalette object at 0x000001C546BB9DD0>.color
+E            +    and   <ColorRole.Highlight: 12> = <enum 'ColorRole'>.Highlight
+E            +      where <enum 'ColorRole'> = QPalette.ColorRole
+E            +  and   <PyQt6.QtGui.QColor object at 0x000001C546BB8850> = Colours(fill=<PyQt6.QtGui.QColor object at 0x000001C546BB93D0>, title=<PyQt6.QtGui.QColor object at 0x000001C546BB9450..._fill=<PyQt6.QtGui.QColor object at 0x000001C546BB8850>, hover_text=<PyQt6.QtGui.QColor object at 0x000001C546BB8950>)).selection
+E            +  and   <PyQt6.QtGui.QColor object at 0x000001C546BB9F50> = <built-in method color of QPalette object at 0x000001C546BB9DD0>(<ColorRole.HighlightedText: 13>)
+E            +    where <built-in method color of QPalette object at 0x000001C546BB9DD0> = <PyQt6.QtGui.QPalette object at 0x000001C546BB9DD0>.color
+E            +    and   <ColorRole.HighlightedText: 13> = <enum 'ColorRole'>.HighlightedText
+E            +      where <enum 'ColorRole'> = QPalette.ColorRole
+E            +  and   <PyQt6.QtGui.QColor object at 0x000001C546BB8950> = Colours(fill=<PyQt6.QtGui.QColor object at 0x000001C546BB93D0>, title=<PyQt6.QtGui.QColor object at 0x000001C546BB9450..._fill=<PyQt6.QtGui.QColor object at 0x000001C546BB8850>, hover_text=<PyQt6.QtGui.QColor object at 0x000001C546BB8950>)).selection_text
+
+tests\test_contrast.py:216: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_contrast.py::test_selected_text_in_the_ask_box_wears_the_selection_colours[electric]
+FAILED tests/test_contrast.py::test_selected_text_in_the_ask_box_wears_the_selection_colours[fire]
+FAILED tests/test_contrast.py::test_selected_text_in_the_ask_box_wears_the_selection_colours[ghost]
+FAILED tests/test_contrast.py::test_selected_text_in_the_ask_box_wears_the_selection_colours[fairy]
+FAILED tests/test_contrast.py::test_selected_text_in_the_ask_box_wears_the_selection_colours[leaf]
+FAILED tests/test_contrast.py::test_selected_text_in_the_ask_box_wears_the_selection_colours[plain]
+6 failed, 27 passed in 1.00s
+-- restored green: exit 0, 33 passed
+.................................                                        [100%]
+33 passed in 0.84s
+
+=== drill M2-02-no-wrap (M2-02) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_rich_text.py
+-- green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.61s
+-- red: exit 1
+        doc = box.answer.document()
+>       check_code_wraps(doc, box.answer.viewport().width(), styles.get(name).colours().code_fill)
+
+tests\test_rich_text.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+doc = <chatmon.richtext.SafeDocument object at 0x000002365BAB1E50>, width = 312
+fill = <PyQt6.QtGui.QColor object at 0x000002365BA717D0>
+
+    def check_code_wraps(doc: QTextDocument, width: float, fill: QColor) -> None:
+        code = code_blocks(doc)
+        assert code, "the code block is there"
+        for b in code:
+>           assert not b.blockFormat().nonBreakableLines()
+E           assert not True
+E            +  where True = <built-in method nonBreakableLines of QTextBlockFormat object at 0x000002365BACEC50>()
+E            +    where <built-in method nonBreakableLines of QTextBlockFormat object at 0x000002365BACEC50> = <PyQt6.QtGui.QTextBlockFormat object at 0x000002365BACEC50>.nonBreakableLines
+E            +      where <PyQt6.QtGui.QTextBlockFormat object at 0x000002365BACEC50> = <built-in method blockFormat of QTextBlock object at 0x000002365BAB2AD0>()
+E            +        where <built-in method blockFormat of QTextBlock object at 0x000002365BAB2AD0> = <PyQt6.QtGui.QTextBlock object at 0x000002365BAB2AD0>.blockFormat
+
+tests\test_rich_text.py:50: AssertionError
+____________________ test_code_wraps_in_the_ask_box[plain] ____________________
+
+box = <chatmon.bubble.AskBox object at 0x000002365BAB3070>, name = 'plain'
+
+    @pytest.mark.parametrize("name", ["electric", "plain"])
+    def test_code_wraps_in_the_ask_box(box, name):
+        box.set_style(styles.get(name), False)
+        box.open(QPoint(600, 600), "Ask", "hint", "", text="**You:** how?\n\n" + LONG_CODE, activate=False)
+        doc = box.answer.document()
+>       check_code_wraps(doc, box.answer.viewport().width(), styles.get(name).colours().code_fill)
+
+tests\test_rich_text.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+doc = <chatmon.richtext.SafeDocument object at 0x000002365BAB3750>, width = 344
+fill = <PyQt6.QtGui.QColor object at 0x000002365BACFA50>
+
+    def check_code_wraps(doc: QTextDocument, width: float, fill: QColor) -> None:
+        code = code_blocks(doc)
+        assert code, "the code block is there"
+        for b in code:
+>           assert not b.blockFormat().nonBreakableLines()
+E           assert not True
+E            +  where True = <built-in method nonBreakableLines of QTextBlockFormat object at 0x000002365BACFED0>()
+E            +    where <built-in method nonBreakableLines of QTextBlockFormat object at 0x000002365BACFED0> = <PyQt6.QtGui.QTextBlockFormat object at 0x000002365BACFED0>.nonBreakableLines
+E            +      where <PyQt6.QtGui.QTextBlockFormat object at 0x000002365BACFED0> = <built-in method blockFormat of QTextBlock object at 0x000002365BB10370>()
+E            +        where <built-in method blockFormat of QTextBlock object at 0x000002365BB10370> = <PyQt6.QtGui.QTextBlock object at 0x000002365BB10370>.blockFormat
+
+tests\test_rich_text.py:50: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[electric]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[fire]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[ghost]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[fairy]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[leaf]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[plain]
+FAILED tests/test_rich_text.py::test_code_wraps_in_the_ask_box[electric] - as...
+FAILED tests/test_rich_text.py::test_code_wraps_in_the_ask_box[plain] - asser...
+8 failed, 10 passed in 0.63s
+-- restored green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.59s
+
+=== drill M2-02-no-panel (M2-02) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_rich_text.py
+-- green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.73s
+-- red: exit 1
+        code = code_blocks(doc)
+        assert code, "the code block is there"
+        for b in code:
+            assert not b.blockFormat().nonBreakableLines()
+            frame = doc.rootFrame()
+            inner = [f for f in frame.childFrames() if f.firstPosition() <= b.position() <= f.lastPosition()]
+            assert len(inner) == 1, "each code block is on a panel of its own"
+            panel = inner[0].frameFormat()
+>           assert panel.background().color() == fill and panel.padding() >= 4
+E           assert (<PyQt6.QtGui.QColor object at 0x00000280C607F350> == <PyQt6.QtGui.QColor object at 0x00000280C60257D0>)
+E            +  where <PyQt6.QtGui.QColor object at 0x00000280C607F350> = <built-in method color of QBrush object at 0x00000280C607F0D0>()
+E            +    where <built-in method color of QBrush object at 0x00000280C607F0D0> = <PyQt6.QtGui.QBrush object at 0x00000280C607F0D0>.color
+E            +      where <PyQt6.QtGui.QBrush object at 0x00000280C607F0D0> = <built-in method background of QTextFrameFormat object at 0x00000280C607FB50>()
+E            +        where <built-in method background of QTextFrameFormat object at 0x00000280C607FB50> = <PyQt6.QtGui.QTextFrameFormat object at 0x00000280C607FB50>.background
+
+tests\test_rich_text.py:55: AssertionError
+____________________ test_code_wraps_in_the_ask_box[plain] ____________________
+
+box = <chatmon.bubble.AskBox object at 0x00000280C606F7F0>, name = 'plain'
+
+    @pytest.mark.parametrize("name", ["electric", "plain"])
+    def test_code_wraps_in_the_ask_box(box, name):
+        box.set_style(styles.get(name), False)
+        box.open(QPoint(600, 600), "Ask", "hint", "", text="**You:** how?\n\n" + LONG_CODE, activate=False)
+        doc = box.answer.document()
+>       check_code_wraps(doc, box.answer.viewport().width(), styles.get(name).colours().code_fill)
+
+tests\test_rich_text.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+doc = <chatmon.richtext.SafeDocument object at 0x00000280C606FED0>, width = 344
+fill = <PyQt6.QtGui.QColor object at 0x00000280C60A8F50>
+
+    def check_code_wraps(doc: QTextDocument, width: float, fill: QColor) -> None:
+        code = code_blocks(doc)
+        assert code, "the code block is there"
+        for b in code:
+            assert not b.blockFormat().nonBreakableLines()
+            frame = doc.rootFrame()
+            inner = [f for f in frame.childFrames() if f.firstPosition() <= b.position() <= f.lastPosition()]
+            assert len(inner) == 1, "each code block is on a panel of its own"
+            panel = inner[0].frameFormat()
+>           assert panel.background().color() == fill and panel.padding() >= 4
+E           assert (<PyQt6.QtGui.QColor object at 0x00000280C60A8D50> == <PyQt6.QtGui.QColor object at 0x00000280C60A8F50>)
+E            +  where <PyQt6.QtGui.QColor object at 0x00000280C60A8D50> = <built-in method color of QBrush object at 0x00000280C60A8C50>()
+E            +    where <built-in method color of QBrush object at 0x00000280C60A8C50> = <PyQt6.QtGui.QBrush object at 0x00000280C60A8C50>.color
+E            +      where <PyQt6.QtGui.QBrush object at 0x00000280C60A8C50> = <built-in method background of QTextFrameFormat object at 0x00000280C60A92D0>()
+E            +        where <built-in method background of QTextFrameFormat object at 0x00000280C60A92D0> = <PyQt6.QtGui.QTextFrameFormat object at 0x00000280C60A92D0>.background
+
+tests\test_rich_text.py:55: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[electric]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[fire]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[ghost]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[fairy]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[leaf]
+FAILED tests/test_rich_text.py::test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[plain]
+FAILED tests/test_rich_text.py::test_code_wraps_in_the_ask_box[electric] - as...
+FAILED tests/test_rich_text.py::test_code_wraps_in_the_ask_box[plain] - asser...
+8 failed, 10 passed in 0.58s
+-- restored green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.59s
+
+=== drill M2-02-headings (M2-02) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_rich_text.py
+-- green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.55s
+-- red: exit 1
+........F.........                                                       [100%]
+================================== FAILURES ===================================
+___________________ test_headings_stay_near_the_texts_size ____________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000016DF3EC2210>
+
+    def test_headings_stay_near_the_texts_size(qapp):
+        message = SpeechBubble()
+        message.show("Notes", "# A big heading\n\n## A smaller one\n\nBody text here.", [], None, 0.0)
+        lines = {b.text(): b.layout().lineAt(0).height() for b in blocks(message.doc) if b.layout().lineCount()}
+        body = lines["Body text here."]
+>       assert lines["A big heading"] <= body * 1.3 and lines["A smaller one"] <= body * 1.3
+E       assert (32.0 <= (16.0 * 1.3))
+
+tests\test_rich_text.py:96: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rich_text.py::test_headings_stay_near_the_texts_size - asse...
+1 failed, 17 passed in 0.71s
+-- restored green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.66s
+
+=== drill M2-17-keywords (M2-17) on chatmon/highlight.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_rich_text.py
+-- green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 1.19s
+-- red: exit 1
+.........FFF......                                                       [100%]
+================================== FAILURES ===================================
+_______ test_python_keywords_strings_numbers_and_comments_are_coloured ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000272C927A210>
+
+    def test_python_keywords_strings_numbers_and_comments_are_coloured(qapp):
+        message, colours = highlighted("Some prose with def and 42 in it.\n\n```python\ndef f(x):\n    return 'hi' + 42  # note\n```")
+        prose, first, second = [b for b in blocks(message.doc) if b.text()][:3]
+        assert prose.layout().formats() == [], "prose isn't coloured"
+>       assert formats_at(first, "def") == [colours.keyword]
+E       assert [] == [<PyQt6.QtGui...0272CA3E0550>]
+E         
+E         Right contains one more item: <PyQt6.QtGui.QColor object at 0x00000272CA3E0550>
+E         Use -v to get more diff
+
+tests\test_rich_text.py:124: AssertionError
+______________ test_a_block_comment_carries_on_to_the_next_lines ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000272C927A210>
+
+    def test_a_block_comment_carries_on_to_the_next_lines(qapp):
+        message, colours = highlighted("```js\nconst a = 1; /* starts here\nstill a comment\nends */ let b = \"s\";\n```")
+        code = code_blocks(message.doc)
+>       assert formats_at(code[0], "const") == [colours.keyword] and formats_at(code[0], "/* starts here") == [colours.comment]
+E       assert ([] == [<PyQt6.QtGui...0272CA4009D0>]
+E         
+E         Right contains one more item: <PyQt6.QtGui.QColor object at 0x00000272CA4009D0>
+E         Use -v to get more diff)
+
+tests\test_rich_text.py:135: AssertionError
+_______________ test_an_unnamed_language_gets_the_common_marks ________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000272C927A210>
+
+    def test_an_unnamed_language_gets_the_common_marks(qapp):
+        message, colours = highlighted("```\nif ready: run(3)  # go\nurl#fragment // and this\n```")
+        first, second = code_blocks(message.doc)
+>       assert formats_at(first, "if") == [colours.keyword] and formats_at(first, "3") == [colours.number]
+E       assert ([] == [<PyQt6.QtGui...0272CA401750>]
+E         
+E         Right contains one more item: <PyQt6.QtGui.QColor object at 0x00000272CA401750>
+E         Use -v to get more diff)
+
+tests\test_rich_text.py:144: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rich_text.py::test_python_keywords_strings_numbers_and_comments_are_coloured
+FAILED tests/test_rich_text.py::test_a_block_comment_carries_on_to_the_next_lines
+FAILED tests/test_rich_text.py::test_an_unnamed_language_gets_the_common_marks
+3 failed, 15 passed in 2.42s
+-- restored green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 1.45s
+
+=== drill M2-17-block-comment (M2-17) on chatmon/highlight.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_rich_text.py
+-- green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.64s
+-- red: exit 1
+..........F.......                                                       [100%]
+================================== FAILURES ===================================
+______________ test_a_block_comment_carries_on_to_the_next_lines ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000275B1A1A210>
+
+    def test_a_block_comment_carries_on_to_the_next_lines(qapp):
+        message, colours = highlighted("```js\nconst a = 1; /* starts here\nstill a comment\nends */ let b = \"s\";\n```")
+        code = code_blocks(message.doc)
+        assert formats_at(code[0], "const") == [colours.keyword] and formats_at(code[0], "/* starts here") == [colours.comment]
+>       assert formats_at(code[1], "still a comment") == [colours.comment]
+E       assert [] == [<PyQt6.QtGui...0275B2BE4CD0>]
+E         
+E         Right contains one more item: <PyQt6.QtGui.QColor object at 0x00000275B2BE4CD0>
+E         Use -v to get more diff
+
+tests\test_rich_text.py:136: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rich_text.py::test_a_block_comment_carries_on_to_the_next_lines
+1 failed, 17 passed in 0.63s
+-- restored green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.88s
+
+=== drill M2-17-contrast (M2-17) on chatmon/highlight.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_rich_text.py
+-- green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.77s
+-- red: exit 1
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001E37FE26210>
+name = 'fairy'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_code_colours_read_on_the_code_panel_and_stand_apart(qapp, name):
+        c = styles.get(name).colours()
+        colours = highlight.code_colours(c)
+        for kind in ("keyword", "string", "number", "comment"):
+>           assert wcag(getattr(colours, kind), c.code_fill) >= 4.5, (name, kind)
+E           AssertionError: ('fairy', 'comment')
+E           assert 1.4869369545499986 >= 4.5
+E            +  where 1.4869369545499986 = wcag(<PyQt6.QtGui.QColor object at 0x000001E3014AB7D0>, <PyQt6.QtGui.QColor object at 0x000001E3014A3E50>)
+E            +    where <PyQt6.QtGui.QColor object at 0x000001E3014AB7D0> = getattr(CodeColours(keyword=<PyQt6.QtGui.QColor object at 0x000001E3014AB6D0>, string=<PyQt6.QtGui.QColor object at 0x000001E3...>, number=<PyQt6.QtGui.QColor object at 0x000001E3014E18D0>, comment=<PyQt6.QtGui.QColor object at 0x000001E3014AB7D0>), 'comment')
+E            +    and   <PyQt6.QtGui.QColor object at 0x000001E3014A3E50> = Colours(fill=<PyQt6.QtGui.QColor object at 0x000001E3014A31D0>, title=<PyQt6.QtGui.QColor object at 0x000001E3014A3A50..._fill=<PyQt6.QtGui.QColor object at 0x000001E3014A8150>, hover_text=<PyQt6.QtGui.QColor object at 0x000001E3014A82D0>)).code_fill
+
+tests\test_rich_text.py:155: AssertionError
+_______ test_code_colours_read_on_the_code_panel_and_stand_apart[leaf] ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001E37FE26210>
+name = 'leaf'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_code_colours_read_on_the_code_panel_and_stand_apart(qapp, name):
+        c = styles.get(name).colours()
+        colours = highlight.code_colours(c)
+        for kind in ("keyword", "string", "number", "comment"):
+>           assert wcag(getattr(colours, kind), c.code_fill) >= 4.5, (name, kind)
+E           AssertionError: ('leaf', 'comment')
+E           assert 1.4581733450550645 >= 4.5
+E            +  where 1.4581733450550645 = wcag(<PyQt6.QtGui.QColor object at 0x000001E3014E1350>, <PyQt6.QtGui.QColor object at 0x000001E3014AA1D0>)
+E            +    where <PyQt6.QtGui.QColor object at 0x000001E3014E1350> = getattr(CodeColours(keyword=<PyQt6.QtGui.QColor object at 0x000001E3014E17D0>, string=<PyQt6.QtGui.QColor object at 0x000001E3...>, number=<PyQt6.QtGui.QColor object at 0x000001E3014E1550>, comment=<PyQt6.QtGui.QColor object at 0x000001E3014E1350>), 'comment')
+E            +    and   <PyQt6.QtGui.QColor object at 0x000001E3014AA1D0> = Colours(fill=<PyQt6.QtGui.QColor object at 0x000001E3014A8350>, title=<PyQt6.QtGui.QColor object at 0x000001E3014A9DD0..._fill=<PyQt6.QtGui.QColor object at 0x000001E3014AA450>, hover_text=<PyQt6.QtGui.QColor object at 0x000001E3014AA5D0>)).code_fill
+
+tests\test_rich_text.py:155: AssertionError
+_______ test_code_colours_read_on_the_code_panel_and_stand_apart[plain] _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001E37FE26210>
+name = 'plain'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_code_colours_read_on_the_code_panel_and_stand_apart(qapp, name):
+        c = styles.get(name).colours()
+        colours = highlight.code_colours(c)
+        for kind in ("keyword", "string", "number", "comment"):
+>           assert wcag(getattr(colours, kind), c.code_fill) >= 4.5, (name, kind)
+E           AssertionError: ('plain', 'comment')
+E           assert 1.7501066122389963 >= 4.5
+E            +  where 1.7501066122389963 = wcag(<PyQt6.QtGui.QColor object at 0x000001E3014E2750>, <PyQt6.QtGui.QColor object at 0x000001E3014E1D50>)
+E            +    where <PyQt6.QtGui.QColor object at 0x000001E3014E2750> = getattr(CodeColours(keyword=<PyQt6.QtGui.QColor object at 0x000001E3014E1CD0>, string=<PyQt6.QtGui.QColor object at 0x000001E3...>, number=<PyQt6.QtGui.QColor object at 0x000001E3014E27D0>, comment=<PyQt6.QtGui.QColor object at 0x000001E3014E2750>), 'comment')
+E            +    and   <PyQt6.QtGui.QColor object at 0x000001E3014E1D50> = Colours(fill=<PyQt6.QtGui.QColor object at 0x000001E3014E1E50>, title=<PyQt6.QtGui.QColor object at 0x000001E3014E1B50..._fill=<PyQt6.QtGui.QColor object at 0x000001E3014E1ED0>, hover_text=<PyQt6.QtGui.QColor object at 0x000001E3014E2450>)).code_fill
+
+tests\test_rich_text.py:155: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rich_text.py::test_code_colours_read_on_the_code_panel_and_stand_apart[electric]
+FAILED tests/test_rich_text.py::test_code_colours_read_on_the_code_panel_and_stand_apart[fire]
+FAILED tests/test_rich_text.py::test_code_colours_read_on_the_code_panel_and_stand_apart[ghost]
+FAILED tests/test_rich_text.py::test_code_colours_read_on_the_code_panel_and_stand_apart[fairy]
+FAILED tests/test_rich_text.py::test_code_colours_read_on_the_code_panel_and_stand_apart[leaf]
+FAILED tests/test_rich_text.py::test_code_colours_read_on_the_code_panel_and_stand_apart[plain]
+6 failed, 12 passed in 0.79s
+-- restored green: exit 0, 18 passed
+..................                                                       [100%]
+18 passed in 0.70s
+
+=== drill M2-03-no-cap (M2-03) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.64s
+-- red: exit 1
+__________ test_a_long_message_is_capped_and_more_has_the_rest[leaf] __________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001C36139E350>
+name = 'leaf'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_a_long_message_is_capped_and_more_has_the_rest(qapp, name):
+        message = make(name)
+        asked = []
+        message.on_more = lambda title, text: asked.append((title, text))
+        message.max_height = 320
+        message.show("Build log", LONG, [("Open it", None)], None, 0.0)
+>       assert message.size.height() <= 320
+E       assert 5203.0 <= 320
+E        +  where 5203.0 = <built-in method height of QSizeF object at 0x000001C3626DB250>()
+E        +    where <built-in method height of QSizeF object at 0x000001C3626DB250> = PyQt6.QtCore.QSizeF(372.0, 5203.0).height
+E        +      where PyQt6.QtCore.QSizeF(372.0, 5203.0) = <chatmon.bubble.SpeechBubble object at 0x000001C3614727B0>.size
+
+tests\test_speech_bubble.py:29: AssertionError
+_________ test_a_long_message_is_capped_and_more_has_the_rest[plain] __________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001C36139E350>
+name = 'plain'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_a_long_message_is_capped_and_more_has_the_rest(qapp, name):
+        message = make(name)
+        asked = []
+        message.on_more = lambda title, text: asked.append((title, text))
+        message.max_height = 320
+        message.show("Build log", LONG, [("Open it", None)], None, 0.0)
+>       assert message.size.height() <= 320
+E       assert 5150.0 <= 320
+E        +  where 5150.0 = <built-in method height of QSizeF object at 0x000001C3626C86D0>()
+E        +    where <built-in method height of QSizeF object at 0x000001C3626C86D0> = PyQt6.QtCore.QSizeF(337.0, 5150.0).height
+E        +      where PyQt6.QtCore.QSizeF(337.0, 5150.0) = <chatmon.bubble.SpeechBubble object at 0x000001C36268E3C0>.size
+
+tests\test_speech_bubble.py:29: AssertionError
+_______________ test_without_a_more_handler_it_is_still_capped ________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001C36139E350>
+
+    def test_without_a_more_handler_it_is_still_capped(qapp):
+        message = make()
+        message.show("Build log", LONG, [], None, 0.0)
+        screen = QGuiApplication.primaryScreen().availableGeometry().height()
+>       assert message.size.height() <= SpeechBubble.SCREEN_SHARE * screen
+E       assert 5149.0 <= (0.4 * 800)
+E        +  where 5149.0 = <built-in method height of QSizeF object at 0x000001C3626C8CD0>()
+E        +    where <built-in method height of QSizeF object at 0x000001C3626C8CD0> = PyQt6.QtCore.QSizeF(373.0, 5149.0).height
+E        +      where PyQt6.QtCore.QSizeF(373.0, 5149.0) = <chatmon.bubble.SpeechBubble object at 0x000001C36268E7B0>.size
+E        +  and   0.4 = SpeechBubble.SCREEN_SHARE
+
+tests\test_speech_bubble.py:43: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_a_long_message_is_capped_and_more_has_the_rest[electric]
+FAILED tests/test_speech_bubble.py::test_a_long_message_is_capped_and_more_has_the_rest[leaf]
+FAILED tests/test_speech_bubble.py::test_a_long_message_is_capped_and_more_has_the_rest[plain]
+FAILED tests/test_speech_bubble.py::test_without_a_more_handler_it_is_still_capped
+4 failed, 15 passed in 0.65s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.62s
+
+=== drill M2-03-one-row (M2-03) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.58s
+-- red: exit 1
+.....FFF...........                                                      [100%]
+================================== FAILURES ===================================
+___________ test_buttons_wrap_onto_rows_inside_the_bubble[electric] ___________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000027EFA146350>
+name = 'electric'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_buttons_wrap_onto_rows_inside_the_bubble(qapp, name):
+        message = make(name)
+        specs = [(f"Snooze for {m} minutes", None) for m in (5, 10, 15, 30, 60)] + [("Done", None)]
+        message.show("Reminder", "Stretch.", specs, None, 0.0)
+        rects = [b.rect for b in message.buttons]
+>       assert len({round(r.top()) for r in rects}) > 1, "more than one row"
+E       AssertionError: more than one row
+E       assert 1 > 1
+E        +  where 1 = len({83})
+
+tests\test_speech_bubble.py:61: AssertionError
+_____________ test_buttons_wrap_onto_rows_inside_the_bubble[leaf] _____________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000027EFA146350>
+name = 'leaf'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_buttons_wrap_onto_rows_inside_the_bubble(qapp, name):
+        message = make(name)
+        specs = [(f"Snooze for {m} minutes", None) for m in (5, 10, 15, 30, 60)] + [("Done", None)]
+        message.show("Reminder", "Stretch.", specs, None, 0.0)
+        rects = [b.rect for b in message.buttons]
+>       assert len({round(r.top()) for r in rects}) > 1, "more than one row"
+E       AssertionError: more than one row
+E       assert 1 > 1
+E        +  where 1 = len({98})
+
+tests\test_speech_bubble.py:61: AssertionError
+____________ test_buttons_wrap_onto_rows_inside_the_bubble[plain] _____________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000027EFA146350>
+name = 'plain'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_buttons_wrap_onto_rows_inside_the_bubble(qapp, name):
+        message = make(name)
+        specs = [(f"Snooze for {m} minutes", None) for m in (5, 10, 15, 30, 60)] + [("Done", None)]
+        message.show("Reminder", "Stretch.", specs, None, 0.0)
+        rects = [b.rect for b in message.buttons]
+>       assert len({round(r.top()) for r in rects}) > 1, "more than one row"
+E       AssertionError: more than one row
+E       assert 1 > 1
+E        +  where 1 = len({64})
+
+tests\test_speech_bubble.py:61: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_buttons_wrap_onto_rows_inside_the_bubble[electric]
+FAILED tests/test_speech_bubble.py::test_buttons_wrap_onto_rows_inside_the_bubble[leaf]
+FAILED tests/test_speech_bubble.py::test_buttons_wrap_onto_rows_inside_the_bubble[plain]
+3 failed, 16 passed in 0.63s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.55s
+
+=== drill M2-04-one-line (M2-04) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.60s
+-- red: exit 1
+.........FFF.......                                                      [100%]
+================================== FAILURES ===================================
+_ test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button[electric] _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000232D27F2350>
+name = 'electric'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button(qapp, name):
+        message = make(name)
+        message.show("A title so long that it can't possibly fit on one line, or even on two of them, in any bubble", "Body.", [], None, 0.0)
+        metrics = QFontMetricsF(message._title_font)
+>       assert len(message._title_lines) == 2
+E       assert 1 == 2
+E        +  where 1 = len(["A title so long that it can't possibly fit on one line, or even on two of them, in any bubble"])
+E        +    where ["A title so long that it can't possibly fit on one line, or even on two of them, in any bubble"] = <chatmon.bubble.SpeechBubble object at 0x00000232D283DD30>._title_lines
+
+tests\test_speech_bubble.py:85: AssertionError
+_ test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button[leaf] _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000232D27F2350>
+name = 'leaf'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button(qapp, name):
+        message = make(name)
+        message.show("A title so long that it can't possibly fit on one line, or even on two of them, in any bubble", "Body.", [], None, 0.0)
+        metrics = QFontMetricsF(message._title_font)
+>       assert len(message._title_lines) == 2
+E       assert 1 == 2
+E        +  where 1 = len(["A title so long that it can't possibly fit on one line, or even on two of them, in any bubble"])
+E        +    where ["A title so long that it can't possibly fit on one line, or even on two of them, in any bubble"] = <chatmon.bubble.SpeechBubble object at 0x00000232D283DFD0>._title_lines
+
+tests\test_speech_bubble.py:85: AssertionError
+_ test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button[plain] _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000232D27F2350>
+name = 'plain'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button(qapp, name):
+        message = make(name)
+        message.show("A title so long that it can't possibly fit on one line, or even on two of them, in any bubble", "Body.", [], None, 0.0)
+        metrics = QFontMetricsF(message._title_font)
+>       assert len(message._title_lines) == 2
+E       assert 1 == 2
+E        +  where 1 = len(["A title so long that it can't possibly fit on one line, or even on two of them, in any bubble"])
+E        +    where ["A title so long that it can't possibly fit on one line, or even on two of them, in any bubble"] = <chatmon.bubble.SpeechBubble object at 0x00000232D283E660>._title_lines
+
+tests\test_speech_bubble.py:85: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button[electric]
+FAILED tests/test_speech_bubble.py::test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button[leaf]
+FAILED tests/test_speech_bubble.py::test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button[plain]
+3 failed, 16 passed in 0.62s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.63s
+
+=== drill M2-08-fixed-clock (M2-08) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.62s
+-- red: exit 1
+............F.F....                                                      [100%]
+================================== FAILURES ===================================
+___________________ test_a_bubble_stays_long_enough_to_read ___________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002291B46E350>
+
+    def test_a_bubble_stays_long_enough_to_read(qapp):
+        message = make()
+        message.show("Focus stopped", "", [], 3, 0.0)  # 2 words: 4 + 0.6 s, more than the 3 asked
+        message.tick(4.5)
+>       assert message.visible()
+E       assert False
+E        +  where False = visible()
+E        +    where visible = <chatmon.bubble.SpeechBubble object at 0x000002291B74DE80>.visible
+
+tests\test_speech_bubble.py:96: AssertionError
+_______ test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002291B46E350>
+
+    def test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was(qapp):
+        message = make()
+        message.show("Focus stopped", "", [], 3, 0.0)  # goes at 4.6
+        message.tick(1.0)
+        message.set_hovered(True)  # at the clock last told: 1.0
+        message.tick(30.0)
+        assert message.visible(), "it doesn't go while it's being read"
+        message.set_hovered(False, 30.0)  # 29 s hovered: it goes at 33.6
+        message.tick(33.5)
+>       assert message.visible()
+E       assert False
+E        +  where False = visible()
+E        +    where visible = <chatmon.bubble.SpeechBubble object at 0x000002291B74E120>.visible
+
+tests\test_speech_bubble.py:137: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_a_bubble_stays_long_enough_to_read
+FAILED tests/test_speech_bubble.py::test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was
+2 failed, 17 passed in 0.60s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.57s
+
+=== drill M2-08-hover-ignored (M2-08) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.50s
+-- red: exit 1
+..............F....                                                      [100%]
+================================== FAILURES ===================================
+_______ test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000025D2D9B6350>
+
+    def test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was(qapp):
+        message = make()
+        message.show("Focus stopped", "", [], 3, 0.0)  # goes at 4.6
+        message.tick(1.0)
+        message.set_hovered(True)  # at the clock last told: 1.0
+        message.tick(30.0)
+>       assert message.visible(), "it doesn't go while it's being read"
+E       AssertionError: it doesn't go while it's being read
+E       assert False
+E        +  where False = visible()
+E        +    where visible = <chatmon.bubble.SpeechBubble object at 0x0000025D2ED49D30>.visible
+
+tests\test_speech_bubble.py:134: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was
+1 failed, 18 passed in 0.63s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.92s
+
+=== drill M2-09-any-scheme (M2-09) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.59s
+-- red: exit 1
+...............F...                                                      [100%]
+================================== FAILURES ===================================
+__________ test_links_in_a_bubble_can_be_clicked_but_only_safe_ones ___________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000276CF7523F0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000276D08C8D60>
+
+    def test_links_in_a_bubble_can_be_clicked_but_only_safe_ones(qapp, monkeypatch):
+        opened = []
+        monkeypatch.setattr(QDesktopServices, "openUrl", lambda url: opened.append(url.toString()) or True)
+        message = make()
+        message.show("Links", "Read [the docs](https://example.com/docs), [write](mailto:help@example.com) or [this](file:///etc/passwd).", [("OK", None)], None, 0.0)
+        found = link_points(message)
+>       assert set(found) == {"", "https://example.com/docs", "mailto:help@example.com"}
+E       AssertionError: assert {'', 'file://...@example.com'} == {'', 'https:/...@example.com'}
+E         
+E         Extra items in the left set:
+E         'file:///etc/passwd'
+E         Use -v to get more diff
+
+tests\test_speech_bubble.py:163: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_links_in_a_bubble_can_be_clicked_but_only_safe_ones
+1 failed, 18 passed in 0.58s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.50s
+
+=== drill M2-09-not-a-link (M2-09) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.53s
+-- red: exit 1
+...............F...                                                      [100%]
+================================== FAILURES ===================================
+__________ test_links_in_a_bubble_can_be_clicked_but_only_safe_ones ___________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000020554BEE350>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020554C84D60>
+
+    def test_links_in_a_bubble_can_be_clicked_but_only_safe_ones(qapp, monkeypatch):
+        opened = []
+        monkeypatch.setattr(QDesktopServices, "openUrl", lambda url: opened.append(url.toString()) or True)
+        message = make()
+        message.show("Links", "Read [the docs](https://example.com/docs), [write](mailto:help@example.com) or [this](file:///etc/passwd).", [("OK", None)], None, 0.0)
+        found = link_points(message)
+        assert set(found) == {"", "https://example.com/docs", "mailto:help@example.com"}
+        for url, points in found.items():
+            if url:
+>               assert message.hit(points[0]) == "link"
+E               AssertionError: assert 'body' == 'link'
+E                 
+E                 - link
+E                 + body
+
+tests\test_speech_bubble.py:166: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_links_in_a_bubble_can_be_clicked_but_only_safe_ones
+1 failed, 18 passed in 0.67s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.60s
+
+=== drill M2-07-desktop-font (M2-07) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.57s
+-- red: exit 1
+.................F.                                                      [100%]
+================================== FAILURES ===================================
+___________________ test_text_follows_a_larger_desktop_font ___________________
+
+big_desktop_font = None
+
+    def test_text_follows_a_larger_desktop_font(big_desktop_font):
+        message = make()
+        message.show("Hi", "Some text to read " * 10, [], None, 0.0)
+>       assert message.doc.defaultFont().pointSizeF() == pytest.approx(16)
+E       assert 10.5 == 16 ± 1.6e-05
+E         
+E         comparison failed
+E         Obtained: 10.5
+E         Expected: 16 ± 1.6e-05
+
+tests\test_speech_bubble.py:198: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_text_follows_a_larger_desktop_font
+1 failed, 18 passed in 0.71s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.62s
+
+=== drill M2-07-fixed-width (M2-07) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_speech_bubble.py
+-- green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.56s
+-- red: exit 1
+..................F                                                      [100%]
+================================== FAILURES ===================================
+______________ test_the_text_size_setting_scales_text_and_widths ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001F4C877E350>
+
+    def test_the_text_size_setting_scales_text_and_widths(qapp):
+        small, large = make(), make()
+        large.set_text_scale(1.5)
+        for message in (small, large):
+            message.show("Hi", "Some text to read, " * 30, [("OK", None)], None, 0.0)
+        assert large.doc.defaultFont().pointSizeF() == pytest.approx(small.doc.defaultFont().pointSizeF() * 1.5)
+>       assert large.size.width() > small.size.width() * 1.3
+E       assert 338.0 > (317.0 * 1.3)
+E        +  where 338.0 = <built-in method width of QSizeF object at 0x000001F4C888B6D0>()
+E        +    where <built-in method width of QSizeF object at 0x000001F4C888B6D0> = PyQt6.QtCore.QSizeF(338.0, 314.0).width
+E        +      where PyQt6.QtCore.QSizeF(338.0, 314.0) = <chatmon.bubble.SpeechBubble object at 0x000001F4C8891D30>.size
+E        +  and   317.0 = <built-in method width of QSizeF object at 0x000001F4C888A650>()
+E        +    where <built-in method width of QSizeF object at 0x000001F4C888A650> = PyQt6.QtCore.QSizeF(317.0, 307.0).width
+E        +      where PyQt6.QtCore.QSizeF(317.0, 307.0) = <chatmon.bubble.SpeechBubble object at 0x000001F4C8663770>.size
+
+tests\test_speech_bubble.py:208: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_speech_bubble.py::test_the_text_size_setting_scales_text_and_widths
+1 failed, 18 passed in 0.67s
+-- restored green: exit 0, 19 passed
+...................                                                      [100%]
+19 passed in 0.79s
+
+=== drill M2-06-buttons (M2-06) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.40s
+-- red: exit 1
+        chip = next(b for b in box.chips.findChildren(QToolButton) if b.objectName() == "chip")
+        close = next(b for b in box.findChildren(QToolButton) if b.accessibleName() == "Close")
+        controls = {
+            "History": box.history_button, "New chat": box.reset_button, "Expand": box.expand_button, "Close": close,
+            "Attach": box.attach_button, "chip": chip, "Stop": box.stop_button, "field": box.entry,
+        }
+        for what, control in controls.items():
+            box.answer.setFocus()
+            spin(0.01)
+            assert ring(box, control, focus) < 4, f"{what} has no outline without the focus"
+            control.setFocus(Qt.FocusReason.TabFocusReason)
+            spin(0.01)
+            assert control.hasFocus(), what
+>           assert ring(box, control, focus) == 4, f"{what} shows its focus ({name})"
+E           AssertionError: History shows its focus (leaf)
+E           assert 0 == 4
+E            +  where 0 = ring(<chatmon.bubble.AskBox object at 0x0000016C4DA587D0>, <PyQt6.QtWidgets.QToolButton object at 0x0000016C4DA59630>, <PyQt6.QtGui.QColor object at 0x0000016C4DD180D0>)
+
+tests\test_ask_box.py:83: AssertionError
+_______________ test_every_control_shows_a_focus_outline[plain] _______________
+
+box = <chatmon.bubble.AskBox object at 0x0000016C4DA5A530>, name = 'plain'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_every_control_shows_a_focus_outline(box, name):
+        box.set_style(styles.get(name), False)
+        open_chat(box, "**You:** hi\n\nHello.", activate=True)
+        box.set_attachments(["notes.md (2 KB)"])
+        box.set_resettable(True)
+        box.set_busy("Claude", time.monotonic())
+        box.activateWindow()
+        spin(0.05)
+        focus = styles.get(name).colours().title
+        chip = next(b for b in box.chips.findChildren(QToolButton) if b.objectName() == "chip")
+        close = next(b for b in box.findChildren(QToolButton) if b.accessibleName() == "Close")
+        controls = {
+            "History": box.history_button, "New chat": box.reset_button, "Expand": box.expand_button, "Close": close,
+            "Attach": box.attach_button, "chip": chip, "Stop": box.stop_button, "field": box.entry,
+        }
+        for what, control in controls.items():
+            box.answer.setFocus()
+            spin(0.01)
+            assert ring(box, control, focus) < 4, f"{what} has no outline without the focus"
+            control.setFocus(Qt.FocusReason.TabFocusReason)
+            spin(0.01)
+            assert control.hasFocus(), what
+>           assert ring(box, control, focus) == 4, f"{what} shows its focus ({name})"
+E           AssertionError: History shows its focus (plain)
+E           assert 0 == 4
+E            +  where 0 = ring(<chatmon.bubble.AskBox object at 0x0000016C4DA5A530>, <PyQt6.QtWidgets.QToolButton object at 0x0000016C4DA5AA30>, <PyQt6.QtGui.QColor object at 0x0000016C4DD04450>)
+
+tests\test_ask_box.py:83: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[electric]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[fire]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[ghost]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[fairy]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[leaf]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[plain]
+6 failed, 24 passed in 4.60s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.36s
+
+=== drill M2-06-field (M2-06) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.59s
+-- red: exit 1
+        chip = next(b for b in box.chips.findChildren(QToolButton) if b.objectName() == "chip")
+        close = next(b for b in box.findChildren(QToolButton) if b.accessibleName() == "Close")
+        controls = {
+            "History": box.history_button, "New chat": box.reset_button, "Expand": box.expand_button, "Close": close,
+            "Attach": box.attach_button, "chip": chip, "Stop": box.stop_button, "field": box.entry,
+        }
+        for what, control in controls.items():
+            box.answer.setFocus()
+            spin(0.01)
+            assert ring(box, control, focus) < 4, f"{what} has no outline without the focus"
+            control.setFocus(Qt.FocusReason.TabFocusReason)
+            spin(0.01)
+            assert control.hasFocus(), what
+>           assert ring(box, control, focus) == 4, f"{what} shows its focus ({name})"
+E           AssertionError: field shows its focus (leaf)
+E           assert 0 == 4
+E            +  where 0 = ring(<chatmon.bubble.AskBox object at 0x000002AAB26407D0>, <chatmon.bubble.Entry object at 0x000002AAB2642210>, <PyQt6.QtGui.QColor object at 0x000002AAB291C0D0>)
+
+tests\test_ask_box.py:83: AssertionError
+_______________ test_every_control_shows_a_focus_outline[plain] _______________
+
+box = <chatmon.bubble.AskBox object at 0x000002AAB2642530>, name = 'plain'
+
+    @pytest.mark.parametrize("name", STYLES)
+    def test_every_control_shows_a_focus_outline(box, name):
+        box.set_style(styles.get(name), False)
+        open_chat(box, "**You:** hi\n\nHello.", activate=True)
+        box.set_attachments(["notes.md (2 KB)"])
+        box.set_resettable(True)
+        box.set_busy("Claude", time.monotonic())
+        box.activateWindow()
+        spin(0.05)
+        focus = styles.get(name).colours().title
+        chip = next(b for b in box.chips.findChildren(QToolButton) if b.objectName() == "chip")
+        close = next(b for b in box.findChildren(QToolButton) if b.accessibleName() == "Close")
+        controls = {
+            "History": box.history_button, "New chat": box.reset_button, "Expand": box.expand_button, "Close": close,
+            "Attach": box.attach_button, "chip": chip, "Stop": box.stop_button, "field": box.entry,
+        }
+        for what, control in controls.items():
+            box.answer.setFocus()
+            spin(0.01)
+            assert ring(box, control, focus) < 4, f"{what} has no outline without the focus"
+            control.setFocus(Qt.FocusReason.TabFocusReason)
+            spin(0.01)
+            assert control.hasFocus(), what
+>           assert ring(box, control, focus) == 4, f"{what} shows its focus ({name})"
+E           AssertionError: field shows its focus (plain)
+E           assert 0 == 4
+E            +  where 0 = ring(<chatmon.bubble.AskBox object at 0x000002AAB2642530>, <chatmon.bubble.Entry object at 0x000002AAB26434D0>, <PyQt6.QtGui.QColor object at 0x000002AAB2908450>)
+
+tests\test_ask_box.py:83: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[electric]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[fire]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[ghost]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[fairy]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[leaf]
+FAILED tests/test_ask_box.py::test_every_control_shows_a_focus_outline[plain]
+6 failed, 24 passed in 5.45s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.21s
+
+=== drill M2-07-box-width (M2-07) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.40s
+-- red: exit 1
+............FF................                                           [100%]
+================================== FAILURES ===================================
+____________ test_the_text_size_setting_grows_the_box_and_its_text ____________
+
+box = <chatmon.bubble.AskBox object at 0x00000177B4485770>
+
+    def test_the_text_size_setting_grows_the_box_and_its_text(box):
+        open_chat(box, "**You:** hi\n\nHello there.")
+        width, points = box.width(), box.answer.document().defaultFont().pointSizeF()
+        box.set_text_scale(1.5)
+>       assert box.width() == pytest.approx(width * 1.5, abs=2)
+E       assert 380 == 570.0 ± 2
+E         
+E         comparison failed
+E         Obtained: 380
+E         Expected: 570.0 ± 2
+
+tests\test_ask_box.py:99: AssertionError
+__________________ test_a_larger_desktop_font_grows_the_box ___________________
+
+big_desktop_font = None
+
+    def test_a_larger_desktop_font_grows_the_box(big_desktop_font):
+        box = AskBox()
+        try:
+            open_chat(box, "**You:** hi\n\nHello there.")
+            assert box.answer.document().defaultFont().pointSizeF() == pytest.approx(16)
+>           assert box.width() > AskBox.WIDTH * 1.4
+E           assert 380 > (380 * 1.4)
+E            +  where 380 = <built-in method width of AskBox object at 0x00000177B4485950>()
+E            +    where <built-in method width of AskBox object at 0x00000177B4485950> = <chatmon.bubble.AskBox object at 0x00000177B4485950>.width
+E            +  and   380 = AskBox.WIDTH
+
+tests\test_ask_box.py:119: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_the_text_size_setting_grows_the_box_and_its_text
+FAILED tests/test_ask_box.py::test_a_larger_desktop_font_grows_the_box - asse...
+2 failed, 28 passed in 5.47s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.27s
+
+=== drill M2-10-at-the-end (M2-10) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.90s
+-- red: exit 1
+..............F...............                                           [100%]
+================================== FAILURES ===================================
+________ test_a_long_answer_opens_at_the_start_of_the_newest_exchange _________
+
+box = <chatmon.bubble.AskBox object at 0x0000026078331D10>
+
+    def test_a_long_answer_opens_at_the_start_of_the_newest_exchange(box):
+        open_chat(box, CHAT, at_end=True)
+        spin(0.05)
+        bar = box.answer.verticalScrollBar()
+        assert bar.maximum() > 0, "the chat is longer than the box"
+>       assert bar.value() == newest_top(box) and bar.value() < bar.maximum(), "its question at the top, not the answer's end"
+E       AssertionError: its question at the top, not the answer's end
+E       assert (2248 == 174)
+E        +  where 2248 = <built-in method value of QScrollBar object at 0x0000026078332F30>()
+E        +    where <built-in method value of QScrollBar object at 0x0000026078332F30> = <PyQt6.QtWidgets.QScrollBar object at 0x0000026078332F30>.value
+E        +  and   174 = newest_top(<chatmon.bubble.AskBox object at 0x0000026078331D10>)
+
+tests\test_ask_box.py:146: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_a_long_answer_opens_at_the_start_of_the_newest_exchange
+1 failed, 29 passed in 6.88s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.53s
+
+=== drill M2-11-no-room (M2-11) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.74s
+-- red: exit 1
+................F.............                                           [100%]
+================================== FAILURES ===================================
+__________________ test_the_box_can_be_made_bigger_and_back ___________________
+
+box = <chatmon.bubble.AskBox object at 0x000001DAAD7636B0>
+
+    def test_the_box_can_be_made_bigger_and_back(box):
+        changed = []
+        box.expand_changed.connect(changed.append)
+        open_chat(box, CHAT, at_end=True)
+        small = box.size()
+        box.expand_button.click()
+        screen = QGuiApplication.primaryScreen().availableGeometry()
+        assert changed == [True] and box.expanded
+>       assert box.height() > small.height() and box.height() <= AskBox.SCREEN_SHARE * screen.height() + 1
+E       assert (384 > 384)
+E        +  where 384 = <built-in method height of AskBox object at 0x000001DAAD7636B0>()
+E        +    where <built-in method height of AskBox object at 0x000001DAAD7636B0> = <chatmon.bubble.AskBox object at 0x000001DAAD7636B0>.height
+E        +  and   384 = <built-in method height of QSize object at 0x000001DAAD7B3B50>()
+E        +    where <built-in method height of QSize object at 0x000001DAAD7B3B50> = PyQt6.QtCore.QSize(380, 384).height
+
+tests\test_ask_box.py:169: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_the_box_can_be_made_bigger_and_back - asse...
+1 failed, 29 passed in 5.63s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.30s
+
+=== drill M2-11-no-rules (M2-11) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.17s
+-- red: exit 1
+...............F..............                                           [100%]
+================================== FAILURES ===================================
+_________________________ test_turns_are_ruled_apart __________________________
+
+box = <chatmon.bubble.AskBox object at 0x00000232AD18E170>
+
+    def test_turns_are_ruled_apart(box):
+        open_chat(box, CHAT, at_end=True)
+        rules = [b for b in iter_blocks(box.answer.document()) if b.blockFormat().hasProperty(QTextFormat.Property.BlockTrailingHorizontalRulerWidth)]
+>       assert len(rules) == 2  # three turns
+        ^^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_ask_box.py:155: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_turns_are_ruled_apart - assert 0 == 2
+1 failed, 29 passed in 5.82s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.30s
+
+=== drill M2-12-no-new-line (M2-12) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.26s
+-- red: exit 1
+..................F...........                                           [100%]
+================================== FAILURES ===================================
+_____________ test_shift_enter_adds_a_line_and_enter_sends_it_all _____________
+
+box = <chatmon.bubble.AskBox object at 0x000001FDC48CA530>
+
+    def test_shift_enter_adds_a_line_and_enter_sends_it_all(box):
+        sent = []
+        box.submitted.connect(sent.append)
+        open_chat(box, activate=True)
+        one_line = box.entry.height()
+        QTest.keyClicks(box.entry, "line one")
+        QTest.keyClick(box.entry, Qt.Key.Key_Return, Qt.KeyboardModifier.ShiftModifier)
+        QTest.keyClicks(box.entry, "line two")
+        QTest.keyClick(box.entry, Qt.Key.Key_Return, Qt.KeyboardModifier.ShiftModifier)
+        QTest.keyClicks(box.entry, "line three")
+>       assert box.entry.text() == "line one\nline two\nline three"
+E       AssertionError: assert 'line three' == 'line one\nli...o\nline three'
+E         
+E         - line one
+E         - line two
+E           line three
+
+tests\test_ask_box.py:197: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_shift_enter_adds_a_line_and_enter_sends_it_all
+1 failed, 29 passed in 5.33s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.64s
+
+=== drill M2-12-paste-joined (M2-12) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 6.24s
+-- red: exit 1
+...................F.F........                                           [100%]
+================================== FAILURES ===================================
+__________________ test_a_short_paste_keeps_its_line_breaks ___________________
+
+box = <chatmon.bubble.AskBox object at 0x000002367306E170>
+
+    def test_a_short_paste_keeps_its_line_breaks(box):
+        open_chat(box, activate=True)
+        box.take_paste("text", "def f():\n    return 1\n")
+>       assert box.entry.text() == "def f():\n    return 1\n"
+E       AssertionError: assert 'def f():     return 1' == 'def f():\n    return 1\n'
+E         
+E         + def f():     return 1
+E         - def f():
+E         -     return 1
+
+tests\test_ask_box.py:208: AssertionError
+___________ test_the_field_keeps_the_calls_the_app_and_overlay_use ____________
+
+box = <chatmon.bubble.AskBox object at 0x000002367306D630>
+
+    def test_the_field_keeps_the_calls_the_app_and_overlay_use(box):
+        open_chat(box, activate=True)
+        e = box.entry
+        e.setText("first\nsecond")
+>       assert e.text() == "first\nsecond"
+E       AssertionError: assert 'first second' == 'first\nsecond'
+E         
+E         + first second
+E         - first
+E         - second
+
+tests\test_ask_box.py:226: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_a_short_paste_keeps_its_line_breaks - Asse...
+FAILED tests/test_ask_box.py::test_the_field_keeps_the_calls_the_app_and_overlay_use
+2 failed, 28 passed in 5.51s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.51s
+
+=== drill M2-12-qt-selection (M2-12) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.74s
+-- red: exit 1
+.....................F........                                           [100%]
+================================== FAILURES ===================================
+___________ test_the_field_keeps_the_calls_the_app_and_overlay_use ____________
+
+box = <chatmon.bubble.AskBox object at 0x0000025B9D31E030>
+
+    def test_the_field_keeps_the_calls_the_app_and_overlay_use(box):
+        open_chat(box, activate=True)
+        e = box.entry
+        e.setText("first\nsecond")
+        assert e.text() == "first\nsecond"
+        e.selectAll()
+        assert e.hasSelectedText() and e.selectedText() == "first\nsecond"
+>       assert e.inputMethodQuery(Qt.InputMethodQuery.ImCurrentSelection) == "first\nsecond"  # Qt's own answer can't reach Python
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_ask_box.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <chatmon.bubble.Entry object at 0x0000025B9D2E1BD0>
+query = <InputMethodQuery.ImCurrentSelection: 32>, argument = None
+
+    def inputMethodQuery(self, query, argument=None):
+        if False:
+            return selection_text(self.textCursor())
+>       return super().inputMethodQuery(query) if argument is None else super().inputMethodQuery(query, argument)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: unable to convert a C++ 'QInputControl::selectionWrapper::MimeDataSelection' instance to a Python object
+
+chatmon\bubble.py:626: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_the_field_keeps_the_calls_the_app_and_overlay_use
+1 failed, 29 passed in 5.55s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.39s
+
+=== drill M2-16-no-copy (M2-16) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.40s
+-- red: exit 1
+......................F.......                                           [100%]
+================================== FAILURES ===================================
+________________ test_each_answer_and_code_block_can_be_copied ________________
+
+box = <chatmon.bubble.AskBox object at 0x0000029110201770>
+
+    def test_each_answer_and_code_block_can_be_copied(box):
+        copied = []
+        box.copy_requested.connect(copied.append)
+        chat = "**You:** how?\n\nLike this:\n\n```python\nprint(1)\n```\n\n**You:** and then?\n\nThat's it."
+        open_chat(box, chat, at_end=True)
+        links = copy_links(box)
+        assert len(links) == 3  # the code block, and each answer
+        for _, block, offset in links:
+            click_link(box, block, offset)
+>       assert copied[0] == "print(1)"
+               ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_ask_box.py:278: IndexError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_each_answer_and_code_block_can_be_copied
+1 failed, 29 passed in 5.44s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.42s
+
+=== drill M2-16-forged (M2-16) on chatmon/richtext.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.54s
+-- red: exit 1
+.......................F......                                           [100%]
+================================== FAILURES ===================================
+____________ test_a_copy_link_written_by_an_answer_copies_nothing _____________
+
+box = <chatmon.bubble.AskBox object at 0x000001C8158737F0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C8158AA520>
+
+    def test_a_copy_link_written_by_an_answer_copies_nothing(box, monkeypatch):
+        opened = []
+        monkeypatch.setattr(bubble, "open_link", lambda url: opened.append(url.toString()))
+        copied = []
+        box.copy_requested.connect(copied.append)
+        open_chat(box, "**You:** hi\n\n[Copy](chatmon-copy:0000/0) this.", at_end=True)
+        forged = [(b, o) for href, b, o in copy_links(box) if href.endswith(":0000/0")]
+        assert forged
+        click_link(box, *forged[0])
+>       assert copied == [] and opened == ["chatmon-copy:0000/0"]  # handed to open_link, which opens only the web
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert (['Copy this.'] == []
+E         
+E         Left contains one more item: 'Copy this.'
+E         Use -v to get more diff)
+
+tests\test_ask_box.py:292: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_a_copy_link_written_by_an_answer_copies_nothing
+1 failed, 29 passed in 5.53s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.38s
+
+=== drill M2-18-no-clock (M2-18) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.42s
+-- red: exit 1
+.........................F....                                           [100%]
+================================== FAILURES ===================================
+_____ test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped _____
+
+box = <chatmon.bubble.AskBox object at 0x0000021876118870>
+
+    def test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped(box):
+        stops = []
+        box.stop_requested.connect(lambda: stops.append(1))
+        open_chat(box, "**You:** hi", at_end=True)
+        box.set_busy("Claude", time.monotonic() - 12.2)
+        assert box.busy.isVisibleTo(box) and box.stop_button.isVisibleTo(box)
+        assert box.busy_label.text() == "Claude is answering… 12 s"
+        spin(1.1)
+>       assert box.busy_label.text() == "Claude is answering… 13 s", "it counts each second"
+E       AssertionError: it counts each second
+E       assert 'Claude is answering… 12 s' == 'Claude is answering… 13 s'
+E         
+E         - Claude is answering… 13 s
+E         ?                       ^
+E         + Claude is answering… 12 s
+E         ?                       ^
+
+tests\test_ask_box.py:315: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped
+1 failed, 29 passed in 5.24s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.30s
+
+=== drill M2-18-no-stop (M2-18) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.20s
+-- red: exit 1
+.........................F....                                           [100%]
+================================== FAILURES ===================================
+_____ test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped _____
+
+box = <chatmon.bubble.AskBox object at 0x0000020C817BC870>
+
+    def test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped(box):
+        stops = []
+        box.stop_requested.connect(lambda: stops.append(1))
+        open_chat(box, "**You:** hi", at_end=True)
+        box.set_busy("Claude", time.monotonic() - 12.2)
+        assert box.busy.isVisibleTo(box) and box.stop_button.isVisibleTo(box)
+        assert box.busy_label.text() == "Claude is answering… 12 s"
+        spin(1.1)
+        assert box.busy_label.text() == "Claude is answering… 13 s", "it counts each second"
+        box.stop_button.click()
+>       assert stops == [1]
+E       assert [] == [1]
+E         
+E         Right contains one more item: 1
+E         Use -v to get more diff
+
+tests\test_ask_box.py:317: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped
+1 failed, 29 passed in 5.22s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.82s
+
+=== drill M2-18-no-partial (M2-18) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 6.06s
+-- red: exit 1
+..........................F...                                           [100%]
+================================== FAILURES ===================================
+_______ test_streamed_text_shows_as_it_comes_and_the_answer_replaces_it _______
+
+box = <chatmon.bubble.AskBox object at 0x00000168D1E33C50>
+
+    def test_streamed_text_shows_as_it_comes_and_the_answer_replaces_it(box):
+        open_chat(box, "**You:** hi", at_end=True)
+        box.set_busy("Claude", time.monotonic())
+        box.append_partial("Hello ")
+        box.append_partial("there, **friend**")
+        spin(0.2)
+>       assert "Hello there, friend" in box.answer.toPlainText() and "You: hi" in box.answer.toPlainText()
+E       AssertionError: assert ('Hello there, friend' in 'You: hi')
+E        +  where 'You: hi' = <built-in method toPlainText of Answer object at 0x00000168D210CF50>()
+E        +    where <built-in method toPlainText of Answer object at 0x00000168D210CF50> = <chatmon.bubble.Answer object at 0x00000168D210CF50>.toPlainText
+E        +      where <chatmon.bubble.Answer object at 0x00000168D210CF50> = <chatmon.bubble.AskBox object at 0x00000168D1E33C50>.answer
+
+tests\test_ask_box.py:328: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_streamed_text_shows_as_it_comes_and_the_answer_replaces_it
+1 failed, 29 passed in 4.83s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.36s
+
+=== drill M2-19-no-fade-in (M2-19) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.16s
+-- red: exit 1
+............................F.                                           [100%]
+================================== FAILURES ===================================
+__________________________ test_it_fades_in_and_out ___________________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001A29322EB70>
+
+    def test_it_fades_in_and_out(qapp):
+        box = AskBox()
+        closed = []
+        box.closed.connect(lambda: closed.append(1))
+        try:
+            box.open(QPoint(700, 900), "Ask", "hint", "", activate=False)
+            assert box.windowOpacity() < 0.5, "it starts see-through"
+            spin(0.35)
+>           assert box.windowOpacity() == pytest.approx(1.0)
+E           assert 0.0 == 1.0 ± 1.0e-06
+E             
+E             comparison failed
+E             Obtained: 0.0
+E             Expected: 1.0 ± 1.0e-06
+
+tests\test_ask_box.py:361: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_it_fades_in_and_out - assert 0.0 == 1.0 ± ...
+1 failed, 29 passed in 4.96s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.24s
+
+=== drill M2-19-no-ghost (M2-19) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.08s
+-- red: exit 1
+............................F.                                           [100%]
+================================== FAILURES ===================================
+__________________________ test_it_fades_in_and_out ___________________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002C97FA5EB70>
+
+    def test_it_fades_in_and_out(qapp):
+        box = AskBox()
+        closed = []
+        box.closed.connect(lambda: closed.append(1))
+        try:
+            box.open(QPoint(700, 900), "Ask", "hint", "", activate=False)
+            assert box.windowOpacity() < 0.5, "it starts see-through"
+            spin(0.35)
+            assert box.windowOpacity() == pytest.approx(1.0)
+            geometry = box.geometry()
+            box.dismiss()
+            assert not box.isVisible() and closed == [1], "closed at once, as far as anyone is concerned"
+            fading = ghosts()
+>           assert len(fading) == 1 and fading[0].geometry() == geometry
+E           assert (0 == 1)
+E            +  where 0 = len([])
+
+tests\test_ask_box.py:366: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_it_fades_in_and_out - assert (0 == 1)
+1 failed, 29 passed in 4.78s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.20s
+
+=== drill M2-19-motion-ignored (M2-19) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_ask_box.py
+-- green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.21s
+-- red: exit 1
+.............................F                                           [100%]
+================================== FAILURES ===================================
+_____________ test_with_reduced_motion_it_comes_and_goes_at_once ______________
+
+box = <chatmon.bubble.AskBox object at 0x0000019E8963FCF0>
+
+    def test_with_reduced_motion_it_comes_and_goes_at_once(box):
+        box.open(QPoint(700, 900), "Ask", "hint", "", activate=False)
+>       assert box.windowOpacity() == pytest.approx(1.0)
+E       assert 0.0 == 1.0 ± 1.0e-06
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 1.0 ± 1.0e-06
+
+tests\test_ask_box.py:376: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_ask_box.py::test_with_reduced_motion_it_comes_and_goes_at_once
+1 failed, 29 passed in 5.22s
+-- restored green: exit 0, 30 passed
+..............................                                           [100%]
+30 passed in 5.21s
+
+=== drill M2-13-never-settles (M2-13) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py
+-- green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.86s
+-- red: exit 1
+    def test_a_bubble_left_up_stops_drawing(qapp, name):
+        message = SpeechBubble()
+        message.set_style(styles.get(name), True)
+        message.show("Left up", "Nobody's looking.", [], None, 0.0)
+        keys = {message.anim_key(i / 30) for i in range(60 * 30)}
+        most = (bubble.Effects.run(message._period) + bubble.EFFECTS_SETTLE) * 30 + 1
+>       assert len(keys - {-1}) <= most  # it was 1800 frames in a minute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert 1780 <= 834.9999999999999
+E        +  where 1780 = len(({0, 1, 2, 3, 4, 5, ...} - {-1}))
+
+tests\test_bubble_styles.py:511: AssertionError
+________ test_a_settled_or_power_saving_bubble_draws_its_still_picture ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000225123E6850>
+
+    def test_a_settled_or_power_saving_bubble_draws_its_still_picture(qapp):
+        moving, still = SpeechBubble(), SpeechBubble()
+        moving.set_style(styles.get("electric"), True)
+        still.set_style(styles.get("electric"), False)
+        for message in (moving, still):
+            message.show("Left up", "Nobody's looking.", [], None, 0.0)
+        end = settled_at(moving)
+        assert bubble_picture(moving, 1.0) != bubble_picture(still, 1.0)
+>       assert bubble_picture(moving, end + 1) == bubble_picture(still, end + 1) == bubble_picture(moving, end + 7.3)
+E       AssertionError: assert b'\x00\x00\x0...0\x00\x00\x00' == b'\x00\x00\x0...0\x00\x00\x00'
+E         
+E         At index 6371 diff: b'\n' != b'\t'
+E         Use -v to get more diff
+
+tests\test_bubble_styles.py:531: AssertionError
+_____________________ test_the_ask_box_settles_and_wakes ______________________
+
+animated_box = <chatmon.bubble.AskBox object at 0x00000225125CC550>
+
+    def test_the_ask_box_settles_and_wakes(animated_box):
+        box = animated_box
+        box._effects.since -= 1000  # long ago: its effects have settled
+        box._next_frame()
+>       assert not box._frames.isActive() and box.anim_key(time.monotonic()) == -1
+E       assert (not True)
+E        +  where True = <built-in method isActive of QTimer object at 0x00000225125CC5F0>()
+E        +    where <built-in method isActive of QTimer object at 0x00000225125CC5F0> = <PyQt6.QtCore.QTimer object at 0x00000225125CC5F0>.isActive
+E        +      where <PyQt6.QtCore.QTimer object at 0x00000225125CC5F0> = <chatmon.bubble.AskBox object at 0x00000225125CC550>._frames
+
+tests\test_bubble_styles.py:589: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[electric]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[fire]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[ghost]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[fairy]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[leaf]
+FAILED tests/test_bubble_styles.py::test_a_bubble_left_up_stops_drawing[electric]
+FAILED tests/test_bubble_styles.py::test_a_bubble_left_up_stops_drawing[fire]
+FAILED tests/test_bubble_styles.py::test_a_bubble_left_up_stops_drawing[ghost]
+FAILED tests/test_bubble_styles.py::test_a_bubble_left_up_stops_drawing[fairy]
+FAILED tests/test_bubble_styles.py::test_a_bubble_left_up_stops_drawing[leaf]
+FAILED tests/test_bubble_styles.py::test_a_settled_or_power_saving_bubble_draws_its_still_picture
+FAILED tests/test_bubble_styles.py::test_the_ask_box_settles_and_wakes - asse...
+12 failed, 38 passed in 2.55s
+-- restored green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.84s
+
+=== drill M2-13-power-saving (M2-13) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py
+-- green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.19s
+-- red: exit 1
+__________ test_a_speech_bubbles_effects_settle_and_come_back[leaf] ___________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000299A5E7E8F0>
+name = 'leaf'
+
+    @pytest.mark.parametrize("name", PAINTED)
+    def test_a_speech_bubbles_effects_settle_and_come_back(qapp, name):
+        message = SpeechBubble()
+        message.set_style(styles.get(name), True)
+        message.show("Build finished", "Three tests were slow.", [], None, 100.0)
+        assert message._period > 0
+        assert message.anim_key(101.0) != -1, "it moves at first"
+        end = settled_at(message)
+        assert message._period <= end - 100.0 <= 2 * max(message._period, bubble.EFFECTS_LEAST) + bubble.EFFECTS_SETTLE
+        assert message.anim_key(end + 0.05) == -1 and message.anim_key(end + 30) == -1, "then it's still"
+        message.tick(end + 1)
+        message.set_hovered(True)
+        assert message.anim_key(end + 1.1) != -1, "pointed at, it moves again"
+        message.set_hovered(False, end + 2)
+        message.show("Next", "New words.", [], None, end + 100)
+        assert message.anim_key(end + 100.5) != -1, "new words, it moves again"
+        message.set_power_saving(True)
+>       assert message.anim_key(end + 100.6) == -1, "power saving: the still picture"
+E       AssertionError: power saving: the still picture
+E       assert 17 == -1
+E        +  where 17 = anim_key((134.79999999999998 + 100.6))
+E        +    where anim_key = <chatmon.bubble.SpeechBubble object at 0x00000299A5C34EC0>.anim_key
+
+tests\test_bubble_styles.py:501: AssertionError
+________ test_a_settled_or_power_saving_bubble_draws_its_still_picture ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000299A5E7E8F0>
+
+    def test_a_settled_or_power_saving_bubble_draws_its_still_picture(qapp):
+        moving, still = SpeechBubble(), SpeechBubble()
+        moving.set_style(styles.get("electric"), True)
+        still.set_style(styles.get("electric"), False)
+        for message in (moving, still):
+            message.show("Left up", "Nobody's looking.", [], None, 0.0)
+        end = settled_at(moving)
+        assert bubble_picture(moving, 1.0) != bubble_picture(still, 1.0)
+        assert bubble_picture(moving, end + 1) == bubble_picture(still, end + 1) == bubble_picture(moving, end + 7.3)
+        moving.show("Again", "Nobody's looking.", [], None, 0.0)
+        moving.set_power_saving(True)
+        still.show("Again", "Nobody's looking.", [], None, 0.0)
+>       assert bubble_picture(moving, 1.0) == bubble_picture(still, 1.0)
+E       AssertionError: assert b'\x00\x00\x0...0\x00\x00\x00' == b'\x00\x00\x0...0\x00\x00\x00'
+E         
+E         At index 6465 diff: b'\x07' != b'\x06'
+E         Use -v to get more diff
+
+tests\test_bubble_styles.py:535: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[electric]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[fire]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[ghost]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[fairy]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[leaf]
+FAILED tests/test_bubble_styles.py::test_a_settled_or_power_saving_bubble_draws_its_still_picture
+6 failed, 44 passed in 2.36s
+-- restored green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.28s
+
+=== drill M2-13-hover-wake (M2-13) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py
+-- green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.23s
+-- red: exit 1
+E       assert -1 != -1
+E        +  where -1 = anim_key((107.2 + 1.1))
+E        +    where anim_key = <chatmon.bubble.SpeechBubble object at 0x000001909BB54C20>.anim_key
+
+tests\test_bubble_styles.py:496: AssertionError
+__________ test_a_speech_bubbles_effects_settle_and_come_back[fairy] __________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001909BA56850>
+name = 'fairy'
+
+    @pytest.mark.parametrize("name", PAINTED)
+    def test_a_speech_bubbles_effects_settle_and_come_back(qapp, name):
+        message = SpeechBubble()
+        message.set_style(styles.get(name), True)
+        message.show("Build finished", "Three tests were slow.", [], None, 100.0)
+        assert message._period > 0
+        assert message.anim_key(101.0) != -1, "it moves at first"
+        end = settled_at(message)
+        assert message._period <= end - 100.0 <= 2 * max(message._period, bubble.EFFECTS_LEAST) + bubble.EFFECTS_SETTLE
+        assert message.anim_key(end + 0.05) == -1 and message.anim_key(end + 30) == -1, "then it's still"
+        message.tick(end + 1)
+        message.set_hovered(True)
+>       assert message.anim_key(end + 1.1) != -1, "pointed at, it moves again"
+E       AssertionError: pointed at, it moves again
+E       assert -1 != -1
+E        +  where -1 = anim_key((107.2 + 1.1))
+E        +    where anim_key = <chatmon.bubble.SpeechBubble object at 0x000001909BB54D70>.anim_key
+
+tests\test_bubble_styles.py:496: AssertionError
+__________ test_a_speech_bubbles_effects_settle_and_come_back[leaf] ___________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001909BA56850>
+name = 'leaf'
+
+    @pytest.mark.parametrize("name", PAINTED)
+    def test_a_speech_bubbles_effects_settle_and_come_back(qapp, name):
+        message = SpeechBubble()
+        message.set_style(styles.get(name), True)
+        message.show("Build finished", "Three tests were slow.", [], None, 100.0)
+        assert message._period > 0
+        assert message.anim_key(101.0) != -1, "it moves at first"
+        end = settled_at(message)
+        assert message._period <= end - 100.0 <= 2 * max(message._period, bubble.EFFECTS_LEAST) + bubble.EFFECTS_SETTLE
+        assert message.anim_key(end + 0.05) == -1 and message.anim_key(end + 30) == -1, "then it's still"
+        message.tick(end + 1)
+        message.set_hovered(True)
+>       assert message.anim_key(end + 1.1) != -1, "pointed at, it moves again"
+E       AssertionError: pointed at, it moves again
+E       assert -1 != -1
+E        +  where -1 = anim_key((134.79999999999998 + 1.1))
+E        +    where anim_key = <chatmon.bubble.SpeechBubble object at 0x000001909BB54EC0>.anim_key
+
+tests\test_bubble_styles.py:496: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[electric]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[fire]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[ghost]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[fairy]
+FAILED tests/test_bubble_styles.py::test_a_speech_bubbles_effects_settle_and_come_back[leaf]
+5 failed, 45 passed in 2.31s
+-- restored green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.37s
+
+=== drill M2-13-box-keeps-drawing (M2-13) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py
+-- green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.39s
+-- red: exit 1
+.................................................F                       [100%]
+================================== FAILURES ===================================
+_____________________ test_the_ask_box_settles_and_wakes ______________________
+
+animated_box = <chatmon.bubble.AskBox object at 0x000001CACA419950>
+
+    def test_the_ask_box_settles_and_wakes(animated_box):
+        box = animated_box
+        box._effects.since -= 1000  # long ago: its effects have settled
+        box._next_frame()
+>       assert not box._frames.isActive() and box.anim_key(time.monotonic()) == -1
+E       assert (not True)
+E        +  where True = <built-in method isActive of QTimer object at 0x000001CACA419E50>()
+E        +    where <built-in method isActive of QTimer object at 0x000001CACA419E50> = <PyQt6.QtCore.QTimer object at 0x000001CACA419E50>.isActive
+E        +      where <PyQt6.QtCore.QTimer object at 0x000001CACA419E50> = <chatmon.bubble.AskBox object at 0x000001CACA419950>._frames
+
+tests\test_bubble_styles.py:589: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_the_ask_box_settles_and_wakes - asse...
+1 failed, 49 passed in 2.32s
+-- restored green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.13s
+
+=== drill M2-14-whole-box (M2-14) on chatmon/bubble.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py
+-- green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.09s
+-- red: exit 1
+................................................F.                       [100%]
+================================== FAILURES ===================================
+_____________ test_the_animated_ask_box_repaints_only_its_border ______________
+
+animated_box = <chatmon.bubble.AskBox object at 0x0000020259A34AF0>
+
+    def test_the_animated_ask_box_repaints_only_its_border(animated_box):
+        box = animated_box
+        assert box._frames.isActive()
+        box.answer.setFocus()  # the field's blinking caret is drawn again too, but that isn't the animation
+        spin(0.1)
+        paints = Paints(box)
+        QApplication.instance().installEventFilter(paints)
+        try:
+            spin(0.6)
+        finally:
+            QApplication.instance().removeEventFilter(paints)
+        assert paints.own >= 5, "the border is drawn"
+>       assert paints.children == 0, "nothing inside it is drawn again"
+E       AssertionError: nothing inside it is drawn again
+E       assert 130 == 0
+E        +  where 130 = <test_bubble_styles.Paints object at 0x0000020259BAA3F0>.children
+
+tests\test_bubble_styles.py:582: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_the_animated_ask_box_repaints_only_its_border
+1 failed, 49 passed in 2.34s
+-- restored green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.19s
+
+=== drill M2-15-upper-every-time (M2-15) on chatmon/bubbleart.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py
+-- green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.30s
+-- red: exit 1
+        text = QSizeF(300, 92)
+        lo, hi = art.tail_range(text.width())
+        tips = [lo + i for i in range(0, int(hi - lo), max(1, int(hi - lo) // 30))]
+        rims = set()
+        laid_out = None
+        for i, tip in enumerate(tips):
+            drawn(art, text, tip, 1.0, age=i / 30, animate=True)
+            rims.add(id(art.rim(300, 92, tip)))
+            sizes = [(len(layer._corners), len(layer._layouts)) for layer in art.layers if isinstance(layer, bubbleart.Scroll)]
+            laid_out = laid_out or sizes
+            assert sizes == laid_out, f"{name}: the border's corners are laid out once per size, not per notch place"
+        uppers = composed.count(True)
+        assert composed.count(None) == 0, "nothing is composed whole any more"
+>       assert uppers <= 2, f"{name}: the picture above the band is composed once per size and art ({uppers} times)"
+E       AssertionError: fairy: the picture above the band is composed once per size and art (87 times)
+E       assert 87 <= 2
+
+tests\test_bubble_styles.py:466: AssertionError
+______________ test_a_moving_notch_composes_only_its_band[leaf] _______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001C7EFE8E8F0>
+name = 'leaf'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C7EFDE58C0>
+
+    @pytest.mark.parametrize("name", PAINTED)
+    def test_a_moving_notch_composes_only_its_band(qapp, name, monkeypatch):
+        art = bubbleart.art(name, "moving notch")
+        composed = []
+        real = bubbleart.BubbleArt._compose
+    
+        def counting(self, pix, tw, th, tip, ratio, rows=None):
+            composed.append(rows[0] == 0 if rows else None)
+            return real(self, pix, tw, th, tip, ratio, rows)
+    
+        monkeypatch.setattr(bubbleart.BubbleArt, "_compose", counting)
+        text = QSizeF(300, 92)
+        lo, hi = art.tail_range(text.width())
+        tips = [lo + i for i in range(0, int(hi - lo), max(1, int(hi - lo) // 30))]
+        rims = set()
+        laid_out = None
+        for i, tip in enumerate(tips):
+            drawn(art, text, tip, 1.0, age=i / 30, animate=True)
+            rims.add(id(art.rim(300, 92, tip)))
+            sizes = [(len(layer._corners), len(layer._layouts)) for layer in art.layers if isinstance(layer, bubbleart.Scroll)]
+            laid_out = laid_out or sizes
+            assert sizes == laid_out, f"{name}: the border's corners are laid out once per size, not per notch place"
+        uppers = composed.count(True)
+        assert composed.count(None) == 0, "nothing is composed whole any more"
+>       assert uppers <= 2, f"{name}: the picture above the band is composed once per size and art ({uppers} times)"
+E       AssertionError: leaf: the picture above the band is composed once per size and art (32 times)
+E       assert 32 <= 2
+
+tests\test_bubble_styles.py:466: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[electric]
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[fire]
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[ghost]
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[fairy]
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[leaf]
+5 failed, 45 passed in 2.63s
+-- restored green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.45s
+
+=== drill M2-15-border-per-notch (M2-15) on chatmon/bubbleart.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py
+-- green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.24s
+-- red: exit 1
+            drawn(art, text, tip, 1.0, age=i / 30, animate=True)
+            rims.add(id(art.rim(300, 92, tip)))
+            sizes = [(len(layer._corners), len(layer._layouts)) for layer in art.layers if isinstance(layer, bubbleart.Scroll)]
+            laid_out = laid_out or sizes
+            assert sizes == laid_out, f"{name}: the border's corners are laid out once per size, not per notch place"
+        uppers = composed.count(True)
+        assert composed.count(None) == 0, "nothing is composed whole any more"
+        assert uppers <= 2, f"{name}: the picture above the band is composed once per size and art ({uppers} times)"
+        assert composed.count(False) >= len(tips), "each notch place gets its band"
+>       assert len(rims) == 1, "one border for the size, whatever the notch"
+E       AssertionError: one border for the size, whatever the notch
+E       assert 3 == 1
+E        +  where 3 = len({1633758934224, 1633758934416, 1633758934608})
+
+tests\test_bubble_styles.py:468: AssertionError
+______________ test_a_moving_notch_composes_only_its_band[leaf] _______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000017C6345A8F0>
+name = 'leaf'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017C638156A0>
+
+    @pytest.mark.parametrize("name", PAINTED)
+    def test_a_moving_notch_composes_only_its_band(qapp, name, monkeypatch):
+        art = bubbleart.art(name, "moving notch")
+        composed = []
+        real = bubbleart.BubbleArt._compose
+    
+        def counting(self, pix, tw, th, tip, ratio, rows=None):
+            composed.append(rows[0] == 0 if rows else None)
+            return real(self, pix, tw, th, tip, ratio, rows)
+    
+        monkeypatch.setattr(bubbleart.BubbleArt, "_compose", counting)
+        text = QSizeF(300, 92)
+        lo, hi = art.tail_range(text.width())
+        tips = [lo + i for i in range(0, int(hi - lo), max(1, int(hi - lo) // 30))]
+        rims = set()
+        laid_out = None
+        for i, tip in enumerate(tips):
+            drawn(art, text, tip, 1.0, age=i / 30, animate=True)
+            rims.add(id(art.rim(300, 92, tip)))
+            sizes = [(len(layer._corners), len(layer._layouts)) for layer in art.layers if isinstance(layer, bubbleart.Scroll)]
+            laid_out = laid_out or sizes
+            assert sizes == laid_out, f"{name}: the border's corners are laid out once per size, not per notch place"
+        uppers = composed.count(True)
+        assert composed.count(None) == 0, "nothing is composed whole any more"
+        assert uppers <= 2, f"{name}: the picture above the band is composed once per size and art ({uppers} times)"
+        assert composed.count(False) >= len(tips), "each notch place gets its band"
+>       assert len(rims) == 1, "one border for the size, whatever the notch"
+E       AssertionError: one border for the size, whatever the notch
+E       assert 3 == 1
+E        +  where 3 = len({1633758934800, 1633758934992, 1633758935184})
+
+tests\test_bubble_styles.py:468: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[electric]
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[fire]
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[ghost]
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[fairy]
+FAILED tests/test_bubble_styles.py::test_a_moving_notch_composes_only_its_band[leaf]
+5 failed, 45 passed in 2.82s
+-- restored green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.57s
+
+=== drill M2-15-band-off-by-one (M2-15) on chatmon/bubbleart.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_bubble_styles.py
+-- green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.44s
+-- red: exit 1
+>           assert drawn(art, text, tip, ratio) == full_picture(art, text, tip, ratio), (name, tip)
+E           AssertionError: ('ghost', 64.0)
+E           assert b'\x00\x00\x0...0\x00\x00\x00' == b'\x00\x00\x0...0\x00\x00\x00'
+E             
+E             At index 649080 diff: b'\x00' != b'\x01'
+E             Use -v to get more diff
+
+tests\test_bubble_styles.py:439: AssertionError
+_ test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[2.0-fairy] _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000021BF2D568F0>
+name = 'fairy', ratio = 2.0
+
+    @pytest.mark.parametrize("name", PAINTED)
+    @pytest.mark.parametrize("ratio", [1.0, 2.0])
+    def test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is(qapp, name, ratio):
+        art = bubbleart.art(name, f"parts {ratio}")
+        text = QSizeF(300, 92)
+        lo, hi = art.tail_range(text.width())
+        for tip in (lo, (lo + hi) / 2, hi, lo + 7, hi - 13):
+>           assert drawn(art, text, tip, ratio) == full_picture(art, text, tip, ratio), (name, tip)
+E           AssertionError: ('fairy', 52.0)
+E           assert b'\x00\x00\x0...0\x00\x00\x00' == b'\x00\x00\x0...0\x00\x00\x00'
+E             
+E             At index 636436 diff: b'\x00' != b'\x04'
+E             Use -v to get more diff
+
+tests\test_bubble_styles.py:439: AssertionError
+_ test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[2.0-leaf] _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000021BF2D568F0>
+name = 'leaf', ratio = 2.0
+
+    @pytest.mark.parametrize("name", PAINTED)
+    @pytest.mark.parametrize("ratio", [1.0, 2.0])
+    def test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is(qapp, name, ratio):
+        art = bubbleart.art(name, f"parts {ratio}")
+        text = QSizeF(300, 92)
+        lo, hi = art.tail_range(text.width())
+        for tip in (lo, (lo + hi) / 2, hi, lo + 7, hi - 13):
+>           assert drawn(art, text, tip, ratio) == full_picture(art, text, tip, ratio), (name, tip)
+E           AssertionError: ('leaf', 58.0)
+E           assert b'\x00\x00\x0...0\x00\x00\x00' == b'\x00\x00\x0...0\x00\x00\x00'
+E             
+E             At index 818959 diff: b'\x00' != b'\x01'
+E             Use -v to get more diff
+
+tests\test_bubble_styles.py:439: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[1.0-electric]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[1.0-fire]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[1.0-ghost]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[1.0-fairy]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[1.0-leaf]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[2.0-electric]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[2.0-fire]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[2.0-ghost]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[2.0-fairy]
+FAILED tests/test_bubble_styles.py::test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[2.0-leaf]
+10 failed, 40 passed in 2.77s
+-- restored green: exit 0, 50 passed
+..................................................                       [100%]
+50 passed in 2.32s
+
+=== summary
+PASS M2-01-loads
+PASS M2-01-empty-image
+PASS M2-01-html
+FAIL M2-01-images-left: mutation text occurs 0 times, expected 1
+PASS M2-01-title-markup
+PASS M2-05-palette
+PASS M2-05-readable
+PASS M2-05-link-colour
+PASS M2-20-fairy-link
+PASS M2-20-selected-text
+PASS M2-02-no-wrap
+PASS M2-02-no-panel
+PASS M2-02-headings
+PASS M2-17-keywords
+PASS M2-17-block-comment
+PASS M2-17-contrast
+PASS M2-03-no-cap
+PASS M2-03-one-row
+PASS M2-04-one-line
+PASS M2-08-fixed-clock
+PASS M2-08-hover-ignored
+PASS M2-09-any-scheme
+PASS M2-09-not-a-link
+PASS M2-07-desktop-font
+PASS M2-07-fixed-width
+PASS M2-06-buttons
+PASS M2-06-field
+PASS M2-07-box-width
+PASS M2-10-at-the-end
+PASS M2-11-no-room
+PASS M2-11-no-rules
+PASS M2-12-no-new-line
+PASS M2-12-paste-joined
+PASS M2-12-qt-selection
+PASS M2-16-no-copy
+PASS M2-16-forged
+PASS M2-18-no-clock
+PASS M2-18-no-stop
+PASS M2-18-no-partial
+PASS M2-19-no-fade-in
+PASS M2-19-no-ghost
+PASS M2-19-motion-ignored
+PASS M2-13-never-settles
+PASS M2-13-power-saving
+PASS M2-13-hover-wake
+PASS M2-13-box-keeps-drawing
+PASS M2-14-whole-box
+PASS M2-15-upper-every-time
+PASS M2-15-border-per-notch
+PASS M2-15-band-off-by-one

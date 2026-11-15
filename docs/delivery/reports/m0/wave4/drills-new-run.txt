@@ -1,0 +1,11 @@
+
+=== summary
+PASS W4-M0-01-priority
+PASS W4-M0-04-appearance
+PASS W4-M0-04-reload-under-help
+PASS W4-M0-05-hide-not-kept
+FAIL W4-M0-05-unknown-id-kept: mutated run exited 0, not 1 (tests failed)
+PASS W4-M0-09-password-read-out
+PASS W4-M0-12-come-forward
+PASS W4-M0-03-light-limit
+FAIL W4-M0-03-light-copies: mutated run exited 0, not 1 (tests failed)

@@ -1,29 +1,36 @@
 #!/bin/sh
-# Chatmon's updater, run as root by pkexec: install-update FILE SHA256
+# Chatmon's updater, run as root by pkexec: install-update FILE SHA256SUMS.txt SHA256SUMS.txt.sig
 #
-# Installs the update FILE (a .deb or .rpm Chatmon downloaded) if it's a chatmon package whose SHA-256 is
-# SHA256, the checksum Chatmon found in the release's signed list. It works on a copy in a folder only root
-# can write, made before it's checked, so nothing can swap the file between the check and the install.
+# Installs FILE (a .deb or .rpm Chatmon downloaded) only if the release's list of checksums (SHA256SUMS.txt) is
+# signed by Chatmon's release key (SHA256SUMS.txt.sig), lists FILE's checksum under a release file's name, and
+# that release is newer than the Chatmon installed. All three are copied first into a folder only root can write,
+# and checked there by verify-update: Chatmon's own check, from this package's folder, with the release key this
+# Chatmon was installed with. Nothing the caller says is taken on trust, and nothing can be swapped between the
+# check and the install.
 set -eu
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
 export PATH
+umask 077
 [ "$(id -u)" = 0 ] || { echo "install-update: run as root, by pkexec" >&2; exit 1; }
-[ $# -eq 2 ] || { echo "usage: install-update FILE SHA256" >&2; exit 2; }
-file=$1 want=$2
-case $want in *[!0-9a-f]*) echo "install-update: not a SHA-256" >&2; exit 2 ;; esac
-[ ${#want} -eq 64 ] || { echo "install-update: not a SHA-256" >&2; exit 2; }
+[ $# -eq 3 ] || { echo "usage: install-update FILE SHA256SUMS.txt SHA256SUMS.txt.sig" >&2; exit 2; }
+file=$1 sums=$2 sig=$3
 case $file in
     *.deb) kind=deb ;;
     *.rpm) kind=rpm ;;
     *) echo "install-update: not a .deb or .rpm" >&2; exit 2 ;;
 esac
-[ -f "$file" ] || { echo "install-update: no such file" >&2; exit 2; }
+for f in "$file" "$sums" "$sig"; do
+    [ -f "$f" ] || { echo "install-update: no such file: $f" >&2; exit 2; }
+done
 
 dir=$(mktemp -d /tmp/chatmon-update.XXXXXXXX)  # root's own, mode 700
 trap 'rm -rf "$dir"' EXIT
 cp -- "$file" "$dir/update.$kind"
-got=$(sha256sum "$dir/update.$kind" | cut -d' ' -f1)
-[ "$got" = "$want" ] || { echo "The update doesn't match its checksum, so it wasn't installed." >&2; exit 3; }
+cp -- "$sums" "$dir/SHA256SUMS.txt"
+cp -- "$sig" "$dir/SHA256SUMS.txt.sig"
+# -I: no PYTHON* variables, no user site-packages, not the current folder; -S: not the system's site-packages
+# either. verify-update says why when it refuses.
+/usr/bin/python3 -I -S /usr/lib/chatmon/verify-update "$kind" "$dir/update.$kind" "$dir/SHA256SUMS.txt" "$dir/SHA256SUMS.txt.sig" >/dev/null || exit 3
 
 if [ $kind = deb ]; then
     [ "$(dpkg-deb --field "$dir/update.deb" Package)" = chatmon ] || { echo "install-update: not Chatmon" >&2; exit 3; }
@@ -32,7 +39,7 @@ else
     [ "$(rpm -qp --queryformat '%{NAME}' "$dir/update.rpm" 2>/dev/null)" = chatmon ] || { echo "install-update: not Chatmon" >&2; exit 3; }
     if command -v dnf >/dev/null; then
         dnf install -y "$dir/update.rpm"
-    elif command -v zypper >/dev/null; then  # openSUSE; the package is checked by its checksum, not a GPG key
+    elif command -v zypper >/dev/null; then  # openSUSE; the package is checked by the signed list, not a GPG key
         zypper --non-interactive install --allow-unsigned-rpm "$dir/update.rpm"
     else
         echo "install-update: no dnf or zypper to install it with" >&2

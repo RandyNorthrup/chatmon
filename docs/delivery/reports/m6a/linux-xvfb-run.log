@@ -1,0 +1,348 @@
+# WSL Arch, Python 3.14.9, packaging/requirements-test.txt installed --require-hashes; as the CI Linux 3.14 leg: xvfb-run -a python -m coverage run -m pytest, 2026-11-14T21:54:30Z
+<frozen site>:101: RuntimeWarning: Unexpected value in sys.prefix, expected /var/tmp/m6a/venv, got /var/tmp/m6a/src/../venv
+<frozen site>:101: RuntimeWarning: Unexpected value in sys.exec_prefix, expected /var/tmp/m6a/venv, got /var/tmp/m6a/src/../venv
+============================= test session starts ==============================
+platform linux -- Python 3.14.9, pytest-9.2.0, pluggy-1.7.0
+rootdir: /var/tmp/m6a/src
+configfile: pyproject.toml
+testpaths: tests
+plugins: hypothesis-6.170.14, timeout-2.4.0
+timeout: 120.0s
+timeout method: signal
+timeout func_only: False
+collected 1190 items
+
+tests/test_a11y.py ...ss                                                 [  0%]
+tests/test_agents.py ............................................        [  4%]
+tests/test_anim_strips.py ...................                            [  5%]
+tests/test_app_smoke.py ................................................ [  9%]
+.............................................                            [ 13%]
+tests/test_ask_box.py ..............................                     [ 16%]
+tests/test_asking.py ......                                              [ 16%]
+tests/test_attachments.py ......sss..s.                                  [ 17%]
+tests/test_autostart.py .......                                          [ 18%]
+tests/test_backup.py ..................                                  [ 19%]
+tests/test_behavior.py ..........................                        [ 21%]
+tests/test_brains.py ......................................s...s.        [ 25%]
+tests/test_bubble_safety.py .....                                        [ 26%]
+tests/test_bubble_styles.py ............................................ [ 29%]
+......                                                                   [ 30%]
+tests/test_chats.py .............................s                       [ 32%]
+tests/test_cli.py ....s.....                                             [ 33%]
+tests/test_clickthrough.py .ssss..                                       [ 34%]
+tests/test_commands.py ......                                            [ 34%]
+tests/test_companions.py ...........................                     [ 36%]
+tests/test_context.py ...........                                        [ 37%]
+tests/test_contrast.py .................................                 [ 40%]
+tests/test_events.py ..............s............                         [ 42%]
+tests/test_heads_up.py ...........s...                                   [ 44%]
+tests/test_hotkey.py .........................sssss..                    [ 46%]
+tests/test_hotkey_portal.py .......                                      [ 47%]
+tests/test_install_update.py ............ssssss                          [ 48%]
+tests/test_keychain.py sss.....                                          [ 49%]
+tests/test_linux_desktop.py ..                                           [ 49%]
+tests/test_linuxsession.py .s                                            [ 50%]
+tests/test_localefmt.py .......                                          [ 50%]
+tests/test_m4b_imports.py ........                                       [ 51%]
+tests/test_macnative.py ssssss                                           [ 51%]
+tests/test_messages.py ..................                                [ 53%]
+tests/test_offline.py .................................................. [ 57%]
+..................................................                       [ 61%]
+tests/test_overlay_stage.py .......................                      [ 63%]
+tests/test_package_data.py ..sss                                         [ 64%]
+tests/test_packaging.py .........                                        [ 64%]
+tests/test_parser_properties.py .....                                    [ 65%]
+tests/test_paths.py ....s...                                             [ 65%]
+tests/test_portal_bus.py .                                               [ 65%]
+tests/test_portowner.py .s..                                             [ 66%]
+tests/test_presence.py ssss....s                                         [ 67%]
+tests/test_releasecheck.py ..................                            [ 68%]
+tests/test_reminders.py ................................................ [ 72%]
+..................................................                       [ 76%]
+tests/test_rename.py .....                                               [ 77%]
+tests/test_requirements.py .....                                         [ 77%]
+tests/test_rich_text.py ..................                               [ 79%]
+tests/test_settings.py ..............                                    [ 80%]
+tests/test_sound.py .........s.s...                                      [ 81%]
+tests/test_speech_bubble.py ...................                          [ 83%]
+tests/test_sprites.py ...                                                [ 83%]
+tests/test_stage_features.py .....                                       [ 83%]
+tests/test_stage_screens.py ...                                          [ 84%]
+tests/test_stage_timer.py .........                                      [ 84%]
+tests/test_stagemenu.py ...........                                      [ 85%]
+tests/test_streaming.py .....................                            [ 87%]
+tests/test_updates.py ................................................s  [ 91%]
+tests/test_wayland.py .........................                          [ 93%]
+tests/test_wincaret.py ss.                                               [ 94%]
+tests/test_windows.py sssssssssssssssssssssssssssssssssss                [ 96%]
+tests/test_winfiles.py ...                                               [ 97%]
+tests/test_winpipe.py sssss                                              [ 97%]
+tests/test_wintoast.py ......sssss                                       [ 98%]
+tests/test_wintrust.py ssssssss                                          [ 99%]
+tests/test_xkb.py .........                                              [100%]
+
+=============================== warnings summary ===============================
+tests/test_brains.py::test_a_redirect_never_takes_the_key_anywhere
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/python.py:187: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 40399)>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed
+  /usr/lib/python3.14/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 302: 'Found'>
+    _warnings.warn(self.warn_message, ResourceWarning)
+
+tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/python.py:187: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 33251)>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_bubble_safety.py::test_the_ask_box_never_reads_a_file_an_answer_names
+  /var/tmp/m6a/src/chatmon/bubbleart.py:369: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 44425)>
+    slices, outline = groups[next(i for i, (a, b) in enumerate(arcs) if a <= at <= b)]
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_events.py::test_notify_never_waits_on_an_open_stdin
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/monkeypatch.py:435: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 mode='r' encoding='UTF-8'>
+    setattr(obj, name, value)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_events.py::test_only_one_chatmon_holds_the_lock
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/python.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=13 encoding='UTF-8'>
+    result = testfunction(**testargs)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_events.py::test_a_shell_that_never_answers_is_stopped_whole
+  /var/tmp/m6a/src/tests/test_events.py:346: ResourceWarning: unclosed file <_io.BufferedReader name=25>
+    paths.login_environment(timeout=0.5)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed file <_io.BufferedReader name=13>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait
+  /usr/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 7235 is still running
+    _warn("subprocess %s is still running" % self.pid,
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[installed]
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 38741)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[refused]
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 45317)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_newer_release_is_downloaded_checked_and_offered
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 37623)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_tampered_download_is_thrown_away_never_offered
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 45941)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_past_the_limit_is_stopped
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 36533)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_nothing_newer_says_so
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 34723)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_chatmon_that_cant_install_it_is_only_told
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 33739)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_is_checked_again_just_before_its_installed
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 45669)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_installer_that_wont_start_says_so_and_frees_the_updater
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 43595)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_checksums_not_signed_with_the_release_key_are_never_trusted
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 45405)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 33639)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_what_pkexec_said_is_told_plainly[126-password prompt was closed]
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 41579)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_what_pkexec_said_is_told_plainly[127-no password prompt running]
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 42761)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_that_cant_be_checked_yet_is_looked_at_again_within_the_hour
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 42303)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_that_cant_be_checked_at_install_time_is_kept_for_later
+  /var/tmp/m6a/venv/lib/python3.14/site-packages/_pytest/fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 42935)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_wayland.py::test_qt_runs_on_wayland_itself_only_where_the_overlay_can_be
+  /usr/lib/python3.14/threading.py:1028: ResourceWarning: unclosed <socket.socket fd=50, family=1, type=1, proto=0>
+    del self._target, self._args, self._kwargs
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_a11y.py:62: Windows
+SKIPPED [1] tests/test_a11y.py:70: macOS
+SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:125: Windows links
+SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+SKIPPED [1] tests/test_brains.py:589: cmd.exe and the tools npm installs as .cmd files are Windows'
+SKIPPED [1] tests/test_brains.py:678: Windows' process tree
+SKIPPED [1] tests/test_chats.py:355: the roaming app-data folder is Windows'
+SKIPPED [1] tests/test_cli.py:89: only Windows keeps a program you're not using from coming to the front
+SKIPPED [1] tests/test_clickthrough.py:81: Windows only
+SKIPPED [1] tests/test_clickthrough.py:87: Windows only
+SKIPPED [1] tests/test_clickthrough.py:96: Windows only
+SKIPPED [1] tests/test_clickthrough.py:105: Windows only
+SKIPPED [1] tests/test_events.py:117: macOS's temporary folder of your own
+SKIPPED [1] tests/test_heads_up.py:135: macOS only
+SKIPPED [1] tests/test_hotkey.py:124: Windows only
+SKIPPED [1] tests/test_hotkey.py:150: Windows only
+SKIPPED [1] tests/test_hotkey.py:167: Windows only
+SKIPPED [1] tests/test_hotkey.py:221: macOS only
+SKIPPED [1] tests/test_hotkey.py:238: macOS only
+SKIPPED [1] tests/test_install_update.py:256: macOS's root code: ditto, BSD find, osascript
+SKIPPED [3] tests/test_install_update.py:267: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:282: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:291: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+SKIPPED [1] tests/test_linuxsession.py:28: no PackageKit here
+SKIPPED [1] tests/test_macnative.py:20: macOS only
+SKIPPED [1] tests/test_macnative.py:54: macOS only
+SKIPPED [1] tests/test_macnative.py:88: macOS only
+SKIPPED [1] tests/test_macnative.py:116: macOS only
+SKIPPED [1] tests/test_macnative.py:134: macOS only
+SKIPPED [1] tests/test_macnative.py:162: macOS only
+SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+SKIPPED [1] tests/test_presence.py:14: Windows only
+SKIPPED [1] tests/test_presence.py:29: Windows only
+SKIPPED [1] tests/test_presence.py:51: Windows only
+SKIPPED [1] tests/test_presence.py:70: macOS only
+SKIPPED [1] tests/test_presence.py:139: no GNOME session here
+SKIPPED [1] tests/test_sound.py:181: Windows only
+SKIPPED [1] tests/test_sound.py:230: macOS only
+SKIPPED [1] tests/test_updates.py:599: holding a file open against changes: Windows
+SKIPPED [1] tests/test_wincaret.py:52: Windows only
+SKIPPED [1] tests/test_wincaret.py:87: Windows only
+SKIPPED [1] tests/test_windows.py:77: Windows only
+SKIPPED [1] tests/test_windows.py:87: Windows only
+SKIPPED [1] tests/test_windows.py:98: Windows only
+SKIPPED [1] tests/test_windows.py:102: Windows only
+SKIPPED [1] tests/test_windows.py:107: Windows only
+SKIPPED [1] tests/test_windows.py:127: Windows only
+SKIPPED [1] tests/test_windows.py:138: Windows only
+SKIPPED [1] tests/test_windows.py:153: Windows only
+SKIPPED [1] tests/test_windows.py:164: Windows only
+SKIPPED [1] tests/test_windows.py:197: Windows only
+SKIPPED [1] tests/test_windows.py:210: Windows only
+SKIPPED [1] tests/test_windows.py:224: Windows only
+SKIPPED [1] tests/test_windows.py:261: Windows only
+SKIPPED [1] tests/test_windows.py:279: Windows only
+SKIPPED [1] tests/test_windows.py:292: Windows only
+SKIPPED [1] tests/test_windows.py:315: Windows only
+SKIPPED [1] tests/test_windows.py:339: Windows only
+SKIPPED [1] tests/test_windows.py:366: Windows only
+SKIPPED [1] tests/test_windows.py:408: Windows only
+SKIPPED [1] tests/test_windows.py:434: Windows only
+SKIPPED [1] tests/test_windows.py:441: Windows only
+SKIPPED [1] tests/test_windows.py:479: Windows only
+SKIPPED [1] tests/test_windows.py:491: Windows only
+SKIPPED [1] tests/test_windows.py:502: Windows only
+SKIPPED [1] tests/test_windows.py:519: Windows only
+SKIPPED [1] tests/test_windows.py:535: Windows only
+SKIPPED [1] tests/test_windows.py:561: Windows only
+SKIPPED [1] tests/test_windows.py:583: Windows only
+SKIPPED [1] tests/test_windows.py:601: Windows only
+SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+SKIPPED [1] tests/test_windows.py:684: Windows only
+SKIPPED [1] tests/test_windows.py:699: Windows only
+SKIPPED [1] tests/test_windows.py:739: Windows only
+SKIPPED [1] tests/test_windows.py:795: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+SKIPPED [1] tests/test_windows.py:818: Windows only
+SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+SKIPPED [1] tests/test_wintoast.py:110: Windows only
+SKIPPED [1] tests/test_wintoast.py:122: Windows only
+SKIPPED [1] tests/test_wintoast.py:175: Windows only
+SKIPPED [1] tests/test_wintoast.py:194: Windows only
+SKIPPED [1] tests/test_wintoast.py:214: Windows only
+SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+========== 1085 passed, 105 skipped, 25 warnings in 166.06s (0:02:46) ==========
+exit 0
+
+# M3 and M4B tests that need an X server, with and without xvfb-run
+tests/test_clickthrough.py::test_the_x_server_gets_the_shape_in_device_pixels PASSED [ 33%]
+tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict PASSED [ 66%]
+tests/test_hotkey.py::test_x11_without_a_display_says_so PASSED          [100%]
+================= 3 passed, 36 deselected, 1 warning in 1.88s ==================
+-- without (no DISPLAY):
+tests/test_clickthrough.py::test_the_x_server_gets_the_shape_in_device_pixels SKIPPED [ 33%]
+tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict PASSED [ 66%]
+tests/test_hotkey.py::test_x11_without_a_display_says_so PASSED          [100%]
+SKIPPED [1] tests/test_clickthrough.py:135: needs an X server (DISPLAY), as under Xvfb
+============ 2 passed, 1 skipped, 36 deselected, 1 warning in 2.05s ============

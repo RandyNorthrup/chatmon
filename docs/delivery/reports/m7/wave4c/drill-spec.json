@@ -1,0 +1,942 @@
+{
+  "drills": [
+    {
+      "id": "CI-01-host-desk-read",
+      "requirement": "M7-CI",
+      "file": "tests/app_harness.py",
+      "find": "    c.desk = PretendDesk()",
+      "replace": "    pass  # the computer's own desk, as before",
+      "test": [
+        "tests/test_app_smoke.py::test_the_computer_the_tests_run_on_holds_nothing_back"
+      ],
+      "expect": [
+        "test_the_computer_the_tests_run_on_holds_nothing_back"
+      ]
+    },
+    {
+      "id": "CI-02-queue-best-only",
+      "requirement": "M7-CI",
+      "file": "chatmon/messages.py",
+      "find": "best = next((m for m in self._ready() if self._takes_over(m, now)), None)",
+      "replace": "best = next((m for m in self._ready()[:1] if self._takes_over(m, now)), None)",
+      "test": [
+        "tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over",
+        "tests/test_messages.py::test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum"
+      ],
+      "expect": [
+        "test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over",
+        "test_what_you_did_shows_at_once_even_while_something_from_the_background_waits_for_the_minimum"
+      ]
+    },
+    {
+      "id": "CI-03-wake-best-only",
+      "requirement": "M7-CI",
+      "file": "chatmon/messages.py",
+      "find": "times = [at for m in self._ready() if",
+      "replace": "times = [at for m in self._ready()[:1] if",
+      "test": [
+        "tests/test_messages.py::test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over"
+      ],
+      "expect": [
+        "test_newer_news_of_whats_showing_isnt_stuck_behind_what_cant_take_over"
+      ]
+    },
+    {
+      "id": "CI-04-askbox-wakes-by-strength",
+      "requirement": "M7-CI",
+      "file": "chatmon/bubble.py",
+      "find": "        if drawn_here and self._moving(time.monotonic()):",
+      "replace": "        if drawn_here and self.effects(time.monotonic()) > 0.0:",
+      "test": [
+        "tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since"
+      ],
+      "expect": [
+        "new words: it moves again"
+      ]
+    },
+    {
+      "id": "CI-05-askbox-frame-stops-at-zero",
+      "requirement": "M7-CI",
+      "file": "chatmon/bubble.py",
+      "find": "        if not self._moving(time.monotonic()):",
+      "replace": "        if self.effects(time.monotonic()) <= 0.0:",
+      "test": [
+        "tests/test_bubble_styles.py::test_new_words_wake_the_ask_box_on_a_clock_that_hasnt_moved_since"
+      ],
+      "expect": [
+        "a frame drawn at strength 0 is the start of the rise"
+      ]
+    },
+    {
+      "id": "M7-01-only-newest-piece",
+      "requirement": "AC-01-1",
+      "file": "chatmon/app.py",
+      "find": "first, q.partial = not q.partial, q.partial + text",
+      "replace": "first, q.partial = not q.partial, text",
+      "test": [
+        "tests/test_app_answers.py::test_an_answer_shows_as_it_streams_in_and_survives_the_box_being_drawn_again"
+      ],
+      "expect": [
+        "test_an_answer_shows_as_it_streams_in_and_survives_the_box_being_drawn_again"
+      ]
+    },
+    {
+      "id": "M7-01-closing-drops",
+      "requirement": "AC-01-2",
+      "file": "chatmon/app.py",
+      "find": "        # A question on its way carries on: its answer is kept in the chat, and a bubble says it came (_answered).",
+      "replace": "        self.asker.cancel()\n        self.questions.drop()",
+      "test": [
+        "tests/test_app_answers.py::test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came"
+      ],
+      "expect": [
+        "test_closing_the_box_lets_the_answer_finish_and_a_bubble_says_it_came"
+      ]
+    },
+    {
+      "id": "M7-01-stop-loses-what-came",
+      "requirement": "AC-01-3",
+      "file": "chatmon/app.py",
+      "find": "        if q.partial.strip():\n",
+      "replace": "        if False:\n",
+      "test": [
+        "tests/test_app_answers.py::test_the_box_says_who_is_answering_and_stop_ends_it"
+      ],
+      "expect": [
+        "test_the_box_says_who_is_answering_and_stop_ends_it"
+      ]
+    },
+    {
+      "id": "M7-01-no-busy",
+      "requirement": "AC-01-3",
+      "file": "chatmon/app.py",
+      "find": "        self.ask_box.set_busy(brain.label, q.started)\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_answers.py::test_the_box_says_who_is_answering_and_stop_ends_it"
+      ],
+      "expect": [
+        "test_the_box_says_who_is_answering_and_stop_ends_it"
+      ]
+    },
+    {
+      "id": "M7-02-fallback-every-time",
+      "requirement": "AC-02-2",
+      "file": "chatmon/app.py",
+      "find": "        if self._fallback_told == picked:\n",
+      "replace": "        if False:\n",
+      "test": [
+        "tests/test_app_answers.py::test_a_brain_picked_that_cant_answer_is_announced_once_for_that_pick"
+      ],
+      "expect": [
+        "test_a_brain_picked_that_cant_answer_is_announced_once_for_that_pick"
+      ]
+    },
+    {
+      "id": "M7-02-server-not-kept",
+      "requirement": "AC-02-4",
+      "file": "chatmon/app.py",
+      "find": "        self.state.set(\"trusted_servers\", brains.confirmed_servers())\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_answers.py::test_a_model_server_that_isnt_yours_is_offered_once_and_kept_once_confirmed"
+      ],
+      "expect": [
+        "test_a_model_server_that_isnt_yours_is_offered_once_and_kept_once_confirmed"
+      ]
+    },
+    {
+      "id": "M7-03-key-not-handed-back",
+      "requirement": "AC-03-1",
+      "file": "chatmon/settingswin.py",
+      "find": "\"api_key\": (self._brain_name(), key) if key and self._brain_name() in self._keys else None,",
+      "replace": "\"api_key\": None,",
+      "test": [
+        "tests/test_settingswin.py::test_the_key_field_shows_only_for_an_api_brain_and_a_key_typed_is_handed_back_once"
+      ],
+      "expect": [
+        "test_the_key_field_shows_only_for_an_api_brain_and_a_key_typed_is_handed_back_once"
+      ]
+    },
+    {
+      "id": "M7-03-test-without-typed-key",
+      "requirement": "AC-03-1",
+      "file": "chatmon/settingswin.py",
+      "find": "self.test_requested.emit(name, self.key.text().strip() if name in self._keys else \"\")",
+      "replace": "self.test_requested.emit(name, \"\")",
+      "test": [
+        "tests/test_settingswin.py::test_test_and_remove_key_ask_the_companion"
+      ],
+      "expect": [
+        "test_test_and_remove_key_ask_the_companion"
+      ]
+    },
+    {
+      "id": "M7-03-text-scale-unapplied",
+      "requirement": "AC-03-2",
+      "file": "chatmon/app.py",
+      "find": "        self.stage.bubble.set_text_scale(scale)\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_m7.py::test_text_size_and_how_long_bubbles_stay_apply_at_once"
+      ],
+      "expect": [
+        "test_text_size_and_how_long_bubbles_stay_apply_at_once"
+      ]
+    },
+    {
+      "id": "M7-03-cues-not-handed-back",
+      "requirement": "AC-03-2",
+      "file": "chatmon/settingswin.py",
+      "find": "\"cues\": {name: box.isChecked() for name, box in self.cues.items()},",
+      "replace": "\"cues\": {},",
+      "test": [
+        "tests/test_settingswin.py::test_the_accessibility_tab_hands_back_what_was_set"
+      ],
+      "expect": [
+        "test_the_accessibility_tab_hands_back_what_was_set"
+      ]
+    },
+    {
+      "id": "M7-03-snooze-from-breaks",
+      "requirement": "AC-03-3",
+      "file": "chatmon/app.py",
+      "find": "        return float(self.config[\"reminders\"][\"snooze_minutes\"])",
+      "replace": "        return float(self.config[\"breaks\"][\"snooze_minutes\"])",
+      "test": [
+        "tests/test_app_reminders.py::test_reminders_snooze_by_their_own_setting_not_the_breaks"
+      ],
+      "expect": [
+        "test_reminders_snooze_by_their_own_setting_not_the_breaks"
+      ]
+    },
+    {
+      "id": "M7-03-interval-needs-restart",
+      "requirement": "AC-03-4",
+      "file": "chatmon/app.py",
+      "find": "        self._updates_timer.setInterval(",
+      "replace": "        (lambda ms: None)(",
+      "test": [
+        "tests/test_app_m7.py::test_the_update_check_interval_applies_without_a_restart"
+      ],
+      "expect": [
+        "test_the_update_check_interval_applies_without_a_restart"
+      ]
+    },
+    {
+      "id": "M7-03-battery-order-window",
+      "requirement": "AC-03-5",
+      "file": "chatmon/settingswin.py",
+      "find": "self.battery_critical.setMaximum(max(1, low - 1) if low else 50)",
+      "replace": "self.battery_critical.setMaximum(50)",
+      "test": [
+        "tests/test_settingswin.py::test_reminders_have_their_own_snooze_and_almost_empty_stays_below_low"
+      ],
+      "expect": [
+        "test_reminders_have_their_own_snooze_and_almost_empty_stays_below_low"
+      ]
+    },
+    {
+      "id": "M7-03-battery-order-file",
+      "requirement": "AC-03-5",
+      "file": "chatmon/settings.py",
+      "find": "0 < heads_up.get(\"battery_low\", 0) <= heads_up.get(\"battery_critical\", 0)",
+      "replace": "False",
+      "test": [
+        "tests/test_settings.py::test_almost_empty_stays_below_low_in_the_settings_file"
+      ],
+      "expect": [
+        "test_almost_empty_stays_below_low_in_the_settings_file"
+      ]
+    },
+    {
+      "id": "M7-04-done-keeps-it",
+      "requirement": "AC-04-1",
+      "file": "chatmon/app.py",
+      "find": "        if self.reminders.acknowledge(rid, time.time()):",
+      "replace": "        if self.reminders.get(rid):",
+      "test": [
+        "tests/test_app_reminders.py::test_a_reminder_that_comes_due_waits_until_done_or_snoozed"
+      ],
+      "expect": [
+        "test_a_reminder_that_comes_due_waits_until_done_or_snoozed"
+      ]
+    },
+    {
+      "id": "M7-04-not-restored",
+      "requirement": "AC-04-2",
+      "file": "chatmon/app.py",
+      "find": "        self._show_due_reminders()  # fired and not yet done or snoozed",
+      "replace": "        pass  # fired and not yet done or snoozed",
+      "test": [
+        "tests/test_app_reminders.py::test_reminders_fired_and_not_done_come_back_at_the_next_start"
+      ],
+      "expect": [
+        "test_reminders_fired_and_not_done_come_back_at_the_next_start"
+      ]
+    },
+    {
+      "id": "M7-04-focus-held-forever",
+      "requirement": "AC-04-2",
+      "file": "chatmon/app.py",
+      "find": "        for r in [r for r in due if r.kind == \"focus\"]:\n",
+      "replace": "        for r in []:\n",
+      "test": [
+        "tests/test_app_reminders.py::test_reminders_fired_and_not_done_come_back_at_the_next_start"
+      ],
+      "expect": [
+        "test_reminders_fired_and_not_done_come_back_at_the_next_start"
+      ]
+    },
+    {
+      "id": "M7-04-edit-ignores-time",
+      "requirement": "AC-04-3",
+      "file": "chatmon/app.py",
+      "find": "            changes[\"when\"] = when.due.timestamp()\n",
+      "replace": "            pass\n",
+      "test": [
+        "tests/test_app_reminders.py::test_each_reminder_in_the_menu_can_be_changed_repeated_or_cancelled"
+      ],
+      "expect": [
+        "test_each_reminder_in_the_menu_can_be_changed_repeated_or_cancelled"
+      ]
+    },
+    {
+      "id": "M7-04-repeat-dropped",
+      "requirement": "AC-04-4",
+      "file": "chatmon/commands.py",
+      "find": "command.kind, repeat=command.repeat)",
+      "replace": "command.kind, repeat=None)",
+      "test": [
+        "tests/test_app_reminders.py::test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+      ],
+      "expect": [
+        "test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time"
+      ]
+    },
+    {
+      "id": "M7-04-cli-no-explanation",
+      "requirement": "AC-04-4",
+      "file": "chatmon/cli.py",
+      "find": "why = reminders.explain(command, markdown=False) if command is not None and command.kind == \"unclear\" else \"\"",
+      "replace": "why = \"\"",
+      "test": [
+        "tests/test_cli.py::test_a_reminder_it_cant_read_says_so_and_exits_2"
+      ],
+      "expect": [
+        "test_a_reminder_it_cant_read_says_so_and_exits_2"
+      ]
+    },
+    {
+      "id": "M7-05-no-summary",
+      "requirement": "AC-05-1",
+      "file": "chatmon/app.py",
+      "find": "        return self.messages.take(lambda m: m in held and not m.buttons)",
+      "replace": "        return []",
+      "test": [
+        "tests/test_app_smoke.py::test_a_focus_session_holds_what_comes_on_its_own_until_its_over_then_sums_it_up"
+      ],
+      "expect": [
+        "test_a_focus_session_holds_what_comes_on_its_own_until_its_over_then_sums_it_up"
+      ]
+    },
+    {
+      "id": "M7-06-not-recent",
+      "requirement": "AC-06-1",
+      "file": "chatmon/app.py",
+      "find": "        self._recent.append((time.time(), message))\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_m7.py::test_recent_messages_are_in_the_menu_and_show_again"
+      ],
+      "expect": [
+        "test_recent_messages_are_in_the_menu_and_show_again"
+      ]
+    },
+    {
+      "id": "M7-06-click-ignores-missed",
+      "requirement": "AC-06-2",
+      "file": "chatmon/app.py",
+      "find": "        elif self._missed and not self.stage.message_visible():",
+      "replace": "        elif False:",
+      "test": [
+        "tests/test_app_m7.py::test_a_bubble_that_went_by_while_you_were_away_comes_back_with_a_click"
+      ],
+      "expect": [
+        "test_a_bubble_that_went_by_while_you_were_away_comes_back_with_a_click"
+      ]
+    },
+    {
+      "id": "M7-06-dropped-not-missed",
+      "requirement": "AC-06-2",
+      "file": "chatmon/app.py",
+      "find": "self._missed += [m for m in self.messages.add(message) if m is not message]",
+      "replace": "self.messages.add(message)",
+      "test": [
+        "tests/test_app_m7.py::test_plain_bubbles_the_queue_dropped_count_as_missed"
+      ],
+      "expect": [
+        "test_plain_bubbles_the_queue_dropped_count_as_missed"
+      ]
+    },
+    {
+      "id": "M7-07-no-badge",
+      "requirement": "AC-07-1",
+      "file": "chatmon/app.py",
+      "find": "            return QIcon(_with_badge(frame.pixmap) if self._tray_badge else frame.pixmap)",
+      "replace": "            return QIcon(frame.pixmap)",
+      "test": [
+        "tests/test_app_m7.py::test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+      ],
+      "expect": [
+        "test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+      ]
+    },
+    {
+      "id": "M7-07-agents-command-is-help",
+      "requirement": "AC-07-2",
+      "file": "chatmon/commands.py",
+      "find": "\"agents\": _agents,",
+      "replace": "\"agents\": _help,",
+      "test": [
+        "tests/test_app_m7.py::test_the_agents_command_says_how_each_stands"
+      ],
+      "expect": [
+        "test_the_agents_command_says_how_each_stands"
+      ]
+    },
+    {
+      "id": "M7-07-no-reply",
+      "requirement": "AC-07-3",
+      "file": "chatmon/app.py",
+      "find": "                            sock.write(events.reply_line(reply))",
+      "replace": "                            pass",
+      "test": [
+        "tests/test_app_m7.py::test_chatmon_status_hears_the_live_states_from_the_running_chatmon"
+      ],
+      "expect": [
+        "test_chatmon_status_hears_the_live_states_from_the_running_chatmon"
+      ]
+    },
+    {
+      "id": "M7-07-cli-ignores-live",
+      "requirement": "AC-07-3",
+      "file": "chatmon/cli.py",
+      "find": "    if live is not None:\n",
+      "replace": "    if False:\n",
+      "test": [
+        "tests/test_cli.py::test_status_says_whether_its_running_the_brain_reminders_and_agents"
+      ],
+      "expect": [
+        "test_status_says_whether_its_running_the_brain_reminders_and_agents"
+      ]
+    },
+    {
+      "id": "M7-08-text-not-attached",
+      "requirement": "AC-08-1",
+      "file": "chatmon/app.py",
+      "find": "            self._attach(lambda: attachments.from_text(payload))  # attached, however short",
+      "replace": "            pass  # attached, however short",
+      "test": [
+        "tests/test_app_m7.py::test_quick_actions_attach_the_clipboard_only_when_chosen_and_type_the_prompt"
+      ],
+      "expect": [
+        "test_quick_actions_attach_the_clipboard_only_when_chosen_and_type_the_prompt"
+      ]
+    },
+    {
+      "id": "M7-09-no-search-inside",
+      "requirement": "AC-09-1",
+      "file": "chatmon/chatswin.py",
+      "find": "                inside.add(listed.id)\n",
+      "replace": "                pass\n",
+      "test": [
+        "tests/test_chatswin.py::test_the_window_lists_every_chat_and_searches_titles_then_words_inside"
+      ],
+      "expect": [
+        "test_the_window_lists_every_chat_and_searches_titles_then_words_inside"
+      ]
+    },
+    {
+      "id": "M7-09-answer-not-by",
+      "requirement": "AC-09-2",
+      "file": "chatmon/app.py",
+      "find": "self.chat.add(chats.Message(\"assistant\", answer, brain=label, by=name))",
+      "replace": "self.chat.add(chats.Message(\"assistant\", answer, brain=label))",
+      "test": [
+        "tests/test_app_answers.py::test_a_chat_keeps_its_brain_and_another_brain_can_answer_the_last_question"
+      ],
+      "expect": [
+        "test_a_chat_keeps_its_brain_and_another_brain_can_answer_the_last_question"
+      ]
+    },
+    {
+      "id": "M7-09-chat-brain-ignored",
+      "requirement": "AC-09-2",
+      "file": "chatmon/app.py",
+      "find": "picked, prefer = self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), self.chat.brain or None",
+      "replace": "picked, prefer = self.config[\"ai\"][\"brain\"], self.state.get(\"brain\"), None",
+      "test": [
+        "tests/test_app_answers.py::test_carrying_a_chat_on_asks_its_own_brain_before_the_one_picked"
+      ],
+      "expect": [
+        "test_carrying_a_chat_on_asks_its_own_brain_before_the_one_picked"
+      ]
+    },
+    {
+      "id": "M7-09-restore-not-reread",
+      "requirement": "AC-09-3",
+      "file": "chatmon/app.py",
+      "find": "        self.reminders = reminders.ReminderBook.from_list(self.state.get(\"reminders\", []))\n        self._sync_focus_hold()\n        self.reload(quietly=True)",
+      "replace": "        self.reload(quietly=True)",
+      "test": [
+        "tests/test_app_m7.py::test_back_up_and_bring_back_from_settings"
+      ],
+      "expect": [
+        "test_back_up_and_bring_back_from_settings"
+      ]
+    },
+    {
+      "id": "M7-09-listing-rereads",
+      "requirement": "AC-09-4",
+      "file": "chatmon/chats.py",
+      "find": "            if seen is None or seen[:2] != (info.st_mtime_ns, info.st_size):",
+      "replace": "            if True:",
+      "test": [
+        "tests/test_chatswin.py::test_the_listing_reads_each_file_once_while_it_doesnt_change"
+      ],
+      "expect": [
+        "test_the_listing_reads_each_file_once_while_it_doesnt_change"
+      ]
+    },
+    {
+      "id": "M7-10-copy-unwired",
+      "requirement": "AC-10-1",
+      "file": "chatmon/app.py",
+      "find": "        self.ask_box.copy_requested.connect(self._copy)\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_m7.py::test_copy_puts_an_answer_on_the_clipboard"
+      ],
+      "expect": [
+        "test_copy_puts_an_answer_on_the_clipboard"
+      ]
+    },
+    {
+      "id": "M7-10-ctrl-number-ignored",
+      "requirement": "AC-10-2",
+      "file": "chatmon/app.py",
+      "find": "                return self._press_bubble_button(key - Qt.Key.Key_1.value)",
+      "replace": "                return False",
+      "test": [
+        "tests/test_app_m7.py::test_ctrl_and_a_number_press_a_bubbles_buttons_while_the_box_is_open"
+      ],
+      "expect": [
+        "test_ctrl_and_a_number_press_a_bubbles_buttons_while_the_box_is_open"
+      ]
+    },
+    {
+      "id": "M7-10-expired-unanswerable",
+      "requirement": "AC-10-3",
+      "file": "chatmon/app.py",
+      "find": "            self._answerable = (now, list(message.buttons))\n",
+      "replace": "            pass\n",
+      "test": [
+        "tests/test_app_m7.py::test_a_buttons_label_typed_after_its_bubble_went_is_answerable_for_a_while"
+      ],
+      "expect": [
+        "test_a_buttons_label_typed_after_its_bubble_went_is_answerable_for_a_while"
+      ]
+    },
+    {
+      "id": "M7-11-lock-keeps-drawing",
+      "requirement": "AC-11-1",
+      "file": "chatmon/app.py",
+      "find": "            self.stage.set_drawing(not locked)  # nothing is drawn while nobody can see it",
+      "replace": "            pass",
+      "test": [
+        "tests/test_app_m7.py::test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box"
+      ],
+      "expect": [
+        "test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box"
+      ]
+    },
+    {
+      "id": "M7-11-box-ignores-saver",
+      "requirement": "AC-11-1",
+      "file": "chatmon/app.py",
+      "find": "        self.ask_box.set_power_saving(on)\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_m7.py::test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box"
+      ],
+      "expect": [
+        "test_a_locked_session_stops_drawing_and_the_power_saver_reaches_the_bubble_and_box"
+      ]
+    },
+    {
+      "id": "M7-11-sound-in-quiet",
+      "requirement": "AC-11-3",
+      "file": "chatmon/app.py",
+      "find": "        if self._quiet or self.reminders.focus() is not None:\n            return False\n        return self._play(name)",
+      "replace": "        return self._play(name)",
+      "test": [
+        "tests/test_app_m7.py::test_sounds_play_for_alerts_only_unless_turned_on_and_never_in_quiet_or_focus"
+      ],
+      "expect": [
+        "test_sounds_play_for_alerts_only_unless_turned_on_and_never_in_quiet_or_focus"
+      ]
+    },
+    {
+      "id": "M7-12-carry-on-forgotten",
+      "requirement": "AC-12-1",
+      "file": "chatmon/app.py",
+      "find": "            self._set_aside = set_aside\n",
+      "replace": "            pass\n",
+      "test": [
+        "tests/test_app_m7.py::test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back"
+      ],
+      "expect": [
+        "test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back"
+      ]
+    },
+    {
+      "id": "M7-12-drops-question",
+      "requirement": "AC-12-1",
+      "file": "chatmon/app.py",
+      "find": "and bool(self.chat.messages) and self.questions.current is None and",
+      "replace": "and bool(self.chat.messages) and",
+      "test": [
+        "tests/test_app_m7.py::test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back"
+      ],
+      "expect": [
+        "test_after_a_while_the_box_opens_on_a_new_chat_and_carry_on_goes_back"
+      ]
+    },
+    {
+      "id": "M7-13-hello-every-unlock",
+      "requirement": "AC-13-1",
+      "file": "chatmon/app.py",
+      "find": "        if self.state.get(\"hello_day\") == today.isoformat():\n            return False\n",
+      "replace": "",
+      "test": [
+        "tests/test_app_m7.py::test_the_first_unlock_of_the_day_names_reminders_agents_and_updates_once"
+      ],
+      "expect": [
+        "test_the_first_unlock_of_the_day_names_reminders_agents_and_updates_once"
+      ]
+    },
+    {
+      "id": "M0-06-table-unfiltered",
+      "requirement": "AC-M0-6",
+      "file": "chatmon/commands.py",
+      "find": "        return command if command in COMMANDS else None",
+      "replace": "        return command",
+      "test": [
+        "tests/test_commands.py::test_a_phrase_is_found_as_typed_give_or_take_case_and_punctuation"
+      ],
+      "expect": [
+        "test_a_phrase_is_found_as_typed_give_or_take_case_and_punctuation"
+      ]
+    },
+    {
+      "id": "M0-07-waits-for-brain",
+      "requirement": "AC-M0-7",
+      "file": "chatmon/app.py",
+      "find": "quick = brains.choose(self.brains, configured, picked, wait=False, prefer=prefer)",
+      "replace": "quick = brains.choose(self.brains, configured, picked, wait=True, prefer=prefer)",
+      "test": [
+        "tests/test_app_answers.py::test_asking_never_waits_on_the_screens_thread_to_find_the_brain"
+      ],
+      "expect": [
+        "test_asking_never_waits_on_the_screens_thread_to_find_the_brain"
+      ]
+    },
+    {
+      "id": "M0-08-connections-unchecked",
+      "requirement": "AC-M0-8",
+      "file": "chatmon/app.py",
+      "find": "            if sys.platform == \"win32\" and not _client_is_me(sock):",
+      "replace": "            if False:",
+      "test": [
+        "tests/test_app_m7.py::test_on_windows_each_connection_is_checked_to_be_yours"
+      ],
+      "expect": [
+        "test_on_windows_each_connection_is_checked_to_be_yours"
+      ]
+    },
+    {
+      "id": "M0-10-any-process-forward",
+      "requirement": "AC-M0-10",
+      "file": "chatmon/cli.py",
+      "find": "    target = pid if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0 else ASFW_ANY",
+      "replace": "    target = ASFW_ANY",
+      "test": [
+        "tests/test_cli.py::test_on_windows_ask_lets_only_chatmon_come_forward_before_sending"
+      ],
+      "expect": [
+        "test_on_windows_ask_lets_only_chatmon_come_forward_before_sending"
+      ]
+    },
+    {
+      "id": "M1B-07-files-brain-sees-all",
+      "requirement": "AC-M1B-7",
+      "file": "chatmon/app.py",
+      "find": "pairs = chat.history(brain.label, name=brain.name, own_only=guard, before=q.before)",
+      "replace": "pairs = chat.history(brain.label, name=brain.name, own_only=False, before=q.before)",
+      "test": [
+        "tests/test_app_answers.py::test_a_brain_that_reads_files_gets_only_its_own_answers_and_summaries"
+      ],
+      "expect": [
+        "test_a_brain_that_reads_files_gets_only_its_own_answers_and_summaries"
+      ]
+    },
+    {
+      "id": "M1B-09-overrides-unchecked",
+      "requirement": "AC-M1B-9",
+      "file": "chatmon/app.py",
+      "find": "            config, more = coerce(merge(config, overrides))",
+      "replace": "            config, more = merge(config, overrides), []",
+      "test": [
+        "tests/test_app_m7.py::test_wrong_settings_are_named_one_by_one_and_the_rest_apply"
+      ],
+      "expect": [
+        "test_wrong_settings_are_named_one_by_one_and_the_rest_apply"
+      ]
+    },
+    {
+      "id": "M1B-10-damage-unsaid",
+      "requirement": "AC-M1B-10",
+      "file": "chatmon/app.py",
+      "find": "        for problem in (self.state.problem, self.memory.problem):",
+      "replace": "        for problem in ():",
+      "test": [
+        "tests/test_app_m7.py::test_a_damaged_file_recovered_at_start_is_said"
+      ],
+      "expect": [
+        "test_a_damaged_file_recovered_at_start_is_said"
+      ]
+    },
+    {
+      "id": "M2-more-unwired",
+      "requirement": "AC-M2-1",
+      "file": "chatmon/app.py",
+      "find": "        self.stage.bubble.on_more = self._show_more",
+      "replace": "        pass",
+      "test": [
+        "tests/test_app_m7.py::test_more_opens_the_whole_text_and_the_box_remembers_its_size_and_says_shift_enter"
+      ],
+      "expect": [
+        "test_more_opens_the_whole_text_and_the_box_remembers_its_size_and_says_shift_enter"
+      ]
+    },
+    {
+      "id": "M5-chat-times-12h",
+      "requirement": "AC-M5-1",
+      "file": "chatmon/chats.py",
+      "find": "        return _(\"today {time}\").format(time=localefmt.time_of_day(d))",
+      "replace": "        return f\"today {(d.hour % 12) or 12}:{d.minute:02d} {'AM' if d.hour < 12 else 'PM'}\"",
+      "test": [
+        "tests/test_chatswin.py::test_chat_times_follow_the_locale"
+      ],
+      "expect": [
+        "test_chat_times_follow_the_locale"
+      ]
+    },
+    {
+      "id": "M7-07-no-stage-badge",
+      "requirement": "AC-07-1",
+      "file": "chatmon/app.py",
+      "find": "        self.stage.set_badge(sum(1 for state, _ in self.agents.values() if state == \"working\"), waiting)\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_m7.py::test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+      ],
+      "expect": [
+        "test_the_tray_and_the_stage_name_what_each_agent_is_doing_with_a_badge_while_one_needs_you"
+      ]
+    },
+    {
+      "id": "M7-11-player-never-quiet",
+      "requirement": "AC-11-3",
+      "file": "chatmon/app.py",
+      "find": "quiet=lambda: self._quiet or self.reminders.focus() is not None)",
+      "replace": "quiet=lambda: False)",
+      "test": [
+        "tests/test_app_m7.py::test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet"
+      ],
+      "expect": [
+        "test_the_player_is_told_the_settings_and_asks_whether_its_a_time_for_quiet"
+      ]
+    },
+    {
+      "id": "M7-11-balloon-not-toast",
+      "requirement": "AC-11-4",
+      "file": "chatmon/app.py",
+      "find": "            if tag is None:  # no toast here",
+      "replace": "            if True:  # no toast here",
+      "test": [
+        "tests/test_app_m7.py::test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"
+      ],
+      "expect": [
+        "test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"
+      ]
+    },
+    {
+      "id": "M7-11-refused-toast-unsaid",
+      "requirement": "AC-11-4",
+      "file": "chatmon/app.py",
+      "find": "            self._balloon(*notice)\n",
+      "replace": "            pass\n",
+      "test": [
+        "tests/test_app_m7.py::test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"
+      ],
+      "expect": [
+        "test_on_windows_an_alert_under_a_full_screen_app_is_a_toast_with_the_reminders_buttons"
+      ]
+    },
+    {
+      "id": "M7-11-box-always-hosted",
+      "requirement": "AC-11-5",
+      "file": "chatmon/app.py",
+      "find": "            self.stage.set_hosting(not self._ask_box_as_window())",
+      "replace": "            pass",
+      "test": [
+        "tests/test_app_m7.py::test_the_ask_box_is_a_window_with_a_screen_reader_where_the_overlay_draws_it"
+      ],
+      "expect": [
+        "test_the_ask_box_is_a_window_with_a_screen_reader_where_the_overlay_draws_it"
+      ]
+    },
+    {
+      "id": "M7-11-follow-ignored",
+      "requirement": "AC-11-5",
+      "file": "chatmon/app.py",
+      "find": "        self.stage.follow_pointer_screen(bool(self.config[\"follow_screen\"]))",
+      "replace": "        self.stage.follow_pointer_screen(False)",
+      "test": [
+        "tests/test_app_m7.py::test_follow_me_across_monitors_is_a_setting"
+      ],
+      "expect": [
+        "test_follow_me_across_monitors_is_a_setting"
+      ]
+    },
+    {
+      "id": "M4A-desk-changes-unheard",
+      "requirement": "AC-11-7",
+      "file": "chatmon/app.py",
+      "find": "        desk.settings_changed.connect(self._check_accessibility)\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+      ],
+      "expect": [
+        "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+      ]
+    },
+    {
+      "id": "M4A-reader-not-looked-again",
+      "requirement": "AC-11-7",
+      "file": "chatmon/app.py",
+      "find": "        self._reader_seen = float(\"-inf\")\n        self._check_hosting()",
+      "replace": "        self._check_hosting()",
+      "test": [
+        "tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+      ],
+      "expect": [
+        "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+      ]
+    },
+    {
+      "id": "M4A-mac-sleep-unheard",
+      "requirement": "AC-11-7",
+      "file": "chatmon/app.py",
+      "find": "            watcher.slept.connect(self._sleeping)\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_m7.py::test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+      ],
+      "expect": [
+        "test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+      ]
+    },
+    {
+      "id": "M4A-low-power-not-read",
+      "requirement": "AC-11-7",
+      "file": "chatmon/app.py",
+      "find": "            self._power_saving(bool(macnative.low_power_mode()))\n",
+      "replace": "\n",
+      "test": [
+        "tests/test_app_m7.py::test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+      ],
+      "expect": [
+        "test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+      ]
+    },
+    {
+      "id": "M4A-urgent-through-dnd",
+      "requirement": "AC-11-7",
+      "file": "chatmon/app.py",
+      "find": "urgency = sysnotify.URGENCY_NORMAL if self._quiet == \"Do Not Disturb\" else sysnotify.URGENCY_CRITICAL",
+      "replace": "urgency = sysnotify.URGENCY_CRITICAL",
+      "test": [
+        "tests/test_app_m7.py::test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits"
+      ],
+      "expect": [
+        "test_on_linux_a_held_alert_is_urgent_unless_do_not_disturb_is_why_it_waits"
+      ]
+    },
+    {
+      "id": "M8-app-language-ignored",
+      "requirement": "AC-M8-1",
+      "file": "chatmon/app.py",
+      "find": "        i18n.setup(self.config.get(i18n.SETTING) or None)",
+      "replace": "        i18n.setup(None)",
+      "test": [
+        "tests/test_app_m7.py::test_chatmon_starts_in_the_language_set_before_any_window"
+      ],
+      "expect": [
+        "test_chatmon_starts_in_the_language_set_before_any_window"
+      ]
+    },
+    {
+      "id": "M8-cli-language-ignored",
+      "requirement": "AC-M8-1",
+      "file": "chatmon/cli.py",
+      "find": "    i18n.setup(_language_setting())",
+      "replace": "    i18n.setup(None)",
+      "test": [
+        "tests/test_cli.py::test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+      ],
+      "expect": [
+        "test_the_command_line_speaks_the_language_chosen_without_writing_anything"
+      ]
+    },
+    {
+      "id": "M8-window-language-dropped",
+      "requirement": "AC-M8-1",
+      "file": "chatmon/settingswin.py",
+      "find": "            \"language\": self.language.currentData(),\n",
+      "replace": "",
+      "test": [
+        "tests/test_settingswin.py::test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
+      ],
+      "expect": [
+        "test_the_language_is_the_systems_or_one_chatmon_has_and_applies_at_the_next_start"
+      ]
+    },
+    {
+      "id": "M7-11-magnifier-not-placed",
+      "requirement": "AC-11-6",
+      "file": "chatmon/app.py",
+      "find": "        wincaret.place(self.stage.native_window(),",
+      "replace": "        (lambda *a: None)(self.stage.native_window(),",
+      "test": [
+        "tests/test_app_m7.py::test_on_windows_magnifier_goes_to_each_bubble_and_lets_go_when_it_closes"
+      ],
+      "expect": [
+        "test_on_windows_magnifier_goes_to_each_bubble_and_lets_go_when_it_closes"
+      ]
+    }
+  ]
+}

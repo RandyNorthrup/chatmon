@@ -12,15 +12,26 @@
 - Starting at login as a login item of its own (SMAppService), not an unattributed LaunchAgent.
 - Pasting that macOS counts as yours: Cmd+V through an Edit menu of its own, and the ask box's menus as native
   ones, so its pasteboard privacy doesn't ask whether Chatmon may paste what you just asked it to.
+- Hearing the computer sleep and wake, the displays sleep and wake, the accessibility display options change, and
+  Low Power Mode come and go (WorkspaceWatcher), as the other platforms hear theirs.
 """
 
 from __future__ import annotations
 
 import ctypes
 import ctypes.util
+import logging
 import os
 import re
-from typing import Callable, NamedTuple
+from collections.abc import Callable
+from typing import NamedTuple
+
+from PyQt6.QtCore import QObject
+
+from .i18n import _
+from .qtsignal import pyqtSignal
+
+logger = logging.getLogger(__name__)
 
 # NSWindowCollectionBehavior
 CAN_JOIN_ALL_SPACES = 1 << 0
@@ -34,7 +45,7 @@ OVERLAY = CAN_JOIN_ALL_SPACES | STATIONARY | IGNORES_CYCLE | CAN_JOIN_ALL_APPLIC
 
 
 class _ObjC:
-    def __init__(self):
+    def __init__(self) -> None:
         lib = ctypes.cdll.LoadLibrary(ctypes.util.find_library("objc") or "/usr/lib/libobjc.dylib")
         ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
         lib.objc_getClass.restype = ctypes.c_void_p
@@ -43,6 +54,9 @@ class _ObjC:
         lib.sel_registerName.argtypes = [ctypes.c_char_p]
         self.lib = lib
         send = ctypes.cast(lib.objc_msgSend, ctypes.c_void_p).value
+        if not send:  # a loaded function always has an address
+            raise OSError("objc_msgSend has no address")
+        self.send = send  # objc_msgSend, which each prototype below calls as its own
         self.obj = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> id
         self.ulong = ctypes.CFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> NSUInteger
         self.long = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_void_p)(send)  # -> NSInteger
@@ -68,7 +82,8 @@ def _rt() -> _ObjC | None:
     if _objc is None:
         try:
             _objc = _ObjC()
-        except (AttributeError, OSError):
+        except (AttributeError, OSError) as exc:
+            logger.debug("couldn't reach the Objective-C runtime: %s", exc)
             return None
     return _objc
 
@@ -76,33 +91,36 @@ def _rt() -> _ObjC | None:
 def _window(widget) -> int:
     """The NSWindow of a Qt window: its winId() is the NSView, whose -window is it."""
     rt = _rt()
-    view = int(widget.winId()) if rt else 0
+    if rt is None:
+        return 0
+    view = int(widget.winId())
     return rt.obj(view, rt.sel("window")) if view else 0
 
 
 def float_everywhere(widget) -> bool:
     """On every Space and outside Stage Manager's layout, not in full-screen apps' Spaces. True if done."""
     rt, window = _rt(), _window(widget)
-    if not window:
+    if rt is None or not window:  # no runtime: no window either
         return False
     try:
         behavior = rt.ulong(window, rt.sel("collectionBehavior"))
         behavior &= ~(MOVE_TO_ACTIVE_SPACE | FULL_SCREEN_PRIMARY | FULL_SCREEN_AUXILIARY)
         rt.set_ulong(window, rt.sel("setCollectionBehavior:"), behavior | OVERLAY)
         return True
-    except (ctypes.ArgumentError, OSError):
+    except (ctypes.ArgumentError, OSError) as exc:
+        logger.debug("couldn't have the window float on every Space: %s", exc)
         return False
 
 
 def collection_behavior(widget) -> int | None:
     rt, window = _rt(), _window(widget)
-    return rt.ulong(window, rt.sel("collectionBehavior")) if window else None
+    return rt.ulong(window, rt.sel("collectionBehavior")) if rt is not None and window else None
 
 
 def ignore_mouse(widget, on: bool) -> bool:
     """Clicks go through the window (on), or it takes them. True if done."""
     rt, window = _rt(), _window(widget)
-    if not window:
+    if rt is None or not window:
         return False
     rt.set_bool(window, rt.sel("setIgnoresMouseEvents:"), on)
     return True
@@ -193,7 +211,8 @@ def _windows() -> _WindowList | None:
     if _window_list is None:
         try:
             _window_list = _WindowList()
-        except (AttributeError, OSError, ValueError):
+        except (AttributeError, OSError, ValueError) as exc:
+            logger.debug("couldn't reach CoreGraphics' window list: %s", exc)
             return None
     return _window_list
 
@@ -216,7 +235,8 @@ def full_screen_over(view: int) -> bool:
             return False
         me = os.getpid()
         return fills_from_top(mine[0].bounds, [w for w in listed.windows(_ON_SCREEN_ONLY | _EXCLUDE_DESKTOP) if w.pid != me])
-    except (ctypes.ArgumentError, OSError):
+    except (ctypes.ArgumentError, OSError) as exc:
+        logger.debug("couldn't tell whether a full-screen app is over the stage: %s", exc)
         return False
 
 
@@ -246,7 +266,8 @@ def _main_app_service() -> tuple[_ObjC | None, int]:
         return None, 0
     try:
         ctypes.cdll.LoadLibrary("/System/Library/Frameworks/ServiceManagement.framework/ServiceManagement")
-    except OSError:
+    except OSError as exc:
+        logger.debug("couldn't load ServiceManagement: %s", exc)
         return None, 0
     cls = rt.cls("SMAppService")  # nil before macOS 13
     service = rt.obj(cls, rt.sel("mainAppService")) if cls else 0
@@ -298,7 +319,7 @@ class _Menus:
         lib.class_addMethod.restype = ctypes.c_bool
         lib.class_addMethod.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p]
         lib.objc_registerClassPair.argtypes = [ctypes.c_void_p]
-        send = ctypes.cast(lib.objc_msgSend, ctypes.c_void_p).value
+        send = rt.send
         self.rt = rt
         self.string = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p)(send)  # -> NSString
         self.make = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(send)  # (id) -> id
@@ -390,7 +411,8 @@ def _menus() -> _Menus | None:
         rt = _rt()
         try:
             _menus_made = _Menus(rt) if rt else None
-        except (AttributeError, OSError):
+        except (AttributeError, OSError) as exc:
+            logger.debug("couldn't make the native menus' target: %s", exc)
             return None
     return _menus_made
 
@@ -417,11 +439,11 @@ def edit_menu(paste: Callable[[], None]) -> bool:
         if menus.index(bar, rt.sel("indexOfItem:"), menus.edit) >= 0:
             return True
         rt.obj(menus.edit, rt.sel("release"))  # the one that was in the menu bar before it was made again
-    edit = menus.new_menu("Edit")
-    item = menus.new_item("Paste", "paste:", "v")  # with Command, a key equivalent's own
+    edit = menus.new_menu(_("Edit"))
+    item = menus.new_item(_("Paste"), "paste:", "v")  # with Command, a key equivalent's own
     menus.put(item, rt.sel("setTarget:"), menus.target)
     menus.put(edit, rt.sel("addItem:"), item)
-    holder = menus.new_item("Edit", None)
+    holder = menus.new_item(_("Edit"), None)
     menus.put(holder, rt.sel("setSubmenu:"), edit)
     menus.put(bar, rt.sel("addItem:"), holder)
     menus.edit = rt.obj(holder, rt.sel("retain"))  # kept, to look for it in the menu bar next time
@@ -454,3 +476,173 @@ def popup(menu, pos, opener) -> bool:
         if view and rt.responds(view, rt.sel("respondsToSelector:"), rt.sel("resetMouseButtons")):
             rt.obj(view, rt.sel("resetMouseButtons"))
     return True
+
+
+# -- What macOS says as it happens: the computer and its displays sleeping and waking (NSWorkspace's own
+#    notification center), the accessibility display options changing (reduce motion, increase contrast), and Low
+#    Power Mode (NSProcessInfo, on the default center), heard by an Objective-C class of Chatmon's own.
+#    https://developer.apple.com/documentation/appkit/nsworkspace/willsleepnotification
+#    https://developer.apple.com/documentation/foundation/processinfo/powerstatedidchangenotification
+
+# (the observer's selector, the notification, whether it's on NSWorkspace's center rather than the default one)
+WORKSPACE_EVENTS = (
+    ("willSleep:", "NSWorkspaceWillSleepNotification", True),
+    ("didWake:", "NSWorkspaceDidWakeNotification", True),
+    ("screensDidSleep:", "NSWorkspaceScreensDidSleepNotification", True),
+    ("screensDidWake:", "NSWorkspaceScreensDidWakeNotification", True),
+    ("displayOptionsDidChange:", "NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification", True),
+    ("powerStateDidChange:", "NSProcessInfoPowerStateDidChangeNotification", False),
+)
+_Notified = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)  # -(void)name:(NSNotification *)n
+
+
+def low_power_mode() -> bool | None:
+    """Whether Low Power Mode is on (macOS 12 and later); None where it can't be asked."""
+    rt = _rt()
+    if rt is None:
+        return None
+    info = rt.obj(rt.cls("NSProcessInfo"), rt.sel("processInfo"))
+    if not info or not rt.responds(info, rt.sel("respondsToSelector:"), rt.sel("isLowPowerModeEnabled")):
+        return None
+    flag = ctypes.CFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(rt.send)
+    return bool(flag(info, rt.sel("isLowPowerModeEnabled")))
+
+
+# NSActivityOptions (a uint64): user-initiated work that still lets the system sleep when it's idle. Held, it keeps
+# App Nap from slowing Chatmon's timers while none of its windows can be seen.
+ACTIVITY_USER_INITIATED_ALLOWING_IDLE_SYSTEM_SLEEP = 0x00FFFFFF & ~(1 << 20)
+_activity: int | None = None  # the system's token for that activity, kept for as long as Chatmon runs
+
+
+def keep_time(reason: str) -> bool:
+    """Ask macOS not to App Nap Chatmon, for as long as it runs (NSProcessInfo's beginActivityWithOptions:reason:).
+    Napped, an app none of whose windows can be seen (hidden, behind a full-screen app, on another Space; or run
+    offscreen, as the tests are) has its timers held back by seconds, so a reminder or a bubble waiting its turn comes
+    late. The system may still sleep when idle. True if asked, now or before."""
+    global _activity
+    if _activity is not None:
+        return True
+    rt = _rt()
+    if rt is None:
+        return False
+    info = rt.obj(rt.cls("NSProcessInfo"), rt.sel("processInfo"))
+    if not info:
+        return False
+    string = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p)(rt.send)
+    begin = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint64, ctypes.c_void_p)(rt.send)
+    why = string(rt.cls("NSString"), rt.sel("stringWithUTF8String:"), reason.encode("utf-8"))
+    token = begin(info, rt.sel("beginActivityWithOptions:reason:"), ACTIVITY_USER_INITIATED_ALLOWING_IDLE_SYSTEM_SLEEP, why)
+    if not token:
+        logger.debug("macOS didn't begin the activity that holds off App Nap")
+        return False
+    _activity = rt.obj(token, rt.sel("retain"))  # kept: the activity lasts until its token is ended, or Chatmon quits
+    return True
+
+
+class _Observers:
+    """The class ChatmonWorkspaceObserver, made once: a method for each notification, which tells the
+    WorkspaceWatcher whose observer it is."""
+
+    def __init__(self, rt: _ObjC):
+        lib = rt.lib
+        lib.objc_allocateClassPair.restype = ctypes.c_void_p
+        lib.objc_allocateClassPair.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_size_t]
+        lib.class_addMethod.restype = ctypes.c_bool
+        lib.class_addMethod.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p]
+        lib.objc_registerClassPair.argtypes = [ctypes.c_void_p]
+        self.watchers: dict[int, WorkspaceWatcher] = {}  # observer: whose
+        # kept: the class calls them
+        self._methods = {selector: _Notified(self._heard(selector)) for selector, _, _ in WORKSPACE_EVENTS}
+        cls = lib.objc_allocateClassPair(rt.cls("NSObject"), b"ChatmonWorkspaceObserver", 0)
+        if not cls:
+            raise OSError("ChatmonWorkspaceObserver exists already")
+        for selector, method in self._methods.items():
+            lib.class_addMethod(cls, rt.sel(selector), ctypes.cast(method, ctypes.c_void_p), b"v@:@")
+        lib.objc_registerClassPair(cls)
+        self.cls = cls
+
+    def _heard(self, selector: str):
+        def heard(me, cmd, notification) -> None:
+            watcher = self.watchers.get(me)
+            if watcher is not None:
+                watcher.deliver(selector)
+
+        return heard
+
+
+_observers_made: _Observers | None = None
+
+
+def _observers() -> _Observers | None:
+    global _observers_made
+    if _observers_made is None:
+        rt = _rt()
+        try:
+            _observers_made = _Observers(rt) if rt else None
+        except (AttributeError, OSError) as exc:
+            logger.debug("couldn't make the workspace observers' class: %s", exc)
+            return None
+    return _observers_made
+
+
+class WorkspaceWatcher(QObject):
+    """macOS's word on the computer sleeping (`slept(True)`) and waking (`slept(False)`), the displays sleeping
+    and waking (`screens_slept`), the accessibility display options changing (`accessibility_changed`: read
+    reduced motion and high contrast again) and Low Power Mode (`low_power_changed`). Some come on other threads
+    (the power state does); a signal reaches its receiver on the receiver's own. `listening` is False where
+    there's no AppKit to ask."""
+
+    slept = pyqtSignal(bool)
+    screens_slept = pyqtSignal(bool)
+    accessibility_changed = pyqtSignal()
+    low_power_changed = pyqtSignal(bool)
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.listening = False
+        self._observer = 0
+        self._centers: list[int] = []
+        rt, observers = _rt(), _observers()
+        if rt is None or observers is None:
+            return
+        try:
+            foundation = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/Foundation.framework/Foundation")
+            appkit = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
+            names = {name: ctypes.c_void_p.in_dll(appkit if on_workspace else foundation, name).value for _, name, on_workspace in WORKSPACE_EVENTS}
+        except (OSError, ValueError) as exc:
+            logger.debug("couldn't find the workspace's notification names: %s", exc)
+            return
+        workspace = rt.obj(rt.cls("NSWorkspace"), rt.sel("sharedWorkspace"))
+        mine, default = rt.obj(workspace, rt.sel("notificationCenter")) if workspace else 0, rt.obj(rt.cls("NSNotificationCenter"), rt.sel("defaultCenter"))
+        if not mine or not default:
+            return
+        # addObserver:selector:name:object:
+        add = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(rt.send)
+        self._observer = rt.obj(rt.obj(observers.cls, rt.sel("alloc")), rt.sel("init"))
+        observers.watchers[self._observer] = self
+        for selector, name, on_workspace in WORKSPACE_EVENTS:
+            add(mine if on_workspace else default, rt.sel("addObserver:selector:name:object:"), self._observer, rt.sel(selector), names[name], None)
+        self._centers = [mine, default]
+        self.listening = True
+
+    def deliver(self, selector: str) -> None:
+        """One of the notifications came, to this method of the observer."""
+        if selector in ("willSleep:", "didWake:"):
+            self.slept.emit(selector == "willSleep:")
+        elif selector in ("screensDidSleep:", "screensDidWake:"):
+            self.screens_slept.emit(selector == "screensDidSleep:")
+        elif selector == "displayOptionsDidChange:":
+            self.accessibility_changed.emit()
+        elif selector == "powerStateDidChange:":
+            self.low_power_changed.emit(bool(low_power_mode()))
+
+    def close(self) -> None:
+        rt, observers = _rt(), _observers()
+        if not self._observer or rt is None or observers is None:
+            return
+        remove = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(rt.send)
+        for center in self._centers:
+            remove(center, rt.sel("removeObserver:"), self._observer)
+        observers.watchers.pop(self._observer, None)
+        rt.obj(self._observer, rt.sel("release"))
+        self._observer, self._centers, self.listening = 0, [], False

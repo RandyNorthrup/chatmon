@@ -1,0 +1,17 @@
+{
+  "drills": [
+    {
+      "id": "L-00B-eager-objc",
+      "requirement": "AC-00B",
+      "file": "chatmon/sound.py",
+      "find": "_sounds = Sounds()\n",
+      "replace": "_sounds = Sounds()\nMacPlayer()\n",
+      "test": [
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "expect": [
+        "test_it_imports_here[sound]"
+      ]
+    }
+  ]
+}

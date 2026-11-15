@@ -1,0 +1,62 @@
+[
+  {
+    "id": "W4-M7-02-no-next-brain",
+    "requirement": "AC-02-1",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "buttons.append((_(\"Ask {brain}\").format(brain=other.label), partial(self._try_again, q, other)))",
+      "replace": "pass"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings"
+    ],
+    "expected": [
+      "test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54",
+    "baseline_exit": 0,
+    "mutated_sha256": "496465778b442f52427b6ffe4c48db9dbfd0aee8aee4d41801098cd72d2b8140",
+    "mutated_exit": 1,
+    "observed": "_ test_a_failed_question_offers_to_try_again_ask_the_next_brain_or_open_settings _",
+    "after_sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54",
+    "restored_exit": 0
+  },
+  {
+    "id": "W4-M7-02-welcome-without-brain",
+    "requirement": "AC-02-3",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "line = _(\"Your questions go to **{brain}**; **Brain** in my menu picks another.\").format(brain=brain.label)",
+      "replace": "line = \"\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_answers.py::test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up"
+    ],
+    "expected": [
+      "test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54",
+    "baseline_exit": 0,
+    "mutated_sha256": "826bef3325833a3cb59ca981534ca570cf8d323f67c281d7150c02afbb7891ff",
+    "mutated_exit": 1,
+    "observed": "___ test_after_naming_it_says_which_brain_will_answer_or_how_to_set_one_up ____",
+    "after_sha256": "7b4465cdb38c2f4932f2029b40154a1d08f21ca73134d3adcc32caa1d891dc54",
+    "restored_exit": 0
+  }
+]

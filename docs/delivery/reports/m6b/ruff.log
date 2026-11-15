@@ -1,0 +1,23 @@
+$ python -m ruff --version
+ruff 0.17.4
+$ python -m ruff check .
+All checks passed!
+exit 0
+$ git grep -ho 'noqa: [A-Z0-9, ]*' -- chatmon packaging art tests | sort | uniq -c
+      1 noqa: B023, B905
+      2 noqa: BLE001
+      1 noqa: C901
+      6 noqa: DTZ005
+      9 noqa: DTZ006
+      3 noqa: DTZ011
+      3 noqa: E402
+      6 noqa: F821
+      2 noqa: F841
+      1 noqa: RUF012
+      2 noqa: RUF046
+      1 noqa: S108
+      1 noqa: S310
+      3 noqa: S311
+      9 noqa: S603
+      3 noqa: S603, S607
+      1 noqa: S607

@@ -1,0 +1,22 @@
+{
+  "drills": [
+    {
+      "id": "M8-01-english-list-broken",
+      "requirement": "M8-01",
+      "file": "chatmon/i18n.py",
+      "find": "    for item in listed[1:-1]:",
+      "replace": "    for item in listed[1:]:",
+      "test": ["tests/test_i18n.py::test_before_a_language_is_chosen_every_string_is_its_english"],
+      "expect": ["test_before_a_language_is_chosen_every_string_is_its_english"]
+    },
+    {
+      "id": "M8-01-english-sentence-changed",
+      "requirement": "M8-01",
+      "file": "chatmon/backup.py",
+      "find": "    return _(\"Brought back {what}.\").format(what=contents.summary())",
+      "replace": "    return _(\"Brought back: {what}.\").format(what=contents.summary())",
+      "test": ["tests/test_backup.py::test_a_backup_moves_everything_to_another_computer"],
+      "expect": ["test_a_backup_moves_everything_to_another_computer", "Brought back"]
+    }
+  ]
+}

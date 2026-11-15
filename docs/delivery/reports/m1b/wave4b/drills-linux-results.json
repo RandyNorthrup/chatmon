@@ -1,0 +1,182 @@
+[
+  {
+    "id": "M1B-08-file-mode",
+    "requirement": "M1B-08",
+    "file": "chatmon/settings.py",
+    "mutation": {
+      "find": "os.fchmod(fd, 0o600)",
+      "replace": "os.fchmod(fd, 0o644)"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settings.py::test_files_are_made_private_from_the_start_and_folders_too"
+    ],
+    "expected": [
+      "test_files_are_made_private_from_the_start_and_folders_too"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "baseline_exit": 0,
+    "mutated_sha256": "37a48e16e31b7342b3351aed28c491ad8cc8bc6a8dd0e7c2bdef98613a63095d",
+    "mutated_exit": 1,
+    "observed": "__________ test_files_are_made_private_from_the_start_and_folders_too __________",
+    "after_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-08-folder-mode",
+    "requirement": "M1B-08",
+    "file": "chatmon/settings.py",
+    "mutation": {
+      "find": "        os.chmod(path, 0o700)\n    return path",
+      "replace": "        os.chmod(path, 0o755)\n    return path"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_settings.py::test_files_are_made_private_from_the_start_and_folders_too"
+    ],
+    "expected": [
+      "test_files_are_made_private_from_the_start_and_folders_too"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "baseline_exit": 0,
+    "mutated_sha256": "e6788fe5877e7213df64acfe3a2a128b6e703525e571dcee011ae88f9a3a24af",
+    "mutated_exit": 1,
+    "observed": "__________ test_files_are_made_private_from_the_start_and_folders_too __________",
+    "after_sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-03-linux-owner",
+    "requirement": "M1B-03",
+    "file": "chatmon/portowner.py",
+    "mutation": {
+      "find": "    return bool(owners) and all(uid == os.getuid() for uid in owners)",
+      "replace": "    return bool(owners) and any(uid == os.getuid() for uid in owners)"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_portowner.py::test_on_linux_your_socket_and_someone_elses_on_one_port_isnt_yours"
+    ],
+    "expected": [
+      "test_on_linux_your_socket_and_someone_elses_on_one_port_isnt_yours"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425",
+    "baseline_exit": 0,
+    "mutated_sha256": "0e13b6ed318abbe739622bad6d3234331999a067d145ee0f0fa3388414dc15eb",
+    "mutated_exit": 1,
+    "observed": "______ test_on_linux_your_socket_and_someone_elses_on_one_port_isnt_yours ______",
+    "after_sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-13-secret-service-value",
+    "requirement": "M1B-13",
+    "file": "chatmon/keychain.py",
+    "mutation": {
+      "find": "        return bytes(secret[2]).decode(\"utf-8\", \"replace\") or None",
+      "replace": "        return bytes(secret[1]).decode(\"utf-8\", \"replace\") or None"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_keychain.py::test_the_secret_service_keeps_replaces_and_forgets_a_key_in_its_own_types"
+    ],
+    "expected": [
+      "test_the_secret_service_keeps_replaces_and_forgets_a_key_in_its_own_types"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1",
+    "baseline_exit": 0,
+    "mutated_sha256": "50d80f92abb39db93a61b811d953f56c9759f3c2630d56f664fbe304f857c5e9",
+    "mutated_exit": 1,
+    "observed": "__ test_the_secret_service_keeps_replaces_and_forgets_a_key_in_its_own_types ___",
+    "after_sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-13-locked-no-prompt",
+    "requirement": "M1B-13",
+    "file": "chatmon/keychain.py",
+    "mutation": {
+      "find": "        unlocked, _locked = self._items(name)\n        if not unlocked:\n            return None",
+      "replace": "        unlocked, _locked = self._items(name)\n        if not unlocked:\n            if _locked:\n                self._unlock(_locked)\n            return None"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_keychain.py::test_a_locked_keyring_is_never_prompted_to_fill_in_the_menu_only_to_save"
+    ],
+    "expected": [
+      "test_a_locked_keyring_is_never_prompted_to_fill_in_the_menu_only_to_save"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1",
+    "baseline_exit": 0,
+    "mutated_sha256": "b596290eee62c86636f78b5103a72b90778fa62c3f3198c21e42f19273597bd0",
+    "mutated_exit": 1,
+    "observed": "___ test_a_locked_keyring_is_never_prompted_to_fill_in_the_menu_only_to_save ___",
+    "after_sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M1B-16-backup-mode",
+    "requirement": "M1B-16",
+    "file": "chatmon/backup.py",
+    "mutation": {
+      "find": "os.O_EXCL | getattr(os, \"O_BINARY\", 0), 0o600)",
+      "replace": "os.O_EXCL | getattr(os, \"O_BINARY\", 0), 0o644)"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_backup.py::test_chats_go_in_only_when_asked_and_the_file_is_yours_alone"
+    ],
+    "expected": [
+      "test_chats_go_in_only_when_asked_and_the_file_is_yours_alone"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac",
+    "baseline_exit": 0,
+    "mutated_sha256": "49ab61056882014b664b0520a756b8b3658841dd9200ae0e93cbbc08577490f6",
+    "mutated_exit": 1,
+    "observed": "_________ test_chats_go_in_only_when_asked_and_the_file_is_yours_alone _________",
+    "after_sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac",
+    "restored_exit": 0
+  }
+]

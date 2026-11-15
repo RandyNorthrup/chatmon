@@ -1,0 +1,32 @@
+[
+  {
+    "id": "CRASH-03-later-sees-it-quit-v2",
+    "requirement": "crash-nothing-after-quit",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            if c is not None and not c._quitting:\n                func(c, *args)\n\n        QTimer.singleShot(ms, go)",
+      "replace": "            if c is not None:\n                func(c, *args)\n\n        QTimer.singleShot(ms, go)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "expected": [
+      "test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "baseline_exit": 0,
+    "mutated_sha256": "1abdb3a52e14c6a4be5f1ea17569892889f3de7c33a9d67e158763071bd2afbf",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_quit_companion_runs_nothing_it_had_waiting ______________",
+    "after_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "restored_exit": 0
+  }
+]

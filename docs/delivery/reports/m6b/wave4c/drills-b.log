@@ -1,0 +1,385 @@
+red drills from docs\delivery\reports\m6b\wave4c\drill-spec-b.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-ev6upqnv
+copied 310 files
+
+=== drill M6B-B-escaped-exception-not-in-the-log (M6B-03.A6) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.82s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback __
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-7048/test_an_exception_that_escapes0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025ABBADC510>
+
+    def test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback(tmp_path, monkeypatch):
+        """What reaches sys.excepthook (PyQt would abort the app over it) is in chatmon.log, traceback and all, as it is
+        whether or not there's a console. The log itself (private, rotated, never a key) is log.py's: test_log.py."""
+        import logging
+    
+        from chatmon import app as appmod, log
+    
+        monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "state"))
+        monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "state"))
+        monkeypatch.setattr(appmod, "_running", None)  # no Companion here to offer a report
+        path = log.setup()
+        try:
+            try:
+                raise ValueError("boom in a slot")
+            except ValueError:
+                appmod._log_exception(*sys.exc_info())
+            for handler in logging.getLogger("chatmon").handlers:
+                handler.flush()
+            text = path.read_text(encoding="utf-8")
+        finally:
+            log.reset()
+>       assert "ERROR chatmon.app: something went wrong" in text and "Traceback" in text and "ValueError: boom in a slot" in text
+E       AssertionError: assert ('ERROR chatmon.app: something went wrong' in '')
+
+tests\test_app_smoke.py:560: AssertionError
+1 failed in 0.92s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.81s
+
+=== drill M6B-B-status-waits-for-the-brain (M6B-LEFT.A1) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_status_names_the_brain_from_the_finder_and_never_waits_for_one
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.15s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_status_names_the_brain_from_the_finder_and_never_waits_for_one _____
+
+companion = <chatmon.app.Companion object at 0x0000022C631EBCF0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022C634D2C40>
+
+    def test_status_names_the_brain_from_the_finder_and_never_waits_for_one(companion, monkeypatch):
+        """*status* asks the brain finder as a question does: the model servers here are looked at on the finder's
+        thread, if at all, and nothing waits for a brain (the status worker used to, and probed them all over again)."""
+        from chatmon import brains
+    
+        c = companion
+        waited, real = [], brains.choose
+    
+        def choose(loaded, configured, picked, wait=True, prefer=None):
+            waited.append(wait)
+            return real(loaded, configured, picked, wait=wait, prefer=prefer)
+    
+        monkeypatch.setattr(brains, "choose", choose)
+        c.open_ask()
+        c.submit("status")
+        assert until(lambda: "Brain:" in c.ask_box.answer.toPlainText())
+>       assert waited and True not in waited
+E       assert ([False, True] and True not in [False, True])
+
+tests\test_app_m7.py:349: AssertionError
+1 failed in 0.95s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.27s
+
+=== drill M6B-B-desktops-words-not-shown (M6B-LEFT.A2) on chatmon/settingswin.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.92s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words _
+
+companion = <chatmon.app.Companion object at 0x000002B444FFFD90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B44535EC40>
+
+    def test_settings_says_how_the_desktop_has_the_hotkey_where_it_chose_its_own_words(companion, monkeypatch):
+        """On Wayland the desktop has the last word on the keys, and says them its own way (hotkey.py's `bound`): Settings
+        › Accessibility shows that beside the keys you picked, and nothing extra where it's just those keys."""
+        from chatmon import hotkey
+    
+        c = companion
+        told = {}
+        monkeypatch.setattr(hotkey, "register", lambda sequence, callback, failed=None, bound=None: told.update(bound=bound))
+        c._override(("hotkey",), "Ctrl+Alt+Space")
+        c.reload(quietly=True)
+        told["bound"]("Press Super+Space")  # the portal's answer, a moment later
+        c.open_settings("accessibility")
+        w = c._settings_window
+>       assert not w.hotkey_bound.isHidden() and w.hotkey_bound.text() == "Your desktop has it as: Press Super+Space"
+E       assert (not True)
+E        +  where True = <built-in method isHidden of QLabel object at 0x000002B444F8DEF0>()
+E        +    where <built-in method isHidden of QLabel object at 0x000002B444F8DEF0> = <PyQt6.QtWidgets.QLabel object at 0x000002B444F8DEF0>.isHidden
+E        +      where <PyQt6.QtWidgets.QLabel object at 0x000002B444F8DEF0> = <chatmon.settingswin.SettingsWindow object at 0x000002B447AB1A90>.hotkey_bound
+
+tests\test_app_m7.py:365: AssertionError
+1 failed in 1.03s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.98s
+
+=== drill M6B-B-hotkey-bound-kept-private (M6B-LEFT.A2) on chatmon/hotkey.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_the_apps_one_shortcut_says_how_the_desktop_has_it
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_the_apps_one_shortcut_says_how_the_desktop_has_it ____________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002508FA27110>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002508FAF6D70>
+
+    def test_the_apps_one_shortcut_says_how_the_desktop_has_it(qapp, monkeypatch):
+        """register()'s `bound` hears how to press the shortcut: at once as Qt writes the keys where Chatmon claims them
+        itself, and the desktop's own words where the desktop has the last word (Wayland's portal)."""
+        for kind, words, expected in (("portal", "Press Super+Space", ["Press Super+Space"]), ("x11", None, ["Ctrl+Alt+Space"])):
+            monkeypatch.setattr(hotkey.Hotkey, "_make_backend", lambda self, words=words: Desktop(self._tell, words))
+            monkeypatch.setattr(hotkey, "_hotkey", hotkey.Hotkey(kind=kind))
+            said = []
+            try:
+                assert hotkey.register("Ctrl+Alt+Space", lambda: None, bound=said.append) is None
+>               assert wait_for(qapp, lambda said=said: said) and said == expected, kind
+E               AssertionError: portal
+E               assert (False)
+E                +  where False = wait_for(<PyQt6.QtWidgets.QApplication object at 0x000002508FA27110>, <function test_the_apps_one_shortcut_says_how_the_desktop_has_it.<locals>.<lambda> at 0x000002508F87C670>)
+
+tests\test_hotkey.py:121: AssertionError
+1 failed in 5.46s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+
+=== drill M6B-B-players-left-at-quit (M6B-LEFT.A3) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_quitting_lets_go_of_the_sound_players
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.89s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_quitting_lets_go_of_the_sound_players __________________
+
+companion = <chatmon.app.Companion object at 0x0000025A77617C50>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025A77DD2C40>
+
+    def test_quitting_lets_go_of_the_sound_players(companion, monkeypatch):
+        """A Linux player still sounding as Chatmon quits is waited for and reaped (sound.close), never left behind."""
+        from chatmon import sound
+    
+        closed = []
+        monkeypatch.setattr(sound, "close", lambda: closed.append(True))
+        companion.quit()
+>       assert closed == [True]
+E       assert [] == [True]
+E         
+E         Right contains one more item: True
+E         Use -v to get more diff
+
+tests\test_app_m7.py:379: AssertionError
+1 failed in 0.90s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.81s
+
+=== drill M6B-B-player-not-closed (M6B-LEFT.A3) on chatmon/sound.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_sound.py::test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.84s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__ test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind ___
+
+cues = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-7063/test_closing_waits_for_a_sound0')
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-7063/test_closing_waits_for_a_sound0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025DD8385480>
+
+    def test_closing_waits_for_a_sound_still_playing_and_leaves_no_player_behind(cues, tmp_path, monkeypatch):
+        """As Chatmon quits (sound.close): a player still sounding is let finish, then reaped, never left running; the
+        next sound finds the players again."""
+        done = tmp_path / "done"
+        # The player's command line: a sound half a second long, which says when it's over.
+        monkeypatch.setattr(sound, "player_command", lambda player, path, volume: [sys.executable, "-c", f"import time; time.sleep(0.5); open({str(done)!r}, 'w').close()"])
+        player = sound.CommandPlayer("pw-play")
+        s = sound.Sounds(cues, players=[player, Recorder()])
+        monkeypatch.setattr(sound, "_sounds", s)
+        assert s.play("needs-you") and s.player == "pw-play" and not done.exists()
+        running = list(player._running)
+        sound.close()
+>       assert done.exists() and running and all(p.poll() is not None for p in running) and player._running == []
+E       AssertionError: assert (False)
+E        +  where False = exists()
+E        +    where exists = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-7063/test_closing_waits_for_a_sound0/done').exists
+
+tests\test_sound.py:140: AssertionError
+1 failed in 0.41s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.78s
+
+=== drill M6B-B-unreadable-settings-hidden (M6B-03.A6) on chatmon/settings.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_settings.py::test_a_state_file_that_cant_be_read_is_logged_and_started_afresh
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.23s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_a_state_file_that_cant_be_read_is_logged_and_started_afresh _______
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-7066/test_a_state_file_that_cant_be0')
+caplog = <_pytest.logging.LogCaptureFixture object at 0x00000141832D6BA0>
+
+    def test_a_state_file_that_cant_be_read_is_logged_and_started_afresh(tmp_path, caplog):
+        """M6B-03: why it couldn't be read goes in the log at debug; Chatmon carries on as it always has."""
+        caplog.set_level(logging.DEBUG, logger="chatmon.settings")
+        path = tmp_path / "state.json"
+        path.mkdir()  # there, but a folder: reading it fails
+        state = State.load(path)
+        assert state.data == {} and "state.json was damaged" in state.problem and "started it afresh" in state.problem
+        assert list(tmp_path.glob("state.json.bad-*")) and not path.exists()  # set aside, as a damaged file is
+        logged = [r for r in caplog.records if r.name == "chatmon.settings" and r.levelno == logging.DEBUG]
+>       assert any(r.getMessage().startswith(f"couldn't read {path}: ") for r in logged), [r.getMessage() for r in logged]
+E       AssertionError: ["couldn't go back to C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-7066\\test_a_state_file_that_can...y\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Randy\\\\pytest-7066\\\\test_a_state_file_that_cant_be0\\\\state.json.bak'"]
+E       assert False
+E        +  where False = any(<generator object test_a_state_file_that_cant_be_read_is_logged_and_started_afresh.<locals>.<genexpr> at 0x00000141833D8E50>)
+
+tests\test_settings.py:129: AssertionError
+------------------------------ Captured log call ------------------------------
+DEBUG    chatmon.settings:settings.py:345 couldn't go back to C:\Users\Randy\AppData\Local\Temp\pytest-of-Randy\pytest-7066\test_a_state_file_that_cant_be0\state.json.bak: [Errno 2] No such file or directory: 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-7066\\test_a_state_file_that_cant_be0\\state.json.bak'
+1 failed in 0.25s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.24s
+
+=== drill M6B-B-unclear-script-reminder-unsaid (M6B-LEFT.A4) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_reminders.py::test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.55s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time _____
+
+companion = <chatmon.app.Companion object at 0x000001F0F51EAE90>
+
+    def test_adding_a_reminder_keeps_its_repeat_and_explains_an_unclear_time(companion):
+        c = companion
+        out_of_the_way(c)
+        c.open_ask()
+        c.submit("remind me every weekday at 9 to stand up")
+        r = next(r for r in c.reminders.upcoming() if r.text == "stand up")
+        assert r.repeat == "weekdays@09:00" and reminders.describe_repeat(r.repeat) in c.ask_box.answer.toPlainText()
+        c.submit("remind me friday tomorrow to call Sam")
+        assert "I couldn't tell when" in c.ask_box.answer.toPlainText() and "friday tomorrow" in c.ask_box.answer.toPlainText()
+        c.submit("reminders")
+        assert f"({reminders.describe_repeat('weekdays@09:00')})" in c.ask_box.answer.toPlainText()
+        c.ask_box.dismiss()
+        c.handle({"type": "remind", "text": "every monday at 9 to plan the week"})
+        assert next(r for r in c.reminders.upcoming() if r.text == "plan the week").repeat == "mon@09:00"
+        assert until(lambda: c.stage.bubble.title == "Reminder set") and reminders.describe_repeat("mon@09:00") in c.stage.bubble.doc.toPlainText()
+        # Closed first: with nothing on screen, a script's message shows at once, rather than MIN_SHOWN later on a timer
+        # (whose waiting turn is messages.py's to test), which a CI runner's macOS held back past the wait once.
+        c.stage.dismiss_message()
+        c.handle({"type": "remind", "text": "on 3/4 to call Sam"})  # a script's own message, unclear: said, not set
+>       assert c.stage.bubble.title == "Reminder not set"
+E       AssertionError: assert 'Reminder set' == 'Reminder not set'
+E         
+E         - Reminder not set
+E         ?          ----
+E         + Reminder set
+
+tests\test_app_reminders.py:170: AssertionError
+1 failed in 2.85s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.62s
+
+=== drill M6B-B-leak-fails-without-a-flag (M6B-RW.A1) on chatmon/brains.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.12s
+-- red: exit 1
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\_pytest\logging.py:878: in pytest_runtest_call
+    yield
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\_pytest\capture.py:906: in pytest_runtest_call
+    return (yield)
+            ^^^^^
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py:64: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py:49: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py:64: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\pluggy\_execution.py:49: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\_pytest\skipping.py:268: in pytest_runtest_call
+    return (yield)
+            ^^^^^
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\_pytest\unraisableexception.py:179: in pytest_runtest_call
+    collect_unraisable(item.config)
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\_pytest\unraisableexception.py:75: in collect_unraisable
+    raise errors[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+config = <_pytest.config.Config object at 0x000001AEF7623E00>
+
+    def collect_unraisable(config: Config) -> None:
+        pop_unraisable = config.stash[unraisable_exceptions].pop
+        errors: list[pytest.PytestUnraisableExceptionWarning | RuntimeError] = []
+        meta = None
+        hook_error = None
+        try:
+            while True:
+                try:
+                    meta = pop_unraisable()
+                except IndexError:
+                    break
+    
+                if isinstance(meta, BaseException):
+                    hook_error = RuntimeError("Failed to process unraisable exception")
+                    hook_error.__cause__ = meta
+                    errors.append(hook_error)
+                    continue
+    
+                msg = meta.msg
+                try:
+>                   warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+E                   pytest.PytestUnraisableExceptionWarning: Exception ignored while calling deallocator <function _TemporaryFileCloser.__del__ at 0x000001AEF720D900>: None
+
+..\..\..\..\Coding\chatmon\.venv\Lib\site-packages\_pytest\unraisableexception.py:63: PytestUnraisableExceptionWarning
+1 failed in 1.16s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.95s
+
+=== summary
+PASS M6B-B-escaped-exception-not-in-the-log
+PASS M6B-B-status-waits-for-the-brain
+PASS M6B-B-desktops-words-not-shown
+PASS M6B-B-hotkey-bound-kept-private
+PASS M6B-B-players-left-at-quit
+PASS M6B-B-player-not-closed
+PASS M6B-B-unreadable-settings-hidden
+PASS M6B-B-unclear-script-reminder-unsaid
+PASS M6B-B-leak-fails-without-a-flag

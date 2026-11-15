@@ -1,0 +1,516 @@
+red drills from docs\delivery\reports\m4a\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-3vt0w87_
+copied 290 files
+
+=== drill AC-03-sleep-wake (M4A-03) on chatmon/macnative.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_each_workspace_notification_is_its_own_signal ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001B4BE054E10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B4BE1DC180>
+
+    def test_each_workspace_notification_is_its_own_signal(qapp, monkeypatch):
+        """What each of the observer's methods says (here without AppKit: on macOS, tests/test_macnative.py posts the
+        real notifications)."""
+        from chatmon import macnative
+    
+        monkeypatch.setattr(macnative, "low_power_mode", lambda: True)
+        watcher = macnative.WorkspaceWatcher()
+        heard = []
+        watcher.slept.connect(lambda on: heard.append(("slept", on)))
+        watcher.screens_slept.connect(lambda on: heard.append(("screens", on)))
+        watcher.accessibility_changed.connect(lambda: heard.append(("accessibility",)))
+        watcher.low_power_changed.connect(lambda on: heard.append(("low power", on)))
+        for selector, _, _ in macnative.WORKSPACE_EVENTS:
+            watcher.deliver(selector)
+>       assert heard == [("slept", True), ("slept", False), ("screens", True), ("screens", False), ("accessibility",), ("low power", True)]
+E       AssertionError: assert [('slept', Fa...power', True)] == [('slept', Tr...power', True)]
+E         
+E         At index 0 diff: ('slept', False) != ('slept', True)
+E         Use -v to get more diff
+
+tests\test_platform_events.py:263: AssertionError
+1 failed in 0.51s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.48s
+
+=== drill AC-06b-low-power (M4A-06) on chatmon/macnative.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.69s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_each_workspace_notification_is_its_own_signal ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000297B26C4E10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000297B283C180>
+
+    def test_each_workspace_notification_is_its_own_signal(qapp, monkeypatch):
+        """What each of the observer's methods says (here without AppKit: on macOS, tests/test_macnative.py posts the
+        real notifications)."""
+        from chatmon import macnative
+    
+        monkeypatch.setattr(macnative, "low_power_mode", lambda: True)
+        watcher = macnative.WorkspaceWatcher()
+        heard = []
+        watcher.slept.connect(lambda on: heard.append(("slept", on)))
+        watcher.screens_slept.connect(lambda on: heard.append(("screens", on)))
+        watcher.accessibility_changed.connect(lambda: heard.append(("accessibility",)))
+        watcher.low_power_changed.connect(lambda on: heard.append(("low power", on)))
+        for selector, _, _ in macnative.WORKSPACE_EVENTS:
+            watcher.deliver(selector)
+>       assert heard == [("slept", True), ("slept", False), ("screens", True), ("screens", False), ("accessibility",), ("low power", True)]
+E       AssertionError: assert [('slept', Tr...ower', False)] == [('slept', Tr...power', True)]
+E         
+E         At index 5 diff: ('low power', False) != ('low power', True)
+E         Use -v to get more diff
+
+tests\test_platform_events.py:263: AssertionError
+1 failed in 0.49s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.52s
+
+=== drill AC-07a-transient (M4A-07) on chatmon/sysnotify.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.41s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_read_aloud_notifications_are_transient_and_alerts_urgent ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001DDFFC3CE10>
+
+    def test_read_aloud_notifications_are_transient_and_alerts_urgent(qapp):
+        pytest.importorskip("PyQt6.QtDBus")
+        from chatmon import sysnotify
+    
+        hints = sysnotify.hints(transient=True)
+>       assert hints["transient"] is True and "urgency" not in hints
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'transient'
+
+tests\test_platform_events.py:32: KeyError
+1 failed in 0.56s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.60s
+
+=== drill AC-07a-urgency-byte (M4A-07) on chatmon/sysnotify.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.59s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_read_aloud_notifications_are_transient_and_alerts_urgent ________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001897DF14E10>
+
+    def test_read_aloud_notifications_are_transient_and_alerts_urgent(qapp):
+        pytest.importorskip("PyQt6.QtDBus")
+        from chatmon import sysnotify
+    
+        hints = sysnotify.hints(transient=True)
+        assert hints["transient"] is True and "urgency" not in hints
+        urgent = sysnotify.hints(urgency=sysnotify.URGENCY_CRITICAL)
+>       assert urgent["urgency"].typeName() == "uchar" and urgent["urgency"].value() in (2, b"\x02")  # a byte, as the spec has it
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ('int' == 'uchar'
+E         
+E         - uchar
+E         + int)
+
+tests\test_platform_events.py:34: AssertionError
+1 failed in 0.58s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.56s
+
+=== drill AC-07b-replaced-buttons (M4A-07) on chatmon/sysnotify.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.72s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_a_notifications_buttons_are_answered_for_ours_alone ___________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001D05DB20D70>
+
+    def test_a_notifications_buttons_are_answered_for_ours_alone(qapp):
+        pytest.importorskip("PyQt6.QtDBus")
+        from chatmon import sysnotify
+    
+        notifier = sysnotify.Notifier()
+        pressed = []
+        notifier.shown(11, lambda i: pressed.append(("first", i)), read_aloud=True)
+        assert notifier.read_aloud_id == 11
+        notifier._action_invoked(_invoked(11, "1"))  # Done, on our notification
+        notifier._action_invoked(_invoked(99, "0"))  # another app's notification
+        notifier._action_invoked(_invoked(11, "default"))  # the notification itself clicked: not a button
+        assert pressed == [("first", 1)]
+        notifier.shown(12, lambda i: pressed.append(("second", i)), read_aloud=True)  # the next read-aloud one replaced it
+        notifier._action_invoked(_invoked(11, "0"))
+        notifier._action_invoked(_invoked(12, "0"))
+>       assert pressed == [("first", 1), ("second", 0)] and notifier.read_aloud_id == 12
+E       AssertionError: assert ([('first', 1)...('second', 0)] == [('first', 1), ('second', 0)]
+E         
+E         At index 1 diff: ('first', 0) != ('second', 0)
+E         Left contains one more item: ('second', 0)
+E         Use -v to get more diff)
+
+tests\test_platform_events.py:77: AssertionError
+1 failed in 0.64s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.67s
+
+=== drill AC-07b-other-apps (M4A-07) on chatmon/sysnotify.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.74s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_a_notifications_buttons_are_answered_for_ours_alone ___________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000019DEFE38D70>
+
+    def test_a_notifications_buttons_are_answered_for_ours_alone(qapp):
+        pytest.importorskip("PyQt6.QtDBus")
+        from chatmon import sysnotify
+    
+        notifier = sysnotify.Notifier()
+        pressed = []
+        notifier.shown(11, lambda i: pressed.append(("first", i)), read_aloud=True)
+        assert notifier.read_aloud_id == 11
+        notifier._action_invoked(_invoked(11, "1"))  # Done, on our notification
+        notifier._action_invoked(_invoked(99, "0"))  # another app's notification
+        notifier._action_invoked(_invoked(11, "default"))  # the notification itself clicked: not a button
+>       assert pressed == [("first", 1)]
+E       AssertionError: assert [('first', 1), ('first', 0)] == [('first', 1)]
+E         
+E         Left contains one more item: ('first', 0)
+E         Use -v to get more diff
+
+tests\test_platform_events.py:73: AssertionError
+1 failed in 0.80s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.72s
+
+=== drill AC-08-not-held (M4A-08) on chatmon/a11y.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_voiceover_holds_announcements_until_chatmon_is_in_front
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.08s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_voiceover_holds_announcements_until_chatmon_is_in_front _________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002DDF89F0E10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002DDF8B7C3E0>
+
+    def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypatch):
+        from PyQt6.QtCore import Qt
+    
+        from chatmon import a11y
+    
+        active, posted, spoken = [False], [], []
+        queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=spoken.append)
+        for i in range(7):
+            queue.say(f"Message {i}.", important=(i == 3))
+>       assert posted == [] and len(queue.held) == a11y.VoiceOver.HELD  # the last few, not a backlog
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ([('Message 0...., False), ...] == []
+E         
+E         Left contains 7 more items, first extra item: ('Message 0.', False)
+E         Use -v to get more diff)
+
+tests\test_platform_events.py:220: AssertionError
+1 failed in 0.84s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.77s
+
+=== drill AC-08-no-fallback (M4A-08) on chatmon/a11y.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_the_speech_fallback_says_it_at_once_instead
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.84s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_the_speech_fallback_says_it_at_once_instead _______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000195F27B8D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000195F2A9C3E0>
+
+    def test_the_speech_fallback_says_it_at_once_instead(qapp, monkeypatch):
+        from chatmon import a11y
+    
+        monkeypatch.setattr(a11y, "_speech_fallback", False)
+        posted, spoken = [], []
+        queue = a11y.VoiceOver(post=lambda text, important: posted.append(text), active=lambda: False, speak=spoken.append)
+        a11y.set_speech_fallback(True)
+        queue.say("Reminder. Stretch.", True)
+>       assert spoken == ["Reminder. Stretch."] and queue.held == [] and posted == []
+E       AssertionError: assert ([] == ['Reminder. Stretch.']
+E         
+E         Right contains one more item: 'Reminder. Stretch.'
+E         Use -v to get more diff)
+
+tests\test_platform_events.py:240: AssertionError
+1 failed in 2.54s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.16s
+
+=== drill AC-09a-client-side (M4A-09) on chatmon/winuia.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 10.64s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_ui_automation_client_hears_the_announcement ______________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2490/test_a_ui_automation_client_he0')
+
+    @windows
+    def test_a_ui_automation_client_hears_the_announcement(tmp_path):
+        """End to end, as Narrator, NVDA or JAWS hear it: a UI Automation client in another process gets the
+        notification event with the words, from the announcer window on Qt's real Windows platform."""
+        pytest.importorskip("comtypes")
+        log, words = tmp_path / "heard.jsonl", "Reminder. Stretch your legs."
+        client = subprocess.Popen([sys.executable, str(HERE / "uia_client.py"), "listen", str(log), "40"], stdout=subprocess.PIPE, text=True)
+        env = dict(os.environ, QT_QPA_PLATFORM="windows")
+        announcer = None
+        try:
+            assert client.stdout.readline().strip() == "ready"
+            announcer = subprocess.Popen([sys.executable, "-c", ANNOUNCER, str(HERE.parent), words, str(log)], stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE, text=True, env=env)
+            said = [announcer.stdout.readline().strip() for _ in range(4)]
+            assert said[0] == "prepared True" and said[1].startswith("window ") and said[2:] == ["too soon False", "routes ['uia'] []"], said
+            # The window's element is the announcer's own provider (it names itself), not Qt's or the bare window's.
+            name = subprocess.run([sys.executable, str(HERE / "uia_client.py"), "name", said[1].split()[1]], capture_output=True, text=True, timeout=30)
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline and not (log.exists() and log.read_text(encoding="utf-8").strip()):
+                time.sleep(0.1)
+            heard = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()] if log.exists() else []
+        finally:
+            for process in (client, announcer):
+                if process is not None:
+                    process.kill()
+                    process.communicate(timeout=10)  # waited for, and its pipes closed
+        assert name.stdout.strip() == "Chatmon announcements", name.stderr
+>       assert heard and all(h == {"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"} for h in heard), heard  # Other, ImportantAll
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: []
+E       assert ([])
+
+tests\test_platform_events.py:208: AssertionError
+1 failed in 22.36s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 7.00s
+
+=== drill AC-09a-not-handed-out (M4A-09) on chatmon/winuia.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 7.28s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_ui_automation_client_hears_the_announcement ______________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2493/test_a_ui_automation_client_he0')
+
+    @windows
+    def test_a_ui_automation_client_hears_the_announcement(tmp_path):
+        """End to end, as Narrator, NVDA or JAWS hear it: a UI Automation client in another process gets the
+        notification event with the words, from the announcer window on Qt's real Windows platform."""
+        pytest.importorskip("comtypes")
+        log, words = tmp_path / "heard.jsonl", "Reminder. Stretch your legs."
+        client = subprocess.Popen([sys.executable, str(HERE / "uia_client.py"), "listen", str(log), "40"], stdout=subprocess.PIPE, text=True)
+        env = dict(os.environ, QT_QPA_PLATFORM="windows")
+        announcer = None
+        try:
+            assert client.stdout.readline().strip() == "ready"
+            announcer = subprocess.Popen([sys.executable, "-c", ANNOUNCER, str(HERE.parent), words, str(log)], stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE, text=True, env=env)
+            said = [announcer.stdout.readline().strip() for _ in range(4)]
+            assert said[0] == "prepared True" and said[1].startswith("window ") and said[2:] == ["too soon False", "routes ['uia'] []"], said
+            # The window's element is the announcer's own provider (it names itself), not Qt's or the bare window's.
+            name = subprocess.run([sys.executable, str(HERE / "uia_client.py"), "name", said[1].split()[1]], capture_output=True, text=True, timeout=30)
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline and not (log.exists() and log.read_text(encoding="utf-8").strip()):
+                time.sleep(0.1)
+            heard = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()] if log.exists() else []
+        finally:
+            for process in (client, announcer):
+                if process is not None:
+                    process.kill()
+                    process.communicate(timeout=10)  # waited for, and its pipes closed
+>       assert name.stdout.strip() == "Chatmon announcements", name.stderr
+E       AssertionError: 
+E       assert 'Chatmon' == 'Chatmon announcements'
+E         
+E         - Chatmon announcements
+E         + Chatmon
+
+tests\test_platform_events.py:207: AssertionError
+1 failed in 6.77s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.46s
+
+=== drill AC-09a-host-provider (M4A-09) on chatmon/winuia.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.64s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_ui_automation_client_hears_the_announcement ______________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-2496/test_a_ui_automation_client_he0')
+
+    @windows
+    def test_a_ui_automation_client_hears_the_announcement(tmp_path):
+        """End to end, as Narrator, NVDA or JAWS hear it: a UI Automation client in another process gets the
+        notification event with the words, from the announcer window on Qt's real Windows platform."""
+        pytest.importorskip("comtypes")
+        log, words = tmp_path / "heard.jsonl", "Reminder. Stretch your legs."
+        client = subprocess.Popen([sys.executable, str(HERE / "uia_client.py"), "listen", str(log), "40"], stdout=subprocess.PIPE, text=True)
+        env = dict(os.environ, QT_QPA_PLATFORM="windows")
+        announcer = None
+        try:
+            assert client.stdout.readline().strip() == "ready"
+            announcer = subprocess.Popen([sys.executable, "-c", ANNOUNCER, str(HERE.parent), words, str(log)], stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE, text=True, env=env)
+            said = [announcer.stdout.readline().strip() for _ in range(4)]
+            assert said[0] == "prepared True" and said[1].startswith("window ") and said[2:] == ["too soon False", "routes ['uia'] []"], said
+            # The window's element is the announcer's own provider (it names itself), not Qt's or the bare window's.
+            name = subprocess.run([sys.executable, str(HERE / "uia_client.py"), "name", said[1].split()[1]], capture_output=True, text=True, timeout=30)
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline and not (log.exists() and log.read_text(encoding="utf-8").strip()):
+                time.sleep(0.1)
+            heard = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()] if log.exists() else []
+        finally:
+            for process in (client, announcer):
+                if process is not None:
+                    process.kill()
+                    process.communicate(timeout=10)  # waited for, and its pipes closed
+        assert name.stdout.strip() == "Chatmon announcements", name.stderr
+>       assert heard and all(h == {"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"} for h in heard), heard  # Other, ImportantAll
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: []
+E       assert ([])
+
+tests\test_platform_events.py:208: AssertionError
+1 failed in 21.22s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 7.69s
+
+=== drill AC-09b-behind (M4A-09) on chatmon/a11y.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_on_windows_announcements_need_chatmon_in_front
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.03s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_on_windows_announcements_need_chatmon_in_front _____________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000016D9F9E4D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016D9FCFC3E0>
+
+    @windows
+    def test_on_windows_announcements_need_chatmon_in_front(qapp, monkeypatch):
+        from chatmon import a11y, winuia
+    
+        raised = []
+        monkeypatch.setattr(winuia, "say", lambda words, important: raised.append(words) or True)
+        notified = []
+        monkeypatch.setattr(winuia, "in_front", lambda: False)  # NVDA would ignore it: the notification instead
+>       assert a11y.announce(a11y.Reader("Narrator"), "Stretch.", notify=lambda: notified.append(True)) == "notification"
+E       AssertionError: assert 'uia' == 'notification'
+E         
+E         - notification
+E         + uia
+
+tests\test_platform_events.py:112: AssertionError
+1 failed in 1.00s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.81s
+
+=== drill AC-09b-no-notification (M4A-09) on chatmon/a11y.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_announcements_fall_back_to_the_notification
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.63s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_announcements_fall_back_to_the_notification _______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000283F5C84D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000283F5E0C3E0>
+
+    def test_announcements_fall_back_to_the_notification(qapp, monkeypatch):
+        """Without UI Automation (Qt's offscreen platform has no real windows) or with Chatmon behind other apps, the
+        notification says it; a reader with a way of its own uses it; no reader, nothing."""
+        from chatmon import a11y
+    
+        notified = []
+        assert a11y.announce(None, "Stretch.", notify=lambda: notified.append(True)) == "" and notified == []
+        assert a11y.announce(a11y.Reader("Narrator"), "Stretch.", notify=lambda: notified.append(True)) == "notification"
+>       assert notified == [True]
+E       assert [] == [True]
+E         
+E         Right contains one more item: True
+E         Use -v to get more diff
+
+tests\test_platform_events.py:96: AssertionError
+1 failed in 0.59s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.82s
+
+=== summary
+PASS AC-03-sleep-wake
+PASS AC-06b-low-power
+PASS AC-07a-transient
+PASS AC-07a-urgency-byte
+PASS AC-07b-replaced-buttons
+PASS AC-07b-other-apps
+PASS AC-08-not-held
+PASS AC-08-no-fallback
+PASS AC-09a-client-side
+PASS AC-09a-not-handed-out
+PASS AC-09a-host-provider
+PASS AC-09b-behind
+PASS AC-09b-no-notification

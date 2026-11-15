@@ -3,10 +3,12 @@ something of ours. On Windows that's WS_EX_TRANSPARENT on its native window, swi
 rest of the window's style, WS_EX_LAYERED above all, is left as it is."""
 
 import ctypes
+import logging
 import sys
 
 import pytest
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget
 
 from chatmon import clickthrough
 
@@ -111,3 +113,104 @@ def test_for_window_picks_it_on_windows(qapp, monkeypatch, hwnd):
 
     monkeypatch.setattr(clickthrough, "QGuiApplication", Gui)
     assert type(clickthrough.for_window(Widget(hwnd))) is clickthrough.WindowsPointerToggle
+
+
+def test_without_an_x_input_shape_qts_mask_lets_clicks_through_and_the_debug_log_says_why(qapp, monkeypatch, caplog):
+    class Gui:
+        @staticmethod
+        def platformName():
+            return "xcb"
+
+    monkeypatch.setattr(clickthrough, "QGuiApplication", Gui)
+    monkeypatch.setenv("DISPLAY", ":9999")  # no X server there (nor libX11 at all off Linux)
+    caplog.set_level(logging.DEBUG, logger="chatmon.clickthrough")
+    widget = QWidget()
+    try:
+        assert type(clickthrough.for_window(widget)) is clickthrough.MaskInput
+        assert not widget.mask().isEmpty()  # its one invisible pixel: clicks go through the rest
+    finally:
+        widget.deleteLater()
+    said = [r.getMessage() for r in caplog.records if r.name == "chatmon.clickthrough" and r.levelno == logging.DEBUG]
+    assert len(said) == 1 and said[0].startswith("no X input shape, so Qt's window mask: ")
+
+
+def test_the_x_input_shape_is_in_device_pixels_rounded_outward():
+    logical = ((10, 20, 30, 4), (0, 0, 1, 1), (7, 3, 5, 9))
+    assert clickthrough.device_rects(logical, 1.0) == logical
+    assert clickthrough.device_rects(logical, 2.0) == ((20, 40, 60, 8), (0, 0, 2, 2), (14, 6, 10, 18))
+    # 1.5: 7 * 1.5 = 10.5 and 12 * 1.5 = 18 (the right edge): the shape starts at 10 and covers both half pixels.
+    assert clickthrough.device_rects(((7, 3, 5, 9),), 1.5) == ((10, 4, 8, 14),)
+    for x, y, w, h in logical:
+        (dx, dy, dw, dh), = clickthrough.device_rects(((x, y, w, h),), 1.25)
+        assert dx <= x * 1.25 and dy <= y * 1.25 and dx + dw >= (x + w) * 1.25 and dy + dh >= (y + h) * 1.25
+
+
+class _XlibWindow:
+    """A window of the test's own on the X server in DISPLAY, and a way to read back its input shape."""
+
+    def __init__(self):
+        import ctypes.util
+        import os
+
+        if not sys.platform.startswith("linux") or not os.environ.get("DISPLAY"):
+            pytest.skip("needs an X server (DISPLAY), as under Xvfb")
+        x11_name, xext_name = ctypes.util.find_library("X11"), ctypes.util.find_library("Xext")
+        if not x11_name or not xext_name:
+            pytest.skip("libX11 and libXext aren't installed")
+        self.x11, self.xext = ctypes.CDLL(x11_name), ctypes.CDLL(xext_name)
+        self.x11.XOpenDisplay.restype = ctypes.c_void_p
+        self.x11.XOpenDisplay.argtypes = [ctypes.c_char_p]
+        self.x11.XDefaultRootWindow.restype = ctypes.c_ulong
+        self.x11.XDefaultRootWindow.argtypes = [ctypes.c_void_p]
+        self.x11.XCreateSimpleWindow.restype = ctypes.c_ulong
+        self.x11.XCreateSimpleWindow.argtypes = [ctypes.c_void_p, ctypes.c_ulong] + [ctypes.c_int] * 2 + [ctypes.c_uint] * 3 + [ctypes.c_ulong] * 2
+        self.x11.XSync.argtypes = [ctypes.c_void_p, ctypes.c_int]
+        self.x11.XDestroyWindow.argtypes = [ctypes.c_void_p, ctypes.c_ulong]
+        self.x11.XCloseDisplay.argtypes = [ctypes.c_void_p]
+        self.x11.XFree.argtypes = [ctypes.c_void_p]
+        self.xext.XShapeGetRectangles.restype = ctypes.POINTER(clickthrough._XRectangle)
+        self.xext.XShapeGetRectangles.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.c_int, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int)]
+        self.display = self.x11.XOpenDisplay(None)
+        if not self.display:
+            pytest.skip("can't open the X display")
+        self.window = self.x11.XCreateSimpleWindow(self.display, self.x11.XDefaultRootWindow(self.display), 0, 0, 400, 300, 0, 0, 0)
+        self.x11.XSync(self.display, 0)
+
+    def input_shape(self) -> set:
+        self.x11.XSync(self.display, 0)
+        count, ordering = ctypes.c_int(), ctypes.c_int()
+        rects = self.xext.XShapeGetRectangles(self.display, self.window, clickthrough.XShapeInput.SHAPE_INPUT, ctypes.byref(count), ctypes.byref(ordering))
+        found = {(rects[i].x, rects[i].y, rects[i].width, rects[i].height) for i in range(count.value)}
+        if rects:
+            self.x11.XFree(rects)
+        return found
+
+    def close(self):
+        self.x11.XDestroyWindow(self.display, self.window)
+        self.x11.XCloseDisplay(self.display)
+
+
+class _ScaledWidget:
+    def __init__(self, window, ratio):
+        self.window, self.ratio = window, ratio
+
+    def winId(self):
+        return self.window
+
+    def devicePixelRatioF(self):
+        return self.ratio
+
+
+def test_the_x_server_gets_the_shape_in_device_pixels(qapp):
+    win = _XlibWindow()
+    try:
+        widget = _ScaledWidget(win.window, 2.0)
+        shape = clickthrough.XShapeInput(widget)
+        shape.update([(10, 20, 30, 4), (100, 120, 7, 9)])
+        assert win.input_shape() == {(20, 40, 60, 8), (200, 240, 14, 18)}  # twice the logical rectangles, where they are
+        widget.ratio = 1.5  # the scale changed, the rectangles didn't: sent again
+        shape.update([(10, 20, 30, 4), (100, 120, 7, 9)])
+        assert win.input_shape() == {(15, 30, 45, 6), (150, 180, 11, 14)}
+        shape.close()
+    finally:
+        win.close()

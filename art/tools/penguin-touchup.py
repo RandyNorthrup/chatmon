@@ -28,7 +28,7 @@ import numpy as np
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import spritefix  # noqa: E402
+import spritefix
 
 VERSION = 1
 LIFTED_FEET = {"walk": [2, 3, 6, 7]}  # 0-based frames whose lifted back foot is olive

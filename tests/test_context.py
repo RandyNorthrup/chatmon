@@ -32,8 +32,8 @@ def test_a_chat_past_its_budget_has_its_earlier_part_summed_up_first():
 
 
 def test_a_summary_is_made_from_the_chat_as_any_brain_sees_it():
-    mine = [("Read this\n\n[begin secret.txt]\nhunter2\n[end secret.txt]", "It's a password.")] + chat(40)
-    anyones = [("Read this\n\n(Attached then: secret.txt)", "It's a password.")] + chat(40)
+    mine = [("Read this\n\n[begin secret.txt]\nhunter2\n[end secret.txt]", "It's a password."), *chat(40)]
+    anyones = [("Read this\n\n(Attached then: secret.txt)", "It's a password."), *chat(40)]
     plan = context.plan(mine, anyones, "", 0, 3_000, "next?")
     assert plan.fold and all("hunter2" not in q for q, _ in plan.fold)  # not through a summary to another brain
 

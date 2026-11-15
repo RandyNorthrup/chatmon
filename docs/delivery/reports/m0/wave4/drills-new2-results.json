@@ -1,0 +1,62 @@
+[
+  {
+    "id": "W4-M0-05-language-table-ignored",
+    "requirement": "M0-05.A2",
+    "file": "chatmon/commands.py",
+    "mutation": {
+      "find": "self.phrases = phrases or offline.phrases()",
+      "replace": "self.phrases = offline.phrases()"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_commands.py::test_another_languages_phrases_join_english_which_stays"
+    ],
+    "expected": [
+      "test_another_languages_phrases_join_english_which_stays"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38",
+    "baseline_exit": 0,
+    "mutated_sha256": "ea7178454b3ea672b884b21e13d74201aee7826da4452cdcdc9d0cd1731111c9",
+    "mutated_exit": 1,
+    "observed": "___________ test_another_languages_phrases_join_english_which_stays ___________",
+    "after_sha256": "e886713458942694936efb6d9dc87d1553b18dc7f643c630c45337195763ae38",
+    "restored_exit": 0
+  },
+  {
+    "id": "W4-M0-05-english-loses",
+    "requirement": "M0-05.A2",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "for source in (_table(own, \"commands\"), known):",
+      "replace": "for source in (known, _table(own, \"commands\")):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_commands.py::test_another_languages_phrases_join_english_which_stays"
+    ],
+    "expected": [
+      "test_another_languages_phrases_join_english_which_stays"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee",
+    "baseline_exit": 0,
+    "mutated_sha256": "5ec1755f74599383acddf9c946613513545dfd168ca7b4622cf38d2a599a5b02",
+    "mutated_exit": 1,
+    "observed": "___________ test_another_languages_phrases_join_english_which_stays ___________",
+    "after_sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee",
+    "restored_exit": 0
+  }
+]

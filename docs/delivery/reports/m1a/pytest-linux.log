@@ -1,0 +1,30 @@
+$ python -m pytest -q -p no:cacheprovider -rs tests/test_releasecheck.py tests/test_install_update.py tests/test_packaging.py tests/test_updates.py tests/test_agents.py tests/test_attachments.py tests/test_paths.py tests/test_rename.py tests/test_events.py tests/test_winpipe.py tests/test_wintrust.py tests/test_chats.py
+(Linux 6.18.58.1-microsoft-standard-WSL2, Python 3.14.9 PyQt 6.11.0, WSL Arch)
+..............................ssssss.................................... [ 31%]
+.....................s.................................................. [ 63%]
+sss..s.....s......................s............sssssssssssss............ [ 95%]
+..........                                                               [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_install_update.py:256: macOS's root code: ditto, BSD find, osascript
+SKIPPED [3] tests/test_install_update.py:267: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:282: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:291: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_updates.py:599: holding a file open against changes: Windows
+SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:125: Windows links
+SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+SKIPPED [1] tests/test_events.py:117: macOS's temporary folder of your own
+SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+200 passed, 26 skipped in 62.59s (0:01:02)
+exit 0

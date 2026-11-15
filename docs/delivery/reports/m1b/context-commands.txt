@@ -1,0 +1,7 @@
+Observed 2026-11-14 on the workstation (Windows 11 Pro 10.0.26200):
+python verify-delivery.py --observe-context  -> windows, python 3.14.10
+python -m pytest --version                   -> pytest 9.2.0
+ruff --version                               -> ruff 0.17.4
+python -c "import PyQt6.QtCore as q; print(q.PYQT_VERSION_STR, q.QT_VERSION_STR)" -> 6.11.0 6.11.0
+claude --version                             -> 2.1.288 (Claude Code)
+WSL archlinux throwaway venv /tmp/m1b-venv  -> Python 3.14.9, PyQt6 6.11.0, dbus-run-session present

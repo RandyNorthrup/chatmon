@@ -62,7 +62,8 @@ def event_from(
     if name is None:
         return None
     if message is None:
-        nested = payload.get("notification") if isinstance(payload.get("notification"), dict) else {}  # Cline
+        notification = payload.get("notification")
+        nested = notification if isinstance(notification, dict) else {}  # Cline
         for value in [payload.get(key) for key in _MESSAGE_KEYS] + [nested.get("message")]:
             if isinstance(value, str) and value.strip():
                 message = value.strip()
@@ -87,6 +88,49 @@ def send(message: dict[str, Any], timeout: float = 0.5) -> bool:
     Waits (up to `timeout`) for the companion to say it got the message
     before hanging up; on Windows, hanging up first can lose it."""
     return deliver(message, timeout) == SENT
+
+
+def reply_line(reply: dict[str, Any]) -> bytes:
+    """The companion's answer to a message that asks for one (`status`): one JSON line, written before its ok."""
+    return (json.dumps(reply) + "\n").encode("utf-8")
+
+
+def request(message: dict[str, Any], timeout: float = 2.0) -> dict[str, Any] | None:
+    """Ask the running companion something it answers (`{"type": "status"}`), with the same checks as `deliver`:
+    the one JSON line it writes before its ok, or None (not running, someone else's, a Chatmon too old to answer,
+    or no answer in `timeout` seconds)."""
+    data = (json.dumps(message) + "\n").encode("utf-8")
+    got = bytearray()
+    if sys.platform == "win32":
+        from . import winpipe
+
+        if winpipe.deliver(paths.server_name(), data, int(timeout * 1000), got) != SENT:
+            return None
+        return _reply(bytes(got))
+    name = paths.server_name()
+    deadline = time.monotonic() + timeout
+    try:
+        if os.stat(name).st_uid != os.getuid():
+            return None  # someone else's socket: it's told nothing
+        with _connect(name, timeout) as sock:
+            sock.sendall(data)
+            while not got.endswith(ACK) and len(got) <= MAX_MESSAGE and time.monotonic() < deadline:
+                sock.settimeout(max(0.01, deadline - time.monotonic()))
+                chunk = sock.recv(4096)
+                if not chunk:
+                    break
+                got.extend(chunk)
+    except OSError:
+        return None
+    return _reply(bytes(got))
+
+
+def _reply(data: bytes) -> dict[str, Any] | None:
+    """The answer in what came back: the JSON line before the ok, if the ok came and a line came before it."""
+    if not data.endswith(ACK):
+        return None
+    lines = parse_lines(data[: -len(ACK)])
+    return lines[-1] if lines else None
 
 
 def deliver(message: dict[str, Any], timeout: float = 0.5) -> str:
@@ -121,6 +165,8 @@ def _connect(name: str, timeout: float) -> socket.socket:
     """A connection to the companion's socket. When its queue of connections not yet taken is full (about
     fifty, while it's busy drawing: several agents' hooks at once), that isn't nobody there: try again for
     a moment instead of saying it isn't running. No socket at all fails at once, as before."""
+    if sys.platform == "win32":  # never asked there: Windows has no AF_UNIX here, and talks through winpipe
+        raise OSError("no Unix sockets on Windows")
     deadline = time.monotonic() + QUEUE_FULL_WAIT
     while True:
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -139,26 +185,12 @@ def _connect(name: str, timeout: float) -> socket.socket:
 
 
 def _send_pipe(data: bytes, timeout: float) -> str:
-    from PyQt6.QtNetwork import QLocalSocket
-
+    """Windows: pipe names are first come, first served, for every user on the PC. winpipe.deliver opens the
+    pipe for identification only (its server can't act as you) and checks whose it is, on that handle, before
+    saying anything; a pipe that turns you away is someone else's (your own Chatmon always lets you in)."""
     from . import winpipe
 
-    ms = int(timeout * 1000)
-    sock = QLocalSocket()
-    sock.connectToServer(paths.server_name())
-    if not sock.waitForConnected(ms):
-        # Your own Chatmon always lets you in, so a pipe that turns you away is someone else's.
-        return FOREIGN if sock.error() == QLocalSocket.LocalSocketError.SocketAccessError else ABSENT
-    # Pipe names are first come, first served, for every user on the PC: check whose this one is
-    # before saying anything, on the very handle we'd say it through.
-    if not winpipe.server_is_me(int(sock.socketDescriptor())):
-        sock.abort()
-        return FOREIGN
-    sock.write(data)
-    sock.waitForBytesWritten(ms)
-    sock.waitForReadyRead(ms)
-    sock.disconnectFromServer()
-    return SENT
+    return winpipe.deliver(paths.server_name(), data, int(timeout * 1000))
 
 
 def clean(message: dict[str, Any]) -> dict[str, Any]:

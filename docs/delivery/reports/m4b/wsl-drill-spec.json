@@ -1,0 +1,108 @@
+{
+  "drills": [
+    {
+      "id": "L-00B-eager-objc",
+      "requirement": "AC-00B",
+      "file": "chatmon/sound.py",
+      "find": "_sounds = Sounds()\n",
+      "replace": "_sounds = Sounds()\nMacPlayer()\n",
+      "test": [
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "expect": [
+        "test_it_imports_here[sound]"
+      ]
+    },
+    {
+      "id": "L-01E-numlock",
+      "requirement": "AC-01E",
+      "file": "chatmon/hotkey.py",
+      "find": "(key.keycode, key.state & ~(self.LOCK | self.NUM_LOCK))",
+      "replace": "(key.keycode, key.state)",
+      "test": [
+        "tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+      ],
+      "expect": [
+        "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+      ]
+    },
+    {
+      "id": "L-01E-conflict",
+      "requirement": "AC-01E",
+      "file": "chatmon/hotkey.py",
+      "find": "            if display == self.display:\n",
+      "replace": "            if False:\n",
+      "test": [
+        "tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+      ],
+      "expect": [
+        "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+      ]
+    },
+    {
+      "id": "L-01F-its-own-session",
+      "requirement": "AC-01F",
+      "file": "chatmon/shortcutportal.py",
+      "find": "if self._session and str(message.args[0]) == self._session and message.args[1] == SHORTCUT_ID:",
+      "replace": "if self._session and message.args[1] == SHORTCUT_ID:",
+      "test": [
+        "tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon"
+      ],
+      "expect": [
+        "test_the_portal_binds_it_and_its_presses_reach_chatmon"
+      ]
+    },
+    {
+      "id": "L-01F-response",
+      "requirement": "AC-01F",
+      "file": "chatmon/shortcutportal.py",
+      "find": "            then(code, results)\n",
+      "replace": "            then(1, results)\n",
+      "test": [
+        "tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon"
+      ],
+      "expect": [
+        "test_the_portal_binds_it_and_its_presses_reach_chatmon"
+      ]
+    },
+    {
+      "id": "L-01F-carries-on",
+      "requirement": "AC-01F",
+      "file": "chatmon/shortcutportal.py",
+      "find": "except (libdbus.Failure, TypeError, ValueError, KeyError, IndexError, AttributeError):",
+      "replace": "except libdbus.Failure:",
+      "test": [
+        "tests/test_hotkey_portal.py::test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked"
+      ],
+      "expect": [
+        "test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked"
+      ]
+    },
+    {
+      "id": "L-01F-no-portal",
+      "requirement": "AC-01F",
+      "file": "chatmon/shortcutportal.py",
+      "find": "            self._tell(\"failed\", NO_PORTAL)\n            return\n        if not version:",
+      "replace": "            return\n        if not version:",
+      "test": [
+        "tests/test_hotkey_portal.py::test_a_desktop_without_the_portal_says_how_to_do_it_instead"
+      ],
+      "expect": [
+        "test_a_desktop_without_the_portal_says_how_to_do_it_instead"
+      ]
+    },
+    {
+      "id": "L-02D-linux-player",
+      "requirement": "AC-02D",
+      "file": "chatmon/sound.py",
+      "find": "servers = {\"pw-play\": runtime / \"pipewire-0\", \"paplay\": runtime / \"pulse\" / \"native\", \"canberra-gtk-play\": None}",
+      "replace": "servers = {\"pw-play\": None, \"paplay\": runtime / \"pulse\" / \"native\", \"canberra-gtk-play\": None}",
+      "test": [
+        "tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+      ],
+      "expect": [
+        "test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+      ]
+    }
+  ]
+}

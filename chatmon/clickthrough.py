@@ -14,16 +14,33 @@ from __future__ import annotations
 
 import ctypes
 import ctypes.util
+import logging
+import math
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor, QGuiApplication, QRegion
 from PyQt6.QtWidgets import QWidget
 
+logger = logging.getLogger(__name__)
 
 
 def _key(rects) -> tuple:
     """Rectangles as (x, y, w, h) tuples: the stage sends them so; QRects are taken too."""
     return tuple(rects) if not rects or isinstance(rects[0], tuple) else tuple((r.x(), r.y(), r.width(), r.height()) for r in rects)
+
+
+def device_rects(rects: tuple, ratio: float) -> tuple:
+    """(x, y, w, h) rectangles in Qt's logical pixels as the device pixels an X input shape takes, rounded
+    outward: at a scale of 1.5 or 2 the clickable area keeps its place and size, and no edge of the chatmon is
+    left letting clicks through."""
+    if ratio == 1:
+        return rects
+    out = []
+    for x, y, w, h in rects:
+        left, top = math.floor(x * ratio), math.floor(y * ratio)
+        out.append((left, top, math.ceil((x + w) * ratio) - left, math.ceil((y + h) * ratio) - top))
+    return tuple(out)
+
 
 class _XRectangle(ctypes.Structure):
     _fields_ = [("x", ctypes.c_short), ("y", ctypes.c_short), ("width", ctypes.c_ushort), ("height", ctypes.c_ushort)]
@@ -50,17 +67,21 @@ class XShapeInput:
         event, error = ctypes.c_int(), ctypes.c_int()
         if not self._display or not xext.XShapeQueryExtension(self._display, ctypes.byref(event), ctypes.byref(error)):
             raise OSError("no X SHAPE extension")
+        self._widget = widget
         self._window = int(widget.winId())
         self._last: tuple | None = None
         self.update([])
 
     def update(self, rects) -> None:
-        key = _key(rects)
+        # The X server counts in device pixels; the stage, like Qt, in logical ones.
+        ratio = self._widget.devicePixelRatioF()
+        key = (_key(rects), ratio)
         if key == self._last:
             return
         self._last = key
-        array = (_XRectangle * max(1, len(key)))(*[_XRectangle(*r) for r in key])
-        self._xext.XShapeCombineRectangles(self._display, self._window, self.SHAPE_INPUT, 0, 0, array, len(key), self.SHAPE_SET, 0)
+        shape = device_rects(key[0], ratio)
+        array = (_XRectangle * max(1, len(shape)))(*[_XRectangle(*r) for r in shape])
+        self._xext.XShapeCombineRectangles(self._display, self._window, self.SHAPE_INPUT, 0, 0, array, len(shape), self.SHAPE_SET, 0)
         self._x11.XFlush(self._display)
 
     def follow_pointer(self, hit) -> None:
@@ -117,6 +138,7 @@ class MacPointerToggle(PointerToggle):
 
 GWL_EXSTYLE = -20
 WS_EX_TRANSPARENT = 0x20  # on a layered window: every click goes through it, to the window below
+_WinDLL = getattr(ctypes, "WinDLL", ctypes.CDLL)  # Windows' own loader; ctypes has it only there
 
 
 class WindowsPointerToggle(PointerToggle):
@@ -132,7 +154,7 @@ class WindowsPointerToggle(PointerToggle):
 
     def __init__(self, widget: QWidget):
         super().__init__(widget)
-        user32 = ctypes.WinDLL("user32", use_last_error=True)
+        user32 = _WinDLL("user32", use_last_error=True)
         self._get_style = user32.GetWindowLongPtrW
         self._get_style.restype, self._get_style.argtypes = ctypes.c_ssize_t, [ctypes.c_void_p, ctypes.c_int]
         self._set_style = user32.SetWindowLongPtrW
@@ -179,7 +201,8 @@ def for_window(widget: QWidget):
     if platform == "xcb":
         try:
             return XShapeInput(widget)
-        except OSError:
+        except OSError as exc:
+            logger.debug("no X input shape, so Qt's window mask: %s", exc)
             return MaskInput(widget)
     if platform == "windows":
         return WindowsPointerToggle(widget)

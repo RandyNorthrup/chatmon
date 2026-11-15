@@ -1,7 +1,9 @@
 """What you attach to a question: files, images and pasted text, and how each kind of brain is given them.
 
-Only what you pick or paste is read, and only regular files: never a folder, a device or a pipe. Text is
-quoted in the question, between markers a file can't fake. Images go to the brains that can see them (the
+Only what you pick or paste is read, and only regular files on this computer: never a folder, a device or a
+pipe, and never a file on the network (a share, a mapped drive, an NFS, SMB or FUSE mount), which even looking
+at could sign in to its server as you or wait on it. Text is quoted in the question, between markers a file
+can't fake. Images go to the brains that can see them (the
 APIs, and a model server here that takes images), PDFs to the Anthropic and OpenAI APIs. Of the command-line
 tools, only those whose tools are off as Chatmon starts them (Claude Code, Muse Code) are given anything, and
 only text: one that can read files could be told by an attached file to read others.
@@ -10,14 +12,22 @@ only text: one that can read files could be told by an attached file to read oth
 from __future__ import annotations
 
 import base64
+import ctypes
+import logging
 import os
+import re
 import secrets
 import stat
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 from PyQt6.QtCore import QBuffer, QByteArray, QIODevice, Qt
 from PyQt6.QtGui import QImage
+
+from .i18n import _
+
+logger = logging.getLogger(__name__)
 
 MAX_COUNT = 10  # attachments to one question
 MAX_TEXT = 200 * 1024  # bytes of one text file: past this it's cut, and says so
@@ -57,7 +67,7 @@ class Attachment:
 
     def label(self) -> str:
         size = len(self.data)
-        amount = f"{size / 2**20:.1f} MB" if size >= 2**20 else f"{max(1, round(size / 1024))} KB"
+        amount = _("{size} MB").format(size=f"{size / 2**20:.1f}") if size >= 2**20 else _("{size} KB").format(size=max(1, round(size / 1024)))
         return f"{self.name} ({amount})"
 
     def b64(self) -> str:
@@ -93,30 +103,38 @@ def _decode_text(raw: bytes) -> str | None:
         return None
 
 
-def from_text(text: str, name: str = "pasted text") -> Attachment:
+def _cut_note() -> str:
+    return _("cut to its first {size} KB").format(size=MAX_TEXT // 1024)
+
+
+def from_text(text: str, name: str | None = None) -> Attachment:
+    """Text as an attachment; `name` None: "pasted text"."""
+    name = _("pasted text") if name is None else name
     data = text.encode("utf-8")
     note = ""
     if len(data) > MAX_TEXT:
         data = data[:MAX_TEXT].decode("utf-8", errors="ignore").encode("utf-8")
-        note = f"cut to its first {MAX_TEXT // 1024} KB"
+        note = _cut_note()
     return Attachment(name, TEXT, "text/plain", data, note)
 
 
-def from_image(image: QImage, name: str = "pasted image") -> Attachment:
-    """An image as it will be sent: no bigger than LONG_EDGE on its long side, PNG, or JPEG if that's too big."""
+def from_image(image: QImage, name: str | None = None) -> Attachment:
+    """An image as it will be sent: no bigger than LONG_EDGE on its long side, PNG, or JPEG if that's too big.
+    `name` None: "pasted image"."""
+    name = _("pasted image") if name is None else name
     if image.isNull():
-        raise AttachError(f"{name} isn't an image Chatmon can read")
+        raise AttachError(_("{file} isn't an image Chatmon can read").format(file=name))
     note = ""
     if max(image.width(), image.height()) > LONG_EDGE:
         image = image.scaled(LONG_EDGE, LONG_EDGE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        note = "made smaller"
+        note = _("made smaller")
     data, mime = _encode(image, "PNG"), "image/png"
     if len(data) > MAX_IMAGE:
         if image.hasAlphaChannel():
             image = image.convertToFormat(QImage.Format.Format_RGB32)
         data, mime = _encode(image, "JPEG", 85), "image/jpeg"
     if len(data) > MAX_IMAGE:
-        raise AttachError(f"{name} is too big to send, even made smaller")
+        raise AttachError(_("{file} is too big to send, even made smaller").format(file=name))
     return Attachment(name, IMAGE, mime, data, note)
 
 
@@ -125,46 +143,172 @@ def _encode(image: QImage, fmt: str, quality: int = -1) -> bytes:
     device = QBuffer(buffer)
     device.open(QIODevice.OpenModeFlag.WriteOnly)
     image.save(device, fmt, quality)
-    return bytes(buffer)
+    return buffer.data()
+
+
+# -- where a file is: on this computer, or on the network
+
+DRIVE_REMOTE = 4  # GetDriveTypeW: a network drive
+# Linux statfs f_type of file systems on other computers. FUSE stands for any file system run by a program,
+# GVFS's and sshfs's among them, so it counts as the network too, except fuseblk (a disk here, as ntfs-3g's).
+FUSE = 0x65735546
+LINUX_REMOTE = {0x6969: "NFS", 0x517B: "SMB", 0xFF534D42: "CIFS", 0xFE534D42: "SMB", FUSE: "FUSE",
+                0x5346414F: "AFS", 0x73757245: "Coda", 0x00C36400: "Ceph"}
+MNT_LOCAL = 0x00001000  # macOS statfs f_flags: stored on this computer
+
+
+def network_location(path: Path) -> str | None:
+    """Where `path` is, if that's on another computer: words for the message ("a network drive"), or None.
+    Asks only the system's own record of its drives and mounts: a share's server is never contacted."""
+    try:
+        if sys.platform == "win32":
+            return _windows_remote(str(path))
+        if sys.platform.startswith("linux"):
+            kind = LINUX_REMOTE.get(_statfs_type(path) or 0)
+            if kind == "FUSE" and _mount_type(path) == "fuseblk":
+                return None
+            if kind is None:
+                return None
+            # Translators: where a file is, said in "{file} is on {place}: copy it to this computer to attach it".
+            return _("a network drive ({kind})").format(kind=kind) if kind != "FUSE" else _("a FUSE drive, which may be on the network")
+        if sys.platform == "darwin":
+            found = _mac_statfs(path)
+            return None if found is None or found[0] & MNT_LOCAL else _("a network drive ({kind})").format(kind=found[1])
+    except (OSError, ValueError) as exc:  # can't tell: looking at the file says what's wrong with it
+        logger.debug("couldn't tell whether a file is on another computer: %s", exc)
+        return None
+    return None
+
+
+def _windows_remote(text: str, depth: int = 0) -> str | None:
+    text = text.replace("/", "\\")
+    upper = text.upper()
+    if upper.startswith("\\\\?\\UNC\\"):
+        return _("a network share")
+    if upper.startswith(("\\\\?\\", "\\\\.\\")):
+        text = text[4:]  # a path on a drive here, spelled another way
+    elif text.startswith("\\\\"):
+        return _("a network share")
+    drive = os.path.splitdrive(os.path.abspath(text))[0]
+    if len(drive) == 2 and drive[1] == ":" and _drive_type(drive + "\\") == DRIVE_REMOTE:
+        return _("a network drive")
+    if depth < 8 and os.path.islink(text):  # a link to the network is the network
+        target = os.readlink(text)
+        return _windows_remote(target if os.path.isabs(target) else os.path.join(os.path.dirname(text), target), depth + 1)
+    return None
+
+
+def _drive_type(root: str) -> int:
+    """Windows' record of what a drive is (GetDriveTypeW): a mapped drive says so without being contacted."""
+    if sys.platform != "win32":  # asked on Windows alone (network_location)
+        return 0  # DRIVE_UNKNOWN
+    kernel32 = ctypes.WinDLL("kernel32")
+    kernel32.GetDriveTypeW.argtypes, kernel32.GetDriveTypeW.restype = [ctypes.c_wchar_p], ctypes.c_uint
+    return kernel32.GetDriveTypeW(root)
+
+
+def _statfs_type(path: Path) -> int | None:
+    """Linux: the f_type of the file system `path` is on, from statfs(2) (the first field: a long)."""
+    libc = ctypes.CDLL(None, use_errno=True)
+    buffer = ctypes.create_string_buffer(512)  # more than any statfs struct
+    if libc.statfs(os.fsencode(str(path)), buffer) != 0:
+        return None
+    return ctypes.c_long.from_buffer(buffer).value & 0xFFFFFFFF
+
+
+def _mount_type(path: Path, mountinfo: str | None = None) -> str | None:
+    """Linux: the type of the mount `path` is on, from /proc/self/mountinfo (the longest mount point holding it)."""
+    if mountinfo is None:
+        with open("/proc/self/mountinfo", encoding="utf-8", errors="replace") as f:
+            mountinfo = f.read()
+    where = os.path.realpath(path)
+    best, kind = "", None
+    for line in mountinfo.splitlines():
+        fields, _, rest = line.partition(" - ")
+        parts, after = fields.split(), rest.split()
+        if len(parts) < 5 or not after:
+            continue
+        point = re.sub(r"\\([0-7]{3})", lambda m: chr(int(m.group(1), 8)), parts[4])  # "\040": a space, as the kernel writes it
+        if (where == point or where.startswith(point.rstrip("/") + "/")) and len(point) >= len(best):
+            best, kind = point, after[0]
+    return kind
+
+
+class _MacStatfs(ctypes.Structure):  # struct statfs with 64-bit inodes, as macOS has it
+    _fields_ = [
+        ("f_bsize", ctypes.c_uint32), ("f_iosize", ctypes.c_int32), ("f_blocks", ctypes.c_uint64), ("f_bfree", ctypes.c_uint64),
+        ("f_bavail", ctypes.c_uint64), ("f_files", ctypes.c_uint64), ("f_ffree", ctypes.c_uint64), ("f_fsid", ctypes.c_int32 * 2),
+        ("f_owner", ctypes.c_uint32), ("f_type", ctypes.c_uint32), ("f_flags", ctypes.c_uint32), ("f_fssubtype", ctypes.c_uint32),
+        ("f_fstypename", ctypes.c_char * 16), ("f_mntonname", ctypes.c_char * 1024), ("f_mntfromname", ctypes.c_char * 1024),
+        ("f_flags_ext", ctypes.c_uint32), ("f_reserved", ctypes.c_uint32 * 7),
+    ]
+
+
+def _mac_statfs(path: Path) -> tuple[int, str] | None:
+    """macOS: (f_flags, f_fstypename) of the file system `path` is on."""
+    libc = ctypes.CDLL(None, use_errno=True)
+    try:
+        call = libc["statfs$INODE64"]  # Intel Macs: the struct above; Apple silicon has only that one
+    except AttributeError:
+        call = libc.statfs
+    found = _MacStatfs()
+    if call(os.fsencode(str(path)), ctypes.byref(found)) != 0:
+        return None
+    return found.f_flags, found.f_fstypename.decode("utf-8", "replace")
 
 
 def from_path(path: Path) -> Attachment:
-    """A file you picked or pasted: text, an image or a PDF. AttachError says why one can't be."""
+    """A file you picked or pasted: text, an image or a PDF. AttachError says why one can't be.
+
+    Never on the network (network_location: asked of the system's own record of drives and mounts, before the
+    file is touched). Looked at before it's opened, so a folder, a device or a pipe is never opened at all;
+    opened without waiting; then judged again by what was opened: the same file, still a regular one."""
     name = path.name or str(path)
+    remote = network_location(path)
+    if remote:
+        raise AttachError(_("{file} is on {place}: copy it to this computer to attach it").format(file=name, place=remote))
     try:
-        # Opened before it's looked at, without waiting (a pipe would wait for a writer forever), then
-        # judged by what was opened: nothing can be swapped in between.
+        looked = os.stat(path)
+    except OSError as exc:
+        raise AttachError(_("couldn't open {file} ({error})").format(file=name, error=exc.strerror or exc)) from None
+    if not stat.S_ISREG(looked.st_mode):
+        raise AttachError(_("{file} isn't a file").format(file=name))
+    if looked.st_size > MAX_FILE:
+        raise AttachError(_too_big(name, looked.st_size))
+    try:
         fd = os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0) | getattr(os, "O_BINARY", 0))
     except OSError as exc:
-        if os.path.isdir(path):  # Windows won't open a folder at all
-            raise AttachError(f"{name} isn't a file") from None
-        raise AttachError(f"couldn't open {name} ({exc.strerror or exc})") from None
+        raise AttachError(_("couldn't open {file} ({error})").format(file=name, error=exc.strerror or exc)) from None
     try:
         info = os.fstat(fd)
     except OSError as exc:
         os.close(fd)
-        raise AttachError(f"couldn't open {name} ({exc.strerror or exc})") from None
-    if not stat.S_ISREG(info.st_mode):
+        raise AttachError(_("couldn't open {file} ({error})").format(file=name, error=exc.strerror or exc)) from None
+    if not stat.S_ISREG(info.st_mode) or (info.st_dev, info.st_ino) != (looked.st_dev, looked.st_ino):
         os.close(fd)
-        raise AttachError(f"{name} isn't a file")
+        raise AttachError(_("{file} changed as it was opened").format(file=name))
     if info.st_size > MAX_FILE:
         os.close(fd)
-        raise AttachError(f"{name} is too big ({info.st_size // 2**20} MB)")
+        raise AttachError(_too_big(name, info.st_size))
     try:
         with os.fdopen(fd, "rb") as f:
             head = f.read(16)
             mime = _sniff(head)
             raw = head + f.read(_limit(mime) - len(head) + 1)
     except OSError as exc:
-        raise AttachError(f"couldn't read {name} ({exc.strerror or exc})") from None
+        raise AttachError(_("couldn't read {file} ({error})").format(file=name, error=exc.strerror or exc)) from None
     return _judged(raw, name, mime)
+
+
+def _too_big(name: str, size: int) -> str:
+    return _("{file} is too big ({size} MB)").format(file=name, size=size // 2**20)
 
 
 def from_bytes(data: bytes, name: str) -> Attachment:
     """A file's contents that aren't on disk (dragged out of Outlook or a zip), judged as from_path judges a
     file's."""
     if len(data) > MAX_FILE:
-        raise AttachError(f"{name} is too big ({len(data) // 2**20} MB)")
+        raise AttachError(_too_big(name, len(data)))
     mime = _sniff(data[:16])
     return _judged(data[: _limit(mime) + 1], name, mime)
 
@@ -178,24 +322,24 @@ def _judged(raw: bytes, name: str, mime: str | None) -> Attachment:
     """A file's first _limit(mime) + 1 bytes (or all of it, if fewer), as an attachment."""
     if mime == "application/pdf":
         if len(raw) > MAX_PDF:
-            raise AttachError(f"{name} is too big ({MAX_PDF // 2**20} MB at most for a PDF)")
+            raise AttachError(_("{file} is too big ({size} MB at most for a PDF)").format(file=name, size=MAX_PDF // 2**20))
         return Attachment(name, PDF, mime, raw)
     if mime:
         return from_image(QImage.fromData(raw), name)
     text = _decode_text(raw[: MAX_TEXT + 4])
     if text is None:
-        raise AttachError(f"{name} isn't text, an image or a PDF")
+        raise AttachError(_("{file} isn't text, an image or a PDF").format(file=name))
     attachment = from_text(text, name)
     if len(raw) > MAX_TEXT and not attachment.note:
-        attachment = Attachment(attachment.name, TEXT, attachment.mime, attachment.data, f"cut to its first {MAX_TEXT // 1024} KB")
+        attachment = Attachment(attachment.name, TEXT, attachment.mime, attachment.data, _cut_note())
     return attachment
 
 
 def check_total(existing: list[Attachment], new: Attachment) -> None:
     if len(existing) >= MAX_COUNT:
-        raise AttachError(f"{MAX_COUNT} attachments at most")
+        raise AttachError(_("{count} attachments at most").format(count=MAX_COUNT))
     if sum(len(a.data) for a in existing) + len(new.data) > MAX_TOTAL:
-        raise AttachError(f"that's past {MAX_TOTAL // 2**20} MB in all")
+        raise AttachError(_("that's past {size} MB in all").format(size=MAX_TOTAL // 2**20))
 
 
 def long_paste(text: str) -> bool:

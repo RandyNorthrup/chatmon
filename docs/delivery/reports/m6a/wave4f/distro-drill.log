@@ -1,0 +1,13 @@
+# Red drill on .github/scripts/distro-tests.sh in debian:trixie (podman 6.2.0), 2026-11-15T19:16:44Z
+# copy: /var/tmp/chatmon-distro-drill-ZE5k8C/src, 310 files
+# tests/test_cli.py sha256 before: d05913174b90ab7b1de137e33dac49e7c41cf68d2ca495d98602664adf6699f2
+green: exit 0, 1283 passed, 155 skipped in 273.89s (0:04:33)
+# mutation: in the copy, '    assert cli.main(["--help"]) == 0' (found 1 time) made '    assert cli.main(["--help"]) == 1'
+# tests/test_cli.py sha256 mutated: be6e77fecee4bcf7b4652e93bb1e0b86f37c19f5625e5ecdfac1112619409832
+red: exit 1, 1 failed, 1282 passed, 155 skipped in 265.11s (0:04:25)
+__________________ test_help_version_and_what_it_doesnt_know ___________________
+E       AssertionError: assert 0 == 1
+# tests/test_cli.py sha256 restored: d05913174b90ab7b1de137e33dac49e7c41cf68d2ca495d98602664adf6699f2 (same as before)
+restored: exit 0, 1283 passed, 155 skipped in 262.13s (0:04:22)
+# exits: green 0, red 1, restored 0
+# drill PASS

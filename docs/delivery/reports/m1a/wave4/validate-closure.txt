@@ -1,0 +1,7 @@
+$ python verify-delivery.py --root . --plan docs/delivery/m1a-security-updates.md --stage closure --context docs/delivery/reports/m1a/wave4/context.json
+FAIL: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+evidence-coverage | AC-01-MACOS | No passing red receipt covers this acceptance criterion
+task-unverified | T-03-macos-root | Task is implemented, not verified
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

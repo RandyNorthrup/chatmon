@@ -1,0 +1,77 @@
+red drills from docs\delivery\reports\wave4e\crash\drill-spec-new.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-xow_rkv1
+copied 310 files
+
+=== drill CRASH-03-later-sees-it-quit-v2 (crash-nothing-after-quit) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.83s
+-- red: exit 1
+        its one-off waits (Companion._later: the greeting, the first look at the agents three seconds in, the update
+        checks minutes in), its timers, should anything start one again, and the answers of the threads it handed work
+        to and of the brain finder. Here every wait it made comes due, the longest ten minutes in, with a thread's
+        answer, a brain found and a timer started again besides, and none of the Companion's own code runs."""
+        import inspect
+        import time as clock
+    
+        from PyQt6.QtCore import QTimer
+    
+        from chatmon import app as appmod, brains
+    
+        assert inspect.getsource(appmod).count("QTimer.singleShot(") == 1, "the Companion waits only through _later"
+        waits = []
+        real = QTimer.singleShot
+    
+        def recording(ms, *rest):
+            waits.append((ms, rest[-1]))
+            real(ms, *rest)
+    
+        monkeypatch.setattr(QTimer, "singleShot", staticmethod(recording))
+        monkeypatch.setattr(appmod.Companion, "_agent_statuses", staticmethod(lambda migrate: clock.sleep(0.3) or {}))
+        fixture = make_companion(tmp_path, monkeypatch)
+        c = next(fixture)
+        try:
+            assert until(lambda: not c._refreshing)
+            appmod._log_exception(ValueError, ValueError("boom"), None)  # the offer to report it, a moment later
+            c.handle({"type": "quit"})  # `chatmon quit`: quits once the sender has heard back
+            c._refresh_agents()  # how the agents stand comes back from a thread, 0.3 s on
+            monkeypatch.setattr(brains, "unsure", lambda: True)  # and the brain to ask from the finder's thread
+            monkeypatch.setattr(brains, "look_again", lambda: clock.sleep(0.1))
+            c._find_brain(c._welcome)
+            c.quit()
+            due = [(ms, then) for ms, then in waits if getattr(then, "__qualname__", "") == "Companion._later.<locals>.go"]
+            assert max(ms for ms, _then in due) >= 120_000 and len(due) >= 8  # the update check's among them
+            ran = []
+    
+            def watch(frame, event, _arg):
+                name = frame.f_code.co_qualname
+                if event == "call" and name.startswith("Companion.") and not name.startswith(("Companion._later.", "Companion._heard.")):  # the guards themselves: what they guard shows by name
+                    ran.append(name)
+    
+            sys.setprofile(watch)
+            try:
+                for _ms, then in due:
+                    then()  # its time come
+                c._message_timer.start(0)  # one of its timers, started again
+                spin(1.0)  # meanwhile the thread's answer and the finder's come back
+            finally:
+                sys.setprofile(None)
+>           assert ran == []
+E           AssertionError: assert ['Companion._..._agents', ...] == []
+E             
+E             Left contains 40 more items, first extra item: 'Companion._mac_edit_menu'
+E             Use -v to get more diff
+
+tests\test_app_smoke.py:726: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    chatmon.app:app.py:3270 something went wrong
+ValueError: boom
+1 failed in 2.49s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.02s
+
+=== summary
+PASS CRASH-03-later-sees-it-quit-v2

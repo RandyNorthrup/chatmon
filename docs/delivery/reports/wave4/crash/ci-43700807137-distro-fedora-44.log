@@ -1,0 +1,86 @@
+# GitHub Actions run 43700807137 (723bea9, PR #18), attempt 1, job 132771292209 "distro (fedora:44)": from the version line to the end of the tests
+2026-11-15T09:46:57.3446466Z Fedora Linux 44 (Container Image): Python 3.14.10, PyQt6 6.11.0, Qt 6.11.2
+2026-11-15T09:47:05.8063569Z ...ss................................................................... [  5%]
+2026-11-15T09:48:08.8226505Z ................s.............ss........................................ [ 10%]
+2026-11-15T09:48:53.0291665Z Fatal Python error: Segmentation fault
+2026-11-15T09:48:53.0292105Z 
+2026-11-15T09:48:53.0292347Z Current thread 0x00007f410f68bbc0 [python3] (most recent call first):
+2026-11-15T09:48:53.0292935Z   File "/home/chatmon-tests/chatmon/chatmon/app.py", line 297 in __init__
+2026-11-15T09:48:53.0293608Z   File "/home/chatmon-tests/chatmon/tests/app_harness.py", line 96 in make_companion
+2026-11-15T09:48:53.0294333Z   File "/home/chatmon-tests/chatmon/tests/test_app_smoke.py", line 20 in companion
+2026-11-15T09:48:53.0295405Z   File "/usr/lib/python3.14/site-packages/_pytest/fixtures.py", line 923 in call_fixture_func
+2026-11-15T09:48:53.0296230Z   File "/usr/lib/python3.14/site-packages/_pytest/fixtures.py", line 1196 in pytest_fixture_setup
+2026-11-15T09:48:53.0296966Z   File "/usr/lib/python3.14/site-packages/pluggy/_callers.py", line 121 in _multicall
+2026-11-15T09:48:53.0297615Z   File "/usr/lib/python3.14/site-packages/pluggy/_manager.py", line 120 in _hookexec
+2026-11-15T09:48:53.0298263Z   File "/usr/lib/python3.14/site-packages/pluggy/_hooks.py", line 512 in __call__
+2026-11-15T09:48:53.0298893Z   File "/usr/lib/python3.14/site-packages/_pytest/fixtures.py", line 1128 in execute
+2026-11-15T09:48:53.0299596Z   File "/usr/lib/python3.14/site-packages/_pytest/fixtures.py", line 640 in _get_active_fixturedef
+2026-11-15T09:48:53.0300324Z   File "/usr/lib/python3.14/site-packages/_pytest/fixtures.py", line 549 in getfixturevalue
+2026-11-15T09:48:53.0301022Z   File "/usr/lib/python3.14/site-packages/_pytest/fixtures.py", line 720 in _fillfixtures
+2026-11-15T09:48:53.0301681Z   File "/usr/lib/python3.14/site-packages/_pytest/python.py", line 1674 in setup
+2026-11-15T09:48:53.0302406Z   File "/usr/lib/python3.14/site-packages/_pytest/runner.py", line 514 in setup
+2026-11-15T09:48:53.0303051Z   File "/usr/lib/python3.14/site-packages/_pytest/runner.py", line 164 in pytest_runtest_setup
+2026-11-15T09:48:53.0303617Z   File "/usr/lib/python3.14/site-packages/pluggy/_callers.py", line 121 in _multicall
+2026-11-15T09:48:53.0304032Z   File "/usr/lib/python3.14/site-packages/pluggy/_manager.py", line 120 in _hookexec
+2026-11-15T09:48:53.0304536Z   File "/usr/lib/python3.14/site-packages/pluggy/_hooks.py", line 512 in __call__
+2026-11-15T09:48:53.0305013Z   File "/usr/lib/python3.14/site-packages/_pytest/runner.py", line 246 in <lambda>
+2026-11-15T09:48:53.0305414Z   File "/usr/lib/python3.14/site-packages/_pytest/runner.py", line 344 in from_call
+2026-11-15T09:48:53.0305912Z   File "/usr/lib/python3.14/site-packages/_pytest/runner.py", line 245 in call_and_report
+2026-11-15T09:48:53.0306339Z   File "/usr/lib/python3.14/site-packages/_pytest/runner.py", line 130 in runtestprotocol
+2026-11-15T09:48:53.0306888Z   File "/usr/lib/python3.14/site-packages/_pytest/runner.py", line 117 in pytest_runtest_protocol
+2026-11-15T09:48:53.0307417Z   File "/usr/lib/python3.14/site-packages/pluggy/_callers.py", line 121 in _multicall
+2026-11-15T09:48:53.0308031Z   File "/usr/lib/python3.14/site-packages/pluggy/_manager.py", line 120 in _hookexec
+2026-11-15T09:48:53.0308686Z   File "/usr/lib/python3.14/site-packages/pluggy/_hooks.py", line 512 in __call__
+2026-11-15T09:48:53.0309183Z   File "/usr/lib/python3.14/site-packages/_pytest/main.py", line 367 in pytest_runtestloop
+2026-11-15T09:48:53.0309605Z   File "/usr/lib/python3.14/site-packages/pluggy/_callers.py", line 121 in _multicall
+2026-11-15T09:48:53.0310098Z   File "/usr/lib/python3.14/site-packages/pluggy/_manager.py", line 120 in _hookexec
+2026-11-15T09:48:53.0310568Z   File "/usr/lib/python3.14/site-packages/pluggy/_hooks.py", line 512 in __call__
+2026-11-15T09:48:53.0310967Z   File "/usr/lib/python3.14/site-packages/_pytest/main.py", line 343 in _main
+2026-11-15T09:48:53.0311438Z   File "/usr/lib/python3.14/site-packages/_pytest/main.py", line 289 in wrap_session
+2026-11-15T09:48:53.0311868Z   File "/usr/lib/python3.14/site-packages/_pytest/main.py", line 336 in pytest_cmdline_main
+2026-11-15T09:48:53.0312963Z   File "/usr/lib/python3.14/site-packages/pluggy/_callers.py", line 121 in _multicall
+2026-11-15T09:48:53.0313367Z   File "/usr/lib/python3.14/site-packages/pluggy/_manager.py", line 120 in _hookexec
+2026-11-15T09:48:53.0313761Z   File "/usr/lib/python3.14/site-packages/pluggy/_hooks.py", line 512 in __call__
+2026-11-15T09:48:53.0314153Z   File "/usr/lib/python3.14/site-packages/_pytest/config/__init__.py", line 175 in main
+2026-11-15T09:48:53.0314585Z   File "/usr/lib/python3.14/site-packages/_pytest/config/__init__.py", line 201 in console_main
+2026-11-15T09:48:53.0315003Z   File "/usr/lib/python3.14/site-packages/pytest/__main__.py", line 9 in <module>
+2026-11-15T09:48:53.0315598Z   File "<frozen runpy>", line 88 in _run_code
+2026-11-15T09:48:53.0330907Z   File "<frozen runpy>", line 203 in _run_module_as_main
+2026-11-15T09:48:53.0331201Z 
+2026-11-15T09:48:53.0331376Z Current thread's C stack trace (most recent call first):
+2026-11-15T09:48:53.0332070Z   Binary file "/lib64/libpython3.14.so.1.0", at _Py_DumpStack+0x4c [0x7f410fae0ae0]
+2026-11-15T09:48:53.0332688Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x14dd04 [0x7f410faead04]
+2026-11-15T09:48:53.0333234Z   Binary file "/lib64/libc.so.6", at +0x19fb0 [0x7f410f7bdfb0]
+2026-11-15T09:48:53.0334035Z   Binary file "/lib64/libQt6Widgets.so.6", at _ZNK14QWidgetPrivate12windowHandleENS_16WindowHandleModeE+0x49 [0x7f41069844a9]
+2026-11-15T09:48:53.0334737Z   Binary file "/lib64/libQt6Widgets.so.6", at _ZN19QApplicationPrivate23notifyWindowIconChangedEv+0x9b [0x7f410693aa5b]
+2026-11-15T09:48:53.0335311Z   Binary file "/usr/lib64/python3.14/site-packages/PyQt6/QtGui.abi3.so", at +0x11c339 [0x7f410984f339]
+2026-11-15T09:48:53.0335752Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x1b772e [0x7f410fb5472e]
+2026-11-15T09:48:53.0336106Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x18570b [0x7f410fb2270b]
+2026-11-15T09:48:53.0336450Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x304a9 [0x7f410f9cd4a9]
+2026-11-15T09:48:53.0336795Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x1cfb97 [0x7f410fb6cb97]
+2026-11-15T09:48:53.0337126Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x185621 [0x7f410fb22621]
+2026-11-15T09:48:53.0337453Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x304a9 [0x7f410f9cd4a9]
+2026-11-15T09:48:53.0337786Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x22df8c [0x7f410fbcaf8c]
+2026-11-15T09:48:53.0338125Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x2dd41 [0x7f410f9cad41]
+2026-11-15T09:48:53.0338457Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x29f20d [0x7f410fc3c20d]
+2026-11-15T09:48:53.0338785Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x30751f [0x7f410fca451f]
+2026-11-15T09:48:53.0339168Z   Binary file "/lib64/libpython3.14.so.1.0", at _PyObject_MakeTpCall+0x89 [0x7f410fb22ad9]
+2026-11-15T09:48:53.0339559Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x27eda [0x7f410f9c4eda]
+2026-11-15T09:48:53.0339905Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x29f20d [0x7f410fc3c20d]
+2026-11-15T09:48:53.0340437Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x30751f [0x7f410fca451f]
+2026-11-15T09:48:53.0340776Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x1e1060 [0x7f410fb7e060]
+2026-11-15T09:48:53.0341130Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x2bfca [0x7f410f9c8fca]
+2026-11-15T09:48:53.0341590Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x29f20d [0x7f410fc3c20d]
+2026-11-15T09:48:53.0342107Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x30751f [0x7f410fca451f]
+2026-11-15T09:48:53.0342510Z   Binary file "/lib64/libpython3.14.so.1.0", at _PyObject_MakeTpCall+0x89 [0x7f410fb22ad9]
+2026-11-15T09:48:53.0342897Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x27eda [0x7f410f9c4eda]
+2026-11-15T09:48:53.0343229Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x29f20d [0x7f410fc3c20d]
+2026-11-15T09:48:53.0343558Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x30751f [0x7f410fca451f]
+2026-11-15T09:48:53.0343923Z   Binary file "/lib64/libpython3.14.so.1.0", at _PyObject_MakeTpCall+0x89 [0x7f410fb22ad9]
+2026-11-15T09:48:53.0344297Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x31d5e [0x7f410f9ced5e]
+2026-11-15T09:48:53.0344623Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x29f20d [0x7f410fc3c20d]
+2026-11-15T09:48:53.0344956Z   Binary file "/lib64/libpython3.14.so.1.0", at +0x30751f [0x7f410fca451f]
+2026-11-15T09:48:53.0345238Z   <truncated rest of calls>
+2026-11-15T09:48:53.0345359Z 
+2026-11-15T09:48:53.0345692Z Extension modules: PyQt6.QtCore, PyQt6.QtGui, PyQt6.QtNetwork, PyQt6.QtWidgets, PyQt6.QtTest, PyQt6.QtDBus, psutil._psutil_linux (total: 7)
+2026-11-15T09:48:54.4104775Z Segmentation fault (core dumped)

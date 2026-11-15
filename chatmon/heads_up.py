@@ -2,18 +2,26 @@
 
 Each check tells you once, not every minute: a battery warning once per level
 until you plug in, a full disk once a day, waiting updates once a day.
+
+The battery and disk readings may take a moment (a D-Bus call, a disk that's slow to answer), and are safe to
+take on any thread: nothing in them belongs to the screen's.
 """
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import shutil
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Callable
+
+from .i18n import _, ngettext
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -37,18 +45,21 @@ def read_battery() -> tuple[float, bool] | None:
         if reading is not None:
             return reading
     try:
-        import psutil
+        import psutil  # type: ignore[import-untyped]  # psutil ships no type information, and types-psutil isn't a dependency
 
         battery = psutil.sensors_battery()
         if battery is not None:
             return float(battery.percent), bool(battery.power_plugged)
-    except Exception:
-        pass
+    except Exception:  # psutil is optional, and may fail any way on an odd battery: then there's no reading
+        logger.debug("psutil couldn't read the battery", exc_info=True)
     return None
 
 
+DISCHARGING_STATES = (2, 6)  # UPower.Device State: discharging, pending discharge
+
+
 def upower_battery() -> tuple[float, bool] | None:
-    """UPower's DisplayDevice: its batteries combined, weighted by what each holds.
+    """UPower's DisplayDevice: its batteries combined, weighted by what each holds, in one call (GetAll).
     https://upower.freedesktop.org/docs/UPower.html#UPower.GetDisplayDevice"""
     try:
         from PyQt6.QtDBus import QDBusConnection
@@ -56,26 +67,33 @@ def upower_battery() -> tuple[float, bool] | None:
         from .presence import _dbus_call
     except ImportError:
         return None
-    bus = QDBusConnection.systemBus()
+    bus: QDBusConnection = QDBusConnection.systemBus()  # a connection QtDBus shares between threads
     if not bus.isConnected():
         return None
+    return battery_from_upower(_dbus_call(bus, UPOWER, DISPLAY_DEVICE, "org.freedesktop.DBus.Properties", "GetAll", "org.freedesktop.UPower.Device"))
 
-    def get(path: str, interface: str, name: str):
-        return _dbus_call(bus, UPOWER, path, "org.freedesktop.DBus.Properties", "Get", interface, name)
 
-    if not get(DISPLAY_DEVICE, "org.freedesktop.UPower.Device", "IsPresent"):  # no battery, or no UPower
+def battery_from_upower(properties) -> tuple[float, bool] | None:
+    """(percent, plugged in) from the DisplayDevice's properties; None without a battery (or UPower). Plugged in
+    unless the batteries are discharging: plugged into a charger too weak to keep up counts as running down."""
+    if not isinstance(properties, dict):
         return None
-    percent = get(DISPLAY_DEVICE, "org.freedesktop.UPower.Device", "Percentage")
-    on_battery = get("/org/freedesktop/UPower", UPOWER, "OnBattery")
-    if not isinstance(percent, (int, float)) or on_battery is None:
+    present, percent, state = (_unwrapped(properties.get(name)) for name in ("IsPresent", "Percentage", "State"))
+    if present is not True or isinstance(percent, bool) or not isinstance(percent, (int, float)) or not isinstance(state, int):
         return None
-    return float(percent), not bool(on_battery)
+    return float(percent), state not in DISCHARGING_STATES
+
+
+def _unwrapped(value):
+    while hasattr(value, "variant"):
+        value = value.variant()
+    return value
 
 
 def sysfs_battery(base: Path = POWER_SUPPLY) -> tuple[float, bool] | None:
     """The kernel's batteries (not a mouse's or a headset's), combined as UPower does: by what each holds, when
     they all say it in the same unit, else their percentages averaged."""
-    found = []  # (percent, (unit, now, full) or None)
+    found: list[tuple[float, tuple[str, float, float] | None]] = []  # (percent, (unit, now, full) or None)
     plugged = True
     for bat in sorted(base.glob("BAT*")):
         try:
@@ -95,9 +113,10 @@ def sysfs_battery(base: Path = POWER_SUPPLY) -> tuple[float, bool] | None:
         found.append((percent, held))
     if not found:
         return None
-    units = {held[0] for _, held in found if held}
-    if len(units) == 1 and all(held for _, held in found) and sum(held[2] for _, held in found) > 0:
-        percent = 100.0 * sum(held[1] for _, held in found) / sum(held[2] for _, held in found)
+    holding = [held for _, held in found if held]
+    units = {held[0] for held in holding}
+    if len(units) == 1 and len(holding) == len(found) and sum(held[2] for held in holding) > 0:
+        percent = 100.0 * sum(held[1] for held in holding) / sum(held[2] for held in holding)
     else:
         percent = sum(p for p, _ in found) / len(found)
     return min(100.0, percent), plugged
@@ -145,7 +164,7 @@ def count_dnf(output: str, code: int) -> int | None:
         return None
     lines = []
     for line in output.splitlines():
-        if line.startswith(("Obsoleting", "Security:", "Last metadata")) or line.startswith(" "):
+        if line.startswith(("Obsoleting", "Security:", "Last metadata", " ")):
             continue
         if re.match(r"^\S+\.\S+\s+\S+\s+\S+\s*$", line):
             lines.append(line)
@@ -253,17 +272,18 @@ class Watcher:
             return None
         self._battery_told = level
         if level == "critical":
-            return Notice("battery", "Battery almost empty", f"Battery at {percent:.0f}%. Plug in now.", urgent=True)
-        return Notice("battery", "Battery low", f"Battery at {percent:.0f}%. Time to find the charger.", urgent=True)
+            return Notice("battery", _("Battery almost empty"), _("Battery at {percent}%. Plug in now.").format(percent=f"{percent:.0f}"), urgent=True)
+        return Notice("battery", _("Battery low"), _("Battery at {percent}%. Time to find the charger.").format(percent=f"{percent:.0f}"), urgent=True)
 
     def disks(self, readings: list[tuple[str, float]], today: date) -> list[Notice]:
-        out = []
+        out: list[Notice] = []
         if self.disk_full <= 0:
             return out
         for folder, percent in readings:
             if percent >= self.disk_full and self._disk_told.get(folder) != today:
                 self._disk_told[folder] = today
-                out.append(Notice(f"disk:{folder}", "Disk almost full", f"The disk holding {folder} is {percent:.0f}% full.", urgent=True))
+                text = _("The disk holding {folder} is {percent}% full.").format(folder=folder, percent=f"{percent:.0f}")
+                out.append(Notice(f"disk:{folder}", _("Disk almost full"), text, urgent=True))
         return out
 
     def updates(self, count: int, today: date, restart: bool = False) -> Notice | None:
@@ -271,6 +291,6 @@ class Watcher:
             return None
         self._updates_told = today
         if restart:
-            return Notice("updates", "Restart to finish updating", "Your computer has installed updates that need a restart to finish.")
-        plural = "s" if count != 1 else ""
-        return Notice("updates", "Updates waiting", f"{count} system update{plural} waiting to install.")
+            return Notice("updates", _("Restart to finish updating"), _("Your computer has installed updates that need a restart to finish."))
+        waiting = ngettext("{n} system update waiting to install.", "{n} system updates waiting to install.", count).format(n=count)
+        return Notice("updates", _("Updates waiting"), waiting)

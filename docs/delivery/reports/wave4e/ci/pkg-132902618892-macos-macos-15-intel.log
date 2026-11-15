@@ -1,0 +1,706 @@
+macos (macos-15-intel)	Set up job	﻿2026-11-15T17:55:35.9836460Z Current runner version: '2.338.2'
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9906330Z ##[group]Runner Image Provisioner
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9909190Z Hosted Compute Agent
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9910890Z Version: 20260819.586
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9912670Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9914760Z Build Date: 2026-08-18T23:20:18Z
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9916740Z Worker ID: {72e24211-416c-4723-997e-ff7d7ca11602}
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9918740Z Azure Region: westus
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9920490Z ##[endgroup]
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9926310Z ##[group]Operating System
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9928330Z macOS
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9929980Z 15.7.9
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9931540Z 24G830
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9933580Z ##[endgroup]
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9935350Z ##[group]Runner Image
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9937280Z Image: macos-15
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9939150Z Version: 20260824.0482.1
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9943510Z Included Software: https://github.com/actions/runner-images/blob/macos-15/20260824.0482/images/macos/macos-15-Readme.md
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9949240Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15%2F20260824.0482
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9955110Z ##[endgroup]
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9959010Z ##[group]GITHUB_TOKEN Permissions
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9965920Z Contents: read
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9967820Z Metadata: read
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9969700Z ##[endgroup]
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9975500Z Secret source: Actions
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9978510Z Cache mode: write
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:35.9981930Z Prepare workflow directory
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:36.4369460Z Prepare all required actions
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:36.4620220Z Getting action download info
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:37.2238500Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:38.2460430Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:39.3303640Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+macos (macos-15-intel)	Set up job	2026-11-15T17:55:40.5863920Z Complete job name: macos (macos-15-intel)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T17:55:41.1528210Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1532810Z with:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1534390Z   persist-credentials: false
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1536370Z   repository: RandyNorthrup/chatmon
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1585960Z   token: ***
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1588750Z   ssh-strict: true
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1591820Z   ssh-user: git
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1596570Z   clean: true
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1608260Z   sparse-checkout-cone-mode: true
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1617370Z   fetch-depth: 1
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1619560Z   fetch-tags: false
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1621290Z   show-progress: true
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1622980Z   lfs: false
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1628400Z   submodules: false
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1630140Z   set-safe-directory: true
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1635130Z   allow-unsafe-pr-checkout: false
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1652210Z env:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1656840Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:41.1663220Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:43.9949850Z Syncing repository: RandyNorthrup/chatmon
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:43.9981580Z ##[group]Getting Git version info
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.0309980Z Working directory is '/Users/runner/work/chatmon/chatmon'
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.0809240Z [command]/usr/local/bin/git version
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.0945730Z git version 2.55.0
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.1101230Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.1435440Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/89104341-901d-4e17-bb09-bf211d9db1ad/.gitconfig'
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.1617220Z Temporarily overriding HOME='/Users/runner/work/_temp/89104341-901d-4e17-bb09-bf211d9db1ad' before making global git config changes
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.1765230Z Adding repository directory to the temporary git global config as a safe directory
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.1914000Z [command]/usr/local/bin/git config --global --add safe.directory /Users/runner/work/chatmon/chatmon
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.2088300Z Deleting the contents of '/Users/runner/work/chatmon/chatmon'
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.3275740Z ##[group]Determining repository object format
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.4164880Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.4559150Z ##[group]Initializing the repository
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.4618510Z [command]/usr/local/bin/git init /Users/runner/work/chatmon/chatmon
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.5107440Z hint: Using 'master' as the name for the initial branch. This default branch name
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.5220220Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.5313860Z hint: to use in all of your new repositories, which will suppress this warning,
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.5620730Z hint: call:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.5723920Z hint:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.5787230Z hint: 	git config --global init.defaultBranch <name>
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.6808170Z hint:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.7715810Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.8189780Z hint: 'development'. The just-created branch can be renamed via this command:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.8327980Z hint:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.8925500Z hint: 	git branch -m <name>
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.9249080Z hint:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.9399550Z hint: Disable this message with "git config set advice.defaultBranchName false"
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:44.9496430Z Initialized empty Git repository in /Users/runner/work/chatmon/chatmon/.git/
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.1181720Z [command]/usr/local/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.2469530Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.2556350Z ##[group]Disabling automatic garbage collection
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.2650110Z [command]/usr/local/bin/git config --local gc.auto 0
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.3068280Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.3286910Z ##[group]Setting up auth
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.3310450Z Removing SSH command configuration
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.3375090Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4047920Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4521530Z Removing HTTP extra header
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.4612360Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:45.6651430Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:46.2798560Z Removing includeIf entries pointing to credentials config files
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:46.2876760Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:46.5292330Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:47.3355370Z [command]/usr/local/bin/git config --file /Users/runner/work/_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:47.3978540Z [command]/usr/local/bin/git config --local includeIf.gitdir:/Users/runner/work/chatmon/chatmon/.git.path /Users/runner/work/_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:47.4138050Z [command]/usr/local/bin/git config --local includeIf.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:47.4251410Z [command]/usr/local/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:47.4281160Z [command]/usr/local/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:47.4306050Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:47.4310590Z ##[group]Fetching the repository
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:55:47.4316820Z [command]/usr/local/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +eb8a996c4d85255e18e7180c2ed22dfebbcc333b:refs/remotes/pull/18/merge
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:03.7324080Z From https://github.com/RandyNorthrup/chatmon
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:03.7541070Z  * [new ref]         eb8a996c4d85255e18e7180c2ed22dfebbcc333b -> pull/18/merge
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:03.7741410Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:03.8180520Z ##[group]Determining the checkout info
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:03.8361930Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:03.8480780Z [command]/usr/local/bin/git sparse-checkout disable
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:03.8652960Z [command]/usr/local/bin/git config --local --unset-all extensions.worktreeConfig
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:04.1179410Z ##[group]Checking out the ref
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:04.1185440Z [command]/usr/local/bin/git checkout --progress --force refs/remotes/pull/18/merge
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:05.1151230Z Updating files:   2% (69/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:05.4824720Z Updating files:   3% (71/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:06.0069680Z Updating files:   4% (94/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:06.5247230Z Updating files:   5% (118/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:06.5881220Z Updating files:   6% (141/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:06.8510940Z Updating files:   7% (165/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:06.8896640Z Updating files:   8% (188/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.0027860Z Updating files:   9% (212/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.0781680Z Updating files:  10% (235/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.2424850Z Updating files:  11% (258/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.2740380Z Updating files:  12% (282/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:07.9428020Z Updating files:  13% (305/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.0488240Z Updating files:  14% (329/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.1136630Z Updating files:  14% (334/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.1875270Z Updating files:  15% (352/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.4084780Z Updating files:  16% (376/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.4393920Z Updating files:  17% (399/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.4971850Z Updating files:  18% (423/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.5097830Z Updating files:  19% (446/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.5550410Z Updating files:  20% (469/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.7839970Z Updating files:  21% (493/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.8844120Z Updating files:  22% (516/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:08.9604000Z Updating files:  23% (540/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.0609610Z Updating files:  24% (563/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.0613850Z Updating files:  25% (587/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.1095850Z Updating files:  26% (610/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.1235730Z Updating files:  26% (624/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.1341660Z Updating files:  27% (634/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.1573440Z Updating files:  28% (657/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.2168100Z Updating files:  29% (681/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.2890440Z Updating files:  30% (704/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.4413730Z Updating files:  31% (727/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.5424810Z Updating files:  32% (751/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.6346330Z Updating files:  33% (774/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.6604290Z Updating files:  34% (798/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.6753290Z Updating files:  35% (821/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.7058630Z Updating files:  36% (845/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.7260450Z Updating files:  37% (868/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.7662700Z Updating files:  38% (892/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.7895110Z Updating files:  39% (915/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:09.9865020Z Updating files:  40% (938/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.0550950Z Updating files:  41% (962/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.0855900Z Updating files:  41% (964/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.0982810Z Updating files:  42% (985/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.3439770Z Updating files:  43% (1009/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.4505460Z Updating files:  44% (1032/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.4651100Z Updating files:  45% (1056/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.4713410Z Updating files:  46% (1079/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.7899770Z Updating files:  47% (1103/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.8740520Z Updating files:  48% (1126/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.8804720Z Updating files:  49% (1150/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.8908760Z Updating files:  50% (1173/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.9153420Z Updating files:  51% (1196/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:10.9370620Z Updating files:  52% (1220/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.0088600Z Updating files:  53% (1243/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.1159000Z Updating files:  53% (1256/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.1502750Z Updating files:  54% (1267/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.1598330Z Updating files:  55% (1290/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.1913660Z Updating files:  56% (1314/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.2184940Z Updating files:  57% (1337/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.2357760Z Updating files:  58% (1361/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.4828530Z Updating files:  59% (1384/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.5637090Z Updating files:  60% (1407/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.5711690Z Updating files:  61% (1431/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.5873510Z Updating files:  62% (1454/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.6631770Z Updating files:  63% (1478/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.7001230Z Updating files:  64% (1501/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.7270200Z Updating files:  65% (1525/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.7761320Z Updating files:  66% (1548/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.8000140Z Updating files:  67% (1572/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.8547720Z Updating files:  68% (1595/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:11.9789140Z Updating files:  69% (1619/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.0014980Z Updating files:  70% (1642/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.1951250Z Updating files:  70% (1651/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.2098920Z Updating files:  71% (1665/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.2461410Z Updating files:  72% (1689/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.2622460Z Updating files:  73% (1712/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.3069240Z Updating files:  74% (1736/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.3716260Z Updating files:  75% (1759/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.5450570Z Updating files:  76% (1783/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.5663250Z Updating files:  77% (1806/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.5795720Z Updating files:  78% (1830/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.5975320Z Updating files:  79% (1853/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.6134940Z Updating files:  80% (1876/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.6314470Z Updating files:  81% (1900/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.6656050Z Updating files:  82% (1923/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.8475730Z Updating files:  83% (1947/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:12.9479550Z Updating files:  84% (1970/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.0487810Z Updating files:  85% (1994/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.0876890Z Updating files:  86% (2017/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.1017100Z Updating files:  87% (2041/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.1238480Z Updating files:  87% (2053/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.1423370Z Updating files:  88% (2064/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.2511590Z Updating files:  89% (2088/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.3623590Z Updating files:  90% (2111/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.4312150Z Updating files:  91% (2134/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.4647160Z Updating files:  92% (2158/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.7187130Z Updating files:  93% (2181/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.7673600Z Updating files:  94% (2205/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.8871090Z Updating files:  95% (2228/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:13.9636180Z Updating files:  96% (2252/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.0645030Z Updating files:  97% (2275/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.2020380Z Updating files:  97% (2278/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.3043010Z Updating files:  98% (2299/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.3936550Z Updating files:  99% (2322/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.4394940Z Updating files: 100% (2345/2345)
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.4398430Z Updating files: 100% (2345/2345), done.
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.4745150Z HEAD is now at eb8a996 Merge 45a17b37fb25590a62fe3391379f7c8d2870da29 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.7205400Z ##[endgroup]
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:14.9433360Z [command]/usr/local/bin/git log -1 --format=%H
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:15.0086270Z eb8a996c4d85255e18e7180c2ed22dfebbcc333b
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:15.2257180Z ##[group]Removing auth
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:15.3279830Z Removing SSH command configuration
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:15.3480750Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:15.4803740Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:15.5223460Z Removing HTTP extra header
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:15.6227700Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:15.7008590Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.0271910Z Removing includeIf entries pointing to credentials config files
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.1284770Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.2290200Z includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.2758960Z includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.3857350Z includeif.gitdir:/github/workspace/.git.path
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.4523680Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.6251550Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.7474710Z /Users/runner/work/_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.8032100Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-1207f340\-a84c\-4edf\-ac36\-0b112b7115f1\.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.9020390Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:16.9750960Z /Users/runner/work/_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.1077740Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-1207f340\-a84c\-4edf\-ac36\-0b112b7115f1\.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.2090000Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.2190900Z /github/runner_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.2667740Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-1207f340\-a84c\-4edf\-ac36\-0b112b7115f1\.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.3151010Z [command]/usr/local/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.3301210Z /github/runner_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.3750040Z [command]/usr/local/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-1207f340\-a84c\-4edf\-ac36\-0b112b7115f1\.config
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.5140630Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.7477820Z Removing credentials config '/Users/runner/work/_temp/git-credentials-1207f340-a84c-4edf-ac36-0b112b7115f1.config'
+macos (macos-15-intel)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T17:56:17.8722390Z ##[endgroup]
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T17:56:18.1065380Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1066820Z with:
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1067460Z   python-version: 3.14
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1069320Z   check-latest: false
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1086610Z   token: ***
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1087890Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1093270Z   update-environment: true
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1094100Z   allow-prereleases: false
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1096050Z   freethreaded: false
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1096750Z env:
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1099060Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:18.1100610Z ##[endgroup]
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:19.9113950Z ##[group]Installed versions
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:21.0349150Z Successfully set up CPython (3.14.7)
+macos (macos-15-intel)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T17:56:21.0406460Z ##[endgroup]
+macos (macos-15-intel)	Date the build by its commit	﻿2026-11-15T17:56:21.0898170Z ##[group]Run echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.0900490Z [36;1mecho "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"[0m
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1432360Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1433540Z env:
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1434310Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1435550Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1437330Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1439070Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1440760Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1442370Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Date the build by its commit	2026-11-15T17:56:21.1443770Z ##[endgroup]
+macos (macos-15-intel)	What the installers are built with, hash-locked	﻿2026-11-15T17:56:21.4732940Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-build.txt
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.4735280Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-build.txt[0m
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.4737520Z [36;1mpython -m pip install --require-hashes --no-build-isolation -r packaging/requirements.txt[0m
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5192310Z shell: /bin/bash -e {0}
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5193210Z env:
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5194000Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5195360Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5197240Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5199130Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5200950Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5234720Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5236200Z   SOURCE_DATE_EPOCH: 1794765319
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:21.5237310Z ##[endgroup]
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:30.6373230Z Ignoring cffi: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:30.7380140Z Ignoring colorama: markers 'os_name == "nt" or sys_platform == "win32"' don't match your environment
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:30.7852200Z Ignoring cryptography: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:30.8085570Z Ignoring jeepney: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:30.8605680Z Ignoring pycparser: markers 'implementation_name != "PyPy" and platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:30.8736320Z Ignoring pywin32-ctypes: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "win32"' don't match your environment
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:30.9044520Z Ignoring secretstorage: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:31.3760730Z Collecting build==1.6.1 (from -r packaging/requirements-build.txt (line 3))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:31.7583170Z   Downloading build-1.6.1-py3-none-any.whl (31 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:32.0622380Z Collecting certifi==2026.10.23 (from -r packaging/requirements-build.txt (line 7))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:32.1180710Z   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:33.7960280Z Collecting charset-normalizer==3.5.2 (from -r packaging/requirements-build.txt (line 113))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:33.9117060Z   Downloading charset_normalizer-3.5.2-cp314-cp314-macosx_10_15_universal2.whl (367 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.2420460Z Collecting docutils==0.23 (from -r packaging/requirements-build.txt (line 354))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.2840520Z   Downloading docutils-0.23-py3-none-any.whl (634 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.3163300Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 18.4 MB/s  0:00:00
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.4390320Z Collecting id==1.6.1 (from -r packaging/requirements-build.txt (line 358))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.4584410Z   Downloading id-1.6.1-py3-none-any.whl (14 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.5952260Z Collecting idna==3.20 (from -r packaging/requirements-build.txt (line 362))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.6208720Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.7374390Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-build.txt (line 366))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.7550570Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.8558220Z Collecting jaraco-classes==3.4.0 (from -r packaging/requirements-build.txt (line 370))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.8750900Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:34.9832640Z Collecting jaraco-context==6.1.2 (from -r packaging/requirements-build.txt (line 374))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.0016950Z   Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.1212180Z Collecting jaraco-functools==4.6.0 (from -r packaging/requirements-build.txt (line 378))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.2366560Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.4360890Z Collecting keyring==25.7.0 (from -r packaging/requirements-build.txt (line 388))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.4606760Z   Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.6244840Z Collecting markdown-it-py==4.2.0 (from -r packaging/requirements-build.txt (line 392))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.6615320Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.7680230Z Collecting mdurl==0.1.2 (from -r packaging/requirements-build.txt (line 396))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.8024290Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.9146780Z Collecting more-itertools==11.2.1 (from -r packaging/requirements-build.txt (line 400))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:35.9283950Z   Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.2728860Z Collecting nh3==0.3.7 (from -r packaging/requirements-build.txt (line 406))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.3091900Z   Downloading nh3-0.3.7-cp38-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl (1.5 MB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.4168030Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 17.5 MB/s  0:00:00
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.5443240Z Collecting packaging==26.3 (from -r packaging/requirements-build.txt (line 435))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.5793090Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.7491620Z Collecting pluggy==1.7.0 (from -r packaging/requirements-build.txt (line 443))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.7675490Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.8842280Z Collecting pygments==2.21.0 (from -r packaging/requirements-build.txt (line 451))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:36.9113470Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:37.0326260Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 10.1 MB/s  0:00:00
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:37.3186180Z Collecting pyproject-hooks==1.3.3 (from -r packaging/requirements-build.txt (line 458))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:37.3206190Z   Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:37.6714470Z Collecting pytest==9.2.0 (from -r packaging/requirements-build.txt (line 462))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:37.7101150Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:37.8804950Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-build.txt (line 468))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:37.9080280Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.0543880Z Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.0898080Z   Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.2535450Z Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.3021740Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.4798860Z Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.5146640Z   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.6104910Z Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.6236600Z   Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.8725750Z Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:38.8932100Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:39.7386570Z Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:39.8165240Z   Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:39.8950500Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 876.3/876.3 kB 12.2 MB/s  0:00:00
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:40.1912890Z Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:40.2562800Z   Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:40.5389390Z Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:40.5663510Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:40.8488140Z Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:40.8913830Z   Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:56:42.5597570Z Installing collected packages: urllib3, setuptools, rfc3986, pyproject-hooks, pygments, pluggy, packaging, nh3, more-itertools, mdurl, jaraco-context, iniconfig, idna, docutils, charset-normalizer, certifi, wheel, requests, readme-renderer, pytest, markdown-it-py, jaraco-functools, jaraco-classes, id, build, rich, requests-toolbelt, pytest-timeout, keyring, twine
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:03.9332290Z   Attempting uninstall: certifi
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:03.9390250Z     Found existing installation: certifi 2026.7.22
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:04.0586900Z     Uninstalling certifi-2026.7.22:
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:04.0683940Z       Successfully uninstalled certifi-2026.7.22
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:12.1113110Z 
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:12.1422080Z Successfully installed build-1.6.1 certifi-2026.10.23 charset-normalizer-3.5.2 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pyproject-hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:15.2814730Z Ignoring nuitka: markers 'sys_platform == "win32"' don't match your environment
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:15.5718840Z Collecting altgraph==0.17.5 (from -r packaging/requirements.txt (line 3))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:15.6883440Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:15.9684950Z Collecting macholib==1.16.4 (from -r packaging/requirements.txt (line 9))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:16.0306830Z   Downloading macholib-1.16.4-py2.py3-none-any.whl (38 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:16.0798680Z Requirement already satisfied: packaging==26.3 in /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages (from -r packaging/requirements.txt (line 16)) (26.3)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:16.7021980Z Collecting psutil==7.2.2 (from -r packaging/requirements.txt (line 22))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:16.7802760Z   Downloading psutil-7.2.2-cp36-abi3-macosx_10_9_x86_64.whl (129 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:17.2580470Z Collecting pyinstaller==6.22.3 (from -r packaging/requirements.txt (line 45))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:17.5867400Z   Downloading pyinstaller-6.22.3-py3-none-macosx_10_13_universal2.whl (1.1 MB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:17.8835810Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 3.0 MB/s  0:00:00
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:18.0662870Z Collecting pyinstaller-hooks-contrib==2026.9 (from -r packaging/requirements.txt (line 59))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:18.0892200Z   Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl (462 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:18.3714860Z Collecting pyqt6==6.11.0 (from -r packaging/requirements.txt (line 65))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:18.4041580Z   Downloading pyqt6-6.11.0-cp310-abi3-macosx_10_14_universal2.whl (12.4 MB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:19.3053750Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 14.4 MB/s  0:00:00
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:19.9114480Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements.txt (line 73))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:19.9549950Z   Downloading pyqt6_qt6-6.11.2-py3-none-macosx_10_14_x86_64.whl (70.5 MB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:23.2468630Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 70.5/70.5 MB 21.4 MB/s  0:00:03
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:24.6919910Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements.txt (line 83))
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:24.7317730Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-macosx_10_15_universal2.whl (113 kB)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:24.7444840Z Requirement already satisfied: setuptools==84.2.1 in /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages (from -r packaging/requirements.txt (line 115)) (84.2.1)
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:25.1239410Z Installing collected packages: pyqt6-qt6, altgraph, pyqt6-sip, pyinstaller-hooks-contrib, psutil, macholib, pyqt6, pyinstaller
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:53.7425550Z 
+macos (macos-15-intel)	What the installers are built with, hash-locked	2026-11-15T17:57:53.7766390Z Successfully installed altgraph-0.17.5 macholib-1.16.4 psutil-7.2.2 pyinstaller-6.22.3 pyinstaller-hooks-contrib-2026.9 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0
+macos (macos-15-intel)	Run python packaging/build.py macos	﻿2026-11-15T17:57:54.3331750Z ##[group]Run python packaging/build.py macos
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3334750Z [36;1mpython packaging/build.py macos[0m
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3868240Z shell: /bin/bash -e {0}
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3869360Z env:
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3871810Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3875000Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3877270Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3879210Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3881440Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3883220Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3886720Z   SOURCE_DATE_EPOCH: 1794765319
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.3887670Z ##[endgroup]
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:54.9727990Z + /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m PyInstaller --noconfirm --clean --distpath /Users/runner/work/chatmon/chatmon/build/pyinstaller --workpath /Users/runner/work/chatmon/chatmon/build/pyinstaller-work /Users/runner/work/chatmon/chatmon/packaging/chatmon.spec
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.0279980Z 436 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.9
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.0461990Z 437 INFO: Python: 3.14.7
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.2794200Z 696 INFO: Platform: macOS-15.7.9-x86_64-i386-64bit-Mach-O
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.2964680Z 696 INFO: Python environment: /Library/Frameworks/Python.framework/Versions/3.14
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.3311840Z 744 INFO: Removing temporary files and cleaning cache in /Users/runner/Library/Application Support/pyinstaller
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.5165940Z 927 INFO: Module search paths (PYTHONPATH):
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.5252170Z ['/Users/runner/work/chatmon/chatmon',
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.5395430Z  '/Users/runner/work/chatmon/chatmon',
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.5648950Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python314.zip',
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.5901790Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14',
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.6011880Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/lib-dynload',
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.6078540Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages',
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.6175520Z  '/Users/runner/work/chatmon/chatmon/packaging/macos',
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:56.6336450Z  '/Users/runner/work/chatmon/chatmon']
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:57.9471290Z 2358 INFO: Appending 'datas' from .spec
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:57.9704400Z 2388 INFO: checking Analysis
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:57.9823040Z 2388 INFO: Building Analysis because Analysis-00.toc is non existent
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:57.9961950Z 2388 INFO: Looking for Python shared library...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:58.0179330Z 2435 INFO: Using Python shared library: /Library/Frameworks/Python.framework/Versions/3.14/Python
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:58.0334050Z 2435 INFO: Running Analysis Analysis-00.toc
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:58.0423560Z 2435 INFO: Target bytecode optimization level: 0
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:58.0484180Z 2435 INFO: Initializing module dependency graph...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:58.0622480Z 2442 INFO: Initializing module graph hook caches...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:57:58.1162230Z 2533 INFO: Analyzing modules for base_library.zip ...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:09.0005670Z 13373 INFO: Processing standard module hook 'hook-encodings.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:11.1610840Z 15527 INFO: Processing standard module hook 'hook-pickle.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:15.6466700Z 20064 INFO: Processing standard module hook 'hook-math.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:17.9390960Z 22356 INFO: Processing standard module hook 'hook-difflib.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:18.1025420Z 22515 INFO: Processing standard module hook 'hook-heapq.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:43.5271320Z 47937 INFO: Caching module dependency graph...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:43.9961370Z 48323 INFO: Analyzing /Users/runner/work/chatmon/chatmon/packaging/macos/entry.py
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:45.8626400Z 50262 INFO: Processing standard module hook 'hook-sysconfig.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:46.1252570Z 50470 INFO: Processing standard module hook 'hook-_osx_support.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:46.2278650Z 50517 INFO: Processing standard module hook 'hook-_ctypes.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:58:49.0863220Z 53476 INFO: Processing standard module hook 'hook-PyQt6.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:00.4881520Z 64900 INFO: Processing standard module hook 'hook-PyQt6.QtCore.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:11.2472870Z 75663 INFO: Processing standard module hook 'hook-PyQt6.QtGui.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:14.8993050Z 79314 INFO: Processing standard module hook 'hook-PyQt6.QtNetwork.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:31.7064720Z 96109 INFO: Processing standard module hook 'hook-PyQt6.QtWidgets.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:33.4777070Z 97870 INFO: Processing standard module hook 'hook-platform.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:33.7306420Z 98145 INFO: Processing standard module hook 'hook-xml.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:34.2526420Z 98665 INFO: Processing standard module hook 'hook-PyQt6.QtDBus.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:42.4947130Z 106900 INFO: Processing standard module hook 'hook-psutil.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:52.3273910Z 116723 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:54.7684180Z 119186 INFO: Processing standard module hook 'hook-PyQt6.QtMultimedia.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:56.4148870Z 120832 INFO: Processing module hooks (post-graph stage)...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:57.8005080Z 122212 INFO: Performing binary vs. data reclassification (243 entries)
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.3224050Z 122703 INFO: Looking for ctypes DLLs
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.4038380Z 122814 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/a11y.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.4631970Z 122871 WARNING: Library oleaut32 required via ctypes not found
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.4720310Z 122876 WARNING: Library uiautomationcore required via ctypes not found
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.6411490Z 123027 WARNING: Ignoring /System/Library/Frameworks/CoreGraphics.framework/CoreGraphics imported from /Users/runner/work/chatmon/chatmon/chatmon/presence.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.6602530Z 123027 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/presence.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.7315800Z 123078 WARNING: Library ole32 required via ctypes not found
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.7507050Z 123111 WARNING: Library combase required via ctypes not found
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.7509590Z 123113 WARNING: Library ole32 required via ctypes not found
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.7782410Z 123191 WARNING: Ignoring /System/Library/Frameworks/ServiceManagement.framework/ServiceManagement imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.7850200Z 123191 WARNING: Ignoring /System/Library/Frameworks/CoreFoundation.framework/CoreFoundation imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.7857180Z 123191 WARNING: Ignoring /System/Library/Frameworks/CoreGraphics.framework/CoreGraphics imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.7927750Z 123191 WARNING: Ignoring /System/Library/Frameworks/Foundation.framework/Foundation imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:58.7994170Z 123191 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:59.7606680Z 124167 WARNING: Library ole32 required via ctypes not found
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:59.7630250Z 124173 WARNING: Library shell32 required via ctypes not found
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T17:59:59.7851370Z 124196 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/sound.py - only basenames are supported with ctypes imports!
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:00.8346210Z 125196 INFO: Analyzing run-time hooks ...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:00.8868170Z 125203 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:00.9014490Z 125214 INFO: Including run-time hook 'pyi_rth_pyqt6.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:00.9057920Z 125279 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/pre_find_module_path'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:00.9384690Z 125282 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:00.9577700Z 125293 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:00.9867880Z 125403 INFO: Creating base_library.zip...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:01.0940270Z 125505 INFO: Looking for dynamic libraries
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:06.2031780Z 130604 INFO: Warnings written to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/warn-chatmon.txt
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:06.3445370Z 130748 INFO: Graph cross-reference written to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/xref-chatmon.html
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:08.6850420Z 133101 INFO: checking PYZ
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:08.7093470Z 133101 INFO: Building PYZ because PYZ-00.toc is non existent
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:08.7275810Z 133101 INFO: Building PYZ (ZlibArchive) /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/PYZ-00.pyz
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.4940290Z 134855 INFO: Building PYZ (ZlibArchive) /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/PYZ-00.pyz completed successfully.
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.5453230Z 134888 INFO: EXE target arch: x86_64
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.5628610Z 134888 INFO: Code signing identity: None
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.5747190Z 134919 INFO: checking PKG
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.5800910Z 134920 INFO: Building PKG because PKG-00.toc is non existent
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.5834350Z 134920 INFO: Building PKG (CArchive) Chatmon.pkg
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.5935110Z 134968 INFO: Building PKG (CArchive) Chatmon.pkg completed successfully.
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.5971130Z 134970 INFO: Bootloader /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/bootloader/Darwin-64bit/runw
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.5974640Z 134971 INFO: checking EXE
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.6068780Z 134971 INFO: Building EXE because EXE-00.toc is non existent
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.6222430Z 134971 INFO: Building EXE from EXE-00.toc
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.6454310Z 134971 INFO: Copying bootloader EXE to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/Chatmon
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:10.7462090Z 134973 INFO: Converting EXE to target arch (x86_64)
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.2652400Z 141683 INFO: Removing signature(s) from EXE
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.4405260Z 141858 INFO: Modifying Mach-O image UUID(s) in EXE
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.4581970Z 141876 INFO: Appending PKG archive to EXE
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.4726340Z 141888 INFO: Fixing EXE headers for code signing
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.5583220Z 141969 INFO: Re-signing the EXE
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.7759190Z 142185 INFO: Building EXE from EXE-00.toc completed successfully.
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.7853270Z 142196 INFO: checking COLLECT
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.7901140Z 142197 INFO: Building COLLECT because COLLECT-00.toc is non existent
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:00:17.8001380Z 142197 INFO: Building COLLECT COLLECT-00.toc
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:10.0108200Z 194423 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:10.0485930Z 194460 INFO: checking BUNDLE
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:10.0572970Z 194460 INFO: Building BUNDLE because BUNDLE-00.toc is non existent
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:10.0791990Z 194461 INFO: Building BUNDLE BUNDLE-00.toc
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:34.0373330Z 218435 INFO: Signing the BUNDLE...
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:39.3832810Z 223796 INFO: Building BUNDLE BUNDLE-00.toc completed successfully.
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:39.4097970Z 223815 INFO: Build complete! The results are available in: /Users/runner/work/chatmon/chatmon/build/pyinstaller
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:40.0730370Z + codesign --force --deep --sign - /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:40.2059790Z /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app: replacing existing signature
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:44.6339510Z + ditto /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app /Users/runner/work/chatmon/chatmon/build/macos/root/Applications/Chatmon.app
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:46.4565060Z + pkgbuild --analyze --root /Users/runner/work/chatmon/chatmon/build/macos/root /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:48.4923320Z pkgbuild: Inferring bundle components from contents of /Users/runner/work/chatmon/chatmon/build/macos/root
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:48.4938560Z pkgbuild: Writing new component property list to /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:48.4963740Z + plutil -replace 0.BundleIsRelocatable -bool NO /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:48.5958030Z + plutil -replace 0.BundleOverwriteAction -string upgrade /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:01:48.6804080Z + pkgbuild --root /Users/runner/work/chatmon/chatmon/build/macos/root --component-plist /Users/runner/work/chatmon/chatmon/build/macos/component.plist --identifier io.github.randynorthrup.chatmon --version 0.10.0 --ownership recommended --install-location / --scripts /Users/runner/work/chatmon/chatmon/build/macos/scripts /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.2627760Z pkgbuild: Reading components from /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.2732060Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtGui.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.2908360Z pkgbuild: Adding component at Applications/Chatmon.app
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.3081990Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtMultimedia.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.3241360Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtSvg.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.3763130Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtPdf.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.3855640Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtCore.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.3961840Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtConcurrent.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.4235670Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtDBus.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.4366650Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtWidgets.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.4559630Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtNetwork.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.4700570Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/Python.framework
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.4819530Z pkgbuild: Adding top-level postinstall script
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.4946490Z pkgbuild: Wrote package to /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:17.5180790Z + productbuild --synthesize --package /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:18.5696250Z productbuild: Wrote synthesized distribution to /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:18.6255570Z + productbuild --distribution /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml --package-path /Users/runner/work/chatmon/chatmon/build/macos /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-intel.pkg
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:20.1760820Z productbuild: Wrote product to /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-intel.pkg
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:20.1799680Z + ditto /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app /Users/runner/work/chatmon/chatmon/build/macos/dmg/Chatmon.app
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:21.8791360Z + hdiutil create -volname Chatmon -srcfolder /Users/runner/work/chatmon/chatmon/build/macos/dmg -ov -format UDZO /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-intel.dmg
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:48.6933470Z created: /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-intel.dmg
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:48.6960300Z /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-intel.pkg  67 MB
+macos (macos-15-intel)	Run python packaging/build.py macos	2026-11-15T18:02:48.6966660Z /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-intel.dmg  73 MB
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	﻿2026-11-15T18:02:48.7411100Z ##[group]Run arch=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo intel)
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7414050Z [36;1march=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo intel)[0m
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7417740Z [36;1mtag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq "[.[] | select((.draft | not) and any(.assets[]; .name | endswith(\"-macos-$arch.pkg\")))][0].tag_name")[0m
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7422460Z [36;1mgh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-macos-$arch.pkg" --dir "$RUNNER_TEMP/last"[0m
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7425140Z [36;1msudo installer -pkg "$RUNNER_TEMP"/last/*.pkg -target /[0m
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7577990Z shell: /bin/bash -e {0}
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7579130Z env:
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7580610Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7581860Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7584380Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7586920Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7588600Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7590420Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7592220Z   SOURCE_DATE_EPOCH: 1794765319
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7603300Z   GH_TOKEN: ***
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:48.7604290Z ##[endgroup]
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:55.4505670Z installer: Package name is Chatmon
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:55.4508540Z installer: Installing at base path /
+macos (macos-15-intel)	The last release's .pkg, for this one to upgrade	2026-11-15T18:02:55.4509780Z installer: The install was successful.
+macos (macos-15-intel)	Install this .pkg over it, run it	﻿2026-11-15T18:02:55.4680850Z ##[group]Run sudo installer -pkg dist/Chatmon-*.pkg -target /
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4682500Z [36;1msudo installer -pkg dist/Chatmon-*.pkg -target /[0m
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4683820Z [36;1mtest -x /usr/local/bin/chatmon[0m
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4686440Z [36;1mpython packaging/build.py smoke /usr/local/bin/chatmon /Applications/Chatmon.app/Contents/MacOS/Chatmon --version "$(python packaging/build.py version)"[0m
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4810620Z shell: /bin/bash -e {0}
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4811550Z env:
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4812280Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4813740Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4815720Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4817550Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4819190Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4820800Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4822350Z   SOURCE_DATE_EPOCH: 1794765319
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:02:55.4823200Z ##[endgroup]
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:03:00.1912910Z installer: Package name is Chatmon
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:03:00.1916260Z installer: Upgrading at base path /
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:03:00.1917330Z installer: The upgrade was successful.
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:03:18.8200840Z /usr/local/bin/chatmon --version: 0.10.0
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:03:18.8332210Z it answered
+macos (macos-15-intel)	Install this .pkg over it, run it	2026-11-15T18:03:18.8462740Z it quit when asked: all good
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	﻿2026-11-15T18:03:18.9709770Z ##[group]Run app=/Applications/Chatmon.app
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9711570Z [36;1mapp=/Applications/Chatmon.app[0m
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9714850Z [36;1mtest -x "$app/Contents/Resources/install-update"[0m
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9725200Z [36;1m[ "$(stat -f %u "$app")" = 0 ] || { echo "Chatmon.app belongs to uid $(stat -f %u "$app"), not root"; exit 1; }[0m
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9729170Z [36;1mstatus=0[0m
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9738490Z [36;1m"$app/Contents/MacOS/Chatmon" verify-update macos missing.pkg missing.txt missing.sig || status=$?[0m
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9741590Z [36;1m[ "$status" = 3 ] || { echo "verify-update exited $status on files that aren't there, not 3 (refused)"; exit 1; }[0m
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9983600Z shell: /bin/bash -e {0}
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9984600Z env:
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9985390Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9986750Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9988910Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9991060Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9992810Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9994580Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9996000Z   SOURCE_DATE_EPOCH: 1794765319
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:18.9997280Z ##[endgroup]
+macos (macos-15-intel)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-15T18:03:20.3563850Z The update wasn't installed: couldn't read missing.txt (No such file or directory).
+macos (macos-15-intel)	The .dmg holds the app	﻿2026-11-15T18:03:20.4587610Z ##[group]Run mount=$(mktemp -d)
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.4590740Z [36;1mmount=$(mktemp -d)[0m
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.4592360Z [36;1mhdiutil attach -nobrowse -readonly -mountpoint "$mount" dist/Chatmon-*.dmg[0m
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.4594720Z [36;1mtest -x "$mount/Chatmon.app/Contents/MacOS/Chatmon" && test -L "$mount/Applications"[0m
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.4597140Z [36;1mhdiutil detach "$mount"[0m
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5033630Z shell: /bin/bash -e {0}
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5034570Z env:
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5035380Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5036740Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5038610Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5042840Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5044660Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5046420Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5048090Z   SOURCE_DATE_EPOCH: 1794765319
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.5049050Z ##[endgroup]
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:20.9107010Z Checksumming Protective Master Boot Record (MBR : 0)…
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:21.1480640Z Protective Master Boot Record (MBR :: verified   CRC32 $DF53F686
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:21.1865210Z Checksumming GPT Header (Primary GPT Header : 1)…
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:22.0654890Z  GPT Header (Primary GPT Header : 1): verified   CRC32 $B7C1295E
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:22.0658820Z Checksumming GPT Partition Data (Primary GPT Table : 2)…
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:22.0699410Z GPT Partition Data (Primary GPT Tabl: verified   CRC32 $C9DB82DF
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:22.0703150Z Checksumming  (Apple_Free : 3)…
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:23.0275520Z                     (Apple_Free : 3): verified   CRC32 $00000000
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:23.0283880Z Checksumming disk image (Apple_APFS : 4)…
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:24.5872430Z          disk image (Apple_APFS : 4): verified   CRC32 $383507CD
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:24.5892030Z Checksumming  (Apple_Free : 5)…
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:25.0188650Z                     (Apple_Free : 5): verified   CRC32 $00000000
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:25.0345990Z Checksumming GPT Partition Data (Backup GPT Table : 6)…
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:25.0393950Z GPT Partition Data (Backup GPT Table: verified   CRC32 $C9DB82DF
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:25.0456060Z Checksumming GPT Header (Backup GPT Header : 7)…
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:26.1339010Z   GPT Header (Backup GPT Header : 7): verified   CRC32 $5CC0D9AB
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:26.2356530Z verified   CRC32 $7174F86C
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:27.9978200Z /dev/disk2          	GUID_partition_scheme          	
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:28.0841330Z /dev/disk2s1        	Apple_APFS                     	
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:28.0847450Z /dev/disk3          	EF57347C-0000-11AA-AA11-0030654	
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:28.0850090Z /dev/disk3s1        	41504653-0000-11AA-AA11-0030654	/private/var/folders/20/jp1_0n3n7kndh6rnbqb5344m0000gn/T/tmp.vn773Ge2Cj
+macos (macos-15-intel)	The .dmg holds the app	2026-11-15T18:03:28.5166140Z "disk2" ejected.
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	﻿2026-11-15T18:03:28.6195090Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6196910Z with:
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6197830Z   name: package-macos-macos-15-intel
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6199000Z   path: dist/*.pkg
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	dist/*.dmg
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6200060Z   if-no-files-found: error
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6200960Z   compression-level: 6
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6201790Z   overwrite: false
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6202850Z   include-hidden-files: false
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6203790Z   archive: true
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6204630Z env:
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6205340Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6206690Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6208610Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6210810Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6212700Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6214410Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.7/x64
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6216070Z   SOURCE_DATE_EPOCH: 1794765319
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:28.6216960Z ##[endgroup]
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:29.8144170Z With the provided path, there will be 2 files uploaded
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:29.8155200Z Artifact name is valid!
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:29.8160160Z Root directory input is valid!
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:30.2581180Z Uploading artifact: package-macos-macos-15-intel.zip
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:30.2975760Z Beginning upload of artifact content to blob storage
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:32.3263520Z Uploaded bytes 8388608
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:32.7391090Z Uploaded bytes 16777216
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:33.4628570Z Uploaded bytes 25165824
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:34.5495770Z Uploaded bytes 33554432
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:35.4052770Z Uploaded bytes 41943040
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:36.0307310Z Uploaded bytes 50331648
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:36.6854580Z Uploaded bytes 58720256
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:37.6869330Z Uploaded bytes 67108864
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:38.9288840Z Uploaded bytes 75497472
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:39.8456960Z Uploaded bytes 83886080
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:40.8911670Z Uploaded bytes 92274688
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:41.6966260Z Uploaded bytes 100663296
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:42.5789130Z Uploaded bytes 109051904
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:43.4608160Z Uploaded bytes 117440512
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:44.2080760Z Uploaded bytes 125829120
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:45.0196310Z Uploaded bytes 134217728
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:45.6831180Z Uploaded bytes 142606336
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:45.9214230Z Uploaded bytes 145335860
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:45.9781530Z Finished uploading artifact content to blob storage!
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:45.9791250Z SHA256 digest of uploaded artifact is 6a2d7958844b12433081c3cdf4ad3a8ed3a070e81e5cffd1e495e72a9b2eae25
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:45.9796020Z Finalizing artifact upload
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:46.4531020Z Artifact package-macos-macos-15-intel successfully finalized. Artifact ID 14172868952
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:46.4554390Z Artifact package-macos-macos-15-intel has been successfully uploaded! Final size is 145335860 bytes. Artifact ID is 14172868952
+macos (macos-15-intel)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-15T18:03:46.4560380Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43743804716/artifacts/14172868952
+macos (macos-15-intel)	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T18:03:46.4933040Z Post job cleanup.
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T18:03:47.1502270Z Post job cleanup.
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.4785080Z [command]/usr/local/bin/git version
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.5008400Z git version 2.55.0
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.5918390Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/22ad24ad-c5ec-401a-ae54-71c5e238bee4/.gitconfig'
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.5932740Z Temporarily overriding HOME='/Users/runner/work/_temp/22ad24ad-c5ec-401a-ae54-71c5e238bee4' before making global git config changes
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.5956830Z Adding repository directory to the temporary git global config as a safe directory
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.6072770Z [command]/usr/local/bin/git config --global --add safe.directory /Users/runner/work/chatmon/chatmon
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.6098500Z Removing SSH command configuration
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.6102790Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.6865420Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.9603940Z Removing HTTP extra header
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.9608800Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:47.9796760Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:48.3514400Z Removing includeIf entries pointing to credentials config files
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:48.3517180Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-15-intel)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T18:03:48.3521250Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-15-intel)	Complete job	﻿2026-11-15T18:03:49.0456210Z Cleaning up orphan processes

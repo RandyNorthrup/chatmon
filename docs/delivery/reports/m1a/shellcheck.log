@@ -1,0 +1,7 @@
+$ shellcheck -s sh <each script, as an LF copy>   (version: 0.11.0)
+== packaging/linux/install-update
+== packaging/linux/test-install-update.sh
+== packaging/macos/install-update
+== packaging/macos/scripts/postinstall
+== chatmon/updates.py: _MACOS_ROOT
+exit 0

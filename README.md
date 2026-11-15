@@ -30,7 +30,7 @@
 
 ## Meet the chatmons
 
-Pick one under **Companion** in the menu; it changes on the spot. Each has the same twelve animations,
+Pick one under **Appearance › Companion** in the menu; it changes on the spot. Each has the same twelve animations,
 does everything the others do, and talks in chat bubbles of its own.
 
 <table>
@@ -52,15 +52,19 @@ does everything the others do, and talks in chat bubbles of its own.
   server on your own computer (Ollama, LM Studio, llama.cpp, vLLM), or an API: Anthropic, OpenAI,
   Gemini, xAI, Meta, Mistral, DeepSeek, Groq, Together, Fireworks, Cerebras, Perplexity, OpenRouter,
   Amazon Bedrock, Azure, or anything that speaks the OpenAI or Anthropic API. Pick the model, how hard
-  it thinks, and whether it thinks at all, right from the menu.
+  it thinks, and whether it thinks at all, right from the menu. Answers appear as they're written, and
+  a shortcut (Ctrl+Alt+Space; Ctrl+Shift+Space on macOS) opens the ask box from any app.
 - **Keeps an eye on your coding agents.** It thinks while one works, flaps for attention when one needs
   your approval, and hops when it's done.
-- **Reminders and timers**, typed the way you'd say them: *remind me in 20m to stretch*, *remind me at
-  3pm to call Sam*, *timer 10 min for the pasta*, *focus 50*. No AI needed.
+- **Reminders and timers**, typed the way you'd say them: *remind me in 20m to stretch*, *remind me
+  friday at 3pm to call Sam*, *remind me every weekday at 9 to stand up*, *timer 10 min for the pasta*,
+  *focus 50*. A reminder waits until you press Done or snooze it. No AI needed.
 - **Breaks.** A nudge after an hour at the screen; locking the screen for five minutes counts as one.
 - **Heads-ups.** A low battery, a disk filling up, system updates waiting.
+- **Clipboard actions.** Explain, summarize, translate or fix what you copied, from the menu.
 - **Stays out of your way.** It wanders about, naps when you ignore it, peeks out from behind the
-  taskbar, and clicks go straight through everything but the chatmon itself.
+  taskbar, and clicks go straight through everything but the chatmon itself. Short sounds mark what
+  needs you, reminders and the end of a focus session; the rest are off until you turn them on.
 
 <br clear="right">
 
@@ -99,7 +103,11 @@ Download the one for your computer from the [latest release](https://github.com/
 
 Then start it the way you start anything else: the Start menu, Launchpad or Spotlight, or your desktop's
 app menu (or `chatmon` in a terminal). On macOS it lives in the menu bar, not the Dock. The Linux
-packages run on your system's Python and PyQt6, which apt and dnf install along with them.
+packages run on your system's Python and PyQt6, which apt and dnf install along with them. On Linux, sounds
+play through QtMultimedia where it's installed (`python3-pyqt6.qtmultimedia` on Debian and Ubuntu), or else
+pw-play, paplay or canberra-gtk-play; on Wayland the shortcut needs a desktop with the GlobalShortcuts portal
+(KDE Plasma, GNOME 48 and later, Hyprland), which has the last word on the keys (Settings shows the ones it
+chose), and elsewhere you can bind `chatmon ask` yourself.
 
 The Windows installer, and Chatmon's programs, are signed by Randy Northrup. For a while after a new
 version comes out, SmartScreen may still ask about it: check it names Randy Northrup, then **More info** and
@@ -137,7 +145,7 @@ battery levels on Windows and macOS, also install `psutil`.
 
 The first time, it asks what it should be called. Right-click it and tick **Start when I log in** to keep
 it around. On Windows that starts `chatmonw`, which installs alongside `chatmon` and runs it without a
-console window; run that way, Chatmon writes any problems to `chatmon.log` in its state folder. On macOS,
+console window; problems go to `chatmon.log` in its state folder (as they always do). On macOS,
 Chatmon.app becomes one of your Login Items, listed by name in System Settings › General › Login Items,
 where you can turn it off too (run from source or pip, a LaunchAgent starts it instead).
 
@@ -156,8 +164,8 @@ chatmon
 The first time it runs, Chatmon moves your settings, name and reminders over from the
 `penguin-companion` folders, switches **Start when I log in** to the new name, and swaps the hooks of
 any agents you connected for `chatmon` ones (Claude Code gets the `chatmon` plugin in place of
-`penguin-companion`). Until then the old hooks keep working: `penguin-companion` is still installed as
-another name for `chatmon`, for now.
+`penguin-companion`). Hooks connected under the old name stop working once the old package is gone,
+until Chatmon has run once and moved them.
 
 Claude Code and Muse Code can drop the old plugin as soon as the old package is uninstalled, before
 Chatmon gets to move it. If either shows unticked under **AI agents** afterwards, tick it again (your
@@ -170,27 +178,44 @@ own state folder, so upgrades can't take it away again.
 
 | You                              | It                                                       |
 | -------------------------------- | -------------------------------------------------------- |
-| Click it                         | Opens the ask box (or wakes up, or answers an alert)     |
+| Click it                         | Opens the ask box (or wakes up, or answers an alert, or brings back a bubble you missed) |
+| Press Ctrl+Alt+Space (Ctrl+Shift+Space on macOS) | Opens the ask box from any app; change it under Settings › Accessibility |
 | Drag it                          | Comes along; let go and it drops back to the taskbar     |
-| Right-click it, or the tray icon | The menu: ask, chats, remind, focus timer, reminders, brain, companion, bubble style, AI agents, walk, hide, help & updates, settings |
+| Right-click it, or the tray icon | The menu: ask, chats, remind, reminders (each can be edited, repeated or cancelled), focus and notes, clipboard, recent messages, brain, AI agents, appearance (companion, bubble style, walking, start at login), hide, settings, help & updates |
 | Click the tray icon              | Hides it, or brings it back                              |
+| Enter / Shift+Enter in the ask box | Sends / starts a new line; **Stop** ends an answer on its way, and closing the box lets it finish |
 | **+** in the ask box             | Attach files, a picture or text; or paste them (Ctrl+V, Cmd+V on macOS), or drop them on it |
-| **History** in the ask box       | Your chats: carry on with one, rename it, pin it to the top, save it as Markdown, or delete it |
+| **History** in the ask box, or **Chats › All chats…** | Your chats: carry on with one, rename it, pin it to the top, save it as Markdown, delete it, or search them all |
+| **Copy** under an answer or a code block | Copies it; **More** in a long bubble opens all of it in the ask box |
+| Ctrl+1 to Ctrl+9 while typing    | Presses a bubble's buttons                               |
 
 Besides questions, the ask box does a lot without any AI: reminders and timers, focus sessions, notes, a
 stopwatch, sums (*15% of 80*), unit conversions (*5 km in miles*), the time and date (*days until
 Christmas*), coins and dice (*roll 2d6*), passwords, and *status* (battery, disks, reminders, the brain in
-use). Ask it *help* for the full list. These are answered at once, marked as answered without AI, never
-sent anywhere, and never part of a chat; anything else goes to the brain you picked.
+use), and *agents* (what each coding agent is doing). Ask it *help* for the full list. These are answered
+at once, marked as answered without AI, never sent anywhere, and never part of a chat; anything else goes to
+the brain you picked. "in 2 hours" means two real hours, even across a clock change, and when it can't tell
+when you mean, it asks. After 15 minutes the ask box opens on a new chat and says so; *carry on* goes back.
 
-It keeps out of your way: bubbles wait while a full-screen app, a presentation, Do Not Disturb (KDE, GNOME)
-or Focus (Windows 11) is on, and the chatmon gives way to full-screen windows (something that needs you still
-comes through as a system notification; on macOS, where only an app signed with an Apple Developer ID may
-send one, it waits for you instead). Time away from the keyboard counts toward a break, locked or not,
-as does sleep. In power-saver mode it draws less often, and on Windows not at all while the screen is locked
-or off. Reduced motion and high contrast are followed unless you choose otherwise. With a screen reader
-running, bubbles and answers are read out (by Orca 49+ or VoiceOver themselves, or as a notification, which
-Narrator, NVDA and JAWS read), and typing a bubble's button in the chat presses it.
+It keeps out of your way: bubbles wait while a full-screen app, a presentation, Do Not Disturb (KDE, GNOME,
+dunst, mako, SwayNotificationCenter, xfce4-notifyd) or Focus (Windows 11) is on, and the chatmon gives way to
+full-screen windows (something that needs you still comes through as a system notification, with its buttons on
+Windows; on macOS, where only an app signed with an Apple Developer ID may send one, it waits for you instead).
+During a focus session, agents' messages wait and come as one bubble at the end. A bubble with buttons stays
+until you answer it, and bubbles stay long enough to read and wait while you point at them. Time away from the
+keyboard counts toward a break, locked or not, as does sleep. Its clock sleeps while nothing on it changes;
+nothing is drawn while the screen is locked, asleep or off, and less in power-saver mode, on battery (Linux) and
+in Low Power Mode (macOS).
+
+Accessibility: every bubble style meets WCAG AA contrast, the plain style follows your desktop's colours (high
+contrast included), every control shows a focus outline, and text follows your desktop's font size. High contrast
+and reduced motion are followed on every platform, and changes apply at once; with reduced motion the chatmon holds
+still. Overlay menus work from the keyboard. **Settings › Accessibility** has text size, how long bubbles stay (up
+to "until I close them"), sounds and their volume, the shortcut, less movement, the ask box as its own window for
+screen readers, and Magnifier following bubbles (Windows). With a screen reader running, bubbles and answers are
+read out: by Orca 49+ itself; by Narrator, NVDA and JAWS through UI Automation while Chatmon is in front, else a
+notification; by VoiceOver when you come back to Chatmon, or at once in macOS's own voice if you turn that on.
+Typing a bubble's button in the chat presses it.
 
 ## Brains: what answers your questions
 
@@ -199,11 +224,18 @@ Narrator, NVDA and JAWS read), and typing a bubble's button in the chat presses 
 - an AI command-line tool you're signed in to: `claude`, `codex`, `gemini`, `muse`, `grok`, `copilot`.
   It runs in an empty folder of its own with its tools off or read-only, so a question can't touch your
   files;
-- a model server running on this computer: Ollama, LM Studio, llama.cpp or vLLM, with whichever model it
-  has loaded.
+- a model server running on this computer under your own account: Ollama, LM Studio, llama.cpp or vLLM,
+  with whichever model it has loaded. One that belongs to someone else (a shared computer) is offered once,
+  and used only if you confirm it.
 
 **APIs are billed per question, so Automatic never picks one**, even if its key is set. Pick it under
-**Brain** in the menu, or name it in the settings.
+**Brain** in the menu, or name it in the settings. Its key can come from the environment variable in the
+table below, or be saved in your system's keychain under **Settings › AI** (Windows Credential Manager, the
+macOS Keychain, or the Secret Service: GNOME Keyring, KWallet, KeePassXC). **Test** there asks the brain
+"Say OK" and shows how long it took, or what went wrong.
+
+When a question fails, Chatmon shows what the provider said and offers **Try again**, **Ask another brain**
+and **Settings**. Each chat remembers its brain, and **Ask another brain** asks the last question again.
 
 ### Model, effort and thinking
 
@@ -239,8 +271,10 @@ checked on each provider's own pages on 10 November 2026.
 
 Change any of it, or add your own brain (any command that reads a question and prints an answer, or any
 endpoint for the Anthropic Messages, OpenAI Responses or OpenAI Chat Completions API, Azure included),
-in the settings file, which has examples. The Claude Code and Grok brains have been tried; the others
-follow their tools' documented options.
+in the settings file, which has examples. A command brain gets only the environment variables it needs:
+list the ones yours signs in with in `env = [...]`. `timeout_seconds` is how long a brain may go without a
+word, and `stream = false` is for a server that can't stream. The Claude Code and Grok brains have been tried;
+the others follow their tools' documented options.
 
 ## AI agents: let them tell your chatmon what they're doing
 
@@ -285,7 +319,10 @@ details.
 | `success`   | Fires a little beam                                                |
 | `error`     | Says something went wrong                                          |
 
-`chatmon say TEXT` and `chatmon remind in 10m to stretch` work from any script too.
+`chatmon say TEXT` and `chatmon remind in 10m to stretch` work from any script too (`chatmon remind` exits
+with status 2 when it can't tell when). `chatmon ask [TEXT]` opens the ask box, filled in, for a shortcut of
+your desktop's own, and `chatmon status` prints the brain, your reminders and what each agent is doing now.
+The tray's tooltip says it too, and a badge by your chatmon shows when one needs you.
 
 ## Privacy and security
 
@@ -293,27 +330,33 @@ details.
   sent to the brain you chose, and once a day, Chatmon asking GitHub for its latest release (it says only
   that it's Chatmon and which version; GitHub sees your IP address, as any website does). **Help & updates
   → Check for updates every day** turns that off.
-- **Your chats stay on this computer.** They're kept in Chatmon's state folder, one file each, readable by
-  you alone, so **Chats** (or **History** in the ask box) can bring one back to carry on. What's kept is
-  what you saw: your questions, the answers, and the names of what you attached, never the files, pictures
-  or text themselves. **Keep chat history** off keeps chats only until Chatmon quits; **Clear chat history**
-  deletes them all.
+- **Your chats stay on this computer.** They're kept in Chatmon's state folder (on Windows,
+  `%LOCALAPPDATA%\chatmon`, never the roaming profile), one file each, readable by you alone, so **Chats**
+  (or **History** in the ask box) can bring one back to carry on. What's kept is what you saw (your
+  questions, the answers and the names of what you attached) and the text you attached, so a chat carried
+  on after a restart still has it; never the pictures or PDFs you attached. **Keep chat
+  history** off writes nothing and keeps chats only until Chatmon quits; **Clear chat history** deletes them
+  all, attached text included.
 - **What you attach goes only to the brain you ask, and only what you picked.** Chatmon reads a file when
-  you attach it, never a folder, a device, a pipe or a network path, and nothing else on your computer.
-  Text is quoted in your question between markers no file can fake; pictures (made smaller first) and PDFs
-  go only to the brains that can read them. Attached text goes again with later questions only to the
-  brain you first gave it to, and only until Chatmon quits. A command-line AI tool that can read files
-  (Codex, Gemini CLI, Grok, Copilot) is given no attachments, since a file could tell it to read others;
-  Claude Code and Muse Code run with their tools off, so they get text. Each question to a command-line
-  tool runs in a new, empty folder of its own.
+  you attach it, never a folder, a device, a pipe, a network drive or share, or a remote mount, and nothing
+  else on your computer. Text is quoted in your question between markers no file can fake; pictures (made
+  smaller first) and PDFs go only to the brains that can read them. Attached text goes again with later
+  questions only to the brain you first gave it to. A command-line AI tool that can read files (Codex,
+  Gemini CLI, Grok, Copilot) is given no attachments, since a file could tell it to read others, and never
+  sees other brains' answers; Claude Code and Muse Code run with their tools off (Claude Code with no MCP
+  servers either), so they get text. Each question to a command-line tool runs in a new, empty folder of its
+  own, with only the environment variables that tool needs.
 - **An update installs only if it's the real one, and only when you say so.** The release's list of
   checksums (`SHA256SUMS.txt`) must be signed with Chatmon's release key, whose public half is built into
   Chatmon, and the download must match its checksum there; on Windows the installer must also be signed by
   Randy Northrup's own certificate from Microsoft's identity-verified code signing. Swapping files on the
   release page can't get past that. Then Chatmon asks; nothing installs until you click **Update now**, and
-  it's checked again first. On macOS and Linux the system asks for your password, and the root side installs
-  only a copy it made and checked itself. On a metered connection it doesn't download until you ask. A
-  Chatmon run from source, or a pip install of your own, only says an update is out.
+  it's checked again first. On Windows a revoked certificate is refused, and the installer runs from a copy
+  nothing can change between its check and its start. On macOS and Linux the system asks for your password,
+  and the root side checks the signed list and the version itself, with code only root can change, and
+  installs only a newer Chatmon from a copy it made. On a metered connection it doesn't download until you
+  ask. A Chatmon run from source, or a pip install of your own, only says an update is out. Each release file
+  also carries a build attestation: `gh attestation verify <file> --repo RandyNorthrup/chatmon`.
 - **A problem report is yours to send.** **Report a problem** opens GitHub's form in your browser with
   Chatmon's version, how it was installed, your system, Qt's version and the brain's name filled in, and
   nothing else: never your name, files, chats, keys or log. Nothing is sent until you submit it.
@@ -322,13 +365,14 @@ details.
   waiting for, and never your prompts.
 - **Connecting an agent is always your choice.** Your chatmon asks before it connects anything (and an
   update never connects one you left off). Each connection backs up the file it changes first
-  (`<file>.chatmon-backup-<time>`), touches only entries that run `chatmon` (or `penguin-companion`, its
-  old name), refuses to edit a file it can't parse, never replaces something of yours (Codex allows only
-  one `notify` program, Cline one script per event), and comes out again with `hooks disconnect`.
-  Uninstalling Chatmon on Windows disconnects every agent connected to it, so none is left running a
-  chatmon that's gone. It does that as the account that runs the uninstaller: if Chatmon was installed for
-  everyone and another account approves the uninstall, run `chatmon hooks disconnect all` as yourself
-  first. On Linux and macOS, run it yourself before removing Chatmon.
+  (`<file>.chatmon-backup-<time>`, readable by you alone, the newest five kept), touches only entries that
+  run `chatmon` (or `penguin-companion`, its old name), refuses to edit a file it can't parse, never replaces
+  something of yours (Codex allows only one `notify` program, Cline one script per event), and comes out
+  again with `hooks disconnect`. Uninstalling Chatmon on Windows disconnects every agent connected to it, so
+  none is left running a chatmon that's gone. It does that as the account that runs the uninstaller, and as
+  an administrator it only edits files, never starting an agent's programs: if Chatmon was installed for
+  everyone, Muse Code's plugin comes out only with `chatmon hooks disconnect muse` run as yourself. On Linux
+  and macOS, run `chatmon hooks disconnect all` yourself before removing Chatmon.
 - **Hooks can't get in an agent's way.** `notify` prints nothing, always succeeds, finishes within about a
   second even if the agent never closes its input, and returns at once if Chatmon isn't running. The AI
   tools Chatmon runs for your own questions carry `CHATMON_INTERNAL=1`, so their hooks don't make it
@@ -339,13 +383,24 @@ details.
 - **Only you can talk to it.** Hooks reach it through a local socket (a named pipe on Windows) open to
   your user account alone, in a folder of its own when there's no session runtime folder (on macOS, with a
   user name too long for that path to be a socket's address, the temporary folder macOS keeps for you
-  alone), never in shared `/tmp`; a hook sends only to a socket you own, and messages are size-limited. Pipe names on Windows are
-  shared by every user of the PC, so a hook first checks that the pipe's server runs as you, and Chatmon
-  claims its pipe name before it listens; if another user got there first, it won't listen and says so.
-- **Keys** are read from environment variables (or `${VAR}` in a header) and are never written to logs.
-  API keys only travel over HTTPS; plain HTTP is allowed only to a server on this computer, and a redirect
-  is never followed, so a key goes only where the settings say. Settings and state files, and the copies
-  made while connecting an agent, are readable by you alone.
+  alone), never in shared `/tmp`; a hook sends only to a socket you own, and messages and connections are
+  limited in size and number. Pipe names on Windows are shared by every user of the PC, so a hook opens the
+  pipe in a way that never lets its server act as you, then checks that the server runs as you; Chatmon claims
+  its pipe name before it listens, checks each connection comes from you, and if another user got there first,
+  it won't listen and says so.
+- **Keys** are read from environment variables (or `${VAR}` in a header) or your system's keychain, and are
+  never written to Chatmon's files, logs, backups or error messages. API keys only travel over HTTPS; plain
+  HTTP is allowed only to a server on this computer, and a redirect is never followed, so a key goes only
+  where the settings say. Chatmon's folders and files are readable by you alone from the moment they're made
+  (on Linux and macOS, folders 0700 and files 0600), and a damaged file is kept aside as `<name>.bad-<time>`
+  while the last good copy is used.
+- **The log is yours alone.** Chatmon writes what went wrong to `chatmon.log` in its state folder, readable
+  only by you (it starts over past 1 MB, keeping the last as `chatmon.log.old`); **Help & updates › Open the
+  log** opens it. It never holds keys, chats or anything you typed, and a provider that repeats your key in an
+  error has it blanked out first.
+- **Backups are yours to move.** **Back up** in Settings saves your settings changes, memory, notes,
+  reminders and, if you choose, chats to one file; never keys, and never `config.toml` (it can hold keys).
+  **Bring back** checks the whole file before it changes anything.
 - **What it notices about you stays with it.** How long since you last typed, whether a full-screen app,
   Do Not Disturb or Focus is on, and your accessibility settings are read from your own system, as you use it,
   and never kept or sent anywhere. To tell a full-screen app is in front, it looks only at the front
@@ -353,27 +408,45 @@ details.
   system keeps the chatmon out of a full-screen app's way itself; on macOS, whether that's happened is told
   from where windows are and whose they are, which needs no Screen Recording permission, never from what
   they show.
-- **The clipboard is read only when you paste** into the ask box: Ctrl+V (Cmd+V), **Paste** in its
-  right-click menu, or **+** › **Paste from the clipboard**. On macOS each comes through a menu of macOS's
-  own, so macOS, which can ask before an app reads the clipboard, knows it was you.
-- **Answers are only shown.** Links open in your browser only if they're web or mail links, and an image
-  in an answer is never loaded (it would have the app read the file it names).
+- **The clipboard is read only when you paste** into the ask box (Ctrl+V or Cmd+V, **Paste** in its
+  right-click menu, or **+** › **Paste from the clipboard**) or pick one of the menu's **Clipboard** actions.
+  On macOS each comes through a menu of macOS's own, so macOS, which can ask before an app reads the
+  clipboard, knows it was you.
+- **Answers are only shown.** Links open in your browser only if they're web or mail links. An image in an
+  answer is never loaded (it would have the app read the file it names, or reach a network share): it shows
+  as "[image]", and HTML in an answer shows as text.
+- **Windows, pip or source installs:** so its notifications carry its name, Chatmon registers it under
+  `HKCU\Software\Classes\AppUserModelId\RandyNorthrup.Chatmon` (the installer's Start menu shortcut does
+  that for installed copies).
 
-Found a security problem? Please open a private
-[security advisory](https://github.com/RandyNorthrup/chatmon/security/advisories/new).
+Found a security problem? See [SECURITY.md](SECURITY.md), which also says how to check a download, or open
+a private [security advisory](https://github.com/RandyNorthrup/chatmon/security/advisories/new).
 
 ## Settings
 
 **Settings…** in the menu (or *settings* in the chat) opens a window with all of it: the name, the companion,
-its size, walking and naps, bubble style, starting at login, updates, the brain, chats (how much of a chat a
-brain is sent, your instructions for every chat, and what it remembers about you), breaks and focus, and the
-heads-up thresholds. What you set there, and in the menu, is kept in `state.json` (in `~/.local/state/chatmon/`
-on Linux, in a `state` folder next to the settings elsewhere), with the reminders, notes and its spot on the
-screen, and wins over the settings file.
+its size, walking and naps, bubble style, starting at login, updates, the language, the brain and its key,
+chats (how much of a chat a brain is sent, your instructions for every chat, what it remembers about you, and
+**Back up** and **Bring back**), breaks, focus and reminders' snooze, the heads-up thresholds, and
+**Accessibility** (text size, how long bubbles stay, sounds, the shortcut, less movement, the ask box as a window,
+reading aloud, Magnifier). What you set there, and in the menu, is kept in `state.json` (in
+`~/.local/state/chatmon/` on Linux, in a `state` folder next to the settings elsewhere), with the reminders,
+notes and its spot on the screen, and wins over the settings file.
 
 The settings file, `config.toml`, has every setting explained, and is where your own brains go. It lives in
-`~/.config/chatmon/` on Linux, `~/Library/Application Support/chatmon/` on macOS and `%APPDATA%\chatmon\` on
-Windows. **Open the settings file** in Settings opens it; **Reload settings file** in the menu applies it.
+`~/.config/chatmon/` on Linux, `~/Library/Application Support/chatmon/` on macOS and `%LOCALAPPDATA%\chatmon\`
+on Windows (before 0.10 it was in `%APPDATA%`; it moves the first time 0.10 starts). A setting with a wrong
+value is named, one by one, and the rest still apply. **Open the settings file** in Settings opens it; **Reload
+settings file** under **Help & updates** applies it.
+
+## Translation
+
+Every word Chatmon shows can be translated. A translation is one file, `chatmon/locale/<language>.po` (for
+example `de.po` or `pt_BR.po`), made from the template `chatmon.pot` beside it with any gettext editor; the
+offline commands' phrases translate separately, in `chatmon/phrases/`. Chatmon uses the first of your
+system's languages it has a translation for, or the one you choose under **Settings** (or `language = "de"` in
+`config.toml`), from its next start. Times and dates follow your system's regional settings. Only English
+ships so far; [CONTRIBUTING.md](CONTRIBUTING.md) says how to add a language.
 
 ## How it's put together
 
@@ -395,9 +468,11 @@ showing you.
 - **Windows and macOS**: a window over the screen that takes the mouse only while it's over the chatmon.
 
 It's built to stay light: an animated bubble is drawn once per frame of its animation and only moved
-after that, each chatmon's animations are cut the first time they're shown, and only what changed on
-screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland desktop, and
-`CHATMON_DEBUG=1` logs the overlay's keyboard focus to the terminal, should either ever be needed.
+after that, and its edges rest after a loop; each chatmon's animations are cut the first time they're shown
+and kept once in memory; only what changed on screen is drawn again; and the stage's clock sleeps until the
+next thing it shows changes (about 100 wake-ups a minute standing idle), at your screen's own refresh rate
+while something moves. `CHATMON_STAGE=window` keeps the X11 way on a Wayland desktop, and `CHATMON_DEBUG=1`
+keeps the details in the log (the overlay's keyboard focus among them), should either ever be needed.
 
 | File                      | What                                                   |
 | ------------------------- | ------------------------------------------------------ |
@@ -412,21 +487,41 @@ screen is drawn again. `CHATMON_STAGE=window` keeps the X11 way on a Wayland des
 | `chatmon/sprites.py`      | One chatmon's animation strips, cut into frames for the screen |
 | `chatmon/bubble.py`       | Message bubbles and the ask box                        |
 | `chatmon/bubbleart.py`    | The painted bubbles and their moving edges             |
-| `chatmon/app.py`          | Ties it together: menu, tray, reminders, heads-ups, hooks |
-| `chatmon/brains.py`       | The AI brains, their models, effort and thinking       |
+| `chatmon/richtext.py`     | Markdown in the bubbles: made safe, then readable      |
+| `chatmon/highlight.py`    | Code in the bubbles, coloured                          |
+| `chatmon/app.py`          | Ties it together: tray, reminders, heads-ups, hooks, settings |
+| `chatmon/messages.py`     | Which bubble shows next, and which waits (no Qt; tested) |
+| `chatmon/asking.py`       | The question on its way to a brain, and the one waiting behind it |
+| `chatmon/menus.py`        | The menu, built when it opens                          |
+| `chatmon/commands.py`     | What it does by itself, without any AI                 |
+| `chatmon/chatswin.py`     | The Chats window, with search                          |
+| `chatmon/brains.py`       | The AI brains, their models, effort and thinking, and streaming answers |
+| `chatmon/keychain.py`     | API keys in your system's own keychain                 |
+| `chatmon/portowner.py`    | Whose program is listening on a port (model servers)   |
 | `chatmon/agents.py`       | Connecting coding agents                               |
 | `chatmon/winpipe.py`      | Whose named pipe it is, on Windows                     |
 | `chatmon/winlock.py`      | Hearing the screen lock and unlock, on Windows          |
 | `chatmon/updates.py`      | Finding, checking and installing updates               |
+| `chatmon/releasecheck.py` | Whether an update is a real, newer release: the check both sides of an update make |
 | `chatmon/ed25519.py`      | Checking the release key's signature (no extra libraries) |
 | `chatmon/changelog.py`    | What's new in each version (`changelog.md`)            |
 | `chatmon/report.py`       | Reporting a problem: GitHub's form, filled in          |
 | `chatmon/chats.py`        | Chats kept on this computer, to carry on with          |
+| `chatmon/backup.py`       | Back up and move: settings, memory, notes, reminders and chats in one file |
 | `chatmon/offline.py`      | What it answers without any AI                         |
+| `chatmon/reminders.py`    | Reminders: reading when you mean, repeating, snoozing  |
+| `chatmon/i18n.py`         | Every word it shows, in your language when there's a translation (`locale/`) |
+| `chatmon/localefmt.py`    | Times and dates written your system's way              |
+| `chatmon/phrases/`        | The offline commands' phrases, one file per language   |
 | `chatmon/presence.py`     | Away, quiet and accessibility, each platform's own way |
 | `chatmon/a11y.py`         | Screen readers: is one running, and having it read out |
+| `chatmon/winuia.py`       | Reading out through UI Automation, on Windows          |
 | `chatmon/linuxsession.py` | Hearing the screen lock and sleep, on Linux            |
-| `chatmon/macnative.py`    | What Chatmon tells macOS itself (Spaces, activation)   |
+| `chatmon/macnative.py`    | What Chatmon tells macOS itself (Spaces, activation, sleep and wake) |
+| `chatmon/hotkey.py`       | The global shortcut, each platform's own way (`shortcutportal.py` and `libdbus.py` on Wayland) |
+| `chatmon/sound.py`        | The sound cues (`sounds/`, made by `art/tools/sound-cues.py`) |
+| `chatmon/wintoast.py`     | Windows' own notifications (`winrt.py`: Windows Runtime through ctypes) |
+| `chatmon/wincaret.py`     | Letting Windows Magnifier find a new bubble            |
 | `chatmon/attachments.py`  | Files, pictures and text attached to a question        |
 | `chatmon/integrations/`   | The Claude Code plugin                                 |
 | `art/`                    | The characters, their image prompts, and the tools that cut and check the strips ([art/README.md](art/README.md)) |
@@ -436,13 +531,19 @@ The pictures and animations on this page are drawn by Chatmon's own code:
 `python art/tools/readme_media.py` makes them again (it needs `ffmpeg`).
 
 The overlay is tested on Hyprland 0.57; KDE Plasma 6.4 (Wayland) was tested with the window, before the
-overlay. CI runs the tests, including a headless run of the whole app and the overlay against a pretend
-compositor, on Linux, Windows and macOS with Python 3.11 and 3.15.
+overlay. CI runs the tests, including a headless run of the whole app, the overlay against a pretend
+compositor and on a real one (a headless sway, with AT-SPI and Orca where the system has them), on Linux (x64 and Arm), Windows and macOS with Python 3.11, 3.14 (what the installers carry) and
+3.15, and on Ubuntu 24.04, Debian 13 and Fedora 44 with their own PyQt6; it also type-checks with mypy for each
+platform and combines the coverage from each OS.
 
 ```sh
-python3 -m pip install pytest ruff
-python3 -m pytest && ruff check .
+python3 -m pip install -e ".[dev]"
+python3 -m pytest
+ruff check .
+mypy --platform linux    # or win32, darwin
 ```
+
+[CONTRIBUTING.md](CONTRIBUTING.md) has the rest, translations included.
 
 ## License
 

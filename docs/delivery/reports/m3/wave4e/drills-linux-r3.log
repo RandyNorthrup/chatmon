@@ -1,0 +1,271 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/plans-final/docs/delivery/reports/m3/wave4e/drill-spec-linux-r3.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-95785ll6
+copied 310 files
+
+=== drill M3-04-buffers (M3-04) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.66s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still ______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x714e84c4b390>
+
+    @linux_only
+    def test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still(qapp):
+        conn, server, _stage, surf, ids = _configured(qapp)
+        shm = surf.globals["wl_shm"][0]
+        created, callbacks = list(ids["buffers"]), list(ids["frames"])
+        assert len(created) == 1 and len(callbacks) == 1  # the configure's full paint, waiting for its frame
+    
+        def present():
+            surf.damage(QRegion(10, 10, 50, 50))
+            surf._present()
+            reqs = server.requests()
+            created.extend(new_buffers(reqs, shm))
+            callbacks.extend(wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME))
+            return reqs
+    
+        def frame_done():
+            server.send(callbacks[-1], 0, "u", 0)
+            conn.read()
+    
+        frame_done()
+        reqs = present()  # the first buffer is still the compositor's: a second one
+        assert len(surf._buffers) == 2 and named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+        frame_done()
+        reqs = present()  # both held: no third, the frame waits
+>       assert len(surf._buffers) == 2 and not named(reqs, shm, layer.SHM_CREATE_POOL) and not named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+E       assert (3 == 2)
+E        +  where 3 = len([<chatmon.layer.Buffer object at 0x714e84af63c0>, <chatmon.layer.Buffer object at 0x714e84cdce10>, <chatmon.layer.Buffer object at 0x714e84cdcf50>])
+E        +    where [<chatmon.layer.Buffer object at 0x714e84af63c0>, <chatmon.layer.Buffer object at 0x714e84cdce10>, <chatmon.layer.Buffer object at 0x714e84cdcf50>] = <chatmon.layer.LayerSurface object at 0x714e84ba8f50>._buffers
+
+tests/test_wayland.py:443: AssertionError
+1 failed in 0.67s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.65s
+
+=== drill M3-04-trim (M3-04) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.62s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still ______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7acea333f430>
+
+    @linux_only
+    def test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still(qapp):
+        conn, server, _stage, surf, ids = _configured(qapp)
+        shm = surf.globals["wl_shm"][0]
+        created, callbacks = list(ids["buffers"]), list(ids["frames"])
+        assert len(created) == 1 and len(callbacks) == 1  # the configure's full paint, waiting for its frame
+    
+        def present():
+            surf.damage(QRegion(10, 10, 50, 50))
+            surf._present()
+            reqs = server.requests()
+            created.extend(new_buffers(reqs, shm))
+            callbacks.extend(wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME))
+            return reqs
+    
+        def frame_done():
+            server.send(callbacks[-1], 0, "u", 0)
+            conn.read()
+    
+        frame_done()
+        reqs = present()  # the first buffer is still the compositor's: a second one
+        assert len(surf._buffers) == 2 and named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+        frame_done()
+        reqs = present()  # both held: no third, the frame waits
+        assert len(surf._buffers) == 2 and not named(reqs, shm, layer.SHM_CREATE_POOL) and not named(reqs, ids["surface"], layer.SURFACE_ATTACH)
+        server.send(created[0], layer.EV_BUFFER_RELEASE)
+        conn.read()
+        surf._present()
+        reqs = server.requests()
+        assert named(reqs, ids["surface"], layer.SURFACE_ATTACH) and not named(reqs, shm, layer.SHM_CREATE_POOL)  # the first, back
+        callbacks.extend(wayland.decode("n", p)[0] for p in named(reqs, ids["surface"], layer.SURFACE_FRAME))
+        frame_done()
+        server.send(created[1], layer.EV_BUFFER_RELEASE)
+        conn.read()
+        assert surf._trim_timer.isActive() and surf._trim_timer.interval() == layer.TRIM_AFTER_MS
+        surf._trim()  # still for a while
+        reqs = server.requests()
+>       assert len(surf._buffers) == 1 and surf._buffers[0] is surf._shown
+E       assert (2 == 1)
+E        +  where 2 = len([<chatmon.layer.Buffer object at 0x7acea33ea3c0>, <chatmon.layer.Buffer object at 0x7acea350ce10>])
+E        +    where [<chatmon.layer.Buffer object at 0x7acea33ea3c0>, <chatmon.layer.Buffer object at 0x7acea350ce10>] = <chatmon.layer.LayerSurface object at 0x7acea339cff0>._buffers
+
+tests/test_wayland.py:456: AssertionError
+1 failed in 0.63s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.65s
+
+=== drill M3-09-latin (M3-09) on chatmon/xkb.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_xkb.py::test_shortcuts_on_a_russian_layout_are_the_latin_keys tests/test_xkb.py::test_the_latin_symbol_comes_from_the_first_layout_that_has_one
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.50s
+-- red: exit 1
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_shortcuts_on_a_russian_layout_are_the_latin_keys _____________
+
+    def test_shortcuts_on_a_russian_layout_are_the_latin_keys():
+        kb = board("us,ru")
+        kb.set_modifiers(0, 0, 0, RUSSIAN)
+        assert kb.press(V).text == "м"  # typing is Russian
+        for code, qt in ((V, Qt.Key.Key_V), (C, Qt.Key.Key_C), (X, Qt.Key.Key_X), (A, Qt.Key.Key_A), (Z, Qt.Key.Key_Z)):
+            kb.set_modifiers(CTRL, 0, 0, RUSSIAN)
+            key = kb.press(code)
+>           assert (key.key, key.modifiers) == (qt.value, Qt.KeyboardModifier.ControlModifier), qt
+E           AssertionError: <Key.Key_V: 86>
+E           assert (1052, <Keybo...er: 67108864>) == (86, <Keyboar...er: 67108864>)
+E             
+E             At index 0 diff: 1052 != 86
+E             Use -v to get more diff
+
+tests/test_xkb.py:82: AssertionError
+________ test_the_latin_symbol_comes_from_the_first_layout_that_has_one ________
+
+    def test_the_latin_symbol_comes_from_the_first_layout_that_has_one():
+        """With Dvorak first, Ctrl and the key that is Dvorak's Q is Ctrl+Q, whatever the US layout after it says."""
+        kb = board("us,ru,us", "dvorak,,")
+        kb.set_modifiers(CTRL, 0, 0, RUSSIAN)
+>       assert kb.press(X).key == Qt.Key.Key_Q.value  # Dvorak has Q where the US has X
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 1063 == 81
+E        +  where 1063 = Key(key=1063, text='\x11', modifiers=<KeyboardModifier.ControlModifier: 67108864>).key
+E        +    where Key(key=1063, text='\x11', modifiers=<KeyboardModifier.ControlModifier: 67108864>) = press(45)
+E        +      where press = <chatmon.xkb.Keyboard object at 0x7986f20de0d0>.press
+E        +  and   81 = <Key.Key_Q: 81>.value
+E        +    where <Key.Key_Q: 81> = <enum 'Key'>.Key_Q
+E        +      where <enum 'Key'> = Qt.Key
+
+tests/test_xkb.py:115: AssertionError
+2 failed in 0.55s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.52s
+
+=== drill M3-09-overlay (M3-09) on chatmon/xkb.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout tests/test_overlay_stage.py::test_ctrl_v_pastes_under_a_russian_layout
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.92s
+-- red: exit 1
+  |     res = hook_impl.function(*args)
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 380, in pytest_cmdline_main
+  |     return wrap_session(config, _main)
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 375, in wrap_session
+  |     config._ensure_unconfigure()
+  |     ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 1377, in _ensure_unconfigure
+  |     self.hook.pytest_unconfigure(config=self)
+  |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+  |     return self._hookexec(
+  |            ~~~~~~~~~~~~~~^
+  |         self.name, self._hookimpls.copy(), call_kwargs, firstresult
+  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |     )
+  |     ^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+  |     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  |            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+  |     raise exception
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+  |     res = hook_impl.function(*args)
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 169, in pytest_unconfigure
+  |     collect_unraisable(config)
+  |     ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 77, in collect_unraisable
+  |     raise ExceptionGroup("multiple unraisable exception warnings", errors)
+  | ExceptionGroup: multiple unraisable exception warnings (2 sub-exceptions)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/usr/lib/python3.14/ast.py", line 46, in parse
+    |     return compile(source, filename, mode, flags,
+    |                    _feature_version=feature_version, optimize=optimize)
+    | ResourceWarning: unclosed <socket.socket fd=12, family=1, type=1, proto=0>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 63, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    |     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket fd=12, family=1, type=1, proto=0>: None
+    | 
+    +---------------- 2 ----------------
+    | Traceback (most recent call last):
+    |   File "/usr/lib/python3.14/ast.py", line 46, in parse
+    |     return compile(source, filename, mode, flags,
+    |                    _feature_version=feature_version, optimize=optimize)
+    | ResourceWarning: unclosed <socket.socket fd=13, family=1, type=1, proto=0>
+    | 
+    | The above exception was the direct cause of the following exception:
+    | 
+    | Traceback (most recent call last):
+    |   File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 63, in collect_unraisable
+    |     warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    |     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket fd=13, family=1, type=1, proto=0>: None
+    | 
+    +------------------------------------
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.91s
+
+=== drill M3-10-xserver (M3-10) on chatmon/clickthrough.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_clickthrough.py::test_the_x_server_gets_the_shape_in_device_pixels
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.55s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_the_x_server_gets_the_shape_in_device_pixels _______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x720a07c66990>
+
+    def test_the_x_server_gets_the_shape_in_device_pixels(qapp):
+        win = _XlibWindow()
+        try:
+            widget = _ScaledWidget(win.window, 2.0)
+            shape = clickthrough.XShapeInput(widget)
+            shape.update([(10, 20, 30, 4), (100, 120, 7, 9)])
+>           assert win.input_shape() == {(20, 40, 60, 8), (200, 240, 14, 18)}  # twice the logical rectangles, where they are
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert {(10, 20, 30,...0, 120, 7, 9)} == {(20, 40, 60,... 240, 14, 18)}
+E             
+E             Extra items in the left set:
+E             (10, 20, 30, 4)
+E             (100, 120, 7, 9)
+E             Extra items in the right set:
+E             (20, 40, 60, 8)
+E             (200, 240, 14, 18)
+E             Use -v to get more diff
+
+tests/test_clickthrough.py:210: AssertionError
+1 failed in 0.50s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.57s
+
+=== summary
+PASS M3-04-buffers
+PASS M3-04-trim
+PASS M3-09-latin
+PASS M3-09-overlay
+PASS M3-10-xserver

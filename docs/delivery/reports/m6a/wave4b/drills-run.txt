@@ -1,0 +1,8 @@
+
+=== summary
+PASS M6A-08-glob
+PASS M6A-01-warnings
+PASS M6A-05-qt
+PASS M6A-06-hash
+PASS M6A-06-stale
+PASS M6A-10-dev

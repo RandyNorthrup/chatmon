@@ -1,0 +1,17 @@
+{
+  "drills": [
+    {
+      "id": "W4-M5-06-help-not-translated",
+      "requirement": "M5-06.A2",
+      "file": "chatmon/offline.py",
+      "find": "name = mine[\"name\"] if isinstance(mine.get(\"name\"), str) else section[\"name\"]",
+      "replace": "name = section[\"name\"]",
+      "test": [
+        "tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood"
+      ],
+      "expect": [
+        "test_another_languages_phrases_and_help_with_english_always_understood"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "L-AC-12c-status-unheard",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "if len(args) >= 2 and args[0] == A11Y_STATUS and isinstance(args[1], dict):",
+      "replace": "if len(args) >= 2 and args[0] == \"org.a11y.StatusX\" and isinstance(args[1], dict):"
+    },
+    "command": [
+      "/var/tmp/m4a-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_with_at_spi2_cores_own_launcher_a_reader_registering_is_heard"
+    ],
+    "expected": [
+      "test_with_at_spi2_cores_own_launcher_a_reader_registering_is_heard"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "c999765525e0e7ec1e16eaade09b9ff9d61da07cc16e7403533353f664975dc9",
+    "mutated_exit": 1,
+    "observed": "______ test_with_at_spi2_cores_own_launcher_a_reader_registering_is_heard ______",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-12c-not-read",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "            if owned:  # AT-SPI's bus is up (again): what does it say?\n",
+      "replace": "            if not owned:  # AT-SPI's bus is up (again): what does it say?\n"
+    },
+    "command": [
+      "/var/tmp/m4a-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_a_launcher_before_262_says_so_and_262s_is_enabled_alone_doesnt"
+    ],
+    "expected": [
+      "test_a_launcher_before_262_says_so_and_262s_is_enabled_alone_doesnt"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "d5d364b2b28e570a70b6a27a732506fa783e4fb6f98297092f3898f887256a05",
+    "mutated_exit": 1,
+    "observed": "_ test_a_launcher_before_262_says_so_and_262s_is_enabled_alone_doesnt[on-a screen reader] _",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-12d-gnome-key",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "GNOME_SCREEN_READER = (\"org.gnome.desktop.a11y.applications\", \"screen-reader-enabled\")",
+      "replace": "GNOME_SCREEN_READER = (\"org.gnome.desktop.a11y.applications\", \"screen-magnifier-enabled\")"
+    },
+    "command": [
+      "/var/tmp/m4a-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_gnomes_setting_turns_the_screen_reader_on_and_off"
+    ],
+    "expected": [
+      "test_gnomes_setting_turns_the_screen_reader_on_and_off"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "cae9690a98cc2f07dd142bee861fd222bd43e7002cffde4219e7b6ee9e75b186",
+    "mutated_exit": 1,
+    "observed": "____________ test_gnomes_setting_turns_the_screen_reader_on_and_off ____________",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-12b-orca-unwatched",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "            self._watcher.serviceOwnerChanged.connect(self._owner_changed)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "/var/tmp/m4a-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_a11y.py::test_orca_is_found_and_asked_to_present_the_message",
+      "tests/test_screen_readers.py::test_with_at_spi2_cores_own_launcher_a_reader_registering_is_heard"
+    ],
+    "expected": [
+      "test_with_at_spi2_cores_own_launcher_a_reader_registering_is_heard"
+    ],
+    "status": "fail",
+    "reason": "mutated run exited 0, not 1 (tests failed)",
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "391f0789e2d1bda046a493c28fa4e534586f91e4ceea58c19b864f1d85a0d574",
+    "mutated_exit": 0,
+    "observed": "",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+  }
+]

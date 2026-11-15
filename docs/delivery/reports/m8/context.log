@@ -1,0 +1,18 @@
+# Observed 2026-11-14T23:51:37Z in /c/Users/Randy/Coding/chatmon-wt/m8
+$ verify-delivery.py --observe-context
+{
+  "platform": "windows",
+  "tools": {
+    "python": "3.14.10"
+  }
+}
+$ python -c 'import ... versions'
+pytest 9.2.0
+PyQt6 6.11.0 Qt 6.11.2
+mypy 2.4.1
+$ ruff --version
+ruff 0.17.4
+$ ver
+Microsoft Windows [Version 10.0.26200.9974]
+(c) Microsoft Corporation. All rights reserved.
+C:\Users\Randy\Coding\chatmon-wt\m8>

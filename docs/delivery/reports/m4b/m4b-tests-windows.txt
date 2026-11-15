@@ -1,0 +1,30 @@
+$ git rev-parse HEAD (plus the uncommitted fix)
+cac004798b3bfaab7c813d4cefda94abb654a94f
+ M chatmon/sound.py
+ M chatmon/wintoast.py
+ M tests/test_hotkey.py
+ M tests/test_sound.py
+ M tests/test_wintoast.py
+$ python -m pytest -q -p no:cacheprovider tests/test_hotkey.py tests/test_hotkey_portal.py tests/test_sound.py tests/test_wintoast.py tests/test_wincaret.py tests/test_m4b_imports.py tests/test_presence.py
+............................ssss..sssss..........ss........s.........s.. [ 70%]
+.........s....s...ss.........s                                           [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_hotkey.py:221: macOS only
+SKIPPED [1] tests\test_hotkey.py:238: macOS only
+SKIPPED [1] tests\test_hotkey.py:319: Linux with Xvfb
+SKIPPED [1] tests\test_hotkey.py:357: Linux with libX11
+SKIPPED [1] tests\test_hotkey_portal.py:95: Linux with dbus-run-session and dbus-monitor
+SKIPPED [1] tests\test_hotkey_portal.py:111: Linux with dbus-run-session and dbus-monitor
+SKIPPED [1] tests\test_hotkey_portal.py:119: Linux with dbus-run-session and dbus-monitor
+SKIPPED [2] tests\test_hotkey_portal.py:127: Linux with dbus-run-session and dbus-monitor
+SKIPPED [1] tests\test_sound.py:201: Linux only
+SKIPPED [1] tests\test_sound.py:232: macOS only
+SKIPPED [1] tests\test_wintoast.py:65: elsewhere than Windows
+SKIPPED [1] tests\test_wincaret.py:123: elsewhere than Windows
+SKIPPED [1] tests\test_presence.py:72: macOS only
+SKIPPED [1] tests\test_presence.py:141: no GNOME session here
+SKIPPED [1] tests\test_presence.py:218: macOS only
+SKIPPED [1] tests\test_presence.py:232: Qt before 6.10, or PyQt6 6.11, which wraps contrastPreferenceChanged as a method, not a signal
+SKIPPED [1] tests\test_presence.py:340: Linux with an X display
+84 passed, 18 skipped in 4.63s
+exit 0

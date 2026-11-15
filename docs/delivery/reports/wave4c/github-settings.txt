@@ -1,0 +1,20 @@
+# GitHub repository settings, observed 2026-11-15T15:40:22Z with read-only gh api calls (round three, 3586a0d)
+$ gh api repos/RandyNorthrup/chatmon --jq "{default_branch, security_and_analysis}"
+{"default_branch":"main","security_and_analysis":{"dependabot_security_updates":{"status":"enabled"},"secret_scanning":{"status":"enabled"},"secret_scanning_non_provider_patterns":{"status":"disabled"},"secret_scanning_push_protection":{"status":"enabled"},"secret_scanning_validity_checks":{"status":"disabled"}}}
+$ gh api repos/RandyNorthrup/chatmon/vulnerability-alerts -i   (204: Dependabot alerts on)
+HTTP/2.0 204 No Content
+$ gh api repos/RandyNorthrup/chatmon/private-vulnerability-reporting
+{"enabled":true}$ gh api repos/RandyNorthrup/chatmon/branches/main/protection --jq "{required_status_checks: .required_status_checks.contexts, count: (.required_status_checks.contexts|length)}"
+{"count":19,"required_status_checks":["coverage","distro (debian:trixie)","distro (fedora:44)","distro (ubuntu:24.04)","gnome","lint","test (macos-latest, 3.11)","test (macos-latest, 3.14)","test (macos-latest, 3.15)","test (ubuntu-24.04, 3.11)","test (ubuntu-24.04, 3.15)","test (ubuntu-24.04-arm, 3.14)","test (windows-latest, 3.11)","test (windows-latest, 3.14)","test (windows-latest, 3.15)","types (darwin)","types (linux)","types (win32)","sway"]}
+$ gh api "repos/RandyNorthrup/chatmon/contents/.github/dependabot.yml?ref=main"
+{"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-repository-content","status":"404"}gh: Not Found (HTTP 404)
+
+$ gh api "repos/RandyNorthrup/chatmon/git/matching-refs/tags/v0.10"
+[]
+$ gh pr view 18 --json state,headRefOid,baseRefName --jq "{state, headRefOid, baseRefName}"
+{"baseRefName":"main","headRefOid":"3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b","state":"OPEN"}
+
+$ gh api "repos/RandyNorthrup/chatmon/tags?per_page=3" --jq ".[].name"
+v0.9.2
+v0.9.1
+v0.9.0

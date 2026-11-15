@@ -1,0 +1,110 @@
+red drills from /Users/user/chatmon-drills-tmp/specs/m4b/drill-spec.json
+python: /Users/user/chatmon-drills-tmp/venv/bin/python
+copy: /Users/user/chatmon-drills-tmp/tmp/chatmon-drill-seegh1yo
+copied 310 files
+
+=== drill MAC-00C-linux-import-sound (AC-00C) on chatmon/sound.py
+command: /Users/user/chatmon-drills-tmp/venv/bin/python -m pytest -q -p no:cacheprovider tests/test_m4b_imports.py::test_it_imports_here
+-- green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.67s
+-- red: exit 1
+.F......                                                                 [100%]
+=================================== FAILURES ===================================
+_________________________ test_it_imports_here[sound] __________________________
+
+module = 'sound'
+
+    @pytest.mark.parametrize("module", MODULES)
+    def test_it_imports_here(module):
+        env = dict(os.environ, PYTHONPATH=str(ROOT), QT_QPA_PLATFORM="offscreen", PYTHONDONTWRITEBYTECODE="1")
+        out = subprocess.run([sys.executable, "-c", f"import chatmon.{module}"], cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+>       assert out.returncode == 0, out.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             import chatmon.sound
+E           File "/Users/user/chatmon-drills-tmp/tmp/chatmon-drill-seegh1yo/chatmon/sound.py", line 35, in <module>
+E             from select import epoll  # Linux's alone
+E             ^^^^^^^^^^^^^^^^^^^^^^^^
+E         ImportError: cannot import name 'epoll' from 'select' (/usr/local/Cellar/python@3.13/3.13.7/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/select.cpython-313-darwin.so). Did you mean: 'poll'?
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/Users/user/chatmon-drills-tmp/venv/bin/python', '-c', 'import chatmon.sound'], returncode=1, ...ks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/select.cpython-313-darwin.so). Did you mean: \'poll\'?\n').returncode
+
+tests/test_m4b_imports.py:19: AssertionError
+1 failed, 7 passed in 1.56s
+-- restored green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 1.46s
+
+=== drill MAC-01D-conflict-unreported (AC-01D) on chatmon/hotkey.py
+command: /Users/user/chatmon-drills-tmp/venv/bin/python -m pytest -q -p no:cacheprovider tests/test_hotkey.py::test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.90s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had __________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x106ff22b0>
+
+    @mac
+    def test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had(qapp):
+        lib, theirs = carbon(), ctypes.c_void_p()
+        flags = hotkey._Carbon.FLAGS
+        held = lib.RegisterEventHotKey(hotkey.KEYS["F18"].mac, flags["ctrl"] | flags["alt"] | flags["shift"], hotkey._EventHotKeyID(hotkey.fourcc("TEST"), 1),
+                                       lib.GetApplicationEventTarget(), hotkey._Carbon.EXCLUSIVE, ctypes.byref(theirs))
+        assert held == 0
+        hk = hotkey.Hotkey()
+        try:
+            assert hk.register("Ctrl+Alt+Shift+F17") is None
+>           assert hk.register("Ctrl+Alt+Shift+F18") == hotkey.CONFLICT.format(combo="Ctrl+Alt+Shift+F18")
+E           AssertionError: assert None == 'Ctrl+Alt+Shift+F18 is already used by another app. Pick another shortcut.'
+E            +  where None = register('Ctrl+Alt+Shift+F18')
+E            +    where register = <chatmon.hotkey.Hotkey object at 0x1071989b0>.register
+E            +  and   'Ctrl+Alt+Shift+F18 is already used by another app. Pick another shortcut.' = <built-in method format of str object at 0x106df79f0>(combo='Ctrl+Alt+Shift+F18')
+E            +    where <built-in method format of str object at 0x106df79f0> = '{combo} is already used by another app. Pick another shortcut.'.format
+E            +      where '{combo} is already used by another app. Pick another shortcut.' = hotkey.CONFLICT
+
+tests/test_hotkey.py:281: AssertionError
+1 failed in 0.92s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.90s
+
+=== drill MAC-02F-volume-unset (AC-02F) on chatmon/sound.py
+command: /Users/user/chatmon-drills-tmp/venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sound.py::test_nssound_plays_at_the_volume
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.94s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_nssound_plays_at_the_volume _______________________
+
+cues = PosixPath('/Users/user/chatmon-drills-tmp/tmp/pytest-of-user/pytest-13/test_nssound_plays_at_the_volu0')
+
+    @pytest.mark.skipif(sys.platform != "darwin", reason="macOS only")
+    def test_nssound_plays_at_the_volume(cues):
+        player = sound.MacPlayer()
+        path = silent_wav(cues / "focus-done.wav", seconds=0.3)
+        result = player.play(path, 0.5)
+        assert player.sounds[path], "NSSound couldn't read the file"
+>       assert player.volume(path) == pytest.approx(0.5)
+E       assert 1.0 == 0.5 ± 5.0e-07
+E         
+E         comparison failed
+E         Obtained: 1.0
+E         Expected: 0.5 ± 5.0e-07
+
+tests/test_sound.py:267: AssertionError
+1 failed in 0.98s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.92s
+
+=== summary
+PASS MAC-00C-linux-import-sound
+PASS MAC-01D-conflict-unreported
+PASS MAC-02F-volume-unset

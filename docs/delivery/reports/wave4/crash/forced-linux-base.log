@@ -1,0 +1,161 @@
+# forced_repro.py in a fedora:44 container (Python 3.14.10, PyQt6 6.11.0, Qt 6.11.2, CI's packages), offscreen, as CI's user; source: bf9d8ac (base)
+## run 1
+ 0.71 s: two companion tests done; top-level windows 24
+ 3.62 s: 12 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+Fatal Python error: Segmentation fault
+
+Current thread 0x000075da80d44b80 [python3] (most recent call first):
+  File "/home/chatmon-tests/chatmon/docs/delivery/reports/wave4/crash/forced_repro.py", line 80 in <module>
+
+Current thread's C stack trace (most recent call first):
+  Binary file "/lib64/libpython3.14.so.1.0", at _Py_DumpStack+0x4c [0x75da81199ae0]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x14dd04 [0x75da811a3d04]
+  Binary file "/lib64/libc.so.6", at +0x19fb0 [0x75da80e76fb0]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZNK14QWidgetPrivate12windowHandleENS_16WindowHandleModeE+0x52 [0x75da79e024b2]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZN19QApplicationPrivate23notifyWindowIconChangedEv+0x9b [0x75da79db8a5b]
+  Binary file "/usr/lib64/python3.14/site-packages/PyQt6/QtGui.abi3.so", at +0x11c339 [0x75da7be81339]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x1b772e [0x75da8120d72e]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x18570b [0x75da811db70b]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x304a9 [0x75da810864a9]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x197d12 [0x75da811edd12]
+  Binary file "/lib64/libpython3.14.so.1.0", at PyEval_EvalCode+0xad [0x75da812f4d6d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e7255 [0x75da8133d255]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e600d [0x75da8133c00d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5c04 [0x75da8133bc04]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5a15 [0x75da8133ba15]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_RunMain+0x31b [0x75da812e17ab]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_BytesMain+0x3c [0x75da812dad7c]
+  Binary file "/lib64/libc.so.6", at +0x3681 [0x75da80e60681]
+  Binary file "/lib64/libc.so.6", at __libc_start_main+0x88 [0x75da80e60798]
+  Binary file "python3", at _start+0x25 [0x5f413d8b13d5]
+
+Extension modules: PyQt6.QtCore, PyQt6.QtGui, PyQt6.QtWidgets, PyQt6.QtNetwork, PyQt6.QtDBus (total: 5)
+# exit 139
+## run 2
+ 0.69 s: two companion tests done; top-level windows 24
+ 3.35 s: 12 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+Fatal Python error: Segmentation fault
+
+Current thread 0x00007602f88e5b80 [python3] (most recent call first):
+  File "/home/chatmon-tests/chatmon/docs/delivery/reports/wave4/crash/forced_repro.py", line 80 in <module>
+
+Current thread's C stack trace (most recent call first):
+  Binary file "/lib64/libpython3.14.so.1.0", at _Py_DumpStack+0x4c [0x7602f8d3aae0]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x14dd04 [0x7602f8d44d04]
+  Binary file "/lib64/libc.so.6", at +0x19fb0 [0x7602f8a17fb0]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZNK14QWidgetPrivate12windowHandleENS_16WindowHandleModeE+0x40 [0x7602f19a34a0]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZN19QApplicationPrivate23notifyWindowIconChangedEv+0x9b [0x7602f1959a5b]
+  Binary file "/usr/lib64/python3.14/site-packages/PyQt6/QtGui.abi3.so", at +0x11c339 [0x7602f3a22339]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x1b772e [0x7602f8dae72e]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x18570b [0x7602f8d7c70b]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x304a9 [0x7602f8c274a9]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x197d12 [0x7602f8d8ed12]
+  Binary file "/lib64/libpython3.14.so.1.0", at PyEval_EvalCode+0xad [0x7602f8e95d6d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e7255 [0x7602f8ede255]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e600d [0x7602f8edd00d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5c04 [0x7602f8edcc04]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5a15 [0x7602f8edca15]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_RunMain+0x31b [0x7602f8e827ab]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_BytesMain+0x3c [0x7602f8e7bd7c]
+  Binary file "/lib64/libc.so.6", at +0x3681 [0x7602f8a01681]
+  Binary file "/lib64/libc.so.6", at __libc_start_main+0x88 [0x7602f8a01798]
+  Binary file "python3", at _start+0x25 [0x5d031e1383d5]
+
+Extension modules: PyQt6.QtCore, PyQt6.QtGui, PyQt6.QtWidgets, PyQt6.QtNetwork, PyQt6.QtDBus (total: 5)
+# exit 139
+## run 3
+ 0.66 s: two companion tests done; top-level windows 24
+ 3.34 s: 12 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+Fatal Python error: Segmentation fault
+
+Current thread 0x000070e20d2b6b80 [python3] (most recent call first):
+  File "/home/chatmon-tests/chatmon/docs/delivery/reports/wave4/crash/forced_repro.py", line 80 in <module>
+
+Current thread's C stack trace (most recent call first):
+  Binary file "/lib64/libpython3.14.so.1.0", at _Py_DumpStack+0x4c [0x70e20d70bae0]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x14dd04 [0x70e20d715d04]
+  Binary file "/lib64/libc.so.6", at +0x19fb0 [0x70e20d3e8fb0]
+  Binary file "/lib64/libQt6Core.so.6", at _ZN16QCoreApplication15notifyInternal2EP7QObjectP6QEvent+0x2c [0x70e20b7286fc]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZN19QApplicationPrivate23notifyWindowIconChangedEv+0x150 [0x70e20632ab10]
+  Binary file "/usr/lib64/python3.14/site-packages/PyQt6/QtGui.abi3.so", at +0x11c339 [0x70e2083f3339]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x1b772e [0x70e20d77f72e]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x18570b [0x70e20d74d70b]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x304a9 [0x70e20d5f84a9]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x197d12 [0x70e20d75fd12]
+  Binary file "/lib64/libpython3.14.so.1.0", at PyEval_EvalCode+0xad [0x70e20d866d6d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e7255 [0x70e20d8af255]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e600d [0x70e20d8ae00d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5c04 [0x70e20d8adc04]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5a15 [0x70e20d8ada15]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_RunMain+0x31b [0x70e20d8537ab]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_BytesMain+0x3c [0x70e20d84cd7c]
+  Binary file "/lib64/libc.so.6", at +0x3681 [0x70e20d3d2681]
+  Binary file "/lib64/libc.so.6", at __libc_start_main+0x88 [0x70e20d3d2798]
+  Binary file "python3", at _start+0x25 [0x63fa7d1dc3d5]
+
+Extension modules: PyQt6.QtCore, PyQt6.QtGui, PyQt6.QtWidgets, PyQt6.QtNetwork, PyQt6.QtDBus (total: 5)
+# exit 139
+## run 4
+ 0.67 s: two companion tests done; top-level windows 24
+ 3.34 s: 12 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+Fatal Python error: Segmentation fault
+
+Current thread 0x00007fb3f55cfb80 [python3] (most recent call first):
+  File "/home/chatmon-tests/chatmon/docs/delivery/reports/wave4/crash/forced_repro.py", line 80 in <module>
+
+Current thread's C stack trace (most recent call first):
+  Binary file "/lib64/libpython3.14.so.1.0", at _Py_DumpStack+0x4c [0x7fb3f5a24ae0]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x14dd04 [0x7fb3f5a2ed04]
+  Binary file "/lib64/libc.so.6", at +0x19fb0 [0x7fb3f5701fb0]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZNK14QWidgetPrivate12windowHandleENS_16WindowHandleModeE+0x49 [0x7fb3ee68d4a9]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZN19QApplicationPrivate23notifyWindowIconChangedEv+0x9b [0x7fb3ee643a5b]
+  Binary file "/usr/lib64/python3.14/site-packages/PyQt6/QtGui.abi3.so", at +0x11c339 [0x7fb3f070c339]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x1b772e [0x7fb3f5a9872e]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x18570b [0x7fb3f5a6670b]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x304a9 [0x7fb3f59114a9]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x197d12 [0x7fb3f5a78d12]
+  Binary file "/lib64/libpython3.14.so.1.0", at PyEval_EvalCode+0xad [0x7fb3f5b7fd6d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e7255 [0x7fb3f5bc8255]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e600d [0x7fb3f5bc700d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5c04 [0x7fb3f5bc6c04]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5a15 [0x7fb3f5bc6a15]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_RunMain+0x31b [0x7fb3f5b6c7ab]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_BytesMain+0x3c [0x7fb3f5b65d7c]
+  Binary file "/lib64/libc.so.6", at +0x3681 [0x7fb3f56eb681]
+  Binary file "/lib64/libc.so.6", at __libc_start_main+0x88 [0x7fb3f56eb798]
+  Binary file "python3", at _start+0x25 [0x62ae335513d5]
+
+Extension modules: PyQt6.QtCore, PyQt6.QtGui, PyQt6.QtWidgets, PyQt6.QtNetwork, PyQt6.QtDBus (total: 5)
+# exit 139
+## run 5
+ 0.69 s: two companion tests done; top-level windows 24
+ 3.43 s: 12 windows freed by a collection inside setWindowIcon's loop; Qt goes on through its list
+Fatal Python error: Segmentation fault
+
+Current thread 0x0000776fcae9ab80 [python3] (most recent call first):
+  File "/home/chatmon-tests/chatmon/docs/delivery/reports/wave4/crash/forced_repro.py", line 80 in <module>
+
+Current thread's C stack trace (most recent call first):
+  Binary file "/lib64/libpython3.14.so.1.0", at _Py_DumpStack+0x4c [0x776fcb2efae0]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x14dd04 [0x776fcb2f9d04]
+  Binary file "/lib64/libc.so.6", at +0x19fb0 [0x776fcafccfb0]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZNK14QWidgetPrivate12windowHandleENS_16WindowHandleModeE+0x52 [0x776fc3f584b2]
+  Binary file "/lib64/libQt6Widgets.so.6", at _ZN19QApplicationPrivate23notifyWindowIconChangedEv+0x9b [0x776fc3f0ea5b]
+  Binary file "/usr/lib64/python3.14/site-packages/PyQt6/QtGui.abi3.so", at +0x11c339 [0x776fc5fd7339]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x1b772e [0x776fcb36372e]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x18570b [0x776fcb33170b]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x304a9 [0x776fcb1dc4a9]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x197d12 [0x776fcb343d12]
+  Binary file "/lib64/libpython3.14.so.1.0", at PyEval_EvalCode+0xad [0x776fcb44ad6d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e7255 [0x776fcb493255]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e600d [0x776fcb49200d]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5c04 [0x776fcb491c04]
+  Binary file "/lib64/libpython3.14.so.1.0", at +0x2e5a15 [0x776fcb491a15]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_RunMain+0x31b [0x776fcb4377ab]
+  Binary file "/lib64/libpython3.14.so.1.0", at Py_BytesMain+0x3c [0x776fcb430d7c]
+  Binary file "/lib64/libc.so.6", at +0x3681 [0x776fcafb6681]
+  Binary file "/lib64/libc.so.6", at __libc_start_main+0x88 [0x776fcafb6798]
+  Binary file "python3", at _start+0x25 [0x633ef8f773d5]
+
+Extension modules: PyQt6.QtCore, PyQt6.QtGui, PyQt6.QtWidgets, PyQt6.QtNetwork, PyQt6.QtDBus (total: 5)
+# exit 139

@@ -1,0 +1,27 @@
+{
+  "acceptance": 28,
+  "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+  ],
+  "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+  "evidence": 77,
+  "findings": [
+    {
+      "code": "outcome-unresolved",
+      "location": "CI-sway-job",
+      "message": "After the coordinator pushes wave4/wayland, read the `sway` job; a failure there (Ubuntu's sway 1.9 or AT-SPI 2.52 behaving otherwise) comes back to M3; once green, add it to main's required checks"
+    }
+  ],
+  "passed": false,
+  "requirements": 17,
+  "stage": "closure",
+  "tasks": 13
+}

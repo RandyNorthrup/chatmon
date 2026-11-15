@@ -1,0 +1,50 @@
+# mypy 2.4.1, default settings, python_version 3.11, on 4fdf790 (before M6A's config), Windows host
+# command: python -m mypy --python-version 3.11 --platform <p> --no-incremental --cache-dir=/dev/null chatmon
+linux: Found 376 errors in 38 files (checked 56 source files)
+win32: Found 356 errors in 34 files (checked 56 source files)
+darwin: Found 386 errors in 40 files (checked 56 source files)
+
+# errors per module (excluding the psutil stub note), by platform
+a11y: linux=9 win32=7 darwin=9
+agents: linux=13 win32=12 darwin=13
+app: linux=22 win32=28 darwin=22
+attachments: linux=2 win32=1 darwin=2
+backup: linux=2 win32=2 darwin=2
+brains: linux=54 win32=54 darwin=54
+bubble: linux=19 win32=20 darwin=19
+bubbleart: linux=5 win32=5 darwin=5
+cli: linux=2 win32=2 darwin=2
+clickthrough: linux=1 darwin=1
+commands: linux=1 win32=1 darwin=1
+context: linux=4 win32=4 darwin=4
+ed25519: linux=1 win32=1 darwin=1
+events: linux=1 win32=2 darwin=1
+heads_up: linux=5 win32=5 darwin=5
+keychain: linux=3 win32=2 darwin=3
+layer: linux=29 win32=40 darwin=34
+linuxsession: linux=1 win32=1 darwin=1
+macnative: linux=17 win32=17 darwin=17
+menus: linux=58 win32=58 darwin=58
+messages: linux=3 win32=3 darwin=3
+offline: linux=14 win32=14 darwin=14
+packagekit: linux=4 win32=4 darwin=4
+paths: darwin=6
+penguin: linux=15 win32=15 darwin=15
+portal: linux=1 win32=1 darwin=1
+portowner: linux=4 win32=2 darwin=4
+presence: linux=15 win32=6 darwin=13
+reminders: linux=3 win32=3 darwin=3
+settings: linux=1 win32=2 darwin=1
+settingswin: linux=7 win32=7 darwin=7
+sprites: linux=1 win32=1 darwin=1
+updates: linux=25 win32=25 darwin=25
+wayland: win32=7 darwin=1
+windrop: linux=7 darwin=7
+winfocus: linux=5 darwin=5
+winlock: linux=4 win32=2 darwin=4
+winpipe: linux=11 darwin=11
+wintrust: linux=5 darwin=5
+xkb: linux=1 win32=1 darwin=1
+
+# clean on all three platforms (16):
+__init__ __main__ asking autostart behavior changelog chats companions localefmt memory releasecheck report stagemenu styles sysnotify winfiles 

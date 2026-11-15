@@ -1,0 +1,86 @@
+# Coverage on the final tree (c6ca786 merged), 2026-11-14T22:18:29Z: the whole suite under coverage 7.17.0 (branch),
+# on Windows 11 (Python 3.14.10, PyQt6 6.11.0) and on Linux (WSL Arch, Python 3.14.9, packaging/requirements-test.txt
+# installed --require-hashes, under xvfb-run -a), then combined as CI's coverage job does.
+
+$ COVERAGE_FILE=.coverage.windows python -m coverage run -m pytest   ->  ========= 1064 passed, 126 skipped, 21 warnings in 187.84s (0:03:07) ==========
+$ COVERAGE_FILE=.coverage.linux xvfb-run -a python -m coverage run -m pytest   ->  ========== 1085 passed, 105 skipped, 25 warnings in 166.06s (0:02:46) ==========
+
+## Windows alone
+TOTAL                       17659   3927   5352    626  74.9%
+
+## Linux alone
+TOTAL                       17659   3927   5352    687  75.6%
+
+## Combined: python -m coverage combine --keep .coverage.windows .coverage.linux; python -m coverage report
+Combined 2 files
+Name                        Stmts   Miss Branch BrPart  Cover
+-------------------------------------------------------------
+chatmon\__init__.py             1      0      0      0 100.0%
+chatmon\__main__.py             2      2      0      0   0.0%
+chatmon\a11y.py               113     55     28      3  47.5%
+chatmon\agents.py             646     58    156     28  88.8%
+chatmon\app.py               1704    317    574    101  77.4%
+chatmon\asking.py              57      0     10      0 100.0%
+chatmon\attachments.py        249     48     90     14  79.4%
+chatmon\autostart.py          125     14     46      6  88.3%
+chatmon\backup.py             177     13     66     11  90.1%
+chatmon\behavior.py           352      9    134     11  95.9%
+chatmon\brains.py            1182    130    430     58  87.3%
+chatmon\bubble.py            1162     62    258     24  92.1%
+chatmon\bubbleart.py          967     48    212     16  93.9%
+chatmon\changelog.py           57      2     20      0  97.4%
+chatmon\chats.py              192     11     66      6  93.4%
+chatmon\cli.py                175     17     78      9  88.9%
+chatmon\clickthrough.py       129     18     28      7  81.5%
+chatmon\commands.py           214     18     62     10  89.1%
+chatmon\companions.py          20      0      2      0 100.0%
+chatmon\context.py            120      3     44      3  96.3%
+chatmon\ed25519.py             58      3     22      3  92.5%
+chatmon\events.py              97      4     28      2  95.2%
+chatmon\heads_up.py           186     21     66      7  88.1%
+chatmon\highlight.py          122     13     38      3  88.8%
+chatmon\hotkey.py             371     64    120     13  80.2%
+chatmon\keychain.py           349    161     68      8  51.3%
+chatmon\layer.py             1101    142    380     86  81.2%
+chatmon\libdbus.py            247    163     94      4  32.3%
+chatmon\linuxsession.py        80     18     38      9  68.6%
+chatmon\localefmt.py           69      8     26      3  84.2%
+chatmon\macnative.py          311    243     70      0  18.9%
+chatmon\memory.py              80      6     24      3  89.4%
+chatmon\menus.py              267      7     72      6  95.6%
+chatmon\messages.py            88      0     24      0 100.0%
+chatmon\offline.py            434      8    150      5  97.8%
+chatmon\packagekit.py          95     60     26      1  33.1%
+chatmon\paths.py              258     25     78     11  89.3%
+chatmon\penguin.py            989     96    330     57  86.4%
+chatmon\portal.py              92     58     20      0  33.9%
+chatmon\portowner.py          129     51     44      7  59.5%
+chatmon\presence.py           297    133     98     17  53.4%
+chatmon\releasecheck.py        87      0     32      0 100.0%
+chatmon\reminders.py          416      2    146      3  99.1%
+chatmon\report.py              46      5     12      3  86.2%
+chatmon\richtext.py           215      1     60      3  98.5%
+chatmon\settings.py           198     24     64      6  87.8%
+chatmon\settingswin.py        180      0     12      1  99.5%
+chatmon\shortcutportal.py     156    119     44      0  18.5%
+chatmon\sound.py              230     46     58     10  78.5%
+chatmon\sprites.py            143      1     36      1  98.9%
+chatmon\stagemenu.py          417     31    150     29  88.7%
+chatmon\styles.py             110      4      8      1  95.8%
+chatmon\sysnotify.py           24      8      2      0  61.5%
+chatmon\updates.py            426     63    160     32  82.8%
+chatmon\wayland.py            234     34     98     18  83.1%
+chatmon\wincaret.py            46      3     10      1  92.9%
+chatmon\windrop.py            227     44     52     11  77.4%
+chatmon\winfiles.py            48      0     16      0 100.0%
+chatmon\winfocus.py            56      7     10      4  83.3%
+chatmon\winlock.py            109      3     36      4  95.2%
+chatmon\winpipe.py            182     15     52     15  87.2%
+chatmon\winrt.py              148     11     16      5  90.2%
+chatmon\wintoast.py           336     57     90     18  79.6%
+chatmon\wintrust.py            95      3     10      3  94.3%
+chatmon\xkb.py                166     23     58     11  83.0%
+-------------------------------------------------------------
+TOTAL                       17659   2613   5352    731  82.7%
+exit 0
+modules listed: 65

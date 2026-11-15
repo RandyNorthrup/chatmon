@@ -1,0 +1,1237 @@
+python	UNKNOWN STEP	﻿2026-11-15T04:38:46.7353171Z Current runner version: '2.338.2'
+python	UNKNOWN STEP	2026-11-15T04:38:46.7393850Z ##[group]Runner Image Provisioner
+python	UNKNOWN STEP	2026-11-15T04:38:46.7394672Z Hosted Compute Agent
+python	UNKNOWN STEP	2026-11-15T04:38:46.7395186Z Version: 20261103.629
+python	UNKNOWN STEP	2026-11-15T04:38:46.7395757Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+python	UNKNOWN STEP	2026-11-15T04:38:46.7396390Z Build Date: 2026-11-03T17:26:59Z
+python	UNKNOWN STEP	2026-11-15T04:38:46.7397006Z Worker ID: {43fd56e9-7c53-4832-a010-4b3eea3ead29}
+python	UNKNOWN STEP	2026-11-15T04:38:46.7397652Z Region: southcentralus
+python	UNKNOWN STEP	2026-11-15T04:38:46.7398151Z Cloud: Azure
+python	UNKNOWN STEP	2026-11-15T04:38:46.7398597Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:46.7399770Z ##[group]Operating System
+python	UNKNOWN STEP	2026-11-15T04:38:46.7400338Z Ubuntu
+python	UNKNOWN STEP	2026-11-15T04:38:46.7400879Z 24.04.5
+python	UNKNOWN STEP	2026-11-15T04:38:46.7401325Z LTS
+python	UNKNOWN STEP	2026-11-15T04:38:46.7402040Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:46.7402604Z ##[group]Runner Image
+python	UNKNOWN STEP	2026-11-15T04:38:46.7403159Z Image: ubuntu-24.04
+python	UNKNOWN STEP	2026-11-15T04:38:46.7403673Z Version: 20261111.370.1
+python	UNKNOWN STEP	2026-11-15T04:38:46.7404777Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+python	UNKNOWN STEP	2026-11-15T04:38:46.7406094Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+python	UNKNOWN STEP	2026-11-15T04:38:46.7406937Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:46.7407921Z ##[group]GITHUB_TOKEN Permissions
+python	UNKNOWN STEP	2026-11-15T04:38:46.7409639Z Contents: read
+python	UNKNOWN STEP	2026-11-15T04:38:46.7410196Z Metadata: read
+python	UNKNOWN STEP	2026-11-15T04:38:46.7410731Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:46.7412711Z Secret source: Actions
+python	UNKNOWN STEP	2026-11-15T04:38:46.7413619Z Cache mode: write
+python	UNKNOWN STEP	2026-11-15T04:38:46.7414197Z Prepare workflow directory
+python	UNKNOWN STEP	2026-11-15T04:38:46.7728703Z Prepare all required actions
+python	UNKNOWN STEP	2026-11-15T04:38:46.7766687Z Getting action download info
+python	UNKNOWN STEP	2026-11-15T04:38:47.0257111Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+python	UNKNOWN STEP	2026-11-15T04:38:47.1718176Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+python	UNKNOWN STEP	2026-11-15T04:38:47.3205246Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+python	UNKNOWN STEP	2026-11-15T04:38:47.5087209Z Complete job name: python
+python	UNKNOWN STEP	2026-11-15T04:38:47.5809097Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+python	UNKNOWN STEP	2026-11-15T04:38:47.5809929Z with:
+python	UNKNOWN STEP	2026-11-15T04:38:47.5810304Z   persist-credentials: false
+python	UNKNOWN STEP	2026-11-15T04:38:47.5810760Z   repository: RandyNorthrup/chatmon
+python	UNKNOWN STEP	2026-11-15T04:38:47.5814078Z   token: ***
+python	UNKNOWN STEP	2026-11-15T04:38:47.5814446Z   ssh-strict: true
+python	UNKNOWN STEP	2026-11-15T04:38:47.5814816Z   ssh-user: git
+python	UNKNOWN STEP	2026-11-15T04:38:47.5815169Z   clean: true
+python	UNKNOWN STEP	2026-11-15T04:38:47.5815537Z   sparse-checkout-cone-mode: true
+python	UNKNOWN STEP	2026-11-15T04:38:47.5815965Z   fetch-depth: 1
+python	UNKNOWN STEP	2026-11-15T04:38:47.5816326Z   fetch-tags: false
+python	UNKNOWN STEP	2026-11-15T04:38:47.5816693Z   show-progress: true
+python	UNKNOWN STEP	2026-11-15T04:38:47.5817061Z   lfs: false
+python	UNKNOWN STEP	2026-11-15T04:38:47.5817400Z   submodules: false
+python	UNKNOWN STEP	2026-11-15T04:38:47.5817819Z   set-safe-directory: true
+python	UNKNOWN STEP	2026-11-15T04:38:47.5818236Z   allow-unsafe-pr-checkout: false
+python	UNKNOWN STEP	2026-11-15T04:38:47.5818891Z env:
+python	UNKNOWN STEP	2026-11-15T04:38:47.5819315Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	UNKNOWN STEP	2026-11-15T04:38:47.5819746Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:47.8553568Z Syncing repository: RandyNorthrup/chatmon
+python	UNKNOWN STEP	2026-11-15T04:38:47.8554991Z ##[group]Getting Git version info
+python	UNKNOWN STEP	2026-11-15T04:38:47.8555544Z Working directory is '/home/runner/work/chatmon/chatmon'
+python	UNKNOWN STEP	2026-11-15T04:38:47.8556323Z [command]/usr/bin/git version
+python	UNKNOWN STEP	2026-11-15T04:38:47.8634818Z git version 2.56.1
+python	UNKNOWN STEP	2026-11-15T04:38:47.8650297Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:47.8658869Z Temporarily overriding HOME='/home/runner/work/_temp/24437b67-dd25-4a28-8ca6-22c784c43c4d' before making global git config changes
+python	UNKNOWN STEP	2026-11-15T04:38:47.8660305Z Adding repository directory to the temporary git global config as a safe directory
+python	UNKNOWN STEP	2026-11-15T04:38:47.8663172Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+python	UNKNOWN STEP	2026-11-15T04:38:47.8705076Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+python	UNKNOWN STEP	2026-11-15T04:38:47.8707839Z ##[group]Determining repository object format
+python	UNKNOWN STEP	2026-11-15T04:38:47.8709054Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:47.8709657Z ##[group]Initializing the repository
+python	UNKNOWN STEP	2026-11-15T04:38:47.8712854Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+python	UNKNOWN STEP	2026-11-15T04:38:47.8925688Z hint: Using 'master' as the name for the initial branch. This default branch name
+python	UNKNOWN STEP	2026-11-15T04:38:47.8926709Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+python	UNKNOWN STEP	2026-11-15T04:38:47.8927483Z hint: to use in all of your new repositories, which will suppress this warning,
+python	UNKNOWN STEP	2026-11-15T04:38:47.8928075Z hint: call:
+python	UNKNOWN STEP	2026-11-15T04:38:47.8928404Z hint:
+python	UNKNOWN STEP	2026-11-15T04:38:47.8928817Z hint: 	git config --global init.defaultBranch <name>
+python	UNKNOWN STEP	2026-11-15T04:38:47.8929488Z hint:
+python	UNKNOWN STEP	2026-11-15T04:38:47.8929963Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+python	UNKNOWN STEP	2026-11-15T04:38:47.8930691Z hint: 'development'. The just-created branch can be renamed via this command:
+python	UNKNOWN STEP	2026-11-15T04:38:47.8931262Z hint:
+python	UNKNOWN STEP	2026-11-15T04:38:47.8931863Z hint: 	git branch -m <name>
+python	UNKNOWN STEP	2026-11-15T04:38:47.8932447Z hint:
+python	UNKNOWN STEP	2026-11-15T04:38:47.8933231Z hint: Disable this message with "git config set advice.defaultBranchName false"
+python	UNKNOWN STEP	2026-11-15T04:38:47.8934450Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+python	UNKNOWN STEP	2026-11-15T04:38:47.8943220Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+python	UNKNOWN STEP	2026-11-15T04:38:47.8988613Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:47.8989556Z ##[group]Disabling automatic garbage collection
+python	UNKNOWN STEP	2026-11-15T04:38:47.8991951Z [command]/usr/bin/git config --local gc.auto 0
+python	UNKNOWN STEP	2026-11-15T04:38:47.9020557Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:47.9022098Z ##[group]Setting up auth
+python	UNKNOWN STEP	2026-11-15T04:38:47.9022858Z Removing SSH command configuration
+python	UNKNOWN STEP	2026-11-15T04:38:47.9026000Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python	UNKNOWN STEP	2026-11-15T04:38:47.9058889Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python	UNKNOWN STEP	2026-11-15T04:38:47.9420689Z Removing HTTP extra header
+python	UNKNOWN STEP	2026-11-15T04:38:47.9426221Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python	UNKNOWN STEP	2026-11-15T04:38:47.9459889Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python	UNKNOWN STEP	2026-11-15T04:38:47.9677638Z Removing includeIf entries pointing to credentials config files
+python	UNKNOWN STEP	2026-11-15T04:38:47.9683251Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python	UNKNOWN STEP	2026-11-15T04:38:47.9713943Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python	UNKNOWN STEP	2026-11-15T04:38:47.9909623Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+python	UNKNOWN STEP	2026-11-15T04:38:47.9942468Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config
+python	UNKNOWN STEP	2026-11-15T04:38:47.9969806Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config
+python	UNKNOWN STEP	2026-11-15T04:38:47.9998160Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config
+python	UNKNOWN STEP	2026-11-15T04:38:48.0025281Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config
+python	UNKNOWN STEP	2026-11-15T04:38:48.0050659Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:48.0055139Z ##[group]Fetching the repository
+python	UNKNOWN STEP	2026-11-15T04:38:48.0056456Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +df725342a3405655e30940839a5d168404170cea:refs/remotes/pull/18/merge
+python	UNKNOWN STEP	2026-11-15T04:38:50.6728001Z From https://github.com/RandyNorthrup/chatmon
+python	UNKNOWN STEP	2026-11-15T04:38:50.6730430Z  * [new ref]         df725342a3405655e30940839a5d168404170cea -> pull/18/merge
+python	UNKNOWN STEP	2026-11-15T04:38:50.6733943Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:50.6734893Z ##[group]Determining the checkout info
+python	UNKNOWN STEP	2026-11-15T04:38:50.6736022Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:50.6736716Z [command]/usr/bin/git sparse-checkout disable
+python	UNKNOWN STEP	2026-11-15T04:38:50.6738719Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+python	UNKNOWN STEP	2026-11-15T04:38:50.6757159Z ##[group]Checking out the ref
+python	UNKNOWN STEP	2026-11-15T04:38:50.6760018Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/18/merge
+python	UNKNOWN STEP	2026-11-15T04:38:51.1746494Z Note: switching to 'refs/remotes/pull/18/merge'.
+python	UNKNOWN STEP	2026-11-15T04:38:51.1747268Z 
+python	UNKNOWN STEP	2026-11-15T04:38:51.1747746Z You are in 'detached HEAD' state. You can look around, make experimental
+python	UNKNOWN STEP	2026-11-15T04:38:51.1748848Z changes and commit them, and you can discard any commits you make in this
+python	UNKNOWN STEP	2026-11-15T04:38:51.1749930Z state without impacting any branches by switching back to a branch.
+python	UNKNOWN STEP	2026-11-15T04:38:51.1750550Z 
+python	UNKNOWN STEP	2026-11-15T04:38:51.1751004Z If you want to create a new branch to retain commits you create, you may
+python	UNKNOWN STEP	2026-11-15T04:38:51.1752328Z do so (now or later) by using -c with the switch command. Example:
+python	UNKNOWN STEP	2026-11-15T04:38:51.1753186Z 
+python	UNKNOWN STEP	2026-11-15T04:38:51.1753514Z   git switch -c <new-branch-name>
+python	UNKNOWN STEP	2026-11-15T04:38:51.1753965Z 
+python	UNKNOWN STEP	2026-11-15T04:38:51.1754275Z Or undo this operation with:
+python	UNKNOWN STEP	2026-11-15T04:38:51.1754696Z 
+python	UNKNOWN STEP	2026-11-15T04:38:51.1754949Z   git switch -
+python	UNKNOWN STEP	2026-11-15T04:38:51.1755310Z 
+python	UNKNOWN STEP	2026-11-15T04:38:51.1755829Z Turn off this advice by setting config variable advice.detachedHead to false
+python	UNKNOWN STEP	2026-11-15T04:38:51.1756630Z 
+python	UNKNOWN STEP	2026-11-15T04:38:51.1757524Z HEAD is now at df72534 Merge fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+python	UNKNOWN STEP	2026-11-15T04:38:51.1773150Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:51.1813198Z [command]/usr/bin/git log -1 --format=%H
+python	UNKNOWN STEP	2026-11-15T04:38:51.1836113Z df725342a3405655e30940839a5d168404170cea
+python	UNKNOWN STEP	2026-11-15T04:38:51.1844775Z ##[group]Removing auth
+python	UNKNOWN STEP	2026-11-15T04:38:51.1845858Z Removing SSH command configuration
+python	UNKNOWN STEP	2026-11-15T04:38:51.1848193Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python	UNKNOWN STEP	2026-11-15T04:38:51.1876195Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python	UNKNOWN STEP	2026-11-15T04:38:51.2072633Z Removing HTTP extra header
+python	UNKNOWN STEP	2026-11-15T04:38:51.2074753Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python	UNKNOWN STEP	2026-11-15T04:38:51.2102637Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python	UNKNOWN STEP	2026-11-15T04:38:51.2297691Z Removing includeIf entries pointing to credentials config files
+python	UNKNOWN STEP	2026-11-15T04:38:51.2300453Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python	UNKNOWN STEP	2026-11-15T04:38:51.2324094Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+python	UNKNOWN STEP	2026-11-15T04:38:51.2326755Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+python	UNKNOWN STEP	2026-11-15T04:38:51.2329111Z includeif.gitdir:/github/workspace/.git.path
+python	UNKNOWN STEP	2026-11-15T04:38:51.2331157Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+python	UNKNOWN STEP	2026-11-15T04:38:51.2336601Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+python	UNKNOWN STEP	2026-11-15T04:38:51.2354727Z /home/runner/work/_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config
+python	UNKNOWN STEP	2026-11-15T04:38:51.2365904Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-9e5e0f4b\-bc62\-40b4\-bab9\-a6c98aa5da83\.config
+python	UNKNOWN STEP	2026-11-15T04:38:51.2405426Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+python	UNKNOWN STEP	2026-11-15T04:38:51.2430309Z /home/runner/work/_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config
+python	UNKNOWN STEP	2026-11-15T04:38:51.2438676Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-9e5e0f4b\-bc62\-40b4\-bab9\-a6c98aa5da83\.config
+python	UNKNOWN STEP	2026-11-15T04:38:51.2466722Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+python	UNKNOWN STEP	2026-11-15T04:38:51.2499132Z /github/runner_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config
+python	UNKNOWN STEP	2026-11-15T04:38:51.2505977Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-9e5e0f4b\-bc62\-40b4\-bab9\-a6c98aa5da83\.config
+python	UNKNOWN STEP	2026-11-15T04:38:51.2530769Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+python	UNKNOWN STEP	2026-11-15T04:38:51.2553887Z /github/runner_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config
+python	UNKNOWN STEP	2026-11-15T04:38:51.2564150Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-9e5e0f4b\-bc62\-40b4\-bab9\-a6c98aa5da83\.config
+python	UNKNOWN STEP	2026-11-15T04:38:51.2597087Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python	UNKNOWN STEP	2026-11-15T04:38:51.2787025Z Removing credentials config '/home/runner/work/_temp/git-credentials-9e5e0f4b-bc62-40b4-bab9-a6c98aa5da83.config'
+python	UNKNOWN STEP	2026-11-15T04:38:51.2794596Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:51.3124412Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+python	UNKNOWN STEP	2026-11-15T04:38:51.3125766Z with:
+python	UNKNOWN STEP	2026-11-15T04:38:51.3126477Z   python-version: 3.14
+python	UNKNOWN STEP	2026-11-15T04:38:51.3127314Z   check-latest: false
+python	UNKNOWN STEP	2026-11-15T04:38:51.3134995Z   token: ***
+python	UNKNOWN STEP	2026-11-15T04:38:51.3136101Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+python	UNKNOWN STEP	2026-11-15T04:38:51.3137445Z   update-environment: true
+python	UNKNOWN STEP	2026-11-15T04:38:51.3138365Z   allow-prereleases: false
+python	UNKNOWN STEP	2026-11-15T04:38:51.3139226Z   freethreaded: false
+python	UNKNOWN STEP	2026-11-15T04:38:51.3139994Z env:
+python	UNKNOWN STEP	2026-11-15T04:38:51.3140726Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	UNKNOWN STEP	2026-11-15T04:38:51.3141733Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:51.4101305Z ##[group]Installed versions
+python	UNKNOWN STEP	2026-11-15T04:38:51.4172763Z Successfully set up CPython (3.14.10)
+python	UNKNOWN STEP	2026-11-15T04:38:51.4174546Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:51.4345402Z ##[group]Run echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+python	UNKNOWN STEP	2026-11-15T04:38:51.4347213Z [36;1mecho "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"[0m
+python	UNKNOWN STEP	2026-11-15T04:38:51.4463771Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+python	UNKNOWN STEP	2026-11-15T04:38:51.4464937Z env:
+python	UNKNOWN STEP	2026-11-15T04:38:51.4465682Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	UNKNOWN STEP	2026-11-15T04:38:51.4466816Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:38:51.4468247Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	UNKNOWN STEP	2026-11-15T04:38:51.4469694Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:38:51.4471133Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:38:51.4472584Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:38:51.4473921Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	UNKNOWN STEP	2026-11-15T04:38:51.4475063Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:51.4631308Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-build.txt
+python	UNKNOWN STEP	2026-11-15T04:38:51.4633429Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-build.txt[0m
+python	UNKNOWN STEP	2026-11-15T04:38:51.4652024Z shell: /usr/bin/bash -e {0}
+python	UNKNOWN STEP	2026-11-15T04:38:51.4652878Z env:
+python	UNKNOWN STEP	2026-11-15T04:38:51.4653631Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	UNKNOWN STEP	2026-11-15T04:38:51.4654746Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:38:51.4656477Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	UNKNOWN STEP	2026-11-15T04:38:51.4657991Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:38:51.4659304Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:38:51.4660621Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:38:51.4662336Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	UNKNOWN STEP	2026-11-15T04:38:51.4663519Z   SOURCE_DATE_EPOCH: 1794717520
+python	UNKNOWN STEP	2026-11-15T04:38:51.4664452Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:38:54.4654488Z Ignoring colorama: markers 'os_name == "nt" or sys_platform == "win32"' don't match your environment
+python	UNKNOWN STEP	2026-11-15T04:38:54.4655891Z Ignoring pywin32-ctypes: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "win32"' don't match your environment
+python	UNKNOWN STEP	2026-11-15T04:38:54.5450241Z Collecting build==1.6.1 (from -r packaging/requirements-build.txt (line 3))
+python	UNKNOWN STEP	2026-11-15T04:38:54.6298689Z   Downloading build-1.6.1-py3-none-any.whl (31 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:54.7002693Z Collecting certifi==2026.10.23 (from -r packaging/requirements-build.txt (line 7))
+python	UNKNOWN STEP	2026-11-15T04:38:54.7105588Z   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:54.8221321Z Collecting cffi==2.1.1 (from -r packaging/requirements-build.txt (line 11))
+python	UNKNOWN STEP	2026-11-15T04:38:54.8324287Z   Downloading cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.0334461Z Collecting charset-normalizer==3.5.2 (from -r packaging/requirements-build.txt (line 113))
+python	UNKNOWN STEP	2026-11-15T04:38:55.0444124Z   Downloading charset_normalizer-3.5.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (255 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.1850079Z Collecting cryptography==50.0.2 (from -r packaging/requirements-build.txt (line 293))
+python	UNKNOWN STEP	2026-11-15T04:38:55.1956942Z   Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.2470812Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 106.5 MB/s  0:00:00
+python	UNKNOWN STEP	2026-11-15T04:38:55.2693268Z Collecting docutils==0.23 (from -r packaging/requirements-build.txt (line 354))
+python	UNKNOWN STEP	2026-11-15T04:38:55.2798680Z   Downloading docutils-0.23-py3-none-any.whl (634 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.2846436Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 123.5 MB/s  0:00:00
+python	UNKNOWN STEP	2026-11-15T04:38:55.3039207Z Collecting id==1.6.1 (from -r packaging/requirements-build.txt (line 358))
+python	UNKNOWN STEP	2026-11-15T04:38:55.3138765Z   Downloading id-1.6.1-py3-none-any.whl (14 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.3515867Z Collecting idna==3.20 (from -r packaging/requirements-build.txt (line 362))
+python	UNKNOWN STEP	2026-11-15T04:38:55.3619970Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.3840976Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-build.txt (line 366))
+python	UNKNOWN STEP	2026-11-15T04:38:55.3956891Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.4142528Z Collecting jaraco-classes==3.4.0 (from -r packaging/requirements-build.txt (line 370))
+python	UNKNOWN STEP	2026-11-15T04:38:55.4242347Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.4445404Z Collecting jaraco-context==6.1.2 (from -r packaging/requirements-build.txt (line 374))
+python	UNKNOWN STEP	2026-11-15T04:38:55.4574094Z   Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.4948357Z Collecting jaraco-functools==4.6.0 (from -r packaging/requirements-build.txt (line 378))
+python	UNKNOWN STEP	2026-11-15T04:38:55.5052462Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.5253947Z Collecting jeepney==0.9.0 (from -r packaging/requirements-build.txt (line 382))
+python	UNKNOWN STEP	2026-11-15T04:38:55.5357279Z   Downloading jeepney-0.9.0-py3-none-any.whl (49 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.5616870Z Collecting keyring==25.7.0 (from -r packaging/requirements-build.txt (line 388))
+python	UNKNOWN STEP	2026-11-15T04:38:55.5719506Z   Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.5930544Z Collecting markdown-it-py==4.2.0 (from -r packaging/requirements-build.txt (line 392))
+python	UNKNOWN STEP	2026-11-15T04:38:55.6033588Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.6557839Z Collecting mdurl==0.1.2 (from -r packaging/requirements-build.txt (line 396))
+python	UNKNOWN STEP	2026-11-15T04:38:55.6659824Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.7422691Z Collecting more-itertools==11.2.1 (from -r packaging/requirements-build.txt (line 400))
+python	UNKNOWN STEP	2026-11-15T04:38:55.7528398Z   Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.7932184Z Collecting nh3==0.3.7 (from -r packaging/requirements-build.txt (line 406))
+python	UNKNOWN STEP	2026-11-15T04:38:55.8037927Z   Downloading nh3-0.3.7-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (832 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.8082467Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 832.2/832.2 kB 208.0 MB/s  0:00:00
+python	UNKNOWN STEP	2026-11-15T04:38:55.8274716Z Collecting packaging==26.3 (from -r packaging/requirements-build.txt (line 435))
+python	UNKNOWN STEP	2026-11-15T04:38:55.8375537Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.8567365Z Collecting pluggy==1.7.0 (from -r packaging/requirements-build.txt (line 443))
+python	UNKNOWN STEP	2026-11-15T04:38:55.8667288Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.8871944Z Collecting pycparser==3.12 (from -r packaging/requirements-build.txt (line 447))
+python	UNKNOWN STEP	2026-11-15T04:38:55.9016661Z   Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.9254884Z Collecting pygments==2.21.0 (from -r packaging/requirements-build.txt (line 451))
+python	UNKNOWN STEP	2026-11-15T04:38:55.9357793Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.9408826Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 300.0 MB/s  0:00:00
+python	UNKNOWN STEP	2026-11-15T04:38:55.9587991Z Collecting pyproject-hooks==1.3.3 (from -r packaging/requirements-build.txt (line 458))
+python	UNKNOWN STEP	2026-11-15T04:38:55.9695131Z   Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:55.9955097Z Collecting pytest==9.2.0 (from -r packaging/requirements-build.txt (line 462))
+python	UNKNOWN STEP	2026-11-15T04:38:56.0070304Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.0314524Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-build.txt (line 468))
+python	UNKNOWN STEP	2026-11-15T04:38:56.0417488Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.0696565Z Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+python	UNKNOWN STEP	2026-11-15T04:38:56.0797903Z   Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.1032071Z Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+python	UNKNOWN STEP	2026-11-15T04:38:56.1131891Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.1317088Z Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+python	UNKNOWN STEP	2026-11-15T04:38:56.1427381Z   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.1619345Z Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+python	UNKNOWN STEP	2026-11-15T04:38:56.1725225Z   Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.2072518Z Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+python	UNKNOWN STEP	2026-11-15T04:38:56.2173865Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.2366949Z Collecting secretstorage==3.5.0 (from -r packaging/requirements-build.txt (line 498))
+python	UNKNOWN STEP	2026-11-15T04:38:56.2467829Z   Downloading secretstorage-3.5.0-py3-none-any.whl (15 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.3024971Z Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+python	UNKNOWN STEP	2026-11-15T04:38:56.3131087Z   Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.3175463Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 876.3/876.3 kB 220.4 MB/s  0:00:00
+python	UNKNOWN STEP	2026-11-15T04:38:56.3428937Z Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+python	UNKNOWN STEP	2026-11-15T04:38:56.3531055Z   Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.4661047Z Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+python	UNKNOWN STEP	2026-11-15T04:38:56.4762039Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.7047444Z Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+python	UNKNOWN STEP	2026-11-15T04:38:56.7150458Z   Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+python	UNKNOWN STEP	2026-11-15T04:38:56.9395492Z Installing collected packages: urllib3, setuptools, rfc3986, pyproject-hooks, pygments, pycparser, pluggy, packaging, nh3, more-itertools, mdurl, jeepney, jaraco-context, iniconfig, idna, docutils, charset-normalizer, certifi, wheel, requests, readme-renderer, pytest, markdown-it-py, jaraco-functools, jaraco-classes, id, cffi, build, rich, requests-toolbelt, pytest-timeout, cryptography, secretstorage, keyring, twine
+python	UNKNOWN STEP	2026-11-15T04:39:00.3886650Z 
+python	UNKNOWN STEP	2026-11-15T04:39:00.3914682Z Successfully installed build-1.6.1 certifi-2026.10.23 cffi-2.1.1 charset-normalizer-3.5.2 cryptography-50.0.2 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 jeepney-0.9.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pycparser-3.12 pygments-2.21.0 pyproject-hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 secretstorage-3.5.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+python	UNKNOWN STEP	2026-11-15T04:39:00.5085111Z ##[group]Run python -m build --no-isolation
+python	UNKNOWN STEP	2026-11-15T04:39:00.5085410Z [36;1mpython -m build --no-isolation[0m
+python	UNKNOWN STEP	2026-11-15T04:39:00.5103888Z shell: /usr/bin/bash -e {0}
+python	UNKNOWN STEP	2026-11-15T04:39:00.5104094Z env:
+python	UNKNOWN STEP	2026-11-15T04:39:00.5104271Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	UNKNOWN STEP	2026-11-15T04:39:00.5104538Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:00.5104883Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	UNKNOWN STEP	2026-11-15T04:39:00.5105229Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:00.5105528Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:00.5105844Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:00.5106140Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	UNKNOWN STEP	2026-11-15T04:39:00.5106404Z   SOURCE_DATE_EPOCH: 1794717520
+python	UNKNOWN STEP	2026-11-15T04:39:00.5106601Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:39:00.7027441Z * Getting build dependencies for sdist...
+python	UNKNOWN STEP	2026-11-15T04:39:00.9987474Z running egg_info
+python	UNKNOWN STEP	2026-11-15T04:39:01.0009339Z creating chatmon.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:01.0010604Z writing chatmon.egg-info/PKG-INFO
+python	UNKNOWN STEP	2026-11-15T04:39:01.0021954Z writing dependency_links to chatmon.egg-info/dependency_links.txt
+python	UNKNOWN STEP	2026-11-15T04:39:01.0024448Z writing entry points to chatmon.egg-info/entry_points.txt
+python	UNKNOWN STEP	2026-11-15T04:39:01.0030077Z writing requirements to chatmon.egg-info/requires.txt
+python	UNKNOWN STEP	2026-11-15T04:39:01.0030923Z writing top-level names to chatmon.egg-info/top_level.txt
+python	UNKNOWN STEP	2026-11-15T04:39:01.0055593Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:01.0134072Z reading manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:01.0135411Z adding license file 'LICENSE'
+python	UNKNOWN STEP	2026-11-15T04:39:01.0152666Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:01.0531146Z * Building sdist...
+python	UNKNOWN STEP	2026-11-15T04:39:01.1975170Z running sdist
+python	UNKNOWN STEP	2026-11-15T04:39:01.1975867Z running egg_info
+python	UNKNOWN STEP	2026-11-15T04:39:01.2017939Z writing chatmon.egg-info/PKG-INFO
+python	UNKNOWN STEP	2026-11-15T04:39:01.2030503Z writing dependency_links to chatmon.egg-info/dependency_links.txt
+python	UNKNOWN STEP	2026-11-15T04:39:01.2033265Z writing entry points to chatmon.egg-info/entry_points.txt
+python	UNKNOWN STEP	2026-11-15T04:39:01.2039072Z writing requirements to chatmon.egg-info/requires.txt
+python	UNKNOWN STEP	2026-11-15T04:39:01.2040227Z writing top-level names to chatmon.egg-info/top_level.txt
+python	UNKNOWN STEP	2026-11-15T04:39:01.2136175Z reading manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:01.2155192Z adding license file 'LICENSE'
+python	UNKNOWN STEP	2026-11-15T04:39:01.2177206Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:01.2180352Z running check
+python	UNKNOWN STEP	2026-11-15T04:39:01.2403347Z creating chatmon-0.10.0
+python	UNKNOWN STEP	2026-11-15T04:39:01.2407104Z creating chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2408028Z creating chatmon-0.10.0/chatmon.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:01.2409028Z creating chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2410105Z creating chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2411114Z creating chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2412246Z creating chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2413308Z creating chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2414197Z creating chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2415277Z creating chatmon-0.10.0/chatmon/integrations/claude/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2417290Z creating chatmon-0.10.0/chatmon/integrations/claude/chatmon/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2418526Z creating chatmon-0.10.0/chatmon/integrations/claude/chatmon/hooks
+python	UNKNOWN STEP	2026-11-15T04:39:01.2419396Z creating chatmon-0.10.0/chatmon/locale
+python	UNKNOWN STEP	2026-11-15T04:39:01.2420294Z creating chatmon-0.10.0/chatmon/phrases
+python	UNKNOWN STEP	2026-11-15T04:39:01.2421171Z creating chatmon-0.10.0/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:01.2422263Z creating chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2422917Z copying files to chatmon-0.10.0...
+python	UNKNOWN STEP	2026-11-15T04:39:01.2423549Z copying LICENSE -> chatmon-0.10.0
+python	UNKNOWN STEP	2026-11-15T04:39:01.2425130Z copying README.md -> chatmon-0.10.0
+python	UNKNOWN STEP	2026-11-15T04:39:01.2427050Z copying pyproject.toml -> chatmon-0.10.0
+python	UNKNOWN STEP	2026-11-15T04:39:01.2427961Z copying chatmon/__init__.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2429165Z copying chatmon/__main__.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2430353Z copying chatmon/a11y.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2431741Z copying chatmon/agents.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2433247Z copying chatmon/app.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2435481Z copying chatmon/asking.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2436705Z copying chatmon/attachments.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2437967Z copying chatmon/autostart.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2439156Z copying chatmon/backup.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2440419Z copying chatmon/behavior.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2441791Z copying chatmon/brains.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2443414Z copying chatmon/bubble.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2444859Z copying chatmon/bubbleart.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2446253Z copying chatmon/changelog.md -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2447543Z copying chatmon/changelog.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2448694Z copying chatmon/chats.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2449965Z copying chatmon/chatswin.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2451195Z copying chatmon/cli.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2452669Z copying chatmon/clickthrough.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2453898Z copying chatmon/commands.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2455107Z copying chatmon/companions.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2456301Z copying chatmon/context.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2457617Z copying chatmon/ed25519.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2458768Z copying chatmon/events.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2459977Z copying chatmon/heads_up.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2461188Z copying chatmon/highlight.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2462580Z copying chatmon/hotkey.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2464012Z copying chatmon/i18n.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2465287Z copying chatmon/keychain.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2466587Z copying chatmon/layer.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2468004Z copying chatmon/libdbus.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2469304Z copying chatmon/linuxsession.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2470568Z copying chatmon/localefmt.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2471841Z copying chatmon/log.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2473104Z copying chatmon/macnative.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2474546Z copying chatmon/memory.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2475737Z copying chatmon/menus.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2477054Z copying chatmon/messages.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2478314Z copying chatmon/offline.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2479637Z copying chatmon/packagekit.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2480886Z copying chatmon/paths.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2482280Z copying chatmon/penguin.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2483670Z copying chatmon/portal.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2484871Z copying chatmon/portowner.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2486049Z copying chatmon/presence.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2487361Z copying chatmon/releasecheck.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2488448Z copying chatmon/reminders.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2489828Z copying chatmon/report.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2490979Z copying chatmon/richtext.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2492519Z copying chatmon/settings.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2493739Z copying chatmon/settingswin.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2495055Z copying chatmon/shortcutportal.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2496251Z copying chatmon/sound.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2497485Z copying chatmon/sprites.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2498799Z copying chatmon/stagemenu.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2500163Z copying chatmon/styles.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2501399Z copying chatmon/sysnotify.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2502859Z copying chatmon/updates.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2504176Z copying chatmon/wayland.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2505402Z copying chatmon/wincaret.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2506530Z copying chatmon/windrop.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2507765Z copying chatmon/winfiles.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2508923Z copying chatmon/winfocus.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2510039Z copying chatmon/winlock.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2511263Z copying chatmon/winpipe.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2512659Z copying chatmon/winrt.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2513919Z copying chatmon/wintoast.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2515240Z copying chatmon/wintrust.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2516452Z copying chatmon/winuia.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2517816Z copying chatmon/xkb.py -> chatmon-0.10.0/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:01.2519183Z copying chatmon.egg-info/PKG-INFO -> chatmon-0.10.0/chatmon.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:01.2520583Z copying chatmon.egg-info/SOURCES.txt -> chatmon-0.10.0/chatmon.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:01.2521882Z copying chatmon.egg-info/dependency_links.txt -> chatmon-0.10.0/chatmon.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:01.2523091Z copying chatmon.egg-info/entry_points.txt -> chatmon-0.10.0/chatmon.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:01.2524106Z copying chatmon.egg-info/requires.txt -> chatmon-0.10.0/chatmon.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:01.2525315Z copying chatmon.egg-info/top_level.txt -> chatmon-0.10.0/chatmon.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:01.2526368Z copying chatmon/anim/alert.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2529183Z copying chatmon/anim/beam.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2532200Z copying chatmon/anim/charge.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2535342Z copying chatmon/anim/hop.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2537737Z copying chatmon/anim/idle.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2540387Z copying chatmon/anim/manifest.json -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2541712Z copying chatmon/anim/peek.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2544296Z copying chatmon/anim/sleep.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2546925Z copying chatmon/anim/talk.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2549554Z copying chatmon/anim/think.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2552561Z copying chatmon/anim/turn.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2554934Z copying chatmon/anim/walk.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2557624Z copying chatmon/anim/wave.png -> chatmon-0.10.0/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:01.2560337Z copying chatmon/anim/fairy-axolotl/alert.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2563836Z copying chatmon/anim/fairy-axolotl/beam.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2566700Z copying chatmon/anim/fairy-axolotl/charge.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2569547Z copying chatmon/anim/fairy-axolotl/hop.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2572372Z copying chatmon/anim/fairy-axolotl/idle.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2575260Z copying chatmon/anim/fairy-axolotl/manifest.json -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2576160Z copying chatmon/anim/fairy-axolotl/peek.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2579232Z copying chatmon/anim/fairy-axolotl/sleep.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2582002Z copying chatmon/anim/fairy-axolotl/talk.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2584880Z copying chatmon/anim/fairy-axolotl/think.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2587848Z copying chatmon/anim/fairy-axolotl/turn.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2590845Z copying chatmon/anim/fairy-axolotl/walk.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2594755Z copying chatmon/anim/fairy-axolotl/wave.png -> chatmon-0.10.0/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:01.2597570Z copying chatmon/anim/fire-red-panda/alert.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2600350Z copying chatmon/anim/fire-red-panda/beam.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2603464Z copying chatmon/anim/fire-red-panda/charge.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2606480Z copying chatmon/anim/fire-red-panda/hop.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2608942Z copying chatmon/anim/fire-red-panda/idle.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2611774Z copying chatmon/anim/fire-red-panda/manifest.json -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2612883Z copying chatmon/anim/fire-red-panda/peek.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2615500Z copying chatmon/anim/fire-red-panda/sleep.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2617928Z copying chatmon/anim/fire-red-panda/talk.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2620522Z copying chatmon/anim/fire-red-panda/think.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2623560Z copying chatmon/anim/fire-red-panda/turn.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2626225Z copying chatmon/anim/fire-red-panda/walk.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2629439Z copying chatmon/anim/fire-red-panda/wave.png -> chatmon-0.10.0/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:01.2632865Z copying chatmon/anim/ghost-rabbit/alert.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2635611Z copying chatmon/anim/ghost-rabbit/beam.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2638406Z copying chatmon/anim/ghost-rabbit/charge.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2641903Z copying chatmon/anim/ghost-rabbit/hop.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2644693Z copying chatmon/anim/ghost-rabbit/idle.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2647027Z copying chatmon/anim/ghost-rabbit/manifest.json -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2648146Z copying chatmon/anim/ghost-rabbit/peek.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2652863Z copying chatmon/anim/ghost-rabbit/sleep.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2655760Z copying chatmon/anim/ghost-rabbit/talk.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2658534Z copying chatmon/anim/ghost-rabbit/think.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2661341Z copying chatmon/anim/ghost-rabbit/turn.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2664158Z copying chatmon/anim/ghost-rabbit/walk.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2667056Z copying chatmon/anim/ghost-rabbit/wave.png -> chatmon-0.10.0/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:01.2670035Z copying chatmon/anim/leaf-pangolin/alert.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2673014Z copying chatmon/anim/leaf-pangolin/beam.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2676183Z copying chatmon/anim/leaf-pangolin/charge.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2679576Z copying chatmon/anim/leaf-pangolin/hop.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2682594Z copying chatmon/anim/leaf-pangolin/idle.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2685586Z copying chatmon/anim/leaf-pangolin/manifest.json -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2686661Z copying chatmon/anim/leaf-pangolin/peek.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2689636Z copying chatmon/anim/leaf-pangolin/sleep.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2692956Z copying chatmon/anim/leaf-pangolin/talk.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2695875Z copying chatmon/anim/leaf-pangolin/think.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2698773Z copying chatmon/anim/leaf-pangolin/turn.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2701886Z copying chatmon/anim/leaf-pangolin/walk.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2705417Z copying chatmon/anim/leaf-pangolin/wave.png -> chatmon-0.10.0/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2708191Z copying chatmon/bubbles/electric-arcs.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2709606Z copying chatmon/bubbles/electric-current.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2710971Z copying chatmon/bubbles/electric-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2712738Z copying chatmon/bubbles/fairy-sparkles.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2713856Z copying chatmon/bubbles/fairy-still-b.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2715183Z copying chatmon/bubbles/fairy-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2716653Z copying chatmon/bubbles/fire-embers.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2717692Z copying chatmon/bubbles/fire-flames.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2721197Z copying chatmon/bubbles/fire-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2722960Z copying chatmon/bubbles/ghost-mist-a.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2724218Z copying chatmon/bubbles/ghost-mist-b.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2725435Z copying chatmon/bubbles/ghost-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2726912Z copying chatmon/bubbles/leaf-crawler.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2728275Z copying chatmon/bubbles/leaf-still.png -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2729893Z copying chatmon/bubbles/manifest.json -> chatmon-0.10.0/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:01.2731284Z copying chatmon/integrations/claude/.claude-plugin/marketplace.json -> chatmon-0.10.0/chatmon/integrations/claude/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2732511Z copying chatmon/integrations/claude/chatmon/.claude-plugin/plugin.json -> chatmon-0.10.0/chatmon/integrations/claude/chatmon/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:01.2733669Z copying chatmon/integrations/claude/chatmon/hooks/hooks.json -> chatmon-0.10.0/chatmon/integrations/claude/chatmon/hooks
+python	UNKNOWN STEP	2026-11-15T04:39:01.2734643Z copying chatmon/locale/chatmon.pot -> chatmon-0.10.0/chatmon/locale
+python	UNKNOWN STEP	2026-11-15T04:39:01.2736339Z copying chatmon/phrases/en.json -> chatmon-0.10.0/chatmon/phrases
+python	UNKNOWN STEP	2026-11-15T04:39:01.2737555Z copying chatmon/sounds/done.wav -> chatmon-0.10.0/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:01.2738948Z copying chatmon/sounds/error.wav -> chatmon-0.10.0/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:01.2740354Z copying chatmon/sounds/focus-done.wav -> chatmon-0.10.0/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:01.2742024Z copying chatmon/sounds/needs-you.wav -> chatmon-0.10.0/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:01.2743738Z copying chatmon/sounds/pop.wav -> chatmon-0.10.0/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:01.2744932Z copying chatmon/sounds/reminder.wav -> chatmon-0.10.0/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:01.2746516Z copying chatmon/sounds/success.wav -> chatmon-0.10.0/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:01.2747909Z copying tests/test_a11y.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2749060Z copying tests/test_agents.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2750317Z copying tests/test_anim_strips.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2751308Z copying tests/test_app_answers.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2752769Z copying tests/test_app_m7.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2754035Z copying tests/test_app_reminders.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2755199Z copying tests/test_app_smoke.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2756572Z copying tests/test_ask_box.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2757792Z copying tests/test_asking.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2758910Z copying tests/test_attachments.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2760062Z copying tests/test_autostart.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2761217Z copying tests/test_backup.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2762541Z copying tests/test_behavior.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2763768Z copying tests/test_brains.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2765091Z copying tests/test_bubble_safety.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2766237Z copying tests/test_bubble_styles.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2767501Z copying tests/test_chats.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2768756Z copying tests/test_chatswin.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2769894Z copying tests/test_cli.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2771087Z copying tests/test_clickthrough.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2772413Z copying tests/test_commands.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2773566Z copying tests/test_companions.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2774698Z copying tests/test_context.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2775866Z copying tests/test_contrast.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2777021Z copying tests/test_events.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2778265Z copying tests/test_heads_up.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2779539Z copying tests/test_hotkey.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2780800Z copying tests/test_hotkey_portal.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2782204Z copying tests/test_i18n.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2783523Z copying tests/test_i18n_app.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2784664Z copying tests/test_imports.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2785771Z copying tests/test_install_update.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2786961Z copying tests/test_keychain.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2788153Z copying tests/test_linux_desktop.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2789297Z copying tests/test_linuxsession.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2790438Z copying tests/test_localefmt.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2791540Z copying tests/test_log.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2792898Z copying tests/test_m4b_imports.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2793885Z copying tests/test_macnative.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2795370Z copying tests/test_messages.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2796564Z copying tests/test_offline.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2797931Z copying tests/test_overlay_stage.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2799190Z copying tests/test_package_data.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2800340Z copying tests/test_packaging.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2801791Z copying tests/test_parser_properties.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2802787Z copying tests/test_paths.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2804059Z copying tests/test_platform_events.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2805318Z copying tests/test_portal_bus.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2806522Z copying tests/test_portowner.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2807643Z copying tests/test_presence.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2808895Z copying tests/test_releasecheck.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2810063Z copying tests/test_reminders.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2811423Z copying tests/test_rename.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2812793Z copying tests/test_requirements.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2813953Z copying tests/test_rich_text.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2815109Z copying tests/test_settings.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2816358Z copying tests/test_settingswin.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2817490Z copying tests/test_sound.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2818718Z copying tests/test_speech_bubble.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2819875Z copying tests/test_sprites.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2820997Z copying tests/test_stage_features.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2822313Z copying tests/test_stage_screens.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2823448Z copying tests/test_stage_timer.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2824627Z copying tests/test_stagemenu.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2825827Z copying tests/test_streaming.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2827052Z copying tests/test_updates.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2828362Z copying tests/test_wayland.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2829691Z copying tests/test_wincaret.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2830909Z copying tests/test_windows.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2832371Z copying tests/test_winfiles.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2833653Z copying tests/test_winlock.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2834787Z copying tests/test_winpipe.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2835941Z copying tests/test_wintoast.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2837159Z copying tests/test_wintrust.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2838313Z copying tests/test_xkb.py -> chatmon-0.10.0/tests
+python	UNKNOWN STEP	2026-11-15T04:39:01.2851853Z Writing chatmon-0.10.0/setup.cfg
+python	UNKNOWN STEP	2026-11-15T04:39:01.2853757Z Creating tar archive
+python	UNKNOWN STEP	2026-11-15T04:39:02.0484578Z removing 'chatmon-0.10.0' (and everything under it)
+python	UNKNOWN STEP	2026-11-15T04:39:02.2141928Z * Building wheel from sdist
+python	UNKNOWN STEP	2026-11-15T04:39:02.2156913Z * Getting build dependencies for wheel...
+python	UNKNOWN STEP	2026-11-15T04:39:02.3607085Z running egg_info
+python	UNKNOWN STEP	2026-11-15T04:39:02.3628884Z writing chatmon.egg-info/PKG-INFO
+python	UNKNOWN STEP	2026-11-15T04:39:02.3641838Z writing dependency_links to chatmon.egg-info/dependency_links.txt
+python	UNKNOWN STEP	2026-11-15T04:39:02.3644694Z writing entry points to chatmon.egg-info/entry_points.txt
+python	UNKNOWN STEP	2026-11-15T04:39:02.3650169Z writing requirements to chatmon.egg-info/requires.txt
+python	UNKNOWN STEP	2026-11-15T04:39:02.3651073Z writing top-level names to chatmon.egg-info/top_level.txt
+python	UNKNOWN STEP	2026-11-15T04:39:02.3744684Z reading manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:02.3763160Z adding license file 'LICENSE'
+python	UNKNOWN STEP	2026-11-15T04:39:02.3784299Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:02.4067383Z * Building wheel...
+python	UNKNOWN STEP	2026-11-15T04:39:02.5487475Z running bdist_wheel
+python	UNKNOWN STEP	2026-11-15T04:39:02.5588010Z running build
+python	UNKNOWN STEP	2026-11-15T04:39:02.5588353Z running build_py
+python	UNKNOWN STEP	2026-11-15T04:39:02.5614732Z creating build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5616502Z copying chatmon/wintrust.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5618568Z copying chatmon/sprites.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5620180Z copying chatmon/settingswin.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5622555Z copying chatmon/localefmt.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5623492Z copying chatmon/bubble.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5625748Z copying chatmon/richtext.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5627211Z copying chatmon/i18n.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5628760Z copying chatmon/libdbus.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5630644Z copying chatmon/cli.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5632434Z copying chatmon/winuia.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5634095Z copying chatmon/changelog.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5635452Z copying chatmon/portowner.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5636930Z copying chatmon/menus.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5638447Z copying chatmon/packagekit.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5639810Z copying chatmon/app.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5642736Z copying chatmon/ed25519.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5644315Z copying chatmon/reminders.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5646102Z copying chatmon/shortcutportal.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5647500Z copying chatmon/sound.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5649182Z copying chatmon/messages.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5650916Z copying chatmon/settings.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5652862Z copying chatmon/releasecheck.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5654266Z copying chatmon/linuxsession.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5655919Z copying chatmon/companions.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5657454Z copying chatmon/winrt.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5659232Z copying chatmon/keychain.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5660922Z copying chatmon/agents.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5663072Z copying chatmon/winfocus.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5664424Z copying chatmon/xkb.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5666177Z copying chatmon/context.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5667676Z copying chatmon/memory.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5669021Z copying chatmon/penguin.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5671011Z copying chatmon/chats.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5672762Z copying chatmon/bubbleart.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5674679Z copying chatmon/stagemenu.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5676456Z copying chatmon/wayland.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5678053Z copying chatmon/portal.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5679527Z copying chatmon/presence.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5681272Z copying chatmon/report.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5682776Z copying chatmon/styles.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5684475Z copying chatmon/winlock.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5685933Z copying chatmon/offline.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5687682Z copying chatmon/asking.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5689148Z copying chatmon/__main__.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5690658Z copying chatmon/updates.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5692546Z copying chatmon/layer.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5694383Z copying chatmon/hotkey.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5696097Z copying chatmon/winpipe.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5697708Z copying chatmon/behavior.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5699453Z copying chatmon/events.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5701140Z copying chatmon/__init__.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5702647Z copying chatmon/winfiles.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5704030Z copying chatmon/brains.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5705785Z copying chatmon/log.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5707224Z copying chatmon/backup.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5708668Z copying chatmon/chatswin.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5710284Z copying chatmon/commands.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5711787Z copying chatmon/autostart.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5713317Z copying chatmon/heads_up.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5714832Z copying chatmon/a11y.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5716330Z copying chatmon/paths.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5717809Z copying chatmon/macnative.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5719367Z copying chatmon/attachments.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5720852Z copying chatmon/wintoast.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5722532Z copying chatmon/clickthrough.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5723905Z copying chatmon/wincaret.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5725224Z copying chatmon/highlight.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5726610Z copying chatmon/windrop.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5728038Z copying chatmon/sysnotify.py -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5745671Z creating build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5747020Z copying chatmon/anim/idle.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5750424Z copying chatmon/anim/alert.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5753969Z copying chatmon/anim/think.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5757268Z copying chatmon/anim/peek.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5760350Z copying chatmon/anim/walk.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5763722Z copying chatmon/anim/charge.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5767376Z copying chatmon/anim/turn.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5770243Z copying chatmon/anim/wave.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5773721Z copying chatmon/anim/talk.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5776712Z copying chatmon/anim/sleep.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5779791Z copying chatmon/anim/beam.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5783263Z copying chatmon/anim/hop.png -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5786126Z copying chatmon/anim/manifest.json -> build/lib/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.5787388Z creating build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5788532Z copying chatmon/anim/leaf-pangolin/idle.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5792096Z copying chatmon/anim/leaf-pangolin/alert.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5795357Z copying chatmon/anim/leaf-pangolin/think.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5798803Z copying chatmon/anim/leaf-pangolin/peek.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5801979Z copying chatmon/anim/leaf-pangolin/walk.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5805580Z copying chatmon/anim/leaf-pangolin/charge.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5808985Z copying chatmon/anim/leaf-pangolin/turn.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5812164Z copying chatmon/anim/leaf-pangolin/wave.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5815395Z copying chatmon/anim/leaf-pangolin/talk.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5818423Z copying chatmon/anim/leaf-pangolin/sleep.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5821447Z copying chatmon/anim/leaf-pangolin/beam.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5824846Z copying chatmon/anim/leaf-pangolin/hop.png -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5827534Z creating build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5828583Z copying chatmon/anim/fairy-axolotl/idle.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5832158Z copying chatmon/anim/fairy-axolotl/alert.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5835596Z copying chatmon/anim/fairy-axolotl/think.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5838890Z copying chatmon/anim/fairy-axolotl/peek.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5842439Z copying chatmon/anim/fairy-axolotl/walk.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5846179Z copying chatmon/anim/fairy-axolotl/charge.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5849399Z copying chatmon/anim/fairy-axolotl/turn.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5852997Z copying chatmon/anim/fairy-axolotl/wave.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5856065Z copying chatmon/anim/fairy-axolotl/talk.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5859211Z copying chatmon/anim/fairy-axolotl/sleep.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5862689Z copying chatmon/anim/fairy-axolotl/beam.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5865970Z copying chatmon/anim/fairy-axolotl/hop.png -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5868755Z creating build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5869775Z copying chatmon/anim/ghost-rabbit/idle.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5872765Z copying chatmon/anim/ghost-rabbit/alert.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5875665Z copying chatmon/anim/ghost-rabbit/think.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5878567Z copying chatmon/anim/ghost-rabbit/peek.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5882541Z copying chatmon/anim/ghost-rabbit/walk.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5885439Z copying chatmon/anim/ghost-rabbit/charge.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5888808Z copying chatmon/anim/ghost-rabbit/turn.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5891504Z copying chatmon/anim/ghost-rabbit/wave.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5894607Z copying chatmon/anim/ghost-rabbit/talk.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5897546Z copying chatmon/anim/ghost-rabbit/sleep.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5900330Z copying chatmon/anim/ghost-rabbit/beam.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5903335Z copying chatmon/anim/ghost-rabbit/hop.png -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5905882Z creating build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5906886Z copying chatmon/anim/fire-red-panda/idle.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5910181Z copying chatmon/anim/fire-red-panda/alert.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5913653Z copying chatmon/anim/fire-red-panda/think.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5916801Z copying chatmon/anim/fire-red-panda/peek.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5919838Z copying chatmon/anim/fire-red-panda/walk.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5923718Z copying chatmon/anim/fire-red-panda/charge.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5927001Z copying chatmon/anim/fire-red-panda/turn.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5930065Z copying chatmon/anim/fire-red-panda/wave.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5933371Z copying chatmon/anim/fire-red-panda/talk.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5936316Z copying chatmon/anim/fire-red-panda/sleep.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5939196Z copying chatmon/anim/fire-red-panda/beam.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5942538Z copying chatmon/anim/fire-red-panda/hop.png -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5945468Z copying chatmon/anim/leaf-pangolin/manifest.json -> build/lib/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5946853Z copying chatmon/anim/fairy-axolotl/manifest.json -> build/lib/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.5948566Z copying chatmon/anim/ghost-rabbit/manifest.json -> build/lib/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.5949877Z copying chatmon/anim/fire-red-panda/manifest.json -> build/lib/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.5951115Z creating build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5952531Z copying chatmon/bubbles/fire-still.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5954661Z copying chatmon/bubbles/ghost-mist-a.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5956200Z copying chatmon/bubbles/electric-arcs.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5958200Z copying chatmon/bubbles/electric-still.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5960116Z copying chatmon/bubbles/fairy-still-b.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5962013Z copying chatmon/bubbles/leaf-still.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5964256Z copying chatmon/bubbles/fire-embers.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5965647Z copying chatmon/bubbles/leaf-crawler.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5967669Z copying chatmon/bubbles/fire-flames.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5971452Z copying chatmon/bubbles/electric-current.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5973391Z copying chatmon/bubbles/ghost-still.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5975352Z copying chatmon/bubbles/fairy-still.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5977403Z copying chatmon/bubbles/fairy-sparkles.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5978878Z copying chatmon/bubbles/ghost-mist-b.png -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5980703Z copying chatmon/bubbles/manifest.json -> build/lib/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.5982213Z copying chatmon/changelog.md -> build/lib/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.5984211Z creating build/lib/chatmon/integrations/claude/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5986336Z copying chatmon/integrations/claude/.claude-plugin/marketplace.json -> build/lib/chatmon/integrations/claude/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5987421Z creating build/lib/chatmon/integrations/claude/chatmon/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5989073Z copying chatmon/integrations/claude/chatmon/.claude-plugin/plugin.json -> build/lib/chatmon/integrations/claude/chatmon/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:02.5990129Z creating build/lib/chatmon/integrations/claude/chatmon/hooks
+python	UNKNOWN STEP	2026-11-15T04:39:02.5991334Z copying chatmon/integrations/claude/chatmon/hooks/hooks.json -> build/lib/chatmon/integrations/claude/chatmon/hooks
+python	UNKNOWN STEP	2026-11-15T04:39:02.5992646Z creating build/lib/chatmon/locale
+python	UNKNOWN STEP	2026-11-15T04:39:02.5993703Z copying chatmon/locale/chatmon.pot -> build/lib/chatmon/locale
+python	UNKNOWN STEP	2026-11-15T04:39:02.5995657Z creating build/lib/chatmon/phrases
+python	UNKNOWN STEP	2026-11-15T04:39:02.5996606Z copying chatmon/phrases/en.json -> build/lib/chatmon/phrases
+python	UNKNOWN STEP	2026-11-15T04:39:02.5998225Z creating build/lib/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.5999145Z copying chatmon/sounds/pop.wav -> build/lib/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6001064Z copying chatmon/sounds/reminder.wav -> build/lib/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6003471Z copying chatmon/sounds/done.wav -> build/lib/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6005406Z copying chatmon/sounds/needs-you.wav -> build/lib/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6007408Z copying chatmon/sounds/error.wav -> build/lib/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6009335Z copying chatmon/sounds/focus-done.wav -> build/lib/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6011212Z copying chatmon/sounds/success.wav -> build/lib/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6060427Z installing to build/bdist.linux-x86_64/wheel
+python	UNKNOWN STEP	2026-11-15T04:39:02.6060825Z running install
+python	UNKNOWN STEP	2026-11-15T04:39:02.6113017Z running install_lib
+python	UNKNOWN STEP	2026-11-15T04:39:02.6134008Z creating build/bdist.linux-x86_64/wheel
+python	UNKNOWN STEP	2026-11-15T04:39:02.6136490Z creating build/bdist.linux-x86_64/wheel/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6137754Z creating build/bdist.linux-x86_64/wheel/chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6139037Z copying build/lib/chatmon/bubbles/fire-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6141196Z copying build/lib/chatmon/bubbles/ghost-mist-a.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6142554Z copying build/lib/chatmon/bubbles/electric-arcs.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6144064Z copying build/lib/chatmon/bubbles/electric-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6145604Z copying build/lib/chatmon/bubbles/fairy-still-b.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6146975Z copying build/lib/chatmon/bubbles/leaf-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6148764Z copying build/lib/chatmon/bubbles/fire-embers.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6150082Z copying build/lib/chatmon/bubbles/leaf-crawler.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6151765Z copying build/lib/chatmon/bubbles/fire-flames.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6155586Z copying build/lib/chatmon/bubbles/electric-current.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6156809Z copying build/lib/chatmon/bubbles/ghost-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6158576Z copying build/lib/chatmon/bubbles/fairy-still.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6160155Z copying build/lib/chatmon/bubbles/fairy-sparkles.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6161467Z copying build/lib/chatmon/bubbles/ghost-mist-b.png -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6162973Z copying build/lib/chatmon/bubbles/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/bubbles
+python	UNKNOWN STEP	2026-11-15T04:39:02.6164121Z copying build/lib/chatmon/wintrust.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6165379Z copying build/lib/chatmon/sprites.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6166674Z copying build/lib/chatmon/settingswin.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6167979Z copying build/lib/chatmon/localefmt.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6169272Z copying build/lib/chatmon/bubble.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6170983Z copying build/lib/chatmon/richtext.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6172372Z copying build/lib/chatmon/i18n.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6173946Z copying build/lib/chatmon/libdbus.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6176010Z creating build/bdist.linux-x86_64/wheel/chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6177405Z creating build/bdist.linux-x86_64/wheel/chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6178676Z copying build/lib/chatmon/anim/leaf-pangolin/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6181967Z copying build/lib/chatmon/anim/leaf-pangolin/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6184886Z copying build/lib/chatmon/anim/leaf-pangolin/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6187729Z copying build/lib/chatmon/anim/leaf-pangolin/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6190350Z copying build/lib/chatmon/anim/leaf-pangolin/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6193860Z copying build/lib/chatmon/anim/leaf-pangolin/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6197056Z copying build/lib/chatmon/anim/leaf-pangolin/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6200004Z copying build/lib/chatmon/anim/leaf-pangolin/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6203167Z copying build/lib/chatmon/anim/leaf-pangolin/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6205869Z copying build/lib/chatmon/anim/leaf-pangolin/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6208752Z copying build/lib/chatmon/anim/leaf-pangolin/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6211831Z copying build/lib/chatmon/anim/leaf-pangolin/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6214616Z copying build/lib/chatmon/anim/leaf-pangolin/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim/leaf-pangolin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6216065Z creating build/bdist.linux-x86_64/wheel/chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6217446Z copying build/lib/chatmon/anim/fairy-axolotl/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6220612Z copying build/lib/chatmon/anim/fairy-axolotl/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6224015Z copying build/lib/chatmon/anim/fairy-axolotl/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6226999Z copying build/lib/chatmon/anim/fairy-axolotl/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6230111Z copying build/lib/chatmon/anim/fairy-axolotl/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6234100Z copying build/lib/chatmon/anim/fairy-axolotl/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6237240Z copying build/lib/chatmon/anim/fairy-axolotl/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6240320Z copying build/lib/chatmon/anim/fairy-axolotl/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6243558Z copying build/lib/chatmon/anim/fairy-axolotl/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6246520Z copying build/lib/chatmon/anim/fairy-axolotl/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6249509Z copying build/lib/chatmon/anim/fairy-axolotl/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6252772Z copying build/lib/chatmon/anim/fairy-axolotl/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6255602Z copying build/lib/chatmon/anim/fairy-axolotl/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fairy-axolotl
+python	UNKNOWN STEP	2026-11-15T04:39:02.6257000Z creating build/bdist.linux-x86_64/wheel/chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6258413Z copying build/lib/chatmon/anim/ghost-rabbit/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6261038Z copying build/lib/chatmon/anim/ghost-rabbit/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6264138Z copying build/lib/chatmon/anim/ghost-rabbit/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6266783Z copying build/lib/chatmon/anim/ghost-rabbit/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6270449Z copying build/lib/chatmon/anim/ghost-rabbit/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6273356Z copying build/lib/chatmon/anim/ghost-rabbit/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6276344Z copying build/lib/chatmon/anim/ghost-rabbit/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6278798Z copying build/lib/chatmon/anim/ghost-rabbit/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6281565Z copying build/lib/chatmon/anim/ghost-rabbit/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6284469Z copying build/lib/chatmon/anim/ghost-rabbit/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6286980Z copying build/lib/chatmon/anim/ghost-rabbit/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6289585Z copying build/lib/chatmon/anim/ghost-rabbit/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6292389Z copying build/lib/chatmon/anim/ghost-rabbit/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim/ghost-rabbit
+python	UNKNOWN STEP	2026-11-15T04:39:02.6293331Z copying build/lib/chatmon/anim/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6296283Z copying build/lib/chatmon/anim/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6299197Z copying build/lib/chatmon/anim/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6302069Z copying build/lib/chatmon/anim/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6304808Z copying build/lib/chatmon/anim/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6307589Z copying build/lib/chatmon/anim/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6310624Z copying build/lib/chatmon/anim/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6313344Z copying build/lib/chatmon/anim/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6316084Z copying build/lib/chatmon/anim/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6318749Z copying build/lib/chatmon/anim/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6321550Z copying build/lib/chatmon/anim/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6324716Z copying build/lib/chatmon/anim/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6327506Z creating build/bdist.linux-x86_64/wheel/chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6328804Z copying build/lib/chatmon/anim/fire-red-panda/idle.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6331978Z copying build/lib/chatmon/anim/fire-red-panda/alert.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6335067Z copying build/lib/chatmon/anim/fire-red-panda/think.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6338106Z copying build/lib/chatmon/anim/fire-red-panda/peek.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6340933Z copying build/lib/chatmon/anim/fire-red-panda/walk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6344545Z copying build/lib/chatmon/anim/fire-red-panda/charge.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6347672Z copying build/lib/chatmon/anim/fire-red-panda/turn.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6350509Z copying build/lib/chatmon/anim/fire-red-panda/wave.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6353587Z copying build/lib/chatmon/anim/fire-red-panda/talk.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6356343Z copying build/lib/chatmon/anim/fire-red-panda/sleep.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6359041Z copying build/lib/chatmon/anim/fire-red-panda/beam.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6362252Z copying build/lib/chatmon/anim/fire-red-panda/hop.png -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6365049Z copying build/lib/chatmon/anim/fire-red-panda/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim/fire-red-panda
+python	UNKNOWN STEP	2026-11-15T04:39:02.6366257Z copying build/lib/chatmon/anim/manifest.json -> build/bdist.linux-x86_64/wheel/./chatmon/anim
+python	UNKNOWN STEP	2026-11-15T04:39:02.6367307Z copying build/lib/chatmon/cli.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6368666Z copying build/lib/chatmon/winuia.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6370513Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations
+python	UNKNOWN STEP	2026-11-15T04:39:02.6372060Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude
+python	UNKNOWN STEP	2026-11-15T04:39:02.6373412Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6374681Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude/chatmon/hooks
+python	UNKNOWN STEP	2026-11-15T04:39:02.6376010Z copying build/lib/chatmon/integrations/claude/chatmon/hooks/hooks.json -> build/bdist.linux-x86_64/wheel/./chatmon/integrations/claude/chatmon/hooks
+python	UNKNOWN STEP	2026-11-15T04:39:02.6377370Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude/chatmon/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6378745Z copying build/lib/chatmon/integrations/claude/chatmon/.claude-plugin/plugin.json -> build/bdist.linux-x86_64/wheel/./chatmon/integrations/claude/chatmon/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6379945Z creating build/bdist.linux-x86_64/wheel/chatmon/integrations/claude/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6381359Z copying build/lib/chatmon/integrations/claude/.claude-plugin/marketplace.json -> build/bdist.linux-x86_64/wheel/./chatmon/integrations/claude/.claude-plugin
+python	UNKNOWN STEP	2026-11-15T04:39:02.6382608Z copying build/lib/chatmon/changelog.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6383660Z copying build/lib/chatmon/portowner.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6385048Z copying build/lib/chatmon/menus.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6386425Z copying build/lib/chatmon/packagekit.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6387619Z copying build/lib/chatmon/app.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6389544Z copying build/lib/chatmon/ed25519.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6390622Z copying build/lib/chatmon/reminders.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6392348Z copying build/lib/chatmon/shortcutportal.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6393590Z copying build/lib/chatmon/sound.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6394865Z copying build/lib/chatmon/messages.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6396117Z copying build/lib/chatmon/settings.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6397559Z copying build/lib/chatmon/releasecheck.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6398703Z copying build/lib/chatmon/linuxsession.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6400009Z copying build/lib/chatmon/companions.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6401088Z copying build/lib/chatmon/winrt.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6402692Z copying build/lib/chatmon/keychain.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6404041Z copying build/lib/chatmon/agents.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6405506Z copying build/lib/chatmon/winfocus.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6406659Z copying build/lib/chatmon/xkb.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6407922Z copying build/lib/chatmon/changelog.md -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6409203Z copying build/lib/chatmon/context.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6410434Z copying build/lib/chatmon/memory.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6411677Z copying build/lib/chatmon/penguin.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6413367Z copying build/lib/chatmon/chats.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6414429Z copying build/lib/chatmon/bubbleart.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6416027Z copying build/lib/chatmon/stagemenu.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6417334Z copying build/lib/chatmon/wayland.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6418597Z copying build/lib/chatmon/portal.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6419829Z copying build/lib/chatmon/presence.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6421105Z copying build/lib/chatmon/report.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6422384Z copying build/lib/chatmon/styles.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6423741Z copying build/lib/chatmon/winlock.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6424998Z copying build/lib/chatmon/offline.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6426379Z copying build/lib/chatmon/asking.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6427601Z copying build/lib/chatmon/__main__.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6428814Z copying build/lib/chatmon/updates.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6430134Z copying build/lib/chatmon/layer.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6432115Z creating build/bdist.linux-x86_64/wheel/chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6433258Z copying build/lib/chatmon/sounds/pop.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6434619Z copying build/lib/chatmon/sounds/reminder.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6436448Z copying build/lib/chatmon/sounds/done.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6438036Z copying build/lib/chatmon/sounds/needs-you.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6439494Z copying build/lib/chatmon/sounds/error.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6440935Z copying build/lib/chatmon/sounds/focus-done.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6442779Z copying build/lib/chatmon/sounds/success.wav -> build/bdist.linux-x86_64/wheel/./chatmon/sounds
+python	UNKNOWN STEP	2026-11-15T04:39:02.6444247Z copying build/lib/chatmon/hotkey.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6492500Z copying build/lib/chatmon/winpipe.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6493343Z copying build/lib/chatmon/behavior.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6494110Z copying build/lib/chatmon/events.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6494583Z copying build/lib/chatmon/__init__.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6495149Z copying build/lib/chatmon/winfiles.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6495560Z copying build/lib/chatmon/brains.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6495944Z copying build/lib/chatmon/log.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6496324Z copying build/lib/chatmon/backup.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6496719Z copying build/lib/chatmon/chatswin.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6497110Z copying build/lib/chatmon/commands.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6497508Z copying build/lib/chatmon/autostart.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6497906Z copying build/lib/chatmon/heads_up.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6498287Z copying build/lib/chatmon/a11y.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6498685Z copying build/lib/chatmon/paths.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6499155Z creating build/bdist.linux-x86_64/wheel/chatmon/phrases
+python	UNKNOWN STEP	2026-11-15T04:39:02.6499552Z copying build/lib/chatmon/phrases/en.json -> build/bdist.linux-x86_64/wheel/./chatmon/phrases
+python	UNKNOWN STEP	2026-11-15T04:39:02.6500004Z copying build/lib/chatmon/macnative.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6500435Z copying build/lib/chatmon/attachments.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6500850Z copying build/lib/chatmon/wintoast.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6501260Z copying build/lib/chatmon/clickthrough.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6502010Z copying build/lib/chatmon/wincaret.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6502632Z copying build/lib/chatmon/highlight.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6503153Z copying build/lib/chatmon/windrop.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6503504Z creating build/bdist.linux-x86_64/wheel/chatmon/locale
+python	UNKNOWN STEP	2026-11-15T04:39:02.6503900Z copying build/lib/chatmon/locale/chatmon.pot -> build/bdist.linux-x86_64/wheel/./chatmon/locale
+python	UNKNOWN STEP	2026-11-15T04:39:02.6504347Z copying build/lib/chatmon/sysnotify.py -> build/bdist.linux-x86_64/wheel/./chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:02.6504663Z running install_egg_info
+python	UNKNOWN STEP	2026-11-15T04:39:02.6504862Z running egg_info
+python	UNKNOWN STEP	2026-11-15T04:39:02.6515823Z writing chatmon.egg-info/PKG-INFO
+python	UNKNOWN STEP	2026-11-15T04:39:02.6530099Z writing dependency_links to chatmon.egg-info/dependency_links.txt
+python	UNKNOWN STEP	2026-11-15T04:39:02.6534532Z writing entry points to chatmon.egg-info/entry_points.txt
+python	UNKNOWN STEP	2026-11-15T04:39:02.6542482Z writing requirements to chatmon.egg-info/requires.txt
+python	UNKNOWN STEP	2026-11-15T04:39:02.6544910Z writing top-level names to chatmon.egg-info/top_level.txt
+python	UNKNOWN STEP	2026-11-15T04:39:02.6598926Z reading manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6618407Z adding license file 'LICENSE'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6640675Z writing manifest file 'chatmon.egg-info/SOURCES.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6643907Z Copying chatmon.egg-info to build/bdist.linux-x86_64/wheel/./chatmon-0.10.0-py3.14.egg-info
+python	UNKNOWN STEP	2026-11-15T04:39:02.6656418Z running install_scripts
+python	UNKNOWN STEP	2026-11-15T04:39:02.6665216Z creating build/bdist.linux-x86_64/wheel/chatmon-0.10.0.dist-info/WHEEL
+python	UNKNOWN STEP	2026-11-15T04:39:02.6669602Z creating '/home/runner/work/chatmon/chatmon/dist/.tmp-94fg_hyt/chatmon-0.10.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+python	UNKNOWN STEP	2026-11-15T04:39:02.6672940Z adding 'chatmon/__init__.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6675002Z adding 'chatmon/__main__.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6679459Z adding 'chatmon/a11y.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6691262Z adding 'chatmon/agents.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6746935Z adding 'chatmon/app.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6750206Z adding 'chatmon/asking.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6755233Z adding 'chatmon/attachments.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6758092Z adding 'chatmon/autostart.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6762041Z adding 'chatmon/backup.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6767397Z adding 'chatmon/behavior.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6795318Z adding 'chatmon/brains.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6817314Z adding 'chatmon/bubble.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6836130Z adding 'chatmon/bubbleart.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6845596Z adding 'chatmon/changelog.md'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6847847Z adding 'chatmon/changelog.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6852643Z adding 'chatmon/chats.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6855426Z adding 'chatmon/chatswin.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6859350Z adding 'chatmon/cli.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6862384Z adding 'chatmon/clickthrough.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6866854Z adding 'chatmon/commands.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6868762Z adding 'chatmon/companions.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6872447Z adding 'chatmon/context.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6874440Z adding 'chatmon/ed25519.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6877457Z adding 'chatmon/events.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6881217Z adding 'chatmon/heads_up.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6884611Z adding 'chatmon/highlight.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6891800Z adding 'chatmon/hotkey.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6897207Z adding 'chatmon/i18n.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6903040Z adding 'chatmon/keychain.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6919817Z adding 'chatmon/layer.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6924581Z adding 'chatmon/libdbus.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6928822Z adding 'chatmon/linuxsession.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6931307Z adding 'chatmon/localefmt.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6933814Z adding 'chatmon/log.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6942404Z adding 'chatmon/macnative.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6944889Z adding 'chatmon/memory.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6950846Z adding 'chatmon/menus.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6954009Z adding 'chatmon/messages.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6963001Z adding 'chatmon/offline.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6965577Z adding 'chatmon/packagekit.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6970932Z adding 'chatmon/paths.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6991515Z adding 'chatmon/penguin.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6995231Z adding 'chatmon/portal.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.6998815Z adding 'chatmon/portowner.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7005992Z adding 'chatmon/presence.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7009094Z adding 'chatmon/releasecheck.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7018235Z adding 'chatmon/reminders.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7020334Z adding 'chatmon/report.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7025111Z adding 'chatmon/richtext.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7031898Z adding 'chatmon/settings.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7039382Z adding 'chatmon/settingswin.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7042843Z adding 'chatmon/shortcutportal.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7047286Z adding 'chatmon/sound.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7050792Z adding 'chatmon/sprites.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7057794Z adding 'chatmon/stagemenu.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7061194Z adding 'chatmon/styles.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7064355Z adding 'chatmon/sysnotify.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7073943Z adding 'chatmon/updates.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7077520Z adding 'chatmon/wayland.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7079759Z adding 'chatmon/wincaret.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7083890Z adding 'chatmon/windrop.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7085953Z adding 'chatmon/winfiles.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7088057Z adding 'chatmon/winfocus.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7091015Z adding 'chatmon/winlock.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7095729Z adding 'chatmon/winpipe.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7099010Z adding 'chatmon/winrt.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7106518Z adding 'chatmon/wintoast.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7110194Z adding 'chatmon/wintrust.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7113772Z adding 'chatmon/winuia.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7117418Z adding 'chatmon/xkb.py'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7211781Z adding 'chatmon/anim/alert.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7301675Z adding 'chatmon/anim/beam.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7413369Z adding 'chatmon/anim/charge.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7480585Z adding 'chatmon/anim/hop.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7558217Z adding 'chatmon/anim/idle.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7562962Z adding 'chatmon/anim/manifest.json'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7640323Z adding 'chatmon/anim/peek.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7719218Z adding 'chatmon/anim/sleep.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7800676Z adding 'chatmon/anim/talk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7884398Z adding 'chatmon/anim/think.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.7954000Z adding 'chatmon/anim/turn.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8034866Z adding 'chatmon/anim/walk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8117923Z adding 'chatmon/anim/wave.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8230223Z adding 'chatmon/anim/fairy-axolotl/alert.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8329154Z adding 'chatmon/anim/fairy-axolotl/beam.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8428982Z adding 'chatmon/anim/fairy-axolotl/charge.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8512660Z adding 'chatmon/anim/fairy-axolotl/hop.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8606043Z adding 'chatmon/anim/fairy-axolotl/idle.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8610851Z adding 'chatmon/anim/fairy-axolotl/manifest.json'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8719989Z adding 'chatmon/anim/fairy-axolotl/peek.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8809506Z adding 'chatmon/anim/fairy-axolotl/sleep.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8901981Z adding 'chatmon/anim/fairy-axolotl/talk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.8999699Z adding 'chatmon/anim/fairy-axolotl/think.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9106135Z adding 'chatmon/anim/fairy-axolotl/turn.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9251721Z adding 'chatmon/anim/fairy-axolotl/walk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9343425Z adding 'chatmon/anim/fairy-axolotl/wave.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9441975Z adding 'chatmon/anim/fire-red-panda/alert.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9538578Z adding 'chatmon/anim/fire-red-panda/beam.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9647136Z adding 'chatmon/anim/fire-red-panda/charge.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9722127Z adding 'chatmon/anim/fire-red-panda/hop.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9802465Z adding 'chatmon/anim/fire-red-panda/idle.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9806977Z adding 'chatmon/anim/fire-red-panda/manifest.json'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9887717Z adding 'chatmon/anim/fire-red-panda/peek.png'
+python	UNKNOWN STEP	2026-11-15T04:39:02.9963489Z adding 'chatmon/anim/fire-red-panda/sleep.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0045662Z adding 'chatmon/anim/fire-red-panda/talk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0142940Z adding 'chatmon/anim/fire-red-panda/think.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0230589Z adding 'chatmon/anim/fire-red-panda/turn.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0352827Z adding 'chatmon/anim/fire-red-panda/walk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0442245Z adding 'chatmon/anim/fire-red-panda/wave.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0526301Z adding 'chatmon/anim/ghost-rabbit/alert.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0597745Z adding 'chatmon/anim/ghost-rabbit/beam.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0694152Z adding 'chatmon/anim/ghost-rabbit/charge.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0761968Z adding 'chatmon/anim/ghost-rabbit/hop.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0816419Z adding 'chatmon/anim/ghost-rabbit/idle.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0819431Z adding 'chatmon/anim/ghost-rabbit/manifest.json'
+python	UNKNOWN STEP	2026-11-15T04:39:03.0957317Z adding 'chatmon/anim/ghost-rabbit/peek.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1029963Z adding 'chatmon/anim/ghost-rabbit/sleep.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1101816Z adding 'chatmon/anim/ghost-rabbit/talk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1174744Z adding 'chatmon/anim/ghost-rabbit/think.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1233788Z adding 'chatmon/anim/ghost-rabbit/turn.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1306471Z adding 'chatmon/anim/ghost-rabbit/walk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1378317Z adding 'chatmon/anim/ghost-rabbit/wave.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1459263Z adding 'chatmon/anim/leaf-pangolin/alert.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1559294Z adding 'chatmon/anim/leaf-pangolin/beam.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1669546Z adding 'chatmon/anim/leaf-pangolin/charge.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1744633Z adding 'chatmon/anim/leaf-pangolin/hop.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1824001Z adding 'chatmon/anim/leaf-pangolin/idle.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1828621Z adding 'chatmon/anim/leaf-pangolin/manifest.json'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1905188Z adding 'chatmon/anim/leaf-pangolin/peek.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.1985879Z adding 'chatmon/anim/leaf-pangolin/sleep.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2070604Z adding 'chatmon/anim/leaf-pangolin/talk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2154422Z adding 'chatmon/anim/leaf-pangolin/think.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2244471Z adding 'chatmon/anim/leaf-pangolin/turn.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2363219Z adding 'chatmon/anim/leaf-pangolin/walk.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2446139Z adding 'chatmon/anim/leaf-pangolin/wave.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2456909Z adding 'chatmon/bubbles/electric-arcs.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2463523Z adding 'chatmon/bubbles/electric-current.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2479968Z adding 'chatmon/bubbles/electric-still.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2483697Z adding 'chatmon/bubbles/fairy-sparkles.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2488867Z adding 'chatmon/bubbles/fairy-still-b.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2502019Z adding 'chatmon/bubbles/fairy-still.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2504381Z adding 'chatmon/bubbles/fire-embers.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2648389Z adding 'chatmon/bubbles/fire-flames.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2664661Z adding 'chatmon/bubbles/fire-still.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2669250Z adding 'chatmon/bubbles/ghost-mist-a.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2673714Z adding 'chatmon/bubbles/ghost-mist-b.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2691388Z adding 'chatmon/bubbles/ghost-still.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2707549Z adding 'chatmon/bubbles/leaf-crawler.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2734973Z adding 'chatmon/bubbles/leaf-still.png'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2737653Z adding 'chatmon/bubbles/manifest.json'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2740209Z adding 'chatmon/integrations/claude/.claude-plugin/marketplace.json'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2741932Z adding 'chatmon/integrations/claude/chatmon/.claude-plugin/plugin.json'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2743751Z adding 'chatmon/integrations/claude/chatmon/hooks/hooks.json'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2761539Z adding 'chatmon/locale/chatmon.pot'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2765028Z adding 'chatmon/phrases/en.json'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2782505Z adding 'chatmon/sounds/done.wav'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2800137Z adding 'chatmon/sounds/error.wav'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2832143Z adding 'chatmon/sounds/focus-done.wav'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2856774Z adding 'chatmon/sounds/needs-you.wav'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2860855Z adding 'chatmon/sounds/pop.wav'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2901974Z adding 'chatmon/sounds/reminder.wav'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2927917Z adding 'chatmon/sounds/success.wav'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2930869Z adding 'chatmon-0.10.0.dist-info/licenses/LICENSE'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2947359Z adding 'chatmon-0.10.0.dist-info/METADATA'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2948572Z adding 'chatmon-0.10.0.dist-info/WHEEL'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2949633Z adding 'chatmon-0.10.0.dist-info/entry_points.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2950561Z adding 'chatmon-0.10.0.dist-info/top_level.txt'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2956862Z adding 'chatmon-0.10.0.dist-info/RECORD'
+python	UNKNOWN STEP	2026-11-15T04:39:03.2960568Z removing build/bdist.linux-x86_64/wheel
+python	UNKNOWN STEP	2026-11-15T04:39:03.3384193Z Successfully built chatmon-0.10.0.tar.gz and chatmon-0.10.0-py3-none-any.whl
+python	UNKNOWN STEP	2026-11-15T04:39:03.3576596Z ##[group]Run python -m twine check --strict dist/*
+python	UNKNOWN STEP	2026-11-15T04:39:03.3576924Z [36;1mpython -m twine check --strict dist/*[0m
+python	UNKNOWN STEP	2026-11-15T04:39:03.3595115Z shell: /usr/bin/bash -e {0}
+python	UNKNOWN STEP	2026-11-15T04:39:03.3595318Z env:
+python	UNKNOWN STEP	2026-11-15T04:39:03.3595514Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	UNKNOWN STEP	2026-11-15T04:39:03.3595793Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:03.3596127Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	UNKNOWN STEP	2026-11-15T04:39:03.3596464Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:03.3596761Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:03.3597053Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:03.3597344Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	UNKNOWN STEP	2026-11-15T04:39:03.3597605Z   SOURCE_DATE_EPOCH: 1794717520
+python	UNKNOWN STEP	2026-11-15T04:39:03.3597805Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:39:03.9451763Z Checking dist/chatmon-0.10.0-py3-none-any.whl: [32mPASSED[0m
+python	UNKNOWN STEP	2026-11-15T04:39:04.0435917Z Checking dist/chatmon-0.10.0.tar.gz: [32mPASSED[0m
+python	UNKNOWN STEP	2026-11-15T04:39:04.0839474Z ##[group]Run python -m pytest -p no:cacheprovider tests/test_package_data.py
+python	UNKNOWN STEP	2026-11-15T04:39:04.0839943Z [36;1mpython -m pytest -p no:cacheprovider tests/test_package_data.py[0m
+python	UNKNOWN STEP	2026-11-15T04:39:04.0857745Z shell: /usr/bin/bash -e {0}
+python	UNKNOWN STEP	2026-11-15T04:39:04.0857956Z env:
+python	UNKNOWN STEP	2026-11-15T04:39:04.0858129Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	UNKNOWN STEP	2026-11-15T04:39:04.0858400Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:04.0858745Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	UNKNOWN STEP	2026-11-15T04:39:04.0859074Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:04.0859368Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:04.0859677Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:04.0859975Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	UNKNOWN STEP	2026-11-15T04:39:04.0860234Z   SOURCE_DATE_EPOCH: 1794717520
+python	UNKNOWN STEP	2026-11-15T04:39:04.0860434Z   CHATMON_DIST: dist
+python	UNKNOWN STEP	2026-11-15T04:39:04.0860668Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:39:04.9094560Z ============================= test session starts ==============================
+python	UNKNOWN STEP	2026-11-15T04:39:04.9095175Z platform linux -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0
+python	UNKNOWN STEP	2026-11-15T04:39:04.9095490Z rootdir: /home/runner/work/chatmon/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:04.9095724Z configfile: pyproject.toml
+python	UNKNOWN STEP	2026-11-15T04:39:04.9095928Z plugins: timeout-2.4.0
+python	UNKNOWN STEP	2026-11-15T04:39:04.9096109Z timeout: 120.0s
+python	UNKNOWN STEP	2026-11-15T04:39:04.9096286Z timeout method: signal
+python	UNKNOWN STEP	2026-11-15T04:39:04.9096470Z timeout func_only: False
+python	UNKNOWN STEP	2026-11-15T04:39:04.9096649Z collected 5 items
+python	UNKNOWN STEP	2026-11-15T04:39:04.9096744Z 
+python	UNKNOWN STEP	2026-11-15T04:39:04.9871262Z tests/test_package_data.py .....                                         [100%]
+python	UNKNOWN STEP	2026-11-15T04:39:04.9871812Z 
+python	UNKNOWN STEP	2026-11-15T04:39:04.9871999Z ============================== 5 passed in 0.08s ===============================
+python	UNKNOWN STEP	2026-11-15T04:39:05.0263932Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+python	UNKNOWN STEP	2026-11-15T04:39:05.0264470Z with:
+python	UNKNOWN STEP	2026-11-15T04:39:05.0264723Z   name: package-python
+python	UNKNOWN STEP	2026-11-15T04:39:05.0265013Z   path: dist/*
+python	UNKNOWN STEP	2026-11-15T04:39:05.0265314Z   if-no-files-found: error
+python	UNKNOWN STEP	2026-11-15T04:39:05.0265623Z   compression-level: 6
+python	UNKNOWN STEP	2026-11-15T04:39:05.0265893Z   overwrite: false
+python	UNKNOWN STEP	2026-11-15T04:39:05.0266160Z   include-hidden-files: false
+python	UNKNOWN STEP	2026-11-15T04:39:05.0266468Z   archive: true
+python	UNKNOWN STEP	2026-11-15T04:39:05.0266709Z env:
+python	UNKNOWN STEP	2026-11-15T04:39:05.0266960Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+python	UNKNOWN STEP	2026-11-15T04:39:05.0267376Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:05.0267922Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+python	UNKNOWN STEP	2026-11-15T04:39:05.0268465Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:05.0268958Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:05.0269488Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+python	UNKNOWN STEP	2026-11-15T04:39:05.0269981Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+python	UNKNOWN STEP	2026-11-15T04:39:05.0270392Z   SOURCE_DATE_EPOCH: 1794717520
+python	UNKNOWN STEP	2026-11-15T04:39:05.0270684Z ##[endgroup]
+python	UNKNOWN STEP	2026-11-15T04:39:05.1448301Z With the provided path, there will be 2 files uploaded
+python	UNKNOWN STEP	2026-11-15T04:39:05.1452295Z Artifact name is valid!
+python	UNKNOWN STEP	2026-11-15T04:39:05.1452652Z Root directory input is valid!
+python	UNKNOWN STEP	2026-11-15T04:39:05.4303146Z Uploading artifact: package-python.zip
+python	UNKNOWN STEP	2026-11-15T04:39:05.4322681Z Beginning upload of artifact content to blob storage
+python	UNKNOWN STEP	2026-11-15T04:39:06.2666138Z Uploaded bytes 8388608
+python	UNKNOWN STEP	2026-11-15T04:39:06.5101289Z Uploaded bytes 16777216
+python	UNKNOWN STEP	2026-11-15T04:39:06.6468094Z Uploaded bytes 25165824
+python	UNKNOWN STEP	2026-11-15T04:39:06.6821820Z Uploaded bytes 33554432
+python	UNKNOWN STEP	2026-11-15T04:39:06.8467783Z Uploaded bytes 41943040
+python	UNKNOWN STEP	2026-11-15T04:39:07.0693351Z Uploaded bytes 50331648
+python	UNKNOWN STEP	2026-11-15T04:39:07.1616300Z Uploaded bytes 53974551
+python	UNKNOWN STEP	2026-11-15T04:39:07.1993611Z Finished uploading artifact content to blob storage!
+python	UNKNOWN STEP	2026-11-15T04:39:07.2004785Z SHA256 digest of uploaded artifact is 58543927080fc342ac6d48244d933e620dafc63e60d1269fc4c4eae855b03204
+python	UNKNOWN STEP	2026-11-15T04:39:07.2006543Z Finalizing artifact upload
+python	UNKNOWN STEP	2026-11-15T04:39:07.6322692Z Artifact package-python successfully finalized. Artifact ID 14147021593
+python	UNKNOWN STEP	2026-11-15T04:39:07.6341724Z Artifact package-python has been successfully uploaded! Final size is 53974551 bytes. Artifact ID is 14147021593
+python	UNKNOWN STEP	2026-11-15T04:39:07.6352819Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/artifacts/14147021593
+python	UNKNOWN STEP	2026-11-15T04:39:07.6526391Z Post job cleanup.
+python	UNKNOWN STEP	2026-11-15T04:39:07.7630058Z Post job cleanup.
+python	UNKNOWN STEP	2026-11-15T04:39:07.8327863Z [command]/usr/bin/git version
+python	UNKNOWN STEP	2026-11-15T04:39:07.8361202Z git version 2.56.1
+python	UNKNOWN STEP	2026-11-15T04:39:07.8388903Z Temporarily overriding HOME='/home/runner/work/_temp/510dba11-c3a2-4949-8efd-331f035af9d2' before making global git config changes
+python	UNKNOWN STEP	2026-11-15T04:39:07.8389949Z Adding repository directory to the temporary git global config as a safe directory
+python	UNKNOWN STEP	2026-11-15T04:39:07.8393615Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+python	UNKNOWN STEP	2026-11-15T04:39:07.8421988Z Removing SSH command configuration
+python	UNKNOWN STEP	2026-11-15T04:39:07.8427283Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python	UNKNOWN STEP	2026-11-15T04:39:07.8456925Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python	UNKNOWN STEP	2026-11-15T04:39:07.8655313Z Removing HTTP extra header
+python	UNKNOWN STEP	2026-11-15T04:39:07.8660077Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python	UNKNOWN STEP	2026-11-15T04:39:07.8692877Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python	UNKNOWN STEP	2026-11-15T04:39:07.8886935Z Removing includeIf entries pointing to credentials config files
+python	UNKNOWN STEP	2026-11-15T04:39:07.8892678Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python	UNKNOWN STEP	2026-11-15T04:39:07.8920014Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python	UNKNOWN STEP	2026-11-15T04:39:07.9254665Z Cleaning up orphan processes
