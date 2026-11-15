@@ -51,12 +51,162 @@
     ],
     "status": "pass",
     "reason": null,
-    "before_sha256": "1bed4941c7a93d9ec78a32cb5b1da853ec05f0a0c1cd33abc51bb7a0981df41d",
+    "before_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
     "baseline_exit": 0,
-    "mutated_sha256": "2859bfb3212fc493d300de7779f14bf061e82e540c7bbd94d6d883909f73a2b3",
+    "mutated_sha256": "9700f48b4be148e6fda3ddc100377823e1e1c3825fcfb976257e042ee4c4bd17",
     "mutated_exit": 1,
     "observed": "____________ test_a_quit_companion_never_looks_at_the_agents_again ____________",
-    "after_sha256": "1bed4941c7a93d9ec78a32cb5b1da853ec05f0a0c1cd33abc51bb7a0981df41d",
+    "after_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "CRASH-03-later-sees-it-quit",
+    "requirement": "crash-nothing-after-quit",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "if c is not None and not c._quitting:",
+      "replace": "if c is not None:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "expected": [
+      "test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "edd5ba096bc0dfeddc331ad59f5c2f12bf844a1c00ce04c15d027024e3448c2f",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_quit_companion_runs_nothing_it_had_waiting ______________",
+    "after_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "CRASH-04-background-stopped",
+    "requirement": "crash-nothing-after-quit",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self.background.stop()",
+      "replace": "self.background.stopped = False"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "expected": [
+      "test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "84a7e8b015b1d77ce93ba23f51a444071aea47475052763171524b4ee0b20ec3",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_quit_companion_runs_nothing_it_had_waiting ______________",
+    "after_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "CRASH-05-finder-stopped",
+    "requirement": "crash-nothing-after-quit",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self.finder.stop()",
+      "replace": "self.finder.stopped = False"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "expected": [
+      "test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "81222903643c80c5ad1281d01ae5a6124cfd26aa1d8e8865ad74363b0de152c2",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_quit_companion_runs_nothing_it_had_waiting ______________",
+    "after_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "CRASH-06-timers-silenced",
+    "requirement": "crash-nothing-after-quit",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "timer.blockSignals(True)",
+      "replace": "timer.blockSignals(False)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "expected": [
+      "test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "23282614e07cca1c3c4dcbf9f4e2a09d3011079a2f7a7f511b6edd43641f11fd",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_quit_companion_runs_nothing_it_had_waiting ______________",
+    "after_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "restored_exit": 0
+  },
+  {
+    "id": "CRASH-07-event-filter-removed",
+    "requirement": "crash-nothing-after-quit",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "widget.removeEventFilter(self)",
+      "replace": "widget.objectName()"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_smoke.py::test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "expected": [
+      "test_a_quit_companion_runs_nothing_it_had_waiting"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
+    "baseline_exit": 0,
+    "mutated_sha256": "0e8384f733a3762e346529a2b10580a2a739d26324e6f4c05b71ea3073418c02",
+    "mutated_exit": 1,
+    "observed": "______________ test_a_quit_companion_runs_nothing_it_had_waiting ______________",
+    "after_sha256": "944fc5c290c4c61f7ec2a7a499cf8a5b1153222f02f1c0e52c31cf8429f644d5",
     "restored_exit": 0
   }
 ]

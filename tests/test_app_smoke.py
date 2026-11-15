@@ -545,7 +545,7 @@ def test_an_exception_that_escapes_a_slot_goes_into_the_log_with_its_traceback(t
 
     monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "state"))
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "state"))
-    monkeypatch.setattr(appmod, "_problem", None)  # no Companion here to offer a report
+    monkeypatch.setattr(appmod, "_running", None)  # no Companion here to offer a report
     path = log.setup()
     try:
         try:
@@ -669,6 +669,62 @@ def test_a_quit_companion_never_looks_at_the_agents_again(companion, monkeypatch
     c.quit()
     c._refresh_agents(True)  # as that timer does, gone off after quitting
     assert len(looked) == 1
+
+
+def test_a_quit_companion_runs_nothing_it_had_waiting(tmp_path, monkeypatch):
+    """Quitting ends all a Companion had waiting, which went on happening in a process that goes on (the tests'):
+    its one-off waits (Companion._later: the greeting, the first look at the agents three seconds in, the update
+    checks minutes in), its timers, should anything start one again, and the answers of the threads it handed work
+    to and of the brain finder. Here every wait it made comes due, the longest ten minutes in, with a thread's
+    answer, a brain found and a timer started again besides, and none of the Companion's own code runs."""
+    import inspect
+    import time as clock
+
+    from PyQt6.QtCore import QTimer
+
+    from chatmon import app as appmod, brains
+
+    assert inspect.getsource(appmod).count("QTimer.singleShot(") == 1, "the Companion waits only through _later"
+    waits = []
+    real = QTimer.singleShot
+
+    def recording(ms, *rest):
+        waits.append((ms, rest[-1]))
+        real(ms, *rest)
+
+    monkeypatch.setattr(QTimer, "singleShot", staticmethod(recording))
+    monkeypatch.setattr(appmod.Companion, "_agent_statuses", staticmethod(lambda migrate: clock.sleep(0.3) or {}))
+    fixture = make_companion(tmp_path, monkeypatch)
+    c = next(fixture)
+    try:
+        assert until(lambda: not c._refreshing)
+        appmod._log_exception(ValueError, ValueError("boom"), None)  # the offer to report it, a moment later
+        c.handle({"type": "quit"})  # `chatmon quit`: quits once the sender has heard back
+        c._refresh_agents()  # how the agents stand comes back from a thread, 0.3 s on
+        monkeypatch.setattr(brains, "unsure", lambda: True)  # and the brain to ask from the finder's thread
+        monkeypatch.setattr(brains, "look_again", lambda: clock.sleep(0.1))
+        c._find_brain(c._welcome)
+        c.quit()
+        due = [(ms, then) for ms, then in waits if getattr(then, "__qualname__", "") == "Companion._later.<locals>.go"]
+        assert max(ms for ms, _then in due) >= 120_000 and len(due) >= 8  # the update check's among them
+        ran = []
+
+        def watch(frame, event, _arg):
+            name = frame.f_code.co_qualname
+            if event == "call" and name.startswith("Companion.") and not name.startswith("Companion._later."):
+                ran.append(name)
+
+        sys.setprofile(watch)
+        try:
+            for _ms, then in due:
+                then()  # its time come
+            c._message_timer.start(0)  # one of its timers, started again
+            spin(1.0)  # meanwhile the thread's answer and the finder's come back
+        finally:
+            sys.setprofile(None)
+        assert ran == []
+    finally:
+        fixture.close()
 
 
 QUIT_COMPANIONS = r"""

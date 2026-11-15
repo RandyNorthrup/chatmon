@@ -1886,6 +1886,10 @@ class Finder(QObject):
         super().__init__(parent)  # type: ignore[arg-type]  # PyQt6 6.12.1's stubs type QObject's parent as Self, this class
         self._looked.connect(self._hand_back)
         self.last: Brain | None = None  # the latest settled answer
+        self.stopped = False  # Chatmon quitting: no answer is handed back from here on
+
+    def stop(self) -> None:
+        self.stopped = True
 
     def find(self, brains: dict[str, Brain], configured: str, picked: str | None, then, prefer: str | None = None) -> Brain | None:
         quick = choose(brains, configured, picked, wait=False, prefer=prefer)
@@ -1904,12 +1908,17 @@ class Finder(QObject):
             except Exception:  # reported as what was known: finding never breaks asking
                 logger.debug("looking for a brain failed; using what was known", exc_info=True)
                 found = quick
-            self._looked.emit(then, found)
+            try:
+                self._looked.emit(then, found)
+            except RuntimeError:  # freed meanwhile (the app ending): there's no one to hand it to
+                pass
 
         threading.Thread(target=look, daemon=True).start()
         return quick
 
     def _hand_back(self, then, brain) -> None:
+        if self.stopped:
+            return
         self.last = brain
         then(brain)
 

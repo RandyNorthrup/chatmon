@@ -10,6 +10,7 @@ import signal
 import sys
 import threading
 import time
+import weakref
 from collections import deque
 from collections.abc import Callable
 from datetime import date, datetime
@@ -77,24 +78,38 @@ SILENT = "silent"  # a message's cue that's no sound at all (one shown again)
 
 class Background(QObject):
     """Runs slow work (another tool's command line) off the screen thread and
-    hands the result back on it."""
+    hands the result back on it; once stopped (Chatmon quitting), nothing more."""
 
     finished = pyqtSignal(object, object)
 
     def __init__(self):
         super().__init__()
-        self.finished.connect(lambda then, result: then(result))
+        self.stopped = False
+        self.finished.connect(self._hand_back)
 
     def run(self, work, then) -> None:
+        if self.stopped:
+            return
+
         def go() -> None:
             try:
                 result = work()
             except Exception as exc:  # handed to `then`, which says what went wrong: never fatal
                 logger.debug("background work failed", exc_info=True)
                 result = exc
-            self.finished.emit(then, result)
+            try:
+                self.finished.emit(then, result)
+            except RuntimeError:  # freed meanwhile (the app ending): there's no one to hand it to
+                pass
 
         threading.Thread(target=go, daemon=True).start()
+
+    def stop(self) -> None:
+        self.stopped = True
+
+    def _hand_back(self, then, result) -> None:
+        if not self.stopped:
+            then(result)
 
 
 def pretty(source: str) -> str:
@@ -257,7 +272,7 @@ class Companion(QObject):
         scheme = getattr(self.app.styleHints(), "colorSchemeChanged", None)  # Qt 6.5 and later; Ubuntu 24.04 has 6.4
         if scheme is not None:
             scheme.connect(self._scheme_changed)  # light or dark: disconnected in quit()
-        QTimer.singleShot(0, self._mac_edit_menu)  # once Qt has made the menu bar, as the app starts
+        self._later(0, self._mac_edit_menu)  # once Qt has made the menu bar, as the app starts
         self.asker.answered.connect(self._answered)
         self.asker.failed.connect(self._failed)
         self.asker.partial.connect(self._partial)
@@ -296,7 +311,7 @@ class Companion(QObject):
         self.tray.show()
         self.app.setWindowIcon(QIcon(self.sprites.frame("idle", 0, False).pixmap))
         if sys.platform.startswith("linux"):
-            QTimer.singleShot(60_000, self._no_tray_news)  # a minute in: a tray starting with the desktop is up by then
+            self._later(60_000, self._no_tray_news)  # a minute in: a tray starting with the desktop is up by then
 
         self._watch_screen_lock()
         self._every(5_000, self._check_reminders)
@@ -304,17 +319,17 @@ class Companion(QObject):
         self._every(30_000, self._check_time)
         self._every(60_000, self._check_system)
         self._updates_timer = self._every(int(self.config["heads_up"]["updates_every_hours"] * 3600_000), self._check_updates)
-        QTimer.singleShot(600_000 if sys.platform == "win32" else 120_000, self._check_updates)
-        QTimer.singleShot(1500, self._greet)
-        QTimer.singleShot(45_000, self._maybe_check_updates)
+        self._later(600_000 if sys.platform == "win32" else 120_000, self._check_updates)
+        self._later(1500, self._greet)
+        self._later(45_000, self._maybe_check_updates)
         self._every(3600_000, self._maybe_check_updates)
-        global _problem
-        _problem = self._problem
-        QTimer.singleShot(3000, partial(self._refresh_agents, True))
+        global _running
+        _running = self
+        self._later(3000, self._refresh_agents, True)
         self._preload = QTimer(self)  # cuts the animations not shown yet, one at a time, between frames
         self._preload.setInterval(40)
         self._preload.timeout.connect(self._preload_next)
-        QTimer.singleShot(2000, self._preload.start)  # once the screen's scale is known
+        self._later(2000, self._start_preload)  # once the screen's scale is known
         self._apply_accessibility()
         self._show_due_reminders()  # fired and not yet done or snoozed: back, as they were when Chatmon quit
         self._register_hotkey()
@@ -326,10 +341,29 @@ class Companion(QObject):
         return self.state.get("name") or self.config["name"] or self._companion().nickname
 
     def _every(self, ms: int, fn) -> QTimer:
-        timer = QTimer(self)
+        timer = QTimer(self)  # the Companion's own: quitting stops it (_stop_for_good)
         timer.timeout.connect(fn)
         timer.start(max(1000, ms))
         return timer
+
+    def _later(self, ms: int, method: Callable[..., object], *args: object) -> None:
+        """`method(*args)`, one of the Companion's own, in `ms` milliseconds, unless it has quit by then: how it
+        waits to do something once, as its timers (_every) are how it does something again and again. Nothing of
+        either runs once it's quit, in the app or in a test after its own (the tests make one Companion after
+        another), and the wait holds the Companion only weakly, so a quit one is freed meanwhile."""
+        func = getattr(method, "__func__", None)
+        if func is None or getattr(method, "__self__", None) is not self:
+            raise TypeError(f"_later waits for one of the Companion's own methods, not {method!r}")
+        if self._quitting:
+            return
+        me = weakref.ref(self)
+
+        def go() -> None:
+            c = me()
+            if c is not None and not c._quitting:
+                func(c, *args)
+
+        QTimer.singleShot(ms, go)
 
     def _make_watcher(self) -> heads_up.Watcher:
         h = self.config["heads_up"]
@@ -491,7 +525,7 @@ class Companion(QObject):
         self.stage.show_message(message.title, message.text, [(label, self._presses(action)) for label, action in message.buttons], message.timeout_s)
         self._read_aloud(message.title, message.text, message.buttons, important=message.alert)
         if sys.platform == "win32" and self.config["accessibility"].get("magnifier_follows", True):
-            QTimer.singleShot(50, self._magnify_bubble)  # once the stage has laid it out
+            self._later(50, self._magnify_bubble)  # once the stage has laid it out
         if message.cue != SILENT:
             self._cue(message.cue or "pop")
 
@@ -701,8 +735,8 @@ class Companion(QObject):
             plain_ctrl = mods & Qt.KeyboardModifier.ControlModifier and not mods & (Qt.KeyboardModifier.AltModifier | Qt.KeyboardModifier.ShiftModifier)
             if plain_ctrl and Qt.Key.Key_1.value <= key <= Qt.Key.Key_9.value:
                 return self._press_bubble_button(key - Qt.Key.Key_1.value)
-        elif kind == QEvent.Type.ApplicationPaletteChange and watched is self.ask_box and not self._quitting:
-            QTimer.singleShot(0, self._palette_changed)
+        elif kind == QEvent.Type.ApplicationPaletteChange and watched is self.ask_box:
+            self._later(0, self._palette_changed)
         return False
 
     def _press_bubble_button(self, index: int) -> bool:
@@ -777,7 +811,7 @@ class Companion(QObject):
         if QSystemTrayIcon.isSystemTrayAvailable() or self.state.get("told_no_tray"):
             return
         if self.stage.message_visible() or self.ask_box.isVisible():
-            QTimer.singleShot(60_000, self._no_tray_news)  # not over something else
+            self._later(60_000, self._no_tray_news)  # not over something else
             return
         self.state.set("told_no_tray", True)
         self.state.save()
@@ -1553,7 +1587,10 @@ class Companion(QObject):
         else:  # you closed the box meanwhile: the answer is kept, and this says it came
             self.say(came, buttons=[(_("Read"), self._read_answer)], timeout_s=30, key="answered", cue="done")
         self.behavior.set_talking(True, now)
-        QTimer.singleShot(int(min(max(len(answer) / 18, 2), 10) * 1000), lambda: self.behavior.set_talking(False, self._now()))
+        self._later(int(min(max(len(answer) / 18, 2), 10) * 1000), self._stop_talking)
+
+    def _stop_talking(self) -> None:
+        self.behavior.set_talking(False, self._now())
 
     def _read_answer(self) -> None:
         """The answered bubble's Read: the box, open at the chat the answer is in."""
@@ -2209,7 +2246,7 @@ class Companion(QObject):
             self._connections[sock] = bytearray()
             sock.readyRead.connect(self._read_connections, type=queued)  # type: ignore[call-arg]  # PyQt6 6.11's stub leaves out connect's type, which it takes
             sock.disconnected.connect(self._read_connections, type=queued)  # type: ignore[call-arg]  # as above
-        QTimer.singleShot(0, self._read_connections)  # anything already in
+        self._later(0, self._read_connections)  # anything already in
 
     def _read_connections(self) -> None:
         """Handle each complete line as it arrives and answer it, so the sender can hang up knowing it got here:
@@ -2291,7 +2328,7 @@ class Companion(QObject):
             self.set_hidden(False)
             self.behavior.poke(now)
         elif kind == "quit":  # `chatmon quit`: an installer updating it, say
-            QTimer.singleShot(0, self.quit)  # once the sender has heard back
+            self._later(0, self.quit)  # once the sender has heard back
         return None
 
     def _agent_event(self, event: str, source: str, text: str) -> None:
@@ -2413,8 +2450,8 @@ class Companion(QObject):
         """How each agent stands, off the main thread. The first time, hooks connected under the old name
         (penguin-companion) are swapped for chatmon's first. One look at a time: each starts the agents'
         own command lines (a second or so each), and every refill of the menu asks for one. Asked again
-        meanwhile, it looks once more when this one is done. Never once quit: the first look's timer, three seconds
-        in, goes off even so in a process that goes on (the tests'), and ran the agents' own command lines then."""
+        meanwhile, it looks once more when this one is done. Never once quit, whoever asks: in a process that goes
+        on (the tests'), a look then ran the agents' own command lines after the test's stand-ins were undone."""
         if self._quitting:
             return
         if self._refreshing:
@@ -2492,7 +2529,7 @@ class Companion(QObject):
         self._offered |= {a.name for a in shown}
         if {a.name for a in new + off} - self._offered and not self._offer_due:
             self._offer_due = True
-            QTimer.singleShot(self.OFFER_AGAIN_MS, self._offer_agents_again)
+            self._later(self.OFFER_AGAIN_MS, self._offer_agents_again)
         if not shown:
             return
         answered = {a.name: status[a.name] for a in shown}
@@ -2659,6 +2696,9 @@ class Companion(QObject):
         self.stage.set_sprites(self.sprites)
         if hasattr(self, "_preload"):
             self._preload.start()
+
+    def _start_preload(self) -> None:
+        self._preload.start()
 
     def _preload_next(self) -> None:
         if not self.sprites.load_next():
@@ -3099,9 +3139,9 @@ class Companion(QObject):
             watcher.close()
         self._save_chat()
         self.desk.close()
-        global _problem
-        if _problem == self._problem:
-            _problem = None
+        global _running
+        if _running is self:
+            _running = None
         self.updater.cancel()
         from . import sound
 
@@ -3115,19 +3155,32 @@ class Companion(QObject):
 
     def _stop_for_good(self) -> None:
         """Nothing of this Companion runs or paints once it's quit, whether or not it's ever freed: every timer it
-        owns stopped, its checks and its menu's refill, and its windows hidden. Left open, the ask box went on
-        redrawing its bubble 30 times a second, and the checks went on every few seconds. Only a process that
-        goes on after quitting sees it: the tests make one Companion after another, and nothing frees them."""
+        owns stopped and silenced, should anything start one again (its checks, its menu's refill, the asker's),
+        what it was waiting for let go of (the work handed to threads, a brain being found, the question on its
+        way, Settings' test), and its windows hidden; its one-off waits (_later) see it has quit. Left open, the ask
+        box went on redrawing its bubble 30 times a second, the checks went on every few seconds, and a look at the
+        agents went off three seconds in, whenever that was. Only a process that goes on after quitting sees it:
+        the tests make one Companion after another."""
+        self.background.stop()
+        self.finder.stop()
+        self.asker.cancel()
+        self.compactor.cancel()
+        if self._brain_test is not None:
+            self._brain_test.cancel()
+            self._brain_test = None
         self.ask_box.hide()  # (its redraws stop as it hides)
+        for widget in (self.ask_box, self.ask_box.entry, self.ask_box.answer):
+            widget.removeEventFilter(self)  # Qt called it for every event of theirs, a quit one's too
         for owner in (self, self.ask_box):
             for timer in owner.findChildren(QTimer):
                 timer.stop()
+                timer.blockSignals(True)
         for window in (self._settings_window, self._chats_window):
             if window is not None and not sip.isdeleted(window):
                 window.close()
 
 
-_problem: Callable[[], None] | None = None  # the running Companion's offer to report what went wrong
+_running: Companion | None = None  # the Companion running, which offers to report what went wrong (_log_exception)
 
 
 def _key_status(brain: brains.Brain) -> dict:
@@ -3195,8 +3248,8 @@ def _log_exception(kind, value, tb) -> None:
     """An exception that escaped a slot (PyQt would abort the app over it): in the log, with its traceback, and
     offered to be reported."""
     logger.error("something went wrong", exc_info=(kind, value, tb))
-    if _problem is not None and not issubclass(kind, KeyboardInterrupt):
-        QTimer.singleShot(0, _problem)
+    if _running is not None and not issubclass(kind, KeyboardInterrupt):
+        _running._later(0, _running._problem)
 
 
 def _find_fonts(app: QApplication) -> None:
@@ -3348,7 +3401,7 @@ def run() -> int:
     # Python runs a signal handler between any two steps of whatever it's doing,
     # say halfway through drawing a frame; quit from the event loop instead.
     for sig in (signal.SIGINT, signal.SIGTERM):
-        signal.signal(sig, lambda *_: QTimer.singleShot(0, companion.quit))
+        signal.signal(sig, lambda *_: companion._later(0, companion.quit))
     try:
         return app.exec()
     finally:
