@@ -1,4 +1,4 @@
-# Lint and types at 806bb34, Windows 11 workstation, 2026-11-15T20:48:23Z
+# Lint and types at b85ec7e (pyproject.toml as main has it), Windows 11 workstation, 2026-11-15T21:00:12Z
 $ ruff --version
 ruff 0.17.4
 $ ruff check .
@@ -6,69 +6,21 @@ All checks passed!
 # exit 0
 $ mypy --version
 mypy 2.4.1 (compiled: yes)
-$ mypy --platform linux   (pyproject.toml's files: chatmon and packaging/pins.py)
-chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-Success: no issues found in 71 source files
-# exit 0
-$ mypy --platform win32   (pyproject.toml's files: chatmon and packaging/pins.py)
-chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-Success: no issues found in 71 source files
-# exit 0
-$ mypy --platform darwin   (pyproject.toml's files: chatmon and packaging/pins.py)
-chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
-Success: no issues found in 71 source files
-# exit 0
-$ mypy --strict --platform linux packaging/pins.py
+$ mypy --platform linux   (pyproject.toml's files: chatmon, unchanged)
+Success: no issues found in 70 source files
+# exit 0 (mypy's annotation-unchecked notes on chatmon/bubble.py left out)
+$ mypy --platform win32   (pyproject.toml's files: chatmon, unchanged)
+Success: no issues found in 70 source files
+# exit 0 (mypy's annotation-unchecked notes on chatmon/bubble.py left out)
+$ mypy --platform darwin   (pyproject.toml's files: chatmon, unchanged)
+Success: no issues found in 70 source files
+# exit 0 (mypy's annotation-unchecked notes on chatmon/bubble.py left out)
+$ mypy --strict --platform linux packaging/pins.py   (what pins.yml's types job runs)
 Success: no issues found in 1 source file
 # exit 0
-$ mypy --strict --platform win32 packaging/pins.py
+$ mypy --strict --platform win32 packaging/pins.py   (what pins.yml's types job runs)
 Success: no issues found in 1 source file
 # exit 0
-$ mypy --strict --platform darwin packaging/pins.py
+$ mypy --strict --platform darwin packaging/pins.py   (what pins.yml's types job runs)
 Success: no issues found in 1 source file
 # exit 0
