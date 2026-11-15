@@ -1,0 +1,17 @@
+{
+  "drills": [
+    {
+      "id": "W4-L-02E-linux-player",
+      "requirement": "AC-02E",
+      "file": "chatmon/sound.py",
+      "find": "servers = {\"pw-play\": folder / \"pipewire-0\", \"paplay\": folder / \"pulse\" / \"native\", \"canberra-gtk-play\": None}",
+      "replace": "servers = {\"pw-play\": None, \"paplay\": folder / \"pulse\" / \"native\", \"canberra-gtk-play\": None}",
+      "test": [
+        "tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+      ],
+      "expect": [
+        "test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+      ]
+    }
+  ]
+}
