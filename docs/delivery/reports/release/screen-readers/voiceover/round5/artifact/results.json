@@ -1,0 +1,404 @@
+[
+ {
+  "pass": "proposed",
+  "case": "G",
+  "how": "HYPOTHESIS: Chatmon just started (active, as launched): its greeting",
+  "expected_words": "Hi, I'm Chatmon! Click me to ask anything.",
+  "needle": "Hi, I'm Chatmon",
+  "said_at": "21:01:26.299Z",
+  "heard": true,
+  "spoken": "Hi, I'm Chatmon! Click me to ask anything.",
+  "spoken_at": "21:01:34.477Z",
+  "seconds_after_said": 8.18,
+  "words": 8,
+  "next_phrase": [
+   4.75,
+   "You are currently on a dialog."
+  ],
+  "quiet_after_for_at_least": null,
+  "trace": [
+   {
+    "t": 1794776486.738,
+    "event": "hypothesis",
+    "settle_ms": 2500
+   },
+   {
+    "t": 1794776487.024,
+    "event": "hypothesis",
+    "title_focus_proxy": true
+   },
+   {
+    "t": 1794776491.747,
+    "event": "voiceover-say",
+    "text": "Hi, I'm Chatmon! Click me to ask anything.",
+    "important": false,
+    "active": true,
+    "fallback": false,
+    "held": [
+     "Hi, I'm Chatmon! Click me to ask anything."
+    ]
+   },
+   {
+    "t": 1794776491.747,
+    "event": "announce",
+    "reader": "VoiceOver",
+    "words": "Hi, I'm Chatmon! Click me to ask anything.",
+    "important": false,
+    "route": "spoken"
+   },
+   {
+    "t": 1794776494.419,
+    "event": "voiceover-post",
+    "text": "Hi, I'm Chatmon! Click me to ask anything.",
+    "important": false
+   }
+  ],
+  "phrases_meanwhile": [
+   [
+    "21:01:29.463Z",
+    "You are currently in a group. To exit this group, press Control-Option-Shift-Up Arrow."
+   ],
+   [
+    "21:01:30.450Z",
+    "Python is not responding"
+   ],
+   [
+    "21:01:31.924Z",
+    "Python Chatmon dialog"
+   ],
+   [
+    "21:01:32.996Z",
+    "In Chatmon dialog content is empty"
+   ],
+   [
+    "21:01:34.477Z",
+    "Hi, I'm Chatmon! Click me to ask anything."
+   ],
+   [
+    "21:01:39.224Z",
+    "You are currently on a dialog."
+   ]
+  ]
+ },
+ {
+  "pass": "proposed",
+  "case": "A2",
+  "how": "HYPOTHESIS: in front (the shortcut opened the ask box): `version` typed, Return",
+  "expected_words": "I'm Chatmon 0.10.0.",
+  "needle": "Chatmon 0.10.0",
+  "said_at": "21:01:57.761Z",
+  "heard": true,
+  "spoken": "I'm Chatmon 0.10.0.",
+  "spoken_at": "21:02:00.181Z",
+  "seconds_after_said": 2.42,
+  "chatmon_active_after_shortcut": true,
+  "focused_before_typing": "AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:",
+  "focused_after_typing": "AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value: version",
+  "words": 3,
+  "next_phrase": null,
+  "quiet_after_for_at_least": 8,
+  "trace": [
+   {
+    "t": 1794776520.038,
+    "event": "voiceover-post",
+    "text": "I'm Chatmon 0.10.0.",
+    "important": false
+   },
+   {
+    "t": 1794776520.04,
+    "event": "voiceover-say",
+    "text": "I'm Chatmon 0.10.0.",
+    "important": false,
+    "active": true,
+    "fallback": false,
+    "held": []
+   },
+   {
+    "t": 1794776520.04,
+    "event": "announce",
+    "reader": "VoiceOver",
+    "words": "I'm Chatmon 0.10.0.",
+    "important": false,
+    "route": "spoken"
+   }
+  ],
+  "phrases_meanwhile": [
+   [
+    "21:01:58.051Z",
+    "version"
+   ],
+   [
+    "21:01:59.167Z",
+    "You are currently on a text area."
+   ],
+   [
+    "21:02:00.181Z",
+    "I'm Chatmon 0.10.0."
+   ]
+  ]
+ },
+ {
+  "pass": "proposed",
+  "case": "A1",
+  "how": "in front (the shortcut opened the ask box), then `chatmon say`",
+  "expected_words": "Chatmon. Probe A1, said while Chatmon is in front.",
+  "needle": "Probe A1",
+  "said_at": "21:02:22.567Z",
+  "heard": true,
+  "spoken": "Chatmon. Probe A1, said while Chatmon is in front.",
+  "spoken_at": "21:02:22.981Z",
+  "seconds_after_said": 0.41,
+  "chatmon_active_after_shortcut": true,
+  "words": 9,
+  "next_phrase": null,
+  "quiet_after_for_at_least": 8,
+  "trace": [
+   {
+    "t": 1794776542.8,
+    "event": "voiceover-post",
+    "text": "Chatmon. Probe A1, said while Chatmon is in front.",
+    "important": false
+   },
+   {
+    "t": 1794776542.801,
+    "event": "voiceover-say",
+    "text": "Chatmon. Probe A1, said while Chatmon is in front.",
+    "important": false,
+    "active": true,
+    "fallback": false,
+    "held": []
+   },
+   {
+    "t": 1794776542.801,
+    "event": "announce",
+    "reader": "VoiceOver",
+    "words": "Chatmon. Probe A1, said while Chatmon is in front.",
+    "important": false,
+    "route": "spoken"
+   }
+  ],
+  "phrases_meanwhile": [
+   [
+    "21:02:22.981Z",
+    "Chatmon. Probe A1, said while Chatmon is in front."
+   ]
+  ]
+ },
+ {
+  "pass": "proposed",
+  "case": "B1",
+  "how": "HYPOTHESIS: behind: `chatmon say`; then Chatmon's shortcut opens the ask box",
+  "expected_words": "Chatmon. Probe P-B1, held while Chatmon is behind.",
+  "needle": "Probe P-B1",
+  "said_at": "21:02:35.984Z",
+  "heard": true,
+  "spoken": "Chatmon. Probe P-B1, held while Chatmon is behind.",
+  "spoken_at": "21:02:49.729Z",
+  "seconds_after_said": 13.74,
+  "chatmon_active_after_bringing": true,
+  "words": 8,
+  "next_phrase": null,
+  "quiet_after_for_at_least": 8,
+  "brought_to_front_at": "21:02:46.449Z",
+  "held_while_behind": true,
+  "seconds_after_front": 3.28,
+  "trace": [
+   {
+    "t": 1794776556.126,
+    "event": "voiceover-say",
+    "text": "Chatmon. Probe P-B1, held while Chatmon is behind.",
+    "important": false,
+    "active": false,
+    "fallback": false,
+    "held": [
+     "Chatmon. Probe P-B1, held while Chatmon is behind."
+    ]
+   },
+   {
+    "t": 1794776556.126,
+    "event": "announce",
+    "reader": "VoiceOver",
+    "words": "Chatmon. Probe P-B1, held while Chatmon is behind.",
+    "important": false,
+    "route": "spoken"
+   },
+   {
+    "t": 1794776566.716,
+    "event": "focus",
+    "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"
+   },
+   {
+    "t": 1794776566.778,
+    "event": "app-state",
+    "state": "ApplicationActive",
+    "held": [
+     "Chatmon. Probe P-B1, held while Chatmon is behind."
+    ]
+   },
+   {
+    "t": 1794776569.408,
+    "event": "voiceover-post",
+    "text": "Chatmon. Probe P-B1, held while Chatmon is behind.",
+    "important": false
+   }
+  ],
+  "phrases_meanwhile": [
+   [
+    "21:02:37.478Z",
+    "You are currently in a group. To exit this group, press Control-Option-Shift-Up Arrow."
+   ],
+   [
+    "21:02:46.995Z",
+    ""
+   ],
+   [
+    "21:02:47.632Z",
+    "Python dialog Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work Ask Chatmon edit text"
+   ],
+   [
+    "21:02:47.951Z",
+    "Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work"
+   ],
+   [
+    "21:02:49.729Z",
+    "Chatmon. Probe P-B1, held while Chatmon is behind."
+   ]
+  ]
+ },
+ {
+  "pass": "proposed",
+  "case": "A2-after-B1",
+  "how": "HYPOTHESIS: in front (the shortcut opened the ask box): `version` typed, Return",
+  "expected_words": "I'm Chatmon 0.10.0.",
+  "needle": "Chatmon 0.10.0",
+  "said_at": "21:03:10.502Z",
+  "heard": true,
+  "spoken": "I'm Chatmon 0.10.0.",
+  "spoken_at": "21:03:12.507Z",
+  "seconds_after_said": 2.0,
+  "chatmon_active_after_shortcut": true,
+  "focused_before_typing": "AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:",
+  "focused_after_typing": "AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value: version",
+  "words": 3,
+  "next_phrase": null,
+  "quiet_after_for_at_least": 8,
+  "trace": [
+   {
+    "t": 1794776592.377,
+    "event": "voiceover-post",
+    "text": "I'm Chatmon 0.10.0.",
+    "important": false
+   },
+   {
+    "t": 1794776592.378,
+    "event": "voiceover-say",
+    "text": "I'm Chatmon 0.10.0.",
+    "important": false,
+    "active": true,
+    "fallback": false,
+    "held": []
+   },
+   {
+    "t": 1794776592.379,
+    "event": "announce",
+    "reader": "VoiceOver",
+    "words": "I'm Chatmon 0.10.0.",
+    "important": false,
+    "route": "spoken"
+   }
+  ],
+  "phrases_meanwhile": [
+   [
+    "21:03:10.816Z",
+    "version"
+   ],
+   [
+    "21:03:11.882Z",
+    "You are currently on a text area."
+   ],
+   [
+    "21:03:12.507Z",
+    "I'm Chatmon 0.10.0."
+   ]
+  ]
+ },
+ {
+  "pass": "proposed",
+  "case": "C1",
+  "how": "HYPOTHESIS: behind: an agent's needs-you alert; then System Events makes Chatmon frontmost (no ask box)",
+  "expected_words": "Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.",
+  "needle": "Probe P-C1",
+  "said_at": "21:03:26.785Z",
+  "heard": true,
+  "spoken": "Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.",
+  "spoken_at": "21:03:41.806Z",
+  "seconds_after_said": 15.02,
+  "chatmon_active_after_bringing": true,
+  "words": 16,
+  "next_phrase": [
+   6.6,
+   "You are currently on a dialog."
+  ],
+  "quiet_after_for_at_least": null,
+  "brought_to_front_at": "21:03:38.080Z",
+  "held_while_behind": true,
+  "seconds_after_front": 3.73,
+  "trace": [
+   {
+    "t": 1794776607.107,
+    "event": "voiceover-say",
+    "text": "Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.",
+    "important": true,
+    "active": false,
+    "fallback": false,
+    "held": [
+     "Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat."
+    ]
+   },
+   {
+    "t": 1794776607.107,
+    "event": "announce",
+    "reader": "VoiceOver",
+    "words": "Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.",
+    "important": true,
+    "route": "spoken"
+   },
+   {
+    "t": 1794776618.567,
+    "event": "app-state",
+    "state": "ApplicationActive",
+    "held": [
+     "Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat."
+    ]
+   },
+   {
+    "t": 1794776621.135,
+    "event": "voiceover-post",
+    "text": "Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.",
+    "important": true
+   }
+  ],
+  "phrases_meanwhile": [
+   [
+    "21:03:28.326Z",
+    "You are currently in a group. To exit this group, press Control-Option-Shift-Up Arrow."
+   ],
+   [
+    "21:03:39.246Z",
+    "Python Chatmon dialog"
+   ],
+   [
+    "21:03:40.101Z",
+    "In Chatmon dialog content is empty"
+   ],
+   [
+    "21:03:41.806Z",
+    "Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat."
+   ],
+   [
+    "21:03:48.403Z",
+    "You are currently on a dialog."
+   ]
+  ]
+ }
+]

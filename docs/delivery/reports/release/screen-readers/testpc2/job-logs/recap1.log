@@ -1,0 +1,22 @@
+﻿job recap1 in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+13:36:00.660 Narrator speech-recap probe: Chatmon 0.10.0 from W:\chatmon-sr\src
+13:36:00.662 pressed Ctrl+Win+Enter (Narrator on) (SendInput: 6)
+13:36:13.216 Narrator running: [8952]
+13:36:27.990 Chatmon running, pid 21080
+13:36:27.990 $ python -m chatmon ask
+13:36:28.291   exit 0
+13:36:31.292 foreground window: pid 21080, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+13:36:36.293 $ python -m chatmon say "Probe one: the build finished while Chatmon was in front."
+13:36:36.587   exit 0
+13:36:44.888 typed 'note: water the ferns' (SendInput)
+13:36:45.889 pressed Enter (SendInput: 2)
+13:36:52.892 pressed Insert+Alt+X, Narrator's speech recap (SendInput: 6)
+13:36:56.893 windows that weren't there before (not Chatmon's): [{'hwnd': 264604, 'pid': 8952, 'title': '', 'class': 'HighlightCursorClass', 'rect': [491, 546, 500, 573]}, {'hwnd': 199274, 'pid': 8952, 'title': 'Speech recap', 'class': 'NarratorSpeechRecapDialog', 'rect': [104, 104, 764, 604]}, {'hwnd': 199404, 'pid': 8848, 'title': 'Narrator updates', 'class': 'ShellUXFrameWindowClass', 'rect': [500, 111, 1100, 741]}]
+13:36:56.950 speech recap: 14 entries read
+13:36:56.950 pressed Esc (the recap closes) (SendInput: 2)
+13:36:57.951 $ python -m chatmon quit
+13:36:58.177   exit 0
+13:36:58.277 pressed Ctrl+Win+Enter (Narrator off) (SendInput: 6)
+13:37:03.280 Narrator running after Ctrl+Win+Enter: [8952]
+13:37:03.288 CASE A1: in Narrator's speech recap: False: []
+13:37:03.288 CASE A2: in Narrator's speech recap: False: []

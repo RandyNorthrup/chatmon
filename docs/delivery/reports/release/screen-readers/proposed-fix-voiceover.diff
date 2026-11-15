@@ -1,0 +1,197 @@
+diff --git a/chatmon/a11y.py b/chatmon/a11y.py
+index 6220c2a..da4b3d8 100644
+--- a/chatmon/a11y.py
++++ b/chatmon/a11y.py
+@@ -13,9 +13,10 @@ notifications; Orca reads GNOME's). `announce()` picks.
+   still keeps it (before 2.62), GNOME's screen-reader-enabled setting, or its own process, and the notification
+   says it (linuxsession.ScreenReaders, which hears each without waiting).
+ - macOS, VoiceOver: NSAccessibilityAnnouncementRequestedNotification, posted on the app. VoiceOver speaks it for
+-  the app in front (with the chat open, Chatmon is); from the background it may stay silent. So while Chatmon
+-  isn't in front, announcements wait (the last few) and are said when you come to it; or, if you chose it
+-  (`set_speech_fallback`), macOS's own voice says them at once.
++  the app in front (with the chat open, Chatmon is); from the background it may stay silent, and it drops one
++  that comes while it moves to Chatmon. So while Chatmon isn't in front, announcements wait (the last few) and are
++  said a moment after you come to it; or, if you chose it (`set_speech_fallback`), macOS's own voice says them at
++  once.
+   https://developer.apple.com/documentation/appkit/nsaccessibility-swift.struct/notification/announcementrequested
+ - Windows: UI Automation's notification event (winuia.py) while Chatmon is in front; NVDA ignores those from apps
+   in the background, so then the notification. https://github.com/nvaccess/nvda/blob/master/source/NVDAObjects/UIA/__init__.py
+@@ -27,10 +28,11 @@ import ctypes
+ import logging
+ import re
+ import sys
++import time
+ from collections.abc import Callable
+ from dataclasses import dataclass
+ 
+-from PyQt6.QtCore import QCoreApplication, QObject, QProcess, Qt
++from PyQt6.QtCore import QCoreApplication, QObject, QProcess, Qt, QTimer
+ 
+ from .i18n import _, either
+ 
+@@ -227,10 +229,14 @@ def set_speech_fallback(on: bool) -> None:
+ 
+ class VoiceOver(QObject):
+     """Announcements for VoiceOver: posted at once while Chatmon is the active app; otherwise held (the last
+-    `HELD`) and posted together when it becomes active, or, with the speech fallback on, said by `say` at once.
++    `HELD`) and posted together SETTLE_MS after it becomes active, or, with the speech fallback on, said by `say`
++    at once. VoiceOver drops an announcement that comes while it moves to an app that has just become active (or
++    just started): on macOS 26.7, every one posted at that moment, or a second after, went unsaid, and each posted
++    2.5 s after was said. So what's held, and what's said in that first moment, waits until then.
+     `post`, `active` and `speak` are AppKit's announcement, Qt's application state and macOS's `say` command."""
+ 
+     HELD = 5
++    SETTLE_MS = 2500  # from Chatmon becoming active (or starting active) to VoiceOver taking its announcements
+ 
+     def __init__(self, post: Callable[[str, bool], None] | None = None, active: Callable[[], bool] | None = None,
+                  speak: Callable[[str], None] | None = None):
+@@ -243,20 +249,43 @@ class VoiceOver(QObject):
+         self.held: list[tuple[str, bool]] = []
+         self._voice: QProcess | None = None
+         self._to_say: list[str] = []
++        self._settled_at: float | None = time.monotonic() + self.SETTLE_MS / 1000 if self._active() else None
++        self._settle = QTimer(self)
++        self._settle.setSingleShot(True)
++        self._settle.timeout.connect(self._post_held)
+         app: QCoreApplication | None = QGuiApplication.instance()
+         if isinstance(app, QGuiApplication):  # only a GUI application has a state (and Chatmon's always is one)
+             app.applicationStateChanged.connect(self.state_changed)
+ 
+     def say(self, text: str, important: bool = False) -> None:
+-        if self._active():
++        wait = self._settling_ms()
++        if self._active() and not wait:
+             self._post(text, important)
++        elif self._active():  # just became active: VoiceOver would drop it yet
++            self.held = [*self.held, (text, important)][-self.HELD:]
++            self._settle.start(wait)
+         elif _speech_fallback:
+             self._speak(text)
+         else:
+             self.held = [*self.held, (text, important)][-self.HELD:]
+ 
+     def state_changed(self, state) -> None:
+-        if state == Qt.ApplicationState.ApplicationActive and self.held:
++        if state == Qt.ApplicationState.ApplicationActive:
++            self._settled_at = time.monotonic() + self.SETTLE_MS / 1000
++            if self.held:
++                self._settle.start(self.SETTLE_MS)
++        else:
++            self._settled_at = None
++            self._settle.stop()
++
++    def _settling_ms(self) -> int:
++        """How long until VoiceOver takes Chatmon's announcements (0: it does now)."""
++        if self._settled_at is None:
++            return 0
++        return max(0, round((self._settled_at - time.monotonic()) * 1000))
++
++    def _post_held(self) -> None:
++        if self.held and self._active():
+             held, self.held = self.held, []
+             self._post(" ".join(text for text, _ in held), any(important for _, important in held))
+ 
+diff --git a/chatmon/bubble.py b/chatmon/bubble.py
+index 9386aed..661d1b8 100644
+--- a/chatmon/bubble.py
++++ b/chatmon/bubble.py
+@@ -1030,6 +1030,9 @@ class AskBox(QWidget):
+         self.attach_button.clicked.connect(lambda: self.attach_requested.emit(self._below(self.attach_button)))
+         row.addWidget(self.attach_button, 0, Qt.AlignmentFlag.AlignBottom)
+         self.entry = Entry()
++        # VoiceOver lands on the title first, and with "keyboard focus follows the VoiceOver cursor" (on by default) its
++        # focus would leave the field, so what you type went nowhere (macOS 26.7, with the shortcut): the title passes it on.
++        self.title.setFocusProxy(self.entry)
+         self.entry.returnPressed.connect(self._submit)
+         self.entry.paste_requested.connect(self.paste_clipboard)
+         self.entry.resized.connect(self._refit)
+diff --git a/tests/test_platform_events.py b/tests/test_platform_events.py
+index bfc618d..6acb828 100644
+--- a/tests/test_platform_events.py
++++ b/tests/test_platform_events.py
+@@ -208,11 +208,19 @@ def test_a_ui_automation_client_hears_the_announcement(tmp_path):
+     assert heard and all(h == {"kind": 4, "processing": 0, "words": words, "activity": "chatmon.announcement"} for h in heard), heard  # Other, ImportantAll
+ 
+ 
++def _pump(qapp, seconds: float) -> None:
++    end = time.monotonic() + seconds
++    while time.monotonic() < end:
++        qapp.processEvents()
++        time.sleep(0.01)
++
++
+ def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypatch):
+     from PyQt6.QtCore import Qt
+ 
+     from chatmon import a11y
+ 
++    monkeypatch.setattr(a11y.VoiceOver, "SETTLE_MS", 300, raising=False)
+     active, posted, spoken = [False], [], []
+     queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=spoken.append)
+     for i in range(7):
+@@ -222,13 +230,42 @@ def test_voiceover_holds_announcements_until_chatmon_is_in_front(qapp, monkeypat
+     assert posted == []
+     active[0] = True
+     queue.state_changed(Qt.ApplicationState.ApplicationActive)  # you came to Chatmon
++    _pump(qapp, 0.1)
++    assert posted == []  # VoiceOver is still moving to Chatmon, and would drop it
++    _pump(qapp, 0.4)
+     assert posted == [("Message 2. Message 3. Message 4. Message 5. Message 6.", True)] and queue.held == []
+-    queue.say("Now.", False)  # in front: said at once
++    queue.say("Now.", False)  # in front, and settled: said at once
+     assert posted[-1] == ("Now.", False)
+     queue.state_changed(Qt.ApplicationState.ApplicationActive)  # nothing held: nothing again
++    _pump(qapp, 0.5)
+     assert len(posted) == 2 and spoken == []
+ 
+ 
++def test_voiceover_waits_after_chatmon_comes_in_front(qapp, monkeypatch):
++    """What's said just as Chatmon becomes active (or starts active) waits until VoiceOver has moved to it; going
++    behind again meanwhile keeps it held."""
++    from PyQt6.QtCore import Qt
++
++    from chatmon import a11y
++
++    monkeypatch.setattr(a11y.VoiceOver, "SETTLE_MS", 300, raising=False)
++    active, posted = [True], []
++    queue = a11y.VoiceOver(post=lambda text, important: posted.append((text, important)), active=lambda: active[0], speak=lambda _: None)
++    queue.say("Hi.")  # made while active, as at the start: not yet
++    assert posted == [] and queue.held == [("Hi.", False)]
++    _pump(qapp, 0.5)
++    assert posted == [("Hi.", False)]
++    active[0] = False
++    queue.state_changed(Qt.ApplicationState.ApplicationInactive)
++    active[0] = True
++    queue.state_changed(Qt.ApplicationState.ApplicationActive)
++    queue.say("Agent done.", True)
++    active[0] = False
++    queue.state_changed(Qt.ApplicationState.ApplicationInactive)  # gone again before VoiceOver got there
++    _pump(qapp, 0.5)
++    assert posted == [("Hi.", False)] and queue.held == [("Agent done.", True)]
++
++
+ def test_the_speech_fallback_says_it_at_once_instead(qapp, monkeypatch):
+     from chatmon import a11y
+ 
+diff --git a/tests/test_ask_box.py b/tests/test_ask_box.py
+index 60b276e..7a9433e 100644
+--- a/tests/test_ask_box.py
++++ b/tests/test_ask_box.py
+@@ -83,6 +83,17 @@ def test_every_control_shows_a_focus_outline(box, name):
+         assert ring(box, control, focus) == 4, f"{what} shows its focus ({name})"
+ 
+ 
++def test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field(box):
++    """VoiceOver's cursor lands on the title first and, with "keyboard focus follows the VoiceOver cursor", gives the
++    title the focus: typing must still reach the field."""
++    open_chat(box, activate=True)
++    box.activateWindow()
++    spin(0.05)
++    box.title.setFocus(Qt.FocusReason.OtherFocusReason)
++    spin(0.01)
++    assert QApplication.focusWidget() is box.entry  # the title "has" it only through its proxy
++
++
+ @pytest.mark.parametrize("name", STYLES)
+ def test_the_focus_colour_stands_out_from_the_bubble(qapp, name):
+     c = styles.get(name).colours()

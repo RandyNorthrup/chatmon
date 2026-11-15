@@ -1,0 +1,81 @@
+== cleanup 2026-11-15 13:44:31 -08:00, testpc2\technician
+last boot: 2026-11-12 11:59:51 (unchanged: no restart happened)
+-- processes
+-- scheduled task
+ChatmonScreenReaderProbe registered: False
+-- Narrator's settings, back to before: HKCU\Software\Microsoft\Narrator held only NoRoam\RunningState = 0
+removing HKEY_CURRENT_USER\Software\Microsoft\Narrator\NarratorHome
+-- keys that were absent before
+removing HKCU:\Software\Microsoft\LiveCaptions
+removing HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Accessibility
+removing HKCU:\Software\Classes\AppUserModelId\RandyNorthrup.Chatmon
+removing HKCU:\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\RandyNorthrup.Chatmon
+-- the speech platform's per-app keys made since (HKCU\Software\Microsoft\Speech_OneCore)
+removing HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\Vw6zzs3GoJUbRrRp13PxfleGZ8Hx8eehfAfMffFakmc
+removing HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\-TKg4S5QjDUQ62GDJVdA7MZlPwMzAd8MjN4oFU9v1LI
+removing HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\Va7l7Y_9VaUGFkvrfiOSJiW2XwF7z_VyU6KZS4D4eZ8
+-- Live captions' language pack (installed by its first run)
+removing MicrosoftWindows.Speech.en-US.1_1.0.28.0_x64__cw5n1h2txyewy
+-- Chatmon's folder for Technician (absent before)
+C:\Users\Technician\AppData\Local\chatmon exists: False
+C:\Users\Technician\AppData\Roaming\nvda exists: False
+-- the work folder on W:, pinned first
+Remove-Item : Cannot remove item W:\chatmon-sr\nvda\lib\2026.3.1\x64\IAccessible2proxy.dll: 
+Access to the path 'IAccessible2proxy.dll' is denied.
+At C:\Users\Technician\chatmon-sr\cleanup.ps1:67 char:5
++     Remove-Item $root -Recurse -Force
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : PermissionDenied: (IAccessible2proxy.dll:FileInfo) [Remove-Item], U 
+   nauthorizedAccessException
+    + FullyQualifiedErrorId : RemoveFileSystemItemUnAuthorizedAccess,Microsoft.PowerShell.Command 
+   s.RemoveItemCommand
+Remove-Item : Cannot remove item W:\chatmon-sr\nvda\lib\2026.3.1\x64\ISimpleDOM.dll: Access to 
+the path 'ISimpleDOM.dll' is denied.
+At C:\Users\Technician\chatmon-sr\cleanup.ps1:67 char:5
++     Remove-Item $root -Recurse -Force
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : PermissionDenied: (ISimpleDOM.dll:FileInfo) [Remove-Item], Unauthor 
+   izedAccessException
+    + FullyQualifiedErrorId : RemoveFileSystemItemUnAuthorizedAccess,Microsoft.PowerShell.Command 
+   s.RemoveItemCommand
+Remove-Item : Cannot remove item W:\chatmon-sr\nvda\lib\2026.3.1\x64: The directory is not empty.
+At C:\Users\Technician\chatmon-sr\cleanup.ps1:67 char:5
++     Remove-Item $root -Recurse -Force
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : WriteError: (x64:DirectoryInfo) [Remove-Item], IOException
+    + FullyQualifiedErrorId : RemoveFileSystemItemIOError,Microsoft.PowerShell.Commands.RemoveIte 
+   mCommand
+Remove-Item : Cannot remove item W:\chatmon-sr\nvda\lib\2026.3.1: The directory is not empty.
+At C:\Users\Technician\chatmon-sr\cleanup.ps1:67 char:5
++     Remove-Item $root -Recurse -Force
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : WriteError: (2026.3.1:DirectoryInfo) [Remove-Item], IOException
+    + FullyQualifiedErrorId : RemoveFileSystemItemIOError,Microsoft.PowerShell.Commands.RemoveIte 
+   mCommand
+Remove-Item : Cannot remove item W:\chatmon-sr\nvda\lib: The directory is not empty.
+At C:\Users\Technician\chatmon-sr\cleanup.ps1:67 char:5
++     Remove-Item $root -Recurse -Force
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : WriteError: (lib:DirectoryInfo) [Remove-Item], IOException
+    + FullyQualifiedErrorId : RemoveFileSystemItemIOError,Microsoft.PowerShell.Commands.RemoveIte 
+   mCommand
+Remove-Item : Cannot remove item W:\chatmon-sr\nvda: The directory is not empty.
+At C:\Users\Technician\chatmon-sr\cleanup.ps1:67 char:5
++     Remove-Item $root -Recurse -Force
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : WriteError: (nvda:DirectoryInfo) [Remove-Item], IOException
+    + FullyQualifiedErrorId : RemoveFileSystemItemIOError,Microsoft.PowerShell.Commands.RemoveIte 
+   mCommand
+Remove-Item : Cannot remove item W:\chatmon-sr: The directory is not empty.
+At C:\Users\Technician\chatmon-sr\cleanup.ps1:67 char:5
++     Remove-Item $root -Recurse -Force
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : WriteError: (W:\chatmon-sr:DirectoryInfo) [Remove-Item], IOExceptio 
+   n
+    + FullyQualifiedErrorId : RemoveFileSystemItemIOError,Microsoft.PowerShell.Commands.RemoveIte 
+   mCommand
+W:\chatmon-sr exists: True; W:\ holds: $RECYCLE.BIN, chatmon-sr, fix6, rc2v, System Volume Information
+-- claim
+claim file exists: False; claims left: sak-utility-secfix.txt
+C:\Users\Technician\chatmon-sr exists: False
+cleanup done 13:44:40

@@ -1,0 +1,2 @@
+﻿job lcclose in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+WM_CLOSE to hwnd 16058376 pid 3060 class 'LiveCaptionsDesktopWindow' title 'Live Captions' rect [40, 12, 1560, 92]

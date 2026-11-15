@@ -1,0 +1,47 @@
+﻿job narrator2 in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+13:15:16.801 probe started: Chatmon 0.10.0 from W:\chatmon-sr\src, Python 3.14.10, reader narrator, session 1
+13:15:16.810 Live captions started, pid 11204
+13:15:24.812 Live captions windows: [{'hwnd': 16058376, 'pid': 3060, 'title': 'Live Captions', 'class': 'LiveCaptionsDesktopWindow', 'rect': [40, 12, 1560, 92]}]
+13:15:24.816 pressed Ctrl+Win+Enter (Narrator on, as a person turns it on) (SendInput: 6)
+13:15:40.469 Narrator running: [17636]
+13:15:40.470 foreground window: pid 17404, class 'ShellUXFrameWindowClass', title 'Narrator updates'
+13:15:40.483 Chatmon started from source through run_chatmon.py, pid 6672, below normal priority
+13:15:52.913 python -m chatmon status: Chatmon is running.
+13:16:04.931 Chatmon's windows: []
+13:16:04.933 == A1: Chatmon in front, a message comes (chatmon say, as a script or hook sends one)
+13:16:04.933 $ python -m chatmon ask
+13:16:05.740   exit 0
+13:16:08.741 foreground window: pid 20980, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+13:16:08.742 Chatmon isn't in front after `chatmon ask`; its windows now: []
+13:16:14.742 $ python -m chatmon say "Probe one: the build finished while Chatmon was in front."
+13:16:15.107   exit 0
+13:16:40.152 CASE A1: routes ['uia']; not heard
+13:16:40.152 == A2: Chatmon in front, a command typed in the ask box (note: water the ferns, Enter)
+13:16:43.152 foreground window: pid 20980, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+13:16:44.439 typed 'note: water the ferns' (SendInput)
+13:16:45.442 pressed Enter (SendInput: 2)
+13:17:10.503 CASE A2: routes ['uia']; not heard
+13:17:10.503 == B: Chatmon behind (File Explorer in front), a message comes
+13:17:10.505 pressed Esc (SendInput: 2)
+13:17:15.520 File Explorer windows: [{'hwnd': 199526, 'pid': 7736, 'title': 'narrator2 - File Explorer', 'class': 'CabinetWClass', 'rect': [266, 162, 1405, 762]}, {'hwnd': 32048702, 'pid': 7472, 'title': 'rel - File Explorer', 'class': 'CabinetWClass', 'rect': [266, 162, 1405, 762]}, {'hwnd': 262822, 'pid': 7472, 'title': 'fix - File Explorer', 'class': 'CabinetWClass', 'rect': [240, 136, 1379, 736]}]
+13:17:15.729 clicked (835, 170): File Explorer's title bar (SendInput: 2)
+13:17:17.729 foreground window: pid 7736, class 'CabinetWClass', title 'narrator2 - File Explorer'
+13:17:21.730 $ python -m chatmon say "Probe two: the tests passed while Chatmon was behind."
+13:17:21.936   exit 0
+13:17:51.991 CASE B: routes []; not heard
+13:17:51.991 == C: Chatmon behind, an agent's needs-you alert comes
+13:17:59.991 foreground window: pid 7736, class 'CabinetWClass', title 'narrator2 - File Explorer'
+13:17:59.991 $ python -m chatmon notify needs-you --source claude --message "Probe three: Claude is waiting for your approval."
+13:18:00.234   exit 0
+13:18:30.294 CASE C: routes ['notification']; not heard
+13:18:35.294 $ python -m chatmon quit
+13:18:35.516   exit 0
+13:18:35.614 Chatmon exited: 0
+13:18:35.615 explorer.exe 4524 (it hands the folder to the running Explorer and exits)
+13:18:35.622 pressed Ctrl+Win+Enter (Narrator off) (SendInput: 6)
+13:18:40.625 Narrator running after Ctrl+Win+Enter: []
+13:18:40.711 transcript entries kept: 1; reader problem: none
+13:18:40.723 A1: heard=False routes=['uia'] transcript=None
+13:18:40.724 A2: heard=False routes=['uia'] transcript=None
+13:18:40.724 B: heard=False routes=[] transcript=None
+13:18:40.724 C: heard=False routes=['notification'] transcript=None

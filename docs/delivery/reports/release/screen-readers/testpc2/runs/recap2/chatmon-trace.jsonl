@@ -1,0 +1,25 @@
+{"t": 1794778749.647, "event": "start", "pid": 9360, "platform": "win32", "python": "3.14.10"}
+{"t": 1794778752.219, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794778752.219, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794778752.234, "event": "reader", "found": "Narrator"}
+{"t": 1794778752.235, "event": "uia-in-front", "value": false}
+{"t": 1794778752.256, "event": "toast", "title": "Hi, I'm Chatmon!", "text": "Hi, I'm Chatmon! Click me to ask anything.", "buttons": [], "tag": "80f8c710839d476e"}
+{"t": 1794778752.266, "event": "announce", "reader": "Narrator", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "notification"}
+{"t": 1794778755.707, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778755.707, "event": "queue-hold", "reason": "quiet"}
+{"t": 1794778760.702, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778763.975, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794778763.976, "event": "focus", "widget": null}
+{"t": 1794778763.976, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794778765.716, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778770.707, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778772.186, "event": "queue-add", "title": "Chatmon", "text": "Probe one: the build finished while Chatmon was in front.", "background": true, "yours": true, "alert": false, "holds": ["quiet"], "passes": true}
+{"t": 1794778772.187, "event": "queue-next", "shown": "Chatmon", "waiting": [], "holds": ["quiet"], "showing": "Chatmon", "visible": false}
+{"t": 1794778772.194, "event": "reader", "found": "Narrator"}
+{"t": 1794778772.194, "event": "uia-in-front", "value": false}
+{"t": 1794778772.2, "event": "toast", "title": "Chatmon", "text": "Chatmon. Probe one: the build finished while Chatmon was in front.", "buttons": [], "tag": "c2f45f039d5a4a9c"}
+{"t": 1794778772.2, "event": "announce", "reader": "Narrator", "words": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "route": "notification"}
+{"t": 1794778775.703, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778780.712, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778784.482, "event": "focus", "widget": null}
+{"t": 1794778784.492, "event": "exit", "code": 0}

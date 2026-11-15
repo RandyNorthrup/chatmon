@@ -1,0 +1,409 @@
+[
+ {
+  "case": "A1",
+  "how": "in front: the ask box open, then `chatmon say`",
+  "expected_words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+  "needles": [
+   "build finished"
+  ],
+  "said_at": "13:24:00.043",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']",
+  "heard_at": "13:24:00.488",
+  "seconds_after_said": 0.45,
+  "chatmon_routes": [
+   "uia"
+  ],
+  "trace": [
+   {
+    "t": 1794777840.36,
+    "event": "queue-add",
+    "title": "Chatmon",
+    "text": "Probe one: the build finished while Chatmon was in front.",
+    "background": true,
+    "yours": true,
+    "alert": false,
+    "holds": [
+     "quiet"
+    ],
+    "passes": true
+   },
+   {
+    "t": 1794777840.36,
+    "event": "queue-next",
+    "shown": "Chatmon",
+    "waiting": [],
+    "holds": [
+     "quiet"
+    ],
+    "showing": "Chatmon",
+    "visible": false
+   },
+   {
+    "t": 1794777840.362,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794777840.362,
+    "event": "uia-in-front",
+    "value": true
+   },
+   {
+    "t": 1794777840.362,
+    "event": "uia-say",
+    "text": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "raised": true
+   },
+   {
+    "t": 1794777840.362,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "route": "uia"
+   },
+   {
+    "t": 1794777840.656,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   }
+  ],
+  "transcript_meanwhile": [
+   [
+    "13:24:00.488",
+    "[LangChangeCommand ('en'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']"
+   ]
+  ]
+ },
+ {
+  "case": "A2",
+  "how": "in front: `note: water the ferns` typed in the ask box, Enter",
+  "expected_words": "Noted (note 1). delete note 1 takes it back.",
+  "needles": [
+   "takes it back"
+  ],
+  "said_at": "13:24:03.663",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en'), 'Noted (note 2). delete note 2 takes it back.']",
+  "heard_at": "13:24:06.407",
+  "seconds_after_said": 2.74,
+  "chatmon_routes": [
+   "uia"
+  ],
+  "trace": [
+   {
+    "t": 1794777845.658,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777846.117,
+    "event": "uia-in-front",
+    "value": true
+   },
+   {
+    "t": 1794777846.117,
+    "event": "uia-say",
+    "text": "Noted (note 2). delete note 2 takes it back.",
+    "important": false,
+    "raised": true
+   },
+   {
+    "t": 1794777846.117,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Noted (note 2). delete note 2 takes it back.",
+    "important": false,
+    "route": "uia"
+   }
+  ],
+  "transcript_meanwhile": [
+   [
+    "13:24:03.807",
+    "[LangChangeCommand ('en'), 'English (not supported)', CharacterModeCommand(True), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:03.807",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'o', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:03.807",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.076",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.076",
+    "[LangChangeCommand ('en'), 'colon', EndUtteranceCommand()]"
+   ],
+   [
+    "13:24:04.076",
+    "[LangChangeCommand ('en'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "13:24:04.076",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'w', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.339",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'a', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.339",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.339",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.339",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.602",
+    "[LangChangeCommand ('en'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "13:24:04.602",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.602",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'h', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.602",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.867",
+    "[LangChangeCommand ('en'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "13:24:04.867",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'f', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.867",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:04.867",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:05.129",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:05.129",
+    "[CharacterModeCommand(True), LangChangeCommand ('en'), 's', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "13:24:06.407",
+    "[LangChangeCommand ('en'), 'Noted (note 2). delete note 2 takes it back.']"
+   ]
+  ]
+ },
+ {
+  "case": "B",
+  "how": "behind: File Explorer in front, then `chatmon say`",
+  "expected_words": "Chatmon. Probe two: the tests passed while Chatmon was behind.",
+  "needles": [
+   "tests passed"
+  ],
+  "said_at": "13:24:17.810",
+  "heard": false,
+  "transcript": null,
+  "heard_at": null,
+  "seconds_after_said": null,
+  "chatmon_routes": [],
+  "trace": [
+   {
+    "t": 1794777858.004,
+    "event": "queue-add",
+    "title": "Chatmon",
+    "text": "Probe two: the tests passed while Chatmon was behind.",
+    "background": true,
+    "yours": false,
+    "alert": false,
+    "holds": [
+     "quiet"
+    ],
+    "passes": false
+   },
+   {
+    "t": 1794777858.004,
+    "event": "queue-next",
+    "shown": null,
+    "waiting": [
+     "Chatmon"
+    ],
+    "holds": [
+     "quiet"
+    ],
+    "showing": null,
+    "visible": false
+   },
+   {
+    "t": 1794777860.66,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777865.669,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777870.659,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777875.664,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777880.671,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777885.658,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   }
+  ],
+  "transcript_meanwhile": []
+ },
+ {
+  "case": "C",
+  "how": "behind: File Explorer in front, then `chatmon notify needs-you`",
+  "expected_words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+  "needles": [
+   "approval"
+  ],
+  "said_at": "13:24:56.079",
+  "heard": false,
+  "transcript": null,
+  "heard_at": null,
+  "seconds_after_said": null,
+  "chatmon_routes": [
+   "notification"
+  ],
+  "trace": [
+   {
+    "t": 1794777895.657,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777896.27,
+    "event": "queue-add",
+    "title": "Claude needs you",
+    "text": "Probe three: Claude is waiting for your approval.",
+    "background": true,
+    "yours": false,
+    "alert": true,
+    "holds": [
+     "quiet"
+    ],
+    "passes": true
+   },
+   {
+    "t": 1794777896.27,
+    "event": "queue-next",
+    "shown": "Claude needs you",
+    "waiting": [
+     "Chatmon"
+    ],
+    "holds": [
+     "quiet"
+    ],
+    "showing": "Claude needs you",
+    "visible": false
+   },
+   {
+    "t": 1794777896.271,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794777896.271,
+    "event": "uia-in-front",
+    "value": false
+   },
+   {
+    "t": 1794777896.278,
+    "event": "toast",
+    "title": "Claude needs you",
+    "text": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+    "buttons": [
+     "OK"
+    ],
+    "tag": "3f08b6b2a8104afa"
+   },
+   {
+    "t": 1794777896.278,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+    "important": true,
+    "route": "notification"
+   },
+   {
+    "t": 1794777900.67,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777905.665,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777910.666,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777915.664,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777920.662,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   },
+   {
+    "t": 1794777925.671,
+    "event": "quiet",
+    "said": "a full-screen app",
+    "state": 2
+   }
+  ],
+  "transcript_meanwhile": []
+ }
+]

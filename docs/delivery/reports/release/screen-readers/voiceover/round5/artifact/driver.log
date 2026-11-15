@@ -1,0 +1,75 @@
+21:01:08.390Z probe started: Chatmon 0.10.0 from /Users/runner/work/chatmon/chatmon, Python 3.14.10
+21:01:08.391Z $ sw_vers
+21:01:08.406Z   exit 0: ProductName:		macOS | ProductVersion:		26.7.2 | BuildVersion:		25G332
+21:01:08.407Z $ /System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter
+21:01:08.456Z   exit 0: ******** Launching VoiceOver from starter application ******** |  | 2026-11-15 21:01:08.424 VoiceOverStarter[3125:12855] VoiceOverDebug: _ScreenReaderStartWithTarget with option 0 | 2026-11-15 21:01:08.430 VoiceOverStarter[3125:12855] VoiceOverDebug: after boostrap_look_up succeeded | 2026-11-15 21:01:08.430 VoiceOverStarter[3125:12855] VoiceOverDebug: calling _SCRStartup returned 0
+21:01:18.743Z VoiceOver answers its AppleScript; last phrase so far: 'application'
+21:01:23.980Z frontmost app: Finder 370
+21:01:24.256Z osascript (Finder activate): exit 0
+21:01:26.299Z Chatmon started from source through run_chatmon.py (pass proposed, PROBE_SETTLE_MS=2500, PROBE_TITLE_PROXY=1), pid 3341
+21:01:30.293Z python -m chatmon status: Chatmon is running.
+21:01:42.537Z CASE proposed/G: VoiceOver said "Hi, I'm Chatmon! Click me to ask anything." 8.18 s after
+21:01:45.605Z == proposed/A2: Finder in front; the shortcut opens the ask box; `version` typed, Return
+21:01:45.762Z frontmost app: Python 3341
+21:01:45.872Z osascript (Esc): exit 0
+21:01:47.082Z osascript (Finder activate): exit 0
+21:01:50.298Z frontmost app: Finder 370
+21:01:50.392Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+21:01:53.582Z frontmost app: Python 3341
+21:01:57.760Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+21:01:57.874Z osascript (keystroke version): exit 0
+21:01:59.211Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value: version
+21:01:59.990Z osascript (Return): exit 0
+21:02:08.215Z CASE proposed/A2: VoiceOver said "I'm Chatmon 0.10.0." 2.42 s after
+21:02:09.514Z == proposed/A1: Finder in front; Chatmon's shortcut opens the ask box; a hook's message comes
+21:02:09.698Z frontmost app: Python 3341
+21:02:09.846Z osascript (Esc): exit 0
+21:02:11.029Z osascript (Finder activate): exit 0
+21:02:14.196Z frontmost app: Finder 370
+21:02:14.309Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+21:02:17.549Z frontmost app: Python 3341
+21:02:22.568Z $ python -m chatmon say "Probe A1, said while Chatmon is in front."
+21:02:22.818Z   exit 0
+21:02:30.998Z CASE proposed/A1: VoiceOver said 'Chatmon. Probe A1, said while Chatmon is in front.' 0.41 s after
+21:02:31.188Z == proposed/B1: HYPOTHESIS: behind: `chatmon say`; then Chatmon's shortcut opens the ask box
+21:02:31.399Z frontmost app: Python 3341
+21:02:31.610Z osascript (Esc): exit 0
+21:02:32.796Z osascript (Finder activate): exit 0
+21:02:35.984Z frontmost app: Finder 370
+21:02:35.984Z $ python -m chatmon say "Probe P-B1, held while Chatmon is behind."
+21:02:36.138Z   exit 0
+21:02:46.655Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+21:02:49.700Z frontmost app: Python 3341
+21:02:57.771Z CASE proposed/B1: VoiceOver said 'Chatmon. Probe P-B1, held while Chatmon is behind.' 13.74 s after; held while behind: True
+21:02:58.013Z == proposed/A2-after-B1: Finder in front; the shortcut opens the ask box; `version` typed, Return
+21:02:58.232Z frontmost app: Python 3341
+21:02:58.416Z osascript (Esc): exit 0
+21:02:59.740Z osascript (Finder activate): exit 0
+21:03:02.966Z frontmost app: Finder 370
+21:03:03.108Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+21:03:06.248Z frontmost app: Python 3341
+21:03:10.502Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+21:03:10.614Z osascript (keystroke version): exit 0
+21:03:11.951Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value: version
+21:03:12.333Z osascript (Return): exit 0
+21:03:20.544Z CASE proposed/A2-after-B1: VoiceOver said "I'm Chatmon 0.10.0." 2.0 s after
+21:03:21.847Z == proposed/C1: HYPOTHESIS: behind: an agent's needs-you alert; then System Events makes Chatmon frontmost (no ask box)
+21:03:22.067Z frontmost app: Python 3341
+21:03:22.283Z osascript (Esc): exit 0
+21:03:23.583Z osascript (Finder activate): exit 0
+21:03:26.784Z frontmost app: Finder 370
+21:03:26.786Z $ python -m chatmon notify needs-you --source claude --message "Probe P-C1, waiting for your approval."
+21:03:27.627Z   exit 0
+21:03:38.565Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+21:03:41.845Z frontmost app: Python 3341
+21:03:49.828Z CASE proposed/C1: VoiceOver said 'Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.' 15.02 s after; held while behind: True
+21:03:52.176Z $ python -m chatmon quit
+21:03:52.469Z   exit 0
+21:03:53.064Z Chatmon exited: 0
+21:03:55.231Z VoiceOver's last phrase was read 716 times (0 failed); 44 phrases kept
+21:03:55.414Z proposed/G: heard=True spoken="Hi, I'm Chatmon! Click me to ask anything."
+21:03:55.414Z proposed/A2: heard=True spoken="I'm Chatmon 0.10.0."
+21:03:55.414Z proposed/A1: heard=True spoken='Chatmon. Probe A1, said while Chatmon is in front.'
+21:03:55.414Z proposed/B1: heard=True spoken='Chatmon. Probe P-B1, held while Chatmon is behind.' held_while_behind=True
+21:03:55.414Z proposed/A2-after-B1: heard=True spoken="I'm Chatmon 0.10.0."
+21:03:55.414Z proposed/C1: heard=True spoken='Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.' held_while_behind=True

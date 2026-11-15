@@ -1,0 +1,20 @@
+{"t": 1794776067.299, "event": "start", "pid": 2810, "platform": "darwin", "python": "3.14.10"}
+{"t": 1794776071.005, "event": "reader", "found": "VoiceOver"}
+{"t": 1794776071.005, "event": "voiceover-post", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false}
+{"t": 1794776071.006, "event": "voiceover-say", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "active": true, "fallback": false, "held": []}
+{"t": 1794776071.006, "event": "announce", "reader": "VoiceOver", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "spoken"}
+{"t": 1794776091.959, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794776095.594, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794776096.292, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794776096.472, "event": "focus", "widget": "QLabel 'title' accessible '' in ''"}
+{"t": 1794776104.29, "event": "reader", "found": "VoiceOver"}
+{"t": 1794776104.29, "event": "voiceover-post", "text": "Chatmon. Probe A1, said while Chatmon is in front.", "important": false}
+{"t": 1794776104.291, "event": "voiceover-say", "text": "Chatmon. Probe A1, said while Chatmon is in front.", "important": false, "active": true, "fallback": false, "held": []}
+{"t": 1794776104.291, "event": "announce", "reader": "VoiceOver", "words": "Chatmon. Probe A1, said while Chatmon is in front.", "important": false, "route": "spoken"}
+{"t": 1794776113.23, "event": "focus", "widget": null}
+{"t": 1794776114.616, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794776118.055, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794776118.122, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794776118.217, "event": "focus", "widget": "QLabel 'title' accessible '' in ''"}
+{"t": 1794776145.756, "event": "focus", "widget": null}
+{"t": 1794776145.849, "event": "exit", "code": 0}

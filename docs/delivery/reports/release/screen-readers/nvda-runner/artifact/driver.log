@@ -1,0 +1,43 @@
+20:54:34.410 probe started: Chatmon 0.10.0 from D:\a\chatmon\chatmon, Python 3.14.10, reader nvda, session 2
+20:54:34.417 NVDA started: D:\a\_temp/nvda/nvda.exe --log-level=12 --log-file=D:\a\_temp\out\nvda.log --minimal, pid 2080
+20:54:49.417 foreground window: pid 1440, class 'CASCADIA_HOSTING_WINDOW_CLASS', title 'C:\\ProgramData\\GitHub\\HostedComputeAgent\\hosted-compute-agent'
+20:54:49.420 Chatmon started from source through run_chatmon.py, pid 5940, below normal priority
+20:54:54.056 python -m chatmon status: Chatmon is running.
+20:55:06.057 Chatmon's windows: [{'hwnd': 262284, 'pid': 5940, 'title': 'Chatmon', 'class': 'Qt6112QWindowToolSaveBits', 'rect': [0, 0, 1024, 768]}, {'hwnd': 852488, 'pid': 5940, 'title': 'Chatmon', 'class': 'Qt6112QWindowToolSaveBits', 'rect': [0, 0, 1, 1]}]
+20:55:06.058 == A1: Chatmon in front, a message comes (chatmon say, as a script or hook sends one)
+20:55:06.058 $ python -m chatmon ask
+20:55:06.231   exit 0
+20:55:09.231 foreground window: pid 5940, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+20:55:15.232 $ python -m chatmon say "Probe one: the build finished while Chatmon was in front."
+20:55:15.350   exit 0
+20:55:15.601 CASE A1: routes ['uia']; heard "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']" 0.28 s after
+20:55:15.601 == A2: Chatmon in front, a command typed in the ask box (note: water the ferns, Enter)
+20:55:18.601 foreground window: pid 5940, class 'Qt6112QWindowToolSaveBits', title 'Chatmon'
+20:55:19.900 typed 'note: water the ferns' (SendInput)
+20:55:20.903 pressed Enter (SendInput: 2)
+20:55:21.154 CASE A2: routes ['uia']; heard "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']" 2.43 s after
+20:55:21.154 == B: Chatmon behind (File Explorer in front), a message comes
+20:55:21.156 pressed Esc (SendInput: 2)
+20:55:26.159 File Explorer windows: [{'hwnd': 66172, 'pid': 8584, 'title': 'out - File Explorer', 'class': 'CabinetWClass', 'rect': [122, 70, 922, 670]}]
+20:55:26.378 clicked (522, 78): File Explorer's title bar (SendInput: 2)
+20:55:28.379 foreground window: pid 8584, class 'CabinetWClass', title 'out - File Explorer'
+20:55:32.379 $ python -m chatmon say "Probe two: the tests passed while Chatmon was behind."
+20:55:32.494   exit 0
+20:56:02.527 CASE B: routes []; not heard
+20:56:02.527 == C: Chatmon behind, an agent's needs-you alert comes
+20:56:10.528 foreground window: pid 8584, class 'CabinetWClass', title 'out - File Explorer'
+20:56:10.528 $ python -m chatmon notify needs-you --source claude --message "Probe three: Claude is waiting for your approval."
+20:56:10.661   exit 0
+20:56:40.697 CASE C: routes ['notification']; not heard
+20:56:45.698 $ python -m chatmon quit
+20:56:45.814   exit 0
+20:56:45.913 Chatmon exited: 0
+20:56:45.914 explorer.exe 9796 (it hands the folder to the running Explorer and exits)
+20:56:48.914 $ D:\a\_temp/nvda/nvda.exe -q (NVDA quits)
+20:56:49.615   exit 0
+20:56:49.615 NVDA exited: 0
+20:56:49.753 transcript entries kept: 34; reader problem: none
+20:56:49.755 A1: heard=True routes=['uia'] transcript="[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']"
+20:56:49.755 A2: heard=True routes=['uia'] transcript="[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']"
+20:56:49.755 B: heard=False routes=[] transcript=None
+20:56:49.755 C: heard=False routes=['notification'] transcript=None

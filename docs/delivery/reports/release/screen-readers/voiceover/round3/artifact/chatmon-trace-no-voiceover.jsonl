@@ -1,0 +1,12 @@
+{"t": 1794775856.189, "event": "start", "pid": 14186, "platform": "darwin", "python": "3.14.10"}
+{"t": 1794775858.354, "event": "reader", "found": "VoiceOver"}
+{"t": 1794775858.354, "event": "voiceover-post", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false}
+{"t": 1794775858.354, "event": "voiceover-say", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "active": true, "fallback": false, "held": []}
+{"t": 1794775858.354, "event": "announce", "reader": "VoiceOver", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "spoken"}
+{"t": 1794775866.944, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794775870.261, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794775874.962, "event": "reader", "found": "VoiceOver"}
+{"t": 1794775874.962, "event": "voiceover-post", "text": "I'm Chatmon 0.10.0.", "important": false}
+{"t": 1794775874.962, "event": "voiceover-say", "text": "I'm Chatmon 0.10.0.", "important": false, "active": true, "fallback": false, "held": []}
+{"t": 1794775874.962, "event": "announce", "reader": "VoiceOver", "words": "I'm Chatmon 0.10.0.", "important": false, "route": "spoken"}
+{"t": 1794775877.22, "event": "exit", "code": 0}

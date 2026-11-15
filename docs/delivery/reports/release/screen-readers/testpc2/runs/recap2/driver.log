@@ -1,0 +1,18 @@
+13:38:56.876 Narrator speech-recap probe: Chatmon 0.10.0 from W:\chatmon-sr\src
+13:38:56.878 pressed Ctrl+Win+Enter (Narrator on) (SendInput: 6)
+13:39:09.421 Narrator running: [20812]
+13:39:23.739 Chatmon running, pid 9360
+13:39:23.740 $ python -m chatmon ask
+13:39:23.988   exit 0
+13:39:26.988 foreground window: pid 8644, class 'Windows.UI.Core.CoreWindow', title 'New notification'
+13:39:31.989 $ python -m chatmon say "Probe one: the build finished while Chatmon was in front."
+13:39:32.223   exit 0
+13:39:39.224 pressed Insert+Alt+X, Narrator's speech recap (SendInput: 6)
+13:39:43.226 windows that weren't there before (not Chatmon's): [{'hwnd': 1182434, 'pid': 20812, 'title': 'Speech recap', 'class': 'NarratorSpeechRecapDialog', 'rect': [156, 156, 816, 656]}]
+13:39:43.256 speech recap: 1 entries read
+13:39:43.257 pressed Esc (the recap closes) (SendInput: 2)
+13:39:44.257 $ python -m chatmon quit
+13:39:44.479   exit 0
+13:39:44.605 pressed Ctrl+Win+Enter (Narrator off) (SendInput: 6)
+13:39:49.634 Narrator running after Ctrl+Win+Enter: [20812]
+13:39:49.643 CASE A1: in Narrator's speech recap: False: []

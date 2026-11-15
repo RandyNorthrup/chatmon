@@ -1,0 +1,33 @@
+[
+ {
+  "case": "A1",
+  "how": "in front: the ask box open, then `chatmon say`",
+  "chatmon_in_front": false,
+  "needle": "build finished",
+  "in_speech_recap": false,
+  "recap_lines": [],
+  "chatmon_routes": [
+   "notification"
+  ],
+  "trace": [
+   {
+    "t": 1794778772.194,
+    "event": "reader",
+    "found": "Narrator"
+   },
+   {
+    "t": 1794778772.194,
+    "event": "uia-in-front",
+    "value": false
+   },
+   {
+    "t": 1794778772.2,
+    "event": "announce",
+    "reader": "Narrator",
+    "words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "route": "notification"
+   }
+  ]
+ }
+]

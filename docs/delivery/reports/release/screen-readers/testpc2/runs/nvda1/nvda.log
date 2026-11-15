@@ -1,0 +1,374 @@
+INFO - __main__ (13:23:19.689) - MainThread (13404):
+Starting NVDA version 2026.3.1 AMD64
+INFO - core.main (13:23:19.819) - MainThread (13404):
+Config dir: W:\chatmon-sr\nvda\userConfig
+INFO - config.ConfigManager._loadConfig (13:23:19.828) - MainThread (13404):
+Loading config: W:\chatmon-sr\nvda\userConfig\nvda.ini
+DEBUGWARNING - languageHandler._createGettextTranslation (13:23:19.850) - MainThread (13404):
+couldn't set the translation service locale to en_US
+DEBUGWARNING - Python warning (13:23:21.737) - MainThread (13404):
+hwIo\ble\_io.pyc:21: DeprecationWarning: importing WinRTClientArgs from bleak.backends.winrt.client is deprecated, use bleak.args.winrt instead
+INFO - core.main (13:23:23.266) - MainThread (13404):
+Windows version: Windows 11 25H2 (10.0.26200.9711) workstation AMD64
+INFO - core.main (13:23:23.266) - MainThread (13404):
+Using Python version 3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]
+INFO - core.main (13:23:23.266) - MainThread (13404):
+Using comtypes version 1.4.16
+INFO - core.main (13:23:23.270) - MainThread (13404):
+Using configobj version 5.1.0 with validate version 1.0.1
+INFO - _asyncioEventLoop.initialize (13:23:23.379) - MainThread (13404):
+Initializing asyncio event loop
+INFO - speechDictHandler.dictFormatUpgrade._doSynthVoiceDictBackupAndMove (13:23:24.087) - MainThread (13404):
+Upgrading voice dictionaries for espeak
+INFO - speechDictHandler.dictFormatUpgrade._doSynthVoiceDictBackupAndMove (13:23:24.088) - MainThread (13404):
+Upgrading voice dictionaries for silence
+INFO - synthDriverHandler.setSynth (13:23:24.088) - MainThread (13404):
+Loaded synthDriver silence
+INFO - mathPres.MathCAT.MathCAT.MathCAT.__init__ (13:23:24.138) - MainThread (13404):
+MathCAT 0.7.2 installed. Using rules dir: W:\chatmon-sr\nvda\include\nvda-mathcat\assets\Rules
+INFO - core._setUpWxApp (13:23:24.165) - MainThread (13404):
+Using wx version 4.2.4 msw (phoenix) wxWidgets 3.2.8
+INFO - braille.input.initialize (13:23:24.173) - MainThread (13404):
+Braille input initialized
+INFO - braille.initialize (13:23:24.173) - MainThread (13404):
+Using liblouis version 3.39.0
+INFO - braille.initialize (13:23:24.173) - MainThread (13404):
+Using pySerial version 3.5
+INFO - braille.brailleHandler.BrailleHandler._setDisplay (13:23:24.186) - MainThread (13404):
+Loaded braille display driver 'noBraille', current display has 0 cells.
+DEBUGWARNING - hwPortUtils.listUsbDevices (13:23:24.207) - ThreadPoolExecutor-0_0 (2988):
+Couldn't get DEVPKEY_Device_BusReportedDeviceDesc for {'hardwareID': 'USB\\VID_8087&PID_0026&REV_0002', 'usbID': 'VID_8087&PID_0026', 'devicePath': '\\\\?\\usb#vid_8087&pid_0026#5&c5759cc&0&14#{a5dcbf10-6530-11d2-901f-00c04fb951ed}'}: [WinError 1168] Element not found.
+DEBUGWARNING - appModuleHandler.getProcessHandleFromProcessId (13:23:24.607) - MainThread (13404):
+Unable to open process for processId 1136
+Traceback (most recent call last):
+  File "appModuleHandler.pyc", line 201, in getProcessHandleFromProcessId
+PermissionError: [WinError 5] Access is denied.
+DEBUGWARNING - appModuleHandler.getProcessHandleFromProcessId (13:23:24.609) - MainThread (13404):
+Unable to get process handle for process 1136 using window enumeration and subsequently getting process handle from that window
+Traceback (most recent call last):
+  File "appModuleHandler.pyc", line 214, in getProcessHandleFromProcessId
+RuntimeError: No window handle found for process 1136 to create process handle
+INFO - core.main (13:23:24.977) - MainThread (13404):
+Java Access Bridge support initialized
+INFO - UIAHandler.UIAHandler.MTAThreadFunc (13:23:25.271) - UIAHandler.UIAHandler.MTAThread (20296):
+UIAutomation: IUIAutomation6
+DEBUGWARNING - inputCore.InputManager.loadLocaleGestureMap (13:23:25.383) - MainThread (13404):
+No locale gesture map for language en
+DEBUGWARNING - inputCore.InputManager.loadUserGestureMap (13:23:25.383) - MainThread (13404):
+No user gesture map
+DEBUGWARNING - touchHandler.touchSupported (13:23:25.416) - MainThread (13404):
+Touch only supported on installed copies
+DEBUGWARNING - updateCheck.initialize (13:23:25.419) - MainThread (13404):
+Couldn't retrieve update state
+Traceback (most recent call last):
+  File "updateCheck.pyc", line 1038, in initialize
+FileNotFoundError: [Errno 2] No such file or directory: 'W:\\chatmon-sr\\nvda\\userConfig\\updateCheckState.pickle'
+INFO - core.main (13:23:25.421) - MainThread (13404):
+NVDA initialized
+IO - speech.speech.speak (13:23:25.516) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'rel - File Explorer', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:23:25.730) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'Items View', 'list', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:23:25.740) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'VLC_media_player_userdata_installer', 'not selected', '1 of 2', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:23:50.600) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'Ask Chatmon', 'window', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:23:50.611) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'Ask Chatmon', 'edit', 'Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work', CancellableSpeech (still valid), 'blank']
+IO - speech.speech.speak (13:24:00.391) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']
+IO - inputCore.InputManager.executeGesture (13:24:03.664) - winInputHook (10880):
+Input: kb(desktop):n
+IO - speech.speech.speak (13:24:03.701) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'English (not supported)', CharacterModeCommand(True), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:03.727) - winInputHook (10880):
+Input: kb(desktop):o
+IO - speech.speech.speak (13:24:03.762) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'o', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:03.790) - winInputHook (10880):
+Input: kb(desktop):t
+IO - speech.speech.speak (13:24:03.798) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:03.853) - winInputHook (10880):
+Input: kb(desktop):e
+IO - speech.speech.speak (13:24:03.874) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:03.915) - winInputHook (10880):
+Input: kb(desktop)::
+IO - speech.speech.speakTypedCharacters (13:24:03.923) - MainThread (13404):
+typed word: note
+IO - speech.speech.speak (13:24:03.924) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'colon', EndUtteranceCommand()]
+IO - inputCore.InputManager.executeGesture (13:24:03.977) - winInputHook (10880):
+Input: kb(desktop): 
+IO - speech.speech.speak (13:24:03.986) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'space', EndUtteranceCommand()]
+IO - inputCore.InputManager.executeGesture (13:24:04.040) - winInputHook (10880):
+Input: kb(desktop):w
+IO - speech.speech.speak (13:24:04.054) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'w', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.102) - winInputHook (10880):
+Input: kb(desktop):a
+IO - speech.speech.speak (13:24:04.110) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'a', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.164) - winInputHook (10880):
+Input: kb(desktop):t
+IO - speech.speech.speak (13:24:04.183) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.226) - winInputHook (10880):
+Input: kb(desktop):e
+IO - speech.speech.speak (13:24:04.246) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.289) - winInputHook (10880):
+Input: kb(desktop):r
+IO - speech.speech.speak (13:24:04.303) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.353) - winInputHook (10880):
+Input: kb(desktop): 
+IO - speech.speech.speakTypedCharacters (13:24:04.366) - MainThread (13404):
+typed word: water
+IO - speech.speech.speak (13:24:04.367) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'space', EndUtteranceCommand()]
+IO - inputCore.InputManager.executeGesture (13:24:04.416) - winInputHook (10880):
+Input: kb(desktop):t
+IO - speech.speech.speak (13:24:04.424) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.478) - winInputHook (10880):
+Input: kb(desktop):h
+IO - speech.speech.speak (13:24:04.487) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'h', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.541) - winInputHook (10880):
+Input: kb(desktop):e
+IO - speech.speech.speak (13:24:04.548) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.603) - winInputHook (10880):
+Input: kb(desktop): 
+IO - speech.speech.speakTypedCharacters (13:24:04.613) - MainThread (13404):
+typed word: the
+IO - speech.speech.speak (13:24:04.614) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'space', EndUtteranceCommand()]
+IO - inputCore.InputManager.executeGesture (13:24:04.666) - winInputHook (10880):
+Input: kb(desktop):f
+IO - speech.speech.speak (13:24:04.694) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'f', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.729) - winInputHook (10880):
+Input: kb(desktop):e
+IO - speech.speech.speak (13:24:04.737) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.791) - winInputHook (10880):
+Input: kb(desktop):r
+IO - speech.speech.speak (13:24:04.800) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.853) - winInputHook (10880):
+Input: kb(desktop):n
+IO - speech.speech.speak (13:24:04.879) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:04.915) - winInputHook (10880):
+Input: kb(desktop):s
+IO - speech.speech.speak (13:24:04.925) - MainThread (13404):
+Speaking [CharacterModeCommand(True), LangChangeCommand ('en'), 's', EndUtteranceCommand(), CharacterModeCommand(False)]
+IO - inputCore.InputManager.executeGesture (13:24:06.082) - winInputHook (10880):
+Input: kb(desktop):enter
+IO - speech.speech.speakTypedCharacters (13:24:06.268) - MainThread (13404):
+typed word: ferns
+IO - speech.speech.speak (13:24:06.290) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'Noted (note 2). delete note 2 takes it back.']
+IO - inputCore.InputManager.executeGesture (13:24:06.593) - winInputHook (10880):
+Input: kb(desktop):escape
+IO - speech.speech.speak (13:24:06.660) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'rel - File Explorer', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:24:06.747) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'Items View', 'list', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:24:06.756) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'VLC_media_player_userdata_installer', 'not selected', '1 of 2', CancellableSpeech (still valid)]
+DEBUGWARNING - IAccessibleHandler.internalWinEventHandler._shouldGetEvents (13:24:08.033) - MainThread (13404):
+Foreground took too long to change. Foreground still 32048702 (CabinetWClass). Should be 133838 (CabinetWClass)
+INFO - watchdog.waitForFreezeRecovery (13:24:08.741) - watchdog (20052):
+Starting freeze recovery after 0.5007911999709904 seconds.
+DEBUGWARNING - watchdog.waitForFreezeRecovery (13:24:08.748) - watchdog (20052):
+Listing stacks for Python threads:
+Python stack for thread 6348 (watchdog.CancellableCallThread.execute(<WinFunctionType object at 0x000000000AFC5090>)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "watchdog.pyc", line 396, in run
+
+Python stack for thread 20052 (watchdog):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "watchdog.pyc", line 168, in _watcher
+  File "watchdog.pyc", line 175, in waitForFreezeRecovery
+  File "logHandler.pyc", line 66, in getFormattedStacksForAllThreads
+
+Python stack for thread 10880 (winInputHook):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "winInputHook.pyc", line 123, in hookThreadFunc
+
+Python stack for thread 20296 (UIAHandler.UIAHandler.MTAThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "UIAHandler\__init__.pyc", line 576, in MTAThreadFunc
+  File "queue.pyc", line 199, in get
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 2988 (ThreadPoolExecutor-0_0):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "concurrent\futures\thread.pyc", line 90, in _worker
+
+Python stack for thread 12656 (hwIo.ioThread.IoThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "hwIo\ioThread.pyc", line 265, in run
+
+Python stack for thread 13464 (Thread-2 (run_forever)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "asyncio\base_events.pyc", line 684, in run_forever
+  File "asyncio\base_events.pyc", line 2023, in _run_once
+  File "asyncio\windows_events.pyc", line 446, in select
+  File "asyncio\windows_events.pyc", line 778, in _poll
+
+Python stack for thread 4740 (ScheduleThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "utils\schedule.pyc", line 88, in run
+
+Python stack for thread 13404 (MainThread):
+  File "nvda.pyw", line 310, in <module>
+  File "core.pyc", line 1094, in main
+  File "wx\core.pyc", line 2254, in MainLoop
+  File "core.pyc", line 1032, in Notify
+  File "IAccessibleHandler\__init__.pyc", line 1091, in pumpAll
+  File "IAccessibleHandler\__init__.pyc", line 675, in processGenericWinEvent
+  File "IAccessibleHandler\__init__.pyc", line 582, in winEventToNVDAEvent
+  File "UIAHandler\__init__.pyc", line 1375, in isUIAWindow
+  File "UIAHandler\__init__.pyc", line 1279, in _isUIAWindowHelper
+  File "watchdog.pyc", line 426, in cancellableExecute
+  File "watchdog.pyc", line 362, in execute
+
+INFO - watchdog.waitForFreezeRecovery (13:24:08.799) - watchdog (20052):
+Recovered from freeze after 0.5583632999914698 seconds.
+INFO - watchdog.waitForFreezeRecovery (13:24:09.257) - watchdog (20052):
+Starting freeze recovery after 0.5001133999903686 seconds.
+DEBUGWARNING - watchdog.waitForFreezeRecovery (13:24:09.264) - watchdog (20052):
+Listing stacks for Python threads:
+Python stack for thread 19576 (Unknown):
+  File "comtypes\_vtbl.pyc", line 166, in call_without_this
+  File "UIAHandler\__init__.pyc", line 887, in IUIAutomationFocusChangedEventHandler_HandleFocusChangedEvent
+  File "UIAHandler\__init__.pyc", line 1535, in isNativeUIAElement
+  File "UIAHandler\__init__.pyc", line 1438, in getNearestWindowHandle
+
+Python stack for thread 2956 (watchdog.CancellableCallThread.execute(<WinFunctionType object at 0x000000000AFC5090>)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "watchdog.pyc", line 393, in run
+  File "threading.pyc", line 660, in wait
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 20052 (watchdog):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "watchdog.pyc", line 168, in _watcher
+  File "watchdog.pyc", line 175, in waitForFreezeRecovery
+  File "logHandler.pyc", line 66, in getFormattedStacksForAllThreads
+
+Python stack for thread 10880 (winInputHook):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "winInputHook.pyc", line 123, in hookThreadFunc
+
+Python stack for thread 20296 (UIAHandler.UIAHandler.MTAThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "UIAHandler\__init__.pyc", line 576, in MTAThreadFunc
+  File "queue.pyc", line 199, in get
+  File "threading.pyc", line 359, in wait
+
+Python stack for thread 2988 (ThreadPoolExecutor-0_0):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "concurrent\futures\thread.pyc", line 90, in _worker
+
+Python stack for thread 12656 (hwIo.ioThread.IoThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "hwIo\ioThread.pyc", line 265, in run
+
+Python stack for thread 13464 (Thread-2 (run_forever)):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "threading.pyc", line 995, in run
+  File "asyncio\base_events.pyc", line 684, in run_forever
+  File "asyncio\base_events.pyc", line 2023, in _run_once
+  File "asyncio\windows_events.pyc", line 446, in select
+  File "asyncio\windows_events.pyc", line 778, in _poll
+
+Python stack for thread 4740 (ScheduleThread):
+  File "threading.pyc", line 1015, in _bootstrap
+  File "threading.pyc", line 1044, in _bootstrap_inner
+  File "utils\schedule.pyc", line 88, in run
+
+Python stack for thread 13404 (MainThread):
+  File "nvda.pyw", line 310, in <module>
+  File "core.pyc", line 1094, in main
+  File "wx\core.pyc", line 2254, in MainLoop
+  File "wx\core.pyc", line 3425, in <lambda>
+  File "core.pyc", line 1017, in processRequest
+  File "core.pyc", line 1032, in Notify
+  File "IAccessibleHandler\__init__.pyc", line 1091, in pumpAll
+  File "IAccessibleHandler\__init__.pyc", line 675, in processGenericWinEvent
+  File "IAccessibleHandler\__init__.pyc", line 599, in winEventToNVDAEvent
+  File "NVDAObjects\IAccessible\__init__.pyc", line 87, in getNVDAObjectFromEvent
+  File "NVDAObjects\__init__.pyc", line 112, in __call__
+  File "NVDAObjects\IAccessible\__init__.pyc", line 586, in findOverlayClasses
+  File "baseObject.pyc", line 57, in __get__
+  File "baseObject.pyc", line 165, in _getPropertyViaCache
+  File "NVDAObjects\IAccessible\__init__.pyc", line 1054, in _get_IAccessibleRole
+  File "comtypes\_memberspec.pyc", line 617, in __call__
+
+DEBUGWARNING - NVDAObjects.IAccessible.IAccessible._get_IAccessibleRole (13:24:09.265) - MainThread (13404):
+accRole failed: (-2147418110, 'Call was canceled by the message filter.', (None, None, None, 0, None))
+INFO - watchdog.waitForFreezeRecovery (13:24:09.368) - watchdog (20052):
+Recovered from freeze after 0.6103460000013001 seconds.
+IO - speech.speech.speak (13:24:09.704) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'nvda1 - File Explorer', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:24:09.725) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'pane', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:24:10.017) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'nvda1', 'tab', 'selected', '1 of 1', CancellableSpeech (still valid)]
+DEBUGWARNING - appModuleHandler.getProcessHandleFromProcessId (13:25:31.638) - MainThread (13404):
+Unable to open process for processId 0
+Traceback (most recent call last):
+  File "appModuleHandler.pyc", line 201, in getProcessHandleFromProcessId
+OSError: [WinError 87] The parameter is incorrect.
+DEBUGWARNING - appModuleHandler.getProcessHandleFromProcessId (13:25:31.640) - MainThread (13404):
+Unable to get process handle for process 0 using window enumeration and subsequently getting process handle from that window
+Traceback (most recent call last):
+  File "appModuleHandler.pyc", line 214, in getProcessHandleFromProcessId
+RuntimeError: No window handle found for process 0 to create process handle
+DEBUGWARNING - appModuleHandler.AppModule._get_isAlive (13:25:31.797) - MainThread (13404):
+Process handle 0 for AppModule(appModuleHandler, appName='[system process]', processID=0) is invalid, assuming process is dead.
+IO - speech.speech.speak (13:25:31.809) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'rel - File Explorer', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:25:31.904) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'Items View', 'list', CancellableSpeech (still valid)]
+IO - speech.speech.speak (13:25:31.912) - MainThread (13404):
+Speaking [LangChangeCommand ('en'), 'VLC_media_player_userdata_installer', 'not selected', '1 of 2', CancellableSpeech (still valid)]
+INFO - core.main (13:25:35.147) - MainThread (13404):
+Exiting
+INFO - config.ConfigManager.save (13:25:35.152) - MainThread (13404):
+Base configuration saved
+INFO - _asyncioEventLoop.terminate (13:25:35.184) - MainThread (13404):
+Terminating asyncio event loop
+INFO - __main__ (13:25:35.686) - MainThread (13404):
+NVDA exit

@@ -1,0 +1,153 @@
+[
+ {
+  "case": "A1",
+  "how": "in front: the ask box open, then `chatmon say`",
+  "expected_words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+  "needles": [
+   "build finished"
+  ],
+  "said_at": "13:16:14.742",
+  "heard": false,
+  "transcript": null,
+  "heard_at": null,
+  "seconds_after_said": null,
+  "chatmon_routes": [
+   "uia"
+  ],
+  "trace": [
+   {
+    "t": 1794777375.074,
+    "event": "reader",
+    "found": "Narrator"
+   },
+   {
+    "t": 1794777375.075,
+    "event": "uia-in-front",
+    "value": true
+   },
+   {
+    "t": 1794777375.075,
+    "event": "uia-say",
+    "text": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "raised": true
+   },
+   {
+    "t": 1794777375.075,
+    "event": "announce",
+    "reader": "Narrator",
+    "words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "route": "uia"
+   }
+  ],
+  "transcript_meanwhile": []
+ },
+ {
+  "case": "A2",
+  "how": "in front: `note: water the ferns` typed in the ask box, Enter",
+  "expected_words": "Noted (note 1). delete note 1 takes it back.",
+  "needles": [
+   "takes it back"
+  ],
+  "said_at": "13:16:43.152",
+  "heard": false,
+  "transcript": null,
+  "heard_at": null,
+  "seconds_after_said": null,
+  "chatmon_routes": [
+   "uia"
+  ],
+  "trace": [
+   {
+    "t": 1794777405.488,
+    "event": "reader",
+    "found": "Narrator"
+   },
+   {
+    "t": 1794777405.488,
+    "event": "uia-in-front",
+    "value": true
+   },
+   {
+    "t": 1794777405.488,
+    "event": "uia-say",
+    "text": "Noted (note 1). delete note 1 takes it back.",
+    "important": false,
+    "raised": true
+   },
+   {
+    "t": 1794777405.488,
+    "event": "announce",
+    "reader": "Narrator",
+    "words": "Noted (note 1). delete note 1 takes it back.",
+    "important": false,
+    "route": "uia"
+   }
+  ],
+  "transcript_meanwhile": []
+ },
+ {
+  "case": "B",
+  "how": "behind: File Explorer in front, then `chatmon say`",
+  "expected_words": "Chatmon. Probe two: the tests passed while Chatmon was behind.",
+  "needles": [
+   "tests passed"
+  ],
+  "said_at": "13:17:21.730",
+  "heard": false,
+  "transcript": null,
+  "heard_at": null,
+  "seconds_after_said": null,
+  "chatmon_routes": [],
+  "trace": [],
+  "transcript_meanwhile": []
+ },
+ {
+  "case": "C",
+  "how": "behind: File Explorer in front, then `chatmon notify needs-you`",
+  "expected_words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+  "needles": [
+   "approval"
+  ],
+  "said_at": "13:17:59.991",
+  "heard": false,
+  "transcript": null,
+  "heard_at": null,
+  "seconds_after_said": null,
+  "chatmon_routes": [
+   "notification"
+  ],
+  "trace": [
+   {
+    "t": 1794777480.198,
+    "event": "reader",
+    "found": "Narrator"
+   },
+   {
+    "t": 1794777480.198,
+    "event": "uia-in-front",
+    "value": false
+   },
+   {
+    "t": 1794777480.216,
+    "event": "toast",
+    "title": "Claude needs you",
+    "text": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+    "buttons": [
+     "OK"
+    ],
+    "tag": "fd87e6173a3d46bd"
+   },
+   {
+    "t": 1794777480.216,
+    "event": "announce",
+    "reader": "Narrator",
+    "words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+    "important": true,
+    "route": "notification"
+   }
+  ],
+  "transcript_meanwhile": []
+ }
+]
