@@ -142,7 +142,7 @@ max-complexity = 15
 
 [tool.mypy]
 python_version = "3.11"
-files = ["chatmon"]
+files = ["chatmon", "packaging/pins.py"]  # and the weekly pins check, which CI runs too
 warn_unused_configs = true
 warn_redundant_casts = true
 strict_equality = true

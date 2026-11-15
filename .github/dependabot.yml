@@ -1,5 +1,14 @@
-# Weekly pull requests for newer actions and Python packages, each held back until it has been out two weeks
-# (cooldown), the same rule as for moving a pin by hand. Every one runs CI before it can be merged.
+# Weekly pull requests for newer actions, each held back until it has been out two weeks (cooldown), the same rule
+# as for moving a pin by hand. Every one runs CI before it can be merged.
+#
+# No pip entries. Each packaging/requirements*.txt is a `uv pip compile --universal` lock, every platform's packages
+# in one file, and Dependabot can't make one: it locks pip lists with pip-compile, for the one platform it runs on
+# (its pull requests dropped the macOS build's packages and nuitka's Windows marker), and its uv support covers only
+# uv.lock. The Python pins move with .github/workflows/pins.yml instead: each week it runs packaging/pins.py, which
+# asks uv what each lock would move to under the same cooldown and keeps one issue with the report while something
+# can; `python packaging/pins.py --apply` moves them. Dependabot's alerts and security updates are repository
+# settings and still come without a pip entry; lock such a pull request again with uv before merging it
+# (CONTRIBUTING.md).
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -11,32 +20,3 @@ updates:
     groups:
       actions:
         patterns: ["*"]
-
-  # The hash-locked lists CI and the release builds install (packaging/requirements*.in, locked into .txt).
-  - package-ecosystem: pip
-    directory: /packaging
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 14
-    groups:
-      qt:  # PyQt6 and its Qt and sip move together
-        patterns: ["PyQt6*", "pyqt6*"]
-    ignore:
-      # 6.12.0's own QtDBus.pyi has a syntax error that stops mypy before it reads anything: every types job would
-      # fail. 6.12.1 fixes it (docs/delivery/m10-followups.md).
-      - dependency-name: "PyQt6"
-        versions: ["6.12.0"]
-
-  # pyproject.toml: the dev extra's pins. PyQt6>=6.5 is a floor for the Linux distributions' own PyQt6, never
-  # raised just because a newer one is out.
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 14
-    versioning-strategy: increase-if-necessary
-    groups:
-      qt:
-        patterns: ["PyQt6*", "pyqt6*"]

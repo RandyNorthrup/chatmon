@@ -121,15 +121,27 @@ there.
 
 `packaging/requirements*.in` name the versions; each `requirements*.txt` beside them locks those, and every
 dependency of theirs, with hashes. To move a pin, edit the `.in` file (and the `dev` extra in `pyproject.toml`,
-for the test and dev lists), then lock again with the command at the top of the `.txt` file, for example:
+for the test and dev lists), then lock again with the command at the top of the `.txt` file, run in `packaging/`,
+for example:
 
 ```sh
-uv pip compile packaging/requirements-test.in -o packaging/requirements-test.txt --universal --python-version 3.11 --generate-hashes --exclude-newer 2026-10-31
+cd packaging
+uv pip compile requirements-test.in -o requirements-test.txt --universal --python-version 3.11 --generate-hashes --exclude-newer 2026-10-31
 ```
 
 Pick releases at least two weeks old; `--exclude-newer` with a date two weeks back does that for every
 dependency. `tests/test_requirements.py` checks that the locks, the `.in` files and the `dev` extra agree.
-Dependabot proposes newer actions and packages every week, each once it's two weeks old.
+
+Dependabot proposes newer actions every week, each once it's two weeks old, but it can't lock these lists: each is
+uv's universal lock, with every platform's packages, and Dependabot's lock keeps only one platform's. So the
+Python pins have a weekly check of their own: the [pins workflow](.github/workflows/pins.yml) runs
+`packaging/pins.py` (with the uv `requirements-pins.txt` locks), which asks uv what each lock would move to,
+taking only releases two weeks old, and keeps an issue, "Python pins ready to move", with the report while
+something can. `python packaging/pins.py --apply` moves them: the `.in` pins, the `dev` extra, and each lock,
+locked again with its own command. Review the diff and commit it. Dependabot's security updates still come for
+Python packages; lock such a pull request again with uv before merging it, because Dependabot's own lock drops
+the other platforms' packages. Run the command at the top of each `.txt` it changed, with `--exclude-newer` late
+enough to take the fixed release (`pins.py` then leaves that release where it is until it's two weeks old).
 
 ## Releasing
 
